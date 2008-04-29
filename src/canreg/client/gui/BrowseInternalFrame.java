@@ -4,7 +4,7 @@
  * Created on 07 February 2008, 12:19
  */
 
-package canreg;
+package canreg.client.gui;
 
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
@@ -22,6 +22,10 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
     
 
     
+    ///
+    // org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, new java.util.List(), jTable1);
+
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -29,13 +33,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        CanRegProtoPUEntityManager = javax.persistence.Persistence.createEntityManagerFactory("CanRegProtoPU").createEntityManager();
-        patientQuery = CanRegProtoPUEntityManager.createQuery("SELECT p FROM Patient p");
-        patientList = patientQuery.getResultList();
-        tumoursQuery = CanRegProtoPUEntityManager.createQuery("SELECT t FROM Tumours t");
-        tumoursList = tumoursQuery.getResultList();
         jPanel1 = new javax.swing.JPanel();
         jComboBox1 = new javax.swing.JComboBox();
         jCheckBox1 = new javax.swing.JCheckBox();
@@ -184,61 +182,6 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
 
         jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         jTable1.setName("jTable1"); // NOI18N
-
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, tumoursList, jTable1);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${registrynumber}"));
-        columnBinding.setColumnName("Registrynumber");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${recordstatus}"));
-        columnBinding.setColumnName("Recordstatus");
-        columnBinding.setColumnClass(Short.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${familyname}"));
-        columnBinding.setColumnName("Familyname");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${firstname}"));
-        columnBinding.setColumnName("Firstname");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${sex}"));
-        columnBinding.setColumnName("Sex");
-        columnBinding.setColumnClass(Short.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${age}"));
-        columnBinding.setColumnName("Age");
-        columnBinding.setColumnClass(Short.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dayofbirth}"));
-        columnBinding.setColumnName("Dayofbirth");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${monthofbirth}"));
-        columnBinding.setColumnName("Monthofbirth");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${yearofbirth}"));
-        columnBinding.setColumnName("Yearofbirth");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${address}"));
-        columnBinding.setColumnName("Address");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dayofincidence}"));
-        columnBinding.setColumnName("Dayofincidence");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${monthofincidence}"));
-        columnBinding.setColumnName("Monthofincidence");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${yearofincidence}"));
-        columnBinding.setColumnName("Yearofincidence");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${topography}"));
-        columnBinding.setColumnName("Topography");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${morphology}"));
-        columnBinding.setColumnName("Morphology");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${behaviour}"));
-        columnBinding.setColumnName("Behaviour");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${basis}"));
-        columnBinding.setColumnName("Basis");
-        columnBinding.setColumnClass(Integer.class);
-        bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();
         jScrollPane1.setViewportView(jTable1);
 
         jPanel4.setName("jPanel4"); // NOI18N
@@ -431,11 +374,9 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -461,23 +402,23 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
                 setProgress(0, 0, 4);
                 setMessage("Rolling back the current changes...");
                 setProgress(1, 0, 4);
-                CanRegProtoPUEntityManager.getTransaction().rollback();
+                // CanRegProtoPUEntityManager.getTransaction().rollback();
                 Thread.sleep(1000L); // remove for real app
                 setProgress(2, 0, 4);
 
                 setMessage("Starting a new transaction...");
-                CanRegProtoPUEntityManager.getTransaction().begin();
+                // CanRegProtoPUEntityManager.getTransaction().begin();
                 Thread.sleep(500L); // remove for real app
                 setProgress(3, 0, 4);
 
                 setMessage("Fetching new data...");
-                java.util.Collection data = patientQuery.getResultList();
+                //java.util.Collection data = patientQuery.getResultList();
                 Thread.sleep(1300L); // remove for real app
                 setProgress(4, 0, 4);
 
                 Thread.sleep(150L); // remove for real app
-                patientList.clear();
-                patientList.addAll(data);
+               // patientList.clear();
+               // patientList.addAll(data);
             } catch(InterruptedException ignore) { }
             return null;
         }
@@ -490,7 +431,6 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.persistence.EntityManager CanRegProtoPUEntityManager;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -523,11 +463,6 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
-    private java.util.List<canreg.Patient> patientList;
-    private javax.persistence.Query patientQuery;
-    private java.util.List<canreg.Tumours> tumoursList;
-    private javax.persistence.Query tumoursQuery;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
     
 }

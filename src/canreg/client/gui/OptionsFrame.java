@@ -4,7 +4,7 @@
  * Created on 28 February 2008, 09:34
  */
 
-package canreg;
+package canreg.client.gui;
 
 /**
  *
