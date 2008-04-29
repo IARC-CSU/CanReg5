@@ -19,7 +19,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jToolBar1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jDesktopPane1" pref="688" max="32767" attributes="0"/>
+                  <Component id="jDesktopPane1" pref="652" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -33,26 +33,31 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="jButton2">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jButton2.text"/>
-                <Property name="focusable" type="boolean" value="false"/>
-                <Property name="horizontalTextPosition" type="int" value="0"/>
-                <Property name="name" type="java.lang.String" value="jButton2" noResource="true"/>
-                <Property name="verticalTextPosition" type="int" value="3"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="jButton1">
+            <Component class="javax.swing.JButton" name="browseEditButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.CanRegProto2View" id="ShowPatient" methodName="ShowPatient"/>
+                  <action class="canreg.client.gui.CanRegClientView" id="browseEditAction" methodName="browseEditAction"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="browseEditButton.text"/>
+                <Property name="focusable" type="boolean" value="false"/>
+                <Property name="horizontalTextPosition" type="int" value="0"/>
+                <Property name="name" type="java.lang.String" value="browseEditButton" noResource="true"/>
+                <Property name="verticalTextPosition" type="int" value="3"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JToolBar$Separator" name="jSeparator12">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="jSeparator12" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="startDatabaseServerButton">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="startDatabaseServer" methodName="startDatabaseServer"/>
                 </Property>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
-                <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="startDatabaseServerButton" noResource="true"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
             </Component>
@@ -126,20 +131,21 @@
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="browseEditMenuItem">
                   <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.CanRegClientView" id="browseEditAction" methodName="browseEditAction"/>
+                    </Property>
                     <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                       <KeyStroke key="Ctrl+B"/>
                     </Property>
-                    <Property name="icon" type="javax.swing.Icon" resourceKey="browseMenuItem.icon"/>
                     <Property name="text" type="java.lang.String" resourceKey="browseMenuItem.text"/>
                     <Property name="name" type="java.lang.String" value="browseMenuItem" noResource="true"/>
                   </Properties>
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="editDictionaryMenuItem">
                   <Properties>
-                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                      <KeyStroke key="Ctrl+D"/>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.CanRegClientView" id="editDictionaryAction" methodName="editDictionaryAction"/>
                     </Property>
-                    <Property name="icon" type="javax.swing.Icon" resourceKey="dictionaryMenuItem.icon"/>
                     <Property name="text" type="java.lang.String" resourceKey="dictionaryMenuItem.text"/>
                     <Property name="name" type="java.lang.String" value="dictionaryMenuItem" noResource="true"/>
                   </Properties>
@@ -149,7 +155,6 @@
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.gui.CanRegClientView" id="importData" methodName="importData"/>
                     </Property>
-                    <Property name="icon" type="javax.swing.Icon" resourceKey="importMenuItem.icon"/>
                     <Property name="name" type="java.lang.String" value="importMenuItem" noResource="true"/>
                   </Properties>
                 </MenuItem>
@@ -164,9 +169,6 @@
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="viewWorkFiles" methodName="viewWorkFiles"/>
-                </Property>
-                <Property name="icon" type="javax.swing.Icon" noResource="true" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/canreg/client/gui/resources/Vista-Inspirate_1.0/16x16/actions/filefind.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="viewWorkFilesMenuItem.text"/>
                 <Property name="name" type="java.lang.String" value="viewWorkFilesMenuItem" noResource="true"/>
@@ -218,6 +220,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem7">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="showExportFrame" methodName="showExportFrame"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="exportReportsMenuItem.text"/>
                 <Property name="name" type="java.lang.String" value="exportReportsMenuItem" noResource="true"/>
               </Properties>
@@ -232,6 +237,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem9">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="backupAction" methodName="backupAction"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="backupMenuItem.text"/>
                 <Property name="name" type="java.lang.String" value="backupMenuItem" noResource="true"/>
               </Properties>
@@ -290,9 +298,6 @@
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.gui.CanRegClientView" id="startDatabaseServer" methodName="startDatabaseServer"/>
-                    </Property>
-                    <Property name="icon" type="javax.swing.Icon" noResource="true" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/canreg/client/gui/resources/Vista-Inspirate_1.0/16x16/actions/run.png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" resourceKey="startDBMenuItem.text"/>
                     <Property name="name" type="java.lang.String" value="startDBMenuItem" noResource="true"/>

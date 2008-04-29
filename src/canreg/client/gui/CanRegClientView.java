@@ -29,6 +29,7 @@ import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -51,8 +52,6 @@ public class CanRegClientView extends FrameView {
 
         // Show the welcome frame...
         showWelcomeFrame(this);
-
-
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
@@ -132,8 +131,9 @@ public class CanRegClientView extends FrameView {
 
         mainPanel = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
-        jButton2 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        browseEditButton = new javax.swing.JButton();
+        jSeparator12 = new javax.swing.JToolBar.Separator();
+        startDatabaseServerButton = new javax.swing.JButton();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
@@ -190,26 +190,25 @@ public class CanRegClientView extends FrameView {
         jToolBar1.setRollover(true);
         jToolBar1.setName("jToolBar1"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(CanRegClientView.class);
-        jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setName("jButton2"); // NOI18N
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(jButton2);
-
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(CanRegClientView.class, this);
-        jButton1.setAction(actionMap.get("ShowPatient")); // NOI18N
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setName("jButton1"); // NOI18N
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton1);
+        browseEditButton.setAction(actionMap.get("browseEditAction")); // NOI18N
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(CanRegClientView.class);
+        browseEditButton.setText(resourceMap.getString("browseEditButton.text")); // NOI18N
+        browseEditButton.setFocusable(false);
+        browseEditButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        browseEditButton.setName("browseEditButton"); // NOI18N
+        browseEditButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(browseEditButton);
+
+        jSeparator12.setName("jSeparator12"); // NOI18N
+        jToolBar1.add(jSeparator12);
+
+        startDatabaseServerButton.setAction(actionMap.get("startDatabaseServer")); // NOI18N
+        startDatabaseServerButton.setFocusable(false);
+        startDatabaseServerButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        startDatabaseServerButton.setName("startDatabaseServerButton"); // NOI18N
+        startDatabaseServerButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(startDatabaseServerButton);
 
         jDesktopPane1.setAutoscrolls(true);
         jDesktopPane1.setDoubleBuffered(true);
@@ -228,7 +227,7 @@ public class CanRegClientView extends FrameView {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE))
+                .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -252,20 +251,18 @@ public class CanRegClientView extends FrameView {
         dataEntryMenu.setText(resourceMap.getString("dataEntryMenu.text")); // NOI18N
         dataEntryMenu.setName("dataEntryMenu"); // NOI18N
 
+        browseEditMenuItem.setAction(actionMap.get("browseEditAction")); // NOI18N
         browseEditMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_MASK));
-        browseEditMenuItem.setIcon(resourceMap.getIcon("browseMenuItem.icon")); // NOI18N
         browseEditMenuItem.setText(resourceMap.getString("browseMenuItem.text")); // NOI18N
         browseEditMenuItem.setName("browseMenuItem"); // NOI18N
         dataEntryMenu.add(browseEditMenuItem);
 
-        editDictionaryMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
-        editDictionaryMenuItem.setIcon(resourceMap.getIcon("dictionaryMenuItem.icon")); // NOI18N
+        editDictionaryMenuItem.setAction(actionMap.get("editDictionaryAction")); // NOI18N
         editDictionaryMenuItem.setText(resourceMap.getString("dictionaryMenuItem.text")); // NOI18N
         editDictionaryMenuItem.setName("dictionaryMenuItem"); // NOI18N
         dataEntryMenu.add(editDictionaryMenuItem);
 
         importDataMenuItem.setAction(actionMap.get("importData")); // NOI18N
-        importDataMenuItem.setIcon(resourceMap.getIcon("importMenuItem.icon")); // NOI18N
         importDataMenuItem.setName("importMenuItem"); // NOI18N
         dataEntryMenu.add(importDataMenuItem);
 
@@ -275,7 +272,6 @@ public class CanRegClientView extends FrameView {
         fileMenu.add(jSeparator4);
 
         viewWorkFilesMenuItem.setAction(actionMap.get("viewWorkFiles")); // NOI18N
-        viewWorkFilesMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/canreg/client/gui/resources/Vista-Inspirate_1.0/16x16/actions/filefind.png"))); // NOI18N
         viewWorkFilesMenuItem.setText(resourceMap.getString("viewWorkFilesMenuItem.text")); // NOI18N
         viewWorkFilesMenuItem.setName("viewWorkFilesMenuItem"); // NOI18N
         fileMenu.add(viewWorkFilesMenuItem);
@@ -305,6 +301,7 @@ public class CanRegClientView extends FrameView {
         jSeparator8.setName("jSeparator8"); // NOI18N
         analysisMenu.add(jSeparator8);
 
+        jMenuItem7.setAction(actionMap.get("showExportFrame")); // NOI18N
         jMenuItem7.setText(resourceMap.getString("exportReportsMenuItem.text")); // NOI18N
         jMenuItem7.setName("exportReportsMenuItem"); // NOI18N
         analysisMenu.add(jMenuItem7);
@@ -314,6 +311,7 @@ public class CanRegClientView extends FrameView {
         managementMenu.setText(resourceMap.getString("managementMenu.text")); // NOI18N
         managementMenu.setName("managementMenu"); // NOI18N
 
+        jMenuItem9.setAction(actionMap.get("backupAction")); // NOI18N
         jMenuItem9.setText(resourceMap.getString("backupMenuItem.text")); // NOI18N
         jMenuItem9.setName("backupMenuItem"); // NOI18N
         managementMenu.add(jMenuItem9);
@@ -348,7 +346,6 @@ public class CanRegClientView extends FrameView {
         jMenu1.add(jMenuItem18);
 
         jMenuItem16.setAction(actionMap.get("startDatabaseServer")); // NOI18N
-        jMenuItem16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/canreg/client/gui/resources/Vista-Inspirate_1.0/16x16/actions/run.png"))); // NOI18N
         jMenuItem16.setText(resourceMap.getString("startDBMenuItem.text")); // NOI18N
         jMenuItem16.setName("startDBMenuItem"); // NOI18N
         jMenuItem16.addActionListener(new java.awt.event.ActionListener() {
@@ -477,33 +474,12 @@ public class CanRegClientView extends FrameView {
         setStatusBar(statusPanel);
         setToolBar(jToolBar1);
     }// </editor-fold>//GEN-END:initComponents
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        BrowseInternalFrame browserInternalFrame = new BrowseInternalFrame();
-        jDesktopPane1.add(browserInternalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        //System.out.println("coucou");
-        browserInternalFrame.setVisible(!browserInternalFrame.isVisible());
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
     // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem16ActionPerformed
 
-    @Action
-    public void ShowPatient() {
-    // PatientFrame1.setVisible(!PatientFrame1.isVisible());
-    }
-
-    @Action
-    public Task openICDO3Manual() {
-        return new OpenICDO3ManualTask(getApplication());
-    }
-
-    private void logOut() {
-        CanRegClientApp.getApplication().logOut();
-        getFrame().setTitle("CanReg5 - Not logged in.");
-        userLevelLabel.setText("Not logged in.");
-    }
+ 
 
     private void showWelcomeFrame(FrameView fv) {
         WelcomeInternalFrame welcomeInternalFrame = new WelcomeInternalFrame(fv);
@@ -680,22 +656,6 @@ public class CanRegClientView extends FrameView {
         }
     }
 
-    @Action
-    public void openIacrWebsite() throws IOException {
-        BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.iacr.com.fr/"));
-    }
-
-    @Action
-    public void openICDO3web() {
-        BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://training.seer.cancer.gov/module_icdo3/icdo3_home.html"));
-    }
-
-    @Action
-    public void showCanRegHelpFile() {
-        File file = new File("doc");
-        BareBonesBrowserLaunch.openURL("file:" + file.getAbsolutePath() + "/CanReg5-functionality.htm");
-    }
-
     public void setUserRightsLevel(int userRightsLevel) {
         this.userRightsLevel = userRightsLevel;
         userLevelLabel.setText(Globals.USER_RIGHT_LEVELS[userRightsLevel]);
@@ -728,21 +688,78 @@ public class CanRegClientView extends FrameView {
         dataEntryMenu.setEnabled(dataEntry);
         logOutMenuItem.setEnabled(loggedIn);
     }
+  
+    @Action
+    public void ShowPatient() {
+    // PatientFrame1.setVisible(!PatientFrame1.isVisible());
+    }
+
+    @Action
+    public Task openICDO3Manual() {
+        return new OpenICDO3ManualTask(getApplication());
+    }
+
+    private void logOut() {
+        CanRegClientApp.getApplication().logOut();
+        getFrame().setTitle("CanReg5 - Not logged in.");
+        userLevelLabel.setText("Not logged in.");
+    }
+    
+    @Action
+    public void openIacrWebsite() throws IOException {
+        BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.iacr.com.fr/"));
+    }
+
+    @Action
+    public void openICDO3web() {
+        BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://training.seer.cancer.gov/module_icdo3/icdo3_home.html"));
+    }
+
+    @Action
+    public void showCanRegHelpFile() {
+        File file = new File("doc");
+        BareBonesBrowserLaunch.openURL("file:" + file.getAbsolutePath() + "/CanReg5-functionality.htm");
+    }
 
     @Action
     public void openENCRweb() {
-
         BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.encr.com.fr/"));
+    }
 
+    @Action
+    public void showExportFrame() {
+        JInternalFrame internalFrame = new ExportFrame();
+        jDesktopPane1.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        internalFrame.setVisible(true);
+    }
+
+    @Action
+    public void browseEditAction() {
+        JInternalFrame internalFrame = new BrowseInternalFrame();
+        jDesktopPane1.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        internalFrame.setVisible(true);
+    }
+
+    @Action
+    public void backupAction() {
+        JInternalFrame internalFrame = new BackUpInternalFrame();
+        jDesktopPane1.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        internalFrame.setVisible(true);
+    }
+
+    @Action
+    public void editDictionaryAction() {
+        JInternalFrame internalFrame = new EditDictionaryInternalFrame();
+        jDesktopPane1.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        internalFrame.setVisible(true);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu analysisMenu;
+    private javax.swing.JButton browseEditButton;
     private javax.swing.JMenuItem browseEditMenuItem;
     private javax.swing.JMenu dataEntryMenu;
     private javax.swing.JMenuItem editDictionaryMenuItem;
     private javax.swing.JMenuItem importDataMenuItem;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu4;
@@ -765,6 +782,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator11;
+    private javax.swing.JToolBar.Separator jSeparator12;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
@@ -780,6 +798,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenu managementMenu;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JButton startDatabaseServerButton;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
@@ -787,7 +806,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem viewWorkFilesMenuItem;
     // End of variables declaration//GEN-END:variables
 
-    // private javax.swing.JInternalFrame browserInternalFrame;
+    // private javax.swing.JInternalFrame internalFrame;
     // private javax.swing.JInternalFrame welcomeInternalFrame;
     private final Timer messageTimer;
     private final Timer busyIconTimer;
