@@ -16,6 +16,7 @@ import org.w3c.dom.Document;
 public class Patient implements Serializable, DatabaseRecord {
 
     public HashMap variables;
+    
     private Document doc;
     
     /**
