@@ -339,7 +339,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         p.setProperty("last_server_id", sd.getId() + "");
         localSettings.writeSettings();
     }
-
+ 
     private void passwordFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFieldKeyTyped
         // TODO add your handling code here:
         if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_ENTER) {
