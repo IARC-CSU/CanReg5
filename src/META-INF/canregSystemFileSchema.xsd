@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:cr5="http://xml.netbeans.org/schema/canregSystemFileSchema"
+            targetNamespace="http://xml.netbeans.org/schema/canregSystemFileSchema"
+            elementFormDefault="qualified">            
+    
+    <xsd:element name="canreg" type="cr5:Canreg"></xsd:element>
+    
+    <xsd:complexType name="Canreg">
+        <xsd:sequence>
+            <xsd:element name="general" type="cr5:General"></xsd:element>
+            <xsd:element name="dictionaries" type="cr5:Dictionaries"></xsd:element>
+            <xsd:element name="groups" type="cr5:Groups"></xsd:element>
+            <xsd:element name="variables" type="cr5:Variables"></xsd:element>
+            <xsd:element name="indexes" type="cr5:Indexes"></xsd:element>
+            <xsd:element name="search_variables" type="cr5:SearchVariables"></xsd:element>
+            <xsd:element name="miscellaneous" type="cr5:Miscellaneous"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="General">
+        <xsd:sequence>
+            <xsd:element name="registry_code" type="xsd:string"/>
+            <xsd:element name="region_code" type="xsd:string"/>
+            <xsd:element name="registry_name" type="xsd:string"/>
+            <xsd:element name="working_language" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType> 
+    
+    <xsd:complexType name="Dictionary">
+        <xsd:sequence>
+            <xsd:element name="dictionary_id" type="xsd:int"/>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="font" type="xsd:string"/>
+            <xsd:element name="type" type="xsd:string"/>
+            <xsd:element name="code_length" type="xsd:int"/>
+            <xsd:element name="category_description_length" type="xsd:int"/>
+            <xsd:element name="full_dictionary_code_length" type="xsd:int"/>
+            <xsd:element name="full_dictionary_description_length" type="xsd:int"/>
+        </xsd:sequence>
+    </xsd:complexType>      
+    
+    <xsd:complexType name="Dictionaries">    
+        <xsd:sequence>
+            <xsd:element name="dictionary" type="cr5:Dictionary" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Group">
+        <xsd:sequence>
+            <xsd:element name="group_id" type="xsd:int"/>
+            <xsd:element name="name" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Groups">    
+        <xsd:sequence>
+            <xsd:element name="group" type="cr5:Group" maxOccurs="unbounded"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Variable">
+        <xsd:sequence>
+            <xsd:element name="variable_id" type="xsd:int"/>
+            <xsd:element name="full_name" type="xsd:string"/>
+            <xsd:element name="short_name" type="xsd:string"/>
+            <xsd:element name="english_name" type="xsd:string"/>
+            <xsd:element name="group_id" type="xsd:int"/>
+            <xsd:element name="group_name" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="variable_name_X_pos" type="xsd:int" minOccurs="0"/>
+            <xsd:element name="variable_name_Y_pos" type="xsd:int" minOccurs="0"/>
+            <xsd:element name="variable_X_pos" type="xsd:int" minOccurs="0"/>
+            <xsd:element name="variable_Y_pos" type="xsd:int" minOccurs="0"/>
+            <xsd:element name="fill_in_status" type="cr5:fillInValue"/>
+            <xsd:element name="multiple_primary_copy" type="cr5:multiplePrimaryType"/>
+            <xsd:element name="variable_type" type="cr5:variableType"/>
+            <xsd:element name="variable_length" type="xsd:int" minOccurs="0"/>
+            <xsd:element name="use_dictionary" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="category_X_pos" type="xsd:int" minOccurs="0"/>
+            <xsd:element name="category_Y_pos" type="xsd:int" minOccurs="0"/>
+            <xsd:element name="dictionary_X_pos" type="xsd:int" minOccurs="0"/>
+            <xsd:element name="dictionary_Y_pos" type="xsd:int" minOccurs="0"/>            
+            <xsd:element name="table" default="Tumour" type="cr5:tables"/>
+            <xsd:element name="standard_variable_name" type="cr5:standardVariableName" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType> 
+    
+    <xsd:complexType name="Variables">
+        <xsd:sequence>
+            <xsd:element name="variable" type="cr5:Variable" maxOccurs="unbounded"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Index">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:sequence>
+                <xsd:element name="indexed_variable" type="cr5:IndexedVariable" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+            </xsd:sequence>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Indexes">    
+        <xsd:sequence>
+            <xsd:element name="index" type="cr5:Index" maxOccurs="unbounded"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="IndexedVariable">
+        <xsd:sequence>
+            <xsd:element name="variable_name" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="SearchVariables">
+        <xsd:sequence>
+            <xsd:element name="search_variable" type="cr5:SearchVariable" maxOccurs="unbounded"></xsd:element>
+            <xsd:element name="minimum_match" type="xsd:integer"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="SearchVariable">
+        <xsd:sequence>
+            <xsd:element name="variable_name" type="xsd:string"/>
+            <xsd:element name="weigth" type="xsd:integer"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Miscellaneous">
+        <xsd:sequence>
+            <xsd:element name="coding" type="cr5:Coding"/>
+            <xsd:element name="settings" type="cr5:Settings"/>
+        </xsd:sequence>
+    </xsd:complexType> 
+    
+    <xsd:complexType name="Coding">
+        <xsd:sequence>
+            <xsd:element name="male_code" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="female_code" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="unknown_sex_code" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="date_format" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="date_separator" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="morphology_length" type="xsd:int" minOccurs="0"/>
+            <xsd:element name="registration_number_type" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="mult_prim_code_length" type="xsd:int" minOccurs="0"/>
+            <xsd:element name="basis_diag_codes" type="xsd:int" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType> 
+    
+    <xsd:complexType name="Settings">
+        <xsd:sequence>
+            <xsd:element name="fast_safe_mode" type="xsd:string"/>
+            <xsd:element name="mult_prim_rules" type="xsd:string"/>
+            <xsd:element name="special_registry" type="xsd:string"/>
+            <xsd:element name="password_rules" type="xsd:string"/>
+            <xsd:element name="data_entry_language" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType> 
+    
+    <xsd:simpleType name="fillInValue">
+        <xsd:list>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="Mandatory"/>
+                    <xsd:enumeration value="Optional"/>
+                    <xsd:enumeration value="System"/>
+                    <xsd:enumeration value="Automatic"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:list>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="variableType">
+        <xsd:list>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="Alpha"/>
+                    <xsd:enumeration value="Dict"/>
+                    <xsd:enumeration value="Date"/>
+                    <xsd:enumeration value="Number"/>
+                    <xsd:enumeration value="AsianText"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:list>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="standardVariableName">
+        <xsd:list>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="RegistrationNo"/>
+                    <xsd:enumeration value="IncidenceDate"/>
+                    <xsd:enumeration value="BirthDate"/>
+                    <xsd:enumeration value="Age"/>
+                    <xsd:enumeration value="Sex"/>
+                    <xsd:enumeration value="Topography"/>
+                    <xsd:enumeration value="Morphology"/>
+                    <xsd:enumeration value="Behaviour"/>
+                    <xsd:enumeration value="BasisDiagnosis"/>
+                    <xsd:enumeration value="ICD10"/>
+                    <xsd:enumeration value="Mult.Prim.Code"/>
+                    <xsd:enumeration value="CheckStatus"/>
+                    <xsd:enumeration value="PersonSearch"/>
+                    <xsd:enumeration value="RecordSearch"/>
+                    <xsd:enumeration value="FirstName"/>
+                    <xsd:enumeration value="Surname"/>
+                    <xsd:enumeration value="UpdateDate"/>
+                    <xsd:enumeration value="Lastcontact"/>
+                    <xsd:enumeration value="Grade"/>
+                    <xsd:enumeration value="ICCC"/>
+                    <xsd:enumeration value="AddressCode"/>
+                    <xsd:enumeration value="Mult.Prim.Seq."/>
+                    <xsd:enumeration value="Mult.Prim.Tot."/>
+                    <xsd:enumeration value="Stage"/>
+                    <xsd:enumeration value="Source1"/>
+                    <xsd:enumeration value="Source2"/>
+                    <xsd:enumeration value="Source3"/>
+                    <xsd:enumeration value="Source4"/>
+                    <xsd:enumeration value="Source5"/>
+                    <xsd:enumeration value="Source6"/>
+                    <xsd:enumeration value="PatientID"/>
+                    <xsd:enumeration value="TumourID"/>
+                    <xsd:enumeration value="NextTumourID"/>
+                    <xsd:enumeration value="LastTumourID"/>
+                    <xsd:enumeration value="NextPatientID"/>
+                    <xsd:enumeration value="LastPatientID"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:list>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="tables">
+        <xsd:list>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="Patient"/>
+                    <xsd:enumeration value="Tumour"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:list>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="multiplePrimaryType">
+        <xsd:list>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="Intr"/>
+                    <xsd:enumeration value="Othr"/>
+                    <xsd:enumeration value="Must"/>
+                    <xsd:enumeration value="Prob"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:list>
+    </xsd:simpleType>
+    
+</xsd:schema>

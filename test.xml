@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
+    Document   : sampleRegistry.xml
+    Created on : 06 March 2008, 10:54
+    Author     : morten
+    Description:
+        Purpose of the document follows.
+--><ns3:canreg xmlns:ns3="http://xml.netbeans.org/schema/canregSystemFileSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xml.netbeans.org/schema/canregSystemFileSchema ..\..\META-INF\canregSystemFileSchema.xsd">
+    <ns3:general>
+        <ns3:registry_code>TRN</ns3:registry_code>
+        <ns3:region_code>1</ns3:region_code>
+        <ns3:registry_name>Training system</ns3:registry_name>
+        <ns3:working_language>E</ns3:working_language>
+    </ns3:general>
+    <ns3:dictionaries>
+        <ns3:dictionary>
+            <ns3:name>Sex</ns3:name>
+            <ns3:font>Arial</ns3:font>
+            <ns3:type>1</ns3:type>
+            <ns3:code_length>1</ns3:code_length>
+            <ns3:category_description_length>10</ns3:category_description_length>
+            <ns3:full_dictionary_code_length>1</ns3:full_dictionary_code_length>
+            <ns3:full_dictionary_description_length>10</ns3:full_dictionary_description_length>
+        </ns3:dictionary>
+    </ns3:dictionaries>
+    <ns3:groups>
+        <ns3:group>
+            <ns3:name>Patient</ns3:name>
+        </ns3:group>
+        <ns3:group>
+            <ns3:name>Tumour</ns3:name>
+        </ns3:group>
+    </ns3:groups>
+    <ns3:variables>
+        <ns3:variable>
+            <ns3:full_name>Registration Number</ns3:full_name>
+            <ns3:short_name>RegNo</ns3:short_name>
+            <ns3:english_name>Reg.No</ns3:english_name>
+            <ns3:group>Patient</ns3:group>
+            <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
+            <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
+            <ns3:variable_type>Char</ns3:variable_type>
+            <ns3:variable_length>10</ns3:variable_length>
+            <ns3:use_dictionary>-1</ns3:use_dictionary>
+            <ns3:standard_variable_name>RegistrationNo</ns3:standard_variable_name>
+            <ns3:table>Tumour</ns3:table>
+        </ns3:variable>
+        
+        <ns3:variable>
+            <ns3:full_name>First Name</ns3:full_name>
+            <ns3:short_name>FirstName</ns3:short_name>
+            <ns3:english_name>First Name</ns3:english_name>
+            <ns3:group>Patient</ns3:group>
+            <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
+            <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
+            <ns3:variable_type>Char</ns3:variable_type>
+            <ns3:variable_length>30</ns3:variable_length>
+            <ns3:use_dictionary>-1</ns3:use_dictionary>
+            <ns3:standard_variable_name>FirstName</ns3:standard_variable_name>
+            <ns3:table>Patient</ns3:table>
+        </ns3:variable>
+        
+        <ns3:variable>
+            <ns3:full_name>Last Name</ns3:full_name>
+            <ns3:short_name>LastName</ns3:short_name>
+            <ns3:english_name>Last Name</ns3:english_name>
+            <ns3:group>Patient</ns3:group>
+            <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
+            <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
+            <ns3:variable_type>Char</ns3:variable_type>
+            <ns3:variable_length>30</ns3:variable_length>
+            <ns3:use_dictionary>-1</ns3:use_dictionary>
+            <ns3:standard_variable_name>Surname</ns3:standard_variable_name>
+            <ns3:table>Patient</ns3:table>
+        </ns3:variable>
+        
+        <ns3:variable>
+            <ns3:full_name>Sex</ns3:full_name>
+            <ns3:short_name>Sex</ns3:short_name>
+            <ns3:english_name>Sex</ns3:english_name>
+            <ns3:group>Patient</ns3:group>
+            <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
+            <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
+            <ns3:variable_type>Dict</ns3:variable_type>
+            <ns3:variable_length>1</ns3:variable_length>
+            <ns3:use_dictionary>Sex</ns3:use_dictionary>
+            <ns3:standard_variable_name>Sex</ns3:standard_variable_name>
+            <ns3:table>Patient</ns3:table>
+        </ns3:variable>
+        
+        <ns3:variable>
+            <ns3:full_name>Incidence Date</ns3:full_name>
+            <ns3:short_name>IncDate</ns3:short_name>
+            <ns3:english_name>Incidence Date</ns3:english_name>
+            <ns3:group>Tumour</ns3:group>
+            <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
+            <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
+            <ns3:variable_type>Date</ns3:variable_type>
+            <ns3:variable_length>8</ns3:variable_length>
+            <ns3:use_dictionary>-1</ns3:use_dictionary>
+            <ns3:standard_variable_name>IncidenceDate</ns3:standard_variable_name>
+            <ns3:table>Tumour</ns3:table>
+        </ns3:variable>  
+
+    </ns3:variables>
+</ns3:canreg>
