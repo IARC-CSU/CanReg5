@@ -169,6 +169,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         fClients.remove(fClients.indexOf(username));
     }
 
+    // For testing purposes only - not secure enough...
     public CanRegDAO getDatabseConnection() throws RemoteException, SecurityException {
         return db;
     }
