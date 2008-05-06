@@ -4,7 +4,7 @@
  * Created on 29 February 2008, 15:12
  */
 
-package canreg;
+package canreg.client.gui;
 
 /**
  *
@@ -71,7 +71,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

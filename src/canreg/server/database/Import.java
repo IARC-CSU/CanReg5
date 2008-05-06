@@ -4,8 +4,6 @@
  */
 package canreg.server.database;
 
-import canreg.server.database.Tumour;
-import canreg.server.database.Patient;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -44,7 +42,6 @@ public class Import {
         HashMap mpCodes = new HashMap();
         
         BufferedReader bufferedReader = null;
-
 
         try {
             bufferedReader = new BufferedReader(new FileReader(file));

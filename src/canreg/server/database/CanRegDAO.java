@@ -16,10 +16,8 @@ package canreg.server.database;
  * found at http://developers.sun.com/berkeley_license.html .
  */
 import canreg.common.Globals;
-import canreg.server.database.Patient;
 import canreg.server.ListEntry;
 
-import canreg.server.database.Tumour;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,17 +54,21 @@ public class CanRegDAO {
 
         System.out.println(canreg.server.xml.Tools.getTextContent(new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
 
+        // Prepare the SQL strings
+        strSavePatient = QueryGenerator.strSavePatient(doc);
+        strSaveTumour = QueryGenerator.strSaveTumour(doc);
+        strSaveDictionary = QueryGenerator.strSaveDictionary();
+
         setDBSystemDir();
         dbProperties = loadDBProperties();
         String driverName = dbProperties.getProperty("derby.driver");
         loadDatabaseDriver(driverName);
         if (!dbExists()) {
             createDatabase();
+            tableOfDictionariesFilled = false;
         }
 
-        // Prepare the SQL strings
-        strSavePatient = QueryGenerator.strSavePatient(doc);
-        strSaveTumour = QueryGenerator.strSaveTumour(doc);
+
     }
 
     // This only works for Embedded databases - will look into it!
@@ -123,6 +125,11 @@ public class CanRegDAO {
             // Dynamic creation of tables
             statement.execute(QueryGenerator.strCreateVariableTable("Tumour", doc));
             statement.execute(QueryGenerator.strCreateVariableTable("Patient", doc));
+            // Dictionaries part
+            statement.execute(QueryGenerator.strCreateDictionaryTable(doc));
+            statement.execute(QueryGenerator.strCreateTablesOfDictionaries(doc));
+            // System part
+            // TODO
 
             bCreatedTables = true;
         } catch (SQLException ex) {
@@ -153,13 +160,28 @@ public class CanRegDAO {
         String dbUrl = getDatabaseUrl();
         try {
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
+            
+            //Prepare the SQL statements
             stmtSaveNewPatient = dbConnection.prepareStatement(strSavePatient, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewTumour = dbConnection.prepareStatement(strSaveTumour, Statement.RETURN_GENERATED_KEYS);
+            stmtSaveNewDictionary = dbConnection.prepareStatement(strSaveDictionary, Statement.RETURN_GENERATED_KEYS);
             //stmtUpdateExistingPatient = dbConnection.prepareStatement(strUpdatePatient);
-            // stmtGetPatient = dbConnection.prepareStatement(strGetPatient);
+            stmtGetPatient = dbConnection.prepareStatement(strGetPatient);
+            stmtGetPatients = dbConnection.prepareStatement(strGetPatients);
+            
+            stmtGetTumour = dbConnection.prepareStatement(strGetTumour);
+            stmtGetTumours = dbConnection.prepareStatement(strGetTumours);
+            
+            stmtGetTumour = dbConnection.prepareStatement(strGetDictionary);
+            stmtGetTumours = dbConnection.prepareStatement(strGetDictionaries);
             // stmtDeletePatient = dbConnection.prepareStatement(strDeletePatient);
 
             isConnected = dbConnection != null;
+
+            // Consider moving this function...
+            if (isConnected && !tableOfDictionariesFilled) {
+                fillDictionariesTable();
+            }
 
             System.out.println("Cocuou from the database connection...");
         } catch (SQLException ex) {
@@ -201,7 +223,7 @@ public class CanRegDAO {
         try {
             stmtSaveNewRecord.clearParameters();
 
-            // Get the variables node in the XML
+            // Get the dictionaries node in the XML
             NodeList nodes = doc.getElementsByTagName(Globals.NAMESPACE + "variables");
             Element variablesElement = (Element) nodes.item(0);
 
@@ -316,6 +338,35 @@ public class CanRegDAO {
 
     }
 
+    private boolean fillDictionariesTable() {
+        boolean bFilled = false;
+
+        // Get the dictionaries node in the XML
+        NodeList nodes = doc.getElementsByTagName(Globals.NAMESPACE + "dictionaries");
+        Element variablesElement = (Element) nodes.item(0);
+
+        NodeList dictionaries = variablesElement.getElementsByTagName(Globals.NAMESPACE + "dictionary");
+
+        // Go through all the variable definitions
+        for (int i = 0; i < dictionaries.getLength(); i++) {
+            Dictionary dic = new Dictionary();
+
+            // Get element
+            Element element = (Element) dictionaries.item(i);
+            // Create dictionary
+            dic.setName(element.getElementsByTagName(Globals.NAMESPACE + "name").item(0).getTextContent());
+            dic.setFont(element.getElementsByTagName(Globals.NAMESPACE + "font").item(0).getTextContent());
+            dic.setType(element.getElementsByTagName(Globals.NAMESPACE + "type").item(0).getTextContent());
+
+            dic.setCodeLength(element.getElementsByTagName(Globals.NAMESPACE + "code_length").item(0).getTextContent());
+            dic.setCategoryDescriptionLength(element.getElementsByTagName(Globals.NAMESPACE + "category_description_length").item(0).getTextContent());
+            dic.setFullDictionaryCodeLength(element.getElementsByTagName(Globals.NAMESPACE + "full_dictionary_code_length").item(0).getTextContent());
+            dic.setFullDictionaryDescriptionLength(element.getElementsByTagName(Globals.NAMESPACE + "full_dictionary_description_length").item(0).getTextContent());
+            saveDictionary(dic);
+        }
+        return bFilled;
+    }
+
     public boolean deleteRecord(int id) {
         boolean bDeleted = false;
         try {
@@ -395,40 +446,57 @@ public class CanRegDAO {
     private boolean isConnected;
     private String dbName;
     private Document doc;
+    private boolean tableOfDictionariesFilled = true;
     private PreparedStatement stmtSaveNewPatient;
     private PreparedStatement stmtSaveNewTumour;
     private PreparedStatement stmtSaveNewDictionary;
     private PreparedStatement stmtUpdateExistingPatient;
     private PreparedStatement stmtGetListEntries;
     private PreparedStatement stmtGetPatient;
+    private PreparedStatement stmtGetTumour;
+    private PreparedStatement stmtGetPatients;
+    private PreparedStatement stmtGetTumours;
+    private PreparedStatement stmtGetRecord;
+    private PreparedStatement stmtGetRecords;
+    private PreparedStatement stmtGetDictionary;
     private PreparedStatement stmtDeletePatient;
+    private PreparedStatement stmtDeleteTumour;
     private String ns = "ns3:";
+    
     private static final String strGetPatient =
             "SELECT * FROM APP.PATIENT " +
             "WHERE ID = ?";
-    private String strGetPatients =
+     private String strGetPatients =
             "SELECT * FROM APP.PATIENT";
-    private String strSavePatient;
-    private String strSaveTumour;
+     
+     private static final String strGetTumour =
+            "SELECT * FROM APP.TUMOUR " +
+            "WHERE ID = ?";
+     private String strGetTumours =
+            "SELECT * FROM APP.TUMOUR";
+     
+     private static final String strGetDictionary =
+            "SELECT * FROM APP.DICTIONARIES " +
+            "WHERE ID = ?";
+     private String strGetDictionaries =
+            "SELECT * FROM APP.DICTIONARIES ";
+
     private static final String strGetListEntries =
             "SELECT ID, LASTNAME, FIRSTNAME, MIDDLENAME FROM APP.PATIENT " +
             "ORDER BY LASTNAME ASC";
-    private static final String strUpdatePatient =
-            "UPDATE APP.PATIENT " +
-            "SET LASTNAME = ?, " +
-            "    FIRSTNAME = ?, " +
-            "    MIDDLENAME = ?, " +
-            "    PHONE = ?, " +
-            "    EMAIL = ?, " +
-            "    Record1 = ?, " +
-            "    Record2 = ?, " +
-            "    CITY = ?, " +
-            "    STATE = ?, " +
-            "    POSTALCODE = ?, " +
-            "    COUNTRY = ? " +
-            "WHERE ID = ?";
     private static final String strDeletePatient =
             "DELETE FROM APP.PATIENT " +
             "WHERE ID = ?";
+    private static final String strDeleteTumour =
+            "DELETE FROM APP.TUMOUR " +
+            "WHERE ID = ?";
+    private static final String strDeleteDictionary =
+            "DELETE FROM APP.DICTIONARY " +
+            "WHERE ID = ?";
+    
+    // The Dynamic ones
+    private String strSavePatient;
+    private String strSaveTumour;
+    private String strSaveDictionary;
 }
 

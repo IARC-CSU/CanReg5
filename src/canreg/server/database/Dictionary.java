@@ -82,4 +82,24 @@ public class Dictionary {
     public void setFullDictionaryDescriptionLength(int fullDictionaryDescriptionLength) {
         this.fullDictionaryDescriptionLength = fullDictionaryDescriptionLength;
     }
+
+    public void setCategoryDescriptionLength(String textContent) {
+        setCategoryDescriptionLength(stringToInt(textContent));
+    }
+    
+    public void setCodeLength(String textContent) {
+       setCodeLength(stringToInt(textContent));
+    }
+
+    public void setFullDictionaryCodeLength(String textContent) {
+        setFullDictionaryCodeLength(stringToInt(textContent));
+    }
+
+    public void setFullDictionaryDescriptionLength(String textContent) {
+        setFullDictionaryDescriptionLength(stringToInt(textContent));
+    }
+    
+    private int stringToInt(String s){
+        return Integer.parseInt(s);
+    }
 }

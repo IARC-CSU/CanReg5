@@ -252,7 +252,6 @@ public class CanRegClientView extends FrameView {
         dataEntryMenu.setName("dataEntryMenu"); // NOI18N
 
         browseEditMenuItem.setAction(actionMap.get("browseEditAction")); // NOI18N
-        browseEditMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_MASK));
         browseEditMenuItem.setText(resourceMap.getString("browseMenuItem.text")); // NOI18N
         browseEditMenuItem.setName("browseMenuItem"); // NOI18N
         dataEntryMenu.add(browseEditMenuItem);
@@ -631,15 +630,35 @@ public class CanRegClientView extends FrameView {
     }
 
     @Action
-    public void startDatabaseServer() {
-        try {
+    public Task startDatabaseServer() {
+        return new StartDatabaseServerTask(getApplication());
+    }
+
+    private class StartDatabaseServerTask extends org.jdesktop.application.Task<Object, Void> {
+        StartDatabaseServerTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to StartDatabaseServerTask fields, here.
+            super(app);
+            try {
             CanRegClientApp.getApplication().startDatabaseServer();
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_started."), "Message", JOptionPane.INFORMATION_MESSAGE);
 
-        } catch (RemoteException ex) {
+            } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
+            } catch (SecurityException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        @Override protected Object doInBackground() {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+            return null;  // return your result
+        }
+        @Override protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
         }
     }
 
