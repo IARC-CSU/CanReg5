@@ -81,7 +81,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     // to connect from an ODBC compliant program you have to "prepare" the
     // connection using db2-tools available here: 
     // http://www-1.ibm.com/support/docview.wss?rs=71&uid=swg21256059
-    // Download and install the DB2 Run-Time Client 
+    // Download and install the DB2 Run-Time Client
+    // Windows: https://www6.software.ibm.com/dl/rtcl/rtcl-p
+    // Linux: https://www6.software.ibm.com/dl/cloudscape/cloudscape-i?S_PKG=db2rtlin_ww
+    //
     // Afterwards:
     // Linux: http://www.ibm.com/developerworks/db2/library/techarticle/dm-0409cline2/readme_linux.txt
     // Windows: http://www.ibm.com/developerworks/db2/library/techarticle/dm-0409cline2/readme_win.txt
@@ -143,7 +146,6 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         if (systemDescription != null) {
             name = systemDescription.getSystemName();
         }
-
         return name;
     }
 
@@ -155,7 +157,6 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             System.out.println("element is " + users[i]);
             i++;
         }
-
         return users;
     }
 
