@@ -4,6 +4,7 @@
  */
 package canreg.client;
 
+import canreg.common.Globals;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,6 +32,7 @@ public class LocalSettings {
     private String settingsFileName;
     private String settingsDir;
     private Properties properties;
+    private boolean settingsChanged;
 
     public LocalSettings(String localSettingsFileName) throws IOException {
         boolean settingsLoaded = false;
@@ -42,13 +44,34 @@ public class LocalSettings {
         settingsLoaded = loadSettings();
 
         if (!settingsLoaded) {
-            properties = createDefaultProperties();
-            writeSettings();
+            createDefaultProperties();
         }
+        writeSettings();
+    }
+
+    public String[] getLanguageList() {
+        String list[] = new String[Globals.LANGUAGES_AVAILABLE.length];
+        for (int i = 0; i < list.length; i++) {
+            Locale locale = new Locale(Globals.LANGUAGES_AVAILABLE[i]);
+            list[i] = locale.getDisplayLanguage();
+        }
+        return list;
+    }
+
+    public Locale getLocale() {
+        return new Locale(properties.getProperty("locale"));
+    }
+
+    public void setLocale(String localeCode) {
+        if (!localeCode.equals(properties.getProperty("locale"))) {
+            settingsChanged = true;
+        }
+        properties.setProperty("locale", localeCode);
     }
 
     private boolean loadSettings() {
         InputStream propInputStream = null;
+        settingsChanged = false;
         boolean success = false;
         try {
             propInputStream = new FileInputStream(settingsDir + "/" + settingsFileName);
@@ -79,41 +102,46 @@ public class LocalSettings {
     }
 
     public boolean writeSettings() {
-        OutputStream propOutputStream = null;
-        boolean success = false;
-        try {
-            propOutputStream = new FileOutputStream(settingsDir + "/" + settingsFileName);
-            getProperties().storeToXML(propOutputStream, "CanReg5 local settings");
+        if (settingsChanged = true) {
+            OutputStream propOutputStream = null;
+            boolean success = false;
+            try {
+                propOutputStream = new FileOutputStream(settingsDir + "/" + settingsFileName);
+                getProperties().storeToXML(propOutputStream, "CanReg5 local settings");
 
-            success = true;
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
-            success = false;
-        } catch (IOException ex) {
-            Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
-            success = false;
-        } finally {
-            if (propOutputStream != null) {
-                try {
-                    propOutputStream.flush();
-                    propOutputStream.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
-                    success = false;
+                success = true;
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
+                success = false;
+            } catch (IOException ex) {
+                Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
+                success = false;
+            } finally {
+                if (propOutputStream != null) {
+                    try {
+                        propOutputStream.flush();
+                        propOutputStream.close();
+                        settingsChanged = false;
+                    } catch (IOException ex) {
+                        Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
+                        success = false;
+                    }
                 }
+                return success;
             }
-            return success;
+        } else {
+            return false;
         }
     }
 
-    private static Properties createDefaultProperties() {
-        Properties properties = new Properties();
+    private Properties createDefaultProperties() {
+        properties = new Properties();
         properties.setProperty("locale", Locale.getDefault().getLanguage());
         properties.setProperty("remember_password", "false");
         properties.setProperty("username", "");
         properties.setProperty("password", "");
         // properties.setProperty("server1.name", "Default");
-
+        settingsChanged = true;
         return properties;
     }
 
@@ -132,12 +160,15 @@ public class LocalSettings {
         return systemDir;
     }
 
+    // Consider making private 
     public Properties getProperties() {
         return properties;
     }
 
+    // Consider making private 
     public void setProperties(Properties properties) {
         this.properties = properties;
+        settingsChanged = true;
     }
 
     public LinkedList<ServerDescription> getServerDescriptions() {
@@ -176,7 +207,7 @@ public class LocalSettings {
             i++;
         }
         String[] namesArray = new String[i];
-        
+
         int j = 0;
         // reset iterator
         sd = getServerDescriptions().iterator();
@@ -184,33 +215,63 @@ public class LocalSettings {
             namesArray[j] = sd.next().toString();
             j++;
         }
-        
+
         if (i > 0) {
             return namesArray;
         } else {
             return null;
         }
     }
-    
-    public ServerDescription getServerDescription(int serverID){
+
+    public ServerDescription getServerDescription(int serverID) {
         LinkedList<ServerDescription> serverList = getServerDescriptions();
         ServerDescription sd = null;
         boolean found = false;
         int i = 0;
-        while(!found && i<serverList.size()){
+        while (!found && i < serverList.size()) {
             ServerDescription sdTemp = serverList.get(i++);
             found = sdTemp.getId() == serverID;
-            if (found){
+            if (found) {
                 sd = sdTemp;
             }
         }
-        return sd;            
+        return sd;
     }
 
-    public void addServerDescription(ServerDescription sd) {    
+    public void addServerDescription(ServerDescription sd) {
         properties.setProperty("server." + sd.getId() + ".name", sd.getName());
         properties.setProperty("server." + sd.getId() + ".port", sd.getPort() + "");
         properties.setProperty("server." + sd.getId() + ".code", sd.getCode());
         properties.setProperty("server." + sd.getId() + ".url", sd.getUrl());
+
+        settingsChanged = true;
+    }
+
+    public String getLanguage() {
+        String localeString = properties.getProperty("locale");
+        Locale loc = new Locale(localeString);
+        return loc.getDisplayLanguage(new Locale("en"));
+    }
+
+    public String getLanguageCode() {
+        return properties.getProperty("locale");
+    }
+
+    public boolean isOutlineDragMode() {
+        boolean isOutLineDragMode = false;
+        String isOutlineDragModeString = properties.getProperty("outline_drag_mode");
+        if (isOutlineDragModeString != null){
+            isOutLineDragMode = isOutlineDragModeString.equalsIgnoreCase("on");
+        }
+        return isOutLineDragMode;
+    }
+
+    public void setOutlineDragMode(boolean outlineDragMode) {
+        if (outlineDragMode) {
+            properties.setProperty("outline_drag_mode", "on");
+        } else {
+            properties.setProperty("outline_drag_mode", "off");
+        }
+        settingsChanged = true;
     }
 }

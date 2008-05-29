@@ -319,9 +319,11 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             String lastServerIDString = p.getProperty("last_server_id");
             if (lastServerIDString != null) {
                 ServerDescription sd = localSettings.getServerDescription(Integer.parseInt(lastServerIDString));
-                portField.setText("" + sd.getPort());
-                serverURLTextField.setText(sd.getUrl());
-                codeField.setText(sd.getCode());
+                if (sd != null) {
+                    portField.setText("" + sd.getPort());
+                    serverURLTextField.setText(sd.getUrl());
+                    codeField.setText(sd.getCode());
+                }
             }
         } else {
             canRegSystemComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[]{""}));
@@ -342,7 +344,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         p.setProperty("last_server_id", sd.getId() + "");
         localSettings.writeSettings();
     }
- 
+
     private void passwordFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFieldKeyTyped
         // TODO add your handling code here:
         if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_ENTER) {
@@ -459,8 +461,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                 if (canreg.common.ServerLauncher.start(codeField.getText(), Integer.parseInt(portField.getText()))) {
                     result = "started";
                 }
-            }
-            catch (AlreadyBoundException ex) {
+            } catch (AlreadyBoundException ex) {
                 result = "running";
             // Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -494,7 +495,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         String server = serverURLTextField.getText().trim();
         String port = portField.getText().trim();
         String code = codeField.getText().trim();
-        
+
         String serverObjectString = "rmi://" + server + ":" + port + "/CanRegLogin" + code;
 
         String systemName = CanRegClientApp.getApplication().testConnection(serverObjectString);

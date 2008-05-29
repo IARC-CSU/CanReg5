@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package canreg.common;
 
 import java.util.LinkedList;
@@ -12,6 +11,21 @@ import java.util.LinkedList;
  * @author morten
  */
 public class Tools {
+
+    public static int findInArray(Object[] objects, Object object) {
+        int position = 0;
+        boolean found = false;
+        while (!found && position < objects.length) {
+            found = object.equals(objects[position++]);
+        }
+        if (!found) {
+            position = -1;
+        } else {
+            position -= 1;
+        }
+        return position;
+    }
+
     public static String[] breakDownLine(char separatingCharacter, String line) {
         LinkedList<String> elements = new LinkedList();
         int pointer = 0;

@@ -36,4 +36,7 @@ public class Globals {
     static public int REGISTRAR = 2;
     static public int ANALYST = 3;
     
+    // Languages - consider moving it to config-file or build it automatically...
+    static public String[] LANGUAGES_AVAILABLE = {"en", "fr", "ar", "no"};
+
 }

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
@@ -85,6 +86,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         // Initialize the user settings
         try {
             localSettings = new LocalSettings("settings.xml");
+            Locale.setDefault(localSettings.getLocale());
         } catch (IOException ioe){
             debugOut(ioe.getLocalizedMessage());
         }
@@ -105,7 +107,6 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
         return systemName;
     }
-    
     
     //  Log on to the CanReg system and set up the server connection.
     //  Returns CanReg System's name if successfull - null if not
@@ -176,6 +177,10 @@ public class CanRegClientApp extends SingleFrameApplication {
     
     public LocalSettings getLocalSettings(){
         return localSettings;
+    }
+    
+    public void applyPreferences(){
+        Locale.setDefault(localSettings.getLocale());
     }
     
     @Action
