@@ -3,6 +3,7 @@
  */
 package canreg.client;
 
+import canreg.client.dataentry.Relation;
 import canreg.client.gui.CanRegClientView;
 import canreg.common.Globals;
 import canreg.server.CanRegLoginInterface;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +21,7 @@ import javax.security.auth.login.LoginException;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
+import org.w3c.dom.Document;
 
 /**
  * The main class of the application.
@@ -179,8 +182,18 @@ public class CanRegClientApp extends SingleFrameApplication {
         return localSettings;
     }
     
+    public Document getDatabseDescription() throws RemoteException{
+        return server.getDatabseDescription();
+    }
+    
     public void applyPreferences(){
         Locale.setDefault(localSettings.getLocale());
+    }
+    
+    public void importFile(Document doc, List<Relation> map, File file) throws RemoteException{
+        // placeholder... 
+        // getting database connection... obly for Supervisor?
+        canreg.client.dataentry.Import.importFile(doc, map, file, server);
     }
     
     @Action

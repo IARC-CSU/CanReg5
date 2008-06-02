@@ -2,10 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package canreg.server;
 
 import canreg.server.database.CanRegDAO;
+import canreg.server.database.Patient;
+import canreg.server.database.Tumour;
 import canreg.server.security.ValidateMethodCall;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -17,51 +18,49 @@ import org.w3c.dom.Document;
  * @author morten
  */
 class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInterface {
+
     private CanRegServerInterface theServer;
     private Subject theUser;
-    
+
     public CanRegServerProxy(Subject user, CanRegServerInterface server) throws RemoteException {
         /** The user associated with this proxy 
-        */
+         */
         this.theUser = user;
         /** A reference to the real server object 
-        */
+         */
         this.theServer = server;
     }
 
-      /**
-       * Proxy implementation of (1st) method in the server interface.
-       * 
-       * The client calls this method. If he client has the
-       * appropriate permissions, the call goes through.
-       */
-      public void doOperationA() throws java.rmi.RemoteException, SecurityException {
+    /**
+     * Proxy implementation of (1st) method in the server interface.
+     * 
+     * The client calls this method. If he client has the
+     * appropriate permissions, the call goes through.
+     */
+    public void doOperationA() throws java.rmi.RemoteException, SecurityException {
         checkPermission("doOperationA");
         theServer.doOperationA();
-      }
+    }
 
-      /**
-       * Proxy implementation of (2nd) method in the server interface.
-       * 
-       * The client calls this method. If he client has the
-       * appropriate permissions, the call goes through.
-       */
-      public void doOperationB() throws java.rmi.RemoteException, SecurityException {
+    /**
+     * Proxy implementation of (2nd) method in the server interface.
+     * 
+     * The client calls this method. If he client has the
+     * appropriate permissions, the call goes through.
+     */
+    public void doOperationB() throws java.rmi.RemoteException, SecurityException {
         checkPermission("doOperationB");
         theServer.doOperationB();
-      }
-      
-      private void checkPermission(String methodName) throws SecurityException {
+    }
+
+    private void checkPermission(String methodName) throws SecurityException {
         // Assume the identity of the user, and validate if he can
         // call this method
 
-        try
-        {
-                Subject.doAs(theUser, new ValidateMethodCall(methodName));
-        }
-        catch (java.security.PrivilegedActionException e)
-        {
-                throw (SecurityException) e.getException();
+        try {
+            Subject.doAs(theUser, new ValidateMethodCall(methodName));
+        } catch (java.security.PrivilegedActionException e) {
+            throw (SecurityException) e.getException();
         }
 
     }
@@ -90,8 +89,8 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public void startNetworkDBServer() throws RemoteException, SecurityException {
         checkPermission("startNetworkDBServer");
         theServer.startNetworkDBServer();
-    }    
-    
+    }
+
     public void stopNetworkDBServer() throws RemoteException, SecurityException {
         checkPermission("stopNetworkDBServer");
         theServer.stopNetworkDBServer();
@@ -101,8 +100,8 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         checkPermission("getDatabseDescription");
         return theServer.getDatabseDescription();
     }
-    
-     public String[] listCurrentUsers() throws RemoteException, SecurityException {
+
+    public String[] listCurrentUsers() throws RemoteException, SecurityException {
         checkPermission("listCurrentUsers");
         return theServer.listCurrentUsers();
     }
@@ -118,6 +117,18 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     public CanRegDAO getDatabseConnection() throws RemoteException, SecurityException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // Cannot be sent over RMI. Good.
+        checkPermission("getDatabseConnection");
+        return theServer.getDatabseConnection();
+    }
+
+    public int savePatient(Patient patient) throws RemoteException, SecurityException {
+        checkPermission("savePatient");
+        return theServer.savePatient(patient);
+    }
+
+    public int saveTumour(Tumour tumour) throws RemoteException, SecurityException {
+        checkPermission("saveTumour");
+        return theServer.saveTumour(tumour);
     }
 }

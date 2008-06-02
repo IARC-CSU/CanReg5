@@ -18,8 +18,10 @@ public class Relation {
     private int fileColumnNumber;
     // Variable type
     private String variableType;
-    
-    private String databaseVariableName;
+    //
+    private String databaseVariableName;    
+    // 
+    private String fileVariableName;
 
     public String getDatabaseTableName() {
         return databaseTableName;
@@ -59,5 +61,13 @@ public class Relation {
 
     public void setVariableType(String variableType) {
         this.variableType = variableType;
+    }
+
+    public String getFileVariableName() {
+        return fileVariableName;
+    }
+
+    public void setFileVariableName(String fileVariableName) {
+        this.fileVariableName = fileVariableName;
     }
 }

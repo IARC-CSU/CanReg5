@@ -6,6 +6,8 @@ package canreg.server;
 
 import canreg.common.Globals;
 import canreg.server.database.CanRegDAO;
+import canreg.server.database.Patient;
+import canreg.server.database.Tumour;
 import canreg.server.management.SystemDescription;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -179,5 +181,14 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         if (debug) {
             System.out.println("\t[CanRegServer] " + msg);
         }
+    }
+    
+    // add and remove records
+    public int savePatient(Patient patient) {
+        return db.savePatient(patient);
+    }
+
+    public int saveTumour(Tumour tumour) {
+        return db.saveTumour(tumour);
     }
 }

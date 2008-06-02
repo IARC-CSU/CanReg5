@@ -5,17 +5,25 @@
  */
 package canreg.client.gui;
 
+import canreg.client.gui.VariableMappingPanel;
 import canreg.client.CanRegClientApp;
+import canreg.client.dataentry.Import;
+import canreg.client.dataentry.Relation;
+import canreg.common.Globals;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.rmi.RemoteException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
+import org.w3c.dom.Document;
 
 /**
  *
@@ -23,12 +31,22 @@ import org.jdesktop.application.Action;
  */
 public class ImportView extends javax.swing.JInternalFrame {
 
-    private boolean needToRebuildVariableMap = false;
+    private boolean needToRebuildVariableMap = true;
     private File inFile;
+    private Document doc;
+    private List<VariableMappingPanel> panelList;
+    private String[] variablesInDB;
 
     /** Creates new form ImportView */
     public ImportView() {
-        initComponents();
+        try {
+            initComponents();
+            // Get the system description
+            doc = CanRegClientApp.getApplication().getDatabseDescription();
+            variablesInDB = canreg.common.Tools.getVariableNames(doc, Globals.NAMESPACE);       
+        } catch (RemoteException ex) {
+            Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     // initializeVariableMappingTab();
     }
 
@@ -64,7 +82,6 @@ public class ImportView extends javax.swing.JInternalFrame {
         jLabel8 = new javax.swing.JLabel();
         variablesScrollPane = new javax.swing.JScrollPane();
         variablesPanel = new javax.swing.JPanel();
-        variableMapPanel1 = new canreg.client.gui.variableMapPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -152,7 +169,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(previewPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
+                .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -219,26 +236,11 @@ public class ImportView extends javax.swing.JInternalFrame {
 
         variablesScrollPane.setName("variablesScrollPane"); // NOI18N
 
-        variablesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         variablesPanel.setName("variablesPanel"); // NOI18N
-
-        variableMapPanel1.setName("variableMapPanel1"); // NOI18N
-
-        javax.swing.GroupLayout variablesPanelLayout = new javax.swing.GroupLayout(variablesPanel);
-        variablesPanel.setLayout(variablesPanelLayout);
-        variablesPanelLayout.setHorizontalGroup(
-            variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(variableMapPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 595, Short.MAX_VALUE)
-        );
-        variablesPanelLayout.setVerticalGroup(
-            variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(variablesPanelLayout.createSequentialGroup()
-                .addComponent(variableMapPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(481, Short.MAX_VALUE))
-        );
-
+        variablesPanel.setLayout(new java.awt.GridLayout(0, 1));
         variablesScrollPane.setViewportView(variablesPanel);
 
+        jSplitPane1.setDividerLocation(200);
         jSplitPane1.setResizeWeight(0.5);
         jSplitPane1.setName("jSplitPane1"); // NOI18N
 
@@ -270,13 +272,10 @@ public class ImportView extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addComponent(jButton7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton8)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, associateVariablesPanelLayout.createSequentialGroup()
-                        .addGroup(associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
-                            .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE))
-                        .addContainerGap())))
+                        .addComponent(jButton8))
+                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
+                    .addComponent(variablesScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE))
+                .addContainerGap())
         );
         associateVariablesPanelLayout.setVerticalGroup(
             associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -286,7 +285,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE)
+                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton8)
@@ -438,7 +437,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addComponent(maxLinesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 252, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 256, Short.MAX_VALUE)
                 .addGroup(importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4)
                     .addComponent(jButton6)
@@ -461,7 +460,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 642, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -494,6 +493,7 @@ public class ImportView extends javax.swing.JInternalFrame {
 
     @Action
     public void jumpToNextTabAction() {
+        initializeVariableMappingTab();
         int tabNumber = jTabbedPane1.getSelectedIndex();
         if (tabNumber < jTabbedPane1.getTabCount()) {
             jTabbedPane1.setSelectedIndex(tabNumber + 1);
@@ -502,6 +502,7 @@ public class ImportView extends javax.swing.JInternalFrame {
 
     @Action
     public void jumpToPreviousTabAction() {
+        initializeVariableMappingTab();
         int tabNumber = jTabbedPane1.getSelectedIndex();
         if (tabNumber <= 1) {
             jTabbedPane1.setSelectedIndex(tabNumber - 1);
@@ -515,26 +516,54 @@ public class ImportView extends javax.swing.JInternalFrame {
 
     @Action
     public void importAction() {
-    // TODO
-    // Calls the client app import action with the file parameters provided,
-    // the import file name and the mapping defined.
+        try {    
+            // Calls the client app import action with the file parameters provided,
+            CanRegClientApp.getApplication().importFile(doc, buildMap(), inFile);
+        } catch (RemoteException ex) {
+            Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
     private void initializeVariableMappingTab() {
-        if (needToRebuildVariableMap) {
+        if (needToRebuildVariableMap && fileNameTextField.getText().trim().length() > 0) {
             BufferedReader br = null;
+            List<Relation> map = null;
+            panelList = new LinkedList();
             try {
+                // Remove all variable mappings
                 variablesPanel.removeAll();
 
+                // Read the first line of the file
                 br = new BufferedReader(new FileReader(inFile));
+                String line = br.readLine();
+                String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
+                
+                map = Import.constructRelations(doc, lineElements);
+
+                // Add the panels
+                for (Relation rel : map){
+                    VariableMappingPanel vmp = new VariableMappingPanel();
+                    panelList.add(vmp);
+                    vmp.setDBVariables(variablesInDB);
+                    vmp.setFileVariableName(rel.getFileVariableName());
+                    // TODO
+                    // Find a safer way to do this!
+                    vmp.setSelectedDBIndex(rel.getDatabaseTableVariableID());
+                    variablesPanel.add(vmp);
+                    vmp.setVisible(true);
+                }
 
                 variablesPanel.revalidate();
                 variablesPanel.repaint();
 
+            }  catch (RemoteException ex) {
+                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not open file: \'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (IOException ex) {
+                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 needToRebuildVariableMap = false;
                 try {
@@ -547,6 +576,26 @@ public class ImportView extends javax.swing.JInternalFrame {
         }
     }
 
+    private List<Relation> buildMap(){
+        List<Relation> map = new LinkedList();
+        int i=0;
+        for(VariableMappingPanel vmp:panelList){
+            Relation rel = new Relation();
+            
+            // TODO!
+            // Unfinished!
+            
+            //rel.setDatabaseTableName();
+            rel.setDatabaseTableVariableID(vmp.getDBVariableIndex());
+            rel.setFileColumnNumber(i);
+            
+            
+            map.add(rel);
+            i++;
+        }
+        return map;
+    }
+    
     @Action
     public void previewAction() {
         // show the contents of the file
@@ -607,7 +656,6 @@ public class ImportView extends javax.swing.JInternalFrame {
     private javax.swing.JRadioButton rejectRadioButton;
     private javax.swing.JCheckBox testOnlyCheckBox;
     private javax.swing.JRadioButton updateRadioButton;
-    private canreg.client.gui.variableMapPanel variableMapPanel1;
     private javax.swing.JPanel variablesPanel;
     private javax.swing.JScrollPane variablesScrollPane;
     // End of variables declaration//GEN-END:variables

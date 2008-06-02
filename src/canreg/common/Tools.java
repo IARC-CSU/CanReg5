@@ -5,6 +5,9 @@
 package canreg.common;
 
 import java.util.LinkedList;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -58,5 +61,15 @@ public class Tools {
             elementArray[i] = elements.get(i);
         }
         return elementArray;
+    }
+
+    public static String[] getVariableNames(Document doc,String namespace) {
+        NodeList nl = doc.getElementsByTagName(namespace + "variable");
+        String[] variableNames = new String[nl.getLength()];
+        for (int i = 0; i < nl.getLength(); i++) {
+            Element e = (Element) nl.item(i);
+            variableNames[i] = e.getElementsByTagName(namespace + "short_name").item(0).getTextContent();
+        }
+        return variableNames;
     }
 }

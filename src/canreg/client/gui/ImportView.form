@@ -42,7 +42,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="642" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="646" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -188,7 +188,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="previewScrollPane" pref="475" max="32767" attributes="0"/>
+                          <Component id="previewScrollPane" pref="479" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -261,16 +261,11 @@
                               <Component id="jButton7" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jButton8" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="jSplitPane1" alignment="0" pref="613" max="32767" attributes="0"/>
-                                  <Component id="variablesScrollPane" alignment="1" pref="613" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="jSplitPane1" alignment="0" pref="613" max="32767" attributes="0"/>
+                          <Component id="variablesScrollPane" alignment="1" pref="613" max="32767" attributes="0"/>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -282,7 +277,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jSplitPane1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variablesScrollPane" pref="519" max="32767" attributes="0"/>
+                      <Component id="variablesScrollPane" pref="523" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jButton8" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -336,41 +331,19 @@
               <SubComponents>
                 <Container class="javax.swing.JPanel" name="variablesPanel">
                   <Properties>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder/>
-                      </Border>
-                    </Property>
                     <Property name="name" type="java.lang.String" value="variablesPanel" noResource="true"/>
                   </Properties>
 
-                  <Layout>
-                    <DimensionLayout dim="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="variableMapPanel1" alignment="1" pref="595" max="32767" attributes="0"/>
-                      </Group>
-                    </DimensionLayout>
-                    <DimensionLayout dim="1">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="variableMapPanel1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="481" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                    </DimensionLayout>
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
+                    <Property name="columns" type="int" value="1"/>
+                    <Property name="rows" type="int" value="0"/>
                   </Layout>
-                  <SubComponents>
-                    <Component class="canreg.client.gui.variableMapPanel" name="variableMapPanel1">
-                      <Properties>
-                        <Property name="name" type="java.lang.String" value="variableMapPanel1" noResource="true"/>
-                      </Properties>
-                    </Component>
-                  </SubComponents>
                 </Container>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JSplitPane" name="jSplitPane1">
               <Properties>
+                <Property name="dividerLocation" type="int" value="200"/>
                 <Property name="resizeWeight" type="double" value="0.5"/>
                 <Property name="name" type="java.lang.String" value="jSplitPane1" noResource="true"/>
               </Properties>
@@ -452,7 +425,7 @@
                       <Component id="maxLinesPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="252" max="32767" attributes="0"/>
+                      <EmptySpace pref="256" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jButton4" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jButton6" alignment="3" min="-2" max="-2" attributes="0"/>

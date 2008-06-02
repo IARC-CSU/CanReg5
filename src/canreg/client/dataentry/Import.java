@@ -4,9 +4,11 @@
  */
 package canreg.client.dataentry;
 
+import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,18 +32,34 @@ public class Import {
     // function without map
     public static boolean importFile(Document doc, File file, CanRegDAO canRegDAO) {
         // create the mapping
-        List<Relation> map = constructRelations(doc, file);
+        BufferedReader bufferedReader = null;
+        List<Relation> map = null;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(file));
+            String line = bufferedReader.readLine();
+            String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
+            map = constructRelations(doc, lineElements);
         // call import function with map
-        return importFile(doc, map, file, canRegDAO);
+
+        } catch (IOException ex) {
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return importFile(doc, map, file, canRegDAO);
+        }
     }
 
-    // function with map
+    // function with map - directly on the server...
     public static boolean importFile(Document doc, List<Relation> map, File file, CanRegDAO canRegDAO) {
 
         boolean success = false;
-        
+
         HashMap mpCodes = new HashMap();
-        
+
         BufferedReader bufferedReader = null;
 
         try {
@@ -58,7 +76,7 @@ public class Import {
                 Patient patient = new Patient();
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
-                    if (rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
+                    if (rel.getDatabaseTableVariableID()>=0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
                         if (rel.getVariableType().equalsIgnoreCase("Number") || rel.getVariableType().equalsIgnoreCase("Date")) {
                             if (lineElements[rel.getFileColumnNumber()].length() > 0) {
                                 patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
@@ -74,7 +92,7 @@ public class Import {
                 Tumour tumour = new Tumour();
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
-                    if (rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
+                    if (rel.getDatabaseTableVariableID()>=0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
                         if (rel.getVariableType().equalsIgnoreCase("Number") || rel.getVariableType().equalsIgnoreCase("Date")) {
                             if (lineElements[rel.getFileColumnNumber()].length() > 0) {
                                 tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
@@ -84,19 +102,19 @@ public class Import {
                         }
                     }
                 }
-                
+
                 debugOut(tumour.toString());
                 // add patient to the database
                 patientIDNumber = canRegDAO.savePatient(patient);
 
                 // If this is a multiple primary tumour...
                 String mpCodeString = (String) tumour.getVariable("MPcode");
-                                
-                if (mpCodeString !=null && mpCodeString.length()>0) {
+
+                if (mpCodeString != null && mpCodeString.length() > 0) {
                     patientIDNumber = lookUpPatientID(mpCodeString, patientIDNumber, mpCodes);
                 }
-                
-                tumour.setVariable("PatientID",patientIDNumber);
+
+                tumour.setVariable("PatientID", patientIDNumber);
                 canRegDAO.saveTumour(tumour);
 
                 //Read next line of data
@@ -119,53 +137,126 @@ public class Import {
         return success;
     }
 
-    public static void importDictionary(){
-        // TODO!
-    }
-    
-    private static List<Relation> constructRelations(Document doc, File file) {
+        public static boolean importFile(Document doc, List<Relation> map, File file, CanRegServerInterface server) {
+
+        boolean success = false;
+
+        HashMap mpCodes = new HashMap();
+
         BufferedReader bufferedReader = null;
-        LinkedList<Relation> list = new LinkedList();
+
         try {
             bufferedReader = new BufferedReader(new FileReader(file));
             String line = bufferedReader.readLine();
-            String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
-            NodeList nl = doc.getElementsByTagName(namespace + "variable");
-            String[] variableNames = new String[nl.getLength()];
-            for (int i = 0; i < nl.getLength(); i++) {
-                Element e = (Element) nl.item(i);
-                variableNames[i] = e.getElementsByTagName(namespace + "short_name").item(0).getTextContent();
-            }
-            for (int i = 0; i < lineElements.length; i++) {
-                boolean found = false;
-                int j = 0;
-                while (!found && j < variableNames.length) {
-                    found = lineElements[i].equalsIgnoreCase(variableNames[j++]);
+            // Skip first line
+            line = bufferedReader.readLine();
+
+            // patientNumber
+            int patientIDNumber = 0;
+            while (line != null) {
+                String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
+                // Build patient part
+                Patient patient = new Patient();
+                for (int i = 0; i < map.size(); i++) {
+                    Relation rel = map.get(i);
+                    if (rel.getDatabaseTableVariableID()>=0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
+                        if (rel.getVariableType().equalsIgnoreCase("Number") || rel.getVariableType().equalsIgnoreCase("Date")) {
+                            if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                            }
+                        } else {
+                            patient.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
+                        }
+                    }
                 }
-                if (found) {
-                    //backtrack
-                    j--;
-                    //build relation
-                    Relation rel = new Relation();
-                    Element e = (Element) nl.item(j);
-                    rel.setDatabaseTableName(e.getElementsByTagName(namespace + "table").item(0).getTextContent());
-                    rel.setDatabaseTableVariableID(Integer.parseInt(e.getElementsByTagName(namespace + "variable_id").item(0).getTextContent()));
-                    rel.setVariableType(e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent());
-                    rel.setDatabaseVariableName(variableNames[j]);
-                    rel.setFileColumnNumber(i);
-                    list.add(rel);
+                debugOut(patient.toString());
+
+                // Build tumour part
+                Tumour tumour = new Tumour();
+                for (int i = 0; i < map.size(); i++) {
+                    Relation rel = map.get(i);
+                    if (rel.getDatabaseTableVariableID()>=0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
+                        if (rel.getVariableType().equalsIgnoreCase("Number") || rel.getVariableType().equalsIgnoreCase("Date")) {
+                            if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                            }
+                        } else {
+                            tumour.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
+                        }
+                    }
                 }
+
+                debugOut(tumour.toString());
+                // add patient to the database
+                patientIDNumber = server.savePatient(patient);
+
+                // If this is a multiple primary tumour...
+                String mpCodeString = (String) tumour.getVariable("MPcode");
+
+                if (mpCodeString != null && mpCodeString.length() > 0) {
+                    patientIDNumber = lookUpPatientID(mpCodeString, patientIDNumber, mpCodes);
+                }
+
+                tumour.setVariable("PatientID", patientIDNumber);
+                server.saveTumour(tumour);
+
+                //Read next line of data
+                line = bufferedReader.readLine();
             }
+
+
+            success = true;
         } catch (IOException ex) {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            try {
-                bufferedReader.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-            return list;
         }
+        return success;
+    }
+    
+    
+    public static void importDictionary() {
+    // TODO!
+    }
+
+    public static List<Relation> constructRelations(Document doc, String[] lineElements) {
+        LinkedList<Relation> list = new LinkedList();
+        NodeList nl = doc.getElementsByTagName(namespace + "variable");
+        String[] variableNames = canreg.common.Tools.getVariableNames(doc, namespace);
+        for (int i = 0; i < lineElements.length; i++) {
+            boolean found = false;
+            int j = 0;
+            while (!found && j < variableNames.length) {
+                found = lineElements[i].equalsIgnoreCase(variableNames[j++]);
+            }
+            //build relation
+            Relation rel = new Relation();
+            rel.setFileVariableName(lineElements[i]);
+            rel.setFileColumnNumber(i);
+            if (found) {
+                //backtrack
+                j--;
+                Element e = (Element) nl.item(j);
+                rel.setDatabaseTableName(e.getElementsByTagName(namespace + "table").item(0).getTextContent());
+                rel.setDatabaseTableVariableID(Integer.parseInt(e.getElementsByTagName(namespace + "variable_id").item(0).getTextContent()));
+                rel.setVariableType(e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent());
+                rel.setDatabaseVariableName(variableNames[j]);
+            }
+            else {
+                rel.setDatabaseTableName("");
+                rel.setDatabaseTableVariableID(-1);
+                rel.setVariableType("");
+                rel.setDatabaseVariableName("");
+            }
+            list.add(rel);
+        }
+        return list;
     }
 
     private static void debugOut(String msg) {
@@ -177,8 +268,8 @@ public class Import {
     private static int lookUpPatientID(String mpCodeString, int patientIDNumber, HashMap mpCodes) {
         Object IDNumberObj = mpCodes.get(mpCodeString);
         int id = patientIDNumber;
-        if (IDNumberObj==null) {
-            mpCodes.put( mpCodeString,patientIDNumber);
+        if (IDNumberObj == null) {
+            mpCodes.put(mpCodeString, patientIDNumber);
         } else {
             id = (Integer) IDNumberObj;
         }

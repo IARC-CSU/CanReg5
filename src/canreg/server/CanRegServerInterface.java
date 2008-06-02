@@ -5,6 +5,8 @@
 package canreg.server;
 
 import canreg.server.database.CanRegDAO;
+import canreg.server.database.Patient;
+import canreg.server.database.Tumour;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import org.w3c.dom.Document;
@@ -34,10 +36,10 @@ public interface CanRegServerInterface extends Remote {
     public Document getDatabseDescription()
             throws RemoteException, SecurityException;
 
-        // returns the connection to the database
+    // returns the connection to the database
     public CanRegDAO getDatabseConnection()
             throws RemoteException, SecurityException;
-    
+
     // administrative tools
     public void addUser(String username)
             throws RemoteException, SecurityException;
@@ -59,9 +61,16 @@ public interface CanRegServerInterface extends Remote {
 
     //Users
     public String[] listCurrentUsers()
-            throws RemoteException, SecurityException;  
+            throws RemoteException, SecurityException;
+
     public void userLoggedIn(String username)
             throws RemoteException, SecurityException;
+
     public void userLoggedOut(String username)
             throws RemoteException, SecurityException;
+
+    //Add remove cases
+    public int savePatient(Patient patient) throws RemoteException, SecurityException;
+
+    public int saveTumour(Tumour tumour) throws RemoteException, SecurityException;
 }

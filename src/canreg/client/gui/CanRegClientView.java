@@ -50,10 +50,8 @@ public class CanRegClientView extends FrameView {
         // To be moved to a config option?
         // jDesktopPane1.setDragMode(javax.swing.JDesktopPane.OUTLINE_DRAG_MODE);
         applyPreferences();
-        
-        // Show the welcome frame...
-        if (!CanRegClientApp.getApplication().isLoggedIn()) 
-            showWelcomeFrame(this);
+
+
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
@@ -111,6 +109,10 @@ public class CanRegClientView extends FrameView {
                 }
             }
         });
+        // Show the welcome frame...
+        if (!CanRegClientApp.getApplication().isLoggedIn()) {
+            showWelcomeFrame(this);
+        }
     }
 
     @Action
@@ -126,10 +128,9 @@ public class CanRegClientView extends FrameView {
     public void applyPreferences() {
         LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
         // Apply the outline drag mode
-        if (localSettings.isOutlineDragMode()){
+        if (localSettings.isOutlineDragMode()) {
             jDesktopPane1.setDragMode(javax.swing.JDesktopPane.OUTLINE_DRAG_MODE);
-        } else
-        {
+        } else {
             jDesktopPane1.setDragMode(javax.swing.JDesktopPane.LIVE_DRAG_MODE);
         }
         // Apply the settings to main program
@@ -501,12 +502,9 @@ public class CanRegClientView extends FrameView {
         setStatusBar(statusPanel);
         setToolBar(jToolBar1);
     }// </editor-fold>//GEN-END:initComponents
-
     private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
     // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem16ActionPerformed
-
- 
 
     private void showWelcomeFrame(FrameView fv) {
         WelcomeInternalFrame welcomeInternalFrame = new WelcomeInternalFrame(fv);
@@ -516,10 +514,11 @@ public class CanRegClientView extends FrameView {
         // System.out.println("coucou");
         Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
         welcomeInternalFrame.setVisible(true);
-        welcomeInternalFrame.setLocation(scr.width / 2 - welcomeInternalFrame.getWidth() / 2, scr.height / 2 - welcomeInternalFrame.getHeight() / 2);
+        welcomeInternalFrame.setLocation(scr.width / 2 - welcomeInternalFrame.getWidth() / 2, scr.height / 2 - welcomeInternalFrame.getHeight() / 2 - 142);
         // debugOut(mainFrame.getWidth() / 2 + " " + mainFrame.getHeight() / 2);
 
         welcomeInternalFrame.setDesktopPane(jDesktopPane1);
+
     }
 
     private class OpenICDO3ManualTask extends org.jdesktop.application.Task<Object, Void> {
@@ -663,30 +662,35 @@ public class CanRegClientView extends FrameView {
     }
 
     private class StartDatabaseServerTask extends org.jdesktop.application.Task<Object, Void> {
+
         StartDatabaseServerTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
             // to StartDatabaseServerTask fields, here.
             super(app);
             try {
-            CanRegClientApp.getApplication().startDatabaseServer();
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_started."), "Message", JOptionPane.INFORMATION_MESSAGE);
+                CanRegClientApp.getApplication().startDatabaseServer();
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_started."), "Message", JOptionPane.INFORMATION_MESSAGE);
 
             } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
-            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        @Override protected Object doInBackground() {
+
+        @Override
+        protected Object doInBackground() {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
             return null;  // return your result
         }
-        @Override protected void succeeded(Object result) {
-            // Runs on the EDT.  Update the GUI based on
-            // the result computed by doInBackground().
+
+        @Override
+        protected void succeeded(Object result) {
+        // Runs on the EDT.  Update the GUI based on
+        // the result computed by doInBackground().
         }
     }
 
@@ -735,7 +739,7 @@ public class CanRegClientView extends FrameView {
         dataEntryMenu.setEnabled(dataEntry);
         logOutMenuItem.setEnabled(loggedIn);
     }
-  
+
     @Action
     public void ShowPatient() {
     // PatientFrame1.setVisible(!PatientFrame1.isVisible());
@@ -751,7 +755,7 @@ public class CanRegClientView extends FrameView {
         getFrame().setTitle("CanReg5 - Not logged in.");
         userLevelLabel.setText("Not logged in.");
     }
-    
+
     @Action
     public void openIacrWebsite() throws IOException {
         BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.iacr.com.fr/"));
