@@ -96,22 +96,17 @@ public class ImportView extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabbedPane = new javax.swing.JTabbedPane();
         chooseFilePanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         fileNameTextField = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
-        nextButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
         previewPanel = new javax.swing.JPanel();
         previewScrollPane = new javax.swing.JScrollPane();
         previewTextArea = new javax.swing.JTextArea();
         previewButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         associateVariablesPanel = new javax.swing.JPanel();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         variablesScrollPane = new javax.swing.JScrollPane();
         variablesPanel = new javax.swing.JPanel();
@@ -120,8 +115,6 @@ public class ImportView extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         importFilePanel = new javax.swing.JPanel();
         importButton = new javax.swing.JButton();
-        backButton3 = new javax.swing.JButton();
-        cancelButton3 = new javax.swing.JButton();
         discrepanciesPanel = new javax.swing.JPanel();
         rejectRadioButton = new javax.swing.JRadioButton();
         updateRadioButton = new javax.swing.JRadioButton();
@@ -133,6 +126,9 @@ public class ImportView extends javax.swing.JInternalFrame {
         maxLinesPanel = new javax.swing.JPanel();
         maxLinesTextField = new javax.swing.JTextField();
         testOnlyCheckBox = new javax.swing.JCheckBox();
+        nextButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        backButton = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -147,10 +143,10 @@ public class ImportView extends javax.swing.JInternalFrame {
             e1.printStackTrace();
         }
 
-        jTabbedPane1.setName("jTabbedPane1"); // NOI18N
-        jTabbedPane1.addFocusListener(new java.awt.event.FocusAdapter() {
+        tabbedPane.setName("tabbedPane"); // NOI18N
+        tabbedPane.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                associateVariablesPaneFocusGained(evt);
+                paneFocusGained(evt);
             }
         });
 
@@ -168,12 +164,6 @@ public class ImportView extends javax.swing.JInternalFrame {
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ImportView.class, this);
         browseButton.setAction(actionMap.get("browseFiles")); // NOI18N
         browseButton.setName("browseButton"); // NOI18N
-
-        nextButton.setAction(actionMap.get("jumpToNextTabAction")); // NOI18N
-        nextButton.setName("nextButton"); // NOI18N
-
-        cancelButton.setAction(actionMap.get("cancelAction")); // NOI18N
-        cancelButton.setName("cancelButton"); // NOI18N
 
         previewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Preview"));
         previewPanel.setEnabled(false);
@@ -196,7 +186,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         );
         previewPanelLayout.setVerticalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 556, Short.MAX_VALUE)
+            .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 565, Short.MAX_VALUE)
         );
 
         previewButton.setAction(actionMap.get("previewAction")); // NOI18N
@@ -213,7 +203,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, chooseFilePanelLayout.createSequentialGroup()
+                    .addGroup(chooseFilePanelLayout.createSequentialGroup()
                         .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, chooseFilePanelLayout.createSequentialGroup()
@@ -223,11 +213,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(browseButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(previewButton))
-                    .addGroup(chooseFilePanelLayout.createSequentialGroup()
-                        .addComponent(cancelButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nextButton)))
+                        .addComponent(previewButton)))
                 .addContainerGap())
         );
         chooseFilePanelLayout.setVerticalGroup(
@@ -242,25 +228,12 @@ public class ImportView extends javax.swing.JInternalFrame {
                     .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nextButton)
-                    .addComponent(cancelButton))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Choose File", chooseFilePanel);
+        tabbedPane.addTab("Choose File", chooseFilePanel);
 
         associateVariablesPanel.setName("associateVariablesPanel"); // NOI18N
-
-        jButton7.setAction(actionMap.get("cancelAction")); // NOI18N
-        jButton7.setName("jButton7"); // NOI18N
-
-        jButton8.setAction(actionMap.get("jumpToNextTabAction")); // NOI18N
-        jButton8.setName("jButton8"); // NOI18N
-
-        jButton9.setAction(actionMap.get("jumpToPreviousTabAction")); // NOI18N
-        jButton9.setName("jButton9"); // NOI18N
 
         jLabel8.setName("jLabel8"); // NOI18N
 
@@ -292,50 +265,29 @@ public class ImportView extends javax.swing.JInternalFrame {
             .addGroup(associateVariablesPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, associateVariablesPanelLayout.createSequentialGroup()
-                        .addGroup(associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(associateVariablesPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 448, Short.MAX_VALUE))
-                            .addGroup(associateVariablesPanelLayout.createSequentialGroup()
-                                .addComponent(jButton9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                        .addComponent(jButton7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton8))
-                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)
-                    .addComponent(variablesScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE))
+                    .addComponent(variablesScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)
+                    .addComponent(jLabel8)
+                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE))
                 .addContainerGap())
         );
         associateVariablesPanelLayout.setVerticalGroup(
             associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, associateVariablesPanelLayout.createSequentialGroup()
+            .addGroup(associateVariablesPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton8)
-                    .addComponent(jButton7)
-                    .addComponent(jButton9))
+                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 601, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Associate Variables", associateVariablesPanel);
+        tabbedPane.addTab("Associate Variables", associateVariablesPanel);
 
         importFilePanel.setName("importFilePanel"); // NOI18N
 
         importButton.setAction(actionMap.get("importAction")); // NOI18N
         importButton.setName("importButton"); // NOI18N
-
-        backButton3.setAction(actionMap.get("jumpToPreviousTabAction")); // NOI18N
-        backButton3.setName("backButton3"); // NOI18N
-
-        cancelButton3.setAction(actionMap.get("cancelAction")); // NOI18N
-        cancelButton3.setName("cancelButton3"); // NOI18N
 
         discrepanciesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Discrepancies"));
         discrepanciesPanel.setName("discrepanciesPanel"); // NOI18N
@@ -447,12 +399,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                     .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(maxLinesPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(discrepanciesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(importFilePanelLayout.createSequentialGroup()
-                        .addComponent(backButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(importButton)))
+                    .addComponent(importButton))
                 .addContainerGap())
         );
         importFilePanelLayout.setVerticalGroup(
@@ -464,38 +411,58 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addComponent(maxLinesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 316, Short.MAX_VALUE)
-                .addGroup(importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(importButton)
-                    .addComponent(cancelButton3)
-                    .addComponent(backButton3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 289, Short.MAX_VALUE)
+                .addComponent(importButton)
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Import File", importFilePanel);
+        tabbedPane.addTab("Import File", importFilePanel);
+
+        nextButton.setAction(actionMap.get("jumpToNextTabAction")); // NOI18N
+        nextButton.setName("nextButton"); // NOI18N
+
+        cancelButton.setAction(actionMap.get("cancelAction")); // NOI18N
+        cancelButton.setName("cancelButton"); // NOI18N
+
+        backButton.setAction(actionMap.get("jumpToPreviousTabAction")); // NOI18N
+        backButton.setEnabled(false);
+        backButton.setName("backButton"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(backButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nextButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 679, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nextButton)
+                    .addComponent(cancelButton)
+                    .addComponent(backButton))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void associateVariablesPaneFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_associateVariablesPaneFocusGained
+    private void paneFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_paneFocusGained
+        changeTab(tabbedPane.getSelectedIndex());
         initializeVariableMappingTab();
-}//GEN-LAST:event_associateVariablesPaneFocusGained
+}//GEN-LAST:event_paneFocusGained
 
     private void fileNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fileNameTextFieldFocusLost
         changeFile();
@@ -519,19 +486,26 @@ public class ImportView extends javax.swing.JInternalFrame {
     @Action
     public void jumpToNextTabAction() {
         initializeVariableMappingTab();
-        int tabNumber = jTabbedPane1.getSelectedIndex();
-        if (tabNumber < jTabbedPane1.getTabCount()) {
-            jTabbedPane1.setSelectedIndex(tabNumber + 1);
+        int tabNumber = tabbedPane.getSelectedIndex();
+        if (tabNumber < tabbedPane.getTabCount()) {
+            tabbedPane.setSelectedIndex(tabNumber + 1);
         }
+        changeTab(tabNumber);
     }
 
     @Action
     public void jumpToPreviousTabAction() {
         initializeVariableMappingTab();
-        int tabNumber = jTabbedPane1.getSelectedIndex();
+        int tabNumber = tabbedPane.getSelectedIndex();
         if (tabNumber <= 1) {
-            jTabbedPane1.setSelectedIndex(tabNumber - 1);
+            tabbedPane.setSelectedIndex(tabNumber - 1);
         }
+        changeTab(tabNumber);
+    }
+    
+    private void changeTab(int tabNumber) {
+        nextButton.setEnabled(tabNumber + 1 < tabbedPane.getTabCount());
+        backButton.setEnabled(tabNumber > 0);
     }
 
     @Action
@@ -704,19 +678,15 @@ public class ImportView extends javax.swing.JInternalFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel associateVariablesPanel;
-    private javax.swing.JButton backButton3;
+    private javax.swing.JButton backButton;
     private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JButton cancelButton3;
     private javax.swing.JPanel chooseFilePanel;
     private javax.swing.JPanel discrepanciesPanel;
     private javax.swing.JCheckBox doChecksCheckBox;
     private javax.swing.JTextField fileNameTextField;
     private javax.swing.JButton importButton;
     private javax.swing.JPanel importFilePanel;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -724,7 +694,6 @@ public class ImportView extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel maxLinesPanel;
     private javax.swing.JTextField maxLinesTextField;
     private javax.swing.JButton nextButton;
@@ -736,6 +705,7 @@ public class ImportView extends javax.swing.JInternalFrame {
     private javax.swing.JTextArea previewTextArea;
     private javax.swing.JCheckBox queryNewNameCheckBox;
     private javax.swing.JRadioButton rejectRadioButton;
+    private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JCheckBox testOnlyCheckBox;
     private javax.swing.JRadioButton updateRadioButton;
     private javax.swing.JPanel variablesPanel;
