@@ -3,13 +3,14 @@
  *
  * Created on 22 February 2008, 09:30
  */
-package canreg.client.gui;
+package canreg.client.gui.dataentry;
 
-import canreg.client.gui.VariableMappingPanel;
+import canreg.client.LocalSettings;
+import canreg.client.gui.dataentry.VariableMappingPanel;
 import canreg.client.CanRegClientApp;
+import canreg.client.DatabaseVariablesListElement;
 import canreg.client.dataentry.Import;
 import canreg.client.dataentry.Relation;
-import canreg.client.gui.dataentry.ImportOptions;
 import canreg.common.Globals;
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,14 +22,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
+import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
 
 /**
  *
  * @author  morten
+ * 
+ * This module 
+ * 
+ * TODO: Accept various date formats?
+ * Implement the various options
+ * 
+ * 
  */
 public class ImportView extends javax.swing.JInternalFrame {
 
@@ -36,15 +46,36 @@ public class ImportView extends javax.swing.JInternalFrame {
     private File inFile;
     private Document doc;
     private List<VariableMappingPanel> panelList;
-    private String[] variablesInDB;
+    private DatabaseVariablesListElement[] variablesInDB;
+    private JFileChooser chooser;
+    private String path;
+    private LocalSettings localSettings;
 
     /** Creates new form ImportView */
     public ImportView() {
         try {
             initComponents();
+            previewPanel.setVisible(false);
+
+            localSettings = CanRegClientApp.getApplication().getLocalSettings();
+            path = localSettings.getProperty("import_path");
+
+            if (path == null) {
+                chooser = new JFileChooser();
+            } else {
+                chooser = new JFileChooser(path);
+            }
+            // Group the radiobuttons
+            ButtonGroup discrepanciesButtonGroup = new ButtonGroup();
+            // Add to the button group
+            discrepanciesButtonGroup.add(rejectRadioButton);
+            discrepanciesButtonGroup.add(updateRadioButton);
+            discrepanciesButtonGroup.add(overwriteRadioButton);
+
             // Get the system description
             doc = CanRegClientApp.getApplication().getDatabseDescription();
-            variablesInDB = canreg.common.Tools.getVariableNames(doc, Globals.NAMESPACE);       
+            variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+            
         } catch (RemoteException ex) {
             Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -53,6 +84,7 @@ public class ImportView extends javax.swing.JInternalFrame {
 
     private void changeFile() {
         inFile = new File(fileNameTextField.getText().trim());
+        path = inFile.getPath();
         needToRebuildVariableMap = true;
     }
 
@@ -64,7 +96,6 @@ public class ImportView extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         chooseFilePanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -76,6 +107,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         previewScrollPane = new javax.swing.JScrollPane();
         previewTextArea = new javax.swing.JTextArea();
         previewButton = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
         associateVariablesPanel = new javax.swing.JPanel();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
@@ -87,9 +119,9 @@ public class ImportView extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         importFilePanel = new javax.swing.JPanel();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        importButton = new javax.swing.JButton();
+        backButton3 = new javax.swing.JButton();
+        cancelButton3 = new javax.swing.JButton();
         discrepanciesPanel = new javax.swing.JPanel();
         rejectRadioButton = new javax.swing.JRadioButton();
         updateRadioButton = new javax.swing.JRadioButton();
@@ -108,22 +140,24 @@ public class ImportView extends javax.swing.JInternalFrame {
         setResizable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(ImportView.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
-        setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
+        try {
+            setSelected(true);
+        } catch (java.beans.PropertyVetoException e1) {
+            e1.printStackTrace();
+        }
 
         jTabbedPane1.setName("jTabbedPane1"); // NOI18N
         jTabbedPane1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                jTabbedPane1FocusGained(evt);
+                associateVariablesPaneFocusGained(evt);
             }
         });
 
         chooseFilePanel.setName("chooseFilePanel"); // NOI18N
 
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
-        fileNameTextField.setText(resourceMap.getString("fileNameTextField.text")); // NOI18N
         fileNameTextField.setName("fileNameTextField"); // NOI18N
         fileNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -132,19 +166,17 @@ public class ImportView extends javax.swing.JInternalFrame {
         });
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ImportView.class, this);
-        browseButton.setAction(actionMap.get("FileBrowser")); // NOI18N
-        browseButton.setText(resourceMap.getString("browseButton.text")); // NOI18N
+        browseButton.setAction(actionMap.get("browseFiles")); // NOI18N
         browseButton.setName("browseButton"); // NOI18N
 
         nextButton.setAction(actionMap.get("jumpToNextTabAction")); // NOI18N
-        nextButton.setText(resourceMap.getString("nextButton.text")); // NOI18N
         nextButton.setName("nextButton"); // NOI18N
 
         cancelButton.setAction(actionMap.get("cancelAction")); // NOI18N
-        cancelButton.setText(resourceMap.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
 
-        previewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("previewPanel.border.title"))); // NOI18N
+        previewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Preview"));
+        previewPanel.setEnabled(false);
         previewPanel.setName("previewPanel"); // NOI18N
 
         previewScrollPane.setFocusable(false);
@@ -153,7 +185,6 @@ public class ImportView extends javax.swing.JInternalFrame {
         previewTextArea.setColumns(20);
         previewTextArea.setEditable(false);
         previewTextArea.setRows(5);
-        previewTextArea.setText(resourceMap.getString("previewTextArea.text")); // NOI18N
         previewTextArea.setName("previewTextArea"); // NOI18N
         previewScrollPane.setViewportView(previewTextArea);
 
@@ -161,39 +192,39 @@ public class ImportView extends javax.swing.JInternalFrame {
         previewPanel.setLayout(previewPanelLayout);
         previewPanelLayout.setHorizontalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(previewPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 577, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
         );
         previewPanelLayout.setVerticalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(previewPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 556, Short.MAX_VALUE)
         );
 
         previewButton.setAction(actionMap.get("previewAction")); // NOI18N
         previewButton.setName("previewButton"); // NOI18N
 
+        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
+        jLabel3.setName("jLabel3"); // NOI18N
+
         javax.swing.GroupLayout chooseFilePanelLayout = new javax.swing.GroupLayout(chooseFilePanel);
         chooseFilePanel.setLayout(chooseFilePanelLayout);
         chooseFilePanelLayout.setHorizontalGroup(
             chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(chooseFilePanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chooseFilePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(chooseFilePanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
+                .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, chooseFilePanelLayout.createSequentialGroup()
+                        .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, chooseFilePanelLayout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(browseButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(previewButton))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chooseFilePanelLayout.createSequentialGroup()
+                    .addGroup(chooseFilePanelLayout.createSequentialGroup()
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(nextButton)))
@@ -207,17 +238,18 @@ public class ImportView extends javax.swing.JInternalFrame {
                     .addComponent(jLabel1)
                     .addComponent(previewButton)
                     .addComponent(browseButton)
+                    .addComponent(jLabel3)
                     .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
                     .addComponent(cancelButton))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("chooseFilePanel.TabConstraints.tabTitle"), chooseFilePanel); // NOI18N
+        jTabbedPane1.addTab("Choose File", chooseFilePanel);
 
         associateVariablesPanel.setName("associateVariablesPanel"); // NOI18N
 
@@ -225,14 +257,11 @@ public class ImportView extends javax.swing.JInternalFrame {
         jButton7.setName("jButton7"); // NOI18N
 
         jButton8.setAction(actionMap.get("jumpToNextTabAction")); // NOI18N
-        jButton8.setText(resourceMap.getString("jButton8.text")); // NOI18N
         jButton8.setName("jButton8"); // NOI18N
 
         jButton9.setAction(actionMap.get("jumpToPreviousTabAction")); // NOI18N
-        jButton9.setText(resourceMap.getString("jButton9.text")); // NOI18N
         jButton9.setName("jButton9"); // NOI18N
 
-        jLabel8.setText(resourceMap.getString("jLabel8.text")); // NOI18N
         jLabel8.setName("jLabel8"); // NOI18N
 
         variablesScrollPane.setName("variablesScrollPane"); // NOI18N
@@ -267,15 +296,15 @@ public class ImportView extends javax.swing.JInternalFrame {
                         .addGroup(associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(associateVariablesPanelLayout.createSequentialGroup()
                                 .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 153, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 448, Short.MAX_VALUE))
                             .addGroup(associateVariablesPanelLayout.createSequentialGroup()
                                 .addComponent(jButton9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addComponent(jButton7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton8))
-                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
-                    .addComponent(variablesScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE))
+                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)
+                    .addComponent(variablesScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE))
                 .addContainerGap())
         );
         associateVariablesPanelLayout.setVerticalGroup(
@@ -286,7 +315,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton8)
@@ -295,22 +324,20 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("associateVariablesPanel.TabConstraints.tabTitle"), associateVariablesPanel); // NOI18N
+        jTabbedPane1.addTab("Associate Variables", associateVariablesPanel);
 
         importFilePanel.setName("importFilePanel"); // NOI18N
 
-        jButton4.setAction(actionMap.get("importAction")); // NOI18N
-        jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
-        jButton4.setName("jButton4"); // NOI18N
+        importButton.setAction(actionMap.get("importAction")); // NOI18N
+        importButton.setName("importButton"); // NOI18N
 
-        jButton5.setAction(actionMap.get("jumpToPreviousTabAction")); // NOI18N
-        jButton5.setText(resourceMap.getString("jButton5.text")); // NOI18N
-        jButton5.setName("jButton5"); // NOI18N
+        backButton3.setAction(actionMap.get("jumpToPreviousTabAction")); // NOI18N
+        backButton3.setName("backButton3"); // NOI18N
 
-        jButton6.setAction(actionMap.get("cancelAction")); // NOI18N
-        jButton6.setName("jButton6"); // NOI18N
+        cancelButton3.setAction(actionMap.get("cancelAction")); // NOI18N
+        cancelButton3.setName("cancelButton3"); // NOI18N
 
-        discrepanciesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("discrepanciesPanel.border.title"))); // NOI18N
+        discrepanciesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Discrepancies"));
         discrepanciesPanel.setName("discrepanciesPanel"); // NOI18N
 
         rejectRadioButton.setText(resourceMap.getString("rejectRadioButton.text")); // NOI18N
@@ -333,7 +360,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                     .addComponent(rejectRadioButton)
                     .addComponent(updateRadioButton)
                     .addComponent(overwriteRadioButton))
-                .addContainerGap(518, Short.MAX_VALUE))
+                .addContainerGap(519, Short.MAX_VALUE))
         );
         discrepanciesPanelLayout.setVerticalGroup(
             discrepanciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -345,7 +372,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addComponent(overwriteRadioButton))
         );
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel7.border.title"))); // NOI18N
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("CanReg data"));
         jPanel7.setName("jPanel7"); // NOI18N
 
         doChecksCheckBox.setText(resourceMap.getString("doChecksCheckBox.text")); // NOI18N
@@ -369,7 +396,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                     .addComponent(doChecksCheckBox)
                     .addComponent(personSearchCheckBox)
                     .addComponent(queryNewNameCheckBox))
-                .addContainerGap(482, Short.MAX_VALUE))
+                .addContainerGap(483, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -382,10 +409,9 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        maxLinesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("maxLinesPanel.border.title"))); // NOI18N
+        maxLinesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Max Lines"));
         maxLinesPanel.setName("maxLinesPanel"); // NOI18N
 
-        maxLinesTextField.setText(resourceMap.getString("maxLinesTextField.text")); // NOI18N
         maxLinesTextField.setName("maxLinesTextField"); // NOI18N
 
         testOnlyCheckBox.setSelected(true);
@@ -399,7 +425,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             .addGroup(maxLinesPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(maxLinesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(maxLinesTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 577, Short.MAX_VALUE)
+                    .addComponent(maxLinesTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
                     .addComponent(testOnlyCheckBox))
                 .addContainerGap())
         );
@@ -422,11 +448,11 @@ public class ImportView extends javax.swing.JInternalFrame {
                     .addComponent(maxLinesPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(discrepanciesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(importFilePanelLayout.createSequentialGroup()
-                        .addComponent(jButton5)
+                        .addComponent(backButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton6)
+                        .addComponent(cancelButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)))
+                        .addComponent(importButton)))
                 .addContainerGap())
         );
         importFilePanelLayout.setVerticalGroup(
@@ -438,15 +464,15 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addComponent(maxLinesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 256, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 316, Short.MAX_VALUE)
                 .addGroup(importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton6)
-                    .addComponent(jButton5))
+                    .addComponent(importButton)
+                    .addComponent(cancelButton3)
+                    .addComponent(backButton3))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("importFilePanel.TabConstraints.tabTitle"), importFilePanel); // NOI18N
+        jTabbedPane1.addTab("Import File", importFilePanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -454,31 +480,29 @@ public class ImportView extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void jTabbedPane1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTabbedPane1FocusGained
-        // TODO add your handling code here:
+    private void associateVariablesPaneFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_associateVariablesPaneFocusGained
         initializeVariableMappingTab();
-    }//GEN-LAST:event_jTabbedPane1FocusGained
+}//GEN-LAST:event_associateVariablesPaneFocusGained
 
     private void fileNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fileNameTextFieldFocusLost
         changeFile();
     }//GEN-LAST:event_fileNameTextFieldFocusLost
 
     @Action
-    public void FileBrowser() {
-        JFileChooser chooser = new JFileChooser();
+    public void browseFiles() {
 
         int returnVal = chooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -516,23 +540,45 @@ public class ImportView extends javax.swing.JInternalFrame {
     }
 
     @Action
-    public void importAction() {
-        try {    
-            // Calls the client app import action with the file parameters provided,
-            CanRegClientApp.getApplication().importFile(doc, buildMap(), inFile, getImportOptions());
-        } catch (RemoteException ex) {
-            Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+    public Task importAction() {
+        localSettings.setProperty("import_path", path);
+        localSettings.writeSettings();
+        this.dispose();
+        return new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+    }
+
+    private class ImportActionTask extends org.jdesktop.application.Task<Object, Void> {
+
+        ImportActionTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to ImportActionTask fields, here.
+            super(app);
+            try {
+                // Calls the client app import action with the file parameters provided,
+                CanRegClientApp.getApplication().importFile(doc, buildMap(), inFile, buildImportOptions());
+            } catch (RemoteException ex) {
+                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
 
+        @Override
+        protected Object doInBackground() {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+            return null;  // return your result
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully imported file " + inFile.getAbsolutePath() + ".", "File successfully imported", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
-    private ImportOptions getImportOptions(){
-            ImportOptions io = new ImportOptions();
-            // TODO: construct import options
-            
-            return io;    
-    }
-    
     private void initializeVariableMappingTab() {
         if (needToRebuildVariableMap && fileNameTextField.getText().trim().length() > 0) {
             BufferedReader br = null;
@@ -546,17 +592,16 @@ public class ImportView extends javax.swing.JInternalFrame {
                 br = new BufferedReader(new FileReader(inFile));
                 String line = br.readLine();
                 String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
-                
+
+                // Build variable mapping
                 map = Import.constructRelations(doc, lineElements);
 
                 // Add the panels
-                for (Relation rel : map){
+                for (Relation rel : map) {
                     VariableMappingPanel vmp = new VariableMappingPanel();
                     panelList.add(vmp);
                     vmp.setDBVariables(variablesInDB);
                     vmp.setFileVariableName(rel.getFileVariableName());
-                    // TODO
-                    // Find a safer way to do this!
                     vmp.setSelectedDBIndex(rel.getDatabaseTableVariableID());
                     variablesPanel.add(vmp);
                     vmp.setVisible(true);
@@ -565,7 +610,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 variablesPanel.revalidate();
                 variablesPanel.repaint();
 
-            }  catch (RemoteException ex) {
+            } catch (RemoteException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
@@ -584,26 +629,54 @@ public class ImportView extends javax.swing.JInternalFrame {
         }
     }
 
-    private List<Relation> buildMap(){
+    private List<Relation> buildMap() {
         List<Relation> map = new LinkedList();
-        int i=0;
-        for(VariableMappingPanel vmp:panelList){
+        int i = 0;
+        for (VariableMappingPanel vmp : panelList) {
             Relation rel = new Relation();
-            
-            // TODO!
-            // Unfinished!
-            
-            //rel.setDatabaseTableName();
+
+            DatabaseVariablesListElement dbVLE = vmp.getSelectedDBVariableObject();
+
+            rel.setDatabaseTableName(dbVLE.getDatabaseTableName());
             rel.setDatabaseTableVariableID(vmp.getDBVariableIndex());
+            rel.setDatabaseVariableName(dbVLE.getDatabaseVariableName());
             rel.setFileColumnNumber(i);
-            
-            
+            rel.setFileVariableName(vmp.getFileVariableName());
+            rel.setVariableType(dbVLE.getVariableType());
+
             map.add(rel);
             i++;
         }
         return map;
     }
-    
+
+    private ImportOptions buildImportOptions() {
+        ImportOptions io = new ImportOptions();
+
+        // Discrepencies
+        if (updateRadioButton.isSelected()) {
+            io.setDiscrepancies(ImportOptions.UPDATE);
+        } else if (rejectRadioButton.isSelected()) {
+            io.setDiscrepancies(ImportOptions.REJECT);
+        } else if (overwriteRadioButton.isSelected()) {
+            io.setDiscrepancies(ImportOptions.OVERWRITE);
+        }
+        // Max Lines
+        if (maxLinesTextField.getText().trim().length() > 0) {
+            io.setMaxLines(Integer.parseInt(maxLinesTextField.getText().trim()));
+        } else {
+            io.setMaxLines(-1);
+        }
+        io.setTestOnly(testOnlyCheckBox.isSelected());
+
+        // CanReg data
+        io.setDoChecks(doChecksCheckBox.isSelected());
+        io.setDoPersonSearch(personSearchCheckBox.isSelected());
+        io.setQueryNewNames(queryNewNameCheckBox.isSelected());
+
+        return io;
+    }
+
     @Action
     public void previewAction() {
         // show the contents of the file
@@ -614,6 +687,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             // Read the entire file into the preview area... 
             // Change this to just a part of the file?
             previewTextArea.read(br, null);
+            previewPanel.setVisible(true);
         } catch (FileNotFoundException fileNotFoundException) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not preview file: \'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, fileNotFoundException);
@@ -630,22 +704,22 @@ public class ImportView extends javax.swing.JInternalFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel associateVariablesPanel;
+    private javax.swing.JButton backButton3;
     private javax.swing.JButton browseButton;
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JButton cancelButton3;
     private javax.swing.JPanel chooseFilePanel;
     private javax.swing.JPanel discrepanciesPanel;
     private javax.swing.JCheckBox doChecksCheckBox;
     private javax.swing.JTextField fileNameTextField;
+    private javax.swing.JButton importButton;
     private javax.swing.JPanel importFilePanel;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel7;

@@ -134,7 +134,7 @@
               <Component id="filterComboBox" alignment="0" pref="340" max="32767" attributes="1"/>
               <Group type="102" alignment="1" attributes="0">
                   <Component id="useFilterCheckBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="156" max="32767" attributes="0"/>
+                  <EmptySpace pref="176" max="32767" attributes="0"/>
                   <Component id="wizardButton" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -176,9 +176,6 @@
         </Component>
         <Component class="javax.swing.JButton" name="wizardButton">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="0" name="null"/>
-            </Property>
             <Property name="text" type="java.lang.String" resourceKey="wizardButton.text"/>
             <Property name="name" type="java.lang.String" value="wizardButton" noResource="true"/>
           </Properties>

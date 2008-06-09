@@ -3,6 +3,8 @@
  */
 package canreg.client.gui;
 
+import canreg.client.gui.dataentry.EditDictionaryInternalFrame;
+import canreg.client.gui.dataentry.ImportView;
 import canreg.client.*;
 import canreg.client.gui.StandardDialog;
 import canreg.client.gui.WelcomeInternalFrame;

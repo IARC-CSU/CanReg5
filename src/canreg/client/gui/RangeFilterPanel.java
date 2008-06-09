@@ -87,7 +87,6 @@ public class RangeFilterPanel extends javax.swing.JPanel {
         useFilterCheckBox.setText(resourceMap.getString("useFilterCheckBox.text")); // NOI18N
         useFilterCheckBox.setName("useFilterCheckBox"); // NOI18N
 
-        wizardButton.setIcon(null);
         wizardButton.setText(resourceMap.getString("wizardButton.text")); // NOI18N
         wizardButton.setName("wizardButton"); // NOI18N
 
@@ -98,7 +97,7 @@ public class RangeFilterPanel extends javax.swing.JPanel {
             .addComponent(filterComboBox, 0, 340, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, filterPanelLayout.createSequentialGroup()
                 .addComponent(useFilterCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 156, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 176, Short.MAX_VALUE)
                 .addComponent(wizardButton))
         );
         filterPanelLayout.setVerticalGroup(

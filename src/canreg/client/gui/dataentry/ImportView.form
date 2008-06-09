@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.5" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
-  <NonVisualComponents>
-    <Component class="javax.swing.ButtonGroup" name="buttonGroup1">
-    </Component>
-  </NonVisualComponents>
   <Properties>
     <Property name="closable" type="boolean" value="true"/>
     <Property name="iconifiable" type="boolean" value="true"/>
     <Property name="maximizable" type="boolean" value="true"/>
     <Property name="resizable" type="boolean" value="true"/>
     <Property name="title" type="java.lang.String" resourceKey="Form.title"/>
-    <Property name="frameIcon" type="javax.swing.Icon" resourceKey="Form.frameIcon"/>
     <Property name="name" type="java.lang.String" value="Form" noResource="true"/>
+    <Property name="selected" type="boolean" value="true"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -33,7 +29,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="638" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="639" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -42,7 +38,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="650" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="706" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -54,7 +50,7 @@
         <Property name="name" type="java.lang.String" value="jTabbedPane1" noResource="true"/>
       </Properties>
       <Events>
-        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTabbedPane1FocusGained"/>
+        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="associateVariablesPaneFocusGained"/>
       </Events>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
@@ -66,7 +62,7 @@
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Choose File">
-                <Property name="tabTitle" type="java.lang.String" resourceKey="chooseFilePanel.TabConstraints.tabTitle"/>
+                <Property name="tabTitle" type="java.lang.String" value="Choose File"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -74,14 +70,19 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="previewPanel" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="fileNameTextField" pref="413" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="fileNameTextField" pref="440" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="browseButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -105,11 +106,12 @@
                           <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="previewButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="browseButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="fileNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="previewPanel" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -122,13 +124,11 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel1.text"/>
                 <Property name="name" type="java.lang.String" value="jLabel1" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="fileNameTextField">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="fileNameTextField.text"/>
                 <Property name="name" type="java.lang.String" value="fileNameTextField" noResource="true"/>
               </Properties>
               <Events>
@@ -138,27 +138,24 @@
             <Component class="javax.swing.JButton" name="browseButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.ImportView" id="FileBrowser" methodName="FileBrowser"/>
+                  <action class="canreg.client.gui.dataentry.ImportView" id="browseFiles" methodName="browseFiles"/>
                 </Property>
-                <Property name="text" type="java.lang.String" resourceKey="browseButton.text"/>
                 <Property name="name" type="java.lang.String" value="browseButton" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="nextButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.ImportView" id="jumpToNextTabAction" methodName="jumpToNextTabAction"/>
+                  <action class="canreg.client.gui.dataentry.ImportView" id="jumpToNextTabAction" methodName="jumpToNextTabAction"/>
                 </Property>
-                <Property name="text" type="java.lang.String" resourceKey="nextButton.text"/>
                 <Property name="name" type="java.lang.String" value="nextButton" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="cancelButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.ImportView" id="cancelAction" methodName="cancelAction"/>
+                  <action class="canreg.client.gui.dataentry.ImportView" id="cancelAction" methodName="cancelAction"/>
                 </Property>
-                <Property name="text" type="java.lang.String" resourceKey="cancelButton.text"/>
                 <Property name="name" type="java.lang.String" value="cancelButton" noResource="true"/>
               </Properties>
             </Component>
@@ -166,31 +163,22 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Preview">
-                      <Property name="titleX" resourceKey="previewPanel.border.title"/>
-                    </TitledBorder>
+                    <TitledBorder title="Preview"/>
                   </Border>
                 </Property>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="previewPanel" noResource="true"/>
               </Properties>
 
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="previewScrollPane" pref="577" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="previewScrollPane" alignment="0" pref="598" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="previewScrollPane" pref="483" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="previewScrollPane" alignment="0" pref="556" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -211,7 +199,6 @@
                         <Property name="columns" type="int" value="20"/>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="rows" type="int" value="5"/>
-                        <Property name="text" type="java.lang.String" resourceKey="previewTextArea.text"/>
                         <Property name="name" type="java.lang.String" value="previewTextArea" noResource="true"/>
                       </Properties>
                     </Component>
@@ -222,9 +209,15 @@
             <Component class="javax.swing.JButton" name="previewButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.ImportView" id="previewAction" methodName="previewAction"/>
+                  <action class="canreg.client.gui.dataentry.ImportView" id="previewAction" methodName="previewAction"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="previewButton" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel3">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="jLabel3.text"/>
+                <Property name="name" type="java.lang.String" value="jLabel3" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -236,7 +229,7 @@
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Associate Variables">
-                <Property name="tabTitle" type="java.lang.String" resourceKey="associateVariablesPanel.TabConstraints.tabTitle"/>
+                <Property name="tabTitle" type="java.lang.String" value="Associate Variables"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -251,7 +244,7 @@
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace pref="153" max="32767" attributes="0"/>
+                                      <EmptySpace pref="448" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
                                       <Component id="jButton9" min="-2" max="-2" attributes="0"/>
@@ -262,8 +255,8 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jButton8" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jSplitPane1" alignment="0" pref="613" max="32767" attributes="0"/>
-                          <Component id="variablesScrollPane" alignment="1" pref="613" max="32767" attributes="0"/>
+                          <Component id="jSplitPane1" alignment="0" pref="614" max="32767" attributes="0"/>
+                          <Component id="variablesScrollPane" alignment="1" pref="614" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -277,7 +270,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jSplitPane1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variablesScrollPane" pref="527" max="32767" attributes="0"/>
+                      <Component id="variablesScrollPane" pref="597" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jButton8" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -293,7 +286,7 @@
             <Component class="javax.swing.JButton" name="jButton7">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.ImportView" id="cancelAction" methodName="cancelAction"/>
+                  <action class="canreg.client.gui.dataentry.ImportView" id="cancelAction" methodName="cancelAction"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jButton7" noResource="true"/>
               </Properties>
@@ -301,24 +294,21 @@
             <Component class="javax.swing.JButton" name="jButton8">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.ImportView" id="jumpToNextTabAction" methodName="jumpToNextTabAction"/>
+                  <action class="canreg.client.gui.dataentry.ImportView" id="jumpToNextTabAction" methodName="jumpToNextTabAction"/>
                 </Property>
-                <Property name="text" type="java.lang.String" resourceKey="jButton8.text"/>
                 <Property name="name" type="java.lang.String" value="jButton8" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="jButton9">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.ImportView" id="jumpToPreviousTabAction" methodName="jumpToPreviousTabAction"/>
+                  <action class="canreg.client.gui.dataentry.ImportView" id="jumpToPreviousTabAction" methodName="jumpToPreviousTabAction"/>
                 </Property>
-                <Property name="text" type="java.lang.String" resourceKey="jButton9.text"/>
                 <Property name="name" type="java.lang.String" value="jButton9" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel8.text"/>
                 <Property name="name" type="java.lang.String" value="jLabel8" noResource="true"/>
               </Properties>
             </Component>
@@ -390,7 +380,7 @@
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Import File">
-                <Property name="tabTitle" type="java.lang.String" resourceKey="importFilePanel.TabConstraints.tabTitle"/>
+                <Property name="tabTitle" type="java.lang.String" value="Import File"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -405,11 +395,11 @@
                           <Component id="maxLinesPanel" alignment="0" max="32767" attributes="0"/>
                           <Component id="discrepanciesPanel" alignment="1" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="jButton5" min="-2" max="-2" attributes="0"/>
+                              <Component id="backButton3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jButton6" min="-2" max="-2" attributes="0"/>
+                              <Component id="cancelButton3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jButton4" min="-2" max="-2" attributes="0"/>
+                              <Component id="importButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -425,11 +415,11 @@
                       <Component id="maxLinesPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="260" max="32767" attributes="0"/>
+                      <EmptySpace pref="316" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jButton4" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton6" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton5" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="importButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cancelButton3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="backButton3" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -437,39 +427,35 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="jButton4">
+            <Component class="javax.swing.JButton" name="importButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.ImportView" id="importAction" methodName="importAction"/>
+                  <action class="canreg.client.gui.dataentry.ImportView" id="importAction" methodName="importAction"/>
                 </Property>
-                <Property name="text" type="java.lang.String" resourceKey="jButton4.text"/>
-                <Property name="name" type="java.lang.String" value="jButton4" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="importButton" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton5">
+            <Component class="javax.swing.JButton" name="backButton3">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.ImportView" id="jumpToPreviousTabAction" methodName="jumpToPreviousTabAction"/>
+                  <action class="canreg.client.gui.dataentry.ImportView" id="jumpToPreviousTabAction" methodName="jumpToPreviousTabAction"/>
                 </Property>
-                <Property name="text" type="java.lang.String" resourceKey="jButton5.text"/>
-                <Property name="name" type="java.lang.String" value="jButton5" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="backButton3" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton6">
+            <Component class="javax.swing.JButton" name="cancelButton3">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.ImportView" id="cancelAction" methodName="cancelAction"/>
+                  <action class="canreg.client.gui.dataentry.ImportView" id="cancelAction" methodName="cancelAction"/>
                 </Property>
-                <Property name="name" type="java.lang.String" value="jButton6" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="cancelButton3" noResource="true"/>
               </Properties>
             </Component>
             <Container class="javax.swing.JPanel" name="discrepanciesPanel">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Discrepancies">
-                      <Property name="titleX" resourceKey="discrepanciesPanel.border.title"/>
-                    </TitledBorder>
+                    <TitledBorder title="Discrepancies"/>
                   </Border>
                 </Property>
                 <Property name="name" type="java.lang.String" value="discrepanciesPanel" noResource="true"/>
@@ -485,7 +471,7 @@
                               <Component id="updateRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="overwriteRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="518" max="32767" attributes="0"/>
+                          <EmptySpace pref="519" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -527,9 +513,7 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="CanReg data">
-                      <Property name="titleX" resourceKey="jPanel7.border.title"/>
-                    </TitledBorder>
+                    <TitledBorder title="CanReg data"/>
                   </Border>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jPanel7" noResource="true"/>
@@ -545,7 +529,7 @@
                               <Component id="personSearchCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="queryNewNameCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="482" max="32767" attributes="0"/>
+                          <EmptySpace pref="483" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -589,9 +573,7 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Max Lines">
-                      <Property name="titleX" resourceKey="maxLinesPanel.border.title"/>
-                    </TitledBorder>
+                    <TitledBorder title="Max Lines"/>
                   </Border>
                 </Property>
                 <Property name="name" type="java.lang.String" value="maxLinesPanel" noResource="true"/>
@@ -603,7 +585,7 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="maxLinesTextField" pref="577" max="32767" attributes="0"/>
+                              <Component id="maxLinesTextField" pref="578" max="32767" attributes="0"/>
                               <Component id="testOnlyCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -623,7 +605,6 @@
               <SubComponents>
                 <Component class="javax.swing.JTextField" name="maxLinesTextField">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="maxLinesTextField.text"/>
                     <Property name="name" type="java.lang.String" value="maxLinesTextField" noResource="true"/>
                   </Properties>
                 </Component>

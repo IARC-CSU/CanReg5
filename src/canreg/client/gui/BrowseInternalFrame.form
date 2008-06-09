@@ -29,13 +29,13 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="resultScrollPane" alignment="0" pref="752" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="rangeFilterPanel1" min="-2" max="-2" attributes="0"/>
+                  <Component id="resultScrollPane" alignment="0" pref="1058" max="32767" attributes="1"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="rangeFilterPanel1" pref="792" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="navigatePanel" max="32767" attributes="1"/>
-                          <Component id="variablesPanel" alignment="1" max="32767" attributes="1"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="variablesPanel" min="-2" max="-2" attributes="1"/>
+                          <Component id="navigatePanel" alignment="1" min="-2" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
@@ -47,84 +47,29 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="rangeFilterPanel1" alignment="0" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="rangeFilterPanel1" max="32767" attributes="1"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="variablesPanel" min="-2" max="-2" attributes="1"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jPanel4" max="32767" attributes="1"/>
+                  </Group>
+                  <Component id="variablesPanel" alignment="0" min="-2" max="-2" attributes="1"/>
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="navigatePanel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jPanel4" min="-2" max="-2" attributes="1"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="resultScrollPane" min="-2" pref="351" max="-2" attributes="0"/>
-              <EmptySpace pref="64" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JPanel" name="variablesPanel">
-      <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Variables">
-              <Property name="titleX" resourceKey="variablesPanel.border.title"/>
-            </TitledBorder>
-          </Border>
-        </Property>
-        <Property name="name" type="java.lang.String" value="variablesPanel" noResource="true"/>
-      </Properties>
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="allRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="mandatoryRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="keyRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace pref="38" max="32767" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <Component id="allRadioButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="mandatoryRadioButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="keyRadioButton" min="-2" max="-2" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-      </Layout>
-      <SubComponents>
-        <Component class="javax.swing.JRadioButton" name="allRadioButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="allRadioButton.text"/>
-            <Property name="name" type="java.lang.String" value="allRadioButton" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="mandatoryRadioButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="mandatoryRadioButton.text"/>
-            <Property name="name" type="java.lang.String" value="mandatoryRadioButton" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="keyRadioButton">
-          <Properties>
-            <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" resourceKey="keyRadioButton.text"/>
-            <Property name="name" type="java.lang.String" value="keyRadioButton" noResource="true"/>
-          </Properties>
-        </Component>
-      </SubComponents>
-    </Container>
     <Container class="javax.swing.JScrollPane" name="resultScrollPane">
       <Properties>
         <Property name="name" type="java.lang.String" value="resultScrollPane" noResource="true"/>
@@ -149,13 +94,13 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="editRecordNumberButton" alignment="0" pref="211" max="32767" attributes="1"/>
-                      <Component id="editTableRecordButton" alignment="0" pref="211" max="32767" attributes="1"/>
-                      <Component id="createNextButton" alignment="0" pref="211" max="32767" attributes="1"/>
-                      <Component id="recordNumberTextField" alignment="0" pref="211" max="32767" attributes="1"/>
-                      <Component id="refreshTableButton" alignment="0" pref="211" max="32767" attributes="1"/>
+                      <Component id="editRecordNumberButton" alignment="0" pref="125" max="32767" attributes="1"/>
+                      <Component id="editTableRecordButton" alignment="0" pref="125" max="32767" attributes="1"/>
+                      <Component id="createNextButton" alignment="0" max="32767" attributes="1"/>
+                      <Component id="recordNumberTextField" alignment="0" pref="125" max="32767" attributes="1"/>
+                      <Component id="refreshTableButton" alignment="0" pref="125" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -163,7 +108,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <Component id="createNextButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="editTableRecordButton" min="-2" max="-2" attributes="0"/>
@@ -173,7 +118,7 @@
                   <Component id="recordNumberTextField" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="refreshTableButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="101" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -217,6 +162,11 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="canreg.client.gui.RangeFilterPanel" name="rangeFilterPanel1">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="rangeFilterPanel1" noResource="true"/>
+      </Properties>
+    </Component>
     <Container class="javax.swing.JPanel" name="navigatePanel">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -298,10 +248,64 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="canreg.client.gui.RangeFilterPanel" name="rangeFilterPanel1">
+    <Container class="javax.swing.JPanel" name="variablesPanel">
       <Properties>
-        <Property name="name" type="java.lang.String" value="rangeFilterPanel1" noResource="true"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Variables">
+              <Property name="titleX" resourceKey="variablesPanel.border.title"/>
+            </TitledBorder>
+          </Border>
+        </Property>
+        <Property name="name" type="java.lang.String" value="variablesPanel" noResource="true"/>
       </Properties>
-    </Component>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="allRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="mandatoryRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="keyRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="38" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <Component id="allRadioButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="mandatoryRadioButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="keyRadioButton" min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JRadioButton" name="allRadioButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="allRadioButton.text"/>
+            <Property name="name" type="java.lang.String" value="allRadioButton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="mandatoryRadioButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="mandatoryRadioButton.text"/>
+            <Property name="name" type="java.lang.String" value="mandatoryRadioButton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="keyRadioButton">
+          <Properties>
+            <Property name="selected" type="boolean" value="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="keyRadioButton.text"/>
+            <Property name="name" type="java.lang.String" value="keyRadioButton" noResource="true"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>

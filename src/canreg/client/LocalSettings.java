@@ -63,10 +63,18 @@ public class LocalSettings {
     }
 
     public void setLocale(String localeCode) {
-        if (!localeCode.equals(properties.getProperty("locale"))) {
+        setProperty("locale", localeCode);
+    }
+
+    public void setProperty(String key, String string) {
+        if (!string.equals(properties.getProperty(key))) {
             settingsChanged = true;
         }
-        properties.setProperty("locale", localeCode);
+        properties.setProperty(key, string);
+    }
+
+    public String getProperty(String key) {
+        return properties.getProperty(key);
     }
 
     private boolean loadSettings() {
@@ -260,7 +268,7 @@ public class LocalSettings {
     public boolean isOutlineDragMode() {
         boolean isOutLineDragMode = false;
         String isOutlineDragModeString = properties.getProperty("outline_drag_mode");
-        if (isOutlineDragModeString != null){
+        if (isOutlineDragModeString != null) {
             isOutLineDragMode = isOutlineDragModeString.equalsIgnoreCase("on");
         }
         return isOutLineDragMode;

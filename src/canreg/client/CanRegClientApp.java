@@ -5,6 +5,7 @@ package canreg.client;
 
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.CanRegClientView;
+import canreg.client.gui.dataentry.ImportOptions;
 import canreg.common.Globals;
 import canreg.server.CanRegLoginInterface;
 import canreg.server.CanRegServerInterface;
@@ -190,10 +191,10 @@ public class CanRegClientApp extends SingleFrameApplication {
         Locale.setDefault(localSettings.getLocale());
     }
     
-    public void importFile(Document doc, List<Relation> map, File file) throws RemoteException{
+    public void importFile(Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException{
         // placeholder... 
         // getting database connection... obly for Supervisor?
-        canreg.client.dataentry.Import.importFile(doc, map, file, server);
+        canreg.client.dataentry.Import.importFile(doc, map, file, server, io);
     }
     
     @Action

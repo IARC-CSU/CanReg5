@@ -4,6 +4,7 @@
  */
 package canreg.common;
 
+import canreg.client.DatabaseVariablesListElement;
 import java.util.LinkedList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -63,13 +64,30 @@ public class Tools {
         return elementArray;
     }
 
-    public static String[] getVariableNames(Document doc,String namespace) {
+    public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace) {
+        NodeList nl = doc.getElementsByTagName(namespace + "variable");
+        DatabaseVariablesListElement[] variables = new DatabaseVariablesListElement[nl.getLength()];
+        for (int i = 0; i < nl.getLength(); i++) {
+            Element e = (Element) nl.item(i);
+            variables[i] = new DatabaseVariablesListElement(
+                    e.getElementsByTagName(namespace + "table").item(0).getTextContent(),
+                    Integer.parseInt(e.getElementsByTagName(namespace + "variable_id").item(0).getTextContent()),
+                    e.getElementsByTagName(namespace + "short_name").item(0).getTextContent(),
+                    e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent()
+                    );   
+        }
+        return variables;
+    }
+
+    public static String[] getVariableNames(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
         String[] variableNames = new String[nl.getLength()];
-        for (int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i <
+                nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
             variableNames[i] = e.getElementsByTagName(namespace + "short_name").item(0).getTextContent();
         }
+
         return variableNames;
     }
 }

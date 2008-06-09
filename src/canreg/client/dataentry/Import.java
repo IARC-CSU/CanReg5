@@ -4,11 +4,11 @@
  */
 package canreg.client.dataentry;
 
+import canreg.client.gui.dataentry.ImportOptions;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -76,7 +76,7 @@ public class Import {
                 Patient patient = new Patient();
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID()>=0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
+                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
                         if (rel.getVariableType().equalsIgnoreCase("Number") || rel.getVariableType().equalsIgnoreCase("Date")) {
                             if (lineElements[rel.getFileColumnNumber()].length() > 0) {
                                 patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
@@ -92,7 +92,7 @@ public class Import {
                 Tumour tumour = new Tumour();
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID()>=0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
+                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
                         if (rel.getVariableType().equalsIgnoreCase("Number") || rel.getVariableType().equalsIgnoreCase("Date")) {
                             if (lineElements[rel.getFileColumnNumber()].length() > 0) {
                                 tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
@@ -137,7 +137,7 @@ public class Import {
         return success;
     }
 
-        public static boolean importFile(Document doc, List<Relation> map, File file, CanRegServerInterface server) {
+    public static boolean importFile(Document doc, List<Relation> map, File file, CanRegServerInterface server, ImportOptions io) {
 
         boolean success = false;
 
@@ -153,13 +153,22 @@ public class Import {
 
             // patientNumber
             int patientIDNumber = 0;
-            while (line != null) {
+            
+            int numberOfLinesRead = 1;            
+            int linesToRead = io.getMaxLines();
+            boolean readWholeFile = true;
+            
+            if (linesToRead > -1) {
+                readWholeFile = false;
+            }
+                
+            while (line != null && (readWholeFile==true || numberOfLinesRead<linesToRead)) {
                 String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
                 // Build patient part
                 Patient patient = new Patient();
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID()>=0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
+                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
                         if (rel.getVariableType().equalsIgnoreCase("Number") || rel.getVariableType().equalsIgnoreCase("Date")) {
                             if (lineElements[rel.getFileColumnNumber()].length() > 0) {
                                 patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
@@ -175,7 +184,7 @@ public class Import {
                 Tumour tumour = new Tumour();
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID()>=0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
+                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
                         if (rel.getVariableType().equalsIgnoreCase("Number") || rel.getVariableType().equalsIgnoreCase("Date")) {
                             if (lineElements[rel.getFileColumnNumber()].length() > 0) {
                                 tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
@@ -202,6 +211,7 @@ public class Import {
 
                 //Read next line of data
                 line = bufferedReader.readLine();
+                numberOfLinesRead++;
             }
 
 
@@ -219,8 +229,7 @@ public class Import {
         }
         return success;
     }
-    
-    
+
     public static void importDictionary() {
     // TODO!
     }
@@ -247,8 +256,7 @@ public class Import {
                 rel.setDatabaseTableVariableID(Integer.parseInt(e.getElementsByTagName(namespace + "variable_id").item(0).getTextContent()));
                 rel.setVariableType(e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent());
                 rel.setDatabaseVariableName(variableNames[j]);
-            }
-            else {
+            } else {
                 rel.setDatabaseTableName("");
                 rel.setDatabaseTableVariableID(-1);
                 rel.setVariableType("");
