@@ -7,7 +7,9 @@ package canreg.client.gui;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
+import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.common.Globals;
+import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 
 /**
@@ -54,14 +56,14 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         jTextField1 = new javax.swing.JTextField();
         advancedPanel = new javax.swing.JPanel();
         versionPanel = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        versionInstalledLabel = new javax.swing.JLabel();
+        versionInstalledTextField = new javax.swing.JTextField();
+        latestVersionLabel = new javax.swing.JLabel();
+        latestVersionTextField = new javax.swing.JTextField();
+        downloadLatestButton = new javax.swing.JButton();
+        checkButton = new javax.swing.JButton();
         lookAndFeelPanel = new javax.swing.JPanel();
-        showContentCheckBox = new javax.swing.JCheckBox();
+        showOutlineCheckBox = new javax.swing.JCheckBox();
 
         setClosable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(OptionsFrame.class);
@@ -257,29 +259,31 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         versionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("versionPanel.border.title"))); // NOI18N
         versionPanel.setName("versionPanel"); // NOI18N
 
-        jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
-        jLabel4.setName("jLabel4"); // NOI18N
+        versionInstalledLabel.setText(resourceMap.getString("versionInstalledLabel.text")); // NOI18N
+        versionInstalledLabel.setName("versionInstalledLabel"); // NOI18N
 
-        jTextField2.setEditable(false);
-        jTextField2.setText(resourceMap.getString("jTextField2.text")); // NOI18N
-        jTextField2.setName("jTextField2"); // NOI18N
+        versionInstalledTextField.setEditable(false);
+        versionInstalledTextField.setText(resourceMap.getString("versionInstalledTextField.text")); // NOI18N
+        versionInstalledTextField.setName("versionInstalledTextField"); // NOI18N
 
-        jLabel5.setText(resourceMap.getString("jLabel5.text")); // NOI18N
-        jLabel5.setName("jLabel5"); // NOI18N
+        latestVersionLabel.setText(resourceMap.getString("latestVersionLabel.text")); // NOI18N
+        latestVersionLabel.setName("latestVersionLabel"); // NOI18N
 
-        jTextField3.setEditable(false);
-        jTextField3.setText(resourceMap.getString("jTextField3.text")); // NOI18N
-        jTextField3.setName("jTextField3"); // NOI18N
+        latestVersionTextField.setEditable(false);
+        latestVersionTextField.setText(resourceMap.getString("latestVersionTextField.text")); // NOI18N
+        latestVersionTextField.setEnabled(false);
+        latestVersionTextField.setName("latestVersionTextField"); // NOI18N
 
-        jButton3.setForeground(resourceMap.getColor("jButton3.foreground")); // NOI18N
-        jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
-        jButton3.setBorder(null);
-        jButton3.setBorderPainted(false);
-        jButton3.setContentAreaFilled(false);
-        jButton3.setName("jButton3"); // NOI18N
+        downloadLatestButton.setAction(actionMap.get("downloadLatestVersionAction")); // NOI18N
+        downloadLatestButton.setForeground(resourceMap.getColor("downloadLatestButton.foreground")); // NOI18N
+        downloadLatestButton.setBorder(null);
+        downloadLatestButton.setBorderPainted(false);
+        downloadLatestButton.setContentAreaFilled(false);
+        downloadLatestButton.setName("downloadLatestButton"); // NOI18N
 
-        jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
-        jButton4.setName("jButton4"); // NOI18N
+        checkButton.setAction(actionMap.get("checkLatestVersionAction")); // NOI18N
+        checkButton.setText(resourceMap.getString("checkButton.text")); // NOI18N
+        checkButton.setName("checkButton"); // NOI18N
 
         javax.swing.GroupLayout versionPanelLayout = new javax.swing.GroupLayout(versionPanel);
         versionPanel.setLayout(versionPanelLayout);
@@ -288,41 +292,42 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(versionPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel4))
+                    .addComponent(latestVersionLabel)
+                    .addComponent(versionInstalledLabel))
                 .addGap(8, 8, 8)
                 .addGroup(versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(versionPanelLayout.createSequentialGroup()
-                        .addComponent(jButton3)
+                        .addComponent(downloadLatestButton)
                         .addContainerGap())
                     .addGroup(versionPanelLayout.createSequentialGroup()
                         .addGroup(versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE))
+                            .addComponent(latestVersionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                            .addComponent(versionInstalledTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4))))
+                        .addComponent(checkButton))))
         );
         versionPanelLayout.setVerticalGroup(
             versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(versionPanelLayout.createSequentialGroup()
                 .addGroup(versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(versionInstalledLabel)
+                    .addComponent(versionInstalledTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jButton4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(latestVersionLabel)
+                    .addComponent(checkButton)
+                    .addComponent(latestVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3))
+                .addComponent(downloadLatestButton))
         );
 
         lookAndFeelPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("lookAndFeelPanel.border.title"))); // NOI18N
         lookAndFeelPanel.setName("lookAndFeelPanel"); // NOI18N
 
-        showContentCheckBox.setText(resourceMap.getString("showContentCheckBox.text")); // NOI18N
-        showContentCheckBox.setToolTipText(resourceMap.getString("showContentCheckBox.toolTipText")); // NOI18N
-        showContentCheckBox.setName("showContentCheckBox"); // NOI18N
+        showOutlineCheckBox.setSelected(true);
+        showOutlineCheckBox.setText(resourceMap.getString("showOutlineCheckBox.text")); // NOI18N
+        showOutlineCheckBox.setToolTipText(resourceMap.getString("showOutlineCheckBox.toolTipText")); // NOI18N
+        showOutlineCheckBox.setName("showOutlineCheckBox"); // NOI18N
 
         javax.swing.GroupLayout lookAndFeelPanelLayout = new javax.swing.GroupLayout(lookAndFeelPanel);
         lookAndFeelPanel.setLayout(lookAndFeelPanelLayout);
@@ -330,14 +335,14 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(showContentCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                .addComponent(showOutlineCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
                 .addContainerGap())
         );
         lookAndFeelPanelLayout.setVerticalGroup(
             lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(showContentCheckBox)
+                .addComponent(showOutlineCheckBox)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -410,48 +415,80 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JPanel advancedPanel;
     private javax.swing.JPanel automaticBackupPanel;
     private javax.swing.JCheckBox automaticbackupCheckBox;
+    private javax.swing.JButton checkButton;
     private javax.swing.JLabel daysLabel;
+    private javax.swing.JButton downloadLatestButton;
     private javax.swing.JLabel everyLabel;
     private javax.swing.JComboBox fontSizeComboBox;
     private javax.swing.JLabel fontSizeLabel;
     private javax.swing.JPanel generalPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JComboBox languageComboBox;
     private javax.swing.JLabel languageLabel;
+    private javax.swing.JLabel latestVersionLabel;
+    private javax.swing.JTextField latestVersionTextField;
     private javax.swing.JPanel lookAndFeelPanel;
     private javax.swing.JTextField numberOfDaysTextField;
-    private javax.swing.JCheckBox showContentCheckBox;
+    private javax.swing.JCheckBox showOutlineCheckBox;
     private javax.swing.JPanel systemPanel;
+    private javax.swing.JLabel versionInstalledLabel;
+    private javax.swing.JTextField versionInstalledTextField;
     private javax.swing.JPanel versionPanel;
     // End of variables declaration//GEN-END:variables
-
     private void initValues() {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
         // Languages
-        languageComboBox.setModel(new javax.swing.DefaultComboBoxModel( localSettings.getLanguageList()));
+        languageComboBox.setModel(new javax.swing.DefaultComboBoxModel(localSettings.getLanguageList()));
         int languageNumber = canreg.common.Tools.findInArray(Globals.LANGUAGES_AVAILABLE, localSettings.getLanguageCode());
         languageComboBox.setSelectedIndex(languageNumber);
-        showContentCheckBox.setSelected(localSettings.isOutlineDragMode());
-        //
+        showOutlineCheckBox.setSelected(localSettings.isOutlineDragMode());
+        // CanReg verison
+        versionInstalledTextField.setText(Globals.VERSION_STRING);
+
     }
-    
-    private void saveValues(){
+
+    private String getNewestVersionNumber() {
+        String latestVersionString = canreg.common.Tools.getFileFromURL(Globals.newestVersionURLString);
+        return latestVersionString;
+    }
+
+    private void saveValues() {
         // save values
         localSettings.setLocale(Globals.LANGUAGES_AVAILABLE[languageComboBox.getSelectedIndex()]);
-        localSettings.setOutlineDragMode(!showContentCheckBox.isSelected());
+        if (showOutlineCheckBox.isSelected()) {
+            localSettings.setOutlineDragMode(true);
+        } else {
+            localSettings.setOutlineDragMode(false);
+        }
         // write settings to file
         localSettings.writeSettings();
+    }
+
+    @Action
+    public void downloadLatestVersionAction() {
+        //  BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.iacr.com.fr/"));
+        BareBonesBrowserLaunch.openURL(Globals.downloadCanRegURL);
+    }
+
+    @Action
+    public void checkLatestVersionAction() {
+        String lv = getNewestVersionNumber();
+        if (lv != null && lv.trim().length()>0) {
+            latestVersionTextField.setText(lv);
+            latestVersionTextField.setEnabled(true);
+            if (!lv.trim().equalsIgnoreCase(Globals.VERSION_STRING)) {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "You do not have the latest official version of CanReg5 installed.", "Message", JOptionPane.WARNING_MESSAGE);
+            } else {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "You have the latest official version of CanReg5 installed.", "Message", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not find information on latest version.", "Message", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

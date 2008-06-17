@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import java.net.*;
+import java.io.*;
 
 /**
  *
@@ -73,8 +75,7 @@ public class Tools {
                     e.getElementsByTagName(namespace + "table").item(0).getTextContent(),
                     Integer.parseInt(e.getElementsByTagName(namespace + "variable_id").item(0).getTextContent()),
                     e.getElementsByTagName(namespace + "short_name").item(0).getTextContent(),
-                    e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent()
-                    );   
+                    e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent());
         }
         return variables;
     }
@@ -89,5 +90,52 @@ public class Tools {
         }
 
         return variableNames;
+    }
+
+    public static String getFileFromURL(String urlString) {
+        StringBuffer contents = new StringBuffer();
+
+        try {
+            // Create an URL instance
+            URL url = new URL(urlString);
+
+            // Get an input stream for reading
+            InputStream in = url.openStream();
+
+            // Create a buffered input stream for efficency
+            BufferedInputStream bufIn = new BufferedInputStream(in);
+
+            // Repeat until end of file
+            for (;;) {
+                int data = bufIn.read();
+
+                // Check for EOF
+                if (data == -1) {
+                    break;
+                } else {
+                    contents.append((char) data);
+                }
+            }
+
+        } catch (MalformedURLException mue) {
+            System.err.println("Invalid URL");
+        } catch (IOException ioe) {
+            System.err.println("I/O Error - " + ioe);
+        }
+        return contents.toString();
+    }
+
+    public static File getTempFileFromURL(String urlString) throws IOException {
+        File file = null;
+        Writer output = null;
+        try {
+            file = File.createTempFile("cr5", "tmp");
+            output = new BufferedWriter(new FileWriter(file));
+            //FileWriter always assumes default encoding is OK!
+            output.write(getFileFromURL(urlString));
+        } finally {
+            output.close();
+        }
+        return file;
     }
 }

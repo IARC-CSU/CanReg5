@@ -25,6 +25,8 @@ import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
@@ -56,6 +58,18 @@ public class ImportView extends javax.swing.JInternalFrame {
         try {
             initComponents();
             previewPanel.setVisible(false);
+            
+            changeTab(0);
+            
+            // Add a listener for changing the active tab
+            ChangeListener tabbedPaneChangeListener = new ChangeListener() {
+                public void stateChanged(ChangeEvent e) {
+                    initializeVariableMappingTab();
+                    changeTab(tabbedPane.getSelectedIndex());
+                }
+            };
+            // And add the listener to the tabbedPane
+            tabbedPane.addChangeListener(tabbedPaneChangeListener);
 
             localSettings = CanRegClientApp.getApplication().getLocalSettings();
             path = localSettings.getProperty("import_path");
@@ -75,7 +89,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             // Get the system description
             doc = CanRegClientApp.getApplication().getDatabseDescription();
             variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
-            
+
         } catch (RemoteException ex) {
             Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -87,7 +101,13 @@ public class ImportView extends javax.swing.JInternalFrame {
         path = inFile.getPath();
         needToRebuildVariableMap = true;
     }
-
+    
+    private void changeTab(int tabNumber) {
+        tabbedPane.setSelectedIndex(tabNumber);
+        nextButton.setEnabled(tabNumber < tabbedPane.getTabCount() - 1);
+        backButton.setEnabled(tabNumber > 0);
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -144,11 +164,6 @@ public class ImportView extends javax.swing.JInternalFrame {
         }
 
         tabbedPane.setName("tabbedPane"); // NOI18N
-        tabbedPane.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                paneFocusGained(evt);
-            }
-        });
 
         chooseFilePanel.setName("chooseFilePanel"); // NOI18N
 
@@ -425,23 +440,22 @@ public class ImportView extends javax.swing.JInternalFrame {
         cancelButton.setName("cancelButton"); // NOI18N
 
         backButton.setAction(actionMap.get("jumpToPreviousTabAction")); // NOI18N
-        backButton.setEnabled(false);
         backButton.setName("backButton"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(backButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nextButton)))
+                        .addComponent(nextButton))
+                    .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -459,15 +473,10 @@ public class ImportView extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void paneFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_paneFocusGained
-        changeTab(tabbedPane.getSelectedIndex());
-        initializeVariableMappingTab();
-}//GEN-LAST:event_paneFocusGained
-
     private void fileNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fileNameTextFieldFocusLost
         changeFile();
     }//GEN-LAST:event_fileNameTextFieldFocusLost
-
+   
     @Action
     public void browseFiles() {
 
@@ -488,24 +497,19 @@ public class ImportView extends javax.swing.JInternalFrame {
         initializeVariableMappingTab();
         int tabNumber = tabbedPane.getSelectedIndex();
         if (tabNumber < tabbedPane.getTabCount()) {
-            tabbedPane.setSelectedIndex(tabNumber + 1);
+            tabbedPane.setSelectedIndex(++tabNumber);
+            changeTab(tabNumber);
         }
-        changeTab(tabNumber);
     }
 
     @Action
     public void jumpToPreviousTabAction() {
         initializeVariableMappingTab();
         int tabNumber = tabbedPane.getSelectedIndex();
-        if (tabNumber <= 1) {
-            tabbedPane.setSelectedIndex(tabNumber - 1);
+        if (tabNumber >= 1) {
+            tabbedPane.setSelectedIndex(--tabNumber);
+            changeTab(tabNumber);
         }
-        changeTab(tabNumber);
-    }
-    
-    private void changeTab(int tabNumber) {
-        nextButton.setEnabled(tabNumber + 1 < tabbedPane.getTabCount());
-        backButton.setEnabled(tabNumber > 0);
     }
 
     @Action
@@ -668,7 +672,6 @@ public class ImportView extends javax.swing.JInternalFrame {
         } catch (IOException ex) {
             Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            needToRebuildVariableMap = false;
             try {
                 br.close();
             } catch (IOException ex) {

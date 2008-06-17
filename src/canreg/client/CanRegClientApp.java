@@ -42,6 +42,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     @Override
     protected void startup() {
+        applyPreferences();
         canRegClientView = new CanRegClientView(this);
         show(canRegClientView);
     }
@@ -73,6 +74,17 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public static void init() {
         //Testing the environment
+        testEnvironment();
+        // Initialize the user settings
+        try {
+            localSettings = new LocalSettings("settings.xml");
+            // Locale.setDefault(localSettings.getLocale());
+        } catch (IOException ioe) {
+            debugOut(ioe.getLocalizedMessage());
+        }
+    }
+
+    private static void testEnvironment() {        
         java.util.Properties prop = System.getProperties();
         java.util.Enumeration enumerator = prop.propertyNames();
         while (enumerator.hasMoreElements()) {
@@ -85,14 +97,6 @@ public class CanRegClientApp extends SingleFrameApplication {
         //System.out.println ("Parent  dir : " + dir2.getCanonicalPath());
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        
-        // Initialize the user settings
-        try {
-            localSettings = new LocalSettings("settings.xml");
-            Locale.setDefault(localSettings.getLocale());
-        } catch (IOException ioe){
-            debugOut(ioe.getLocalizedMessage());
         }
     }
 
@@ -111,7 +115,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
         return systemName;
     }
-    
+
     //  Log on to the CanReg system and set up the server connection.
     //  Returns CanReg System's name if successfull - null if not
     public String login(String serverObjectString, String username, char[] password) {
@@ -159,7 +163,6 @@ public class CanRegClientApp extends SingleFrameApplication {
         return server.listCurrentUsers();
     }
 
-
     /**
      * Simple console trace to system.out for debug purposes only.&Ltp>
      *
@@ -178,28 +181,28 @@ public class CanRegClientApp extends SingleFrameApplication {
     public void stopDatabaseServer() throws RemoteException, SecurityException {
         server.stopNetworkDBServer();
     }
-    
-    public LocalSettings getLocalSettings(){
+
+    public LocalSettings getLocalSettings() {
         return localSettings;
     }
-    
-    public Document getDatabseDescription() throws RemoteException{
+
+    public Document getDatabseDescription() throws RemoteException {
         return server.getDatabseDescription();
     }
-    
-    public void applyPreferences(){
+
+    public void applyPreferences() {
         Locale.setDefault(localSettings.getLocale());
     }
-    
-    public void importFile(Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException{
+
+    public void importFile(Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException {
         // placeholder... 
         // getting database connection... obly for Supervisor?
         canreg.client.dataentry.Import.importFile(doc, map, file, server, io);
     }
-    
+
     @Action
     @Override
-    public void quit(ActionEvent evt){
+    public void quit(ActionEvent evt) {
         try {
             logOut();
             super.quit(evt);
@@ -221,12 +224,12 @@ public class CanRegClientApp extends SingleFrameApplication {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public boolean isLoggedIn(){
+
+    public boolean isLoggedIn() {
         return loggedIn;
     }
-    
-    public int getUserRightLevel(){
+
+    public int getUserRightLevel() {
         return Globals.SUPERVISOR;
     }
 }

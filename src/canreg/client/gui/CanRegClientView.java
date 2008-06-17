@@ -25,7 +25,6 @@ import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.File;
 import java.rmi.RemoteException;
 import javax.swing.Timer;
 import javax.swing.Icon;
@@ -40,6 +39,7 @@ import javax.swing.JOptionPane;
 public class CanRegClientView extends FrameView {
 
     private static boolean debug = true;
+    LocalSettings localSettings;
 
     public CanRegClientView(SingleFrameApplication app) {
         super(app);
@@ -128,7 +128,7 @@ public class CanRegClientView extends FrameView {
     }
 
     public void applyPreferences() {
-        LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        localSettings = CanRegClientApp.getApplication().getLocalSettings();
         // Apply the outline drag mode
         if (localSettings.isOutlineDragMode()) {
             jDesktopPane1.setDragMode(javax.swing.JDesktopPane.OUTLINE_DRAG_MODE);
@@ -573,9 +573,8 @@ public class CanRegClientView extends FrameView {
         if (CanRegClientApp.getApplication().isLoggedIn()) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Already logged in.", "Message", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            LoginInternalFrame loginInternalFrame = new LoginInternalFrame(this);
+            LoginInternalFrame loginInternalFrame = new LoginInternalFrame(this, jDesktopPane1);
             jDesktopPane1.add(loginInternalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
-            loginInternalFrame.setDesktopPane(jDesktopPane1);
             //JFrame mainFrame = CanRegClientApp.getApplication().getMainFrame();
             loginInternalFrame.setLocation(jDesktopPane1.getWidth() / 2 - loginInternalFrame.getWidth() / 2, jDesktopPane1.getHeight() / 2 - loginInternalFrame.getHeight() / 2);
             //CanRegClientApp.getApplication().getMainFrame();
@@ -612,7 +611,7 @@ public class CanRegClientView extends FrameView {
             // on a background thread, so don't reference
             // the Swing GUI from here.
             if (System.getProperty("os.name").toString().substring(0, 3).equalsIgnoreCase("win")) {
-                File file = new File("c:\\");
+                File file = new File(localSettings.getProperty(localSettings.workingDirPathKey));
                 Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL " + file.getAbsolutePath());
             }
 

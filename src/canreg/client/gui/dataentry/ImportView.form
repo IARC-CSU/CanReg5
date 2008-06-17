@@ -27,10 +27,9 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="tabbedPane" alignment="0" pref="639" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="backButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -38,6 +37,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="nextButton" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="tabbedPane" alignment="0" pref="639" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -64,9 +64,6 @@
       <Properties>
         <Property name="name" type="java.lang.String" value="tabbedPane" noResource="true"/>
       </Properties>
-      <Events>
-        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="paneFocusGained"/>
-      </Events>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
@@ -561,7 +558,6 @@
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
           <action class="canreg.client.gui.dataentry.ImportView" id="jumpToPreviousTabAction" methodName="jumpToPreviousTabAction"/>
         </Property>
-        <Property name="enabled" type="boolean" value="false"/>
         <Property name="name" type="java.lang.String" value="backButton" noResource="true"/>
       </Properties>
     </Component>

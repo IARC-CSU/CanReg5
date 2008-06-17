@@ -10,8 +10,13 @@ package canreg.common;
  * @author morten
  */
 public class Globals {
-    static public int VERSION = 5;
-    static public int REVISION = 3;
+    static public int VERSION = 4;
+    static public int REVISION = 99;
+    
+    static public String VERSION_STRING = "4.99";
+    
+    static public String downloadCanRegURL = "http://www.iacr.com.fr/iacr_canreg4.htm";
+    static public String newestVersionURLString = "http://www.iacr.com.fr/version.txt";
     
     static public String NAMESPACE = "ns3:";
     static public int RMI_PORT = 1199;

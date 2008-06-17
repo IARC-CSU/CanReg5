@@ -162,9 +162,8 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
 
     @Action
     public void showLoginFrame() {
-           LoginInternalFrame loginInternalFrame = new LoginInternalFrame(fv);
+           LoginInternalFrame loginInternalFrame = new LoginInternalFrame(fv,desktopPane);
            desktopPane.add(loginInternalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
-           loginInternalFrame.setDesktopPane(desktopPane);
            //JFrame mainFrame = CanRegClientApp.getApplication().getMainFrame();
            loginInternalFrame.setLocation(desktopPane.getWidth()/2-loginInternalFrame.getWidth()/2,desktopPane.getHeight()/2-loginInternalFrame.getHeight()/2);        
            //CanRegClientApp.getApplication().getMainFrame();

@@ -429,22 +429,22 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="latestVersionLabel" min="-2" max="-2" attributes="0"/>
+                              <Component id="versionInstalledLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="downloadLatestButton" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="jTextField3" pref="181" max="32767" attributes="1"/>
-                                      <Component id="jTextField2" alignment="1" pref="181" max="32767" attributes="1"/>
+                                      <Component id="latestVersionTextField" pref="181" max="32767" attributes="1"/>
+                                      <Component id="versionInstalledTextField" alignment="1" pref="181" max="32767" attributes="1"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jButton4" min="-2" max="-2" attributes="0"/>
+                                  <Component id="checkButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -454,64 +454,70 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="versionInstalledLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="versionInstalledTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jButton4" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jTextField3" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="latestVersionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="checkButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="latestVersionTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                          <Component id="downloadLatestButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel4">
+                <Component class="javax.swing.JLabel" name="versionInstalledLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="jLabel4.text"/>
-                    <Property name="name" type="java.lang.String" value="jLabel4" noResource="true"/>
+                    <Property name="text" type="java.lang.String" resourceKey="versionInstalledLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="versionInstalledLabel" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="jTextField2">
+                <Component class="javax.swing.JTextField" name="versionInstalledTextField">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
-                    <Property name="text" type="java.lang.String" resourceKey="jTextField2.text"/>
-                    <Property name="name" type="java.lang.String" value="jTextField2" noResource="true"/>
+                    <Property name="text" type="java.lang.String" resourceKey="versionInstalledTextField.text"/>
+                    <Property name="name" type="java.lang.String" value="versionInstalledTextField" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel5">
+                <Component class="javax.swing.JLabel" name="latestVersionLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="jLabel5.text"/>
-                    <Property name="name" type="java.lang.String" value="jLabel5" noResource="true"/>
+                    <Property name="text" type="java.lang.String" resourceKey="latestVersionLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="latestVersionLabel" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="jTextField3">
+                <Component class="javax.swing.JTextField" name="latestVersionTextField">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
-                    <Property name="text" type="java.lang.String" resourceKey="jTextField3.text"/>
-                    <Property name="name" type="java.lang.String" value="jTextField3" noResource="true"/>
+                    <Property name="text" type="java.lang.String" resourceKey="latestVersionTextField.text"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                    <Property name="name" type="java.lang.String" value="latestVersionTextField" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="jButton3">
+                <Component class="javax.swing.JButton" name="downloadLatestButton">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" resourceKey="jButton3.foreground"/>
-                    <Property name="text" type="java.lang.String" resourceKey="jButton3.text"/>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.OptionsFrame" id="downloadLatestVersionAction" methodName="downloadLatestVersionAction"/>
+                    </Property>
+                    <Property name="foreground" type="java.awt.Color" resourceKey="downloadLatestButton.foreground"/>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="null"/>
                     </Property>
                     <Property name="borderPainted" type="boolean" value="false"/>
                     <Property name="contentAreaFilled" type="boolean" value="false"/>
-                    <Property name="name" type="java.lang.String" value="jButton3" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="downloadLatestButton" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="jButton4">
+                <Component class="javax.swing.JButton" name="checkButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="jButton4.text"/>
-                    <Property name="name" type="java.lang.String" value="jButton4" noResource="true"/>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.OptionsFrame" id="checkLatestVersionAction" methodName="checkLatestVersionAction"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" resourceKey="checkButton.text"/>
+                    <Property name="name" type="java.lang.String" value="checkButton" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -533,7 +539,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="showContentCheckBox" pref="371" max="32767" attributes="0"/>
+                          <Component id="showOutlineCheckBox" pref="371" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -542,18 +548,19 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="showContentCheckBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="showOutlineCheckBox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JCheckBox" name="showContentCheckBox">
+                <Component class="javax.swing.JCheckBox" name="showOutlineCheckBox">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="showContentCheckBox.text"/>
-                    <Property name="toolTipText" type="java.lang.String" resourceKey="showContentCheckBox.toolTipText"/>
-                    <Property name="name" type="java.lang.String" value="showContentCheckBox" noResource="true"/>
+                    <Property name="selected" type="boolean" value="true"/>
+                    <Property name="text" type="java.lang.String" resourceKey="showOutlineCheckBox.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="showOutlineCheckBox.toolTipText"/>
+                    <Property name="name" type="java.lang.String" value="showOutlineCheckBox" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>

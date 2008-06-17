@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : version.xml
+    Created on : 17 June 2008, 12:07
+    Author     : ervikm
+    Description:
+        Purpose of the document follows.
+-->
+
+<root>
+    <version>4</version>
+    <revision>99</revision>
+    <date>17.06.2008</date>
+</root>

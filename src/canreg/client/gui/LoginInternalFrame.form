@@ -45,7 +45,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="156" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="169" max="32767" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="loginButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -146,7 +146,7 @@
                           <Component id="rememberPasswordCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="passwordField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="54" max="32767" attributes="0"/>
+                      <EmptySpace pref="67" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -235,21 +235,14 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="serverURLLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="nameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="launchServerButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jButton2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="nameTextField" alignment="0" pref="323" max="32767" attributes="0"/>
@@ -264,6 +257,16 @@
                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                   <Component id="codeField" min="0" pref="0" max="32767" attributes="1"/>
                                   <Component id="portField" alignment="1" pref="39" max="32767" attributes="1"/>
+                              </Group>
+                          </Group>
+                          <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                              <Component id="autoStartCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="launchServerButton" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="addServerToListButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -289,11 +292,13 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="addServerToListButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="launchServerButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="23" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="autoStartCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="11" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -335,12 +340,12 @@
                 <Property name="name" type="java.lang.String" value="launchServerButton" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton1">
+            <Component class="javax.swing.JButton" name="addServerToListButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.LoginInternalFrame" id="addServerToList" methodName="addServerToList"/>
                 </Property>
-                <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="addServerToListButton" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="nameLabel">
@@ -374,6 +379,12 @@
                   <action class="canreg.client.gui.LoginInternalFrame" id="testServerConnection" methodName="testServerConnection"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jButton2" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="autoStartCheckBox">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="autoStartCheckBox.text"/>
+                <Property name="name" type="java.lang.String" value="autoStartCheckBox" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>

@@ -34,18 +34,41 @@ public class LocalSettings {
     private Properties properties;
     private boolean settingsChanged;
 
+    // Key names
+    public String lastServerIDKey = "last_server_id";
+    public String importPathKey = "import_path";
+    public String userNameKey = "username";
+    public String passwordKey = "password";
+    public String localeKey = "locale";
+    public String rememberPasswordKey = "remember_password";
+    public String outlineDragModeKey = "outline_drag_mode";
+    public String workingDirPathKey = "working_path";
+    public String autoStartServerKey = "auto_start_server";
+    // Property names
+    public String yesProperty = "yes";
+    public String noProperty = "no";
+    public String onProperty = "on";
+    public String offProperty = "off";
+    public String trueProperty = "true";
+    public String falseProperty = "false";
+
     public LocalSettings(String localSettingsFileName) throws IOException {
         boolean settingsLoaded = false;
         this.settingsFileName = localSettingsFileName;
         // set (and create) settings directory
         settingsDir = setCanRegClientSettingsDir();
 
+        // Initialize properties
+        properties = new Properties();
         // Try to load the settings file
         settingsLoaded = loadSettings();
 
         if (!settingsLoaded) {
+            // If not possible to load the settings - get the default ones
             createDefaultProperties();
         }
+        // create the working dir
+        createWorkingDir(properties.getProperty(workingDirPathKey));
         writeSettings();
     }
 
@@ -59,22 +82,11 @@ public class LocalSettings {
     }
 
     public Locale getLocale() {
-        return new Locale(properties.getProperty("locale"));
+        return new Locale(properties.getProperty(localeKey));
     }
 
     public void setLocale(String localeCode) {
-        setProperty("locale", localeCode);
-    }
-
-    public void setProperty(String key, String string) {
-        if (!string.equals(properties.getProperty(key))) {
-            settingsChanged = true;
-        }
-        properties.setProperty(key, string);
-    }
-
-    public String getProperty(String key) {
-        return properties.getProperty(key);
+        setProperty(localeKey, localeCode);
     }
 
     private boolean loadSettings() {
@@ -82,7 +94,7 @@ public class LocalSettings {
         settingsChanged = false;
         boolean success = false;
         try {
-            propInputStream = new FileInputStream(settingsDir + "/" + settingsFileName);
+            propInputStream = new FileInputStream(settingsDir + System.getProperty("file.separator") + settingsFileName);
             setProperties(new Properties());
             getProperties().loadFromXML(propInputStream);
             propInputStream.close();
@@ -114,7 +126,7 @@ public class LocalSettings {
             OutputStream propOutputStream = null;
             boolean success = false;
             try {
-                propOutputStream = new FileOutputStream(settingsDir + "/" + settingsFileName);
+                propOutputStream = new FileOutputStream(settingsDir + System.getProperty("file.separator") + settingsFileName);
                 getProperties().storeToXML(propOutputStream, "CanReg5 local settings");
 
                 success = true;
@@ -142,21 +154,54 @@ public class LocalSettings {
         }
     }
 
-    private Properties createDefaultProperties() {
-        properties = new Properties();
-        properties.setProperty("locale", Locale.getDefault().getLanguage());
-        properties.setProperty("remember_password", "false");
-        properties.setProperty("username", "");
-        properties.setProperty("password", "");
-        // properties.setProperty("server1.name", "Default");
+    public void setProperty(String key, String string) {
+        // Not sure why this didn't work, but OK... 
+//        String property = properties.getProperty(key);
+//        if (property != null && !string.trim().equalsIgnoreCase(property)) {
+//            settingsChanged = true;
+//        }
+        properties.setProperty(key, string);
         settingsChanged = true;
-        return properties;
+    }
+
+    public String getProperty(String key) {
+        String property = properties.getProperty(key);
+        if (property == null) {
+            return getDefalutProperty(key);
+        } else {
+            return property;
+        }
+    }
+
+    public String getDefalutProperty(String key) {
+        String property = "";
+        if (key.equalsIgnoreCase(userNameKey)) {
+            property = "";
+        } else if (key.equalsIgnoreCase(passwordKey)) {
+            property = "";
+        } else if (key.equalsIgnoreCase(localeKey)) {
+            property = Locale.getDefault().getLanguage();
+        } else if (key.equalsIgnoreCase(rememberPasswordKey)) {
+            property = falseProperty;
+        } else if (key.equalsIgnoreCase(workingDirPathKey)) {
+            property = System.getProperty("user.home", ".") + System.getProperty("file.separator") + "CanReg";
+        } 
+        return property;
+    }
+
+    private void createDefaultProperties() {
+        setProperty(localeKey, getDefalutProperty(localeKey));
+        setProperty(rememberPasswordKey, getDefalutProperty(rememberPasswordKey));
+        setProperty(userNameKey, getDefalutProperty(userNameKey));
+        setProperty(passwordKey, getDefalutProperty(passwordKey));
+        setProperty(workingDirPathKey,getDefalutProperty(workingDirPathKey));
+        settingsChanged = true;
     }
 
     private static String setCanRegClientSettingsDir() {
         // decide on the db system directory
         String userHomeDir = System.getProperty("user.home", ".");
-        String systemDir = userHomeDir + "/.CanRegClient";
+        String systemDir = userHomeDir + System.getProperty("file.separator") + ".CanRegClient";
 
         // Create directory if missing
         File settingsFileDir = new File(systemDir);
@@ -247,39 +292,46 @@ public class LocalSettings {
     }
 
     public void addServerDescription(ServerDescription sd) {
-        properties.setProperty("server." + sd.getId() + ".name", sd.getName());
-        properties.setProperty("server." + sd.getId() + ".port", sd.getPort() + "");
-        properties.setProperty("server." + sd.getId() + ".code", sd.getCode());
-        properties.setProperty("server." + sd.getId() + ".url", sd.getUrl());
-
-        settingsChanged = true;
+        setProperty("server." + sd.getId() + ".name", sd.getName());
+        setProperty("server." + sd.getId() + ".port", sd.getPort() + "");
+        setProperty("server." + sd.getId() + ".code", sd.getCode());
+        setProperty("server." + sd.getId() + ".url", sd.getUrl());
     }
 
     public String getLanguage() {
-        String localeString = properties.getProperty("locale");
+        String localeString = properties.getProperty(localeKey);
         Locale loc = new Locale(localeString);
         return loc.getDisplayLanguage(new Locale("en"));
     }
 
     public String getLanguageCode() {
-        return properties.getProperty("locale");
+        return properties.getProperty(localeKey);
     }
 
     public boolean isOutlineDragMode() {
         boolean isOutLineDragMode = false;
-        String isOutlineDragModeString = properties.getProperty("outline_drag_mode");
+        String isOutlineDragModeString = properties.getProperty(outlineDragModeKey);
         if (isOutlineDragModeString != null) {
-            isOutLineDragMode = isOutlineDragModeString.equalsIgnoreCase("on");
+            isOutLineDragMode = isOutlineDragModeString.trim().equalsIgnoreCase(onProperty);
         }
         return isOutLineDragMode;
     }
 
     public void setOutlineDragMode(boolean outlineDragMode) {
         if (outlineDragMode) {
-            properties.setProperty("outline_drag_mode", "on");
+            setProperty(outlineDragModeKey, onProperty);
         } else {
-            properties.setProperty("outline_drag_mode", "off");
+            setProperty(outlineDragModeKey, offProperty);
         }
-        settingsChanged = true;
+    }
+
+    public void createWorkingDir(String dir) {
+        setProperty(workingDirPathKey, dir);
+        File settingsFileDir = new File(dir);
+        if (!settingsFileDir.exists()) {
+            // create the db system directory
+            File fileSystemDir = new File(dir);
+            fileSystemDir.mkdir();
+        }
     }
 }
