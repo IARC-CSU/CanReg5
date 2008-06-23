@@ -3,10 +3,11 @@
  *
  * Created on 02 April 2008, 16:24
  */
-
 package canreg.client.gui;
 
 import canreg.client.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
@@ -16,15 +17,15 @@ import org.jdesktop.application.FrameView;
  * @author  morten
  */
 public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
-    
+
     FrameView fv;
-    
+
     /** Creates new form WelcomeInternalFrame */
     public WelcomeInternalFrame(FrameView fv) {
         this.fv = fv;
         initComponents();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -162,19 +163,20 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
 
     @Action
     public void showLoginFrame() {
-           LoginInternalFrame loginInternalFrame = new LoginInternalFrame(fv,desktopPane);
-           desktopPane.add(loginInternalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
-           //JFrame mainFrame = CanRegClientApp.getApplication().getMainFrame();
-           loginInternalFrame.setLocation(desktopPane.getWidth()/2-loginInternalFrame.getWidth()/2,desktopPane.getHeight()/2-loginInternalFrame.getHeight()/2);        
-           //CanRegClientApp.getApplication().getMainFrame();
-           loginInternalFrame.setVisible(true);
-           this.dispose();
+
+        this.dispose();
+        LoginInternalFrame loginInternalFrame = new LoginInternalFrame(fv, desktopPane);
+        desktopPane.add(loginInternalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        //JFrame mainFrame = CanRegClientApp.getApplication().getMainFrame();
+        loginInternalFrame.setLocation(desktopPane.getWidth() / 2 - loginInternalFrame.getWidth() / 2, desktopPane.getHeight() / 2 - loginInternalFrame.getHeight() / 2);
+
+        loginInternalFrame.setVisible(true);
+
     }
-    
-    public void setDesktopPane(JDesktopPane dtp){
+
+    public void setDesktopPane(JDesktopPane dtp) {
         desktopPane = dtp;
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane aboutEditorPane;
     private javax.swing.JScrollPane aboutScrollPane;
@@ -184,6 +186,5 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JButton restoreBackupButton;
     // End of variables declaration//GEN-END:variables
-    
     private javax.swing.JDesktopPane desktopPane;
 }

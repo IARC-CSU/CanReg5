@@ -10,26 +10,26 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jToolBar1" alignment="0" pref="859" max="32767" attributes="0"/>
-              <Component id="jDesktopPane1" alignment="0" pref="859" max="32767" attributes="0"/>
+              <Component id="toolBar" alignment="0" pref="859" max="32767" attributes="0"/>
+              <Component id="desktopPane" alignment="0" pref="859" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="jToolBar1" min="-2" max="-2" attributes="0"/>
+                  <Component id="toolBar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jDesktopPane1" pref="658" max="32767" attributes="0"/>
+                  <Component id="desktopPane" pref="652" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="javax.swing.JToolBar" name="jToolBar1">
+        <Container class="javax.swing.JToolBar" name="toolBar">
           <Properties>
             <Property name="floatable" type="boolean" value="false"/>
             <Property name="rollover" type="boolean" value="true"/>
-            <Property name="name" type="java.lang.String" value="jToolBar1" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="toolBar" noResource="true"/>
           </Properties>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
@@ -67,27 +67,27 @@
                 <Property name="name" type="java.lang.String" value="jSeparator13" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton1">
+            <Component class="javax.swing.JButton" name="optionsButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="showOptionFrame" methodName="showOptionFrame"/>
                 </Property>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
-                <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="optionsButton" noResource="true"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JDesktopPane" name="jDesktopPane1">
+        <Container class="javax.swing.JDesktopPane" name="desktopPane">
           <Properties>
             <Property name="autoscrolls" type="boolean" value="true"/>
             <Property name="doubleBuffered" type="boolean" value="true"/>
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[400, 300]"/>
             </Property>
-            <Property name="name" type="java.lang.String" value="jDesktopPane1" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="desktopPane" noResource="true"/>
           </Properties>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout"/>
@@ -265,6 +265,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem10">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="showNameSexAction" methodName="showNameSexAction"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="nameSexMenuItem.text"/>
                 <Property name="name" type="java.lang.String" value="nameSexMenuItem" noResource="true"/>
               </Properties>
@@ -540,7 +543,7 @@
       <ComponentRef name="statusPanel"/>
     </Property>
     <Property name="toolBar" type="javax.swing.JToolBar" editor="org.netbeans.modules.form.ComponentChooserEditor">
-      <ComponentRef name="jToolBar1"/>
+      <ComponentRef name="toolBar"/>
     </Property>
   </Properties>
   <AuxValues>

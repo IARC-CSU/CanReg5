@@ -6,7 +6,7 @@
 
 package canreg.client.gui.dataentry;
 
-import canreg.client.DatabaseVariablesListElement;
+import canreg.common.DatabaseVariablesListElement;
 
 /**
  *
@@ -50,7 +50,7 @@ public class VariableMappingPanel extends javax.swing.JPanel {
         fileVariableLabel.setName("fileVariableLabel"); // NOI18N
         jSplitPane1.setLeftComponent(fileVariableLabel);
 
-        dbVariableComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        dbVariableComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "DB Variable 1", "DB Variable 2" }));
         dbVariableComboBox.setName("dbVariableComboBox"); // NOI18N
         jSplitPane1.setRightComponent(dbVariableComboBox);
 

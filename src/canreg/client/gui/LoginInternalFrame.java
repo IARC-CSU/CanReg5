@@ -40,7 +40,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         loadDefaultValues();
         if (autoStartCheckBox.isSelected()) {
             Task task = launchCanRegServerAction();
-            task.run();
+            task.execute();
         }
     }
 

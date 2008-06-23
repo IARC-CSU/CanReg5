@@ -4,7 +4,6 @@
  */
 package canreg.common;
 
-import canreg.client.DatabaseVariablesListElement;
 import java.util.LinkedList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -78,6 +77,17 @@ public class Tools {
                     e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent());
         }
         return variables;
+    }
+
+    public static DatabaseIndexesListElement[] getIndexesListElements(Document doc, String namespace) {
+        NodeList nl = doc.getElementsByTagName(namespace + "index");
+        DatabaseIndexesListElement[] indexes = new DatabaseIndexesListElement[nl.getLength()];
+        for (int i = 0; i < nl.getLength(); i++) {
+            Element e = (Element) nl.item(i);
+            indexes[i] = new DatabaseIndexesListElement(
+                    e.getElementsByTagName(namespace + "name").item(0).getTextContent());
+        }
+        return indexes;
     }
 
     public static String[] getVariableNames(Document doc, String namespace) {

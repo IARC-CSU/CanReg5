@@ -73,4 +73,8 @@ public interface CanRegServerInterface extends Remote {
     public int savePatient(Patient patient) throws RemoteException, SecurityException;
 
     public int saveTumour(Tumour tumour) throws RemoteException, SecurityException;
+
+    // Backup
+    public String performBackup()
+            throws RemoteException, SecurityException;
 }

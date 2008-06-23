@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.w3c.dom.*;
 
 /**
@@ -69,6 +71,16 @@ public class CanRegDAO {
         }
 
 
+    }
+
+    public String  performBackup() {
+        String path = null;
+        try {
+            path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection,Globals.CANREG_BACKUP_FOLDER);
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return path;
     }
 
     // This only works for Embedded databases - will look into it!
@@ -154,6 +166,24 @@ public class CanRegDAO {
         }
         dbProperties.remove("create");
         return bCreated;
+    }
+    
+    public boolean restoreDatabase(String path){
+        boolean bRestored = false;
+        dbConnection = null;
+
+        String dbUrl = getDatabaseUrl();
+        dbProperties.put("restoreFrom", path);
+
+        try {
+            dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
+            bRestored = true;
+            System.out.println("Database restored...");
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        dbProperties.remove("restoreFrom");
+        return bRestored;
     }
 
     public boolean connect() {

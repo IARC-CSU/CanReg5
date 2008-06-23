@@ -8,7 +8,7 @@ package canreg.client.gui.dataentry;
 import canreg.client.LocalSettings;
 import canreg.client.gui.dataentry.VariableMappingPanel;
 import canreg.client.CanRegClientApp;
-import canreg.client.DatabaseVariablesListElement;
+import canreg.common.DatabaseVariablesListElement;
 import canreg.client.dataentry.Import;
 import canreg.client.dataentry.Relation;
 import canreg.common.Globals;
@@ -55,44 +55,42 @@ public class ImportView extends javax.swing.JInternalFrame {
 
     /** Creates new form ImportView */
     public ImportView() {
-        try {
-            initComponents();
-            previewPanel.setVisible(false);
-            
-            changeTab(0);
-            
-            // Add a listener for changing the active tab
-            ChangeListener tabbedPaneChangeListener = new ChangeListener() {
-                public void stateChanged(ChangeEvent e) {
-                    initializeVariableMappingTab();
-                    changeTab(tabbedPane.getSelectedIndex());
-                }
-            };
-            // And add the listener to the tabbedPane
-            tabbedPane.addChangeListener(tabbedPaneChangeListener);
 
-            localSettings = CanRegClientApp.getApplication().getLocalSettings();
-            path = localSettings.getProperty("import_path");
+        initComponents();
+        previewPanel.setVisible(false);
 
-            if (path == null) {
-                chooser = new JFileChooser();
-            } else {
-                chooser = new JFileChooser(path);
+        changeTab(0);
+
+        // Add a listener for changing the active tab
+        ChangeListener tabbedPaneChangeListener = new ChangeListener() {
+
+            public void stateChanged(ChangeEvent e) {
+                initializeVariableMappingTab();
+                changeTab(tabbedPane.getSelectedIndex());
             }
-            // Group the radiobuttons
-            ButtonGroup discrepanciesButtonGroup = new ButtonGroup();
-            // Add to the button group
-            discrepanciesButtonGroup.add(rejectRadioButton);
-            discrepanciesButtonGroup.add(updateRadioButton);
-            discrepanciesButtonGroup.add(overwriteRadioButton);
+            };
+        // And add the listener to the tabbedPane
+        tabbedPane.addChangeListener(tabbedPaneChangeListener);
 
-            // Get the system description
-            doc = CanRegClientApp.getApplication().getDatabseDescription();
-            variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+        localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        path = localSettings.getProperty("import_path");
 
-        } catch (RemoteException ex) {
-            Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+        if (path == null) {
+            chooser = new JFileChooser();
+        } else {
+            chooser = new JFileChooser(path);
         }
+        // Group the radiobuttons
+        ButtonGroup discrepanciesButtonGroup = new ButtonGroup();
+        // Add to the button group
+        discrepanciesButtonGroup.add(rejectRadioButton);
+        discrepanciesButtonGroup.add(updateRadioButton);
+        discrepanciesButtonGroup.add(overwriteRadioButton);
+
+        // Get the system description
+        doc = CanRegClientApp.getApplication().getDatabseDescription();
+        variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+
     // initializeVariableMappingTab();
     }
 
@@ -101,13 +99,13 @@ public class ImportView extends javax.swing.JInternalFrame {
         path = inFile.getPath();
         needToRebuildVariableMap = true;
     }
-    
+
     private void changeTab(int tabNumber) {
         tabbedPane.setSelectedIndex(tabNumber);
         nextButton.setEnabled(tabNumber < tabbedPane.getTabCount() - 1);
         backButton.setEnabled(tabNumber > 0);
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -476,7 +474,7 @@ public class ImportView extends javax.swing.JInternalFrame {
     private void fileNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fileNameTextFieldFocusLost
         changeFile();
     }//GEN-LAST:event_fileNameTextFieldFocusLost
-   
+
     @Action
     public void browseFiles() {
 
@@ -532,13 +530,6 @@ public class ImportView extends javax.swing.JInternalFrame {
             // doInBackground() depends on from parameters
             // to ImportActionTask fields, here.
             super(app);
-            try {
-                // Calls the client app import action with the file parameters provided,
-                CanRegClientApp.getApplication().importFile(doc, buildMap(), inFile, buildImportOptions());
-            } catch (RemoteException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
         }
 
         @Override
@@ -546,6 +537,12 @@ public class ImportView extends javax.swing.JInternalFrame {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
+            try {
+                // Calls the client app import action with the file parameters provided,
+                CanRegClientApp.getApplication().importFile(doc, buildMap(), inFile, buildImportOptions());
+            } catch (RemoteException ex) {
+                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            }
             return null;  // return your result
         }
 

@@ -46,9 +46,6 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         if (!initDataBase()) {
             throw new RemoteException("Cannot initialize database...");
         }
-    // for debugging purposes we start a derby network server as well
-    // moved into main GUI
-    // startNetworkDBServer();
     }
 
     // Initialize the database connection
@@ -190,5 +187,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     public int saveTumour(Tumour tumour) {
         return db.saveTumour(tumour);
+    }
+
+    public String performBackup() throws RemoteException, SecurityException {
+        return db.performBackup();
     }
 }

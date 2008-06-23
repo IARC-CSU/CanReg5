@@ -31,6 +31,8 @@ public class Globals {
     static public String CANREG_SYSTEM_CONFIG_FOLDER = "./conf/database/";
     
     static public String CANREG_SYSTEM_CONFIG = CANREG_SYSTEM_CONFIG_FOLDER+"TRN.xml";
+
+    static public String CANREG_BACKUP_FOLDER = "CR5-BACK";
     
     static public String SCHEMA_NAME = "APP";
     

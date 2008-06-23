@@ -96,11 +96,21 @@ public class SystemDescription {
         return element;
     }
     
-
-        
+    public Element getIndexes(){
+        Element element=null;
+        if (doc != null){
+                    NodeList nl = doc.getElementsByTagName(namespace+"indexes");
+            if (nl != null) {
+               element = (Element) nl.item(0);
+            }
+        }
+        return element;
+    }
+ 
     public void addVariable(Variable var){
         
     }
+    
     private static void debugOut(String msg) {
         if (debug) {
             System.out.println("\t[SystemDescription] " + msg);

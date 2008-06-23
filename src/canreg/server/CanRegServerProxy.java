@@ -131,4 +131,9 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         checkPermission("saveTumour");
         return theServer.saveTumour(tumour);
     }
+
+    public String performBackup() throws RemoteException, SecurityException {
+        checkPermission("performBackup");
+        return theServer.performBackup();
+    }
 }

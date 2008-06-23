@@ -19,6 +19,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
+import javax.swing.JInternalFrame;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
@@ -36,6 +37,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private static LocalSettings localSettings;
     public boolean loggedIn = false;
     private CanRegClientView canRegClientView;
+    private Document doc;
 
     /**
      * At startup create and show the main frame of the application.
@@ -78,13 +80,13 @@ public class CanRegClientApp extends SingleFrameApplication {
         // Initialize the user settings
         try {
             localSettings = new LocalSettings("settings.xml");
-            // Locale.setDefault(localSettings.getLocale());
+        // Locale.setDefault(localSettings.getLocale());
         } catch (IOException ioe) {
             debugOut(ioe.getLocalizedMessage());
         }
     }
 
-    private static void testEnvironment() {        
+    private static void testEnvironment() {
         java.util.Properties prop = System.getProperties();
         java.util.Enumeration enumerator = prop.propertyNames();
         while (enumerator.hasMoreElements()) {
@@ -141,6 +143,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 int i = getUserRightLevel();
                 canRegClientView.setUserRightsLevel(i);
                 loggedIn = true;
+                doc = server.getDatabseDescription();
                 return systemName;
             } else {
                 return null;
@@ -186,8 +189,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         return localSettings;
     }
 
-    public Document getDatabseDescription() throws RemoteException {
-        return server.getDatabseDescription();
+    public Document getDatabseDescription() {
+        return doc;
     }
 
     public void applyPreferences() {
@@ -195,11 +198,11 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     public void importFile(Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException {
-        // placeholder... 
-        // getting database connection... obly for Supervisor?
+        // TODO 
+        // Add feedback mechanism...
         canreg.client.dataentry.Import.importFile(doc, map, file, server, io);
     }
-
+    
     @Action
     @Override
     public void quit(ActionEvent evt) {
@@ -231,5 +234,17 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public int getUserRightLevel() {
         return Globals.SUPERVISOR;
+    }
+
+    public String performBackup() {
+        String path = null;
+        try {
+            path = server.performBackup();
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return path;
     }
 }
