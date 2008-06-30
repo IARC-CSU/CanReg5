@@ -33,6 +33,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private NetworkServerControl dbServer;
     private SystemDescription systemDescription;
     private String systemCode;
+    private String serverDir;
 
     public CanRegServerImpl() throws RemoteException {
         this("TRN");
@@ -55,7 +56,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         boolean success = false;
 
         // Connect to the database
-        db = new CanRegDAO(systemDescription.getSystemDescriptionDocument());
+        db = new CanRegDAO(systemCode, systemDescription.getSystemDescriptionDocument());
         db.connect();
 
         if (db != null) {
@@ -70,7 +71,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         boolean success = false;
 
         // Load the system description object
-        systemDescription = new SystemDescription(Globals.CANREG_SYSTEM_CONFIG_FOLDER + systemCode + ".xml");
+        systemDescription = new SystemDescription(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + systemCode + ".xml");
 
         if (systemDescription.getSystemDescriptionDocument() != null) {
             success = true;

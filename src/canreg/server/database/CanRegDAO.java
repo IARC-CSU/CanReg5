@@ -44,14 +44,6 @@ import org.w3c.dom.*;
  */
 public class CanRegDAO {
 
-    /** Creates a new instance of CanRegDAO
-     * @param doc 
-     */
-    public CanRegDAO(Document doc) {
-        // Database name should be <= 8 characters long to access them with ODBC
-        this("CanReg5", doc);
-    }
-
     /**
      * 
      * @param dbName
@@ -96,9 +88,10 @@ public class CanRegDAO {
                 String code = results.getString(3);
                 String desc = results.getString(4);
                 HashMap dic = dictionaryMap.get(dictionary);
-                if (dic==null)
-                    dic = new HashMap<String,String>();
-                    dictionaryMap.put(dictionary, dic);
+                if (dic == null) {
+                    dic = new HashMap<String, String>();
+                }
+                dictionaryMap.put(dictionary, dic);
                 dic.put(code, desc);
             }
 
@@ -117,7 +110,7 @@ public class CanRegDAO {
     public String performBackup() {
         String path = null;
         try {
-            path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER);
+            path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + dbName);
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -139,8 +132,7 @@ public class CanRegDAO {
 
     private void setDBSystemDir() {
         // decide on the db system directory
-        String userHomeDir = System.getProperty("user.home", ".");
-        String systemDir = userHomeDir + "/.CanReg5DB";
+        String systemDir = Globals.CANREG_SERVER_DATABASE_FOLDER;
         System.setProperty("derby.system.home", systemDir);
 
         // create the db system directory

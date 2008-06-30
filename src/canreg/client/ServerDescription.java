@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package canreg.client;
 
 /**
@@ -10,23 +9,29 @@ package canreg.client;
  * @author morten
  */
 public class ServerDescription {
+
     private String name;
     private String url;
     private int port;
     private String code;
     private int id;
-    
-    public ServerDescription(String name, String url, int port, String code, int id){
+    private boolean showCode = true;
+
+    public ServerDescription(String name, String url, int port, String code, int id) {
         this.name = name;
         this.url = url;
         this.port = port;
         this.code = code;
         this.id = id;
     }
-    
+
     @Override
-    public String toString(){
-        return getName();
+    public String toString() {
+        String str = getName();
+        if (showCode) {
+            str = getCode() + " - " + str;
+        }
+        return str;
     }
 
     public String getName() {
@@ -67,5 +72,25 @@ public class ServerDescription {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isShowCode() {
+        return showCode;
+    }
+
+    public void setShowCode(boolean showCode) {
+        this.showCode = showCode;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof ServerDescription && getId() == ((ServerDescription) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + this.id;
+        return hash;
     }
 }

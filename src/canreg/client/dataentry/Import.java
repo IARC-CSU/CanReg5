@@ -4,7 +4,6 @@
  */
 package canreg.client.dataentry;
 
-import canreg.client.dataentry.ImportOptions;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
 import java.io.BufferedReader;

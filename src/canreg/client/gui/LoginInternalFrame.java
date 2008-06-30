@@ -60,7 +60,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         cancelButton = new javax.swing.JButton();
         feedbackLabel = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel2 = new javax.swing.JPanel();
+        systemPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         canRegSystemComboBox = new javax.swing.JComboBox();
         usernameLabel = new javax.swing.JLabel();
@@ -68,20 +68,22 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         passwordLabel = new javax.swing.JLabel();
         passwordField = new javax.swing.JPasswordField();
         rememberPasswordCheckBox = new javax.swing.JCheckBox();
-        jPanel1 = new javax.swing.JPanel();
-        serverURLLabel = new javax.swing.JLabel();
-        serverURLTextField = new javax.swing.JTextField();
-        portLabel = new javax.swing.JLabel();
-        portField = new javax.swing.JTextField();
-        launchServerButton = new javax.swing.JButton();
-        addServerToListButton = new javax.swing.JButton();
-        nameLabel = new javax.swing.JLabel();
+        settingsPanel = new javax.swing.JPanel();
         nameTextField = new javax.swing.JTextField();
+        nameLabel = new javax.swing.JLabel();
         codeField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        portField = new javax.swing.JTextField();
+        portLabel = new javax.swing.JLabel();
+        serverURLTextField = new javax.swing.JTextField();
+        serverURLLabel = new javax.swing.JLabel();
+        addServerToListButton = new javax.swing.JButton();
+        advancedPanel = new javax.swing.JPanel();
         autoStartCheckBox = new javax.swing.JCheckBox();
+        jButton2 = new javax.swing.JButton();
+        launchServerButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        advancedCheckBox = new javax.swing.JCheckBox();
 
         setResizable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(LoginInternalFrame.class);
@@ -108,7 +110,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
 
         jTabbedPane1.setName("jTabbedPane1"); // NOI18N
 
-        jPanel2.setName("jPanel2"); // NOI18N
+        systemPanel.setName("systemPanel"); // NOI18N
 
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
@@ -143,76 +145,56 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         rememberPasswordCheckBox.setToolTipText(resourceMap.getString("rememberPasswordCheckBox.toolTipText")); // NOI18N
         rememberPasswordCheckBox.setName("rememberPasswordCheckBox"); // NOI18N
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout systemPanelLayout = new javax.swing.GroupLayout(systemPanel);
+        systemPanel.setLayout(systemPanelLayout);
+        systemPanelLayout.setHorizontalGroup(
+            systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(systemPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(usernameLabel)
                     .addComponent(passwordLabel)
                     .addComponent(jLabel1))
                 .addGap(10, 10, 10)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(canRegSystemComboBox, 0, 415, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+                .addGroup(systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(canRegSystemComboBox, 0, 420, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, systemPanelLayout.createSequentialGroup()
+                        .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(rememberPasswordCheckBox))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, systemPanelLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(usernameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)))
+                        .addComponent(usernameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        systemPanelLayout.setVerticalGroup(
+            systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(systemPanelLayout.createSequentialGroup()
+                .addGroup(systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(canRegSystemComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(usernameLabel)
                     .addComponent(usernameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(passwordLabel)
                     .addComponent(rememberPasswordCheckBox)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(75, Short.MAX_VALUE))
+                .addContainerGap(114, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
+        jTabbedPane1.addTab(resourceMap.getString("systemPanel.TabConstraints.tabTitle"), systemPanel); // NOI18N
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
-        jPanel1.setName("jPanel1"); // NOI18N
-
-        serverURLLabel.setText(resourceMap.getString("serverURLLabel.text")); // NOI18N
-        serverURLLabel.setName("serverURLLabel"); // NOI18N
-
-        serverURLTextField.setText(resourceMap.getString("serverURLTextField.text")); // NOI18N
-        serverURLTextField.setName("serverURLTextField"); // NOI18N
-        serverURLTextField.setNextFocusableComponent(portField);
-
-        portLabel.setText(resourceMap.getString("portLabel.text")); // NOI18N
-        portLabel.setName("portLabel"); // NOI18N
-
-        portField.setText(resourceMap.getString("portField.text")); // NOI18N
-        portField.setName("portField"); // NOI18N
-
-        launchServerButton.setAction(actionMap.get("launchCanRegServerAction")); // NOI18N
-        launchServerButton.setName("launchServerButton"); // NOI18N
-
-        addServerToListButton.setAction(actionMap.get("addServerToList")); // NOI18N
-        addServerToListButton.setName("addServerToListButton"); // NOI18N
-
-        nameLabel.setText(resourceMap.getString("nameLabel.text")); // NOI18N
-        nameLabel.setName("nameLabel"); // NOI18N
+        settingsPanel.setName("settingsPanel"); // NOI18N
 
         nameTextField.setEditable(false);
         nameTextField.setText(resourceMap.getString("nameTextField.text")); // NOI18N
         nameTextField.setName("nameTextField"); // NOI18N
+
+        nameLabel.setText(resourceMap.getString("nameLabel.text")); // NOI18N
+        nameLabel.setName("nameLabel"); // NOI18N
 
         codeField.setText(resourceMap.getString("codeField.text")); // NOI18N
         codeField.setName("codeField"); // NOI18N
@@ -220,88 +202,133 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 
-        jButton2.setAction(actionMap.get("testServerConnection")); // NOI18N
-        jButton2.setName("jButton2"); // NOI18N
+        portField.setText(resourceMap.getString("portField.text")); // NOI18N
+        portField.setName("portField"); // NOI18N
+
+        portLabel.setText(resourceMap.getString("portLabel.text")); // NOI18N
+        portLabel.setName("portLabel"); // NOI18N
+
+        serverURLTextField.setText(resourceMap.getString("serverURLTextField.text")); // NOI18N
+        serverURLTextField.setName("serverURLTextField"); // NOI18N
+        serverURLTextField.setNextFocusableComponent(portField);
+
+        serverURLLabel.setText(resourceMap.getString("serverURLLabel.text")); // NOI18N
+        serverURLLabel.setName("serverURLLabel"); // NOI18N
+
+        addServerToListButton.setAction(actionMap.get("addServerToList")); // NOI18N
+        addServerToListButton.setName("addServerToListButton"); // NOI18N
+
+        advancedPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("advancedPanel.border.title"))); // NOI18N
+        advancedPanel.setName("advancedPanel"); // NOI18N
 
         autoStartCheckBox.setText(resourceMap.getString("autoStartCheckBox.text")); // NOI18N
         autoStartCheckBox.setName("autoStartCheckBox"); // NOI18N
 
+        jButton2.setAction(actionMap.get("testServerConnection")); // NOI18N
+        jButton2.setName("jButton2"); // NOI18N
+
+        launchServerButton.setAction(actionMap.get("launchCanRegServerAction")); // NOI18N
+        launchServerButton.setName("launchServerButton"); // NOI18N
+
         jButton1.setAction(actionMap.get("getIPaddressAction")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout advancedPanelLayout = new javax.swing.GroupLayout(advancedPanel);
+        advancedPanel.setLayout(advancedPanelLayout);
+        advancedPanelLayout.setHorizontalGroup(
+            advancedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(advancedPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(advancedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(launchServerButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(advancedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(autoStartCheckBox)
+                    .addComponent(jButton2))
+                .addContainerGap(110, Short.MAX_VALUE))
+        );
+        advancedPanelLayout.setVerticalGroup(
+            advancedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(advancedPanelLayout.createSequentialGroup()
+                .addGroup(advancedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(advancedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(launchServerButton)
+                    .addComponent(autoStartCheckBox)))
+        );
+
+        advancedCheckBox.setAction(actionMap.get("changeShowAdvancedAction")); // NOI18N
+        advancedCheckBox.setName("advancedCheckBox"); // NOI18N
+
+        javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
+        settingsPanel.setLayout(settingsPanelLayout);
+        settingsPanelLayout.setHorizontalGroup(
+            settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, settingsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(advancedPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, settingsPanelLayout.createSequentialGroup()
+                        .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(serverURLLabel)
                             .addComponent(nameLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(nameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
-                            .addComponent(serverURLTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE))
+                        .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(nameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
+                            .addComponent(serverURLTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(portLabel)
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(codeField, 0, 0, Short.MAX_VALUE)
-                            .addComponent(portField, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(autoStartCheckBox)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(launchServerButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(addServerToListButton)))))
+                            .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(settingsPanelLayout.createSequentialGroup()
+                        .addComponent(advancedCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 294, Short.MAX_VALUE)
+                        .addComponent(addServerToListButton)))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        settingsPanelLayout.setVerticalGroup(
+            settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(settingsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameLabel)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(codeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(serverURLLabel)
                     .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(portLabel)
                     .addComponent(serverURLTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addServerToListButton)
-                    .addComponent(launchServerButton)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1))
+                    .addComponent(advancedCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(autoStartCheckBox)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addComponent(advancedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
+        jTabbedPane1.addTab(resourceMap.getString("settingsPanel.TabConstraints.tabTitle"), settingsPanel); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(feedbackLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                        .addComponent(feedbackLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
                         .addGap(109, 109, 109)
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -312,8 +339,8 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(loginButton)
                     .addComponent(cancelButton)
@@ -341,10 +368,12 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             if (lastServerIDString != null) {
                 ServerDescription sd = localSettings.getServerDescription(Integer.parseInt(lastServerIDString));
                 if (sd != null) {
-                    portField.setText("" + sd.getPort());
+                    canRegSystemComboBox.setSelectedItem(sd);
+                    portField.setText(Integer.toString(sd.getPort()));
                     serverURLTextField.setText(sd.getUrl());
                     codeField.setText(sd.getCode());
                 }
+                canRegSystemComboBox.setSelectedItem(sd);
             }
         } else {
             canRegSystemComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[]{""}));
@@ -356,6 +385,9 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         } else {
             autoStartCheckBox.setSelected(false);
         }
+        // Advanced 
+        advancedPanel.setVisible(false);
+
     }
 
     private void saveDefaultValues() {
@@ -372,7 +404,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         // Get list of servers stored locally
         LinkedList<ServerDescription> sds = localSettings.getServerDescriptions();
         // If this list contains more than one entry - save it.
-        if (sds.size()>0) {
+        if (sds.size() > 0) {
             ServerDescription sd = sds.get(canRegSystemComboBox.getSelectedIndex());
             localSettings.setProperty(LocalSettings.LAST_SERVER_ID_KEY, sd.getId() + "");
         }
@@ -432,6 +464,8 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addServerToListButton;
+    private javax.swing.JCheckBox advancedCheckBox;
+    private javax.swing.JPanel advancedPanel;
     private javax.swing.JCheckBox autoStartCheckBox;
     private javax.swing.JComboBox canRegSystemComboBox;
     private javax.swing.JButton cancelButton;
@@ -441,8 +475,6 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton launchServerButton;
     private javax.swing.JButton loginButton;
@@ -455,6 +487,8 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JCheckBox rememberPasswordCheckBox;
     private javax.swing.JLabel serverURLLabel;
     private javax.swing.JTextField serverURLTextField;
+    private javax.swing.JPanel settingsPanel;
+    private javax.swing.JPanel systemPanel;
     private javax.swing.JLabel usernameLabel;
     private javax.swing.JTextField usernameTextField;
     // End of variables declaration//GEN-END:variables
@@ -562,7 +596,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             boolean found = false;
             int i = 0;
             while (!found) {
-                found = localSettings.getProperty("server." + (i++) + ".name") == null;
+                found = localSettings.getProperty("server." + (i++) + ".name").equals("");
             }
             // step one back
             i -= 1;
@@ -593,10 +627,15 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             } else {
                 addr = InetAddress.getByName(serverURLTextField.getText());
             }
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "<html>The IP address of <b>" + addr.getHostName() +"</b> is <b>"+ addr.getHostAddress()+"</b>.</html>", "Message", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "<html>The IP address of <b>" + addr.getHostName() + "</b> is <b>" + addr.getHostAddress() + "</b>.</html>", "Message", JOptionPane.INFORMATION_MESSAGE);
         } catch (UnknownHostException ex) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "<html>Cannot find the IP address of <b>"+ serverURLTextField.getText()+"</b>.</html>" , "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "<html>Cannot find the IP address of <b>" + serverURLTextField.getText() + "</b>.</html>", "Message", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Action
+    public void changeShowAdvancedAction() {
+        advancedPanel.setVisible(advancedCheckBox.isSelected());
     }
 }

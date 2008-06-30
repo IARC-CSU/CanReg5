@@ -4,6 +4,7 @@
  */
 package canreg.server.database.derby;
 
+import canreg.common.Globals;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -18,7 +19,7 @@ public class Backup {
 // Get today's date as a string:
         java.text.SimpleDateFormat todaysDate =
                 new java.text.SimpleDateFormat("yyyy-MM-dd");
-        backupdirectory += "\\" +
+        backupdirectory += Globals.FILE_SEPARATOR +
                 todaysDate.format((java.util.Calendar.getInstance()).getTime());
 
         CallableStatement cs = conn.prepareCall("CALL SYSCS_UTIL.SYSCS_BACKUP_DATABASE(?)");
