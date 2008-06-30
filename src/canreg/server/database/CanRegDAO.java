@@ -111,6 +111,7 @@ public class CanRegDAO {
         String path = null;
         try {
             path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + dbName);
+            // TODO - record date of last backup somewhere...
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
