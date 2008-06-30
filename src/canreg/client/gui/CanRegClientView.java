@@ -158,6 +158,8 @@ public class CanRegClientView extends FrameView {
         startDatabaseServerButton = new javax.swing.JButton();
         jSeparator13 = new javax.swing.JToolBar.Separator();
         optionsButton = new javax.swing.JButton();
+        jSeparator14 = new javax.swing.JToolBar.Separator();
+        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         desktopPane = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
@@ -245,6 +247,17 @@ public class CanRegClientView extends FrameView {
         optionsButton.setName("optionsButton"); // NOI18N
         optionsButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(optionsButton);
+
+        jSeparator14.setName("jSeparator14"); // NOI18N
+        toolBar.add(jSeparator14);
+
+        jButton1.setAction(actionMap.get("installSystemAction")); // NOI18N
+        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setName("jButton1"); // NOI18N
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(jButton1);
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
@@ -829,6 +842,15 @@ public class CanRegClientView extends FrameView {
         //CanRegClientApp.getApplication().getMainFrame();
         internalFrame.setVisible(true);
     }
+
+    @Action
+    public void installSystemAction() {
+        // TODO
+        // Choose a system.xml
+        // copy it to system folder
+        // Give log in window with settings from XML
+               
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu analysisMenu;
     private javax.swing.JButton browseEditButton;
@@ -837,6 +859,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenuItem editDictionaryMenuItem;
     private javax.swing.JMenuItem importDataMenuItem;
+    private javax.swing.JButton jButton1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuItem jMenuItem1;
@@ -861,6 +884,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JSeparator jSeparator11;
     private javax.swing.JToolBar.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator13;
+    private javax.swing.JToolBar.Separator jSeparator14;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
