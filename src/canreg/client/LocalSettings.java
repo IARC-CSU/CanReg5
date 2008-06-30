@@ -35,22 +35,22 @@ public class LocalSettings {
     private boolean settingsChanged;
 
     // Key names
-    public String lastServerIDKey = "last_server_id";
-    public String importPathKey = "import_path";
-    public String userNameKey = "username";
-    public String passwordKey = "password";
-    public String localeKey = "locale";
-    public String rememberPasswordKey = "remember_password";
-    public String outlineDragModeKey = "outline_drag_mode";
-    public String workingDirPathKey = "working_path";
-    public String autoStartServerKey = "auto_start_server";
+    public static String LAST_SERVER_ID_KEY = "last_server_id";
+    public static String IMPORT_PATH_KEY = "import_path";
+    public static String USERNAME_KEY = "username";
+    public static String PASSWORD_KEY = "password";
+    public static String LOCALE_KEY = "locale";
+    public static String REMEMBER_PASSWORD_KEY = "remember_password";
+    public static String OUTLINE_DRAG_MODE_KEY = "outline_drag_mode";
+    public static String WORKING_DIR_PATH_KEY = "working_path";
+    public static String AUTO_START_SERVER_KEY = "auto_start_server";
     // Property names
-    public String yesProperty = "yes";
-    public String noProperty = "no";
-    public String onProperty = "on";
-    public String offProperty = "off";
-    public String trueProperty = "true";
-    public String falseProperty = "false";
+    public static String YES_PROPERTY = "yes";
+    public static String NO_PROPERTY = "no";
+    public static String ON_PROPERTY = "on";
+    public static String OFF_PROPERTY = "off";
+    public static String TRUE_PROPERTY = "true";
+    public static String FALSE_PROPERTY = "false";
 
     public LocalSettings(String localSettingsFileName) throws IOException {
         boolean settingsLoaded = false;
@@ -68,7 +68,7 @@ public class LocalSettings {
             createDefaultProperties();
         }
         // create the working dir
-        createWorkingDir(properties.getProperty(workingDirPathKey));
+        createWorkingDir(properties.getProperty(WORKING_DIR_PATH_KEY));
         writeSettings();
     }
 
@@ -82,11 +82,11 @@ public class LocalSettings {
     }
 
     public Locale getLocale() {
-        return new Locale(properties.getProperty(localeKey));
+        return new Locale(properties.getProperty(LOCALE_KEY));
     }
 
     public void setLocale(String localeCode) {
-        setProperty(localeKey, localeCode);
+        setProperty(LOCALE_KEY, localeCode);
     }
 
     private boolean loadSettings() {
@@ -175,26 +175,26 @@ public class LocalSettings {
 
     public String getDefalutProperty(String key) {
         String property = "";
-        if (key.equalsIgnoreCase(userNameKey)) {
+        if (key.equalsIgnoreCase(USERNAME_KEY)) {
             property = "";
-        } else if (key.equalsIgnoreCase(passwordKey)) {
+        } else if (key.equalsIgnoreCase(PASSWORD_KEY)) {
             property = "";
-        } else if (key.equalsIgnoreCase(localeKey)) {
+        } else if (key.equalsIgnoreCase(LOCALE_KEY)) {
             property = Locale.getDefault().getLanguage();
-        } else if (key.equalsIgnoreCase(rememberPasswordKey)) {
-            property = falseProperty;
-        } else if (key.equalsIgnoreCase(workingDirPathKey)) {
+        } else if (key.equalsIgnoreCase(REMEMBER_PASSWORD_KEY)) {
+            property = FALSE_PROPERTY;
+        } else if (key.equalsIgnoreCase(WORKING_DIR_PATH_KEY)) {
             property = System.getProperty("user.home", ".") + System.getProperty("file.separator") + "CanReg";
         } 
         return property;
     }
 
     private void createDefaultProperties() {
-        setProperty(localeKey, getDefalutProperty(localeKey));
-        setProperty(rememberPasswordKey, getDefalutProperty(rememberPasswordKey));
-        setProperty(userNameKey, getDefalutProperty(userNameKey));
-        setProperty(passwordKey, getDefalutProperty(passwordKey));
-        setProperty(workingDirPathKey,getDefalutProperty(workingDirPathKey));
+        setProperty(LOCALE_KEY, getDefalutProperty(LOCALE_KEY));
+        setProperty(REMEMBER_PASSWORD_KEY, getDefalutProperty(REMEMBER_PASSWORD_KEY));
+        setProperty(USERNAME_KEY, getDefalutProperty(USERNAME_KEY));
+        setProperty(PASSWORD_KEY, getDefalutProperty(PASSWORD_KEY));
+        setProperty(WORKING_DIR_PATH_KEY,getDefalutProperty(WORKING_DIR_PATH_KEY));
         settingsChanged = true;
     }
 
@@ -299,34 +299,34 @@ public class LocalSettings {
     }
 
     public String getLanguage() {
-        String localeString = properties.getProperty(localeKey);
+        String localeString = properties.getProperty(LOCALE_KEY);
         Locale loc = new Locale(localeString);
         return loc.getDisplayLanguage(new Locale("en"));
     }
 
     public String getLanguageCode() {
-        return properties.getProperty(localeKey);
+        return properties.getProperty(LOCALE_KEY);
     }
 
     public boolean isOutlineDragMode() {
         boolean isOutLineDragMode = false;
-        String isOutlineDragModeString = properties.getProperty(outlineDragModeKey);
+        String isOutlineDragModeString = properties.getProperty(OUTLINE_DRAG_MODE_KEY);
         if (isOutlineDragModeString != null) {
-            isOutLineDragMode = isOutlineDragModeString.trim().equalsIgnoreCase(onProperty);
+            isOutLineDragMode = isOutlineDragModeString.trim().equalsIgnoreCase(ON_PROPERTY);
         }
         return isOutLineDragMode;
     }
 
     public void setOutlineDragMode(boolean outlineDragMode) {
         if (outlineDragMode) {
-            setProperty(outlineDragModeKey, onProperty);
+            setProperty(OUTLINE_DRAG_MODE_KEY, ON_PROPERTY);
         } else {
-            setProperty(outlineDragModeKey, offProperty);
+            setProperty(OUTLINE_DRAG_MODE_KEY, OFF_PROPERTY);
         }
     }
 
     public void createWorkingDir(String dir) {
-        setProperty(workingDirPathKey, dir);
+        setProperty(WORKING_DIR_PATH_KEY, dir);
         File settingsFileDir = new File(dir);
         if (!settingsFileDir.exists()) {
             // create the db system directory

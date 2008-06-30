@@ -6,13 +6,12 @@ package canreg.client.gui;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.client.gui.management.FirstNameSexInternalFrame;
 import canreg.client.gui.management.BackUpInternalFrame;
-import canreg.client.gui.analysis.ExportFrame;
-import canreg.client.gui.dataentry.EditDictionaryInternalFrame;
+import canreg.client.gui.analysis.ExportReportInternalFrame;
 import canreg.client.gui.dataentry.ImportView;
 import canreg.client.*;
+import canreg.client.gui.dataentry.EditDictionaryInternalFrame;
 import canreg.client.gui.StandardDialog;
 import canreg.client.gui.WelcomeInternalFrame;
-import canreg.*;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.common.Globals;
 import java.awt.Dimension;
@@ -159,6 +158,7 @@ public class CanRegClientView extends FrameView {
         startDatabaseServerButton = new javax.swing.JButton();
         jSeparator13 = new javax.swing.JToolBar.Separator();
         optionsButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
         desktopPane = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
@@ -246,24 +246,27 @@ public class CanRegClientView extends FrameView {
         optionsButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(optionsButton);
 
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
+
         desktopPane.setAutoscrolls(true);
         desktopPane.setDoubleBuffered(true);
         desktopPane.setMinimumSize(new java.awt.Dimension(400, 300));
         desktopPane.setName("desktopPane"); // NOI18N
+        jScrollPane1.setViewportView(desktopPane);
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 859, Short.MAX_VALUE)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 859, Short.MAX_VALUE)
+            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 1078, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1078, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -272,12 +275,10 @@ public class CanRegClientView extends FrameView {
         fileMenu.setName("fileMenu"); // NOI18N
 
         logInMenuItem.setAction(actionMap.get("showLoginFrame")); // NOI18N
-        logInMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/canreg/client/gui/resources/Vista-Inspirate_1.0/16x16/actions/forward.png"))); // NOI18N
         logInMenuItem.setName("logInMenuItem"); // NOI18N
         fileMenu.add(logInMenuItem);
 
         logOutMenuItem.setAction(actionMap.get("logOutaction")); // NOI18N
-        logOutMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/canreg/client/gui/resources/Vista-Inspirate_1.0/16x16/actions/back.png"))); // NOI18N
         logOutMenuItem.setName("logOutMenuItem"); // NOI18N
         fileMenu.add(logOutMenuItem);
 
@@ -377,7 +378,6 @@ public class CanRegClientView extends FrameView {
         jMenu1.setName("advancedMenu"); // NOI18N
 
         jMenuItem18.setAction(actionMap.get("showUsersLoggedIn")); // NOI18N
-        jMenuItem18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/canreg/client/gui/resources/Vista-Inspirate_1.0/16x16/actions/kontact_contacts.png"))); // NOI18N
         jMenuItem18.setName("showUsersLoggedInMenuItem"); // NOI18N
         jMenu1.add(jMenuItem18);
 
@@ -392,7 +392,6 @@ public class CanRegClientView extends FrameView {
         jMenu1.add(jMenuItem16);
 
         jMenuItem17.setAction(actionMap.get("stopDatabaseServer")); // NOI18N
-        jMenuItem17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/canreg/client/gui/resources/Vista-Inspirate_1.0/16x16/actions/stop.png"))); // NOI18N
         jMenuItem17.setText(resourceMap.getString("stopDBMenuItem.text")); // NOI18N
         jMenuItem17.setName("stopDBMenuItem"); // NOI18N
         jMenu1.add(jMenuItem17);
@@ -412,7 +411,6 @@ public class CanRegClientView extends FrameView {
         helpMenu.setName("helpMenu"); // NOI18N
 
         jMenuItem14.setAction(actionMap.get("showCanRegHelpFile")); // NOI18N
-        jMenuItem14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/canreg/client/gui/resources/Vista-Inspirate_1.0/16x16/actions/help.png"))); // NOI18N
         jMenuItem14.setText(resourceMap.getString("helpMenuItem.text")); // NOI18N
         jMenuItem14.setName("helpMenuItem"); // NOI18N
         helpMenu.add(jMenuItem14);
@@ -450,7 +448,6 @@ public class CanRegClientView extends FrameView {
         helpMenu.add(jSeparator2);
 
         aboutMenuItem.setAction(actionMap.get("showAboutBox")); // NOI18N
-        aboutMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/canreg/client/gui/resources/LogoBetaNew16x16.png"))); // NOI18N
         aboutMenuItem.setName("aboutMenuItem"); // NOI18N
         helpMenu.add(aboutMenuItem);
 
@@ -480,10 +477,10 @@ public class CanRegClientView extends FrameView {
                 .addComponent(userLevelLabel)
                 .addGap(91, 91, 91)
                 .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE)
+                    .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 910, Short.MAX_VALUE)
                     .addGroup(statusPanelLayout.createSequentialGroup()
                         .addComponent(statusMessageLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 531, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 750, Short.MAX_VALUE)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(statusAnimationLabel)
@@ -511,7 +508,7 @@ public class CanRegClientView extends FrameView {
         setToolBar(toolBar);
     }// </editor-fold>//GEN-END:initComponents
     private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
-    // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem16ActionPerformed
 
     private void showWelcomeFrame(FrameView fv) {
@@ -523,7 +520,7 @@ public class CanRegClientView extends FrameView {
         welcomeInternalFrame.setVisible(true);
         welcomeInternalFrame.setLocation(scr.width / 2 - welcomeInternalFrame.getWidth() / 2, scr.height / 2 - welcomeInternalFrame.getHeight() / 2 - 142);
         // debugOut(mainFrame.getWidth() / 2 + " " + mainFrame.getHeight() / 2);
-        
+
         welcomeInternalFrame.setDesktopPane(desktopPane);
 
     }
@@ -552,8 +549,8 @@ public class CanRegClientView extends FrameView {
 
         @Override
         protected void succeeded(Object result) {
-        // Runs on the EDT.  Update the GUI based on
-        // the result computed by doInBackground().
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
         }
     }
 
@@ -604,7 +601,7 @@ public class CanRegClientView extends FrameView {
             // on a background thread, so don't reference
             // the Swing GUI from here.
             if (System.getProperty("os.name").toString().substring(0, 3).equalsIgnoreCase("win")) {
-                File file = new File(localSettings.getProperty(localSettings.workingDirPathKey));
+                File file = new File(localSettings.getProperty(localSettings.WORKING_DIR_PATH_KEY));
                 Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL " + file.getAbsolutePath());
             }
 
@@ -613,8 +610,8 @@ public class CanRegClientView extends FrameView {
 
         @Override
         protected void succeeded(Object result) {
-        // Runs on the EDT.  Update the GUI based on
-        // the result computed by doInBackground().
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
         }
     }
 
@@ -644,9 +641,7 @@ public class CanRegClientView extends FrameView {
             sd.setVisible(true);
 
         } catch (RemoteException re) {
-
         } catch (SecurityException se) {
-
         }
     }
 
@@ -662,29 +657,35 @@ public class CanRegClientView extends FrameView {
             // doInBackground() depends on from parameters
             // to StartDatabaseServerTask fields, here.
             super(app);
-            try {
-                CanRegClientApp.getApplication().startDatabaseServer();
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_started."), "Message", JOptionPane.INFORMATION_MESSAGE);
 
-            } catch (RemoteException ex) {
-                Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
-                Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
 
         @Override
         protected Object doInBackground() {
-            // Your Task's code here.  This method runs
-            // on a background thread, so don't reference
-            // the Swing GUI from here.
-            return null;  // return your result
+            boolean success = false;
+            try {
+                CanRegClientApp.getApplication().startDatabaseServer();
+                success = true;
+            } catch (RemoteException ex) {
+                Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+                success = false;
+            } catch (SecurityException ex) {
+                Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+                success = false;
+            }
+            return success;  // return your result
         }
 
         @Override
         protected void succeeded(Object result) {
-        // Runs on the EDT.  Update the GUI based on
-        // the result computed by doInBackground().
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
+            boolean success = (Boolean) result;
+            if (success) {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_started."), "Message", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_not_started."), "Message", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
     }
 
@@ -706,20 +707,20 @@ public class CanRegClientView extends FrameView {
         userLevelLabel.setText(Globals.USER_RIGHT_LEVELS[userRightsLevel]);
 
         boolean analysis = false;
-        boolean mangement = false;
+        boolean management = false;
         boolean dataEntry = false;
         boolean loggedIn = false;
 
         // Hide/reveal menus
         if (userRightsLevel == 0) {
             analysis = false;
-            mangement = false;
+            management = false;
             dataEntry = false;
             loggedIn = false;
         } else {
             loggedIn = true;
             if (userRightsLevel < 2) {
-                mangement = true;
+                management = true;
             }
             if (userRightsLevel < 3) {
                 dataEntry = true;
@@ -728,16 +729,21 @@ public class CanRegClientView extends FrameView {
                 analysis = true;
             }
         }
-        toolBar.setVisible(loggedIn);
+
+        //toolbar buttons        
+        // a bit too drastic : toolBar.setVisible(loggedIn);
+        browseEditButton.setEnabled(analysis);
+        startDatabaseServerButton.setEnabled(management);
+        //Menus
         analysisMenu.setEnabled(analysis);
-        managementMenu.setEnabled(mangement);
+        managementMenu.setEnabled(management);
         dataEntryMenu.setEnabled(dataEntry);
         logOutMenuItem.setEnabled(loggedIn);
     }
 
     @Action
     public void ShowPatient() {
-    // PatientFrame1.setVisible(!PatientFrame1.isVisible());
+        // PatientFrame1.setVisible(!PatientFrame1.isVisible());
     }
 
     @Action
@@ -780,8 +786,8 @@ public class CanRegClientView extends FrameView {
 
     @Action
     public void showExportFrame() {
-        JInternalFrame internalFrame = new ExportFrame(desktopPane);
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+        ExportReportInternalFrame exportFrame = new ExportReportInternalFrame(desktopPane);
+        showAndCenterInternalFrame(desktopPane, exportFrame);
     }
 
     @Action
@@ -817,9 +823,9 @@ public class CanRegClientView extends FrameView {
     public static void showAndCenterInternalFrame(JDesktopPane desktopPane, JInternalFrame internalFrame) {
         desktopPane.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
         internalFrame.setVisible(true);
-        int posX = Math.max(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2 ,0);
-        int posY = Math.max(desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2,0);
-        internalFrame.setLocation(posX,posY);
+        int posX = Math.max(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, 0);
+        int posY = Math.max(desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2, 0);
+        internalFrame.setLocation(posX, posY);
         //CanRegClientApp.getApplication().getMainFrame();
         internalFrame.setVisible(true);
     }
@@ -849,6 +855,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator11;

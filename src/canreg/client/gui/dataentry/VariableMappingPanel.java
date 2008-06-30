@@ -3,28 +3,35 @@
  *
  * Created on 27 May 2008, 16:58
  */
-
 package canreg.client.gui.dataentry;
 
 import canreg.common.DatabaseVariablesListElement;
+import org.jdesktop.application.Action;
 
 /**
  *
  * @author  ervikm
  */
 public class VariableMappingPanel extends javax.swing.JPanel {
-    DatabaseVariablesListElement[] variablesInDB;
-    /** Creates new form VariableMappingPanel */
 
+    DatabaseVariablesListElement[] variablesInDB;
+    String fileVariable;
+
+    /** Creates new form VariableMappingPanel */
     public VariableMappingPanel() {
         initComponents();
     }
 
     void setDBVariables(DatabaseVariablesListElement[] variablesInDB) {
         this.variablesInDB = variablesInDB;
-        dbVariableComboBox.setModel(new javax.swing.DefaultComboBoxModel(variablesInDB));
+        DatabaseVariablesListElement[] entriesInComboBox = new DatabaseVariablesListElement[variablesInDB.length+1];
+        entriesInComboBox[0]=null;
+        for (int i = 0; i<variablesInDB.length; i++){
+            entriesInComboBox[i+1]=variablesInDB[i];
+        }
+        dbVariableComboBox.setModel(new javax.swing.DefaultComboBoxModel(entriesInComboBox));
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -51,6 +58,8 @@ public class VariableMappingPanel extends javax.swing.JPanel {
         jSplitPane1.setLeftComponent(fileVariableLabel);
 
         dbVariableComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "DB Variable 1", "DB Variable 2" }));
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(VariableMappingPanel.class, this);
+        dbVariableComboBox.setAction(actionMap.get("changeComboBoxAction")); // NOI18N
         dbVariableComboBox.setName("dbVariableComboBox"); // NOI18N
         jSplitPane1.setRightComponent(dbVariableComboBox);
 
@@ -84,23 +93,39 @@ public class VariableMappingPanel extends javax.swing.JPanel {
     public void setSelectedDBIndex(int i){
         boolean found = false;
         int j = 0;
-        DatabaseVariablesListElement dbVLE=null;
+        DatabaseVariablesListElement dbVLE = null;
         while (!found && j<variablesInDB.length){
             dbVLE = variablesInDB[j++];
             found = dbVLE.getDatabaseTableVariableID()==i;
         }
-        if (found)
+        if (found) {
             dbVariableComboBox.setSelectedItem(dbVLE);
-        else 
+            fileVariableLabel.setText("<html>"+fileVariable+"<html>");
+        }
+        else {
             dbVariableComboBox.setSelectedItem(null);
+            fileVariableLabel.setText("<html><b>"+fileVariable+"</b><html>");
+            fileVariableLabel.repaint();
+        }
     }
     
     public void setFileVariableName(String variable){
+        fileVariable = variable;
         fileVariableLabel.setText(variable);
     }
     
     public String getFileVariableName(){
         return fileVariableLabel.getText();
+    }
+
+    @Action
+    public void changeComboBoxAction() {
+        DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) dbVariableComboBox.getSelectedItem();
+        if (dbvle!=null)
+            setSelectedDBIndex(dbvle.getDatabaseTableVariableID());
+        else {
+            setSelectedDBIndex(-1);
+        }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

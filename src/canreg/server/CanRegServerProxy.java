@@ -5,11 +5,13 @@
 package canreg.server;
 
 import canreg.server.database.CanRegDAO;
+import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
 import canreg.server.security.ValidateMethodCall;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 import javax.security.auth.Subject;
 import org.w3c.dom.Document;
 
@@ -132,8 +134,28 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return theServer.saveTumour(tumour);
     }
 
+    public int saveDictionaryEntry(DictionaryEntry dictionaryEntry) throws RemoteException, SecurityException {
+        checkPermission("saveDictionaryEntry");
+        return theServer.saveDictionaryEntry(dictionaryEntry);
+    }
+
     public String performBackup() throws RemoteException, SecurityException {
         checkPermission("performBackup");
         return theServer.performBackup();
+    }
+
+    public String getCanRegVersion() throws RemoteException, SecurityException {
+        checkPermission("getCanRegVersion");
+        return theServer.getCanRegVersion();
+    }
+
+    public boolean deleteDictionaryEntries(int dictionaryID) throws RemoteException, SecurityException {
+        checkPermission("deleteDictionaryEntries");
+        return theServer.deleteDictionaryEntries(dictionaryID);
+    }
+
+    public HashMap<Integer, HashMap<String, String>> getDictionary() throws RemoteException, SecurityException {
+        checkPermission("getDictionary");
+        return theServer.getDictionary();
     }
 }

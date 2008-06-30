@@ -3,20 +3,38 @@
  *
  * Created on 29 February 2008, 14:06
  */
-
 package canreg.client.gui.dataentry;
+
+import canreg.client.CanRegClientApp;
+import canreg.common.DatabaseDictionaryListElement;
+import canreg.common.Globals;
+import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.Task;
+import org.w3c.dom.Document;
 
 /**
  *
  * @author  morten
  */
 public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
-    
+
+    private DatabaseDictionaryListElement[] dictionariesInDB;
+    private Document doc;
+
     /** Creates new form EditDictionaryInternalFrame */
     public EditDictionaryInternalFrame() {
         initComponents();
+        initValues();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -25,16 +43,15 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        allFieldsPanel = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jButton3 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton4 = new javax.swing.JButton();
+        oneFieldPanel = new javax.swing.JPanel();
+        displayEditLabel = new javax.swing.JLabel();
+        chooseDictionaryComboBox = new javax.swing.JComboBox();
+        displayScrollPane = new javax.swing.JScrollPane();
+        editorTextArea = new javax.swing.JTextArea();
+        updateButton = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -49,86 +66,78 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
             e1.printStackTrace();
         }
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
-        jPanel1.setToolTipText(resourceMap.getString("jPanel1.toolTipText")); // NOI18N
-        jPanel1.setName("jPanel1"); // NOI18N
+        allFieldsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("All Fields"));
+        allFieldsPanel.setName("allFieldsPanel"); // NOI18N
 
-        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(EditDictionaryInternalFrame.class, this);
+        jButton1.setAction(actionMap.get("exportCompleteDictionaryAction")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
-        jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
+        jButton2.setAction(actionMap.get("importCompleteDictionaryAction")); // NOI18N
         jButton2.setName("jButton2"); // NOI18N
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addContainerGap())
+        javax.swing.GroupLayout allFieldsPanelLayout = new javax.swing.GroupLayout(allFieldsPanel);
+        allFieldsPanel.setLayout(allFieldsPanelLayout);
+        allFieldsPanelLayout.setHorizontalGroup(
+            allFieldsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(allFieldsPanelLayout.createSequentialGroup()
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        allFieldsPanelLayout.setVerticalGroup(
+            allFieldsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(allFieldsPanelLayout.createSequentialGroup()
+                .addGroup(allFieldsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel2.border.title"))); // NOI18N
-        jPanel2.setToolTipText(resourceMap.getString("jPanel2.toolTipText")); // NOI18N
-        jPanel2.setName("jPanel2"); // NOI18N
+        oneFieldPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("One Field at a time"));
+        oneFieldPanel.setName("oneFieldPanel"); // NOI18N
 
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
+        displayEditLabel.setText(resourceMap.getString("displayEditLabel.text")); // NOI18N
+        displayEditLabel.setName("displayEditLabel"); // NOI18N
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "RecordStatus", "Sex", "PersonSearch" }));
-        jComboBox1.setName("jComboBox1"); // NOI18N
+        chooseDictionaryComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "RecordStatus", "Sex", "PersonSearch" }));
+        chooseDictionaryComboBox.setAction(actionMap.get("refreshSelectedDictionaryAction")); // NOI18N
+        chooseDictionaryComboBox.setName("chooseDictionaryComboBox"); // NOI18N
 
-        jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
-        jButton3.setName("jButton3"); // NOI18N
+        displayScrollPane.setName("displayScrollPane"); // NOI18N
 
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
+        editorTextArea.setColumns(20);
+        editorTextArea.setRows(5);
+        editorTextArea.setName("editorTextArea"); // NOI18N
+        displayScrollPane.setViewportView(editorTextArea);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setName("jTextArea1"); // NOI18N
-        jScrollPane1.setViewportView(jTextArea1);
+        updateButton.setAction(actionMap.get("updateDictionaryAction")); // NOI18N
+        updateButton.setText(resourceMap.getString("updateButton.text")); // NOI18N
+        updateButton.setName("updateButton"); // NOI18N
 
-        jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
-        jButton4.setName("jButton4"); // NOI18N
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
+        javax.swing.GroupLayout oneFieldPanelLayout = new javax.swing.GroupLayout(oneFieldPanel);
+        oneFieldPanel.setLayout(oneFieldPanelLayout);
+        oneFieldPanelLayout.setHorizontalGroup(
+            oneFieldPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(oneFieldPanelLayout.createSequentialGroup()
+                .addComponent(displayEditLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, 0, 303, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(377, Short.MAX_VALUE)
-                .addComponent(jButton4))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
+                .addComponent(chooseDictionaryComboBox, 0, 444, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, oneFieldPanelLayout.createSequentialGroup()
+                .addContainerGap(437, Short.MAX_VALUE)
+                .addComponent(updateButton))
+            .addComponent(displayScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jLabel1)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        oneFieldPanelLayout.setVerticalGroup(
+            oneFieldPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(oneFieldPanelLayout.createSequentialGroup()
+                .addGroup(oneFieldPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(displayEditLabel)
+                    .addComponent(chooseDictionaryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
+                .addComponent(displayScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4))
+                .addComponent(updateButton))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -138,35 +147,119 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(oneFieldPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(allFieldsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(allFieldsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(oneFieldPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel allFieldsPanel;
+    private javax.swing.JComboBox chooseDictionaryComboBox;
+    private javax.swing.JLabel displayEditLabel;
+    private javax.swing.JScrollPane displayScrollPane;
+    private javax.swing.JTextArea editorTextArea;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JPanel oneFieldPanel;
+    private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
-    
+    private void initValues() {
+        doc = CanRegClientApp.getApplication().getDatabseDescription();
+        // variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+        dictionariesInDB = canreg.common.Tools.getDictionaryListElements(doc, Globals.NAMESPACE);
+        chooseDictionaryComboBox.setModel(new javax.swing.DefaultComboBoxModel(dictionariesInDB));
+        chooseDictionaryComboBox.setSelectedIndex(0);
+    }
+
+    @Action
+    public void exportCompleteDictionaryAction() {
+    }
+
+    @Action
+    public void importCompleteDictionaryAction() {
+    }
+
+    @Action
+    public void selectDictionaryAction() {
+        //TODO
+    }
+
+    @Action
+    public Task updateDictionaryAction() {
+        return new UpdateDictionaryActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+    }
+
+    private class UpdateDictionaryActionTask extends org.jdesktop.application.Task<Object, Void> {
+
+        String dictionaryString;
+        DatabaseDictionaryListElement dbdle;
+
+        UpdateDictionaryActionTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to UpdateDictionaryActionTask fields, here.
+            super(app);
+            // first check to see if we have anything at all here
+            dictionaryString = editorTextArea.getText().trim();
+            dbdle = (DatabaseDictionaryListElement) chooseDictionaryComboBox.getSelectedItem();
+        }
+
+        @Override
+        protected Object doInBackground() {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+
+            if (dictionaryString.trim().length() > 0) {
+                int dictionaryID = dbdle.getDictionaryID();
+                try {
+                    canreg.client.dataentry.DictionaryHelper.replaceDictionary(dictionaryID, dictionaryString, CanRegClientApp.getApplication().getServer());
+                    CanRegClientApp.getApplication().refreshDictionary();
+                } catch (RemoteException ex) {
+                    Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                return new String("Error.");
+            }
+            return null;  // return your result
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
+            if (result == null) {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully updated dictionary: " + dbdle.getName() + ".", "Dictionary successfully updated.", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
+    @Action
+    public void refreshSelectedDictionaryAction() {
+        DatabaseDictionaryListElement dbdle = (DatabaseDictionaryListElement) chooseDictionaryComboBox.getSelectedItem();
+        HashMap<String, String> map = canreg.client.dataentry.DictionaryHelper.getDictionaryByID(CanRegClientApp.getApplication().getDictionary(), dbdle.getDictionaryID());
+        String str = "";
+        if (map != null) {
+            Map sortedMap = new TreeMap(map);
+
+            Iterator iterator = sortedMap.entrySet().iterator();
+
+            while (iterator.hasNext()) {
+                Map.Entry entry = (Map.Entry) iterator.next();
+                str += entry.getKey() + "\t" + entry.getValue() + "\n";
+            }
+        }
+        editorTextArea.setText(str);
+    }
 }

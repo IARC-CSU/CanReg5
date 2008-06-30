@@ -30,6 +30,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -43,12 +44,19 @@ import org.w3c.dom.*;
  */
 public class CanRegDAO {
 
-    /** Creates a new instance of CanRegDAO */
+    /** Creates a new instance of CanRegDAO
+     * @param doc 
+     */
     public CanRegDAO(Document doc) {
         // Database name should be <= 8 characters long to access them with ODBC
         this("CanReg5", doc);
     }
 
+    /**
+     * 
+     * @param dbName
+     * @param doc
+     */
     public CanRegDAO(String dbName, Document doc) {
         this.doc = doc;
 
@@ -60,6 +68,7 @@ public class CanRegDAO {
         strSavePatient = QueryGenerator.strSavePatient(doc);
         strSaveTumour = QueryGenerator.strSaveTumour(doc);
         strSaveDictionary = QueryGenerator.strSaveDictionary();
+        strSaveDictionaryEntry = QueryGenerator.strSaveDictionaryEntry();
 
         setDBSystemDir();
         dbProperties = loadDBProperties();
@@ -73,10 +82,42 @@ public class CanRegDAO {
 
     }
 
-    public String  performBackup() {
+    public HashMap<Integer, HashMap<String, String>> getDictionary() {
+        HashMap<Integer, HashMap<String, String>> dictionaryMap = new HashMap<Integer, HashMap<String, String>>();
+        Statement queryStatement = null;
+        ResultSet results = null;
+
+        try {
+            queryStatement = dbConnection.createStatement();
+            results = queryStatement.executeQuery(strGetDictionaryEntries);
+            while (results.next()) {
+                int id = results.getInt(1);
+                Integer dictionary = results.getInt(2);
+                String code = results.getString(3);
+                String desc = results.getString(4);
+                HashMap dic = dictionaryMap.get(dictionary);
+                if (dic==null)
+                    dic = new HashMap<String,String>();
+                    dictionaryMap.put(dictionary, dic);
+                dic.put(code, desc);
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+
+        }
+
+        return dictionaryMap;
+    }
+
+    /**
+     * Perform backup of the database
+     * @return Path to backup
+     */
+    public String performBackup() {
         String path = null;
         try {
-            path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection,Globals.CANREG_BACKUP_FOLDER);
+            path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER);
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -167,8 +208,13 @@ public class CanRegDAO {
         dbProperties.remove("create");
         return bCreated;
     }
-    
-    public boolean restoreDatabase(String path){
+
+    /**
+     * Restore database from backup.
+     * @param path to database backup.
+     * @return true if successfull, false if not
+     */
+    public boolean restoreDatabase(String path) {
         boolean bRestored = false;
         dbConnection = null;
 
@@ -186,24 +232,30 @@ public class CanRegDAO {
         return bRestored;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public boolean connect() {
         String dbUrl = getDatabaseUrl();
         try {
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
-            
+
             //Prepare the SQL statements
             stmtSaveNewPatient = dbConnection.prepareStatement(strSavePatient, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewTumour = dbConnection.prepareStatement(strSaveTumour, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewDictionary = dbConnection.prepareStatement(strSaveDictionary, Statement.RETURN_GENERATED_KEYS);
+            stmtSaveNewDictionaryEntry = dbConnection.prepareStatement(strSaveDictionaryEntry, Statement.RETURN_GENERATED_KEYS);
+            stmtDeleteDictionaryEntries = dbConnection.prepareStatement(strDeleteDictionaryEntries);
             //stmtUpdateExistingPatient = dbConnection.prepareStatement(strUpdatePatient);
             stmtGetPatient = dbConnection.prepareStatement(strGetPatient);
             stmtGetPatients = dbConnection.prepareStatement(strGetPatients);
-            
+
             stmtGetTumour = dbConnection.prepareStatement(strGetTumour);
             stmtGetTumours = dbConnection.prepareStatement(strGetTumours);
-            
-            stmtGetTumour = dbConnection.prepareStatement(strGetDictionary);
-            stmtGetTumours = dbConnection.prepareStatement(strGetDictionaries);
+
+            stmtGetDictionary = dbConnection.prepareStatement(strGetDictionary);
+            // stmtGetDictionaries = dbConnection.prepareStatement(strGetDictionaries);
             // stmtDeletePatient = dbConnection.prepareStatement(strDeletePatient);
 
             isConnected = dbConnection != null;
@@ -226,6 +278,9 @@ public class CanRegDAO {
         return System.getProperty("user.home");
     }
 
+    /**
+     * 
+     */
     public void disconnect() {
         if (isConnected) {
             String dbUrl = getDatabaseUrl();
@@ -238,17 +293,25 @@ public class CanRegDAO {
         }
     }
 
+    /**
+     * 
+     * @return String location of the database
+     */
     public String getDatabaseLocation() {
         String dbLocation = System.getProperty("derby.system.home") + "/" + dbName;
         return dbLocation;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getDatabaseUrl() {
         String dbUrl = dbProperties.getProperty("derby.url") + dbName;
         return dbUrl;
     }
 
-    private int saveRecord(String tableName, DatabaseRecord record, PreparedStatement stmtSaveNewRecord) {
+    private synchronized int saveRecord(String tableName, DatabaseRecord record, PreparedStatement stmtSaveNewRecord) {
         int id = -1;
         try {
             stmtSaveNewRecord.clearParameters();
@@ -307,14 +370,29 @@ public class CanRegDAO {
         return id;
     }
 
+    /**
+     * 
+     * @param patient
+     * @return
+     */
     public int savePatient(Patient patient) {
         return saveRecord("Patient", patient, stmtSaveNewPatient);
     }
 
+    /**
+     * 
+     * @param tumour
+     * @return
+     */
     public int saveTumour(Tumour tumour) {
         return saveRecord("Tumour", tumour, stmtSaveNewTumour);
     }
 
+    /**
+     * 
+     * @param dictionary
+     * @return
+     */
     public int saveDictionary(Dictionary dictionary) {
         int id = -1;
         try {
@@ -341,6 +419,52 @@ public class CanRegDAO {
         return id;
     }
 
+    /**
+     * 
+     * @param dictionary
+     * @return
+     */
+    public int saveDictionaryEntry(DictionaryEntry dictionaryEntry) {
+        int id = -1;
+        try {
+            stmtSaveNewDictionaryEntry.clearParameters();
+
+            stmtSaveNewDictionaryEntry.setInt(1, dictionaryEntry.getDictionaryID());
+            stmtSaveNewDictionaryEntry.setString(2, dictionaryEntry.getCode());
+            stmtSaveNewDictionaryEntry.setString(3, dictionaryEntry.getDescription());
+
+            int rowCount = stmtSaveNewDictionaryEntry.executeUpdate();
+            ResultSet results = stmtSaveNewDictionaryEntry.getGeneratedKeys();
+            if (results.next()) {
+                id = results.getInt(1);
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return id;
+    }
+
+    public boolean deleteDictionaryEntries(int dictionaryID) {
+        boolean success = false;
+        try {
+            stmtDeleteDictionaryEntries.clearParameters();
+            stmtDeleteDictionaryEntries.setInt(1, dictionaryID);
+
+            stmtDeleteDictionaryEntries.executeUpdate();
+            success = true;
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return success;
+    }
+
+    /**
+     * 
+     * @param record
+     * @return
+     */
     public boolean editPatient(Patient record) {
         boolean bEdited = false;
         try {
@@ -397,6 +521,11 @@ public class CanRegDAO {
         return bFilled;
     }
 
+    /**
+     * 
+     * @param id
+     * @return
+     */
     public boolean deleteRecord(int id) {
         boolean bDeleted = false;
         try {
@@ -411,11 +540,20 @@ public class CanRegDAO {
         return bDeleted;
     }
 
+    /**
+     * 
+     * @param record
+     * @return
+     */
     public boolean deleteRecord(Patient record) {
         int id = record.getId();
         return deleteRecord(id);
     }
 
+    /**
+     * 
+     * @return
+     */
     public List<ListEntry> getListEntries() {
         List<ListEntry> listEntries = new ArrayList<ListEntry>();
         Statement queryStatement = null;
@@ -442,6 +580,11 @@ public class CanRegDAO {
         return listEntries;
     }
 
+    /**
+     * 
+     * @param index
+     * @return
+     */
     public Patient getRecord(int index) {
         Patient record = null;
         try {
@@ -480,6 +623,7 @@ public class CanRegDAO {
     private PreparedStatement stmtSaveNewPatient;
     private PreparedStatement stmtSaveNewTumour;
     private PreparedStatement stmtSaveNewDictionary;
+    private PreparedStatement stmtSaveNewDictionaryEntry;
     private PreparedStatement stmtUpdateExistingPatient;
     private PreparedStatement stmtGetListEntries;
     private PreparedStatement stmtGetPatient;
@@ -489,28 +633,32 @@ public class CanRegDAO {
     private PreparedStatement stmtGetRecord;
     private PreparedStatement stmtGetRecords;
     private PreparedStatement stmtGetDictionary;
+    private PreparedStatement stmtGetDictionaryEntry;
+    private PreparedStatement stmtDeleteDictionaryEntry;
+    private PreparedStatement stmtDeleteDictionaryEntries;
     private PreparedStatement stmtDeletePatient;
     private PreparedStatement stmtDeleteTumour;
     private String ns = "ns3:";
-    
     private static final String strGetPatient =
             "SELECT * FROM APP.PATIENT " +
             "WHERE ID = ?";
-     private String strGetPatients =
+    private String strGetPatients =
             "SELECT * FROM APP.PATIENT";
-     
-     private static final String strGetTumour =
+    private static final String strGetTumour =
             "SELECT * FROM APP.TUMOUR " +
             "WHERE ID = ?";
-     private String strGetTumours =
+    private String strGetTumours =
             "SELECT * FROM APP.TUMOUR";
-     
-     private static final String strGetDictionary =
+    private static final String strGetDictionary =
             "SELECT * FROM APP.DICTIONARIES " +
             "WHERE ID = ?";
-     private String strGetDictionaries =
+    private String strGetDictionaries =
             "SELECT * FROM APP.DICTIONARIES ";
-
+    private static final String strGetDictionaryEntry =
+            "SELECT * FROM APP.DICTIONARY " +
+            "WHERE ID = ?";
+    private static final String strGetDictionaryEntries =
+            "SELECT * FROM APP.DICTIONARY ";
     private static final String strGetListEntries =
             "SELECT ID, LASTNAME, FIRSTNAME, MIDDLENAME FROM APP.PATIENT " +
             "ORDER BY LASTNAME ASC";
@@ -520,13 +668,12 @@ public class CanRegDAO {
     private static final String strDeleteTumour =
             "DELETE FROM APP.TUMOUR " +
             "WHERE ID = ?";
-    private static final String strDeleteDictionary =
+    private static final String strDeleteDictionaryEntries =
             "DELETE FROM APP.DICTIONARY " +
-            "WHERE ID = ?";
-    
-    // The Dynamic ones
+            "WHERE DICTIONARY = ?";    // The Dynamic ones
     private String strSavePatient;
     private String strSaveTumour;
     private String strSaveDictionary;
+    private String strSaveDictionaryEntry;
 }
 

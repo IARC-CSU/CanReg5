@@ -9,8 +9,12 @@ import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.ServerDescription;
 import java.beans.PropertyChangeSupport;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.AlreadyBoundException;
-import java.util.Properties;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
@@ -77,6 +81,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         autoStartCheckBox = new javax.swing.JCheckBox();
+        jButton1 = new javax.swing.JButton();
 
         setResizable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(LoginInternalFrame.class);
@@ -175,7 +180,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(passwordLabel)
                     .addComponent(rememberPasswordCheckBox)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addContainerGap(75, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
@@ -197,7 +202,6 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         portField.setName("portField"); // NOI18N
 
         launchServerButton.setAction(actionMap.get("launchCanRegServerAction")); // NOI18N
-        launchServerButton.setText(resourceMap.getString("launchServerButton.text")); // NOI18N
         launchServerButton.setName("launchServerButton"); // NOI18N
 
         addServerToListButton.setAction(actionMap.get("addServerToList")); // NOI18N
@@ -222,18 +226,21 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         autoStartCheckBox.setText(resourceMap.getString("autoStartCheckBox.text")); // NOI18N
         autoStartCheckBox.setName("autoStartCheckBox"); // NOI18N
 
+        jButton1.setAction(actionMap.get("getIPaddressAction")); // NOI18N
+        jButton1.setName("jButton1"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(serverURLLabel)
-                    .addComponent(nameLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(serverURLLabel)
+                            .addComponent(nameLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(nameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
                             .addComponent(serverURLTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE))
@@ -245,14 +252,17 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(codeField, 0, 0, Short.MAX_VALUE)
                             .addComponent(portField, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(autoStartCheckBox)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(launchServerButton)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jButton2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(addServerToListButton))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(autoStartCheckBox)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(launchServerButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addServerToListButton)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -273,10 +283,11 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addServerToListButton)
                     .addComponent(launchServerButton)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(autoStartCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
@@ -301,7 +312,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(loginButton)
@@ -312,20 +323,21 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
     private void loadDefaultValues() {
-        Properties p = localSettings.getProperties();
-        String rememberPasswordBooleanString = p.getProperty(localSettings.rememberPasswordKey);
-        boolean rememberPassword = rememberPasswordBooleanString.equalsIgnoreCase(localSettings.trueProperty);
+        // Properties p = localSettings.getProperties();
+        String rememberPasswordBooleanString = localSettings.getProperty(LocalSettings.REMEMBER_PASSWORD_KEY);
+        boolean rememberPassword = rememberPasswordBooleanString.equalsIgnoreCase(LocalSettings.TRUE_PROPERTY);
         rememberPasswordCheckBox.setSelected(rememberPassword);
         if (rememberPassword) {
-            passwordField.setText(p.getProperty(localSettings.passwordKey));
+            passwordField.setText(localSettings.getProperty(LocalSettings.PASSWORD_KEY));
         }
-        usernameTextField.setText(p.getProperty(localSettings.userNameKey));
+        usernameTextField.setText(localSettings.getProperty(LocalSettings.USERNAME_KEY));
         // Load the server list
         String[] serverNames = localSettings.getServerNames();
         if (serverNames != null) {
             canRegSystemComboBox.setModel(new javax.swing.DefaultComboBoxModel(localSettings.getServerDescriptions().toArray()));
-            String lastServerIDString = p.getProperty(localSettings.lastServerIDKey);
+            String lastServerIDString = localSettings.getProperty(LocalSettings.LAST_SERVER_ID_KEY);
             if (lastServerIDString != null) {
                 ServerDescription sd = localSettings.getServerDescription(Integer.parseInt(lastServerIDString));
                 if (sd != null) {
@@ -337,9 +349,9 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         } else {
             canRegSystemComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[]{""}));
         }
-        String autoStartServerBooleanString = p.getProperty(localSettings.autoStartServerKey);
+        String autoStartServerBooleanString = localSettings.getProperty(LocalSettings.AUTO_START_SERVER_KEY);
         if (autoStartServerBooleanString != null) {
-            boolean autoStartServerBoolean = autoStartServerBooleanString.equalsIgnoreCase(localSettings.trueProperty);
+            boolean autoStartServerBoolean = autoStartServerBooleanString.equalsIgnoreCase(LocalSettings.TRUE_PROPERTY);
             autoStartCheckBox.setSelected(autoStartServerBoolean);
         } else {
             autoStartCheckBox.setSelected(false);
@@ -347,21 +359,28 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
     }
 
     private void saveDefaultValues() {
-        Properties p = localSettings.getProperties();
+        // Properties p = localSettings.getProperties();
+        // Should CanReg remember the password?
         if (rememberPasswordCheckBox.isSelected()) {
-            p.setProperty(localSettings.rememberPasswordKey, localSettings.trueProperty);
-            p.setProperty(localSettings.passwordKey, new String(passwordField.getPassword()));
+            localSettings.setProperty(LocalSettings.REMEMBER_PASSWORD_KEY, LocalSettings.TRUE_PROPERTY);
+            localSettings.setProperty(LocalSettings.PASSWORD_KEY, new String(passwordField.getPassword()));
         } else {
-            p.setProperty(localSettings.rememberPasswordKey, localSettings.falseProperty);
-            p.setProperty(localSettings.passwordKey, "");
+            localSettings.setProperty(LocalSettings.REMEMBER_PASSWORD_KEY, LocalSettings.FALSE_PROPERTY);
+            localSettings.setProperty(LocalSettings.PASSWORD_KEY, "");
         }
-        p.setProperty(localSettings.userNameKey, usernameTextField.getText());
-        ServerDescription sd = localSettings.getServerDescriptions().get(canRegSystemComboBox.getSelectedIndex());
-        p.setProperty(localSettings.lastServerIDKey, sd.getId() + "");
+        localSettings.setProperty(LocalSettings.USERNAME_KEY, usernameTextField.getText());
+        // Get list of servers stored locally
+        LinkedList<ServerDescription> sds = localSettings.getServerDescriptions();
+        // If this list contains more than one entry - save it.
+        if (sds.size()>0) {
+            ServerDescription sd = sds.get(canRegSystemComboBox.getSelectedIndex());
+            localSettings.setProperty(LocalSettings.LAST_SERVER_ID_KEY, sd.getId() + "");
+        }
+        // Should one autostart the CanReg server the next time?
         if (autoStartCheckBox.isSelected()) {
-            p.setProperty(localSettings.autoStartServerKey, localSettings.trueProperty);
+            localSettings.setProperty(LocalSettings.AUTO_START_SERVER_KEY, LocalSettings.TRUE_PROPERTY);
         } else {
-            p.setProperty(localSettings.autoStartServerKey, localSettings.falseProperty);
+            localSettings.setProperty(LocalSettings.AUTO_START_SERVER_KEY, LocalSettings.FALSE_PROPERTY);
         }
         localSettings.writeSettings();
     }
@@ -374,7 +393,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_passwordFieldKeyTyped
 
     private void usernameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameTextFieldKeyTyped
-    // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_usernameTextFieldKeyTyped
 
     @Action
@@ -418,6 +437,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton cancelButton;
     private javax.swing.JTextField codeField;
     private javax.swing.JLabel feedbackLabel;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -449,7 +469,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
-    @Action
+    @Action()
     public Task launchCanRegServerAction() {
         return new LaunchCanRegServerActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
     }
@@ -503,6 +523,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Server failed to start.", "Message", JOptionPane.ERROR_MESSAGE);
             } else if (resultString != null) {
                 feedbackLabel.setText("Server started.");
+                CanRegClientApp.getApplication().setCanregServerRunningInThisThread(true);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Server started.", "Message", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 feedbackLabel.setText("Server failed to start.");
@@ -534,18 +555,17 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
 
     @Action
     public void addServerToList() {
-        Properties properties = localSettings.getProperties();
+        // Properties properties = localSettings.getProperties();
 
         if (testServerConnection()) {
             //find an available server number
             boolean found = false;
             int i = 0;
             while (!found) {
-                found = properties.getProperty("server." + (i++) + ".name") == null;
+                found = localSettings.getProperty("server." + (i++) + ".name") == null;
             }
             // step one back
             i -= 1;
-
 
             ServerDescription sd = new ServerDescription(nameTextField.getText(),
                     serverURLTextField.getText(),
@@ -562,5 +582,21 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         portField.setText(sd.getPort() + "");
         serverURLTextField.setText(sd.getUrl());
         codeField.setText(sd.getCode());
+    }
+
+    @Action
+    public void getIPaddressAction() {
+        try {
+            InetAddress addr;
+            if (serverURLTextField.getText().equalsIgnoreCase("localhost")) {
+                addr = InetAddress.getLocalHost();
+            } else {
+                addr = InetAddress.getByName(serverURLTextField.getText());
+            }
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "<html>The IP address of <b>" + addr.getHostName() +"</b> is <b>"+ addr.getHostAddress()+"</b>.</html>", "Message", JOptionPane.INFORMATION_MESSAGE);
+        } catch (UnknownHostException ex) {
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "<html>Cannot find the IP address of <b>"+ serverURLTextField.getText()+"</b>.</html>" , "Message", JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

@@ -8,11 +8,12 @@ package canreg.client.gui.components;
 import canreg.client.gui.*;
 import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseIndexesListElement;
-import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import java.beans.PropertyVetoException;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
-import javax.swing.JInternalFrame;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -23,10 +24,11 @@ import org.w3c.dom.Document;
 public class RangeFilterPanel extends javax.swing.JPanel {
 
     private Document doc;
-    private DatabaseVariablesListElement[] variablesInDB;
+    // private DatabaseVariablesListElement[] variablesInDB;
     private DatabaseIndexesListElement[] indexesInDB;
     private Vector filterCollection;
     private JDesktopPane dtp;
+    private FastFilterInternalFrame filterWizardInternalFrame;
 
     /** Creates new form RangeFilterPanel */
     public RangeFilterPanel() {
@@ -252,7 +254,7 @@ public class RangeFilterPanel extends javax.swing.JPanel {
 
         // Get the system description
         doc = CanRegClientApp.getApplication().getDatabseDescription();
-        variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+        // variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
         indexesInDB = canreg.common.Tools.getIndexesListElements(doc, Globals.NAMESPACE);
         rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(indexesInDB));
         refreshFilterComboBox();
@@ -310,9 +312,22 @@ public class RangeFilterPanel extends javax.swing.JPanel {
 
     @Action
     public void filterWizardAction() {
-        JInternalFrame internalFrame = new FastFilterInternalFrame(this);
-        dtp.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        internalFrame.setLocation(dtp.getWidth() / 2 - internalFrame.getWidth() / 2, dtp.getHeight() / 2 - internalFrame.getHeight() / 2);
-        internalFrame.setVisible(true);
+        if (filterWizardInternalFrame == null) {
+            filterWizardInternalFrame = new FastFilterInternalFrame(this);
+            dtp.add(filterWizardInternalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+            filterWizardInternalFrame.setLocation(dtp.getWidth() / 2 - filterWizardInternalFrame.getWidth() / 2, dtp.getHeight() / 2 - filterWizardInternalFrame.getHeight() / 2);
+            filterWizardInternalFrame.setVisible(false);
+        }
+        if (filterWizardInternalFrame.isVisible()) {
+            filterWizardInternalFrame.toFront();
+            try {
+                filterWizardInternalFrame.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(RangeFilterPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            filterWizardInternalFrame.setTextPane("");
+            filterWizardInternalFrame.setVisible(true);
+        }
     }
 }

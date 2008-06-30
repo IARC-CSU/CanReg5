@@ -5,7 +5,7 @@ package canreg.client;
 
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.CanRegClientView;
-import canreg.client.gui.dataentry.ImportOptions;
+import canreg.client.dataentry.ImportOptions;
 import canreg.common.Globals;
 import canreg.server.CanRegLoginInterface;
 import canreg.server.CanRegServerInterface;
@@ -14,12 +14,14 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.util.EventObject;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
-import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
@@ -32,12 +34,14 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     private CanRegServerInterface server;
     static boolean debug = true;
+    private boolean canregServerRunningInThisThread = false;
     private String systemName = null;
     private String username = null;
     private static LocalSettings localSettings;
     public boolean loggedIn = false;
     private CanRegClientView canRegClientView;
     private Document doc;
+    private HashMap<Integer, HashMap<String, String>> dictionary;
 
     /**
      * At startup create and show the main frame of the application.
@@ -47,6 +51,34 @@ public class CanRegClientApp extends SingleFrameApplication {
         applyPreferences();
         canRegClientView = new CanRegClientView(this);
         show(canRegClientView);
+
+        ExitListener maybeExit = new ExitListener() {
+
+            public boolean canExit(EventObject e) {
+                int option = JOptionPane.NO_OPTION;
+                if (!canregServerRunningInThisThread) {
+                    option = JOptionPane.showConfirmDialog(null, "Really exit?");
+                } else {
+                    try {
+                        if (loggedIn) {
+                            int users = listUsersLoggedIn().length - 1;
+                            option = JOptionPane.showConfirmDialog(null, "Really exit?\n" + users + " other user(s) connected to this server will be disconnected.");
+                        } else {
+                            option = JOptionPane.showConfirmDialog(null, "Really exit?\nOther user(s) connected to this server will be disconnected.");
+                        }
+                    } catch (RemoteException ex) {
+                    }
+                }
+                return option == JOptionPane.YES_OPTION;
+            }
+
+            public void willExit(EventObject e) {
+                if (loggedIn) {
+                    logOut();
+                }
+            }
+        };
+        addExitListener(maybeExit);
     }
 
     /**
@@ -144,6 +176,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 canRegClientView.setUserRightsLevel(i);
                 loggedIn = true;
                 doc = server.getDatabseDescription();
+                dictionary = server.getDictionary();
                 return systemName;
             } else {
                 return null;
@@ -193,6 +226,14 @@ public class CanRegClientApp extends SingleFrameApplication {
         return doc;
     }
 
+    public HashMap<Integer, HashMap<String, String>> getDictionary() {
+        return dictionary;
+    }
+
+    public void refreshDictionary() throws SecurityException, RemoteException {
+        dictionary = server.getDictionary();
+    }
+
     public void applyPreferences() {
         Locale.setDefault(localSettings.getLocale());
     }
@@ -202,12 +243,16 @@ public class CanRegClientApp extends SingleFrameApplication {
         // Add feedback mechanism...
         canreg.client.dataentry.Import.importFile(doc, map, file, server, io);
     }
-    
+
+    public void setCanregServerRunningInThisThread(boolean canregServerRunningInThisThread) {
+        this.canregServerRunningInThisThread = canregServerRunningInThisThread;
+    }
+
     @Action
     @Override
     public void quit(ActionEvent evt) {
         try {
-            logOut();
+            // logOut();
             super.quit(evt);
         } catch (SecurityException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
@@ -246,5 +291,9 @@ public class CanRegClientApp extends SingleFrameApplication {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         }
         return path;
+    }
+
+    public CanRegServerInterface getServer() {
+        return server;
     }
 }

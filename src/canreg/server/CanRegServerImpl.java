@@ -6,11 +6,13 @@ package canreg.server;
 
 import canreg.common.Globals;
 import canreg.server.database.CanRegDAO;
+import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
 import canreg.server.management.SystemDescription;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -179,7 +181,6 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             System.out.println("\t[CanRegServer] " + msg);
         }
     }
-    
     // add and remove records
     public int savePatient(Patient patient) {
         return db.savePatient(patient);
@@ -189,7 +190,23 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return db.saveTumour(tumour);
     }
 
+    public int saveDictionaryEntry(DictionaryEntry dictionaryEntry) {
+        return db.saveDictionaryEntry(dictionaryEntry);
+    }
+
     public String performBackup() throws RemoteException, SecurityException {
         return db.performBackup();
+    }
+
+    public String getCanRegVersion() throws RemoteException, SecurityException {
+        return Globals.VERSION_STRING;
+    }
+
+    public boolean deleteDictionaryEntries(int dictionaryID) throws RemoteException, SecurityException {
+        return db.deleteDictionaryEntries(dictionaryID);
+    }
+
+    public HashMap<Integer, HashMap<String, String>> getDictionary() throws RemoteException, SecurityException {
+        return db.getDictionary();
     }
 }

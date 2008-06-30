@@ -5,10 +5,12 @@
 package canreg.server;
 
 import canreg.server.database.CanRegDAO;
+import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import org.w3c.dom.Document;
 
 /**
@@ -69,12 +71,26 @@ public interface CanRegServerInterface extends Remote {
     public void userLoggedOut(String username)
             throws RemoteException, SecurityException;
 
-    //Add remove cases
+    //Add cases
     public int savePatient(Patient patient) throws RemoteException, SecurityException;
 
     public int saveTumour(Tumour tumour) throws RemoteException, SecurityException;
 
+    public int saveDictionaryEntry(DictionaryEntry dictionaryEntry) throws RemoteException, SecurityException;
+    
+    // Drop cases
+    public boolean deleteDictionaryEntries(int dictionaryID) throws RemoteException, SecurityException;
+    
+    // Get the dictionary
+    public HashMap<Integer, HashMap<String, String>> getDictionary() throws RemoteException, SecurityException;
+    
     // Backup
     public String performBackup()
             throws RemoteException, SecurityException;
+
+    // Get version information
+    public String getCanRegVersion()
+            throws RemoteException, SecurityException;
+    
+    
 }

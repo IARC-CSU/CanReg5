@@ -90,6 +90,19 @@ public class Tools {
         return indexes;
     }
 
+    public static DatabaseDictionaryListElement[] getDictionaryListElements(Document doc, String namespace) {
+        NodeList nl = doc.getElementsByTagName(namespace + "dictionary");
+        DatabaseDictionaryListElement[] dictionaries = new DatabaseDictionaryListElement[nl.getLength()];
+        for (int i = 0; i < nl.getLength(); i++) {
+            Element e = (Element) nl.item(i);
+            dictionaries[i] = new DatabaseDictionaryListElement();
+            dictionaries[i].setName(e.getElementsByTagName(namespace + "name").item(0).getTextContent());
+            dictionaries[i].setDictionaryID(Integer.parseInt(e.getElementsByTagName(namespace + "dictionary_id").item(0).getTextContent()));
+            // TODO -- capture more info...
+        }
+        return dictionaries;
+    }
+
     public static String[] getVariableNames(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
         String[] variableNames = new String[nl.getLength()];

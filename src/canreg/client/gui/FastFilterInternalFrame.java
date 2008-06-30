@@ -236,6 +236,10 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         logicalOperatorComboBox.setModel(new DefaultComboBoxModel(logicalOperator));
     }
 
+    public void setTextPane(String str) {
+        textPane.setText(str);
+    }
+    
     @Action
     public void cancelAction() {
         this.dispose();
@@ -244,7 +248,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public void okAction() {
         parentFilterPanel.setFilter(textPane.getText().trim());
-        this.dispose();
+        this.setVisible(false);
     }
 
     @Action

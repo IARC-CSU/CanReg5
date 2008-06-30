@@ -4,7 +4,7 @@
  */
 package canreg.client.dataentry;
 
-import canreg.client.gui.dataentry.ImportOptions;
+import canreg.client.dataentry.ImportOptions;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
 import java.io.BufferedReader;
@@ -29,7 +29,8 @@ public class Import {
     private static String namespace = "ns3:";
     private static boolean debug = true;
 
-    // function without map
+    // function without map - directly on the server...
+    // deprecated
     public static boolean importFile(Document doc, File file, CanRegDAO canRegDAO) {
         // create the mapping
         BufferedReader bufferedReader = null;
@@ -54,6 +55,7 @@ public class Import {
     }
 
     // function with map - directly on the server...
+    // deprecated
     public static boolean importFile(Document doc, List<Relation> map, File file, CanRegDAO canRegDAO) {
 
         boolean success = false;
@@ -163,7 +165,7 @@ public class Import {
             }
                 
             while (line != null && (readWholeFile==true || numberOfLinesRead<linesToRead)) {
-                String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
+                String[] lineElements = line.split(io.getSeparator());
                 // Build patient part
                 Patient patient = new Patient();
                 for (int i = 0; i < map.size(); i++) {
