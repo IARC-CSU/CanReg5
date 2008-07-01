@@ -4,6 +4,8 @@
  */
 package canreg.server.management;
 
+import canreg.common.Globals;
+import javax.swing.JTextField;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;
@@ -28,7 +30,12 @@ public class SystemDefinitionConverter {
     private String namespace = "ns3:";
     private Document doc;
     private DataInputStream dataStream;
-    private String[] standardVariablesCR4 = {"RegistrationNo",
+    private JTextField nameTextField = null;
+    private JTextField codeTextField = null;
+    private String registryName;
+    private String registryCode;
+    private String[] standardVariablesCR4 = {
+        "RegistrationNo",
         "IncidenceDate",
         "BirthDate",
         "Age",
@@ -74,7 +81,8 @@ public class SystemDefinitionConverter {
             System.out.println("Usage:\nSystemDefinitionConverter <CanReg4 system definition file>");
         } else {
             try {
-                new SystemDefinitionConverter(args[0]);
+                SystemDefinitionConverter sdc = new SystemDefinitionConverter();
+                sdc.convert(args[0]);
             } catch (FileNotFoundException ex) {
                 System.out.println(args[0] + " not found. " + ex);
                 Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,7 +90,7 @@ public class SystemDefinitionConverter {
         }
     }
 
-    private SystemDefinitionConverter(String canReg4FileName) throws FileNotFoundException {
+    public String convert(String canReg4FileName) throws FileNotFoundException {
         this.canReg4FileName = canReg4FileName;
 
         try {
@@ -121,12 +129,20 @@ public class SystemDefinitionConverter {
                 parentElement = doc.createElement(namespace + "general");
                 root.appendChild(parentElement);
 
-                // Read and add the 3 letter code                
-                parentElement.appendChild(createElement(namespace + "registry_code", readBytes(3)));
+                // Read and add the 3 letter code
+                registryCode = new String(readBytes(3));
+                if (codeTextField != null) {
+                    codeTextField.setText(registryCode);
+                }
+                parentElement.appendChild(createElement(namespace + "registry_code", registryCode));
                 // Read the region code
                 parentElement.appendChild(createElement(namespace + "region_code", readBytes(1)));
                 // Read the Registry name
-                parentElement.appendChild(createElement(namespace + "registry_name", readText().replace('|', ' ')));
+                registryName = new String(readText().replace('|', ' '));
+                if (nameTextField != null) {
+                    nameTextField.setText(registryName);
+                }
+                parentElement.appendChild(createElement(namespace + "registry_name", registryName));
                 // Read the working language
                 parentElement.appendChild(createElement(namespace + "working_language", readBytes(1)));
 
@@ -251,8 +267,8 @@ public class SystemDefinitionConverter {
                         element.appendChild(createElement(namespace + "table", "Tumour"));
                     }
                 }
-                
-                
+
+
                 // Add the new System variables
                 //    private Element createVariable(int variableId, String fullName, String shortName,
                 //    String englishName, int groupID, String fillInStatus, String multiplePrimaryCopy,
@@ -267,22 +283,25 @@ public class SystemDefinitionConverter {
                 parentElement.appendChild(
                         createVariable(variableNumber++, "Tumour ID", "TumourID", "TumourID",
                         -1, "Automatic", "Othr", "Number", -1, -1, "Patient", "TumourID"));
-                
+
+                /* moved to the system Variables
                 // Forward and backward pointers...
                 // Pointer to records of the same Tumour information
                 parentElement.appendChild(
-                        createVariable(variableNumber++, "Next Tumour Record ID", "NextTumourRecID", "Next Tumour Record ID",
-                        -1, "Automatic", "Othr", "Number", -1, -1, "Tumour", "NextTumourID"));
+                createVariable(variableNumber++, "Next Tumour Record ID", "NextTumourRecID", "Next Tumour Record ID",
+                -1, "Automatic", "Othr", "Number", -1, -1, "Tumour", "NextTumourID"));
                 parentElement.appendChild(
-                        createVariable(variableNumber++, "Last Tumour Record ID", "LastTumourRecID", "Last Tumour Record ID",
-                        -1, "Automatic", "Othr", "Number", -1, -1, "Tumour", "LastTumourID"));
+                createVariable(variableNumber++, "Last Tumour Record ID", "LastTumourRecID", "Last Tumour Record ID",
+                -1, "Automatic", "Othr", "Number", -1, -1, "Tumour", "LastTumourID"));
                 // Pointer to records of the same Patient information
                 parentElement.appendChild(
-                        createVariable(variableNumber++, "Next Patient Record ID", "NextPatientRecID", "Next Patient Record ID",
-                        -1, "Automatic", "Othr", "Number", -1, -1, "Patient", "NextPatientID"));
+                createVariable(variableNumber++, "Next Patient Record ID", "NextPatientRecID", "Next Patient Record ID",
+                -1, "Automatic", "Othr", "Number", -1, -1, "Patient", "NextPatientID"));
                 parentElement.appendChild(
-                        createVariable(variableNumber++, "Last Patient Record ID", "LastPatientRecID", "Last Patient Record ID",
-                        -1, "Automatic", "Othr", "Number", -1, -1, "Patient", "LastPatientID"));
+                createVariable(variableNumber++, "Last Patient Record ID", "LastPatientRecID", "Last Patient Record ID",
+                -1, "Automatic", "Othr", "Number", -1, -1, "Patient", "LastPatientID"));
+                 */
+
 
                 // Create the Indexes part
                 //
@@ -372,12 +391,12 @@ public class SystemDefinitionConverter {
                 codingElement.appendChild(createElement(namespace + "basis_diag_codes", "" + dataStream.readByte()));
 
             } catch (EOFException e) {
-            // Nothing to do
+                // Nothing to do
             } catch (IOException e) {
-            // Nothing to do
+                // Nothing to do
             } finally {
                 if (debug) {
-                    canreg.server.xml.Tools.writeXmlFile(doc, "CanReg.xml");
+                    canreg.server.xml.Tools.writeXmlFile(doc, Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + registryCode + ".xml");
                 }
                 dataStream.close();
             }
@@ -386,10 +405,19 @@ public class SystemDefinitionConverter {
         } catch (IOException ex) {
             System.out.println("Something wrong with the file... " + ex);
         }
+        return ("Success");
     }
 
     public Document getDoc() {
         return doc;
+    }
+
+    public void setCodeField(JTextField codeTextField) {
+        this.codeTextField = codeTextField;
+    }
+
+    public void setNameField(JTextField nameTextField) {
+        this.nameTextField = nameTextField;
     }
 
     private String translate(String variableName, String value) {

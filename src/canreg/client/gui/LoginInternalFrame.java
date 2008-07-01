@@ -589,7 +589,8 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
 
     @Action
     public void addServerToList() {
-        // Properties properties = localSettings.getProperties();
+        // Warning Code duplication!
+        // Same functionality in CanReg4SystemConverterInternalFrame - consider refactoring...
 
         if (testServerConnection()) {
             //find an available server number

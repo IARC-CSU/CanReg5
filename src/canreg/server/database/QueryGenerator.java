@@ -22,7 +22,13 @@ public class QueryGenerator {
 
         // Common for all tables
         String query = "create table " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase() +
-                " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)";
+                // Add the system variables
+                // ID is just a variable for the database
+                " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)"+
+                // NEXT_RECORD_DB_ID is a pointer to the ID of the next version of this record - used only by the database 
+                ", NEXT_RECORD_DB_ID INTEGER" +
+                // LAST_RECORD_DB_ID is a pointer to the ID of the last version of this record - used only by the database 
+                ", LAST_RECORD_DB_ID INTEGER";
 
         // Get the variables node in the XML
         NodeList nodes = doc.getElementsByTagName(namespace + "variables");
@@ -44,6 +50,7 @@ public class QueryGenerator {
                 query += createVariable(element, doc);
             }
         }
+        
         query += ") ";
         return query;
     }

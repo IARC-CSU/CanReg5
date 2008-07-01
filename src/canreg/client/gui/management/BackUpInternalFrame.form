@@ -58,7 +58,7 @@
               <Component id="performBackupButton" alignment="0" pref="358" max="32767" attributes="0"/>
               <Component id="feedbackLabel" alignment="0" pref="358" max="32767" attributes="0"/>
               <Component id="scrollPane" alignment="0" pref="358" max="32767" attributes="0"/>
-              <Component id="copyElsewhereButton" alignment="0" pref="358" max="32767" attributes="0"/>
+              <Component id="openFolderButton" alignment="0" pref="358" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -68,9 +68,9 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="feedbackLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="scrollPane" pref="91" max="32767" attributes="0"/>
+                  <Component id="scrollPane" pref="95" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="copyElsewhereButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="openFolderButton" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -84,10 +84,12 @@
             <Property name="name" type="java.lang.String" value="performBackupButton" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="copyElsewhereButton">
+        <Component class="javax.swing.JButton" name="openFolderButton">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="copyElsewhereButton.text"/>
-            <Property name="name" type="java.lang.String" value="copyElsewhereButton" noResource="true"/>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.management.BackUpInternalFrame" id="openFolderAction" methodName="openFolderAction"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="openFolderButton" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="feedbackLabel">

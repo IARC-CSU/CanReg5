@@ -56,7 +56,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
             public boolean canExit(EventObject e) {
                 int option = JOptionPane.NO_OPTION;
-                if (!canregServerRunningInThisThread) {
+                if (!isCanregServerRunningInThisThread()) {
                     option = JOptionPane.showConfirmDialog(null, "Really exit?");
                 } else {
                     try {
@@ -172,7 +172,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 debugOut("LOGIN SUCCESSFULL");
                 // This should work...
                 systemName = server.getCanRegSystemName();
-                int i = getUserRightLevel();
+                Globals.UserRightLevels i = getUserRightLevel();
                 canRegClientView.setUserRightsLevel(i);
                 loggedIn = true;
                 doc = server.getDatabseDescription();
@@ -265,7 +265,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             server = null;
             systemName = "";
             loggedIn = false;
-            canRegClientView.setUserRightsLevel(Globals.NOT_LOGGED_IN);
+            canRegClientView.setUserRightsLevel(Globals.UserRightLevels.NOT_LOGGED_IN);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {
@@ -277,8 +277,9 @@ public class CanRegClientApp extends SingleFrameApplication {
         return loggedIn;
     }
 
-    public int getUserRightLevel() {
-        return Globals.SUPERVISOR;
+    public Globals.UserRightLevels getUserRightLevel() {
+        // For now all users are supervisors
+        return Globals.UserRightLevels.SUPERVISOR;
     }
 
     public String performBackup() {
@@ -295,5 +296,9 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public CanRegServerInterface getServer() {
         return server;
+    }
+
+    public boolean isCanregServerRunningInThisThread() {
+        return canregServerRunningInThisThread;
     }
 }

@@ -13,6 +13,7 @@ import canreg.client.gui.dataentry.EditDictionaryInternalFrame;
 import canreg.client.gui.StandardDialog;
 import canreg.client.gui.WelcomeInternalFrame;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
+import canreg.client.gui.tools.CanReg4SystemConverterInternalFrame;
 import canreg.common.Globals;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -194,6 +195,8 @@ public class CanRegClientView extends FrameView {
         jMenuItem17 = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JSeparator();
         jMenuItem13 = new javax.swing.JMenuItem();
+        toolsMenu = new javax.swing.JMenu();
+        convertCR4SystDefMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         jMenuItem14 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
@@ -420,6 +423,15 @@ public class CanRegClientView extends FrameView {
 
         menuBar.add(managementMenu);
 
+        toolsMenu.setText(resourceMap.getString("toolsMenu.text")); // NOI18N
+        toolsMenu.setName("toolsMenu"); // NOI18N
+
+        convertCR4SystDefMenuItem.setAction(actionMap.get("convertCanReg4SystemAction")); // NOI18N
+        convertCR4SystDefMenuItem.setName("convertCR4SystDefMenuItem"); // NOI18N
+        toolsMenu.add(convertCR4SystDefMenuItem);
+
+        menuBar.add(toolsMenu);
+
         helpMenu.setText(resourceMap.getString("helpMenu.text")); // NOI18N
         helpMenu.setName("helpMenu"); // NOI18N
 
@@ -599,6 +611,7 @@ public class CanRegClientView extends FrameView {
         return new ViewWorkFilesTask(getApplication());
     }
 
+    // Works only on windows so far...
     private class ViewWorkFilesTask extends org.jdesktop.application.Task<Object, Void> {
 
         ViewWorkFilesTask(org.jdesktop.application.Application app) {
@@ -614,7 +627,7 @@ public class CanRegClientView extends FrameView {
             // on a background thread, so don't reference
             // the Swing GUI from here.
             if (System.getProperty("os.name").toString().substring(0, 3).equalsIgnoreCase("win")) {
-                File file = new File(localSettings.getProperty(localSettings.WORKING_DIR_PATH_KEY));
+                File file = new File(localSettings.getProperty(LocalSettings.WORKING_DIR_PATH_KEY));
                 Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL " + file.getAbsolutePath());
             }
 
@@ -715,9 +728,9 @@ public class CanRegClientView extends FrameView {
         }
     }
 
-    public void setUserRightsLevel(int userRightsLevel) {
+    public void setUserRightsLevel(Globals.UserRightLevels userRightsLevel) {
         this.userRightsLevel = userRightsLevel;
-        userLevelLabel.setText(Globals.USER_RIGHT_LEVELS[userRightsLevel]);
+        userLevelLabel.setText(userRightsLevel.toString());
 
         boolean analysis = false;
         boolean management = false;
@@ -725,20 +738,23 @@ public class CanRegClientView extends FrameView {
         boolean loggedIn = false;
 
         // Hide/reveal menus
-        if (userRightsLevel == 0) {
+        if (userRightsLevel == Globals.UserRightLevels.NOT_LOGGED_IN) {
             analysis = false;
             management = false;
             dataEntry = false;
             loggedIn = false;
         } else {
             loggedIn = true;
-            if (userRightsLevel < 2) {
+            if (userRightsLevel == Globals.UserRightLevels.SUPERVISOR) {
                 management = true;
-            }
-            if (userRightsLevel < 3) {
                 dataEntry = true;
+                analysis = true;
             }
-            if (userRightsLevel < 4) {
+            if (userRightsLevel == Globals.UserRightLevels.REGISTRAR) {
+                dataEntry = true;
+                analysis = true;
+            }
+            if (userRightsLevel == Globals.UserRightLevels.ANALYST) {
                 analysis = true;
             }
         }
@@ -849,12 +865,20 @@ public class CanRegClientView extends FrameView {
         // Choose a system.xml
         // copy it to system folder
         // Give log in window with settings from XML
-               
+    }
+
+    @Action
+    public void convertCanReg4SystemAction() {
+        // TODO
+        // Choose a CanReg4 system file
+        JInternalFrame internalFrame = new CanReg4SystemConverterInternalFrame();
+        showAndCenterInternalFrame(desktopPane, internalFrame);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu analysisMenu;
     private javax.swing.JButton browseEditButton;
     private javax.swing.JMenuItem browseEditMenuItem;
+    private javax.swing.JMenuItem convertCR4SystDefMenuItem;
     private javax.swing.JMenu dataEntryMenu;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenuItem editDictionaryMenuItem;
@@ -905,6 +929,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
     private javax.swing.JToolBar toolBar;
+    private javax.swing.JMenu toolsMenu;
     private javax.swing.JLabel userLevelLabel;
     private javax.swing.JMenuItem viewWorkFilesMenuItem;
     // End of variables declaration//GEN-END:variables
@@ -917,5 +942,5 @@ public class CanRegClientView extends FrameView {
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
     private JDialog aboutBox;
-    private int userRightsLevel = 0;
+    private Globals.UserRightLevels userRightsLevel = Globals.UserRightLevels.NOT_LOGGED_IN;
 }

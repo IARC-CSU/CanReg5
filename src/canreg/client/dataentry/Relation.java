@@ -6,7 +6,7 @@
 package canreg.client.dataentry;
 
 /**
- *
+ * Defines the relation between a variable in the database and a variable in a file
  * @author morten
  */
 public class Relation {

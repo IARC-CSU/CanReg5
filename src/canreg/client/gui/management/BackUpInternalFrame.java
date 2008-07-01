@@ -5,6 +5,11 @@
  */
 package canreg.client.gui.management;
 
+import canreg.common.Globals;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 
@@ -14,9 +19,12 @@ import org.jdesktop.application.Task;
  */
 public class BackUpInternalFrame extends javax.swing.JInternalFrame {
 
+    String backupPath;
+
     /** Creates new form BackUpInternalFrame */
     public BackUpInternalFrame() {
         initComponents();
+        openFolderButton.setEnabled(canreg.client.CanRegClientApp.getApplication().isCanregServerRunningInThisThread());
     }
 
     /** This method is called from within the constructor to
@@ -29,7 +37,7 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
 
         mainPanel = new javax.swing.JPanel();
         performBackupButton = new javax.swing.JButton();
-        copyElsewhereButton = new javax.swing.JButton();
+        openFolderButton = new javax.swing.JButton();
         feedbackLabel = new javax.swing.JLabel();
         scrollPane = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
@@ -51,8 +59,8 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
         performBackupButton.setAction(actionMap.get("performBackupAction")); // NOI18N
         performBackupButton.setName("performBackupButton"); // NOI18N
 
-        copyElsewhereButton.setText(resourceMap.getString("copyElsewhereButton.text")); // NOI18N
-        copyElsewhereButton.setName("copyElsewhereButton"); // NOI18N
+        openFolderButton.setAction(actionMap.get("openFolderAction")); // NOI18N
+        openFolderButton.setName("openFolderButton"); // NOI18N
 
         feedbackLabel.setName("feedbackLabel"); // NOI18N
 
@@ -70,7 +78,7 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
             .addComponent(performBackupButton, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
             .addComponent(feedbackLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
             .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
-            .addComponent(copyElsewhereButton, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
+            .addComponent(openFolderButton, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -79,9 +87,9 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(feedbackLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(copyElsewhereButton))
+                .addComponent(openFolderButton))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -103,14 +111,13 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
     @Action
     public Task performBackupAction() {
         return new PerformBackupActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
     }
 
     private class PerformBackupActionTask extends org.jdesktop.application.Task<Object, Void> {
-
-        String backupPath;
 
         PerformBackupActionTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
@@ -137,10 +144,25 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
             textArea.setText(textArea.getText() + "\nBacked up database to " + backupPath + ".");
         }
     }
+
+    @Action
+    // This only works in Windows so far...
+    public void openFolderAction() {
+        if (canreg.client.CanRegClientApp.getApplication().isCanregServerRunningInThisThread()) {
+            if (System.getProperty("os.name").toString().substring(0, 3).equalsIgnoreCase("win")) {
+                try {
+                    File file = new File(Globals.CANREG_BACKUP_FOLDER);
+                    Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL " + file.getAbsolutePath());
+                } catch (IOException ex) {
+                    Logger.getLogger(BackUpInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton copyElsewhereButton;
     private javax.swing.JLabel feedbackLabel;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JButton openFolderButton;
     private javax.swing.JButton performBackupButton;
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JTextArea textArea;

@@ -36,10 +36,10 @@ public class Globals {
     static public String CANREG_BACKUP_FOLDER = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + CANREG_BACKUP_FOLDER_NAME;
 
     static public String SCHEMA_NAME = "APP";    // User levels
-    static public String[] USER_RIGHT_LEVELS = {"Not logged in", "Supervisor", "Registrar", "Analyst"};
-    static public int NOT_LOGGED_IN = 0;
-    static public int SUPERVISOR = 1;
-    static public int REGISTRAR = 2;
-    static public int ANALYST = 3;    // Languages - consider moving it to config-file or build it automatically...
+    public static String CANREG4_SYSTEM_FOLDER = "C:\\CR4SHARE\\CANREG4\\CR4-SYST\\";
+    public static int DEFAULT_PORT = 1199;
+    static public enum UserRightLevels {NOT_LOGGED_IN, SUPERVISOR, REGISTRAR, ANALYST };
+
+    // Languages - consider moving it to config-file or build it automatically...
     static public String[] LANGUAGES_AVAILABLE = {"en", "fr", "ar", "no"};
 }
