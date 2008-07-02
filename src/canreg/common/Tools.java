@@ -176,5 +176,24 @@ public class Tools {
         in.close();
         out.close();
     }
+
+    public static int numberOfLinesInFile(String file) throws IOException {
+        //returns the number of lines in a file
+        //author : Ravindra S
+        //Symphony software Hyderabad
+        int countRec = 0;
+
+        RandomAccessFile randFile = new RandomAccessFile(file, "r");
+        long lastRec = randFile.length();
+        randFile.close();
+        FileReader fileRead = new FileReader(file);
+        LineNumberReader lineRead = new LineNumberReader(fileRead);
+        lineRead.skip(lastRec);
+        countRec = lineRead.getLineNumber() - 1;
+        fileRead.close();
+        lineRead.close();
+
+        return countRec;
+    }
 }
 

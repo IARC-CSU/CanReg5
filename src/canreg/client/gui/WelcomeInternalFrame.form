@@ -36,7 +36,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Component id="mainPanel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="35" max="32767" attributes="0"/>
+              <EmptySpace pref="39" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -165,8 +165,10 @@
             </Component>
             <Component class="javax.swing.JButton" name="restoreBackupButton">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" resourceKey="restoreBackupButton.icon"/>
-                <Property name="text" type="java.lang.String" resourceKey="restoreBackupButton.text"/>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.WelcomeInternalFrame" id="installNewSystemAction" methodName="installNewSystemAction"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="restoreBackupButton.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="restoreBackupButton" noResource="true"/>
               </Properties>
             </Component>

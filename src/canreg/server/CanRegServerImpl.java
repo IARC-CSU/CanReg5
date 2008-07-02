@@ -10,6 +10,7 @@ import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
 import canreg.server.management.SystemDescription;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
@@ -209,5 +210,19 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     public HashMap<Integer, HashMap<String, String>> getDictionary() throws RemoteException, SecurityException {
         return db.getDictionary();
+    }
+
+    public String restoreFromBackup(String path) throws RemoteException, SecurityException {
+        return db.restoreFromBackup(path);
+    }
+
+    public InetAddress getIPAddress() throws RemoteException, SecurityException {
+        InetAddress addr = null;
+        try {
+            addr = InetAddress.getLocalHost();
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return addr;
     }
 }

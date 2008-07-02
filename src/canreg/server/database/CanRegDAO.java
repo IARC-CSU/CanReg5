@@ -70,8 +70,6 @@ public class CanRegDAO {
             createDatabase();
             tableOfDictionariesFilled = false;
         }
-
-
     }
 
     public HashMap<Integer, HashMap<String, String>> getDictionary() {
@@ -111,7 +109,7 @@ public class CanRegDAO {
         String path = null;
         try {
             path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + dbName);
-            // TODO - record date of last backup somewhere...
+        // TODO - record date of last backup somewhere...
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -207,22 +205,46 @@ public class CanRegDAO {
      * @param path to database backup.
      * @return true if successfull, false if not
      */
-    public boolean restoreDatabase(String path) {
-        boolean bRestored = false;
-        dbConnection = null;
-
+    public String restoreFromBackup(String path) {
+        boolean bRestored = false, shutdownSuccess = false;
+        SQLException ex = null;
         String dbUrl = getDatabaseUrl();
-        dbProperties.put("restoreFrom", path);
 
         try {
+            dbConnection.close(); // Close current connection.
+            dbProperties.put("shutdown", "true");
+            dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
+        } catch (SQLException e) {
+            if (e.getSQLState().equals("08006")) {
+                shutdownSuccess = true; // single db.
+            }
+            ex = e;
+        }
+        if (!shutdownSuccess) {
+            dbProperties.remove("shutdown");
+            ex.printStackTrace();
+            // ((DonMan) parent).signalError("Error during shutdown for RESTORE: ", ex,
+            //        "in: DonDao.restore", false);
+            return "shutdown failed";
+        }
+        try {
+            dbProperties.remove("shutdown");
+            dbConnection.close(); // Close current connection.
+            dbProperties.put("restoreFrom", path + "/" + dbName);
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
             bRestored = true;
-            System.out.println("Database restored...");
-        } catch (SQLException ex) {
-            System.out.println(ex);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        //((DonMan) parent).signalError("Error during RESTORE: ", e,
+        //       "in: DonDao.restore", false);
         }
         dbProperties.remove("restoreFrom");
-        return bRestored;
+        connect(); // Reconnect.
+        if (bRestored) {
+            return "success";
+        } else {
+            return "failed";
+        }
     }
 
     /**
@@ -265,10 +287,6 @@ public class CanRegDAO {
             isConnected = false;
         }
         return isConnected;
-    }
-
-    private String getHomeDir() {
-        return System.getProperty("user.home");
     }
 
     /**

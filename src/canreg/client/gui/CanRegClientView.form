@@ -83,15 +83,15 @@
                 <Property name="name" type="java.lang.String" value="jSeparator14" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton1">
+            <Component class="javax.swing.JButton" name="installSystemButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="installSystemAction" methodName="installSystemAction"/>
                 </Property>
-                <Property name="text" type="java.lang.String" resourceKey="jButton1.text"/>
+                <Property name="text" type="java.lang.String" resourceKey="installSystemButton.text"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
-                <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="installSystemButton" noResource="true"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
             </Component>
@@ -235,13 +235,13 @@
             <Property name="name" type="java.lang.String" value="analysisMenu" noResource="true"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem4">
+            <MenuItem class="javax.swing.JMenuItem" name="frequenciesMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="frequencyDistributionsMenuItem.text"/>
                 <Property name="name" type="java.lang.String" value="frequencyDistributionsMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem5">
+            <MenuItem class="javax.swing.JMenuItem" name="incidenceTablesMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="incidenceTablesMenuItem.text"/>
                 <Property name="name" type="java.lang.String" value="incidenceTablesMenuItem" noResource="true"/>
@@ -252,7 +252,7 @@
                 <Property name="name" type="java.lang.String" value="jSeparator8" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem7">
+            <MenuItem class="javax.swing.JMenuItem" name="exportDataReportsMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="showExportFrame" methodName="showExportFrame"/>
@@ -265,11 +265,13 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="managementMenu">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="managementMenu.text"/>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.CanRegClientView" id="restoreAction" methodName="restoreAction"/>
+            </Property>
             <Property name="name" type="java.lang.String" value="managementMenu" noResource="true"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem9">
+            <MenuItem class="javax.swing.JMenuItem" name="backupMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="backupAction" methodName="backupAction"/>
@@ -278,12 +280,21 @@
                 <Property name="name" type="java.lang.String" value="backupMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="restoreMenuItem">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="restoreAction" methodName="restoreAction"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="restoreMenuItem.text"/>
+                <Property name="name" type="java.lang.String" value="restoreMenuItem" noResource="true"/>
+              </Properties>
+            </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator7">
               <Properties>
                 <Property name="name" type="java.lang.String" value="jSeparator7" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem10">
+            <MenuItem class="javax.swing.JMenuItem" name="nameSexMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="showNameSexAction" methodName="showNameSexAction"/>
@@ -292,7 +303,7 @@
                 <Property name="name" type="java.lang.String" value="nameSexMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem11">
+            <MenuItem class="javax.swing.JMenuItem" name="duplicateSearchMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="duplicateSearchMenuItem.text"/>
                 <Property name="name" type="java.lang.String" value="duplicateSearchMenuItem" noResource="true"/>
@@ -303,7 +314,7 @@
                 <Property name="name" type="java.lang.String" value="jSeparator6" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem12">
+            <MenuItem class="javax.swing.JMenuItem" name="usersMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="usersMenuItem.text"/>
                 <Property name="name" type="java.lang.String" value="usersMenuItem" noResource="true"/>
@@ -314,7 +325,7 @@
                 <Property name="name" type="java.lang.String" value="jSeparator10" noResource="true"/>
               </Properties>
             </MenuItem>
-            <Menu class="javax.swing.JMenu" name="jMenu1">
+            <Menu class="javax.swing.JMenu" name="advancedMenu">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="advancedMenu.text"/>
                 <Property name="name" type="java.lang.String" value="advancedMenu" noResource="true"/>
@@ -356,7 +367,7 @@
                 <Property name="name" type="java.lang.String" value="jSeparator5" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem13">
+            <MenuItem class="javax.swing.JMenuItem" name="optionsMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="showOptionFrame" methodName="showOptionFrame"/>
@@ -392,7 +403,7 @@
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
           </AuxValues>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem14">
+            <MenuItem class="javax.swing.JMenuItem" name="canReg5HelpMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="showCanRegHelpFile" methodName="showCanRegHelpFile"/>
@@ -406,13 +417,13 @@
                 <Property name="name" type="java.lang.String" value="jSeparator1" noResource="true"/>
               </Properties>
             </MenuItem>
-            <Menu class="javax.swing.JMenu" name="jMenu4">
+            <Menu class="javax.swing.JMenu" name="linksMenu">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="linksMenu.text"/>
                 <Property name="name" type="java.lang.String" value="linksMenu" noResource="true"/>
               </Properties>
               <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem6">
+                <MenuItem class="javax.swing.JMenuItem" name="iacrWebsiteMenuItem">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.gui.CanRegClientView" id="openIacrWebsite" methodName="openIacrWebsite"/>
@@ -421,15 +432,15 @@
                     <Property name="name" type="java.lang.String" value="iacrWebsiteMenuItem" noResource="true"/>
                   </Properties>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+                <MenuItem class="javax.swing.JMenuItem" name="encrWebsiteMenuItem">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.gui.CanRegClientView" id="openENCRweb" methodName="openENCRweb"/>
                     </Property>
-                    <Property name="name" type="java.lang.String" value="jMenuItem1" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="encrWebsiteMenuItem" noResource="true"/>
                   </Properties>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem19">
+                <MenuItem class="javax.swing.JMenuItem" name="icdo3DocumentationWebsiteMenuItem">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.gui.CanRegClientView" id="openICDO3web" methodName="openICDO3web"/>
@@ -444,13 +455,13 @@
                 <Property name="name" type="java.lang.String" value="jSeparator9" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem15">
+            <MenuItem class="javax.swing.JMenuItem" name="icdo3ManualMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.CanRegProto2View" id="openICDO3Manual" methodName="openICDO3Manual"/>
                 </Property>
-                <Property name="text" type="java.lang.String" resourceKey="jMenuItem15.text"/>
-                <Property name="name" type="java.lang.String" value="jMenuItem15" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="icdo3ManualMenuItem.text"/>
+                <Property name="name" type="java.lang.String" value="icdo3ManualMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator2">

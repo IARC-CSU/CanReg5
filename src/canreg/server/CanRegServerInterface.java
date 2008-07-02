@@ -8,6 +8,7 @@ import canreg.server.database.CanRegDAO;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
+import java.net.InetAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -77,20 +78,20 @@ public interface CanRegServerInterface extends Remote {
     public int saveTumour(Tumour tumour) throws RemoteException, SecurityException;
 
     public int saveDictionaryEntry(DictionaryEntry dictionaryEntry) throws RemoteException, SecurityException;
-    
     // Drop cases
     public boolean deleteDictionaryEntries(int dictionaryID) throws RemoteException, SecurityException;
-    
     // Get the dictionary
     public HashMap<Integer, HashMap<String, String>> getDictionary() throws RemoteException, SecurityException;
-    
     // Backup
     public String performBackup()
+            throws RemoteException, SecurityException;
+    public String restoreFromBackup(String path)
             throws RemoteException, SecurityException;
 
     // Get version information
     public String getCanRegVersion()
             throws RemoteException, SecurityException;
     
-    
+    public InetAddress getIPAddress()
+            throws RemoteException, SecurityException;
 }

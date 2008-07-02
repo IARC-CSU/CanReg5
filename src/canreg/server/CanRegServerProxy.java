@@ -9,6 +9,7 @@ import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
 import canreg.server.security.ValidateMethodCall;
+import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
@@ -144,6 +145,11 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return theServer.performBackup();
     }
 
+    public String restoreFromBackup(String path) throws RemoteException, SecurityException {
+        checkPermission("restoreFromBackup");
+        return theServer.restoreFromBackup(path);
+    }
+
     public String getCanRegVersion() throws RemoteException, SecurityException {
         checkPermission("getCanRegVersion");
         return theServer.getCanRegVersion();
@@ -157,5 +163,10 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public HashMap<Integer, HashMap<String, String>> getDictionary() throws RemoteException, SecurityException {
         checkPermission("getDictionary");
         return theServer.getDictionary();
+    }
+
+    public InetAddress getIPAddress() throws RemoteException, SecurityException {
+        checkPermission("getIPAddress");
+        return theServer.getIPAddress();
     }
 }

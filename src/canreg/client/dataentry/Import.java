@@ -15,9 +15,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import canreg.client.dataentry.Relation;
 
 /**
  *
@@ -138,32 +140,30 @@ public class Import {
         return success;
     }
 
-    public static boolean importFile(Document doc, List<Relation> map, File file, CanRegServerInterface server, ImportOptions io) {
+    public static boolean importFile(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) {
 
         boolean success = false;
 
         HashMap mpCodes = new HashMap();
 
         BufferedReader bufferedReader = null;
-
         try {
+            int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath()) - 1;
             bufferedReader = new BufferedReader(new FileReader(file));
             String line = bufferedReader.readLine();
             // Skip first line
             line = bufferedReader.readLine();
-
             // patientNumber
             int patientIDNumber = 0;
-            
-            int numberOfLinesRead = 1;            
+            int numberOfLinesRead = 1;
             int linesToRead = io.getMaxLines();
-            boolean readWholeFile = true;
-            
-            if (linesToRead > -1) {
-                readWholeFile = false;
+            if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
+                linesToRead = numberOfRecordsInFile;
             }
-                
-            while (line != null && (readWholeFile==true || numberOfLinesRead<linesToRead)) {
+            while (line != null && (numberOfLinesRead < linesToRead)) {
+                // We allow for null tasks...
+                if (task!=null)
+                    task.firePropertyChange("progress", (numberOfLinesRead - 1)*100/linesToRead, (numberOfLinesRead)*100/linesToRead);
                 String[] lineElements = line.split(io.getSeparator());
                 // Build patient part
                 Patient patient = new Patient();
@@ -228,11 +228,12 @@ public class Import {
                 }
             }
         }
+        task.firePropertyChange("finished", null, null);
         return success;
     }
 
     public static void importDictionary() {
-    // TODO!
+        // TODO!
     }
 
     public static List<Relation> constructRelations(Document doc, String[] lineElements) {

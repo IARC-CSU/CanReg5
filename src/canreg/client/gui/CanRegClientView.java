@@ -12,6 +12,7 @@ import canreg.client.*;
 import canreg.client.gui.dataentry.EditDictionaryInternalFrame;
 import canreg.client.gui.StandardDialog;
 import canreg.client.gui.WelcomeInternalFrame;
+import canreg.client.gui.management.RestoreInternalFrame;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.tools.CanReg4SystemConverterInternalFrame;
 import canreg.common.Globals;
@@ -53,12 +54,7 @@ public class CanRegClientView extends FrameView {
 
         setUserRightsLevel(userRightsLevel);
 
-        // To speed up moving of Frames... 
-        // To be moved to a config option?
-        // desktopPane.setDragMode(javax.swing.JDesktopPane.OUTLINE_DRAG_MODE);
         applyPreferences();
-
-
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
@@ -118,7 +114,7 @@ public class CanRegClientView extends FrameView {
         });
         // Show the welcome frame...
         if (!CanRegClientApp.getApplication().isLoggedIn()) {
-            showWelcomeFrame(this);
+            showWelcomeFrame();
         }
     }
 
@@ -160,7 +156,7 @@ public class CanRegClientView extends FrameView {
         jSeparator13 = new javax.swing.JToolBar.Separator();
         optionsButton = new javax.swing.JButton();
         jSeparator14 = new javax.swing.JToolBar.Separator();
-        jButton1 = new javax.swing.JButton();
+        installSystemButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         desktopPane = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
@@ -177,35 +173,36 @@ public class CanRegClientView extends FrameView {
         jSeparator3 = new javax.swing.JSeparator();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         analysisMenu = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
+        frequenciesMenuItem = new javax.swing.JMenuItem();
+        incidenceTablesMenuItem = new javax.swing.JMenuItem();
         jSeparator8 = new javax.swing.JSeparator();
-        jMenuItem7 = new javax.swing.JMenuItem();
+        exportDataReportsMenuItem = new javax.swing.JMenuItem();
         managementMenu = new javax.swing.JMenu();
-        jMenuItem9 = new javax.swing.JMenuItem();
+        backupMenuItem = new javax.swing.JMenuItem();
+        restoreMenuItem = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JSeparator();
-        jMenuItem10 = new javax.swing.JMenuItem();
-        jMenuItem11 = new javax.swing.JMenuItem();
+        nameSexMenuItem = new javax.swing.JMenuItem();
+        duplicateSearchMenuItem = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JSeparator();
-        jMenuItem12 = new javax.swing.JMenuItem();
+        usersMenuItem = new javax.swing.JMenuItem();
         jSeparator10 = new javax.swing.JSeparator();
-        jMenu1 = new javax.swing.JMenu();
+        advancedMenu = new javax.swing.JMenu();
         jMenuItem18 = new javax.swing.JMenuItem();
         jMenuItem16 = new javax.swing.JMenuItem();
         jMenuItem17 = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JSeparator();
-        jMenuItem13 = new javax.swing.JMenuItem();
+        optionsMenuItem = new javax.swing.JMenuItem();
         toolsMenu = new javax.swing.JMenu();
         convertCR4SystDefMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
-        jMenuItem14 = new javax.swing.JMenuItem();
+        canReg5HelpMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
-        jMenu4 = new javax.swing.JMenu();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem19 = new javax.swing.JMenuItem();
+        linksMenu = new javax.swing.JMenu();
+        iacrWebsiteMenuItem = new javax.swing.JMenuItem();
+        encrWebsiteMenuItem = new javax.swing.JMenuItem();
+        icdo3DocumentationWebsiteMenuItem = new javax.swing.JMenuItem();
         jSeparator9 = new javax.swing.JSeparator();
-        jMenuItem15 = new javax.swing.JMenuItem();
+        icdo3ManualMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
         statusPanel = new javax.swing.JPanel();
@@ -254,13 +251,13 @@ public class CanRegClientView extends FrameView {
         jSeparator14.setName("jSeparator14"); // NOI18N
         toolBar.add(jSeparator14);
 
-        jButton1.setAction(actionMap.get("installSystemAction")); // NOI18N
-        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setName("jButton1"); // NOI18N
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(jButton1);
+        installSystemButton.setAction(actionMap.get("installSystemAction")); // NOI18N
+        installSystemButton.setText(resourceMap.getString("installSystemButton.text")); // NOI18N
+        installSystemButton.setFocusable(false);
+        installSystemButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        installSystemButton.setName("installSystemButton"); // NOI18N
+        installSystemButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(installSystemButton);
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
@@ -342,60 +339,65 @@ public class CanRegClientView extends FrameView {
         analysisMenu.setText(resourceMap.getString("analysisMenu.text")); // NOI18N
         analysisMenu.setName("analysisMenu"); // NOI18N
 
-        jMenuItem4.setText(resourceMap.getString("frequencyDistributionsMenuItem.text")); // NOI18N
-        jMenuItem4.setName("frequencyDistributionsMenuItem"); // NOI18N
-        analysisMenu.add(jMenuItem4);
+        frequenciesMenuItem.setText(resourceMap.getString("frequencyDistributionsMenuItem.text")); // NOI18N
+        frequenciesMenuItem.setName("frequencyDistributionsMenuItem"); // NOI18N
+        analysisMenu.add(frequenciesMenuItem);
 
-        jMenuItem5.setText(resourceMap.getString("incidenceTablesMenuItem.text")); // NOI18N
-        jMenuItem5.setName("incidenceTablesMenuItem"); // NOI18N
-        analysisMenu.add(jMenuItem5);
+        incidenceTablesMenuItem.setText(resourceMap.getString("incidenceTablesMenuItem.text")); // NOI18N
+        incidenceTablesMenuItem.setName("incidenceTablesMenuItem"); // NOI18N
+        analysisMenu.add(incidenceTablesMenuItem);
 
         jSeparator8.setName("jSeparator8"); // NOI18N
         analysisMenu.add(jSeparator8);
 
-        jMenuItem7.setAction(actionMap.get("showExportFrame")); // NOI18N
-        jMenuItem7.setText(resourceMap.getString("exportReportsMenuItem.text")); // NOI18N
-        jMenuItem7.setName("exportReportsMenuItem"); // NOI18N
-        analysisMenu.add(jMenuItem7);
+        exportDataReportsMenuItem.setAction(actionMap.get("showExportFrame")); // NOI18N
+        exportDataReportsMenuItem.setText(resourceMap.getString("exportReportsMenuItem.text")); // NOI18N
+        exportDataReportsMenuItem.setName("exportReportsMenuItem"); // NOI18N
+        analysisMenu.add(exportDataReportsMenuItem);
 
         menuBar.add(analysisMenu);
 
-        managementMenu.setText(resourceMap.getString("managementMenu.text")); // NOI18N
+        managementMenu.setAction(actionMap.get("restoreAction")); // NOI18N
         managementMenu.setName("managementMenu"); // NOI18N
 
-        jMenuItem9.setAction(actionMap.get("backupAction")); // NOI18N
-        jMenuItem9.setText(resourceMap.getString("backupMenuItem.text")); // NOI18N
-        jMenuItem9.setName("backupMenuItem"); // NOI18N
-        managementMenu.add(jMenuItem9);
+        backupMenuItem.setAction(actionMap.get("backupAction")); // NOI18N
+        backupMenuItem.setText(resourceMap.getString("backupMenuItem.text")); // NOI18N
+        backupMenuItem.setName("backupMenuItem"); // NOI18N
+        managementMenu.add(backupMenuItem);
+
+        restoreMenuItem.setAction(actionMap.get("restoreAction")); // NOI18N
+        restoreMenuItem.setText(resourceMap.getString("restoreMenuItem.text")); // NOI18N
+        restoreMenuItem.setName("restoreMenuItem"); // NOI18N
+        managementMenu.add(restoreMenuItem);
 
         jSeparator7.setName("jSeparator7"); // NOI18N
         managementMenu.add(jSeparator7);
 
-        jMenuItem10.setAction(actionMap.get("showNameSexAction")); // NOI18N
-        jMenuItem10.setText(resourceMap.getString("nameSexMenuItem.text")); // NOI18N
-        jMenuItem10.setName("nameSexMenuItem"); // NOI18N
-        managementMenu.add(jMenuItem10);
+        nameSexMenuItem.setAction(actionMap.get("showNameSexAction")); // NOI18N
+        nameSexMenuItem.setText(resourceMap.getString("nameSexMenuItem.text")); // NOI18N
+        nameSexMenuItem.setName("nameSexMenuItem"); // NOI18N
+        managementMenu.add(nameSexMenuItem);
 
-        jMenuItem11.setText(resourceMap.getString("duplicateSearchMenuItem.text")); // NOI18N
-        jMenuItem11.setName("duplicateSearchMenuItem"); // NOI18N
-        managementMenu.add(jMenuItem11);
+        duplicateSearchMenuItem.setText(resourceMap.getString("duplicateSearchMenuItem.text")); // NOI18N
+        duplicateSearchMenuItem.setName("duplicateSearchMenuItem"); // NOI18N
+        managementMenu.add(duplicateSearchMenuItem);
 
         jSeparator6.setName("jSeparator6"); // NOI18N
         managementMenu.add(jSeparator6);
 
-        jMenuItem12.setText(resourceMap.getString("usersMenuItem.text")); // NOI18N
-        jMenuItem12.setName("usersMenuItem"); // NOI18N
-        managementMenu.add(jMenuItem12);
+        usersMenuItem.setText(resourceMap.getString("usersMenuItem.text")); // NOI18N
+        usersMenuItem.setName("usersMenuItem"); // NOI18N
+        managementMenu.add(usersMenuItem);
 
         jSeparator10.setName("jSeparator10"); // NOI18N
         managementMenu.add(jSeparator10);
 
-        jMenu1.setText(resourceMap.getString("advancedMenu.text")); // NOI18N
-        jMenu1.setName("advancedMenu"); // NOI18N
+        advancedMenu.setText(resourceMap.getString("advancedMenu.text")); // NOI18N
+        advancedMenu.setName("advancedMenu"); // NOI18N
 
         jMenuItem18.setAction(actionMap.get("showUsersLoggedIn")); // NOI18N
         jMenuItem18.setName("showUsersLoggedInMenuItem"); // NOI18N
-        jMenu1.add(jMenuItem18);
+        advancedMenu.add(jMenuItem18);
 
         jMenuItem16.setAction(actionMap.get("startDatabaseServer")); // NOI18N
         jMenuItem16.setText(resourceMap.getString("startDBMenuItem.text")); // NOI18N
@@ -405,21 +407,21 @@ public class CanRegClientView extends FrameView {
                 jMenuItem16ActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem16);
+        advancedMenu.add(jMenuItem16);
 
         jMenuItem17.setAction(actionMap.get("stopDatabaseServer")); // NOI18N
         jMenuItem17.setText(resourceMap.getString("stopDBMenuItem.text")); // NOI18N
         jMenuItem17.setName("stopDBMenuItem"); // NOI18N
-        jMenu1.add(jMenuItem17);
+        advancedMenu.add(jMenuItem17);
 
-        managementMenu.add(jMenu1);
+        managementMenu.add(advancedMenu);
 
         jSeparator5.setName("jSeparator5"); // NOI18N
         managementMenu.add(jSeparator5);
 
-        jMenuItem13.setAction(actionMap.get("showOptionFrame")); // NOI18N
-        jMenuItem13.setName("optionsMenuItem"); // NOI18N
-        managementMenu.add(jMenuItem13);
+        optionsMenuItem.setAction(actionMap.get("showOptionFrame")); // NOI18N
+        optionsMenuItem.setName("optionsMenuItem"); // NOI18N
+        managementMenu.add(optionsMenuItem);
 
         menuBar.add(managementMenu);
 
@@ -435,39 +437,39 @@ public class CanRegClientView extends FrameView {
         helpMenu.setText(resourceMap.getString("helpMenu.text")); // NOI18N
         helpMenu.setName("helpMenu"); // NOI18N
 
-        jMenuItem14.setAction(actionMap.get("showCanRegHelpFile")); // NOI18N
-        jMenuItem14.setText(resourceMap.getString("helpMenuItem.text")); // NOI18N
-        jMenuItem14.setName("helpMenuItem"); // NOI18N
-        helpMenu.add(jMenuItem14);
+        canReg5HelpMenuItem.setAction(actionMap.get("showCanRegHelpFile")); // NOI18N
+        canReg5HelpMenuItem.setText(resourceMap.getString("helpMenuItem.text")); // NOI18N
+        canReg5HelpMenuItem.setName("helpMenuItem"); // NOI18N
+        helpMenu.add(canReg5HelpMenuItem);
 
         jSeparator1.setName("jSeparator1"); // NOI18N
         helpMenu.add(jSeparator1);
 
-        jMenu4.setText(resourceMap.getString("linksMenu.text")); // NOI18N
-        jMenu4.setName("linksMenu"); // NOI18N
+        linksMenu.setText(resourceMap.getString("linksMenu.text")); // NOI18N
+        linksMenu.setName("linksMenu"); // NOI18N
 
-        jMenuItem6.setAction(actionMap.get("openIacrWebsite")); // NOI18N
-        jMenuItem6.setText(resourceMap.getString("iacrWebsiteMenuItem.text")); // NOI18N
-        jMenuItem6.setName("iacrWebsiteMenuItem"); // NOI18N
-        jMenu4.add(jMenuItem6);
+        iacrWebsiteMenuItem.setAction(actionMap.get("openIacrWebsite")); // NOI18N
+        iacrWebsiteMenuItem.setText(resourceMap.getString("iacrWebsiteMenuItem.text")); // NOI18N
+        iacrWebsiteMenuItem.setName("iacrWebsiteMenuItem"); // NOI18N
+        linksMenu.add(iacrWebsiteMenuItem);
 
-        jMenuItem1.setAction(actionMap.get("openENCRweb")); // NOI18N
-        jMenuItem1.setName("jMenuItem1"); // NOI18N
-        jMenu4.add(jMenuItem1);
+        encrWebsiteMenuItem.setAction(actionMap.get("openENCRweb")); // NOI18N
+        encrWebsiteMenuItem.setName("encrWebsiteMenuItem"); // NOI18N
+        linksMenu.add(encrWebsiteMenuItem);
 
-        jMenuItem19.setAction(actionMap.get("openICDO3web")); // NOI18N
-        jMenuItem19.setName("icdo3MenuItem"); // NOI18N
-        jMenu4.add(jMenuItem19);
+        icdo3DocumentationWebsiteMenuItem.setAction(actionMap.get("openICDO3web")); // NOI18N
+        icdo3DocumentationWebsiteMenuItem.setName("icdo3MenuItem"); // NOI18N
+        linksMenu.add(icdo3DocumentationWebsiteMenuItem);
 
-        helpMenu.add(jMenu4);
+        helpMenu.add(linksMenu);
 
         jSeparator9.setName("jSeparator9"); // NOI18N
         helpMenu.add(jSeparator9);
 
-        jMenuItem15.setAction(actionMap.get("openICDO3Manual")); // NOI18N
-        jMenuItem15.setText(resourceMap.getString("jMenuItem15.text")); // NOI18N
-        jMenuItem15.setName("jMenuItem15"); // NOI18N
-        helpMenu.add(jMenuItem15);
+        icdo3ManualMenuItem.setAction(actionMap.get("openICDO3Manual")); // NOI18N
+        icdo3ManualMenuItem.setText(resourceMap.getString("icdo3ManualMenuItem.text")); // NOI18N
+        icdo3ManualMenuItem.setName("icdo3ManualMenuItem"); // NOI18N
+        helpMenu.add(icdo3ManualMenuItem);
 
         jSeparator2.setName("jSeparator2"); // NOI18N
         helpMenu.add(jSeparator2);
@@ -536,8 +538,8 @@ public class CanRegClientView extends FrameView {
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem16ActionPerformed
 
-    private void showWelcomeFrame(FrameView fv) {
-        WelcomeInternalFrame welcomeInternalFrame = new WelcomeInternalFrame(fv);
+    private void showWelcomeFrame() {
+        WelcomeInternalFrame welcomeInternalFrame = new WelcomeInternalFrame(this);
 
         desktopPane.add(welcomeInternalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
         // System.out.println("coucou");
@@ -768,6 +770,17 @@ public class CanRegClientView extends FrameView {
         managementMenu.setEnabled(management);
         dataEntryMenu.setEnabled(dataEntry);
         logOutMenuItem.setEnabled(loggedIn);
+
+        // If we are accessing a remote CanReg system not all things are available to us...
+        if (!CanRegClientApp.getApplication().isCanRegServerRunningOnThisMachine()) {
+            toolsMenu.setEnabled(!loggedIn);
+            restoreMenuItem.setEnabled(false);
+            // We show the install system button if we are not logged in to a remote server...
+            installSystemButton.setEnabled((userRightsLevel == Globals.UserRightLevels.NOT_LOGGED_IN));
+        } else {
+            toolsMenu.setEnabled(true);
+            restoreMenuItem.setEnabled(true);
+        }
     }
 
     @Action
@@ -871,39 +884,39 @@ public class CanRegClientView extends FrameView {
 
     @Action
     public void convertCanReg4SystemAction() {
-        // TODO
-        // Choose a CanReg4 system file
         JInternalFrame internalFrame = new CanReg4SystemConverterInternalFrame();
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
+
+    @Action
+    public void restoreAction() {
+        JInternalFrame internalFrame = new RestoreInternalFrame();
+        showAndCenterInternalFrame(desktopPane, internalFrame);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;
+    private javax.swing.JMenuItem backupMenuItem;
     private javax.swing.JButton browseEditButton;
     private javax.swing.JMenuItem browseEditMenuItem;
+    private javax.swing.JMenuItem canReg5HelpMenuItem;
     private javax.swing.JMenuItem convertCR4SystDefMenuItem;
     private javax.swing.JMenu dataEntryMenu;
     private javax.swing.JDesktopPane desktopPane;
+    private javax.swing.JMenuItem duplicateSearchMenuItem;
     private javax.swing.JMenuItem editDictionaryMenuItem;
+    private javax.swing.JMenuItem encrWebsiteMenuItem;
+    private javax.swing.JMenuItem exportDataReportsMenuItem;
+    private javax.swing.JMenuItem frequenciesMenuItem;
+    private javax.swing.JMenuItem iacrWebsiteMenuItem;
+    private javax.swing.JMenuItem icdo3DocumentationWebsiteMenuItem;
+    private javax.swing.JMenuItem icdo3ManualMenuItem;
     private javax.swing.JMenuItem importDataMenuItem;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem10;
-    private javax.swing.JMenuItem jMenuItem11;
-    private javax.swing.JMenuItem jMenuItem12;
-    private javax.swing.JMenuItem jMenuItem13;
-    private javax.swing.JMenuItem jMenuItem14;
-    private javax.swing.JMenuItem jMenuItem15;
+    private javax.swing.JMenuItem incidenceTablesMenuItem;
+    private javax.swing.JButton installSystemButton;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem18;
-    private javax.swing.JMenuItem jMenuItem19;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
-    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
@@ -919,13 +932,17 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
+    private javax.swing.JMenu linksMenu;
     private javax.swing.JMenuItem logInMenuItem;
     private javax.swing.JMenuItem logOutMenuItem;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenu managementMenu;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem nameSexMenuItem;
     private javax.swing.JButton optionsButton;
+    private javax.swing.JMenuItem optionsMenuItem;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JMenuItem restoreMenuItem;
     private javax.swing.JButton startDatabaseServerButton;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
@@ -933,6 +950,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JToolBar toolBar;
     private javax.swing.JMenu toolsMenu;
     private javax.swing.JLabel userLevelLabel;
+    private javax.swing.JMenuItem usersMenuItem;
     private javax.swing.JMenuItem viewWorkFilesMenuItem;
     // End of variables declaration//GEN-END:variables
 

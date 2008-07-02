@@ -29,7 +29,7 @@
                   <Group type="102" attributes="0">
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jTextField1" pref="191" max="32767" attributes="0"/>
+                      <Component id="fileNameTextField" pref="191" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jButton3" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -49,7 +49,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fileNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -62,10 +62,10 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JTextField" name="jTextField1">
+    <Component class="javax.swing.JTextField" name="fileNameTextField">
       <Properties>
-        <Property name="text" type="java.lang.String" resourceKey="jTextField1.text"/>
-        <Property name="name" type="java.lang.String" value="jTextField1" noResource="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="fileNameTextField.text"/>
+        <Property name="name" type="java.lang.String" value="fileNameTextField" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jButton1">

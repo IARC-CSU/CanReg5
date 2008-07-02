@@ -12,6 +12,7 @@ import canreg.server.CanRegServerInterface;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.EventObject;
@@ -25,6 +26,7 @@ import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
+import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
 
 /**
@@ -42,6 +44,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private CanRegClientView canRegClientView;
     private Document doc;
     private HashMap<Integer, HashMap<String, String>> dictionary;
+    private boolean canregServerRunningOnThisMachine = false;
 
     /**
      * At startup create and show the main frame of the application.
@@ -172,11 +175,13 @@ public class CanRegClientApp extends SingleFrameApplication {
                 debugOut("LOGIN SUCCESSFULL");
                 // This should work...
                 systemName = server.getCanRegSystemName();
-                Globals.UserRightLevels i = getUserRightLevel();
-                canRegClientView.setUserRightsLevel(i);
                 loggedIn = true;
                 doc = server.getDatabseDescription();
                 dictionary = server.getDictionary();
+                canregServerRunningOnThisMachine = InetAddress.getLocalHost().
+                        equals(server.getIPAddress());
+                Globals.UserRightLevels i = getUserRightLevel();
+                canRegClientView.setUserRightsLevel(i);
                 return systemName;
             } else {
                 return null;
@@ -238,10 +243,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         Locale.setDefault(localSettings.getLocale());
     }
 
-    public void importFile(Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException {
-        // TODO 
-        // Add feedback mechanism...
-        canreg.client.dataentry.Import.importFile(doc, map, file, server, io);
+    public void importFile(Task<Object,Void> task, Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException {
+        canreg.client.dataentry.Import.importFile(task , doc, map, file, server, io);
     }
 
     public void setCanregServerRunningInThisThread(boolean canregServerRunningInThisThread) {
@@ -294,11 +297,19 @@ public class CanRegClientApp extends SingleFrameApplication {
         return path;
     }
 
+    public String restoreBackup(String path) throws SecurityException, RemoteException {
+        return server.restoreFromBackup(path);
+    }
+
     public CanRegServerInterface getServer() {
         return server;
     }
 
     public boolean isCanregServerRunningInThisThread() {
         return canregServerRunningInThisThread;
+    }
+
+    public boolean isCanRegServerRunningOnThisMachine() {
+        return canregServerRunningOnThisMachine;
     }
 }

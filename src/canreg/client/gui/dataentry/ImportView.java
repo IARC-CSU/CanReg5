@@ -13,6 +13,8 @@ import canreg.client.dataentry.Import;
 import canreg.client.dataentry.ImportOptions;
 import canreg.client.dataentry.Relation;
 import canreg.common.Globals;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,6 +32,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
+import org.jdesktop.application.TaskEvent;
+import org.jdesktop.application.TaskListener;
 import org.w3c.dom.Document;
 
 /**
@@ -99,6 +103,11 @@ public class ImportView extends javax.swing.JInternalFrame {
         inFile = new File(fileNameTextField.getText().trim());
         path = inFile.getPath();
         needToRebuildVariableMap = true;
+        try {
+            numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath()) - 1));
+        } catch (IOException ex) {
+            Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void changeTab(int tabNumber) {
@@ -123,6 +132,8 @@ public class ImportView extends javax.swing.JInternalFrame {
         previewPanel = new javax.swing.JPanel();
         previewScrollPane = new javax.swing.JScrollPane();
         previewTextArea = new javax.swing.JTextArea();
+        numberOfRecordsLabel = new javax.swing.JLabel();
+        numberOfRecordsTextField = new javax.swing.JTextField();
         previewButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         separatingCharacterComboBox = new javax.swing.JComboBox();
@@ -148,6 +159,8 @@ public class ImportView extends javax.swing.JInternalFrame {
         maxLinesPanel = new javax.swing.JPanel();
         maxLinesTextField = new javax.swing.JTextField();
         testOnlyCheckBox = new javax.swing.JCheckBox();
+        jPanel1 = new javax.swing.JPanel();
+        progressBar = new javax.swing.JProgressBar();
         nextButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
@@ -195,15 +208,32 @@ public class ImportView extends javax.swing.JInternalFrame {
         previewTextArea.setName("previewTextArea"); // NOI18N
         previewScrollPane.setViewportView(previewTextArea);
 
+        numberOfRecordsLabel.setText(resourceMap.getString("numberOfRecordsLabel.text")); // NOI18N
+        numberOfRecordsLabel.setFocusable(false);
+        numberOfRecordsLabel.setName("numberOfRecordsLabel"); // NOI18N
+
+        numberOfRecordsTextField.setText(resourceMap.getString("numberOfRecordsTextField.text")); // NOI18N
+        numberOfRecordsTextField.setFocusable(false);
+        numberOfRecordsTextField.setName("numberOfRecordsTextField"); // NOI18N
+
         javax.swing.GroupLayout previewPanelLayout = new javax.swing.GroupLayout(previewPanel);
         previewPanel.setLayout(previewPanelLayout);
         previewPanelLayout.setHorizontalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
+            .addGroup(previewPanelLayout.createSequentialGroup()
+                .addComponent(numberOfRecordsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(numberOfRecordsTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE))
         );
         previewPanelLayout.setVerticalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, previewPanelLayout.createSequentialGroup()
+                .addGroup(previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(numberOfRecordsLabel)
+                    .addComponent(numberOfRecordsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(previewScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 527, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         previewButton.setAction(actionMap.get("previewAction")); // NOI18N
@@ -319,7 +349,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
+                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -430,17 +460,36 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addComponent(testOnlyCheckBox))
         );
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
+        jPanel1.setName("jPanel1"); // NOI18N
+
+        progressBar.setName("progressBar"); // NOI18N
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(81, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout importFilePanelLayout = new javax.swing.GroupLayout(importFilePanel);
         importFilePanel.setLayout(importFilePanelLayout);
         importFilePanelLayout.setHorizontalGroup(
             importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(importFilePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(maxLinesPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(discrepanciesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(importButton))
+                .addGroup(importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(maxLinesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(discrepanciesPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(importButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         importFilePanelLayout.setVerticalGroup(
@@ -452,7 +501,9 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addComponent(maxLinesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 297, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
                 .addComponent(importButton)
                 .addContainerGap())
         );
@@ -488,7 +539,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 687, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -543,12 +594,22 @@ public class ImportView extends javax.swing.JInternalFrame {
         this.dispose();
     }
 
-    @Action(block = Task.BlockingScope.APPLICATION)
+        @Action()
     public Task importAction() {
         localSettings.setProperty("import_path", path);
         localSettings.writeSettings();
-        this.dispose();
-        return new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+        // this.dispose();
+        Task task = new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+        task.addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("progress".equals(evt.getPropertyName())) {
+                    progressBar.setValue((Integer) evt.getNewValue());
+                } else if ("finished".equals(evt.getPropertyName())) {
+                    dispose();
+                }
+            }
+        });
+        return task;
     }
 
     private class ImportActionTask extends org.jdesktop.application.Task<Object, Void> {
@@ -567,7 +628,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             // the Swing GUI from here.
             try {
                 // Calls the client app import action with the file parameters provided,
-                CanRegClientApp.getApplication().importFile(doc, buildMap(), inFile, buildImportOptions());
+                CanRegClientApp.getApplication().importFile(this, doc, buildMap(), inFile, buildImportOptions());
             } catch (RemoteException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -699,10 +760,20 @@ public class ImportView extends javax.swing.JInternalFrame {
         BufferedReader br = null;
         try {
             changeFile();
+            // numberOfRecordsTextField.setText(""+(canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath())-1));
             br = new BufferedReader(new FileReader(inFile));
             // Read the entire file into the preview area... 
             // Change this to just a part of the file?
-            previewTextArea.read(br, null);
+            int i = 0;
+            String text = new String();
+            String line = br.readLine();
+            while (i < Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW && line != null) {
+                text += line + "\n";
+                line = br.readLine();
+                i++;
+            }
+            previewTextArea.setText(text);
+            previewTextArea.setCaretPosition(0);
             previewPanel.setVisible(true);
         } catch (FileNotFoundException fileNotFoundException) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not preview file: \'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -725,7 +796,7 @@ public class ImportView extends javax.swing.JInternalFrame {
 
     @Action
     public void autodetectSeparatingCharacterAction() {
-        JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Not yet implemented.", "Error", JOptionPane.ERROR_MESSAGE);    
+        JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Not yet implemented.", "Error", JOptionPane.ERROR_MESSAGE);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel associateVariablesPanel;
@@ -745,17 +816,21 @@ public class ImportView extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel maxLinesPanel;
     private javax.swing.JTextField maxLinesTextField;
     private javax.swing.JButton nextButton;
+    private javax.swing.JLabel numberOfRecordsLabel;
+    private javax.swing.JTextField numberOfRecordsTextField;
     private javax.swing.JRadioButton overwriteRadioButton;
     private javax.swing.JCheckBox personSearchCheckBox;
     private javax.swing.JButton previewButton;
     private javax.swing.JPanel previewPanel;
     private javax.swing.JScrollPane previewScrollPane;
     private javax.swing.JTextArea previewTextArea;
+    private javax.swing.JProgressBar progressBar;
     private javax.swing.JCheckBox queryNewNameCheckBox;
     private javax.swing.JRadioButton rejectRadioButton;
     private javax.swing.JComboBox separatingCharacterComboBox;

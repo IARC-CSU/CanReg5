@@ -87,8 +87,8 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         loginButton.setActionCommand(resourceMap.getString("loginButton.actionCommand")); // NOI18N
         loginButton.setName("loginButton"); // NOI18N
 
-        restoreBackupButton.setIcon(resourceMap.getIcon("restoreBackupButton.icon")); // NOI18N
-        restoreBackupButton.setText(resourceMap.getString("restoreBackupButton.text")); // NOI18N
+        restoreBackupButton.setAction(actionMap.get("installNewSystemAction")); // NOI18N
+        restoreBackupButton.setToolTipText(resourceMap.getString("restoreBackupButton.toolTipText")); // NOI18N
         restoreBackupButton.setName("restoreBackupButton"); // NOI18N
 
         javax.swing.GroupLayout buttonPanelLayout = new javax.swing.GroupLayout(buttonPanel);
@@ -150,7 +150,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         pack();
@@ -177,6 +177,16 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
     public void setDesktopPane(JDesktopPane dtp) {
         desktopPane = dtp;
     }
+
+    @Action
+    public void installNewSystemAction() {
+        InstallNewSystemInternalFrame internalFrame = new InstallNewSystemInternalFrame();
+        desktopPane.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        //JFrame mainFrame = CanRegClientApp.getApplication().getMainFrame();
+        internalFrame.setLocation(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2);
+        internalFrame.setVisible(true);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane aboutEditorPane;
     private javax.swing.JScrollPane aboutScrollPane;

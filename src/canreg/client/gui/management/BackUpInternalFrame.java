@@ -24,7 +24,7 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
     /** Creates new form BackUpInternalFrame */
     public BackUpInternalFrame() {
         initComponents();
-        openFolderButton.setEnabled(canreg.client.CanRegClientApp.getApplication().isCanregServerRunningInThisThread());
+        openFolderButton.setEnabled(canreg.client.CanRegClientApp.getApplication().isCanRegServerRunningOnThisMachine());
     }
 
     /** This method is called from within the constructor to

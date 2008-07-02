@@ -38,6 +38,7 @@ public class Globals {
     static public String SCHEMA_NAME = "APP";    // User levels
     public static String CANREG4_SYSTEM_FOLDER = "C:\\CR4SHARE\\CANREG4\\CR4-SYST\\";
     public static int DEFAULT_PORT = 1199;
+    public static int NUMBER_OF_LINES_IN_IMPORT_PREVIEW = 42;
     static public enum UserRightLevels {NOT_LOGGED_IN, SUPERVISOR, REGISTRAR, ANALYST };
 
     // Languages - consider moving it to config-file or build it automatically...
