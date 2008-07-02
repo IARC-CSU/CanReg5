@@ -7,7 +7,6 @@ package canreg.client.gui.tools;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
-import canreg.client.ServerDescription;
 import canreg.common.Globals;
 import canreg.server.management.SystemDefinitionConverter;
 import java.io.File;
@@ -17,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.jdesktop.application.Action;
 
 /**
@@ -38,6 +38,9 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
         } else {
             chooser = new JFileChooser(Globals.CANREG4_SYSTEM_FOLDER);
         }
+        // Filter only the DEF-files.
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("CanReg4 System Definition File", "DEF");
+        chooser.addChoosableFileFilter(filter);
     }
 
     /** This method is called from within the constructor to
@@ -193,8 +196,10 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
                     codeField.getText() + "\'.\n" + 
                     "Do you want to add it to your favourite servers?"
                     , "Success", JOptionPane.YES_NO_OPTION);
-            if (addServer == JOptionPane.YES_OPTION) 
-                addServerToServerList();
+            if (addServer == JOptionPane.YES_OPTION) {
+                LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
+                localSettings.addServerToServerList(nameTextField.getText(), "localhost", Globals.DEFAULT_PORT, codeField.getText());
+            }
             this.dispose();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -202,25 +207,7 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
         }
     }
     
-    private void addServerToServerList(){
-        // Warning Code duplication!
-        // Same functionality in LoginInternalFrame - consider refactoring...
-            boolean found = false;
-            int i = 0;
-            LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
-            
-            while (!found) {
-                found = localSettings.getProperty("server." + (i++) + ".name").equals("");
-            }
-            // step one back
-            i -= 1;
 
-            ServerDescription sd = new ServerDescription(nameTextField.getText(),
-                    "localhost",
-                    Globals.DEFAULT_PORT,
-                    codeField.getText(), i);
-            localSettings.addServerDescription(sd);
-    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;

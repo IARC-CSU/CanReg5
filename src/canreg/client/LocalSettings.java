@@ -32,9 +32,7 @@ public class LocalSettings {
     private String settingsFileName;
     private String settingsDir;
     private Properties properties;
-    private boolean settingsChanged;
-
-    // Key names
+    private boolean settingsChanged;    // Key names
     public static String LAST_SERVER_ID_KEY = "last_server_id";
     public static String IMPORT_PATH_KEY = "import_path";
     public static String USERNAME_KEY = "username";
@@ -70,6 +68,25 @@ public class LocalSettings {
         // create the working dir
         createWorkingDir(properties.getProperty(WORKING_DIR_PATH_KEY));
         writeSettings();
+    }
+
+    public int addServerToServerList(String name, String url, int port, String code) {
+        boolean found = false;
+        int i = 0;
+
+        while (!found) {
+            found = getProperty("server." + (i++) + ".name").equals("");
+        }
+        // step one back
+        i -= 1;
+
+        ServerDescription sd = new ServerDescription(name,
+                url,
+                port,
+                code, i);
+        addServerDescription(sd);
+        
+        return i;
     }
 
     public String[] getLanguageList() {
@@ -185,7 +202,7 @@ public class LocalSettings {
             property = FALSE_PROPERTY;
         } else if (key.equalsIgnoreCase(WORKING_DIR_PATH_KEY)) {
             property = System.getProperty("user.home", ".") + System.getProperty("file.separator") + "CanReg";
-        } 
+        }
         return property;
     }
 
@@ -194,7 +211,7 @@ public class LocalSettings {
         setProperty(REMEMBER_PASSWORD_KEY, getDefalutProperty(REMEMBER_PASSWORD_KEY));
         setProperty(USERNAME_KEY, getDefalutProperty(USERNAME_KEY));
         setProperty(PASSWORD_KEY, getDefalutProperty(PASSWORD_KEY));
-        setProperty(WORKING_DIR_PATH_KEY,getDefalutProperty(WORKING_DIR_PATH_KEY));
+        setProperty(WORKING_DIR_PATH_KEY, getDefalutProperty(WORKING_DIR_PATH_KEY));
         settingsChanged = true;
     }
 

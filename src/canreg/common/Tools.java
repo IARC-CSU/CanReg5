@@ -98,7 +98,7 @@ public class Tools {
             dictionaries[i] = new DatabaseDictionaryListElement();
             dictionaries[i].setName(e.getElementsByTagName(namespace + "name").item(0).getTextContent());
             dictionaries[i].setDictionaryID(Integer.parseInt(e.getElementsByTagName(namespace + "dictionary_id").item(0).getTextContent()));
-            // TODO -- capture more info...
+        // TODO -- capture more info...
         }
         return dictionaries;
     }
@@ -161,4 +161,20 @@ public class Tools {
         }
         return file;
     }
+
+    public static void fileCopy(String from, String to) throws IOException {
+        File inputFile = new File(from);
+        File outputFile = new File(to);
+
+        FileReader in = new FileReader(inputFile);
+        FileWriter out = new FileWriter(outputFile);
+        int c;
+
+        while ((c = in.read()) != -1) {
+            out.write(c);
+        }
+        in.close();
+        out.close();
+    }
 }
+

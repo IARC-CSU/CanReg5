@@ -865,6 +865,8 @@ public class CanRegClientView extends FrameView {
         // Choose a system.xml
         // copy it to system folder
         // Give log in window with settings from XML
+        JInternalFrame internalFrame = new InstallNewSystemInternalFrame();
+        showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
     @Action
