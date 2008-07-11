@@ -6,6 +6,7 @@
 
 package canreg.client.gui.components;
 
+import javax.swing.ListSelectionModel;
 import org.jdesktop.application.Action;
 
 /**
@@ -13,11 +14,15 @@ import org.jdesktop.application.Action;
  * @author  ervikm
  */
 public class NavigationPanel extends javax.swing.JPanel {
+    private ListSelectionModel listSelectionModel;
+    private javax.swing.JTable table;
     
     /** Creates new form NavigationPanel */
     public NavigationPanel() {
         initComponents();
     }
+    
+    
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -95,19 +100,24 @@ public class NavigationPanel extends javax.swing.JPanel {
 
     @Action
     public void goToTopAction() {
-        
+        listSelectionModel.setSelectionInterval(0, 0);
+        table.scrollRectToVisible(table.getCellRect(0,0,true));
     }
 
     @Action
     public void goOneUpAction() {
+        
     }
 
     @Action
     public void goToBottomAction() {
+        listSelectionModel.setSelectionInterval(table.getRowCount()-1, table.getRowCount()-1);
+        table.scrollRectToVisible(table.getCellRect(table.getRowCount()-1,0,true));
     }
 
     @Action
     public void goOneDownAction() {
+        
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -117,5 +127,11 @@ public class NavigationPanel extends javax.swing.JPanel {
     private javax.swing.JButton topButton2;
     private javax.swing.JButton topButton3;
     // End of variables declaration//GEN-END:variables
-    
+
+    public void setTable(javax.swing.JTable table) {
+        this.table = table;
+        this.listSelectionModel = table.getSelectionModel();
+    }
+
+  
 }

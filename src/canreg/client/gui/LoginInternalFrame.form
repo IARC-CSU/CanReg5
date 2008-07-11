@@ -201,7 +201,7 @@
                 <Property name="name" type="java.lang.String" value="passwordField" noResource="true"/>
               </Properties>
               <Events>
-                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="passwordFieldKeyTyped"/>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="enterKeyTyped"/>
               </Events>
             </Component>
             <Component class="javax.swing.JCheckBox" name="rememberPasswordCheckBox">
@@ -311,6 +311,9 @@
                   <ComponentRef name="portField"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="enterKeyTyped"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="serverURLLabel">
               <Properties>
@@ -441,6 +444,9 @@
                 <Property name="text" type="java.lang.String" resourceKey="codeField.text"/>
                 <Property name="name" type="java.lang.String" value="codeField" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="enterKeyTyped"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

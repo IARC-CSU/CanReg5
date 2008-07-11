@@ -4,6 +4,9 @@
  */
 package canreg.server;
 
+import cachingtableapi.DistributedTableDescription;
+import cachingtableapi.DistributedTableModel;
+import canreg.common.DatabaseFilter;
 import canreg.common.Globals;
 import canreg.server.database.CanRegDAO;
 import canreg.server.database.DictionaryEntry;
@@ -13,6 +16,7 @@ import canreg.server.management.SystemDescription;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -224,5 +228,13 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return addr;
+    }
+
+    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, Exception {
+        return db.getDistributedTableDescription(filter, tableName);
+    }
+
+    public Object[][] retrieveRows(DistributedTableDescription description, int from, int to) throws RemoteException, SecurityException, Exception {
+        return db.retrieveRows(description,from,to);
     }
 }

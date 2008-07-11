@@ -15,6 +15,10 @@ package canreg.server.database;
  * this software is authorized pursuant to the terms of the license 
  * found at http://developers.sun.com/berkeley_license.html .
  */
+import canreg.server.database.DistributedTableDataSourceResultSetImpl;
+import cachingtableapi.DistributedTableDataSource;
+import cachingtableapi.DistributedTableDescription;
+import canreg.common.DatabaseFilter;
 import canreg.common.Globals;
 import canreg.server.ListEntry;
 
@@ -43,7 +47,8 @@ import org.w3c.dom.*;
  * @author morten (based on code by John O'Conner)
  */
 public class CanRegDAO {
-
+    private DistributedTableDescription temporaryGlobalDescription;
+    
     /**
      * 
      * @param dbName
@@ -53,6 +58,8 @@ public class CanRegDAO {
         this.doc = doc;
 
         this.dbName = dbName;
+        
+        distributedDataSources = new HashMap<DistributedTableDescription, DistributedTableDataSource>();
 
         System.out.println(canreg.server.xml.Tools.getTextContent(new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
 
@@ -101,6 +108,24 @@ public class CanRegDAO {
         return dictionaryMap;
     }
 
+    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, Exception {
+        ResultSet result;
+        Statement statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+        if (tableName.equalsIgnoreCase("tumour")) {
+            result = statement.executeQuery(strGetTumours);
+        } else if (tableName.equalsIgnoreCase("patient")) {
+            result = statement.executeQuery(strGetPatients);
+        } else {
+            throw new Exception("Unknown table name.");
+        }
+        DistributedTableDataSource dataSource = new DistributedTableDataSourceResultSetImpl(result);
+        DistributedTableDescription tableDescription = dataSource.getTableDescription();
+        //distributedDataSources.put(tableDescription, dataSource);
+        distributedDataSources.put(temporaryGlobalDescription, dataSource);
+        return tableDescription;
+    }
+
     /**
      * Perform backup of the database
      * @return Path to backup
@@ -114,6 +139,11 @@ public class CanRegDAO {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return path;
+    }
+
+    public Object[][] retrieveRows(DistributedTableDescription description, int from, int to) throws Exception {
+        DistributedTableDataSource ts = distributedDataSources.get(temporaryGlobalDescription);
+        return ts.retrieveRows(from, to);
     }
 
     // This only works for Embedded databases - will look into it!
@@ -206,7 +236,7 @@ public class CanRegDAO {
      * @return true if successfull, false if not
      */
     public String restoreFromBackup(String path) {
-        boolean bRestored = false, shutdownSuccess = false;
+           boolean bRestored = false, shutdownSuccess = false;
         SQLException ex = null;
         String dbUrl = getDatabaseUrl();
 
@@ -596,7 +626,7 @@ public class CanRegDAO {
      * @param index
      * @return
      */
-    public Patient getRecord(int index) {
+    public Patient getPatient(int index) {
         Patient record = null;
         try {
             stmtGetPatient.clearParameters();
@@ -630,6 +660,7 @@ public class CanRegDAO {
     private boolean isConnected;
     private String dbName;
     private Document doc;
+    private HashMap<DistributedTableDescription,DistributedTableDataSource> distributedDataSources;
     private boolean tableOfDictionariesFilled = true;
     private PreparedStatement stmtSaveNewPatient;
     private PreparedStatement stmtSaveNewTumour;

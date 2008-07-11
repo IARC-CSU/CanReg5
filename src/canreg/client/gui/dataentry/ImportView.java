@@ -594,13 +594,14 @@ public class ImportView extends javax.swing.JInternalFrame {
         this.dispose();
     }
 
-        @Action()
+    @Action()
     public Task importAction() {
         localSettings.setProperty("import_path", path);
         localSettings.writeSettings();
         // this.dispose();
         Task task = new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
         task.addPropertyChangeListener(new PropertyChangeListener() {
+
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("progress".equals(evt.getPropertyName())) {
                     progressBar.setValue((Integer) evt.getNewValue());
@@ -700,15 +701,16 @@ public class ImportView extends javax.swing.JInternalFrame {
             Relation rel = new Relation();
 
             DatabaseVariablesListElement dbVLE = vmp.getSelectedDBVariableObject();
+            if (dbVLE != null) {
+                rel.setDatabaseTableName(dbVLE.getDatabaseTableName());
+                rel.setDatabaseTableVariableID(vmp.getDBVariableIndex());
+                rel.setDatabaseVariableName(dbVLE.getDatabaseVariableName());
+                rel.setFileColumnNumber(i);
+                rel.setFileVariableName(vmp.getFileVariableName());
+                rel.setVariableType(dbVLE.getVariableType());
 
-            rel.setDatabaseTableName(dbVLE.getDatabaseTableName());
-            rel.setDatabaseTableVariableID(vmp.getDBVariableIndex());
-            rel.setDatabaseVariableName(dbVLE.getDatabaseVariableName());
-            rel.setFileColumnNumber(i);
-            rel.setFileVariableName(vmp.getFileVariableName());
-            rel.setVariableType(dbVLE.getVariableType());
-
-            map.add(rel);
+                map.add(rel);
+            }
             i++;
         }
         return map;

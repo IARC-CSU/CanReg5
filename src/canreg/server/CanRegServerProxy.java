@@ -4,6 +4,8 @@
  */
 package canreg.server;
 
+import cachingtableapi.DistributedTableDescription;
+import canreg.common.DatabaseFilter;
 import canreg.server.database.CanRegDAO;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
@@ -12,6 +14,7 @@ import canreg.server.security.ValidateMethodCall;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
 import java.util.HashMap;
 import javax.security.auth.Subject;
 import org.w3c.dom.Document;
@@ -168,5 +171,15 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public InetAddress getIPAddress() throws RemoteException, SecurityException {
         checkPermission("getIPAddress");
         return theServer.getIPAddress();
+    }
+
+    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, Exception {
+        checkPermission("getDistributedTableDescription");
+        return theServer.getDistributedTableDescription(filter, tableName);
+    }
+
+    public Object[][] retrieveRows(DistributedTableDescription description, int from, int to) throws RemoteException, SecurityException, Exception {
+        checkPermission("retrieveRows");
+        return theServer.retrieveRows(description, from, to);
     }
 }

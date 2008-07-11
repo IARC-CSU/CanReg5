@@ -3,9 +3,12 @@
  */
 package canreg.client;
 
+import cachingtableapi.DistributedTableDescription;
+import cachingtableapi.DistributedTableModel;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.dataentry.ImportOptions;
+import canreg.common.DatabaseFilter;
 import canreg.common.Globals;
 import canreg.server.CanRegLoginInterface;
 import canreg.server.CanRegServerInterface;
@@ -15,6 +18,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.List;
@@ -311,5 +315,13 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public boolean isCanRegServerRunningOnThisMachine() {
         return canregServerRunningOnThisMachine;
+    }
+    
+    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, Exception {
+        return server.getDistributedTableDescription(filter, tableName);
+    }
+    
+    public Object[][] retrieveRows(DistributedTableDescription description, int from, int to) throws RemoteException, SecurityException, Exception{
+            return server.retrieveRows(description, from, to);
     }
 }

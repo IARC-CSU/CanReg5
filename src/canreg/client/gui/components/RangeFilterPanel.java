@@ -330,4 +330,12 @@ public class RangeFilterPanel extends javax.swing.JPanel {
             filterWizardInternalFrame.setVisible(true);
         }
     }
+
+    public void setRecordsShown(int rec) {
+        recordsShownField.setText("" + rec);
+    }
+
+    public void setRecordsTotal(int rec) {
+        recordsTotalTextField.setText("" + rec);
+    }
 }

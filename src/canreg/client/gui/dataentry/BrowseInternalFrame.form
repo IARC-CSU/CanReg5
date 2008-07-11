@@ -26,20 +26,19 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="resultScrollPane" alignment="0" pref="676" max="32767" attributes="0"/>
+                  <Component id="resultPanel" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="variablesPanel1" min="-2" max="-2" attributes="1"/>
-                          <Component id="navigationPanel1" pref="119" max="32767" attributes="1"/>
+                          <Component id="navigationPanel" min="-2" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="buttonsPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="buttonsPanel" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -49,41 +48,24 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace pref="15" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                      <Group type="102" alignment="1" attributes="1">
-                          <Component id="variablesPanel1" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="navigationPanel1" min="-2" pref="93" max="-2" attributes="0"/>
-                      </Group>
-                      <Component id="buttonsPanel" alignment="0" min="-2" pref="198" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="variablesPanel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="navigationPanel" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="rangeFilterPanel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="buttonsPanel" min="-2" pref="198" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-              <Component id="resultScrollPane" pref="371" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="resultPanel" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JScrollPane" name="resultScrollPane">
-      <Properties>
-        <Property name="name" type="java.lang.String" value="resultScrollPane" noResource="true"/>
-      </Properties>
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-      <SubComponents>
-        <Component class="javax.swing.JTable" name="resultTable">
-          <Properties>
-            <Property name="autoResizeMode" type="int" value="0"/>
-            <Property name="name" type="java.lang.String" value="resultTable" noResource="true"/>
-          </Properties>
-        </Component>
-      </SubComponents>
-    </Container>
     <Container class="javax.swing.JPanel" name="buttonsPanel">
       <Properties>
         <Property name="name" type="java.lang.String" value="buttonsPanel" noResource="true"/>
@@ -95,11 +77,11 @@
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="editRecordNumberButton" alignment="0" pref="194" max="32767" attributes="1"/>
-                      <Component id="editTableRecordButton" alignment="0" pref="194" max="32767" attributes="1"/>
-                      <Component id="createNextButton" alignment="0" pref="194" max="32767" attributes="1"/>
-                      <Component id="recordNumberTextField" alignment="0" pref="194" max="32767" attributes="1"/>
-                      <Component id="refreshTableButton" alignment="0" pref="194" max="32767" attributes="1"/>
+                      <Component id="editRecordNumberButton" alignment="0" pref="217" max="32767" attributes="1"/>
+                      <Component id="editTableRecordButton" alignment="0" pref="217" max="32767" attributes="1"/>
+                      <Component id="createNextButton" alignment="0" pref="217" max="32767" attributes="1"/>
+                      <Component id="recordNumberTextField" alignment="0" pref="217" max="32767" attributes="1"/>
+                      <Component id="refreshTableButton" alignment="0" pref="217" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -150,7 +132,7 @@
         <Component class="javax.swing.JButton" name="refreshTableButton">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="canreg.BrowseInternalFrame" id="refresh" methodName="refresh"/>
+              <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="refresh" methodName="refresh"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="refreshTableButton.text"/>
             <Property name="name" type="java.lang.String" value="refreshTableButton" noResource="true"/>
@@ -169,9 +151,9 @@
         <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="rangeFilterPanel.initValues();&#xa;rangeFilterPanel.setDeskTopPane(dtp);"/>
       </AuxValues>
     </Component>
-    <Component class="canreg.client.gui.components.NavigationPanel" name="navigationPanel1">
+    <Component class="canreg.client.gui.components.NavigationPanel" name="navigationPanel">
       <Properties>
-        <Property name="name" type="java.lang.String" value="navigationPanel1" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="navigationPanel" noResource="true"/>
       </Properties>
     </Component>
     <Component class="canreg.client.gui.components.VariablesPanel" name="variablesPanel1">
@@ -179,5 +161,48 @@
         <Property name="name" type="java.lang.String" value="variablesPanel1" noResource="true"/>
       </Properties>
     </Component>
+    <Container class="javax.swing.JPanel" name="resultPanel">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="resultPanel" noResource="true"/>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Component id="resultScrollPaneWiz" alignment="0" pref="684" max="32767" attributes="0"/>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Component id="resultScrollPaneWiz" alignment="0" pref="311" max="32767" attributes="0"/>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Container class="javax.swing.JScrollPane" name="resultScrollPaneWiz">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="resultScrollPaneWiz" noResource="true"/>
+          </Properties>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JTable" name="resultTableWiz">
+              <Properties>
+                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                  <Table columnCount="4" rowCount="4">
+                    <Column editable="true" title="Title 1" type="java.lang.Object"/>
+                    <Column editable="true" title="Title 2" type="java.lang.Object"/>
+                    <Column editable="true" title="Title 3" type="java.lang.Object"/>
+                    <Column editable="true" title="Title 4" type="java.lang.Object"/>
+                  </Table>
+                </Property>
+                <Property name="fillsViewportHeight" type="boolean" value="true"/>
+                <Property name="name" type="java.lang.String" value="resultTableWiz" noResource="true"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>

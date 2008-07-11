@@ -137,7 +137,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         passwordField.setName("passwordField"); // NOI18N
         passwordField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                passwordFieldKeyTyped(evt);
+                enterKeyTyped(evt);
             }
         });
 
@@ -199,6 +199,11 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         serverURLTextField.setText(resourceMap.getString("serverURLTextField.text")); // NOI18N
         serverURLTextField.setName("serverURLTextField"); // NOI18N
         serverURLTextField.setNextFocusableComponent(portField);
+        serverURLTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                enterKeyTyped(evt);
+            }
+        });
 
         serverURLLabel.setText(resourceMap.getString("serverURLLabel.text")); // NOI18N
         serverURLLabel.setName("serverURLLabel"); // NOI18N
@@ -266,6 +271,11 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
 
         codeField.setText(resourceMap.getString("codeField.text")); // NOI18N
         codeField.setName("codeField"); // NOI18N
+        codeField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                enterKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
         settingsPanel.setLayout(settingsPanelLayout);
@@ -419,12 +429,11 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         localSettings.writeSettings();
     }
 
-    private void passwordFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFieldKeyTyped
-        // TODO add your handling code here:
+    private void enterKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterKeyTyped
         if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_ENTER) {
             loginAction();
         }
-    }//GEN-LAST:event_passwordFieldKeyTyped
+}//GEN-LAST:event_enterKeyTyped
 
     private void usernameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameTextFieldKeyTyped
         // TODO add your handling code here:
@@ -620,7 +629,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "<html>The IP address of <b>" + addr.getHostName() + "</b> is <b>" + addr.getHostAddress() + "</b>.</html>", "Message", JOptionPane.INFORMATION_MESSAGE);
         } catch (UnknownHostException ex) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "<html>Cannot find the IP address of <b>" + serverURLTextField.getText() + "</b>.</html>", "Message", JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.WARNING, null, ex);
         }
     }
 

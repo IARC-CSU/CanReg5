@@ -24,10 +24,10 @@ public class VariableMappingPanel extends javax.swing.JPanel {
 
     void setDBVariables(DatabaseVariablesListElement[] variablesInDB) {
         this.variablesInDB = variablesInDB;
-        DatabaseVariablesListElement[] entriesInComboBox = new DatabaseVariablesListElement[variablesInDB.length+1];
-        entriesInComboBox[0]=null;
-        for (int i = 0; i<variablesInDB.length; i++){
-            entriesInComboBox[i+1]=variablesInDB[i];
+        DatabaseVariablesListElement[] entriesInComboBox = new DatabaseVariablesListElement[variablesInDB.length + 1];
+        entriesInComboBox[0] = null;
+        for (int i = 0; i < variablesInDB.length; i++) {
+            entriesInComboBox[i + 1] = variablesInDB[i];
         }
         dbVariableComboBox.setModel(new javax.swing.DefaultComboBoxModel(entriesInComboBox));
     }
@@ -83,7 +83,15 @@ public class VariableMappingPanel extends javax.swing.JPanel {
     }
     
     public DatabaseVariablesListElement getSelectedDBVariableObject(){
-        return (DatabaseVariablesListElement) dbVariableComboBox.getSelectedObjects()[0];
+        Object[] dbve = dbVariableComboBox.getSelectedObjects();
+        if (dbve.length>0)
+        {
+            return (DatabaseVariablesListElement) dbve[0];
+        } 
+        else 
+        {
+            return null;
+        }
     }
 
     public void setSelectedDBVariableObject(DatabaseVariablesListElement dbVLE){
