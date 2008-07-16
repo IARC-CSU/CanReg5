@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.security.auth.Subject;
 import org.apache.derby.drda.NetworkServerControl;
 import java.net.InetAddress;
 import java.util.Iterator;
@@ -230,11 +231,21 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return addr;
     }
 
+    // This cannot be called directly
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, Exception {
-        return db.getDistributedTableDescription(filter, tableName);
+        return null;
+    }
+    
+    public DistributedTableDescription getDistributedTableDescription(Subject theUser, DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, Exception {
+        return db.getDistributedTableDescriptionAndInitiateDatabaseQuery(theUser, filter, tableName);
     }
 
-    public Object[][] retrieveRows(DistributedTableDescription description, int from, int to) throws RemoteException, SecurityException, Exception {
-        return db.retrieveRows(description,from,to);
+    // This cannot be called directly
+    public Object[][] retrieveRows(int from, int to) throws RemoteException, SecurityException, Exception {
+        return null;
+    }
+    
+    public Object[][] retrieveRows(Subject theUser, int from, int to) throws RemoteException, SecurityException, Exception {
+        return db.retrieveRows(theUser,from,to);
     }
 }

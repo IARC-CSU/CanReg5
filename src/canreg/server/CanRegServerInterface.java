@@ -15,6 +15,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import javax.security.auth.Subject;
 import org.w3c.dom.Document;
 
 /**
@@ -100,5 +101,9 @@ public interface CanRegServerInterface extends Remote {
     
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, Exception;
 
-    public Object[][] retrieveRows(DistributedTableDescription description, int from, int to) throws RemoteException, SecurityException, Exception;
+    public DistributedTableDescription getDistributedTableDescription(Subject theUser, DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, Exception;
+    
+    public Object[][] retrieveRows(Subject theUser, int from, int to) throws RemoteException, SecurityException, Exception ;
+    
+    public Object[][] retrieveRows(int from, int to) throws RemoteException, SecurityException, Exception;
 }

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.5" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.ButtonGroup" name="buttonGroup1">
+    </Component>
+  </NonVisualComponents>
   <Properties>
     <Property name="closable" type="boolean" value="true"/>
     <Property name="maximizable" type="boolean" value="true"/>
@@ -26,19 +30,19 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="resultPanel" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
+                      <Component id="rangeFilterPanel" pref="317" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="variablesPanel1" min="-2" max="-2" attributes="1"/>
-                          <Component id="navigationPanel" min="-2" max="-2" attributes="1"/>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="variablesPanel1" max="32767" attributes="1"/>
+                          <Component id="navigationPanel" alignment="1" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="buttonsPanel" max="32767" attributes="0"/>
+                      <Component id="buttonsPanel" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -55,8 +59,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="navigationPanel" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="rangeFilterPanel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="buttonsPanel" min="-2" pref="198" max="-2" attributes="0"/>
+                  <Component id="buttonsPanel" alignment="1" min="0" pref="254" max="32767" attributes="1"/>
+                  <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="resultPanel" max="32767" attributes="0"/>
@@ -75,13 +79,13 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="editRecordNumberButton" alignment="0" pref="217" max="32767" attributes="1"/>
-                      <Component id="editTableRecordButton" alignment="0" pref="217" max="32767" attributes="1"/>
-                      <Component id="createNextButton" alignment="0" pref="217" max="32767" attributes="1"/>
-                      <Component id="recordNumberTextField" alignment="0" pref="217" max="32767" attributes="1"/>
-                      <Component id="refreshTableButton" alignment="0" pref="217" max="32767" attributes="1"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="editRecordNumberButton" alignment="0" pref="241" max="32767" attributes="1"/>
+                      <Component id="editTableRecordButton" alignment="0" pref="241" max="32767" attributes="1"/>
+                      <Component id="createNextButton" alignment="0" pref="241" max="32767" attributes="1"/>
+                      <Component id="recordNumberTextField" alignment="0" pref="241" max="32767" attributes="1"/>
+                      <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -98,8 +102,8 @@
                   <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                   <Component id="recordNumberTextField" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="refreshTableButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
+                  <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="109" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -129,18 +133,63 @@
             <Property name="name" type="java.lang.String" value="editRecordNumberButton" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="refreshTableButton">
+        <Container class="javax.swing.JPanel" name="jPanel1">
           <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="refresh" methodName="refresh"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                <TitledBorder title="Table">
+                  <Property name="titleX" resourceKey="jPanel1.border.title"/>
+                </TitledBorder>
+              </Border>
             </Property>
-            <Property name="text" type="java.lang.String" resourceKey="refreshTableButton.text"/>
-            <Property name="name" type="java.lang.String" value="refreshTableButton" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="jPanel1" noResource="true"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshTableButtonActionPerformed"/>
-          </Events>
-        </Component>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="tableChooserComboBox" alignment="1" pref="225" max="32767" attributes="0"/>
+                  <Component id="refreshTableButton" alignment="1" pref="225" max="32767" attributes="1"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="tableChooserComboBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="refreshTableButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JComboBox" name="tableChooserComboBox">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="3">
+                    <StringItem index="0" value="Patient"/>
+                    <StringItem index="1" value="Tumour"/>
+                    <StringItem index="2" value="Both"/>
+                  </StringArray>
+                </Property>
+                <Property name="name" type="java.lang.String" value="tableChooserComboBox" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="refreshTableButton">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="refresh" methodName="refresh"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="refreshTableButton.text"/>
+                <Property name="name" type="java.lang.String" value="refreshTableButton" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshTableButtonActionPerformed"/>
+              </Events>
+            </Component>
+          </SubComponents>
+        </Container>
       </SubComponents>
     </Container>
     <Component class="canreg.client.gui.components.RangeFilterPanel" name="rangeFilterPanel">
@@ -169,12 +218,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="resultScrollPaneWiz" alignment="0" pref="684" max="32767" attributes="0"/>
+              <Component id="resultScrollPaneWiz" alignment="0" pref="694" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="resultScrollPaneWiz" alignment="0" pref="311" max="32767" attributes="0"/>
+              <Component id="resultScrollPaneWiz" alignment="1" pref="361" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -188,16 +237,18 @@
           <SubComponents>
             <Component class="javax.swing.JTable" name="resultTableWiz">
               <Properties>
+                <Property name="autoCreateRowSorter" type="boolean" value="true"/>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="4" rowCount="4">
-                    <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                    <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                    <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                    <Column editable="true" title="Title 4" type="java.lang.Object"/>
-                  </Table>
+                  <Table columnCount="0" rowCount="0"/>
                 </Property>
-                <Property name="fillsViewportHeight" type="boolean" value="true"/>
+                <Property name="autoResizeMode" type="int" value="0"/>
+                <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                  <TableColumnModel selectionModel="0"/>
+                </Property>
                 <Property name="name" type="java.lang.String" value="resultTableWiz" noResource="true"/>
+                <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                  <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                </Property>
               </Properties>
             </Component>
           </SubComponents>

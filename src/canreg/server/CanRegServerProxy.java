@@ -175,11 +175,19 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
 
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, Exception {
         checkPermission("getDistributedTableDescription");
-        return theServer.getDistributedTableDescription(filter, tableName);
+        return theServer.getDistributedTableDescription(theUser, filter, tableName);
     }
 
-    public Object[][] retrieveRows(DistributedTableDescription description, int from, int to) throws RemoteException, SecurityException, Exception {
+    public Object[][] retrieveRows(int from, int to) throws RemoteException, SecurityException, Exception {
         checkPermission("retrieveRows");
-        return theServer.retrieveRows(description, from, to);
+        return theServer.retrieveRows(theUser, from, to);
+    }
+
+    public DistributedTableDescription getDistributedTableDescription(Subject theUser, DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, Exception {
+        throw new UnsupportedOperationException("Not supported.");
+    }
+
+    public Object[][] retrieveRows(Subject theUser, int from, int to) throws RemoteException, SecurityException, Exception {
+        throw new UnsupportedOperationException("Not supported.");
     }
 }

@@ -12,4 +12,5 @@ package canreg.server.database;
 public interface DatabaseRecord {
     public void setVariable(String variableName, Object value);
     public Object getVariable(String variableName);
+    public String[] getVariableNames();
 }

@@ -4,19 +4,22 @@
 package canreg.client;
 
 import cachingtableapi.DistributedTableDescription;
-import cachingtableapi.DistributedTableModel;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.dataentry.ImportOptions;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals;
+import canreg.exceptions.WrongCanRegVersionException;
 import canreg.server.CanRegLoginInterface;
 import canreg.server.CanRegServerInterface;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.EventObject;
@@ -114,8 +117,8 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     public static void init() {
-        //Testing the environment
-        testEnvironment();
+        //Testing the environment - disabled
+        // testEnvironment();
         // Initialize the user settings
         try {
             localSettings = new LocalSettings("settings.xml");
@@ -159,47 +162,37 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     //  Log on to the CanReg system and set up the server connection.
     //  Returns CanReg System's name if successfull - null if not
-    public String login(String serverObjectString, String username, char[] password) {
+    public String login(String serverObjectString, String username, char[] password) throws LoginException, NullPointerException, NotBoundException, MalformedURLException, RemoteException, UnknownHostException, WrongCanRegVersionException {
         this.username = username;
         debugOut("connecting to server=" + serverObjectString + " as " + username + ".");
         CanRegLoginInterface loginServer = null;
-        try {
-            //authenticate credentials
-            loginServer = (CanRegLoginInterface) Naming.lookup(serverObjectString);
+
+        //authenticate credentials
+        loginServer = (CanRegLoginInterface) Naming.lookup(serverObjectString);
         //login object received
-        } catch (Exception e) {
-            System.out.println(e);
-        // System.exit(0);
+        if (!Globals.VERSION_STRING.equalsIgnoreCase(loginServer.getSystemVersion())){
+            throw (new WrongCanRegVersionException(loginServer.getSystemVersion()));
         }
-//do the login 
-        try {
-            debugOut("ATTEMPTING LOGIN");
-            server = (CanRegServerInterface) loginServer.login(username, new String(password));
-            if (server != null) {
-                debugOut("LOGIN SUCCESSFULL");
-                // This should work...
-                systemName = server.getCanRegSystemName();
-                loggedIn = true;
-                doc = server.getDatabseDescription();
-                dictionary = server.getDictionary();
-                canregServerRunningOnThisMachine = InetAddress.getLocalHost().
-                        equals(server.getIPAddress());
-                Globals.UserRightLevels i = getUserRightLevel();
-                canRegClientView.setUserRightsLevel(i);
-                return systemName;
-            } else {
-                return null;
-            }
-        } catch (LoginException le) {
-            debugOut("LOGIN UNSUCCESSFULL");
-            return null;
-        } catch (NullPointerException npe) {
-            debugOut("SERVER NOT FOUND");
-            return null;
-        } catch (Exception e) {
-            debugOut("error : " + e);
-            e.printStackTrace();
-            System.exit(0);
+        //do the login 
+        debugOut("ATTEMPTING LOGIN");
+        server = (CanRegServerInterface) loginServer.login(username, new String(password));
+        if (server != null) {
+            // See if server version of CanReg matches the 
+
+
+            debugOut("LOGIN SUCCESSFULL");
+            // This should work...
+            systemName = server.getCanRegSystemName();
+
+            loggedIn = true;
+            doc = server.getDatabseDescription();
+            dictionary = server.getDictionary();
+            canregServerRunningOnThisMachine = InetAddress.getLocalHost().
+                    equals(server.getIPAddress());
+            Globals.UserRightLevels i = getUserRightLevel();
+            canRegClientView.setUserRightsLevel(i);
+            return systemName;
+        } else {
             return null;
         }
     }
@@ -247,8 +240,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         Locale.setDefault(localSettings.getLocale());
     }
 
-    public void importFile(Task<Object,Void> task, Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException {
-        canreg.client.dataentry.Import.importFile(task , doc, map, file, server, io);
+    public void importFile(Task<Object, Void> task, Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException {
+        canreg.client.dataentry.Import.importFile(task, doc, map, file, server, io);
     }
 
     public void setCanregServerRunningInThisThread(boolean canregServerRunningInThisThread) {
@@ -316,12 +309,12 @@ public class CanRegClientApp extends SingleFrameApplication {
     public boolean isCanRegServerRunningOnThisMachine() {
         return canregServerRunningOnThisMachine;
     }
-    
+
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, Exception {
         return server.getDistributedTableDescription(filter, tableName);
     }
-    
-    public Object[][] retrieveRows(DistributedTableDescription description, int from, int to) throws RemoteException, SecurityException, Exception{
-            return server.retrieveRows(description, from, to);
+
+    public Object[][] retrieveRows(DistributedTableDescription description, int from, int to) throws RemoteException, SecurityException, Exception {
+        return server.retrieveRows(from, to);
     }
 }

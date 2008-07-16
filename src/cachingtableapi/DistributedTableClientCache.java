@@ -14,11 +14,13 @@ public class DistributedTableClientCache implements Serializable {
     //THE NUMBER OF ROWS THAT ARE RETRIEVED AT A TIME
     private int chunkSize = -1;    
     //THE CACHE OF ROWS
-    private Object[] data = null;    
+    private HashMap <Integer, Object> dataMap = null;
+    // private Object[] data = null;    
     //AN INDEX- AN INTS ARE STORED CORREPONDING TO A ROWS REAL INDEX IN THE TABLE. THE LOCATION OF THE INDEX IN THIS
     //ARRAY SHOWS WHICH LOCATION TO ACCESS IN THE data ARRAY
     // private int[] rowIndexLookup = null;
-    private HashMap <Integer, Integer> rowIndexMap = null;    
+    private HashMap <Integer, Integer> rowCacheIndexMap = null;
+    private HashMap <Integer, Integer> cacheRowMap = null;
     //STORES THE INDEX THAT THE NEXT WRITES TO THE TWO ARRAYS SHOULD TAKE PLACE IN. WHEN IT REACHES
     //THE MAX CACHE SIZE IT GOES BACK TO ZERO
     private int writePositionIndex = 0;    
@@ -61,22 +63,26 @@ public class DistributedTableClientCache implements Serializable {
         if (maximumCacheSize < 300) {
             maximumCacheSize = 300;
         }
-        this.maximumCacheSize = maximumCacheSize;
 
-        //MAKE SURE THE CHUNK SIZE NOT BIGGER THAN THE MAX CACHE SIZE
+        this.maximumCacheSize = maximumCacheSize;
+        
+        //MAKE THE CACHE AS BIG AS THE TABLE...
+        this.maximumCacheSize = tableDescription.getRowCount();
+                
+        // MAKE SURE THE CHUNK SIZE NOT BIGGER THAN THE MAX CACHE SIZE
         if (chunkSize > maximumCacheSize) {
             chunkSize = maximumCacheSize;
         }
 
-        //INITIALIZE THE ARRAYS
-        data = new Object[maximumCacheSize];
-        //rowIndexLookup = new int[maximumCacheSize];
-        rowIndexMap = new HashMap<Integer, Integer>(maximumCacheSize);
+        
 
-        //SET ALL THE ROWS TO -1, (THEY INITIALIZE TO 0).
-        for (int i = 0; i < maximumCacheSize; i++) {
-            rowIndexMap.put(-1,i);
-        }
+        
+        //INITIALIZE THE ARRAYS
+        // data = new Object[maximumCacheSize];
+        dataMap  = new HashMap<Integer, Object>();
+        //rowIndexLookup = new int[maximumCacheSize];
+        rowCacheIndexMap = new HashMap<Integer, Integer>(maximumCacheSize);
+        cacheRowMap = new HashMap<Integer, Integer>(maximumCacheSize);
     }
 
     /**
@@ -87,22 +93,22 @@ public class DistributedTableClientCache implements Serializable {
      */
     public Object[] retrieveRowFromCache(int rowIndex) {
         ensureRowCached(rowIndex);
-        return (Object[]) data[getIndexOfRowInCache(rowIndex)];
+        return (Object[]) dataMap.get(rowCacheIndexMap.get(rowIndex));
     }
 
     /**
      *Ensures that a row index in the table is cached and if not a chunk of data is retrieved.
      */
-    private void ensureRowCached(int rowIndex) {
-        if (!isRowCached(rowIndex)) {
+    private void ensureRowCached(int tableRow) {
+        if (!isRowCached(tableRow)) {
             //HAVE TO FETCH DATA FROM THE REMOTE STORE
 
             //SET THE toIndex AND fromIndex VARIABLES
 
             //TEST IF THE USER IS DESCENDING THE TABLE
-            if (rowIndex >= lastRequiredFetchRowIndex) {
-                fromIndex = rowIndex;
-                toIndex = rowIndex + chunkSize;
+            if (tableRow >= lastRequiredFetchRowIndex) {
+                fromIndex = tableRow;
+                toIndex = tableRow + chunkSize;
 
                 try {
                     if (toIndex > tableDescription.getRowCount()) {
@@ -113,11 +119,11 @@ public class DistributedTableClientCache implements Serializable {
                 }
             } //USER IS ASCENDING THE TABLE
             else {
-                fromIndex = rowIndex - chunkSize;
+                fromIndex = tableRow - chunkSize;
                 if (fromIndex < 0) {
                     fromIndex = 0;
                 }
-                toIndex = rowIndex + 1;
+                toIndex = tableRow + 1;
             }
 
             Object[][] rows = null;
@@ -130,21 +136,26 @@ public class DistributedTableClientCache implements Serializable {
             }
 
             //ADD THE DATA TO THE CACHE
-            for (int i = 0; i < rows.length; i++) {
-                //SET THE VALUE IN THE DATA ARRAY
-                data[writePositionIndex] = rows[i];
+            for (int k = 0; k < rows.length; k++) {
+                //SET THE VALUE IN THE DATA MAP
+                dataMap.put((Integer) writePositionIndex, rows[k]);
+                
+                // see if this position was already used...
+                Integer index = cacheRowMap.get(writePositionIndex);
+                rowCacheIndexMap.remove(index);
 
-                //CREATE AN INDEX TO THE NEW CACHED DATA
-                tableIndex = fromIndex + i;
-                rowIndexMap.put(tableIndex,writePositionIndex);
-
+                //CREATE INDEXES TO THE NEW CACHED DATA
+                tableIndex = fromIndex + k;
+                rowCacheIndexMap.put((Integer) tableIndex, writePositionIndex);
+                cacheRowMap.put((Integer) writePositionIndex, tableIndex);
+                
                 //CLOCK UP writePositionIndex AND REZERO IF NECESSARY
                 if (writePositionIndex == (maximumCacheSize - 1)) {
                     writePositionIndex = 0;
                 } else {
                     writePositionIndex++;
                 }
-                lastRequiredFetchRowIndex = rowIndex;
+                lastRequiredFetchRowIndex = tableRow;
             }
         }
     }
@@ -152,15 +163,15 @@ public class DistributedTableClientCache implements Serializable {
     /**
      *Returns whether a particular row index in the table is cached.
      */
-    private boolean isRowCached(int rowIndexInTable) {
-        return getIndexOfRowInCache(rowIndexInTable) >= 0;
+    private boolean isRowCached(Integer rowIndexInTable) {
+        return rowCacheIndexMap.containsKey(rowIndexInTable);
     }
 
     /**
      *Returns the array index of a particular row index in the table
      */
-    private int getIndexOfRowInCache(int rowIndex) {
-        Integer index = rowIndexMap.get(rowIndex);
+    private Integer getIndexOfRowInCache(Integer rowIndex) {
+        Integer index = rowCacheIndexMap.get(rowIndex);
         if (index != null) {
             lastRowAccess = index;
             return index;
@@ -175,9 +186,7 @@ public class DistributedTableClientCache implements Serializable {
      * the server.
      */
     public void sortOccurred() {
-        //SET ALL THE ROWS TO -1, (THEY INITIALIZE TO 0).
-        for (int i = 0; i < maximumCacheSize; i++) {
-            rowIndexMap.put(-1,i);
-        }
+        //reinitializa the indexmap
+        rowCacheIndexMap = new HashMap<Integer, Integer>(maximumCacheSize);
     }
 }

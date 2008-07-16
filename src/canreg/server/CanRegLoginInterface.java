@@ -14,6 +14,8 @@ import javax.security.auth.login.LoginException;
 public interface CanRegLoginInterface extends java.rmi.Remote{
 
     public String getSystemName() throws java.rmi.RemoteException ;
+
+    public String getSystemVersion()throws java.rmi.RemoteException ;
     
    /** Method that lets clients login, returning an interface to the server.
    * @param username The name of the user.

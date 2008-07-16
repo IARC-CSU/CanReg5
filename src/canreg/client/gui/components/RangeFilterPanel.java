@@ -35,6 +35,12 @@ public class RangeFilterPanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    public String getFilter() {
+        if (useFilterCheckBox.isSelected()){
+            return filterComboBox.getSelectedItem().toString().trim();
+        } else return new String("");
+    }
+
     public void setDeskTopPane(JDesktopPane dtp) {
         this.dtp = dtp;
     }

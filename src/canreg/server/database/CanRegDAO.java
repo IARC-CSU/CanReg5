@@ -15,7 +15,7 @@ package canreg.server.database;
  * this software is authorized pursuant to the terms of the license 
  * found at http://developers.sun.com/berkeley_license.html .
  */
-import canreg.server.database.DistributedTableDataSourceResultSetImpl;
+
 import cachingtableapi.DistributedTableDataSource;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
@@ -40,6 +40,7 @@ import java.util.Properties;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.security.auth.Subject;
 import org.w3c.dom.*;
 
 /**
@@ -59,7 +60,7 @@ public class CanRegDAO {
 
         this.dbName = dbName;
         
-        distributedDataSources = new HashMap<DistributedTableDescription, DistributedTableDataSource>();
+        distributedDataSources = new HashMap<Subject, DistributedTableDataSource>();
 
         System.out.println(canreg.server.xml.Tools.getTextContent(new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
 
@@ -108,7 +109,8 @@ public class CanRegDAO {
         return dictionaryMap;
     }
 
-    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, Exception {
+    public DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(Subject theUser, DatabaseFilter filter, String tableName) throws SQLException, Exception {
+        distributedDataSources.put(theUser, null);
         ResultSet result;
         Statement statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
@@ -116,13 +118,16 @@ public class CanRegDAO {
             result = statement.executeQuery(strGetTumours);
         } else if (tableName.equalsIgnoreCase("patient")) {
             result = statement.executeQuery(strGetPatients);
+        } else if (tableName.equalsIgnoreCase("both")) {
+            result = statement.executeQuery(strGetPatientsAndTumours);
         } else {
             throw new Exception("Unknown table name.");
         }
         DistributedTableDataSource dataSource = new DistributedTableDataSourceResultSetImpl(result);
         DistributedTableDescription tableDescription = dataSource.getTableDescription();
         //distributedDataSources.put(tableDescription, dataSource);
-        distributedDataSources.put(temporaryGlobalDescription, dataSource);
+        distributedDataSources.put(theUser, dataSource);
+        System.out.println(tableDescription.toString());
         return tableDescription;
     }
 
@@ -141,11 +146,15 @@ public class CanRegDAO {
         return path;
     }
 
-    public Object[][] retrieveRows(DistributedTableDescription description, int from, int to) throws Exception {
-        DistributedTableDataSource ts = distributedDataSources.get(temporaryGlobalDescription);
-        return ts.retrieveRows(from, to);
+    public Object[][] retrieveRows(Subject theUser, int from, int to) throws Exception {
+        // DistributedTableDataSource ts = distributedDataSources.get(temporaryGlobalDescription);
+        DistributedTableDataSource ts = distributedDataSources.get(theUser);
+        if (ts !=null){
+            return ts.retrieveRows(from, to);
+        } 
+            else return null;
     }
-
+    
     // This only works for Embedded databases - will look into it!
     // When using Derby this is OK as we can access it via Embedded 
     // and Client drivers at the same time...
@@ -295,6 +304,7 @@ public class CanRegDAO {
             //stmtUpdateExistingPatient = dbConnection.prepareStatement(strUpdatePatient);
             stmtGetPatient = dbConnection.prepareStatement(strGetPatient);
             stmtGetPatients = dbConnection.prepareStatement(strGetPatients);
+            stmtGetPatientsAndTumours = dbConnection.prepareStatement(strGetPatientsAndTumours);
 
             stmtGetTumour = dbConnection.prepareStatement(strGetTumour);
             stmtGetTumours = dbConnection.prepareStatement(strGetTumours);
@@ -505,7 +515,7 @@ public class CanRegDAO {
      * 
      * @param record
      * @return
-     */
+    
     public boolean editPatient(Patient record) {
         boolean bEdited = false;
         try {
@@ -532,7 +542,7 @@ public class CanRegDAO {
         return bEdited;
 
     }
-
+ */
     private boolean fillDictionariesTable() {
         boolean bFilled = false;
 
@@ -585,12 +595,12 @@ public class CanRegDAO {
      * 
      * @param record
      * @return
-     */
+     
     public boolean deleteRecord(Patient record) {
         int id = record.getId();
         return deleteRecord(id);
     }
-
+*/
     /**
      * 
      * @return
@@ -625,7 +635,7 @@ public class CanRegDAO {
      * 
      * @param index
      * @return
-     */
+    
     public Patient getPatient(int index) {
         Patient record = null;
         try {
@@ -654,13 +664,13 @@ public class CanRegDAO {
         }
 
         return record;
-    }
+    } */
     private Connection dbConnection;
     private Properties dbProperties;
     private boolean isConnected;
     private String dbName;
     private Document doc;
-    private HashMap<DistributedTableDescription,DistributedTableDataSource> distributedDataSources;
+    private HashMap<Subject,DistributedTableDataSource> distributedDataSources;
     private boolean tableOfDictionariesFilled = true;
     private PreparedStatement stmtSaveNewPatient;
     private PreparedStatement stmtSaveNewTumour;
@@ -672,6 +682,7 @@ public class CanRegDAO {
     private PreparedStatement stmtGetTumour;
     private PreparedStatement stmtGetPatients;
     private PreparedStatement stmtGetTumours;
+    private PreparedStatement stmtGetPatientsAndTumours;
     private PreparedStatement stmtGetRecord;
     private PreparedStatement stmtGetRecords;
     private PreparedStatement stmtGetDictionary;
@@ -686,6 +697,9 @@ public class CanRegDAO {
             "WHERE ID = ?";
     private String strGetPatients =
             "SELECT * FROM APP.PATIENT";
+    private String strGetPatientsAndTumours =
+            "SELECT * FROM APP.PATIENT, APP.TUMOUR " + 
+            "WHERE APP.PATIENT.ID = APP.TUMOUR.PATIENTID";
     private static final String strGetTumour =
             "SELECT * FROM APP.TUMOUR " +
             "WHERE ID = ?";

@@ -4,11 +4,11 @@
  */
 package canreg.server;
 
+import canreg.common.Globals;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.rmi.server.*;
 import javax.security.auth.*;
-import java.util.*;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
@@ -42,6 +42,10 @@ public class CanRegLoginImpl extends UnicastRemoteObject
 
     public String getSystemName() throws RemoteException {
         return theServer.getCanRegSystemName();
+    }
+
+    public String getSystemVersion() throws RemoteException {
+        return Globals.VERSION_STRING;
     }
 }
 

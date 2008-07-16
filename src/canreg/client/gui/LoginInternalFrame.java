@@ -8,13 +8,19 @@ package canreg.client.gui;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.ServerDescription;
+import canreg.common.Globals;
+import canreg.exceptions.WrongCanRegVersionException;
 import java.beans.PropertyChangeSupport;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.security.auth.login.LoginException;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
@@ -459,10 +465,29 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                 feedbackLabel.setText("Error.");
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (Exception exception) {
-//            System.out.println(exception.getLocalizedMessage());
-            feedbackLabel.setText(exception.getLocalizedMessage());
+        } catch (LoginException loginException) {
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
+            feedbackLabel.setText("Error.");     
+        } catch (NullPointerException nullPointerException) {
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
+            feedbackLabel.setText("Error.");
+        } catch (NotBoundException notBoundException) {
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
+            feedbackLabel.setText("Error.");
+        } catch (MalformedURLException malformedURLException) {
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not find CanReg server: " + server + ".", "Error", JOptionPane.ERROR_MESSAGE);
+            feedbackLabel.setText("Error.");
+        } catch (RemoteException remoteException) {
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
+            feedbackLabel.setText("Error.");
+        } catch (UnknownHostException unknownHostException) {
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not find CanReg server: " + server + ".", "Error", JOptionPane.ERROR_MESSAGE);            
+            feedbackLabel.setText("Error.");
+        } catch (WrongCanRegVersionException wrongCanRegVersionException) {
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "CanReg server version different than client version. Server: " + wrongCanRegVersionException.toString() + " Client: "+Globals.VERSION_STRING+".", "Error", JOptionPane.ERROR_MESSAGE);            
+            feedbackLabel.setText("Error.");
         }
+
     }
 
     @Action

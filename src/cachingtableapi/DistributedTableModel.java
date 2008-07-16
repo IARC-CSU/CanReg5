@@ -1,6 +1,7 @@
 package cachingtableapi;
 import java.io.Serializable;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 /**
@@ -13,7 +14,7 @@ import javax.swing.table.TableModel;
  * defined in the constructor.
  * @author Jeremy Dickson, 2003.
  */
-public class DistributedTableModel implements TableModel, Serializable {
+public class DistributedTableModel extends AbstractTableModel implements TableModel, Serializable {
 
 	//Used to retrieve table data
 	private DistributedTableDataSource tableDataSource;
@@ -61,6 +62,7 @@ public class DistributedTableModel implements TableModel, Serializable {
 	/**
 	 * @see javax.swing.table.TableModel#getColumnName(int)
 	 */
+    @Override
 	public String getColumnName(int columnIndex) {
 		if(columnIndex < tableDescription.getColumnCount()) {
 			return tableDescription.getColumnNames()[columnIndex];
@@ -73,6 +75,7 @@ public class DistributedTableModel implements TableModel, Serializable {
 	/**
 	 * @see javax.swing.table.TableModel#getColumnClass(int)
 	 */
+    @Override
 	public Class getColumnClass(int columnIndex) {
 		if(columnIndex < tableDescription.getColumnCount()) {
 			return tableDescription.getColumnClasses()[columnIndex];
@@ -93,6 +96,7 @@ public class DistributedTableModel implements TableModel, Serializable {
 	/**
 	 * @see javax.swing.table.TableModel#isCellEditable(int, int)
 	 */
+    @Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		return false;
 	}
@@ -100,18 +104,21 @@ public class DistributedTableModel implements TableModel, Serializable {
 	/**
 	 * @see javax.swing.table.TableModel#setValueAt(Object, int, int)
 	 */	
+    @Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {	}
 	
 	
 	/**
 	 * @see javax.swing.table.TableModel#addTableModelListener(TableModelListener)
 	 */	
+    @Override
 	public void addTableModelListener(TableModelListener l) {	}
 	
 	
 	/**
 	 * @see javax.swing.table.TableModel#removeTableModelListener(TableModelListener)
 	 */	
+    @Override
 	public void removeTableModelListener(TableModelListener l) {	}
 
 	/**
