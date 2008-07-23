@@ -8,6 +8,7 @@ package canreg.client.gui.dataentry;
 import cachingtableapi.DistributedTableDescription;
 import cachingtableapi.DistributedTableModel;
 import canreg.client.DistributedTableDataSourceClient;
+import canreg.client.gui.components.BrowserInterface;
 import canreg.common.DatabaseFilter;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -23,7 +24,7 @@ import org.jdesktop.application.Task;
  *
  * @author  morten
  */
-public class BrowseInternalFrame extends javax.swing.JInternalFrame {
+public class BrowseInternalFrame extends javax.swing.JInternalFrame implements BrowserInterface{
 
     private JDesktopPane dtp;
     private DistributedTableDescription tableDatadescription;
@@ -55,9 +56,6 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
         editTableRecordButton = new javax.swing.JButton();
         recordNumberTextField = new javax.swing.JTextField();
         editRecordNumberButton = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        tableChooserComboBox = new javax.swing.JComboBox();
-        refreshTableButton = new javax.swing.JButton();
         rangeFilterPanel = new canreg.client.gui.components.RangeFilterPanel();
         navigationPanel = new canreg.client.gui.components.NavigationPanel();
         variablesPanel1 = new canreg.client.gui.components.VariablesPanel();
@@ -72,6 +70,23 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameClosed(evt);
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+        });
 
         buttonsPanel.setName("buttonsPanel"); // NOI18N
 
@@ -87,38 +102,6 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
         editRecordNumberButton.setText(resourceMap.getString("editRecordNumberButton.text")); // NOI18N
         editRecordNumberButton.setName("editRecordNumberButton"); // NOI18N
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
-        jPanel1.setName("jPanel1"); // NOI18N
-
-        tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Patient", "Tumour", "Both" }));
-        tableChooserComboBox.setName("tableChooserComboBox"); // NOI18N
-
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(BrowseInternalFrame.class, this);
-        refreshTableButton.setAction(actionMap.get("refresh")); // NOI18N
-        refreshTableButton.setText(resourceMap.getString("refreshTableButton.text")); // NOI18N
-        refreshTableButton.setName("refreshTableButton"); // NOI18N
-        refreshTableButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                refreshTableButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tableChooserComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 225, Short.MAX_VALUE)
-            .addComponent(refreshTableButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(tableChooserComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(refreshTableButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout buttonsPanelLayout = new javax.swing.GroupLayout(buttonsPanel);
         buttonsPanel.setLayout(buttonsPanelLayout);
         buttonsPanelLayout.setHorizontalGroup(
@@ -129,8 +112,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(editRecordNumberButton, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
                     .addComponent(editTableRecordButton, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
                     .addComponent(createNextButton, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                    .addComponent(recordNumberTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(recordNumberTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
                 .addContainerGap())
         );
         buttonsPanelLayout.setVerticalGroup(
@@ -143,9 +125,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
                 .addComponent(editRecordNumberButton)
                 .addGap(4, 4, 4)
                 .addComponent(recordNumberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(109, 109, 109))
+                .addGap(162, 162, 162))
         );
 
         rangeFilterPanel.setName("rangeFilterPanel"); // NOI18N
@@ -175,23 +155,23 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPaneWiz, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)
+            .addComponent(resultScrollPaneWiz, javax.swing.GroupLayout.DEFAULT_SIZE, 771, Short.MAX_VALUE)
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPaneWiz, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+            .addComponent(resultScrollPaneWiz, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(resultPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(resultPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(variablesPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -206,11 +186,16 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(variablesPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(navigationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(buttonsPanel, javax.swing.GroupLayout.Alignment.TRAILING, 0, 254, Short.MAX_VALUE)
-                    .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(buttonsPanel, javax.swing.GroupLayout.Alignment.LEADING, 0, 209, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(variablesPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(navigationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(59, 59, 59)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(resultPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -232,15 +217,16 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
         // Last:
         // hook the navigationpanel up to the resulttable
         navigationPanel.setTable(resultTable);
-        /* disabled
-        Task task = refresh();
-        task.run();
-        */
+        rangeFilterPanel.setBrowser(this);
+        // Task task = refresh();
+        // task.run();
+        // rangeFilterPanel.setRecordsTotal(tableDataModel.getRowCount());
     }
 
-    private void refreshTableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshTableButtonActionPerformed
-        // TODO add your handling code here:
-}//GEN-LAST:event_refreshTableButtonActionPerformed
+private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosed
+// TODO add your handling code here:
+    rangeFilterPanel.close();
+}//GEN-LAST:event_formInternalFrameClosed
 
     @Action
     public Task refresh() {
@@ -258,8 +244,8 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
             // doInBackground() depends on from parameters
             // to RefreshTask fields, here.
             super(app);
-            tableName = tableChooserComboBox.getSelectedItem().toString();
-            filter.setFilterString(rangeFilterPanel.getFilter());
+            tableName = rangeFilterPanel.getSelectedTable();
+            filter.setFilterString(rangeFilterPanel.getFilter().trim());
         }
         @Override protected Object doInBackground() {
             try {
@@ -275,7 +261,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
 
                 setMessage("Starting a new transaction...");
                 rangeFilterPanel.setRecordsShown(tableDataModel.getRowCount());
-                rangeFilterPanel.setRecordsTotal(tableDataModel.getRowCount());  
+                 
                 setProgress(3, 0, 4);
 
                 setMessage("Fetching data...");
@@ -310,15 +296,12 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton createNextButton;
     private javax.swing.JButton editRecordNumberButton;
     private javax.swing.JButton editTableRecordButton;
-    private javax.swing.JPanel jPanel1;
     private canreg.client.gui.components.NavigationPanel navigationPanel;
     private canreg.client.gui.components.RangeFilterPanel rangeFilterPanel;
     private javax.swing.JTextField recordNumberTextField;
-    private javax.swing.JButton refreshTableButton;
     private javax.swing.JPanel resultPanel;
     private javax.swing.JScrollPane resultScrollPaneWiz;
     private javax.swing.JTable resultTableWiz;
-    private javax.swing.JComboBox tableChooserComboBox;
     private canreg.client.gui.components.VariablesPanel variablesPanel1;
     // End of variables declaration//GEN-END:variables
     

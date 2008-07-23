@@ -7,6 +7,7 @@ package canreg.client.gui.components;
 
 import canreg.client.gui.*;
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.Globals;
 import java.beans.PropertyVetoException;
@@ -15,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import org.jdesktop.application.Action;
+import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
 
 /**
@@ -29,20 +31,43 @@ public class RangeFilterPanel extends javax.swing.JPanel {
     private Vector filterCollection;
     private JDesktopPane dtp;
     private FastFilterInternalFrame filterWizardInternalFrame;
+    private BrowserInterface browser;
 
     /** Creates new form RangeFilterPanel */
     public RangeFilterPanel() {
         initComponents();
     }
 
+    public void close() {
+        filterWizardInternalFrame.dispose();
+    }
+
+    public Document getDatabseDescription() {
+        return doc;
+    }
+
     public String getFilter() {
-        if (useFilterCheckBox.isSelected()){
+        if (useFilterCheckBox.isSelected()) {
             return filterComboBox.getSelectedItem().toString().trim();
-        } else return new String("");
+        } else {
+            return new String("");
+        }
+    }
+
+    public String getSelectedTable() {
+        return tableChooserComboBox.getSelectedItem().toString();
     }
 
     public void setDeskTopPane(JDesktopPane dtp) {
         this.dtp = dtp;
+    }
+
+    public void setBrowser(BrowserInterface browser) {
+        this.browser = browser;
+    }
+
+    public void setFilterActive(boolean b) {
+        useFilterCheckBox.setSelected(b);
     }
 
     /** This method is called from within the constructor to
@@ -67,8 +92,10 @@ public class RangeFilterPanel extends javax.swing.JPanel {
         recordsShownLabel = new javax.swing.JLabel();
         recordsTotalTextField = new javax.swing.JTextField();
         recordsTotalLabel = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         andLabel = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        tableChooserComboBox = new javax.swing.JComboBox();
+        refreshTableButton = new javax.swing.JButton();
 
         setName("Form"); // NOI18N
 
@@ -78,9 +105,9 @@ public class RangeFilterPanel extends javax.swing.JPanel {
         rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Record Number", "ICD10", "Names" }));
         rangeComboBox.setName("rangeComboBox"); // NOI18N
 
-        limitsSplitPane.setDividerLocation(102);
+        limitsSplitPane.setDividerLocation(125);
         limitsSplitPane.setDividerSize(4);
-        limitsSplitPane.setResizeWeight(1.0);
+        limitsSplitPane.setResizeWeight(0.5);
         limitsSplitPane.setName("limitsSplitPane"); // NOI18N
 
         rangeStartTextField.setName("rangeStartTextField"); // NOI18N
@@ -96,7 +123,7 @@ public class RangeFilterPanel extends javax.swing.JPanel {
             .addGroup(rangePanelLayout.createSequentialGroup()
                 .addComponent(rangeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(limitsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
+                .addComponent(limitsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
         );
         rangePanelLayout.setVerticalGroup(
             rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -125,10 +152,10 @@ public class RangeFilterPanel extends javax.swing.JPanel {
         filterPanel.setLayout(filterPanelLayout);
         filterPanelLayout.setHorizontalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(filterComboBox, 0, 315, Short.MAX_VALUE)
+            .addComponent(filterComboBox, 0, 358, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, filterPanelLayout.createSequentialGroup()
                 .addComponent(useFilterCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
                 .addComponent(wizardButton))
         );
         filterPanelLayout.setVerticalGroup(
@@ -158,24 +185,19 @@ public class RangeFilterPanel extends javax.swing.JPanel {
         recordsTotalLabel.setText(resourceMap.getString("recordsTotalLabel.text")); // NOI18N
         recordsTotalLabel.setName("recordsTotalLabel"); // NOI18N
 
-        jButton1.setAction(actionMap.get("refreshAction")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
-
         javax.swing.GroupLayout recordsPanelLayout = new javax.swing.GroupLayout(recordsPanel);
         recordsPanel.setLayout(recordsPanelLayout);
         recordsPanelLayout.setHorizontalGroup(
             recordsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(recordsPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(recordsShownField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(recordsShownLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(recordsTotalTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordsTotalLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
-                .addComponent(jButton1))
+                .addComponent(recordsTotalLabel))
         );
         recordsPanelLayout.setVerticalGroup(
             recordsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,14 +206,48 @@ public class RangeFilterPanel extends javax.swing.JPanel {
                     .addComponent(recordsShownField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(recordsShownLabel)
                     .addComponent(recordsTotalTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(recordsTotalLabel)
-                    .addComponent(jButton1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(recordsTotalLabel))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         andLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         andLabel.setText(resourceMap.getString("andLabel.text")); // NOI18N
         andLabel.setName("andLabel"); // NOI18N
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Table"));
+        jPanel1.setName("jPanel1"); // NOI18N
+
+        tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Both", "Patient", "Tumour" }));
+        tableChooserComboBox.setAction(actionMap.get("setTableName")); // NOI18N
+        tableChooserComboBox.setName("tableChooserComboBox"); // NOI18N
+        tableChooserComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tableChooserComboBoxActionPerformed(evt);
+            }
+        });
+
+        refreshTableButton.setAction(actionMap.get("refreshAction")); // NOI18N
+        refreshTableButton.setName("refreshTableButton"); // NOI18N
+        refreshTableButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshTableButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tableChooserComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 172, Short.MAX_VALUE)
+            .addComponent(refreshTableButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(tableChooserComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(refreshTableButton))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -200,10 +256,13 @@ public class RangeFilterPanel extends javax.swing.JPanel {
             .addComponent(rangePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(andLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
+                .addComponent(andLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
                 .addGap(16, 16, 16))
             .addComponent(filterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(recordsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(recordsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,17 +272,28 @@ public class RangeFilterPanel extends javax.swing.JPanel {
                 .addComponent(andLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(filterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(recordsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+private void refreshTableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshTableButtonActionPerformed
+}//GEN-LAST:event_refreshTableButtonActionPerformed
+
+private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tableChooserComboBoxActionPerformed
+    filterWizardInternalFrame.setTableName(tableChooserComboBox.getSelectedItem().toString());
+}//GEN-LAST:event_tableChooserComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel andLabel;
     private javax.swing.JComboBox filterComboBox;
     private javax.swing.JPanel filterPanel;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JSplitPane limitsSplitPane;
     private javax.swing.JComboBox rangeComboBox;
     private javax.swing.JTextField rangeEndTextField;
@@ -234,6 +304,8 @@ public class RangeFilterPanel extends javax.swing.JPanel {
     private javax.swing.JLabel recordsShownLabel;
     private javax.swing.JLabel recordsTotalLabel;
     private javax.swing.JTextField recordsTotalTextField;
+    private javax.swing.JButton refreshTableButton;
+    private javax.swing.JComboBox tableChooserComboBox;
     private javax.swing.JCheckBox useFilterCheckBox;
     private javax.swing.JButton wizardButton;
     // End of variables declaration//GEN-END:variables
@@ -251,18 +323,32 @@ public class RangeFilterPanel extends javax.swing.JPanel {
         return range;
     }
 
+    public String getFromValue(){
+        return rangeStartTextField.getText();
+    }
+    
+    public String getToValue(){
+        return rangeEndTextField.getText();
+    }
+    
+    public String getIndexName(){
+        return rangeComboBox.getSelectedItem().toString();
+    }
+    
     /**
      * Initialize the values of the panel.
      *
      */
     public void initValues() {
         filterCollection = new Vector();
-
         // Get the system description
         doc = CanRegClientApp.getApplication().getDatabseDescription();
         // variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
         indexesInDB = canreg.common.Tools.getIndexesListElements(doc, Globals.NAMESPACE);
         rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(indexesInDB));
+        
+        filterWizardInternalFrame = new FastFilterInternalFrame(this);
+        filterWizardInternalFrame.setTableName(tableChooserComboBox.getSelectedItem().toString());
         refreshFilterComboBox();
     }
 
@@ -298,12 +384,17 @@ public class RangeFilterPanel extends javax.swing.JPanel {
 
     @Action
     public void refreshAction() {
-        String filter = filterComboBox.getSelectedItem().toString();
-        int position = addFilterToComboBox(filter);
-        refreshFilterComboBox();
-        filterComboBox.setSelectedIndex(position);
-        System.out.println();
-    // Call "mother class"
+        int position = -1;
+        Object filter = filterComboBox.getSelectedItem();
+        if (filter != null) {
+            String filterString = filter.toString();
+            position = addFilterToComboBox(filterString);
+            refreshFilterComboBox();
+            filterComboBox.setSelectedIndex(position);
+        }
+        // System.out.println();
+        Task task = browser.refresh();
+        task.run();
     }
 
     /**
@@ -318,8 +409,8 @@ public class RangeFilterPanel extends javax.swing.JPanel {
 
     @Action
     public void filterWizardAction() {
-        if (filterWizardInternalFrame == null) {
-            filterWizardInternalFrame = new FastFilterInternalFrame(this);
+
+        if (filterWizardInternalFrame.getParent() == null) {
             dtp.add(filterWizardInternalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
             filterWizardInternalFrame.setLocation(dtp.getWidth() / 2 - filterWizardInternalFrame.getWidth() / 2, dtp.getHeight() / 2 - filterWizardInternalFrame.getHeight() / 2);
             filterWizardInternalFrame.setVisible(false);
@@ -343,5 +434,16 @@ public class RangeFilterPanel extends javax.swing.JPanel {
 
     public void setRecordsTotal(int rec) {
         recordsTotalTextField.setText("" + rec);
+    }
+
+    @Action
+    public void refreshTableAction() {
+        String filter = filterComboBox.getSelectedItem().toString();
+        int position = addFilterToComboBox(filter);
+        refreshFilterComboBox();
+        filterComboBox.setSelectedIndex(position);
+        System.out.println();
+        Task task = browser.refresh();
+        task.run();
     }
 }

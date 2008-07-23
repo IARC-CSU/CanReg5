@@ -5,7 +5,6 @@
 package canreg.server;
 
 import cachingtableapi.DistributedTableDescription;
-import cachingtableapi.DistributedTableModel;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals;
 import canreg.server.database.CanRegDAO;

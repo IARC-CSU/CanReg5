@@ -118,7 +118,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public static void init() {
         //Testing the environment - disabled
-        // testEnvironment();
+        // canreg.common.Tools.testEnvironment();
         // Initialize the user settings
         try {
             localSettings = new LocalSettings("settings.xml");
@@ -128,21 +128,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
-    private static void testEnvironment() {
-        java.util.Properties prop = System.getProperties();
-        java.util.Enumeration enumerator = prop.propertyNames();
-        while (enumerator.hasMoreElements()) {
-            String key = (String) enumerator.nextElement();
-            System.out.println(key + " = " + System.getProperty(key));
-        }
-        File dir1 = new File(".");
-        try {
-            System.out.println("Current dir : " + dir1.getCanonicalPath());
-        //System.out.println ("Parent  dir : " + dir2.getCanonicalPath());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 
     public String testConnection(String serverObjectString) {
         debugOut("testing the connecting to server=" + serverObjectString + ".");

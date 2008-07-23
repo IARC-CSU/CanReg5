@@ -115,11 +115,25 @@ public class CanRegDAO {
         Statement statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
         if (tableName.equalsIgnoreCase("tumour")) {
-            result = statement.executeQuery(strGetTumours);
+            String filterString = filter.getFilterString();
+            if (!filterString.isEmpty()){
+                filterString = " WHERE "+filterString;
+            }
+            System.out.println(strGetTumours+filterString);
+            result = statement.executeQuery(strGetTumours+filterString);
         } else if (tableName.equalsIgnoreCase("patient")) {
-            result = statement.executeQuery(strGetPatients);
+            String filterString = filter.getFilterString();
+            if (!filterString.isEmpty()){
+                filterString = " WHERE "+filterString;
+            }
+            System.out.println(strGetPatients+filterString);
+            result = statement.executeQuery(strGetPatients+filterString);
         } else if (tableName.equalsIgnoreCase("both")) {
-            result = statement.executeQuery(strGetPatientsAndTumours);
+            String filterString = filter.getFilterString();
+            if (!filterString.isEmpty()){
+                filterString = " AND "+ filterString.trim();
+            }
+            result = statement.executeQuery(strGetPatientsAndTumours + filterString);
         } else {
             throw new Exception("Unknown table name.");
         }

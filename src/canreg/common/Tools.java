@@ -35,7 +35,7 @@ public class Tools {
         LinkedList<String> elements = new LinkedList();
         int pointer = 0;
         String tmpString = new String();
-        boolean finished = false;
+        // boolean finished = false;
         char tmpChar;
         while (pointer < line.length()) {
             tmpChar = line.charAt(pointer);
@@ -75,6 +75,11 @@ public class Tools {
                     Integer.parseInt(e.getElementsByTagName(namespace + "variable_id").item(0).getTextContent()),
                     e.getElementsByTagName(namespace + "short_name").item(0).getTextContent(),
                     e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent());
+            if (e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent().equalsIgnoreCase("dict")){
+                String dictionaryName = e.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
+                int id = canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, dictionaryName);
+                variables[i].setDictionaryID(id);
+            }
         }
         return variables;
     }
@@ -194,6 +199,22 @@ public class Tools {
         lineRead.close();
 
         return countRec;
+    }
+
+    public static void testEnvironment() {
+        java.util.Properties prop = System.getProperties();
+        java.util.Enumeration enumerator = prop.propertyNames();
+        while (enumerator.hasMoreElements()) {
+            String key = (String) enumerator.nextElement();
+            System.out.println(key + " = " + System.getProperty(key));
+        }
+        File dir1 = new File(".");
+        try {
+            System.out.println("Current dir : " + dir1.getCanonicalPath());
+        //System.out.println ("Parent  dir : " + dir2.getCanonicalPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 

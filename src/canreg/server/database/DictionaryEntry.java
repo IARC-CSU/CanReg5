@@ -21,7 +21,7 @@ public class DictionaryEntry implements Serializable {
         this.code = code;
         this.description = description;
     }
-
+    
     public int getDictionaryID() {
         return dictionaryID;
     }
@@ -46,4 +46,9 @@ public class DictionaryEntry implements Serializable {
         this.description = description;
     }
 
+    @Override
+    public String toString() {
+        return code +" - "+description;
+    }
+    
 }

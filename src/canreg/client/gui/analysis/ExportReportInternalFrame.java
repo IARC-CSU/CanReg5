@@ -5,22 +5,41 @@
  */
 package canreg.client.gui.analysis;
 
+import cachingtableapi.DistributedTableDescription;
+import cachingtableapi.DistributedTableModel;
+import canreg.client.DistributedTableDataSourceClient;
+import canreg.client.gui.components.BrowserInterface;
+import canreg.common.DatabaseFilter;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import org.jdesktop.application.Task;
+import org.jdesktop.application.Action;
 
 /**
  *
  * @author  morten
  */
-public class ExportReportInternalFrame extends javax.swing.JInternalFrame {
+public class ExportReportInternalFrame extends javax.swing.JInternalFrame implements BrowserInterface {
 
     private JDesktopPane dtp;
-
+    private DistributedTableDescription tableDatadescription;
+    private DistributedTableDataSourceClient tableDataSource;
+    private DistributedTableModel tableDataModel;
+    private JScrollPane resultScrollPane;
+    private JTable resultTable;
+    
     /** Creates new form ExportFrame
      * @param dtp is a pointer to the current desktop pane.
      */
     public ExportReportInternalFrame(JDesktopPane dtp) {
         initComponents();
         this.dtp=dtp;
+        initOtherComponents();
         initValues();
     }
 
@@ -50,9 +69,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame {
         jCheckBox5 = new javax.swing.JCheckBox();
         exportPanel = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
-        previewPanel = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        resultPanel = new javax.swing.JPanel();
+        resultScrollPaneWiz = new javax.swing.JScrollPane();
+        resultTableWiz = new javax.swing.JTable();
         variableChooserPanel1 = new canreg.client.gui.components.VariablesChooserPanel();
         rangeFilterPanel = new canreg.client.gui.components.RangeFilterPanel();
 
@@ -204,34 +223,33 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
-        previewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("previewPanel.border.title"))); // NOI18N
-        previewPanel.setName("previewPanel"); // NOI18N
+        resultPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("resultPanel.border.title"))); // NOI18N
+        resultPanel.setName("resultPanel"); // NOI18N
 
-        jScrollPane2.setName("jScrollPane2"); // NOI18N
+        resultScrollPaneWiz.setName("resultScrollPaneWiz"); // NOI18N
 
-        jTable2.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        jTable2.setName("jTable2"); // NOI18N
-        jScrollPane2.setViewportView(jTable2);
+        resultTableWiz.setAutoCreateRowSorter(true);
+        resultTableWiz.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-        javax.swing.GroupLayout previewPanelLayout = new javax.swing.GroupLayout(previewPanel);
-        previewPanel.setLayout(previewPanelLayout);
-        previewPanelLayout.setHorizontalGroup(
-            previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1112, Short.MAX_VALUE)
-            .addGroup(previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(previewPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1092, Short.MAX_VALUE)
-                    .addContainerGap()))
+            },
+            new String [] {
+
+            }
+        ));
+        resultTableWiz.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        resultTableWiz.setName("resultTableWiz"); // NOI18N
+        resultScrollPaneWiz.setViewportView(resultTableWiz);
+
+        javax.swing.GroupLayout resultPanelLayout = new javax.swing.GroupLayout(resultPanel);
+        resultPanel.setLayout(resultPanelLayout);
+        resultPanelLayout.setHorizontalGroup(
+            resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(resultScrollPaneWiz, javax.swing.GroupLayout.DEFAULT_SIZE, 908, Short.MAX_VALUE)
         );
-        previewPanelLayout.setVerticalGroup(
-            previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 579, Short.MAX_VALUE)
-            .addGroup(previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(previewPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
-                    .addContainerGap()))
+        resultPanelLayout.setVerticalGroup(
+            resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(resultScrollPaneWiz, javax.swing.GroupLayout.DEFAULT_SIZE, 1275, Short.MAX_VALUE)
         );
 
         variableChooserPanel1.setName("variableChooserPanel1"); // NOI18N
@@ -245,11 +263,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(resultPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(variableChooserPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
+                        .addComponent(variableChooserPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -259,11 +277,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
-                    .addComponent(variableChooserPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
-                    .addComponent(rangeFilterPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 240, Short.MAX_VALUE))
+                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                    .addComponent(variableChooserPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                    .addComponent(rangeFilterPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(resultPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -284,11 +302,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox jComboBox4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable2;
     private javax.swing.JPanel optionsPanel;
-    private javax.swing.JPanel previewPanel;
     private canreg.client.gui.components.RangeFilterPanel rangeFilterPanel;
+    private javax.swing.JPanel resultPanel;
+    private javax.swing.JScrollPane resultScrollPaneWiz;
+    private javax.swing.JTable resultTableWiz;
     private javax.swing.JPanel settingsPanel;
     private javax.swing.JPanel setupPanel;
     private canreg.client.gui.components.VariablesChooserPanel variableChooserPanel1;
@@ -301,5 +319,74 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame {
     private void initValues() {
         variableChooserPanel1.initPanel();
         rangeFilterPanel.setDeskTopPane(dtp);
+        rangeFilterPanel.setBrowser(this);
+    }
+
+    private void initOtherComponents() {
+        resultTable = resultTableWiz;
+        resultScrollPane = resultScrollPaneWiz;
+        resultPanel.setVisible(false);
+    }
+    
+    @Action
+    public Task refresh() {
+        // navigationPanel.goToTopAction();
+        resultPanel.setVisible(false);
+        return new RefreshTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+    }
+
+    private class RefreshTask extends org.jdesktop.application.Task<Object, Void> {
+        String tableName = null;
+        DatabaseFilter filter = new DatabaseFilter();
+        
+        RefreshTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to RefreshTask fields, here.
+            super(app);
+            tableName = rangeFilterPanel.getSelectedTable();
+            filter.setFilterString(rangeFilterPanel.getFilter().trim());
+        }
+        @Override protected Object doInBackground() {
+            try {
+                setProgress(0, 0, 4);
+                setMessage("Initiating query...");
+                setProgress(1, 0, 4);
+
+                tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
+
+                tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
+                tableDataModel = new DistributedTableModel(tableDataSource);
+                setProgress(2, 0, 4);
+
+                setMessage("Starting a new transaction...");
+                rangeFilterPanel.setRecordsShown(tableDataModel.getRowCount());
+                 
+                setProgress(3, 0, 4);
+
+                setMessage("Fetching data...");
+                resultTable.setModel(tableDataModel);
+                resultTable.setColumnSelectionAllowed(false);
+                
+                setProgress(4, 0, 4);
+                setMessage("Finished");
+
+            } catch (SQLException ex) {
+                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {
+                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch(InterruptedException ignore) { }
+         catch (Exception ex) {
+                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            return null;
+        }
+        @Override protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
+            resultPanel.setVisible(true);
+        }
     }
 }

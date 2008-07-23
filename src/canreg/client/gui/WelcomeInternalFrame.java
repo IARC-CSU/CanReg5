@@ -5,9 +5,6 @@
  */
 package canreg.client.gui;
 
-import canreg.client.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;

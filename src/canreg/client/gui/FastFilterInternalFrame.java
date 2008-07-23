@@ -6,10 +6,15 @@
 package canreg.client.gui;
 
 import canreg.client.gui.components.RangeFilterPanel;
-import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.server.database.DictionaryEntry;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.TreeMap;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -20,8 +25,11 @@ import org.w3c.dom.Document;
 public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
 
     private RangeFilterPanel parentFilterPanel;
-    private DatabaseVariablesListElement[] variablesInDB;
+    private DatabaseVariablesListElement[] variablesInTable;
     private Document doc;
+    private String tableName = "both";
+    private HashMap<Integer, HashMap<String, String>> dictionary;
+    private DictionaryEntry[] possibleValues;
 
     /** Creates new form FastFilterInternalFrame */
     public FastFilterInternalFrame(RangeFilterPanel parentFilterPanel) {
@@ -55,8 +63,6 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
 
-        setClosable(true);
-        setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(FastFilterInternalFrame.class);
@@ -87,7 +93,13 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         operationComboBox.setName("operationComboBox"); // NOI18N
 
         valueTextField.setText(resourceMap.getString("valueTextField.text")); // NOI18N
+        valueTextField.setAction(actionMap.get("addAction")); // NOI18N
         valueTextField.setName("valueTextField"); // NOI18N
+        valueTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mouseClickHandler(evt);
+            }
+        });
 
         logicalOperatorComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         logicalOperatorComboBox.setName("logicalOperatorComboBox"); // NOI18N
@@ -166,7 +178,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         );
         filterPanelLayout.setVerticalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
         );
 
         cancelButton.setAction(actionMap.get("cancelAction")); // NOI18N
@@ -206,6 +218,25 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseClickHandler
+    DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
+    if (dbvle.getVariableType().equalsIgnoreCase("dict")) {
+        // System.out.println("Coucou");
+        if (possibleValues == null) {
+            JOptionPane.showInternalMessageDialog(this, "Empty dictionary.", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else {
+            DictionaryEntry selectedValue = (DictionaryEntry) JOptionPane.showInternalInputDialog(this,
+                    "Choose one", "Input",
+                    JOptionPane.INFORMATION_MESSAGE, null,
+                    possibleValues, possibleValues[0]);
+            valueTextField.setText(selectedValue.getCode());
+        }
+    } else {
+        // System.out.println(dbvle.getVariableType());
+        // Do nothing
+    }
+}//GEN-LAST:event_mouseClickHandler
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JPanel filterPanel;
@@ -229,46 +260,114 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         operationComboBox.setModel(new DefaultComboBoxModel(operators));
         operationComboBox.setSelectedIndex(2);
         // Get the system description
-        doc = CanRegClientApp.getApplication().getDatabseDescription();
-        variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
-        variableComboBox.setModel(new DefaultComboBoxModel(variablesInDB));
+        doc =
+                parentFilterPanel.getDatabseDescription();
+        refreshVariableList();
+
         String[] logicalOperator = {"", "AND", "OR"};
         logicalOperatorComboBox.setModel(new DefaultComboBoxModel(logicalOperator));
+        dictionary =
+                canreg.client.CanRegClientApp.getApplication().getDictionary();
+        updatePossibleValues();
+
+    }
+
+    private void refreshVariableList() {
+        variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+        if (!tableName.equalsIgnoreCase("both")) {
+            LinkedList<DatabaseVariablesListElement> tempVariablesInTable = new LinkedList<DatabaseVariablesListElement>();
+            for (int i = 0; i <
+                    variablesInTable.length; i++) {
+                if (variablesInTable[i].getDatabaseTableName().equalsIgnoreCase(tableName)) {
+                    tempVariablesInTable.add(variablesInTable[i]);
+                }
+
+            }
+            variablesInTable = new DatabaseVariablesListElement[tempVariablesInTable.size()];
+            for (int i = 0; i <
+                    variablesInTable.length; i++) {
+                variablesInTable[i] = tempVariablesInTable.get(i);
+            }
+
+        }
+        variableComboBox.setModel(new DefaultComboBoxModel(variablesInTable));
     }
 
     public void setTextPane(String str) {
         textPane.setText(str);
     }
-    
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+        refreshVariableList();
+
+    }
+
     @Action
     public void cancelAction() {
-        this.dispose();
+        this.setVisible(false);
     }
 
     @Action
     public void okAction() {
         parentFilterPanel.setFilter(textPane.getText().trim());
+        parentFilterPanel.setFilterActive(true);
         this.setVisible(false);
     }
 
     @Action
     public void addAction() {
         String newFilterPart = "";
-        newFilterPart += variableComboBox.getSelectedItem().toString();
-        newFilterPart += " ";
-        newFilterPart += operationComboBox.getSelectedItem().toString();
-        newFilterPart += " ";
+        newFilterPart +=
+                variableComboBox.getSelectedItem().toString();
+        newFilterPart +=
+                " ";
+        newFilterPart +=
+                operationComboBox.getSelectedItem().toString();
+        newFilterPart +=
+                " ";
+        DatabaseVariablesListElement dvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
+        if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
+            newFilterPart += "'";
+        }
+
         newFilterPart += valueTextField.getText();
+        if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
+            newFilterPart += "'";
+        }
+
         newFilterPart += " ";
-        newFilterPart += logicalOperatorComboBox.getSelectedItem().toString();
-        newFilterPart += " ";
+        newFilterPart +=
+                logicalOperatorComboBox.getSelectedItem().toString();
+        newFilterPart +=
+                " ";
         textPane.setText(textPane.getText() + newFilterPart);
         logicalOperatorComboBox.setSelectedIndex(0);
     }
 
     @Action
     public void varibleChosenAction() {
-        // TODO
-        // Set value-box accordingly
+        valueTextField.setText("");
+        updatePossibleValues();
+
+    }
+
+    @SuppressWarnings("empty-statement")
+    private void updatePossibleValues() {
+        DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
+        int id = dbvle.getDictionaryID();
+        if (id >= 0) {
+            Map map = canreg.client.dataentry.DictionaryHelper.getDictionaryByID(dictionary, id);
+            if (map != null) {
+                Map sortedmap = new TreeMap(map);
+                possibleValues =
+                        canreg.client.dataentry.DictionaryHelper.buildDictionaryEntriesFromMap(sortedmap);
+            } else {
+                possibleValues = null;
+            }
+
+        } else {
+            possibleValues = null;
+        }
     }
 }

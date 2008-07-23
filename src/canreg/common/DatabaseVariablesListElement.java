@@ -17,6 +17,8 @@ public class DatabaseVariablesListElement {
     private String databaseVariableName;
     // Variable type
     private String variableType;
+    // Dictionary ID
+    private int dictionaryID = -1;
 
     public DatabaseVariablesListElement(
             String databaseTableName,
@@ -69,5 +71,13 @@ public class DatabaseVariablesListElement {
     public String toString() {
         return databaseVariableName;
 
+    }
+
+    public int getDictionaryID() {
+        return dictionaryID;
+    }
+
+    public void setDictionaryID(int dictionaryID) {
+        this.dictionaryID = dictionaryID;
     }
 }
