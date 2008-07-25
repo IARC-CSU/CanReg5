@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import org.jdesktop.application.Action;
@@ -272,7 +273,8 @@ private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
                 setMessage("Finished");
 
             } catch (SQLException ex) {
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showInternalMessageDialog(rootPane, "Not a valid filter.", "Error", JOptionPane.ERROR_MESSAGE);
+                return "Not valid";
             } catch (RemoteException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
@@ -281,12 +283,13 @@ private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
          catch (Exception ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-            return null;
+            return "OK";
         }
         @Override protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
-            resultPanel.setVisible(true);
+            boolean theResult = result.equals("OK");
+            resultPanel.setVisible(theResult);
         }
     }
     

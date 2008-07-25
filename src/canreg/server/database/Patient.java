@@ -4,11 +4,9 @@
  */
 package canreg.server.database;
 
-import canreg.server.*;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
-import org.w3c.dom.Document;
 
 /**
  *
@@ -16,8 +14,7 @@ import org.w3c.dom.Document;
  */
 public class Patient implements Serializable, DatabaseRecord {
 
-    public HashMap<String, Object> variables;   
-    private Document doc;
+    public HashMap<String, Object> variables;
     
     /**
      * Creates a new instance of Patient

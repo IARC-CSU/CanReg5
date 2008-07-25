@@ -444,6 +444,6 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
         filterComboBox.setSelectedIndex(position);
         System.out.println();
         Task task = browser.refresh();
-        task.run();
+        task.execute();
     }
 }

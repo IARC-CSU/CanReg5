@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import org.jdesktop.application.Task;
@@ -32,13 +33,13 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private DistributedTableModel tableDataModel;
     private JScrollPane resultScrollPane;
     private JTable resultTable;
-    
+
     /** Creates new form ExportFrame
      * @param dtp is a pointer to the current desktop pane.
      */
     public ExportReportInternalFrame(JDesktopPane dtp) {
         initComponents();
-        this.dtp=dtp;
+        this.dtp = dtp;
         initOtherComponents();
         initValues();
     }
@@ -249,7 +250,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPaneWiz, javax.swing.GroupLayout.DEFAULT_SIZE, 1275, Short.MAX_VALUE)
+            .addComponent(resultScrollPaneWiz, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
         );
 
         variableChooserPanel1.setName("variableChooserPanel1"); // NOI18N
@@ -277,9 +278,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                    .addComponent(variableChooserPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                    .addComponent(rangeFilterPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
+                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                    .addComponent(variableChooserPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                    .addComponent(rangeFilterPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(resultPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -311,7 +312,6 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private javax.swing.JPanel setupPanel;
     private canreg.client.gui.components.VariablesChooserPanel variableChooserPanel1;
     // End of variables declaration//GEN-END:variables
-
     public JDesktopPane getDtp() {
         return dtp;
     }
@@ -327,7 +327,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         resultScrollPane = resultScrollPaneWiz;
         resultPanel.setVisible(false);
     }
-    
+
     @Action
     public Task refresh() {
         // navigationPanel.goToTopAction();
@@ -336,9 +336,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     }
 
     private class RefreshTask extends org.jdesktop.application.Task<Object, Void> {
+
         String tableName = null;
         DatabaseFilter filter = new DatabaseFilter();
-        
+
         RefreshTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
@@ -347,7 +348,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             tableName = rangeFilterPanel.getSelectedTable();
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
         }
-        @Override protected Object doInBackground() {
+
+        @Override
+        protected Object doInBackground() {
             try {
                 setProgress(0, 0, 4);
                 setMessage("Initiating query...");
@@ -361,32 +364,36 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
                 setMessage("Starting a new transaction...");
                 rangeFilterPanel.setRecordsShown(tableDataModel.getRowCount());
-                 
+
                 setProgress(3, 0, 4);
 
                 setMessage("Fetching data...");
                 resultTable.setModel(tableDataModel);
                 resultTable.setColumnSelectionAllowed(false);
-                
+
                 setProgress(4, 0, 4);
                 setMessage("Finished");
 
             } catch (SQLException ex) {
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showInternalMessageDialog(rootPane, "Not a valid filter.", "Error", JOptionPane.ERROR_MESSAGE);
+                return "Not valid";
             } catch (RemoteException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch(InterruptedException ignore) { }
-         catch (Exception ex) {
+            } catch (InterruptedException ignore) {
+            } catch (Exception ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return "OK";
         }
-            return null;
-        }
-        @Override protected void succeeded(Object result) {
+
+        @Override
+        protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
-            resultPanel.setVisible(true);
+            boolean theResult = result.equals("OK");
+            resultPanel.setVisible(theResult);
         }
     }
 }

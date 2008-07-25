@@ -16,7 +16,6 @@ import java.util.Iterator;
 public class Tumour implements Serializable, DatabaseRecord {
 
     private HashMap variables;
-    private Document doc;
 
     /**
      * Creates a new instance of Patient

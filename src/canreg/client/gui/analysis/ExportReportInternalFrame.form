@@ -49,9 +49,9 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="settingsPanel" pref="277" max="32767" attributes="0"/>
-                  <Component id="variableChooserPanel1" alignment="0" pref="277" max="32767" attributes="0"/>
-                  <Component id="rangeFilterPanel" alignment="1" pref="277" max="32767" attributes="0"/>
+                  <Component id="settingsPanel" pref="280" max="32767" attributes="0"/>
+                  <Component id="variableChooserPanel1" alignment="0" pref="280" max="32767" attributes="0"/>
+                  <Component id="rangeFilterPanel" alignment="1" pref="280" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="resultPanel" min="-2" max="-2" attributes="0"/>
@@ -323,7 +323,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="resultScrollPaneWiz" alignment="0" pref="1275" max="32767" attributes="0"/>
+              <Component id="resultScrollPaneWiz" alignment="0" pref="237" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>

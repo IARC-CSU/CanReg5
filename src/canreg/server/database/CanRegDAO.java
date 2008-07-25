@@ -103,7 +103,6 @@ public class CanRegDAO {
 
         } catch (SQLException sqle) {
             sqle.printStackTrace();
-
         }
 
         return dictionaryMap;
