@@ -4,41 +4,23 @@
  */
 package canreg.server.database;
 
-import java.util.HashMap;
-import org.w3c.dom.Document;
 import java.io.Serializable;
-import java.util.Iterator;
 
 /**
  *
  * @author morten
  */
-public class Tumour implements Serializable, DatabaseRecord {
-
-    private HashMap variables;
-
+public class Tumour extends DatabaseRecord implements Serializable {
+    
     /**
-     * Creates a new instance of Patient
+     * Creates a new instance of Tumour
      */
-    public Tumour() {
-        variables = new HashMap();
-    }
-
-    public void setVariable(String variableName, Object value) {
-        variables.put(variableName, value);
-    }
-
-    public Object getVariable(String variableName) {
-        return variables.get(variableName);
-    }
-
-    public String[] getVariableNames() {
-        String[] names = new String[variables.size()];
-        Iterator it = variables.keySet().iterator();
-        int i = 0;
-        while (it.hasNext()) {
-            names[i++] = (String) it.next();
-        }
-        return names;
-    }
+     public Tumour(){
+        super();
+     }
+     
+     @Override
+     public String toString(){
+        return "Tumour";
+     }
 }

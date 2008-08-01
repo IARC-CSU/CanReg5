@@ -49,9 +49,9 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="settingsPanel" pref="280" max="32767" attributes="0"/>
-                  <Component id="variableChooserPanel1" alignment="0" pref="280" max="32767" attributes="0"/>
-                  <Component id="rangeFilterPanel" alignment="1" pref="280" max="32767" attributes="0"/>
+                  <Component id="settingsPanel" pref="284" max="32767" attributes="0"/>
+                  <Component id="variableChooserPanel1" alignment="0" pref="284" max="32767" attributes="0"/>
+                  <Component id="rangeFilterPanel" alignment="1" pref="284" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="resultPanel" min="-2" max="-2" attributes="0"/>
@@ -332,6 +332,9 @@
           <Properties>
             <Property name="name" type="java.lang.String" value="resultScrollPaneWiz" noResource="true"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="resultScrollPaneWiz.getVerticalScrollBar().setUnitIncrement(16);"/>
+          </AuxValues>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>

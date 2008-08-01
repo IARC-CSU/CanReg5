@@ -7,6 +7,7 @@ package canreg.server;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
 import canreg.server.database.CanRegDAO;
+import canreg.server.database.DatabaseRecord;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
@@ -15,7 +16,7 @@ import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.Map;
 import javax.security.auth.Subject;
 import org.w3c.dom.Document;
 
@@ -163,7 +164,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return theServer.deleteDictionaryEntries(dictionaryID);
     }
 
-    public HashMap<Integer, HashMap<String, String>> getDictionary() throws RemoteException, SecurityException {
+    public Map<Integer, Map<String, String>> getDictionary() throws RemoteException, SecurityException {
         checkPermission("getDictionary");
         return theServer.getDictionary();
     }
@@ -183,11 +184,24 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return theServer.retrieveRows(theUser, from, to);
     }
 
+    
+    
     public DistributedTableDescription getDistributedTableDescription(Subject theUser, DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, Exception {
-        throw new UnsupportedOperationException("Not supported.");
+        throw new UnsupportedOperationException("Not supported."); // This should not be implemented!
     }
 
+    
     public Object[][] retrieveRows(Subject theUser, int from, int to) throws RemoteException, SecurityException, Exception {
-        throw new UnsupportedOperationException("Not supported.");
+        throw new UnsupportedOperationException("Not supported."); // This should not be implemented!
+    }
+
+    public DatabaseRecord getPatient(int patientID) throws RemoteException, SecurityException {
+        checkPermission("getPatient");
+        return theServer.getPatient(patientID);
+    }
+
+    public DatabaseRecord getRecord(int recordID, String tableName) throws RemoteException, SecurityException {
+        checkPermission("get"+tableName);
+        return theServer.getRecord(recordID,tableName);
     }
 }

@@ -9,6 +9,11 @@ import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.common.Globals;
+import java.lang.String;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.Locale;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 
@@ -20,6 +25,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
 
     private CanRegClientView crcv;
     private LocalSettings localSettings;
+    private Locale[] locales;
 
     /** Creates new form OptionsFrame */
     public OptionsFrame(CanRegClientView crcv) {
@@ -153,8 +159,8 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(generalPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         generalPanelLayout.setVerticalGroup(
@@ -444,13 +450,42 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private void initValues() {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
         // Languages
-        languageComboBox.setModel(new javax.swing.DefaultComboBoxModel(localSettings.getLanguageList()));
-        int languageNumber = canreg.common.Tools.findInArray(Globals.LANGUAGES_AVAILABLE, localSettings.getLanguageCode());
-        languageComboBox.setSelectedIndex(languageNumber);
+        locales = Locale.getAvailableLocales();
+        Arrays.sort(locales, new Comparator<Locale>() {
+            public int compare(Locale o1, Locale o2) {
+                return o1.getDisplayName(o1).compareToIgnoreCase(o2.getDisplayName(o2));
+            }
+        });
+        String[] localeNames = new String[locales.length];
+        Locale currentLocale = localSettings.getLocale();
+        int currentLocaleIndex = 0;
+        int numberOfElementsAdded = 0;
+        LinkedList localesList = new LinkedList();
+        LinkedList localesNamesList = new LinkedList();
+        for(int i = 0; i<locales.length; i++){
+            
+            String country =locales[i].getDisplayCountry(locales[i]);
+            localeNames[i] = locales[i].getDisplayName(locales[i]);
+            
+            if (country.trim().length()>0){
+                //skip it
+            } else{
+                if (locales[i].equals(currentLocale)){
+                   currentLocaleIndex = numberOfElementsAdded;
+                }
+                localesList.add(locales[i]);
+                localesNamesList.add(locales[i].getDisplayName(locales[i]));
+                numberOfElementsAdded++;
+            }
+
+        }
+        locales = (Locale[]) localesList.toArray(locales);
+        languageComboBox.setModel(new javax.swing.DefaultComboBoxModel(localesNamesList.toArray()));
+        languageComboBox.setSelectedIndex(currentLocaleIndex);
+        
         showOutlineCheckBox.setSelected(localSettings.isOutlineDragMode());
         // CanReg verison
         versionInstalledTextField.setText(Globals.VERSION_STRING);
-
     }
 
     private String getNewestVersionNumber() {
@@ -460,7 +495,9 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
 
     private void saveValues() {
         // save values
-        localSettings.setLocale(Globals.LANGUAGES_AVAILABLE[languageComboBox.getSelectedIndex()]);
+        // localSettings.setLocale(Globals.LANGUAGES_AVAILABLE[languageComboBox.getSelectedIndex()]);
+        localSettings.setLocale(locales[languageComboBox.getSelectedIndex()].getLanguage());
+
         if (showOutlineCheckBox.isSelected()) {
             localSettings.setOutlineDragMode(true);
         } else {

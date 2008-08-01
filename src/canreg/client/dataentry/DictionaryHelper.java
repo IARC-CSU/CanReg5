@@ -4,12 +4,14 @@
  */
 package canreg.client.dataentry;
 
+import canreg.client.CanRegClientApp;
 import canreg.common.Globals;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.DictionaryEntry;
 import java.rmi.RemoteException;
-import java.util.HashMap;
+// import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
 import org.w3c.dom.Element;
@@ -21,22 +23,19 @@ import org.w3c.dom.NodeList;
  * @author ervikm
  */
 public class DictionaryHelper {
-    public static HashMap<Integer, HashMap<String, String>> getDictionaryFromServer(CanRegServerInterface server) throws RemoteException {
-        return server.getDictionary();
-    }
     
-    public static HashMap<String, String> getDictionaryByID(HashMap<Integer, HashMap<String, String>> dictionary, int dictionaryID){
+    public static Map<String, String> getDictionaryByID(Map<Integer, Map<String, String>> dictionary, int dictionaryID){
         return dictionary.get(dictionaryID);
     }
     
-    public static DictionaryEntry[] buildDictionaryEntriesFromMap(Map<String, String> dictionary) {
-        DictionaryEntry[] dictionaryEntries = new DictionaryEntry[dictionary.size()];
+    public static Map<String, DictionaryEntry> buildDictionaryEntriesFromMap(Map<String, String> dictionary) {
+        Map<String, DictionaryEntry> dictionaryEntries = new LinkedHashMap <String, DictionaryEntry> ();
         Iterator <String> iterator = dictionary.keySet().iterator();
         int i = 0;
         while (iterator.hasNext()){
             String code = iterator.next().toString();
             String description = dictionary.get(code);
-            dictionaryEntries[i++] = new DictionaryEntry(0, code, description);
+            dictionaryEntries.put(code,new DictionaryEntry(0, code, description));
         }
         return dictionaryEntries;
     }
@@ -64,8 +63,8 @@ public class DictionaryHelper {
         return id;
     }
     
-    public static boolean clearDictionary(int dictionaryID, CanRegServerInterface server) throws RemoteException {
-        return server.deleteDictionaryEntries(dictionaryID);
+    public static boolean clearDictionary(int dictionaryID, CanRegClientApp app) throws RemoteException {
+        return app.deleteDictionaryEntries(dictionaryID);
     }
 
     public static int saveDictionaryEntry(DictionaryEntry dictionaryEntry, CanRegServerInterface server) throws SecurityException, RemoteException {
@@ -86,14 +85,15 @@ public class DictionaryHelper {
         return dictionaryEntries;
     }
 
-    public static void replaceDictionary(int dictionaryID, String str, CanRegServerInterface server) throws RemoteException {
-        Vector<DictionaryEntry> dictionaryEntries = parseDictionaryText(dictionaryID, str);
-        HashMap<String, String> dictionaryEntriesMap = new HashMap<String, String>();
+    public static void replaceDictionary(int dictionaryID, String str, CanRegClientApp app) throws RemoteException {
 
-        boolean removed = clearDictionary(dictionaryID, server);
+        Vector<DictionaryEntry> dictionaryEntries = parseDictionaryText(dictionaryID, str);
+        Map<String, String> dictionaryEntriesMap = new LinkedHashMap<String, String>();
+
+        boolean removed = clearDictionary(dictionaryID, app);
 
         for (DictionaryEntry entry : dictionaryEntries) {
-            server.saveDictionaryEntry(entry);
+            app.saveDictionaryEntry(entry);
             dictionaryEntriesMap.put(entry.getCode(),entry.getDescription());
         }
     }

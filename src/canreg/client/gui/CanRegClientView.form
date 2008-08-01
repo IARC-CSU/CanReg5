@@ -95,6 +95,22 @@
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
             </Component>
+            <Component class="javax.swing.JToolBar$Separator" name="jSeparator15">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="jSeparator15" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="jButton1">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="showLastRecord" methodName="showLastRecord"/>
+                </Property>
+                <Property name="focusable" type="boolean" value="false"/>
+                <Property name="horizontalTextPosition" type="int" value="0"/>
+                <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
+                <Property name="verticalTextPosition" type="int" value="3"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">

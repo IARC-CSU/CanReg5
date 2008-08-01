@@ -8,6 +8,7 @@ import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals;
 import canreg.server.database.CanRegDAO;
+import canreg.server.database.DatabaseRecord;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
@@ -16,7 +17,6 @@ import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +24,7 @@ import javax.security.auth.Subject;
 import org.apache.derby.drda.NetworkServerControl;
 import java.net.InetAddress;
 import java.util.Iterator;
+import java.util.Map;
 import org.w3c.dom.Document;
 
 /**
@@ -212,7 +213,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return db.deleteDictionaryEntries(dictionaryID);
     }
 
-    public HashMap<Integer, HashMap<String, String>> getDictionary() throws RemoteException, SecurityException {
+    public Map<Integer, Map<String, String>> getDictionary() throws RemoteException, SecurityException {
         return db.getDictionary();
     }
 
@@ -246,5 +247,13 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     
     public Object[][] retrieveRows(Subject theUser, int from, int to) throws RemoteException, SecurityException, Exception {
         return db.retrieveRows(theUser,from,to);
+    }
+
+    public DatabaseRecord getPatient(int patientID) throws RemoteException, SecurityException {
+        return db.getPatient(patientID);
+    }
+
+    public DatabaseRecord getRecord(int recordID, String tableName) throws RemoteException, SecurityException {      
+        return db.getRecord(recordID, tableName);
     }
 }

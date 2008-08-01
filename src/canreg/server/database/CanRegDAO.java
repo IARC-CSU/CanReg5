@@ -29,13 +29,16 @@ import java.io.InputStream;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.Statement;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+// import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import java.util.logging.Level;
@@ -60,7 +63,7 @@ public class CanRegDAO {
 
         this.dbName = dbName;
         
-        distributedDataSources = new HashMap<Subject, DistributedTableDataSource>();
+        distributedDataSources = new LinkedHashMap<Subject, DistributedTableDataSource>();
 
         System.out.println(canreg.server.xml.Tools.getTextContent(new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
 
@@ -80,8 +83,8 @@ public class CanRegDAO {
         }
     }
 
-    public HashMap<Integer, HashMap<String, String>> getDictionary() {
-        HashMap<Integer, HashMap<String, String>> dictionaryMap = new HashMap<Integer, HashMap<String, String>>();
+    public Map<Integer, Map<String, String>> getDictionary() {
+        Map<Integer, Map<String, String>> dictionaryMap = new LinkedHashMap<Integer, Map<String, String>>();
         Statement queryStatement = null;
         ResultSet results = null;
 
@@ -93,9 +96,9 @@ public class CanRegDAO {
                 Integer dictionary = results.getInt(2);
                 String code = results.getString(3);
                 String desc = results.getString(4);
-                HashMap dic = dictionaryMap.get(dictionary);
+                Map dic = dictionaryMap.get(dictionary);
                 if (dic == null) {
-                    dic = new HashMap<String, String>();
+                    dic = new LinkedHashMap<String, String>();
                 }
                 dictionaryMap.put(dictionary, dic);
                 dic.put(code, desc);
@@ -142,6 +145,14 @@ public class CanRegDAO {
         distributedDataSources.put(theUser, dataSource);
         System.out.println(tableDescription.toString());
         return tableDescription;
+    }
+
+    public DatabaseRecord getRecord(int recordID, String tableName) {
+        if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)){
+            return getPatient(recordID);
+        } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
+            return getTumour(recordID);
+        } else return null;
     }
 
     /**
@@ -644,46 +655,70 @@ public class CanRegDAO {
         return listEntries;
     }
 
-    /**
-     * 
+
+     /* 
      * @param index
      * @return
-    
-    public Patient getPatient(int index) {
+     */
+    public Patient getPatient(int recordID) {
         Patient record = null;
+        ResultSetMetaData metadata;
         try {
             stmtGetPatient.clearParameters();
-            stmtGetPatient.setInt(1, index);
+            stmtGetPatient.setInt(1, recordID);
             ResultSet result = stmtGetPatient.executeQuery();
+            metadata = result.getMetaData();
+            int numberOfColumns = metadata.getColumnCount();
             if (result.next()) {
-                String lastName = result.getString("LASTNAME");
-                String firstName = result.getString("FIRSTNAME");
-                String middleName = result.getString("MIDDLENAME");
-                String phone = result.getString("PHONE");
-                String email = result.getString("EMAIL");
-                String add1 = result.getString("Record1");
-                String add2 = result.getString("Record2");
-                String city = result.getString("CITY");
-                String state = result.getString("STATE");
-                String postalCode = result.getString("POSTALCODE");
-                String country = result.getString("COUNTRY");
-                int id = result.getInt("ID");
-                record = new Patient(lastName, firstName, middleName, phone,
-                        email, add1, add2, city, state, postalCode,
-                        country, id);
+                record = new Patient();
+                for (int i = 1; i<=numberOfColumns; i++){
+                    if (metadata.getColumnType(i)==java.sql.Types.VARCHAR)
+                        record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
+                    else if (metadata.getColumnType(i)==java.sql.Types.INTEGER)
+                        record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                }
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
 
         return record;
-    } */
+    } 
+
+     /* 
+     * @param index
+     * @return
+     */
+    public Tumour getTumour(int recordID) {
+        Tumour record = null;
+        ResultSetMetaData metadata;
+        try {
+            stmtGetTumour.clearParameters();
+            stmtGetTumour.setInt(1, recordID);
+            ResultSet result = stmtGetTumour.executeQuery();
+            metadata = result.getMetaData();
+            int numberOfColumns = metadata.getColumnCount();
+            if (result.next()) {
+                record = new Tumour();
+                for (int i = 1; i<=numberOfColumns; i++){
+                    if (metadata.getColumnType(i)==java.sql.Types.VARCHAR)
+                        record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
+                    else if (metadata.getColumnType(i)==java.sql.Types.INTEGER)
+                        record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                }
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return record;
+    } 
+    
     private Connection dbConnection;
     private Properties dbProperties;
     private boolean isConnected;
     private String dbName;
     private Document doc;
-    private HashMap<Subject,DistributedTableDataSource> distributedDataSources;
+    private Map<Subject,DistributedTableDataSource> distributedDataSources;
     private boolean tableOfDictionariesFilled = true;
     private PreparedStatement stmtSaveNewPatient;
     private PreparedStatement stmtSaveNewTumour;

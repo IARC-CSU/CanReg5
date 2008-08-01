@@ -51,4 +51,19 @@ public class DictionaryEntry implements Serializable {
         return code +" - "+description;
     }
     
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof DictionaryEntry){
+            DictionaryEntry de = (DictionaryEntry) o;
+            return code.equals(de.getCode());
+        } else 
+            return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + (this.code != null ? this.code.hashCode() : 0);
+        return hash;
+    }
 }

@@ -12,6 +12,8 @@ import canreg.common.Globals;
 import canreg.exceptions.WrongCanRegVersionException;
 import canreg.server.CanRegLoginInterface;
 import canreg.server.CanRegServerInterface;
+import canreg.server.database.DatabaseRecord;
+import canreg.server.database.DictionaryEntry;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -23,13 +25,16 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.EventObject;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
@@ -47,11 +52,22 @@ public class CanRegClientApp extends SingleFrameApplication {
     private String systemName = null;
     private String username = null;
     private static LocalSettings localSettings;
+    /**
+     * 
+     */
     public boolean loggedIn = false;
     private CanRegClientView canRegClientView;
     private Document doc;
-    private HashMap<Integer, HashMap<String, String>> dictionary;
+    private Map<Integer, Map<String, String>> dictionary;
     private boolean canregServerRunningOnThisMachine = false;
+
+    public boolean deleteDictionaryEntries(int dictionaryID) throws SecurityException, RemoteException {
+       return server.deleteDictionaryEntries(dictionaryID);
+    }
+
+    public void saveDictionaryEntry(DictionaryEntry entry) throws SecurityException, RemoteException  {
+        server.saveDictionaryEntry(entry);
+    }
 
     /**
      * At startup create and show the main frame of the application.
@@ -59,7 +75,9 @@ public class CanRegClientApp extends SingleFrameApplication {
     @Override
     protected void startup() {
         applyPreferences();
+
         canRegClientView = new CanRegClientView(this);
+
         show(canRegClientView);
 
         ExitListener maybeExit = new ExitListener() {
@@ -95,6 +113,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * This method is to initialize the specified window by injecting resources.
      * Windows shown in our application come fully initialized from the GUI
      * builder, so this additional configuration is not needed.
+     * @param root 
      */
     @Override
     protected void configureWindow(java.awt.Window root) {
@@ -110,26 +129,35 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     /**
      * Main method launching the application.
+     * @param args 
      */
     public static void main(String[] args) {
         init();
         launch(CanRegClientApp.class, args);
     }
 
+    /**
+     * 
+     */
     public static void init() {
         //Testing the environment - disabled
         // canreg.common.Tools.testEnvironment();
         // Initialize the user settings
         try {
             localSettings = new LocalSettings("settings.xml");
+            initializeLookAndFeels();
+
         // Locale.setDefault(localSettings.getLocale());
         } catch (IOException ioe) {
             debugOut(ioe.getLocalizedMessage());
         }
     }
 
-
-
+    /**
+     * 
+     * @param serverObjectString
+     * @return
+     */
     public String testConnection(String serverObjectString) {
         debugOut("testing the connecting to server=" + serverObjectString + ".");
         CanRegLoginInterface loginServer = null;
@@ -148,6 +176,20 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     //  Log on to the CanReg system and set up the server connection.
     //  Returns CanReg System's name if successfull - null if not
+    /**
+     * 
+     * @param serverObjectString
+     * @param username
+     * @param password
+     * @return
+     * @throws javax.security.auth.login.LoginException
+     * @throws java.lang.NullPointerException
+     * @throws java.rmi.NotBoundException
+     * @throws java.net.MalformedURLException
+     * @throws java.rmi.RemoteException
+     * @throws java.net.UnknownHostException
+     * @throws canreg.exceptions.WrongCanRegVersionException
+     */
     public String login(String serverObjectString, String username, char[] password) throws LoginException, NullPointerException, NotBoundException, MalformedURLException, RemoteException, UnknownHostException, WrongCanRegVersionException {
         this.username = username;
         debugOut("connecting to server=" + serverObjectString + " as " + username + ".");
@@ -156,7 +198,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         //authenticate credentials
         loginServer = (CanRegLoginInterface) Naming.lookup(serverObjectString);
         //login object received
-        if (!Globals.VERSION_STRING.equalsIgnoreCase(loginServer.getSystemVersion())){
+        if (!Globals.VERSION_STRING.equalsIgnoreCase(loginServer.getSystemVersion())) {
             throw (new WrongCanRegVersionException(loginServer.getSystemVersion()));
         }
         //do the login 
@@ -183,6 +225,12 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public String[] listUsersLoggedIn() throws RemoteException, SecurityException {
         return server.listCurrentUsers();
     }
@@ -198,42 +246,107 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    /**
+     * 
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public void startDatabaseServer() throws RemoteException, SecurityException {
         server.startNetworkDBServer();
     }
 
+    /**
+     * 
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public void stopDatabaseServer() throws RemoteException, SecurityException {
         server.stopNetworkDBServer();
     }
 
+    /**
+     * 
+     * @return
+     */
     public LocalSettings getLocalSettings() {
         return localSettings;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Document getDatabseDescription() {
         return doc;
     }
 
-    public HashMap<Integer, HashMap<String, String>> getDictionary() {
+    /**
+     * 
+     * @return
+     */
+    public Map<Integer, Map<String, String>> getDictionary() {
         return dictionary;
     }
 
+    /**
+     * 
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public void refreshDictionary() throws SecurityException, RemoteException {
         dictionary = server.getDictionary();
     }
 
+    /**
+     * 
+     */
     public void applyPreferences() {
         Locale.setDefault(localSettings.getLocale());
+        if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).length() > 0) {
+            try {
+                if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).equalsIgnoreCase("System")) {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } else {
+                    UIManager.setLookAndFeel(localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY));
+                }
+            // Locale.setDefault(localSettings.getLocale());
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
+            } catch (InstantiationException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
+            } catch (UnsupportedLookAndFeelException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
+            }
+        }
     }
 
+    /**
+     * 
+     * @param task
+     * @param doc
+     * @param map
+     * @param file
+     * @param io
+     * @throws java.rmi.RemoteException
+     */
     public void importFile(Task<Object, Void> task, Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException {
         canreg.client.dataentry.Import.importFile(task, doc, map, file, server, io);
     }
 
+    /**
+     * 
+     * @param canregServerRunningInThisThread
+     */
     public void setCanregServerRunningInThisThread(boolean canregServerRunningInThisThread) {
         this.canregServerRunningInThisThread = canregServerRunningInThisThread;
     }
 
+    /**
+     * 
+     * @param evt
+     */
     @Action
     @Override
     public void quit(ActionEvent evt) {
@@ -245,6 +358,9 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    /**
+     * 
+     */
     public void logOut() {
         try {
             server.userLoggedOut(username);
@@ -259,15 +375,27 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isLoggedIn() {
         return loggedIn;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Globals.UserRightLevels getUserRightLevel() {
         // For now all users are supervisors
         return Globals.UserRightLevels.SUPERVISOR;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String performBackup() {
         String path = null;
         try {
@@ -280,27 +408,147 @@ public class CanRegClientApp extends SingleFrameApplication {
         return path;
     }
 
+    /**
+     * 
+     * @param path
+     * @return
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public String restoreBackup(String path) throws SecurityException, RemoteException {
         return server.restoreFromBackup(path);
     }
 
-    public CanRegServerInterface getServer() {
-        return server;
-    }
-
+    /**
+     * 
+     * @return
+     */
     public boolean isCanregServerRunningInThisThread() {
         return canregServerRunningInThisThread;
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isCanRegServerRunningOnThisMachine() {
         return canregServerRunningOnThisMachine;
     }
 
+    /**
+     * 
+     * @param filter
+     * @param tableName
+     * @return
+     * @throws java.sql.SQLException
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     * @throws java.lang.Exception
+     */
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, Exception {
         return server.getDistributedTableDescription(filter, tableName);
     }
 
-    public Object[][] retrieveRows(DistributedTableDescription description, int from, int to) throws RemoteException, SecurityException, Exception {
+    /**
+     * 
+     * @param from
+     * @param to
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     * @throws java.lang.Exception
+     */
+    public Object[][] retrieveRows(int from, int to) throws RemoteException, SecurityException, Exception {
         return server.retrieveRows(from, to);
+    }
+
+    /**
+     * 
+     * @param recordID
+     * @param tableName
+     * @return
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
+    public DatabaseRecord getRecord(int recordID, String tableName) throws SecurityException, RemoteException {
+        return server.getRecord(recordID, tableName);
+    }
+
+    /**
+     * 
+     * @param idString
+     * @param tableName
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     * @throws java.sql.SQLException
+     * @throws java.lang.Exception
+     */
+    public DatabaseRecord[] getRecordsFromOtherTableBasedOnID(String idString, String tableName) throws RemoteException, SecurityException, SQLException, Exception {
+        DatabaseRecord[] records = null;
+        String lookUpTableName = "";
+        DatabaseFilter filter = new DatabaseFilter();
+
+        // We want the records from the "other table"
+        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+            lookUpTableName = Globals.PATIENT_TABLE_NAME;
+            filter.setFilterString("REGNO ='" + idString + "'");
+        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+            lookUpTableName = Globals.TUMOUR_TABLE_NAME;
+            filter.setFilterString("PATNO ='" + idString + "'");
+        }
+        Object[][] rows;
+
+        DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
+        int numberOfRecords = distributedTableDescription.getRowCount();
+ 
+        // Retrieve all rows
+        rows = retrieveRows(0, numberOfRecords);
+
+        String[] columnNames = distributedTableDescription.getColumnNames();
+        int ids[] = new int[numberOfRecords];
+        boolean found = false;
+        int idColumnNumber = 0;
+        while (!found && idColumnNumber < columnNames.length) {
+            found = columnNames[idColumnNumber++].equalsIgnoreCase("PatientID");
+        }
+
+        if (found) {
+            records = new DatabaseRecord[numberOfRecords];
+            idColumnNumber--;
+            for (int j = 0; j < numberOfRecords; j++) {
+                ids[j] = (Integer) rows[j][idColumnNumber];
+                records[j] = getRecord(ids[j], lookUpTableName);
+            }
+        }
+
+        return records;
+    }
+
+    /**
+     * Installs the JGoodies Look & Feels, if available, in classpath.
+     */
+    public static void initializeLookAndFeels() {
+        // if in classpath thry to load JGoodies Plastic Look & Feel
+        try {
+            LookAndFeelInfo[] lnfs = UIManager.getInstalledLookAndFeels();
+            boolean found = false;
+            for (int i = 0; i < lnfs.length; i++) {
+                if (lnfs[i].getName().equals("JGoodies Plastic 3D")) {
+                    found = true;
+                }
+            }
+            if (!found) {
+                UIManager.installLookAndFeel("JGoodies Plastic 3D",
+                        "com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+            }
+            UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+        } catch (Throwable t) {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

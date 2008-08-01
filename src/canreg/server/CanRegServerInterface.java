@@ -7,6 +7,7 @@ package canreg.server;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
 import canreg.server.database.CanRegDAO;
+import canreg.server.database.DatabaseRecord;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
@@ -14,7 +15,7 @@ import java.net.InetAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.Map;
 import javax.security.auth.Subject;
 import org.w3c.dom.Document;
 
@@ -51,6 +52,8 @@ public interface CanRegServerInterface extends Remote {
     public void addUser(String username)
             throws RemoteException, SecurityException;
 
+    public DatabaseRecord getRecord(int recordID, String tableName) throws RemoteException, SecurityException;
+
     public void removeUser(String username)
             throws RemoteException, SecurityException;
 
@@ -79,13 +82,15 @@ public interface CanRegServerInterface extends Remote {
     //Add cases
     public int savePatient(Patient patient) throws RemoteException, SecurityException;
 
+    public DatabaseRecord getPatient(int patientID) throws RemoteException, SecurityException;
+
     public int saveTumour(Tumour tumour) throws RemoteException, SecurityException;
 
     public int saveDictionaryEntry(DictionaryEntry dictionaryEntry) throws RemoteException, SecurityException;
     // Drop cases
     public boolean deleteDictionaryEntries(int dictionaryID) throws RemoteException, SecurityException;
     // Get the dictionary
-    public HashMap<Integer, HashMap<String, String>> getDictionary() throws RemoteException, SecurityException;
+    public Map<Integer, Map<String, String>> getDictionary() throws RemoteException, SecurityException;
     // Backup
     public String performBackup()
             throws RemoteException, SecurityException;

@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.net.*;
 import java.io.*;
+import java.util.Comparator;
 
 /**
  *
@@ -75,13 +76,69 @@ public class Tools {
                     Integer.parseInt(e.getElementsByTagName(namespace + "variable_id").item(0).getTextContent()),
                     e.getElementsByTagName(namespace + "short_name").item(0).getTextContent(),
                     e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent());
-            if (e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent().equalsIgnoreCase("dict")){
+            if (e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent().equalsIgnoreCase("dict")) {
                 String dictionaryName = e.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
                 int id = canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, dictionaryName);
                 variables[i].setDictionaryID(id);
             }
+
+            variables[i].setEnglishName(e.getElementsByTagName(namespace + "english_name").item(0).getTextContent());
+
+            NodeList groupNameNodeList = e.getElementsByTagName(namespace + "group_name");
+            if (groupNameNodeList != null && groupNameNodeList.getLength() > 0) {
+                variables[i].setGroupName(groupNameNodeList.item(0).getTextContent());
+            }
+
+            variables[i].setFullName(e.getElementsByTagName(namespace + "full_name").item(0).getTextContent());
+
+            NodeList xPosNodeList = e.getElementsByTagName(namespace + "variable_X_pos");
+            if (xPosNodeList != null && xPosNodeList.getLength() > 0) {
+                variables[i].setXPos(Integer.decode(xPosNodeList.item(0).getTextContent()));
+            }
+            NodeList yPosNodeList = e.getElementsByTagName(namespace + "variable_Y_pos");
+            if (yPosNodeList != null && yPosNodeList.getLength() > 0) {
+                variables[i].setYPos(Integer.decode(yPosNodeList.item(0).getTextContent()));
+            }
+            NodeList variableLengthNodeList = e.getElementsByTagName(namespace + "variable_length");
+            if (variableLengthNodeList != null && variableLengthNodeList.getLength() > 0) {
+                variables[i].setVariableLength(Integer.decode(variableLengthNodeList.item(0).getTextContent()));
+            } else if (e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent().equalsIgnoreCase("dict")) {
+                String dictionaryName = e.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
+                NodeList dictnl = doc.getElementsByTagName("ns3:dictionary");
+                boolean found = false;
+                int j = 0;
+                Element dictionaryElement = null;
+                while (!found && j < dictnl.getLength()) {
+                    dictionaryElement = (Element) dictnl.item(j++);
+                    found = dictionaryElement.getElementsByTagName("ns3:name").item(0).getTextContent().equalsIgnoreCase(dictionaryName);
+                }
+                if (found) {
+                    variables[i].setVariableLength(Integer.decode(dictionaryElement.getElementsByTagName("ns3:full_dictionary_code_length").item(0).getTextContent()));
+                }
+            }
+            NodeList fillInStatusNodeList = e.getElementsByTagName(namespace + "fill_in_status");
+            if (fillInStatusNodeList != null && fillInStatusNodeList.getLength() > 0) {
+                variables[i].setFillInStatus(fillInStatusNodeList.item(0).getTextContent());
+            }
         }
         return variables;
+    }
+
+    public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace, String tableName) {
+        DatabaseVariablesListElement[] variablesInTable = getVariableListElements(doc, namespace);
+        LinkedList<DatabaseVariablesListElement> tempVariablesInTable = new LinkedList<DatabaseVariablesListElement>();
+        for (int i = 0; i <
+                variablesInTable.length; i++) {
+            if (variablesInTable[i].getDatabaseTableName().equalsIgnoreCase(tableName)) {
+                tempVariablesInTable.add(variablesInTable[i]);
+            }
+        }
+        variablesInTable = new DatabaseVariablesListElement[tempVariablesInTable.size()];
+        for (int i = 0; i <
+                variablesInTable.length; i++) {
+            variablesInTable[i] = tempVariablesInTable.get(i);
+        }
+        return variablesInTable;
     }
 
     public static DatabaseIndexesListElement[] getIndexesListElements(Document doc, String namespace) {
@@ -217,4 +274,3 @@ public class Tools {
         }
     }
 }
-

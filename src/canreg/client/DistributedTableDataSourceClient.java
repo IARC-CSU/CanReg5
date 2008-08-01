@@ -33,7 +33,7 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
     }
     
     public Object[][] retrieveRows(int from, int to) throws Exception {
-        return CanRegClientApp.getApplication().retrieveRows(distributedTableDescription, from, to);
+        return CanRegClientApp.getApplication().retrieveRows(from, to);
     }
 
     public int[] sort(int sortColumn, boolean ascending, int[] selectedRows) throws Exception {

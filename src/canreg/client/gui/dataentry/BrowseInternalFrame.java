@@ -7,9 +7,13 @@ package canreg.client.gui.dataentry;
 
 import cachingtableapi.DistributedTableDescription;
 import cachingtableapi.DistributedTableModel;
+import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
+import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.components.BrowserInterface;
 import canreg.common.DatabaseFilter;
+import canreg.common.Globals;
+import canreg.server.database.DatabaseRecord;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -25,7 +29,7 @@ import org.jdesktop.application.Task;
  *
  * @author  morten
  */
-public class BrowseInternalFrame extends javax.swing.JInternalFrame implements BrowserInterface{
+public class BrowseInternalFrame extends javax.swing.JInternalFrame implements BrowserInterface {
 
     private JDesktopPane dtp;
     private DistributedTableDescription tableDatadescription;
@@ -55,8 +59,10 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
         buttonsPanel = new javax.swing.JPanel();
         createNextButton = new javax.swing.JButton();
         editTableRecordButton = new javax.swing.JButton();
-        recordNumberTextField = new javax.swing.JTextField();
-        editRecordNumberButton = new javax.swing.JButton();
+        patientNumberTextField = new javax.swing.JTextField();
+        editPatientNumberButton = new javax.swing.JButton();
+        tumourNumberTextField = new javax.swing.JTextField();
+        editTumourNumberButton = new javax.swing.JButton();
         rangeFilterPanel = new canreg.client.gui.components.RangeFilterPanel();
         navigationPanel = new canreg.client.gui.components.NavigationPanel();
         variablesPanel1 = new canreg.client.gui.components.VariablesPanel();
@@ -97,11 +103,17 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
         editTableRecordButton.setText(resourceMap.getString("editTableRecordButton.text")); // NOI18N
         editTableRecordButton.setName("editTableRecordButton"); // NOI18N
 
-        recordNumberTextField.setText(resourceMap.getString("recordNumberTextField.text")); // NOI18N
-        recordNumberTextField.setName("recordNumberTextField"); // NOI18N
+        patientNumberTextField.setText(resourceMap.getString("patientNumberTextField.text")); // NOI18N
+        patientNumberTextField.setName("patientNumberTextField"); // NOI18N
 
-        editRecordNumberButton.setText(resourceMap.getString("editRecordNumberButton.text")); // NOI18N
-        editRecordNumberButton.setName("editRecordNumberButton"); // NOI18N
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(BrowseInternalFrame.class, this);
+        editPatientNumberButton.setAction(actionMap.get("editPatientID")); // NOI18N
+        editPatientNumberButton.setName("editPatientNumberButton"); // NOI18N
+
+        tumourNumberTextField.setName("tumourNumberTextField"); // NOI18N
+
+        editTumourNumberButton.setAction(actionMap.get("editTumour")); // NOI18N
+        editTumourNumberButton.setName("editTumourNumberButton"); // NOI18N
 
         javax.swing.GroupLayout buttonsPanelLayout = new javax.swing.GroupLayout(buttonsPanel);
         buttonsPanel.setLayout(buttonsPanelLayout);
@@ -110,10 +122,16 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
             .addGroup(buttonsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(editRecordNumberButton, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
                     .addComponent(editTableRecordButton, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
                     .addComponent(createNextButton, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                    .addComponent(recordNumberTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
+                    .addGroup(buttonsPanelLayout.createSequentialGroup()
+                        .addComponent(editPatientNumberButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(patientNumberTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))
+                    .addGroup(buttonsPanelLayout.createSequentialGroup()
+                        .addComponent(editTumourNumberButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tumourNumberTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         buttonsPanelLayout.setVerticalGroup(
@@ -123,10 +141,14 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(editTableRecordButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editRecordNumberButton)
-                .addGap(4, 4, 4)
-                .addComponent(recordNumberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(162, 162, 162))
+                .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(editPatientNumberButton)
+                    .addComponent(patientNumberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(editTumourNumberButton)
+                    .addComponent(tumourNumberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(99, 99, 99))
         );
 
         rangeFilterPanel.setName("rangeFilterPanel"); // NOI18N
@@ -160,8 +182,10 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPaneWiz, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+            .addComponent(resultScrollPaneWiz, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
         );
+
+        resultScrollPaneWiz.getVerticalScrollBar().setUnitIncrement(16);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -186,18 +210,14 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(buttonsPanel, javax.swing.GroupLayout.Alignment.LEADING, 0, 209, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(variablesPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(navigationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(59, 59, 59)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(buttonsPanel, javax.swing.GroupLayout.Alignment.LEADING, 0, 209, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(variablesPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(navigationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(6, 6, 6)
                 .addComponent(resultPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -219,9 +239,9 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
         // hook the navigationpanel up to the resulttable
         navigationPanel.setTable(resultTable);
         rangeFilterPanel.setBrowser(this);
-        // Task task = refresh();
-        // task.run();
-        // rangeFilterPanel.setRecordsTotal(tableDataModel.getRowCount());
+    // Task task = refresh();
+    // task.run();
+    // rangeFilterPanel.setRecordsTotal(tableDataModel.getRowCount());
     }
 
 private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosed
@@ -292,19 +312,125 @@ private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             resultPanel.setVisible(theResult);
         }
     }
+
+    @Action
+    public void editPatientID() {
+        String idString = patientNumberTextField.getText().trim();
+        String tableName = Globals.PATIENT_TABLE_NAME;
+                
+        RecordEditor recordEditor = new RecordEditor();
+        recordEditor.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
+        recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
+        DatabaseRecord record = null;        
+        DatabaseFilter filter = new DatabaseFilter();
+        filter.setFilterString("ID ='"+idString+"'");
+        DistributedTableDescription distributedTableDescription;
+        Object[][] rows;
+        
+        try {
+            distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
+            int numberOfRecords = distributedTableDescription.getRowCount();
+            rows = CanRegClientApp.getApplication().retrieveRows(0, numberOfRecords);
+            String[] columnNames = distributedTableDescription.getColumnNames();
+            int ids[] = new int[numberOfRecords];
+            boolean found = false;
+            int idColumnNumber = 0;
+            while (!found && idColumnNumber<columnNames.length){
+                found = columnNames[idColumnNumber++].equalsIgnoreCase("ID");
+            }
+            if (found){
+                idColumnNumber--;
+                for (int j=0; j<numberOfRecords;j++){
+                    ids[j]=(Integer) rows[j][idColumnNumber];
+                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.TUMOUR_TABLE_NAME);
+                    recordEditor.addRecord(record);
+                }
+                CanRegClientView.showAndCenterInternalFrame(dtp, recordEditor);
+            }
+            else {
+                JOptionPane.showMessageDialog(rootPane, "Record not found", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }
+
+    @Action
+    public void editTumour() {
+        String idString = tumourNumberTextField.getText().trim();
+        
+        RecordEditor recordEditor = new RecordEditor();
+        recordEditor.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
+        recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
+        DatabaseRecord record = null;        
+        DatabaseFilter filter = new DatabaseFilter();
+        filter.setFilterString("REGNO ='"+idString+"'");
+        Object[][] rows;
+        
+        try {
+            DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
+            int numberOfRecords = distributedTableDescription.getRowCount();
+            rows = CanRegClientApp.getApplication().retrieveRows(0, numberOfRecords);
+
+            String[] columnNames = distributedTableDescription.getColumnNames();
+            int ids[] = new int[numberOfRecords];
+            boolean found = false;
+            int idColumnNumber = 0;
+            while (!found && idColumnNumber<columnNames.length){
+                found = columnNames[idColumnNumber++].equalsIgnoreCase("ID");
+            }
+
+            if (found){
+                idColumnNumber--;
+                for (int j=0; j<numberOfRecords;j++){
+                    ids[j]=(Integer) rows[j][idColumnNumber];
+                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.TUMOUR_TABLE_NAME);
+                    recordEditor.addRecord(record);
+                }
+                CanRegClientView.showAndCenterInternalFrame(dtp, recordEditor);
+            }
+            else {
+                JOptionPane.showMessageDialog(rootPane, "Variable not found...", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void editRecord(String idString, String tableName) {
+   
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JPanel buttonsPanel;
     private javax.swing.JButton createNextButton;
-    private javax.swing.JButton editRecordNumberButton;
+    private javax.swing.JButton editPatientNumberButton;
     private javax.swing.JButton editTableRecordButton;
+    private javax.swing.JButton editTumourNumberButton;
     private canreg.client.gui.components.NavigationPanel navigationPanel;
+    private javax.swing.JTextField patientNumberTextField;
     private canreg.client.gui.components.RangeFilterPanel rangeFilterPanel;
-    private javax.swing.JTextField recordNumberTextField;
     private javax.swing.JPanel resultPanel;
     private javax.swing.JScrollPane resultScrollPaneWiz;
     private javax.swing.JTable resultTableWiz;
+    private javax.swing.JTextField tumourNumberTextField;
     private canreg.client.gui.components.VariablesPanel variablesPanel1;
     // End of variables declaration//GEN-END:variables
     

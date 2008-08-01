@@ -42,6 +42,7 @@ public class LocalSettings {
     public static String OUTLINE_DRAG_MODE_KEY = "outline_drag_mode";
     public static String WORKING_DIR_PATH_KEY = "working_path";
     public static String AUTO_START_SERVER_KEY = "auto_start_server";
+    public static String LOOK_AND_FEEL_KEY = "look_and_feel";
     // Property names
     public static String YES_PROPERTY = "yes";
     public static String NO_PROPERTY = "no";
@@ -49,6 +50,7 @@ public class LocalSettings {
     public static String OFF_PROPERTY = "off";
     public static String TRUE_PROPERTY = "true";
     public static String FALSE_PROPERTY = "false";
+    
 
     public LocalSettings(String localSettingsFileName) throws IOException {
         boolean settingsLoaded = false;
@@ -202,6 +204,8 @@ public class LocalSettings {
             property = FALSE_PROPERTY;
         } else if (key.equalsIgnoreCase(WORKING_DIR_PATH_KEY)) {
             property = System.getProperty("user.home", ".") + System.getProperty("file.separator") + "CanReg";
+        } else if (key.equalsIgnoreCase(LOOK_AND_FEEL_KEY)){
+            property = "System";
         }
         return property;
     }
@@ -231,12 +235,12 @@ public class LocalSettings {
     }
 
     // Consider making private 
-    public Properties getProperties() {
+    private Properties getProperties() {
         return properties;
     }
 
     // Consider making private 
-    public void setProperties(Properties properties) {
+    private void setProperties(Properties properties) {
         this.properties = properties;
         settingsChanged = true;
     }

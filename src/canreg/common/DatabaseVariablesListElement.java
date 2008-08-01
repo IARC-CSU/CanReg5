@@ -10,49 +10,62 @@ package canreg.common;
  */
 public class DatabaseVariablesListElement {
     // Table in the database for the variable
-    private String databaseTableName;
+    private String table;
     // ID of the variable in the database
-    private int databaseTableVariableID;
+    private int variableID;
     //
-    private String databaseVariableName;
+    private String shortName;
     // Variable type
     private String variableType;
+    // Dictionary
+    private String useDictionary;
     // Dictionary ID
     private int dictionaryID = -1;
 
+    private String fullName;
+    private String englishName;
+    private String groupName;
+    
+    private int xPos;
+    private int yPos;
+    
+    private int variableLength;
+    
+    private String fillInStatus;
+    
     public DatabaseVariablesListElement(
             String databaseTableName,
             int databaseTableVariableID,
             String databaseVariableName,
             String variableType) {
-        this.databaseTableName = databaseTableName;
-        this.databaseTableVariableID = databaseTableVariableID;
-        this.databaseVariableName = databaseVariableName;
+        this.table = databaseTableName;
+        this.variableID = databaseTableVariableID;
+        this.shortName = databaseVariableName;
         this.variableType = variableType;
     }
 
     public String getDatabaseTableName() {
-        return databaseTableName;
+        return getTable();
     }
 
     public void setDatabaseTableName(String databaseTableName) {
-        this.databaseTableName = databaseTableName;
+        this.setTable(databaseTableName);
     }
 
     public int getDatabaseTableVariableID() {
-        return databaseTableVariableID;
+        return getVariableID();
     }
 
     public void setDatabaseTableVariableID(int databaseTableVariableID) {
-        this.databaseTableVariableID = databaseTableVariableID;
+        this.setVariableID(databaseTableVariableID);
     }
 
     public String getDatabaseVariableName() {
-        return databaseVariableName;
+        return getShortName();
     }
 
     public void setDatabaseVariableName(String databaseVariableName) {
-        this.databaseVariableName = databaseVariableName;
+        this.setShortName(databaseVariableName);
     }
 
     public String getVariableType() {
@@ -64,12 +77,12 @@ public class DatabaseVariablesListElement {
     }
 
     public boolean equals(DatabaseVariablesListElement o) {
-        return databaseTableVariableID == o.getDatabaseTableVariableID() && databaseTableName.equalsIgnoreCase(o.getDatabaseTableName());
+        return getVariableID() == o.getDatabaseTableVariableID() && getTable().equalsIgnoreCase(o.getDatabaseTableName());
     }
 
     @Override
     public String toString() {
-        return databaseVariableName;
+        return getShortName();
 
     }
 
@@ -80,4 +93,94 @@ public class DatabaseVariablesListElement {
     public void setDictionaryID(int dictionaryID) {
         this.dictionaryID = dictionaryID;
     }
+
+    public String getTable() {
+        return table;
+    }
+
+    public void setTable(String table) {
+        this.table = table;
+    }
+
+    public int getVariableID() {
+        return variableID;
+    }
+
+    public void setVariableID(int variableID) {
+        this.variableID = variableID;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public String getUseDictionary() {
+        return useDictionary;
+    }
+
+    public void setUseDictionary(String useDictionary) {
+        this.useDictionary = useDictionary;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEnglishName() {
+        return englishName;
+    }
+
+    public void setEnglishName(String englishName) {
+        this.englishName = englishName;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public int getXPos() {
+        return xPos;
+    }
+
+    public void setXPos(int xPos) {
+        this.xPos = xPos;
+    }
+
+    public int getYPos() {
+        return yPos;
+    }
+
+    public void setYPos(int yPos) {
+        this.yPos = yPos;
+    }
+
+    public int getVariableLength() {
+        return variableLength;
+    }
+
+    public void setVariableLength(int variableLength) {
+        this.variableLength = variableLength;
+    }
+
+    public String getFillInStatus() {
+        return fillInStatus;
+    }
+
+    public void setFillInStatus(String fillInStatus) {
+        this.fillInStatus = fillInStatus;
+    }
 }
+
+

@@ -57,23 +57,17 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="buttonsPanel" alignment="0" min="0" pref="209" max="32767" attributes="1"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="variablesPanel1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="navigationPanel" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                  <Component id="rangeFilterPanel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="buttonsPanel" alignment="0" min="0" pref="209" max="32767" attributes="1"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="variablesPanel1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="navigationPanel" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
               <Component id="resultPanel" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -92,10 +86,18 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="editRecordNumberButton" alignment="0" pref="241" max="32767" attributes="1"/>
                       <Component id="editTableRecordButton" alignment="0" pref="241" max="32767" attributes="1"/>
                       <Component id="createNextButton" alignment="0" pref="241" max="32767" attributes="1"/>
-                      <Component id="recordNumberTextField" alignment="0" pref="241" max="32767" attributes="1"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="editPatientNumberButton" min="-2" max="-2" attributes="1"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="patientNumberTextField" pref="144" max="32767" attributes="1"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="editTumourNumberButton" min="-2" max="-2" attributes="1"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tumourNumberTextField" pref="142" max="32767" attributes="1"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -108,10 +110,16 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="editTableRecordButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="editRecordNumberButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                  <Component id="recordNumberTextField" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="162" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="editPatientNumberButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="patientNumberTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="editTumourNumberButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tumourNumberTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="99" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -129,16 +137,31 @@
             <Property name="name" type="java.lang.String" value="editTableRecordButton" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="recordNumberTextField">
+        <Component class="javax.swing.JTextField" name="patientNumberTextField">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="recordNumberTextField.text"/>
-            <Property name="name" type="java.lang.String" value="recordNumberTextField" noResource="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="patientNumberTextField.text"/>
+            <Property name="name" type="java.lang.String" value="patientNumberTextField" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="editRecordNumberButton">
+        <Component class="javax.swing.JButton" name="editPatientNumberButton">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="editRecordNumberButton.text"/>
-            <Property name="name" type="java.lang.String" value="editRecordNumberButton" noResource="true"/>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="editPatientID" methodName="editPatientID"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="editPatientNumberButton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tumourNumberTextField">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="tumourNumberTextField" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="editTumourNumberButton">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="editTumour" methodName="editTumour"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="editTumourNumberButton" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -174,7 +197,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="resultScrollPaneWiz" alignment="1" pref="467" max="32767" attributes="0"/>
+              <Component id="resultScrollPaneWiz" alignment="1" pref="471" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -183,6 +206,9 @@
           <Properties>
             <Property name="name" type="java.lang.String" value="resultScrollPaneWiz" noResource="true"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="resultScrollPaneWiz.getVerticalScrollBar().setUnitIncrement(16);"/>
+          </AuxValues>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>

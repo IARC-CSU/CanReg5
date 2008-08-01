@@ -6,17 +6,53 @@
 
 package canreg.client.gui.dataentry;
 
+import canreg.server.database.DatabaseRecord;
+import canreg.server.database.Patient;
+import canreg.server.database.Tumour;
+import java.util.LinkedList;
+import java.util.Map;
+import org.w3c.dom.Document;
+
 /**
  *
  * @author  ervikm
  */
 public class RecordEditor extends javax.swing.JInternalFrame {
+    private Document doc;
+    private Map<Integer, Map<String, String>> dictionary;
+    private LinkedList<DatabaseRecord> patientRecords;
+    private LinkedList<DatabaseRecord> tumourRecords;
 
     /** Creates new form RecordEditor */
     public RecordEditor() {
         initComponents();
+        patientRecords = new LinkedList<DatabaseRecord>();
+        tumourRecords = new LinkedList<DatabaseRecord>();
     }
 
+    public void setDocument(Document doc) {
+        this.doc = doc;
+    }
+
+    public void setDictionary(Map<Integer, Map<String, String>> dictionary){
+        this.dictionary = dictionary;
+    }
+    
+    public void addRecord(DatabaseRecord dbr) {
+        RecordEditorPanel rePanel = new RecordEditorPanel();
+        rePanel.setDictionary(dictionary);
+        rePanel.setDocument(doc);
+        rePanel.setRecord(dbr);
+        rePanel.repaint();
+        if (dbr.getClass().isInstance(new Patient())) {
+            patientRecords.add(dbr);
+            patientTabbedPane.addTab(dbr.toString()+" - " + (patientTabbedPane.getTabCount()+1),rePanel);
+        } else if (dbr.getClass().isInstance(new Tumour())) {
+            tumourRecords.add(dbr);
+            tumourTabbedPane.addTab(dbr.toString()+" - " + (tumourTabbedPane.getTabCount()+1),rePanel);
+        }
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -27,12 +63,8 @@ public class RecordEditor extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        recordEditorPanel1 = new canreg.client.gui.dataentry.RecordEditorPanel();
-        jTabbedPane2 = new javax.swing.JTabbedPane();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        recordEditorPanel2 = new canreg.client.gui.dataentry.RecordEditorPanel();
+        patientTabbedPane = new javax.swing.JTabbedPane();
+        tumourTabbedPane = new javax.swing.JTabbedPane();
 
         setClosable(true);
         setIconifiable(true);
@@ -46,28 +78,11 @@ public class RecordEditor extends javax.swing.JInternalFrame {
         jSplitPane1.setName("jSplitPane1"); // NOI18N
         jSplitPane1.setOneTouchExpandable(true);
 
-        jTabbedPane1.setName("jTabbedPane1"); // NOI18N
+        patientTabbedPane.setName("patientTabbedPane"); // NOI18N
+        jSplitPane1.setTopComponent(patientTabbedPane);
 
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
-
-        recordEditorPanel1.setName("recordEditorPanel1"); // NOI18N
-        jScrollPane1.setViewportView(recordEditorPanel1);
-
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RecordEditor.class);
-        jTabbedPane1.addTab(resourceMap.getString("jScrollPane1.TabConstraints.tabTitle"), jScrollPane1); // NOI18N
-
-        jSplitPane1.setTopComponent(jTabbedPane1);
-
-        jTabbedPane2.setName("jTabbedPane2"); // NOI18N
-
-        jScrollPane2.setName("jScrollPane2"); // NOI18N
-
-        recordEditorPanel2.setName("recordEditorPanel2"); // NOI18N
-        jScrollPane2.setViewportView(recordEditorPanel2);
-
-        jTabbedPane2.addTab(resourceMap.getString("jScrollPane2.TabConstraints.tabTitle"), jScrollPane2); // NOI18N
-
-        jSplitPane1.setRightComponent(jTabbedPane2);
+        tumourTabbedPane.setName("tumourTabbedPane"); // NOI18N
+        jSplitPane1.setRightComponent(tumourTabbedPane);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -82,7 +97,7 @@ public class RecordEditor extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -91,13 +106,9 @@ public class RecordEditor extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTabbedPane jTabbedPane2;
-    private canreg.client.gui.dataentry.RecordEditorPanel recordEditorPanel1;
-    private canreg.client.gui.dataentry.RecordEditorPanel recordEditorPanel2;
+    private javax.swing.JTabbedPane patientTabbedPane;
+    private javax.swing.JTabbedPane tumourTabbedPane;
     // End of variables declaration//GEN-END:variables
 
 }

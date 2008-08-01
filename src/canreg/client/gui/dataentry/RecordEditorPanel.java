@@ -3,37 +3,134 @@
  *
  * Created on 16 July 2008, 14:53
  */
-
 package canreg.client.gui.dataentry;
 
+import canreg.client.gui.components.DateVariableEditorPanel;
+import canreg.client.gui.components.VariableEditorPanel;
+import canreg.common.DatabaseVariablesListElement;
+import canreg.common.DatabaseVariablesListElementPositionSorter;
+import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
+import canreg.server.database.DictionaryEntry;
+import canreg.server.database.Patient;
+import canreg.server.database.Tumour;
+import java.awt.KeyboardFocusManager;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Arrays;
+import java.util.Map;
+import javax.swing.JTextField;
 import org.w3c.dom.Document;
 
 /**
  *
  * @author  ervikm
  */
-public class RecordEditorPanel extends javax.swing.JPanel {
+public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
+
     private DatabaseRecord databaseRecord;
     private Document doc;
+    private panelTypes panelType;
+    private DatabaseVariablesListElement[] variablesInTable;
+    private Map<Integer, Map<String, String>> dictionary;
+
+    private enum panelTypes {
+
+        PATIENT, TUMOUR
+    }
 
     /** Creates new form RecordEditorPanel */
     public RecordEditorPanel() {
         initComponents();
+
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                String prop = evt.getPropertyName();
+                if ("focusOwner".equals(evt.getPropertyName())) {
+                    if (evt.getNewValue() instanceof JTextField) {
+                        JTextField textField = (JTextField) evt.getNewValue();
+                        textField.selectAll();
+                    }
+                }
+            }
+        });
+
+
     }
-    
-    public void setDocument(Document doc){
+
+    public void setDocument(Document doc) {
         this.doc = doc;
     }
-    
-    public void setRecord(DatabaseRecord dbr){
-        this.databaseRecord = dbr;
+
+    public void setDictionary(Map<Integer, Map<String, String>> dictionary) {
+        this.dictionary = dictionary;
     }
-    
-    public DatabaseRecord getRecord(){
+
+    public void setRecord(DatabaseRecord dbr) {
+        this.databaseRecord = dbr;
+        if (databaseRecord.getClass().isInstance(new Patient())) {
+            panelType = panelTypes.PATIENT;
+        } else if (databaseRecord.getClass().isInstance(new Tumour())) {
+            panelType = panelTypes.TUMOUR;
+        }
+        buildPanel();
+    }
+
+    public DatabaseRecord getRecord() {
+        // TODO reconstruct the record...
         return databaseRecord;
     }
-    
+
+    private void buildPanel() {
+        String tableName = null;
+        dataPanel.removeAll();
+
+        if (panelType == panelTypes.PATIENT) {
+            tableName = Globals.PATIENT_TABLE_NAME;
+        } else if (panelType == panelTypes.TUMOUR) {
+            tableName = Globals.TUMOUR_TABLE_NAME;
+        }
+        variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
+        Arrays.sort(variablesInTable, new DatabaseVariablesListElementPositionSorter());
+        Map<String, DictionaryEntry> possibleValues;
+        for (int i = 0; i < variablesInTable.length; i++) {
+            DatabaseVariablesListElement currentVariable = variablesInTable[i];
+            VariableEditorPanel vep;
+            String variableType = currentVariable.getVariableType();
+
+            if ("date".equalsIgnoreCase(variableType)) {
+                vep = new DateVariableEditorPanel();
+            } else {
+                vep = new VariableEditorPanel();
+            }
+            
+            vep.setDatabaseVariablesListElement(currentVariable);
+
+            int id = currentVariable.getDictionaryID();
+
+            if (id >= 0) {
+                Map map = canreg.client.dataentry.DictionaryHelper.getDictionaryByID(dictionary, id);
+
+                if (map != null) {
+                    // Map sortedmap = new TreeMap(map);
+                    possibleValues =
+                            canreg.client.dataentry.DictionaryHelper.buildDictionaryEntriesFromMap(map);
+                } else {
+                    possibleValues = null;
+                }
+                vep.setPossibleValues(possibleValues);
+            } else {
+                vep.setPossibleValues(null);
+            }
+            vep.setValue(databaseRecord.getVariable(currentVariable.getDatabaseVariableName()).toString());
+            dataPanel.add(vep);
+            vep.setVisible(true);
+        }
+        dataPanel.revalidate();
+        dataPanel.repaint();
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -43,27 +140,14 @@ public class RecordEditorPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        dataPanel = new javax.swing.JPanel();
         systemPanel = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        dataPanel = new javax.swing.JPanel();
 
         setName("Form"); // NOI18N
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RecordEditorPanel.class);
-        dataPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("dataPanel.border.title"))); // NOI18N
-        dataPanel.setName("dataPanel"); // NOI18N
-
-        javax.swing.GroupLayout dataPanelLayout = new javax.swing.GroupLayout(dataPanel);
-        dataPanel.setLayout(dataPanelLayout);
-        dataPanelLayout.setHorizontalGroup(
-            dataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 267, Short.MAX_VALUE)
-        );
-        dataPanelLayout.setVerticalGroup(
-            dataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 165, Short.MAX_VALUE)
-        );
-
         systemPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("systemPanel.border.title"))); // NOI18N
         systemPanel.setName("systemPanel"); // NOI18N
 
@@ -75,7 +159,7 @@ public class RecordEditorPanel extends javax.swing.JPanel {
         systemPanelLayout.setHorizontalGroup(
             systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, systemPanelLayout.createSequentialGroup()
-                .addContainerGap(200, Short.MAX_VALUE)
+                .addContainerGap(336, Short.MAX_VALUE)
                 .addComponent(saveButton)
                 .addContainerGap())
         );
@@ -84,6 +168,13 @@ public class RecordEditorPanel extends javax.swing.JPanel {
             .addComponent(saveButton)
         );
 
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
+
+        dataPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("dataPanel.border.title"))); // NOI18N
+        dataPanel.setName("dataPanel"); // NOI18N
+        dataPanel.setLayout(new java.awt.GridLayout(0, 1));
+        jScrollPane1.setViewportView(dataPanel);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -91,7 +182,7 @@ public class RecordEditorPanel extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(dataPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
                     .addComponent(systemPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -101,16 +192,22 @@ public class RecordEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(systemPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dataPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
     }// </editor-fold>//GEN-END:initComponents
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel dataPanel;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton saveButton;
     private javax.swing.JPanel systemPanel;
     // End of variables declaration//GEN-END:variables
+    @Override
+    public RecordEditorPanel clone() throws CloneNotSupportedException {
+        RecordEditorPanel clone = (RecordEditorPanel) super.clone();
 
+        return clone();
+    }
 }

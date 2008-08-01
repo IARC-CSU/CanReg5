@@ -224,7 +224,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
             if (dictionaryString.trim().length() > 0) {
                 int dictionaryID = dbdle.getDictionaryID();
                 try {
-                    canreg.client.dataentry.DictionaryHelper.replaceDictionary(dictionaryID, dictionaryString, CanRegClientApp.getApplication().getServer());
+                    canreg.client.dataentry.DictionaryHelper.replaceDictionary(dictionaryID, dictionaryString, CanRegClientApp.getApplication());
                     CanRegClientApp.getApplication().refreshDictionary();
                 } catch (RemoteException ex) {
                     Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -248,7 +248,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public void refreshSelectedDictionaryAction() {
         DatabaseDictionaryListElement dbdle = (DatabaseDictionaryListElement) chooseDictionaryComboBox.getSelectedItem();
-        HashMap<String, String> map = canreg.client.dataentry.DictionaryHelper.getDictionaryByID(CanRegClientApp.getApplication().getDictionary(), dbdle.getDictionaryID());
+        Map<String, String> map = canreg.client.dataentry.DictionaryHelper.getDictionaryByID(CanRegClientApp.getApplication().getDictionary(), dbdle.getDictionaryID());
         String str = "";
         if (map != null) {
             Map sortedMap = new TreeMap(map);

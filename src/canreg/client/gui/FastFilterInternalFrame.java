@@ -9,10 +9,9 @@ import canreg.client.gui.components.RangeFilterPanel;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.server.database.DictionaryEntry;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.TreeMap;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
@@ -28,8 +27,8 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
     private DatabaseVariablesListElement[] variablesInTable;
     private Document doc;
     private String tableName = "both";
-    private HashMap<Integer, HashMap<String, String>> dictionary;
-    private DictionaryEntry[] possibleValues;
+    private Map<Integer, Map<String, String>> dictionary;
+    private Map<String, DictionaryEntry> possibleValuesMap;
 
     /** Creates new form FastFilterInternalFrame */
     public FastFilterInternalFrame(RangeFilterPanel parentFilterPanel) {
@@ -223,13 +222,19 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
     DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
     if (dbvle.getVariableType().equalsIgnoreCase("dict")) {
         // System.out.println("Coucou");
-        if (possibleValues == null) {
+        if (possibleValuesMap == null) {
             JOptionPane.showInternalMessageDialog(this, "Empty dictionary.", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
+            DictionaryEntry[] possibleValuesArray = new DictionaryEntry[possibleValuesMap.size()];
+            Iterator <String> it = possibleValuesMap.keySet().iterator();
+            int i=0;
+            while (it.hasNext()){
+                possibleValuesArray[i++]=possibleValuesMap.get(it.next());
+            }
             DictionaryEntry selectedValue = (DictionaryEntry) JOptionPane.showInternalInputDialog(this,
                     "Choose one", "Input",
                     JOptionPane.INFORMATION_MESSAGE, null,
-                    possibleValues, possibleValues[0]);
+                    possibleValuesArray, possibleValuesArray[0]);
             valueTextField.setText(selectedValue.getCode());
         }
     } else {
@@ -281,7 +286,6 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
                 if (variablesInTable[i].getDatabaseTableName().equalsIgnoreCase(tableName)) {
                     tempVariablesInTable.add(variablesInTable[i]);
                 }
-
             }
             variablesInTable = new DatabaseVariablesListElement[tempVariablesInTable.size()];
             for (int i = 0; i <
@@ -359,15 +363,15 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         if (id >= 0) {
             Map map = canreg.client.dataentry.DictionaryHelper.getDictionaryByID(dictionary, id);
             if (map != null) {
-                Map sortedmap = new TreeMap(map);
-                possibleValues =
-                        canreg.client.dataentry.DictionaryHelper.buildDictionaryEntriesFromMap(sortedmap);
+                // Map sortedmap = new TreeMap(map);
+                possibleValuesMap =
+                        canreg.client.dataentry.DictionaryHelper.buildDictionaryEntriesFromMap(map);
             } else {
-                possibleValues = null;
+                possibleValuesMap = null;
             }
 
         } else {
-            possibleValues = null;
+            possibleValuesMap = null;
         }
     }
 }

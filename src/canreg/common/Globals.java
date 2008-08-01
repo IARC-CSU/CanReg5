@@ -35,6 +35,9 @@ public class Globals {
     public static String CANREG4_SYSTEM_FOLDER = "C:\\CR4SHARE\\CANREG4\\CR4-SYST\\";
     public static int DEFAULT_PORT = 1199;
     public static int NUMBER_OF_LINES_IN_IMPORT_PREVIEW = 42;
+    public static String TUMOUR_TABLE_NAME = "Tumour";
+    public static String PATIENT_TABLE_NAME = "Patient";
+    public static String DATE_FORMAT_STRING = "yyyyMMdd";
     static public enum UserRightLevels {NOT_LOGGED_IN, SUPERVISOR, REGISTRAR, ANALYST };
 
     // Languages - consider moving it to config-file or build it automatically...
