@@ -169,6 +169,7 @@
                         <StringItem index="2" value="Small"/>
                       </StringArray>
                     </Property>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="fontSizeComboBox.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="fontSizeComboBox" noResource="true"/>
                   </Properties>
                 </Component>
@@ -227,6 +228,7 @@
                         <StringItem index="3" value="Persian"/>
                       </StringArray>
                     </Property>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="languageComboBox.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="languageComboBox" noResource="true"/>
                   </Properties>
                 </Component>

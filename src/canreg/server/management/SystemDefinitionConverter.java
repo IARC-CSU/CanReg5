@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package canreg.server.management;
 
 import canreg.common.Globals;
@@ -45,7 +41,7 @@ public class SystemDefinitionConverter {
         "Behaviour",
         "BasisDiagnosis",
         "ICD10",
-        "Mult.Prim.Code",
+        "MultPrimCode",
         "CheckStatus",
         "PersonSearch",
         "RecordSearch",
@@ -56,8 +52,8 @@ public class SystemDefinitionConverter {
         "Grade",
         "ICCC",
         "AddressCode",
-        "Mult.Prim.Seq.",
-        "Mult.Prim.Tot.",
+        "MultPrimSeq",
+        "MultPrimTot",
         "Stage",
         "Source1",
         "Source2",
@@ -261,7 +257,10 @@ public class SystemDefinitionConverter {
                     int groupID = Integer.parseInt(groupIDString);
                     Element groupElement = (Element) doc.getElementsByTagName(namespace + "group").item(groupID);
                     String groupName = groupElement.getElementsByTagName(namespace + "name").item(0).getTextContent();
-                    if (groupName.equalsIgnoreCase("patient") || groupName.equalsIgnoreCase("follow up")) {
+                    
+                    if ((groupName.equalsIgnoreCase("patient") || groupName.equalsIgnoreCase("follow up") 
+                            || nameInDatabase.equalsIgnoreCase("PerS")) 
+                            && !(nameInDatabase.equalsIgnoreCase("age"))) {
                         element.appendChild(createElement(namespace + "table", "Patient"));
                     } else {
                         element.appendChild(createElement(namespace + "table", "Tumour"));

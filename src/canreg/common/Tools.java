@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package canreg.common;
 
 import java.util.LinkedList;
@@ -10,7 +6,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.net.*;
 import java.io.*;
-import java.util.Comparator;
 
 /**
  *
@@ -84,9 +79,9 @@ public class Tools {
 
             variables[i].setEnglishName(e.getElementsByTagName(namespace + "english_name").item(0).getTextContent());
 
-            NodeList groupNameNodeList = e.getElementsByTagName(namespace + "group_name");
+            NodeList groupNameNodeList = e.getElementsByTagName(namespace + "group_id");
             if (groupNameNodeList != null && groupNameNodeList.getLength() > 0) {
-                variables[i].setGroupName(groupNameNodeList.item(0).getTextContent());
+                variables[i].setGroupID(Integer.parseInt(groupNameNodeList.item(0).getTextContent()));
             }
 
             variables[i].setFullName(e.getElementsByTagName(namespace + "full_name").item(0).getTextContent());
@@ -119,6 +114,10 @@ public class Tools {
             NodeList fillInStatusNodeList = e.getElementsByTagName(namespace + "fill_in_status");
             if (fillInStatusNodeList != null && fillInStatusNodeList.getLength() > 0) {
                 variables[i].setFillInStatus(fillInStatusNodeList.item(0).getTextContent());
+            }
+            NodeList standardVariableNameNodeList = e.getElementsByTagName(namespace + "standard_variable_name");
+            if (standardVariableNameNodeList != null && standardVariableNameNodeList.getLength() > 0) {
+                variables[i].setStandardVariableName(standardVariableNameNodeList.item(0).getTextContent());
             }
         }
         return variables;
@@ -165,6 +164,19 @@ public class Tools {
         return dictionaries;
     }
 
+        public static DatabaseGroupsListElement[] getGroupsListElements(Document doc, String namespace) {
+        NodeList nl = doc.getElementsByTagName(namespace + "group");
+        DatabaseGroupsListElement[] indexes = new DatabaseGroupsListElement[nl.getLength()];
+        for (int i = 0; i < nl.getLength(); i++) {
+            Element e = (Element) nl.item(i);
+            indexes[i] = new DatabaseGroupsListElement(
+                    e.getElementsByTagName(namespace + "name").item(0).getTextContent(), 
+                    Integer.parseInt(e.getElementsByTagName(namespace + "group_id").item(0).getTextContent())
+                    );
+        }
+        return indexes;
+    }
+    
     public static String[] getVariableNames(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
         String[] variableNames = new String[nl.getLength()];

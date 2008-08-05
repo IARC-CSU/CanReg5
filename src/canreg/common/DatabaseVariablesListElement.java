@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package canreg.common;
 
 /**
@@ -24,7 +20,8 @@ public class DatabaseVariablesListElement {
 
     private String fullName;
     private String englishName;
-    private String groupName;
+    // private String groupName;
+    private String standardVariableName;
     
     private int xPos;
     private int yPos;
@@ -32,6 +29,8 @@ public class DatabaseVariablesListElement {
     private int variableLength;
     
     private String fillInStatus;
+    
+    private int groupID;
     
     public DatabaseVariablesListElement(
             String databaseTableName,
@@ -142,12 +141,12 @@ public class DatabaseVariablesListElement {
         this.englishName = englishName;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public int getGroupID() {
+        return groupID;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setGroupID(int groupID) {
+        this.groupID = groupID;
     }
 
     public int getXPos() {
@@ -180,6 +179,14 @@ public class DatabaseVariablesListElement {
 
     public void setFillInStatus(String fillInStatus) {
         this.fillInStatus = fillInStatus;
+    }
+
+    public String getStandardVariableName() {
+        return standardVariableName;
+    }
+
+    public void setStandardVariableName(String standardVariableName) {
+        this.standardVariableName = standardVariableName;
     }
 }
 

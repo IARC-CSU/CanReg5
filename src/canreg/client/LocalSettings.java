@@ -4,7 +4,6 @@
  */
 package canreg.client;
 
-import canreg.common.Globals;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -91,6 +90,7 @@ public class LocalSettings {
         return i;
     }
 
+    /*
     public String[] getLanguageList() {
         String list[] = new String[Globals.LANGUAGES_AVAILABLE.length];
         for (int i = 0; i < list.length; i++) {
@@ -99,7 +99,8 @@ public class LocalSettings {
         }
         return list;
     }
-
+    */
+    
     public Locale getLocale() {
         return new Locale(properties.getProperty(LOCALE_KEY));
     }

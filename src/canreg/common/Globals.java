@@ -6,9 +6,13 @@ package canreg.common;
  */
 public class Globals {
 
-    static public int VERSION = 4;
-    static public int REVISION = 99;
-    static public String VERSION_STRING = "4.99";
+    // http://en.wikipedia.org/wiki/Software_versioning
+    static private int VERSION_MAJOR = 4;
+    static private int VERSION_MINOR = 99;
+    static private int VERSION_BUILD = 0;
+    static private int VERSION_REVISION = 0;
+    static private String VERSION_APPENDIX = "";
+    static public String VERSION_STRING = VERSION_MAJOR+"."+VERSION_MINOR+VERSION_APPENDIX;
     static public String downloadCanRegURL = "http://www.iacr.com.fr/iacr_canreg4.htm";
     static public String newestVersionURLString = "http://www.iacr.com.fr/version.txt";
     static public String NAMESPACE = "ns3:";
@@ -40,6 +44,46 @@ public class Globals {
     public static String DATE_FORMAT_STRING = "yyyyMMdd";
     static public enum UserRightLevels {NOT_LOGGED_IN, SUPERVISOR, REGISTRAR, ANALYST };
 
-    // Languages - consider moving it to config-file or build it automatically...
-    static public String[] LANGUAGES_AVAILABLE = {"en", "fr", "ar", "no"};
+    static public String PATIENT_TABLE_RECORD_ID_VARIABLE_NAME = "PRID";
+    static public String TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME = "TRID";
+
+    public static enum SystemVariableNames{
+        PRID,
+        TRID,
+        NEXT_RECORD_DB_ID,
+        LAST_RECORD_DB_ID
+    }
+    
+    public static enum StandardVariableNames {
+        RegistrationNo,
+        IncidenceDate,
+        BirthDate,
+        Age,
+        Sex,
+        Topography,
+        Morphology,
+        Behaviour,
+        BasisDiagnosis,
+        ICD10,
+        MultPrimCode,
+        CheckStatus,
+        PersonSearch,
+        RecordSearch,
+        FirstName,
+        Surname,
+        UpdateDate,
+        Lastcontact,
+        Grade,
+        ICCC,
+        AddressCode,
+        MultPrimSeq,
+        MultPrimTot,
+        Stage,
+        Source1,
+        Source2,
+        Source3,
+        Source4,
+        Source5,
+        Source6
+    }
 }

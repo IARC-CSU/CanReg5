@@ -38,7 +38,7 @@
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="resultPanel" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="rangeFilterPanel" pref="394" max="32767" attributes="0"/>
+                      <Component id="rangeFilterPanel" pref="334" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="variablesPanel1" max="32767" attributes="1"/>
@@ -86,17 +86,17 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="editTableRecordButton" alignment="0" pref="241" max="32767" attributes="1"/>
-                      <Component id="createNextButton" alignment="0" pref="241" max="32767" attributes="1"/>
+                      <Component id="editTableRecordButton" alignment="0" pref="301" max="32767" attributes="1"/>
+                      <Component id="createNextButton" alignment="0" pref="301" max="32767" attributes="1"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="editPatientNumberButton" min="-2" max="-2" attributes="1"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="patientNumberTextField" pref="144" max="32767" attributes="1"/>
+                          <Component id="patientNumberTextField" pref="204" max="32767" attributes="1"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="editTumourNumberButton" min="-2" max="-2" attributes="1"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="tumourNumberTextField" pref="142" max="32767" attributes="1"/>
+                          <Component id="tumourNumberTextField" pref="202" max="32767" attributes="1"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -119,7 +119,7 @@
                       <Component id="editTumourNumberButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="tumourNumberTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="99" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -159,7 +159,7 @@
         <Component class="javax.swing.JButton" name="editTumourNumberButton">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="editTumour" methodName="editTumour"/>
+              <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="editTumourID" methodName="editTumourID"/>
             </Property>
             <Property name="name" type="java.lang.String" value="editTumourNumberButton" noResource="true"/>
           </Properties>
@@ -197,7 +197,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="resultScrollPaneWiz" alignment="1" pref="471" max="32767" attributes="0"/>
+              <Component id="resultScrollPaneWiz" alignment="1" pref="479" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -227,6 +227,9 @@
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="rowClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

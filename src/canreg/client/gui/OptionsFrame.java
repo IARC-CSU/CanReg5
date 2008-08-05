@@ -101,6 +101,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         fontSizeLabel.setName("fontSizeLabel"); // NOI18N
 
         fontSizeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Medium", "Big", "Small" }));
+        fontSizeComboBox.setToolTipText(resourceMap.getString("fontSizeComboBox.toolTipText")); // NOI18N
         fontSizeComboBox.setName("fontSizeComboBox"); // NOI18N
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -130,6 +131,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         languageLabel.setName("languageLabel"); // NOI18N
 
         languageComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "English", "Arabic", "Spanish", "Persian" }));
+        languageComboBox.setToolTipText(resourceMap.getString("languageComboBox.toolTipText")); // NOI18N
         languageComboBox.setName("languageComboBox"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);

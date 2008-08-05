@@ -86,7 +86,6 @@ public class DictionaryHelper {
     }
 
     public static void replaceDictionary(int dictionaryID, String str, CanRegClientApp app) throws RemoteException {
-
         Vector<DictionaryEntry> dictionaryEntries = parseDictionaryText(dictionaryID, str);
         Map<String, String> dictionaryEntriesMap = new LinkedHashMap<String, String>();
 
@@ -96,5 +95,5 @@ public class DictionaryHelper {
             app.saveDictionaryEntry(entry);
             dictionaryEntriesMap.put(entry.getCode(),entry.getDescription());
         }
-    }
+    }    
 }

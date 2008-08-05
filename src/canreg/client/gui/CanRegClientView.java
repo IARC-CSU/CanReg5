@@ -21,7 +21,7 @@ import canreg.server.database.DatabaseRecord;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.IOException;
-import java.util.Map;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdesktop.application.Action;
@@ -294,7 +294,7 @@ public class CanRegClientView extends FrameView {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -373,6 +373,7 @@ public class CanRegClientView extends FrameView {
         menuBar.add(analysisMenu);
 
         managementMenu.setAction(actionMap.get("restoreAction")); // NOI18N
+        managementMenu.setText(resourceMap.getString("managementMenu.text")); // NOI18N
         managementMenu.setName("managementMenu"); // NOI18N
 
         backupMenuItem.setAction(actionMap.get("backupAction")); // NOI18N
@@ -914,15 +915,25 @@ public class CanRegClientView extends FrameView {
         RecordEditor internalFrame = new RecordEditor();
         internalFrame.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
         internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
-        DatabaseRecord record = null;
+        DatabaseRecord patientRecord = null;
+        DatabaseRecord[] tumourRecords;
         try {
-            record = CanRegClientApp.getApplication().getRecord(1,"patient");
-        } catch (SecurityException ex) {
-            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+            int patientID=1;
+            patientRecord = CanRegClientApp.getApplication().getRecord(patientID,"patient");
+            internalFrame.addRecord(patientRecord);
+            tumourRecords = CanRegClientApp.getApplication().getRecordsFromOtherTableBasedOnID(patientID+"", "patient");
+            for (DatabaseRecord rec : tumourRecords){
+                internalFrame.addRecord(rec);
+            }
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        internalFrame.addRecord(record);
+        } catch (SecurityException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        } 
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

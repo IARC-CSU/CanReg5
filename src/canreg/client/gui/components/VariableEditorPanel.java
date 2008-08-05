@@ -135,8 +135,10 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
                     "Choose one", "Input",
                     JOptionPane.INFORMATION_MESSAGE, null,
                     possibleValuesArray, possibleValuesArray[0]);
-            textField1.setText(selectedValue.getCode());
-            textField2.setText(selectedValue.getDescription());
+            if (selectedValue!=null){
+                textField1.setText(selectedValue.getCode());
+                textField2.setText(selectedValue.getDescription());
+            }
         }
     } else {
         // Do nothing

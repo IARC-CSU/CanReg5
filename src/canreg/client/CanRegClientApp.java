@@ -8,6 +8,7 @@ import canreg.client.dataentry.Relation;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.dataentry.ImportOptions;
 import canreg.common.DatabaseFilter;
+import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.exceptions.WrongCanRegVersionException;
 import canreg.server.CanRegLoginInterface;
@@ -60,14 +61,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private Document doc;
     private Map<Integer, Map<String, String>> dictionary;
     private boolean canregServerRunningOnThisMachine = false;
-
-    public boolean deleteDictionaryEntries(int dictionaryID) throws SecurityException, RemoteException {
-       return server.deleteDictionaryEntries(dictionaryID);
-    }
-
-    public void saveDictionaryEntry(DictionaryEntry entry) throws SecurityException, RemoteException  {
-        server.saveDictionaryEntry(entry);
-    }
+    private GlobalToolBox globalToolBox;
 
     /**
      * At startup create and show the main frame of the application.
@@ -125,15 +119,6 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     public static CanRegClientApp getApplication() {
         return Application.getInstance(CanRegClientApp.class);
-    }
-
-    /**
-     * Main method launching the application.
-     * @param args 
-     */
-    public static void main(String[] args) {
-        init();
-        launch(CanRegClientApp.class, args);
     }
 
     /**
@@ -215,6 +200,8 @@ public class CanRegClientApp extends SingleFrameApplication {
             loggedIn = true;
             doc = server.getDatabseDescription();
             dictionary = server.getDictionary();
+            globalToolBox = new GlobalToolBox(doc);
+
             canregServerRunningOnThisMachine = InetAddress.getLocalHost().
                     equals(server.getIPAddress());
             Globals.UserRightLevels i = getUserRightLevel();
@@ -474,6 +461,14 @@ public class CanRegClientApp extends SingleFrameApplication {
         return server.getRecord(recordID, tableName);
     }
 
+    public boolean deleteDictionaryEntries(int dictionaryID) throws SecurityException, RemoteException {
+        return server.deleteDictionaryEntries(dictionaryID);
+    }
+
+    public void saveDictionaryEntry(DictionaryEntry entry) throws SecurityException, RemoteException {
+        server.saveDictionaryEntry(entry);
+    }
+
     /**
      * 
      * @param idString
@@ -488,37 +483,43 @@ public class CanRegClientApp extends SingleFrameApplication {
         DatabaseRecord[] records = null;
         String lookUpTableName = "";
         DatabaseFilter filter = new DatabaseFilter();
+        String lookUpColumnName = "";
 
         // We want the records from the "other table"
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
             lookUpTableName = Globals.PATIENT_TABLE_NAME;
-            filter.setFilterString("REGNO ='" + idString + "'");
+            filter.setFilterString("TUMOURID =" + idString + "");
+            lookUpColumnName = "ID";
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             lookUpTableName = Globals.TUMOUR_TABLE_NAME;
-            filter.setFilterString("PATNO ='" + idString + "'");
+            filter.setFilterString("PATIENTID = " + idString + "");
+            lookUpColumnName = "ID";
+        } else {
+            return null;
         }
         Object[][] rows;
 
-        DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
+        DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, lookUpTableName);
         int numberOfRecords = distributedTableDescription.getRowCount();
- 
+
         // Retrieve all rows
         rows = retrieveRows(0, numberOfRecords);
 
         String[] columnNames = distributedTableDescription.getColumnNames();
-        int ids[] = new int[numberOfRecords];
+
         boolean found = false;
         int idColumnNumber = 0;
         while (!found && idColumnNumber < columnNames.length) {
-            found = columnNames[idColumnNumber++].equalsIgnoreCase("PatientID");
+            found = columnNames[idColumnNumber++].equalsIgnoreCase(lookUpColumnName);
         }
 
         if (found) {
+            int id;
             records = new DatabaseRecord[numberOfRecords];
             idColumnNumber--;
             for (int j = 0; j < numberOfRecords; j++) {
-                ids[j] = (Integer) rows[j][idColumnNumber];
-                records[j] = getRecord(ids[j], lookUpTableName);
+                id = (Integer) rows[j][idColumnNumber];
+                records[j] = getRecord(id, lookUpTableName);
             }
         }
 
@@ -550,5 +551,18 @@ public class CanRegClientApp extends SingleFrameApplication {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Main method launching the application.
+     * @param args 
+     */
+    public static void main(String[] args) {
+        init();
+        launch(CanRegClientApp.class, args);
+    }
+
+    public GlobalToolBox getGlobalToolBox() {
+        return globalToolBox;
     }
 }

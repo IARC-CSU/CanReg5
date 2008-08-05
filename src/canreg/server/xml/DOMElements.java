@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package canreg.server.xml;
 
 /**
@@ -12,7 +7,6 @@ package canreg.server.xml;
 import java.io.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
-import org.xml.sax.*;
 
 public class DOMElements{
    static public void main(String[] arg){

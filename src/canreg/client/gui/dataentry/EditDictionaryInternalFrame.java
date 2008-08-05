@@ -9,7 +9,6 @@ import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.Globals;
 import java.rmi.RemoteException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
