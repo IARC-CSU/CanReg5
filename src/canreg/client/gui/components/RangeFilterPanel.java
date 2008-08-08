@@ -7,7 +7,6 @@ package canreg.client.gui.components;
 
 import canreg.client.gui.*;
 import canreg.client.CanRegClientApp;
-import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.Globals;
 import java.beans.PropertyVetoException;

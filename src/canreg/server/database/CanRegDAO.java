@@ -15,7 +15,6 @@ package canreg.server.database;
  * this software is authorized pursuant to the terms of the license 
  * found at http://developers.sun.com/berkeley_license.html .
  */
-
 import cachingtableapi.DistributedTableDataSource;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
@@ -51,8 +50,7 @@ import org.w3c.dom.*;
  * @author morten (based on code by John O'Conner)
  */
 public class CanRegDAO {
-    private DistributedTableDescription temporaryGlobalDescription;
-    
+
     /**
      * 
      * @param dbName
@@ -62,7 +60,7 @@ public class CanRegDAO {
         this.doc = doc;
 
         this.dbName = dbName;
-        
+
         distributedDataSources = new LinkedHashMap<Subject, DistributedTableDataSource>();
 
         System.out.println(canreg.server.xml.Tools.getTextContent(new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
@@ -112,34 +110,78 @@ public class CanRegDAO {
     }
 
     public DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(Subject theUser, DatabaseFilter filter, String tableName) throws SQLException, Exception {
-        distributedDataSources.put(theUser, null);
+        distributedDataSources.remove(theUser);
         ResultSet result;
         Statement statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        int rowCount = 0;
+        DistributedTableDataSource dataSource;
 
-        if (tableName.equalsIgnoreCase("tumour")) {
+        if (DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR.equals(filter.getQueryType())) {
             String filterString = filter.getFilterString();
-            if (!filterString.isEmpty()){
-                filterString = " WHERE "+filterString;
+            String query = "";
+            if (!filterString.isEmpty()) {
+                filterString = " AND " + filterString;
             }
-            System.out.println(strGetTumours+filterString);
-            result = statement.executeQuery(strGetTumours+filterString);
+            String[] variables = filter.getDatabaseVariables();
+            String variablesList = "";
+            if (variables.length > 0) {
+
+                for (String variable : variables) {
+                    if (variable != null) {
+                        variablesList += ", " + variable;
+                    }
+                }
+            // variablesList = variablesList.substring(0, variablesList.length() - 2);
+
+            }
+
+            query = "SELECT INCID/10000 " + variablesList + ", COUNT(*) as Cases " +
+                    "FROM APP.TUMOUR, APP.PATIENT " +
+                    "WHERE APP.PATIENT.ID = APP.TUMOUR.PATIENTID " + filterString + " " +
+                    "GROUP BY INCID/10000 " + variablesList + " " +
+                    "ORDER BY INCID/10000 " + variablesList;
+            System.out.print(query);
+            result = statement.executeQuery(query);
+
+        } else if (tableName.equalsIgnoreCase("tumour")) {
+            String filterString = filter.getFilterString();
+            if (!filterString.isEmpty()) {
+                filterString = " WHERE " + filterString;
+            }
+            ResultSet countRowSet = statement.executeQuery(strCountTumours + filterString);
+            if (countRowSet.next()) {
+                rowCount = countRowSet.getInt(1);
+            }
+            result = statement.executeQuery(strGetTumours + filterString);
         } else if (tableName.equalsIgnoreCase("patient")) {
             String filterString = filter.getFilterString();
-            if (!filterString.isEmpty()){
-                filterString = " WHERE "+filterString;
+            if (!filterString.isEmpty()) {
+                filterString = " WHERE " + filterString;
             }
-            System.out.println(strGetPatients+filterString);
-            result = statement.executeQuery(strGetPatients+filterString);
+            ResultSet countRowSet = statement.executeQuery(strCountPatients + filterString);
+            if (countRowSet.next()) {
+                rowCount = countRowSet.getInt(1);
+            }
+            result = statement.executeQuery(strGetPatients + filterString);
         } else if (tableName.equalsIgnoreCase("both")) {
             String filterString = filter.getFilterString();
-            if (!filterString.isEmpty()){
-                filterString = " AND "+ filterString.trim();
+            if (!filterString.isEmpty()) {
+                filterString = " AND " + filterString.trim();
+            }
+            ResultSet countRowSet = statement.executeQuery(strCountPatientsAndTumours + filterString);
+            if (countRowSet.next()) {
+                rowCount = countRowSet.getInt(1);
             }
             result = statement.executeQuery(strGetPatientsAndTumours + filterString);
         } else {
             throw new Exception("Unknown table name.");
         }
-        DistributedTableDataSource dataSource = new DistributedTableDataSourceResultSetImpl(result);
+        if (rowCount > 0) {
+            dataSource = new DistributedTableDataSourceResultSetImpl(rowCount, result);
+        } else {
+            dataSource = new DistributedTableDataSourceResultSetImpl(result);
+        }
+
         DistributedTableDescription tableDescription = dataSource.getTableDescription();
         //distributedDataSources.put(tableDescription, dataSource);
         distributedDataSources.put(theUser, dataSource);
@@ -148,11 +190,13 @@ public class CanRegDAO {
     }
 
     public DatabaseRecord getRecord(int recordID, String tableName) {
-        if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)){
+        if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             return getPatient(recordID);
-        } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
+        } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
             return getTumour(recordID);
-        } else return null;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -173,12 +217,12 @@ public class CanRegDAO {
     public Object[][] retrieveRows(Subject theUser, int from, int to) throws Exception {
         // DistributedTableDataSource ts = distributedDataSources.get(temporaryGlobalDescription);
         DistributedTableDataSource ts = distributedDataSources.get(theUser);
-        if (ts !=null){
+        if (ts != null) {
             return ts.retrieveRows(from, to);
-        } 
-            else return null;
+        } else {
+            return null;
+        }
     }
-    
     // This only works for Embedded databases - will look into it!
     // When using Derby this is OK as we can access it via Embedded 
     // and Client drivers at the same time...
@@ -269,7 +313,7 @@ public class CanRegDAO {
      * @return true if successfull, false if not
      */
     public String restoreFromBackup(String path) {
-           boolean bRestored = false, shutdownSuccess = false;
+        boolean bRestored = false, shutdownSuccess = false;
         SQLException ex = null;
         String dbUrl = getDatabaseUrl();
 
@@ -541,32 +585,32 @@ public class CanRegDAO {
      * @return
     
     public boolean editPatient(Patient record) {
-        boolean bEdited = false;
-        try {
-            stmtUpdateExistingPatient.clearParameters();
-
-            stmtUpdateExistingPatient.setString(1, record.getLastName());
-            stmtUpdateExistingPatient.setString(2, record.getFirstName());
-            stmtUpdateExistingPatient.setString(3, record.getMiddleName());
-            stmtUpdateExistingPatient.setString(4, record.getPhone());
-            stmtUpdateExistingPatient.setString(5, record.getEmail());
-            stmtUpdateExistingPatient.setString(6, record.getAddress1());
-            stmtUpdateExistingPatient.setString(7, record.getAddress2());
-            stmtUpdateExistingPatient.setString(8, record.getCity());
-            stmtUpdateExistingPatient.setString(9, record.getState());
-            stmtUpdateExistingPatient.setString(10, record.getPostalCode());
-            stmtUpdateExistingPatient.setString(11, record.getCountry());
-            stmtUpdateExistingPatient.setInt(12, record.getId());
-
-            stmtUpdateExistingPatient.executeUpdate();
-            bEdited = true;
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
-        }
-        return bEdited;
-
+    boolean bEdited = false;
+    try {
+    stmtUpdateExistingPatient.clearParameters();
+    
+    stmtUpdateExistingPatient.setString(1, record.getLastName());
+    stmtUpdateExistingPatient.setString(2, record.getFirstName());
+    stmtUpdateExistingPatient.setString(3, record.getMiddleName());
+    stmtUpdateExistingPatient.setString(4, record.getPhone());
+    stmtUpdateExistingPatient.setString(5, record.getEmail());
+    stmtUpdateExistingPatient.setString(6, record.getAddress1());
+    stmtUpdateExistingPatient.setString(7, record.getAddress2());
+    stmtUpdateExistingPatient.setString(8, record.getCity());
+    stmtUpdateExistingPatient.setString(9, record.getState());
+    stmtUpdateExistingPatient.setString(10, record.getPostalCode());
+    stmtUpdateExistingPatient.setString(11, record.getCountry());
+    stmtUpdateExistingPatient.setInt(12, record.getId());
+    
+    stmtUpdateExistingPatient.executeUpdate();
+    bEdited = true;
+    } catch (SQLException sqle) {
+    sqle.printStackTrace();
     }
- */
+    return bEdited;
+    
+    }
+     */
     private boolean fillDictionariesTable() {
         boolean bFilled = false;
 
@@ -619,12 +663,12 @@ public class CanRegDAO {
      * 
      * @param record
      * @return
-     
+    
     public boolean deleteRecord(Patient record) {
-        int id = record.getId();
-        return deleteRecord(id);
+    int id = record.getId();
+    return deleteRecord(id);
     }
-*/
+     */
     /**
      * 
      * @return
@@ -656,7 +700,7 @@ public class CanRegDAO {
     }
 
 
-     /* 
+    /* 
      * @param index
      * @return
      */
@@ -671,11 +715,12 @@ public class CanRegDAO {
             int numberOfColumns = metadata.getColumnCount();
             if (result.next()) {
                 record = new Patient();
-                for (int i = 1; i<=numberOfColumns; i++){
-                    if (metadata.getColumnType(i)==java.sql.Types.VARCHAR)
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
                         record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
-                    else if (metadata.getColumnType(i)==java.sql.Types.INTEGER)
+                    } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
                         record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                    }
                 }
             }
         } catch (SQLException sqle) {
@@ -683,9 +728,9 @@ public class CanRegDAO {
         }
 
         return record;
-    } 
+    }
 
-     /* 
+    /* 
      * @param index
      * @return
      */
@@ -700,25 +745,25 @@ public class CanRegDAO {
             int numberOfColumns = metadata.getColumnCount();
             if (result.next()) {
                 record = new Tumour();
-                for (int i = 1; i<=numberOfColumns; i++){
-                    if (metadata.getColumnType(i)==java.sql.Types.VARCHAR)
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
                         record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
-                    else if (metadata.getColumnType(i)==java.sql.Types.INTEGER)
+                    } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
                         record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                    }
                 }
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
         return record;
-    } 
-    
+    }
     private Connection dbConnection;
     private Properties dbProperties;
     private boolean isConnected;
     private String dbName;
     private Document doc;
-    private Map<Subject,DistributedTableDataSource> distributedDataSources;
+    private Map<Subject, DistributedTableDataSource> distributedDataSources;
     private boolean tableOfDictionariesFilled = true;
     private PreparedStatement stmtSaveNewPatient;
     private PreparedStatement stmtSaveNewTumour;
@@ -745,14 +790,21 @@ public class CanRegDAO {
             "WHERE ID = ?";
     private String strGetPatients =
             "SELECT * FROM APP.PATIENT";
+    private String strCountPatients =
+            "SELECT COUNT(*) FROM APP.PATIENT";
     private String strGetPatientsAndTumours =
-            "SELECT * FROM APP.PATIENT, APP.TUMOUR " + 
+            "SELECT * FROM APP.PATIENT, APP.TUMOUR " +
+            "WHERE APP.PATIENT.ID = APP.TUMOUR.PATIENTID";
+    private String strCountPatientsAndTumours =
+            "SELECT COUNT(*) FROM APP.PATIENT, APP.TUMOUR " +
             "WHERE APP.PATIENT.ID = APP.TUMOUR.PATIENTID";
     private static final String strGetTumour =
             "SELECT * FROM APP.TUMOUR " +
             "WHERE ID = ?";
     private String strGetTumours =
             "SELECT * FROM APP.TUMOUR";
+    private String strCountTumours =
+            "SELECT COUNT(*) FROM APP.TUMOUR";
     private static final String strGetDictionary =
             "SELECT * FROM APP.DICTIONARIES " +
             "WHERE ID = ?";

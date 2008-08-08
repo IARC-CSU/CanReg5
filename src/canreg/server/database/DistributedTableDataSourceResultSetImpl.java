@@ -36,13 +36,25 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         resultSet.beforeFirst();          // reset to allow forward cursor processing
 
         // rowCount = 1000;
-        
-        
+
         ResultSetMetaData metaData = resultSet.getMetaData();
         columnCount = metaData.getColumnCount();
         columnNames = getColumnNames(metaData);
         columnClasses = getColumnClasses(metaData);
-        
+
+        distributedTableDescription = new DistributedTableDescription(columnNames, columnClasses, rowCount);
+    }
+
+    public DistributedTableDataSourceResultSetImpl(int rowCount, ResultSet resultSet) throws SQLException, Exception {
+        super();
+        this.resultSet = resultSet;
+        this.rowCount = rowCount;
+
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        columnCount = metaData.getColumnCount();
+        columnNames = getColumnNames(metaData);
+        columnClasses = getColumnClasses(metaData);
+
         distributedTableDescription = new DistributedTableDescription(columnNames, columnClasses, rowCount);
     }
 
@@ -58,17 +70,17 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         while (hasMore) {
             Object[] row = new Object[columnCount];
             for (int i = 0; i < columnCount; i++) {
-                row[i] = resultSet.getObject(i+1);
+                row[i] = resultSet.getObject(i + 1);
             }
             rows.add(row);
             hasMore = resultSet.next();
         }
         Object[][] rowsArray = new Object[rows.size()][columnCount];
 
-        for (int i = 0; i<rows.size();i++){
-            rowsArray[i]=rows.get(i);
+        for (int i = 0; i < rows.size(); i++) {
+            rowsArray[i] = rows.get(i);
         }
-        
+
         return rowsArray;
     }
 
@@ -92,7 +104,7 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         int ccount = metaData.getColumnCount();
         Class[] columns = new Class[ccount];
         for (int i = 0; i < ccount; i++) {
-            columns[i] = getColumnClass(metaData.getColumnType(i+1));
+            columns[i] = getColumnClass(metaData.getColumnType(i + 1));
         }
         return columns;
     }
@@ -201,7 +213,7 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         String[] columns = new String[ccount];
 
         for (int i = 0; i < ccount; i++) {
-            columns[i] = metaData.getColumnLabel(i+1);
+            columns[i] = metaData.getColumnLabel(i + 1);
         }
 
         return columns;

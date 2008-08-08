@@ -12,6 +12,7 @@ import canreg.client.*;
 import canreg.client.gui.dataentry.EditDictionaryInternalFrame;
 import canreg.client.gui.StandardDialog;
 import canreg.client.gui.WelcomeInternalFrame;
+import canreg.client.gui.analysis.FrequenciesByYearInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
 import canreg.client.gui.management.RestoreInternalFrame;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
@@ -354,7 +355,7 @@ public class CanRegClientView extends FrameView {
         analysisMenu.setText(resourceMap.getString("analysisMenu.text")); // NOI18N
         analysisMenu.setName("analysisMenu"); // NOI18N
 
-        frequenciesMenuItem.setText(resourceMap.getString("frequencyDistributionsMenuItem.text")); // NOI18N
+        frequenciesMenuItem.setAction(actionMap.get("showFrequenciesFrame")); // NOI18N
         frequenciesMenuItem.setName("frequencyDistributionsMenuItem"); // NOI18N
         analysisMenu.add(frequenciesMenuItem);
 
@@ -934,6 +935,12 @@ public class CanRegClientView extends FrameView {
         } catch (Exception ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
         } 
+        showAndCenterInternalFrame(desktopPane, internalFrame);
+    }
+
+    @Action
+    public void showFrequenciesFrame() {
+        JInternalFrame internalFrame = new FrequenciesByYearInternalFrame(desktopPane);
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

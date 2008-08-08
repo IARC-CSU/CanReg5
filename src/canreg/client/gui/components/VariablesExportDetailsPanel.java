@@ -6,27 +6,36 @@
 
 package canreg.client.gui.components;
 
+import canreg.common.DatabaseVariablesListElement;
+
 /**
  *
  * @author  ervikm
  */
 public class VariablesExportDetailsPanel extends javax.swing.JPanel {
+    private DatabaseVariablesListElement variable;
     
     /** Creates new form VariablesExportDetailsPanel */
     public VariablesExportDetailsPanel() {
         initComponents();
     }
     
-    public void setVariableName(String variableName){
+    private void setVariableName(String variableName){
         variableNameLabel.setText(variableName);
     }
     
-    public void setVariableType(String type){
+    private void setVariableType(String type){
         dictionaryCategoryCheckBox.setVisible(false);
         dictionaryDescriptionCheckBox.setVisible(false);
         if (type.equalsIgnoreCase("Dict")) {
             dictionaryDescriptionCheckBox.setVisible(true);
         }
+    }
+    
+    public void setVariable(DatabaseVariablesListElement variable){
+        this.variable = variable;
+        setVariableName(variable.getFullName());
+        setVariableType(variable.getVariableType());
     }
     
     public void setDataCheckBox(boolean bool){
@@ -35,6 +44,10 @@ public class VariablesExportDetailsPanel extends javax.swing.JPanel {
     
     public boolean[] getCheckboxes() {
         return new boolean[] { dataCheckBox.isSelected(), dictionaryCategoryCheckBox.isSelected(), dictionaryDescriptionCheckBox.isSelected() };
+    }
+
+    DatabaseVariablesListElement getVariable() {
+        return variable;
     }
     
     /** This method is called from within the constructor to

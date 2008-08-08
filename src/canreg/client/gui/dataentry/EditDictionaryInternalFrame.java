@@ -11,7 +11,6 @@ import canreg.common.Globals;
 import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -250,9 +249,9 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         Map<String, String> map = canreg.client.dataentry.DictionaryHelper.getDictionaryByID(CanRegClientApp.getApplication().getDictionary(), dbdle.getDictionaryID());
         String str = "";
         if (map != null) {
-            Map sortedMap = new TreeMap(map);
+            // Map sortedMap = new TreeMap(map);
 
-            Iterator iterator = sortedMap.entrySet().iterator();
+            Iterator iterator = map.entrySet().iterator();
 
             while (iterator.hasNext()) {
                 Map.Entry entry = (Map.Entry) iterator.next();

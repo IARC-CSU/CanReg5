@@ -18,21 +18,16 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="systemPanel" max="32767" attributes="1"/>
-              <EmptySpace max="-2" attributes="0"/>
-          </Group>
           <Component id="jScrollPane1" alignment="0" pref="610" max="32767" attributes="0"/>
+          <Component id="systemPanel" alignment="0" max="32767" attributes="1"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
               <Component id="systemPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="206" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="217" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -62,7 +57,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="statusLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="statusComboBox" pref="114" max="32767" attributes="0"/>
+                  <Component id="statusComboBox" pref="134" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="saveButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>

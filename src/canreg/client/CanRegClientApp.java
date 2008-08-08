@@ -53,9 +53,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private String systemName = null;
     private String username = null;
     private static LocalSettings localSettings;
-    /**
-     * 
-     */
+    
     public boolean loggedIn = false;
     private CanRegClientView canRegClientView;
     private Document doc;

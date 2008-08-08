@@ -32,7 +32,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Variables to export">
+            <TitledBorder title="Select variables">
               <Property name="titleX" resourceKey="variablesPanel.border.title"/>
             </TitledBorder>
           </Border>
@@ -80,9 +80,8 @@
         <Component class="javax.swing.JCheckBox" name="allVariablesCheckBox">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="canreg.client.gui.analysis.VariableChooserPanel" id="exportAllVariablesAction" methodName="exportAllVariablesAction"/>
+              <action class="canreg.client.gui.components.VariablesChooserPanel" id="exportAllVariablesAction" methodName="exportAllVariablesAction"/>
             </Property>
-            <Property name="text" type="java.lang.String" resourceKey="allVariablesCheckBox.text"/>
             <Property name="name" type="java.lang.String" value="allVariablesCheckBox" noResource="true"/>
           </Properties>
         </Component>

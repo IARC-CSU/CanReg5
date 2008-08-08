@@ -10,6 +10,7 @@ import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import java.util.LinkedList;
+import java.util.TreeSet;
 import org.jdesktop.application.Action;
 
 /**
@@ -18,7 +19,7 @@ import org.jdesktop.application.Action;
  */
 public class VariablesChooserPanel extends javax.swing.JPanel {
 
-    private LinkedList <VariablesExportDetailsPanel> panelList;
+    private LinkedList<VariablesExportDetailsPanel> panelList;
     private DatabaseVariablesListElement[] variablesInDB;
 
     /** Creates new form VariablesChooserPanel */
@@ -53,7 +54,6 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(VariablesChooserPanel.class, this);
         allVariablesCheckBox.setAction(actionMap.get("exportAllVariablesAction")); // NOI18N
-        allVariablesCheckBox.setText(resourceMap.getString("allVariablesCheckBox.text")); // NOI18N
         allVariablesCheckBox.setName("allVariablesCheckBox"); // NOI18N
 
         javax.swing.GroupLayout variablesPanelLayout = new javax.swing.GroupLayout(variablesPanel);
@@ -83,7 +83,6 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    
     /**
      * Initialize the variable panel, i.e. fill it with VariablesExportDetailsPanels.
      */
@@ -97,8 +96,8 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
         for (DatabaseVariablesListElement variable : variablesInDB) {
             VariablesExportDetailsPanel ved = new VariablesExportDetailsPanel();
             panelList.add(ved);
-            ved.setVariableName(variable.getDatabaseVariableName());
-            ved.setVariableType(variable.getVariableType());
+            ved.setVariable(variable);
+            // ved.setVariableType(variable.getVariableType());
             panel.add(ved);
             ved.setVisible(true);
         }
@@ -112,9 +111,20 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
      */
     @Action
     public void exportAllVariablesAction() {
-        for(VariablesExportDetailsPanel ved : panelList){
+        for (VariablesExportDetailsPanel ved : panelList) {
             ved.setDataCheckBox(allVariablesCheckBox.isSelected());
         }
+    }
+
+    public String[] getSelectedVariableNames() {
+        TreeSet<String> variableNames = new TreeSet<String>();
+        for (VariablesExportDetailsPanel ved : panelList) {
+            if (ved.getCheckboxes()[0]){
+                variableNames.add(ved.getVariable().getDatabaseVariableName());
+            }
+        }
+        String[] array = {""};
+        return variableNames.toArray(array);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox allVariablesCheckBox;
@@ -122,5 +132,4 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JPanel variablesPanel;
     // End of variables declaration//GEN-END:variables
-
 }
