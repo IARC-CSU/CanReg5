@@ -15,6 +15,8 @@ import canreg.server.CanRegLoginInterface;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.DictionaryEntry;
+import canreg.server.database.Patient;
+import canreg.server.database.Tumour;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +55,6 @@ public class CanRegClientApp extends SingleFrameApplication {
     private String systemName = null;
     private String username = null;
     private static LocalSettings localSettings;
-    
     public boolean loggedIn = false;
     private CanRegClientView canRegClientView;
     private Document doc;
@@ -144,17 +145,18 @@ public class CanRegClientApp extends SingleFrameApplication {
     public String testConnection(String serverObjectString) {
         debugOut("testing the connecting to server=" + serverObjectString + ".");
         CanRegLoginInterface loginServer = null;
+        String sysName = null;
         try {
             //authenticate credentials
             loginServer = (CanRegLoginInterface) Naming.lookup(serverObjectString);
             //login object received
             // try to get system name
-            systemName = loginServer.getSystemName();
+            sysName = loginServer.getSystemName();
         } catch (Exception e) {
             System.out.println(e);
         // System.exit(0);
         }
-        return systemName;
+        return sysName;
     }
 
     //  Log on to the CanReg system and set up the server connection.
@@ -457,6 +459,14 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     public DatabaseRecord getRecord(int recordID, String tableName) throws SecurityException, RemoteException {
         return server.getRecord(recordID, tableName);
+    }
+
+    public void saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException {
+        if (databaseRecord instanceof Patient) {
+            server.savePatient((Patient) databaseRecord);
+        } else if (databaseRecord instanceof Tumour) {
+            server.saveTumour((Tumour) databaseRecord);
+        }
     }
 
     public boolean deleteDictionaryEntries(int dictionaryID) throws SecurityException, RemoteException {

@@ -25,7 +25,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         splitPane1.remove(splitPane1.getRightComponent());
         splitPane1.setTopComponent(dateChooser);
         dateField = (JTextField) dateChooser.getDateEditor().getUiComponent();
-        
+
         String fillInStatus = databaseListElement.getFillInStatus();
         if (fillInStatus.equalsIgnoreCase("Automatic")) {
             dateField.setFocusable(false);
@@ -57,9 +57,16 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             }
         }
     }
-    
+
     @Override
-        public String getValue() {
-            return dateField.getText();
+    public Object getValue() {
+        Object valueObject = null;
+        String valueString = dateField.getText();
+
+        if (valueString.trim().length() > 0) {
+            valueObject = Integer.parseInt(valueString.trim());
+        } 
+
+        return valueObject;
     }
 }

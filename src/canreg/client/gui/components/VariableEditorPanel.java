@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.swing.JOptionPane;
 
-
 /**
  *
  * @author  ervikm
@@ -36,6 +35,10 @@ public class VariableEditorPanel extends javax.swing.JPanel {
                 componentFocusGained(evt);
             }
         });
+    }
+
+    public String getKey() {
+        return databaseListElement.getDatabaseVariableName();
     }
 
     /** This method is called from within the constructor to
@@ -136,7 +139,7 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
                     "Choose one", "Input",
                     JOptionPane.INFORMATION_MESSAGE, null,
                     possibleValuesArray, possibleValuesArray[0]);
-            if (selectedValue!=null){
+            if (selectedValue != null) {
                 textField1.setText(selectedValue.getCode());
                 textField2.setText(selectedValue.getDescription());
             }
@@ -189,8 +192,20 @@ private void textField1ActionPerformed(java.awt.event.FocusEvent evt) {//GEN-FIR
 
     }
 
-    public String getValue() {
-        return textField1.getText();
+    public Object getValue() {
+        Object valueObject = null;
+        String valueString = textField1.getText();
+        if (databaseListElement.getVariableType().equalsIgnoreCase("Number") ||
+                databaseListElement.getVariableType().equalsIgnoreCase("Date")) {
+            if (valueString.trim().length() > 0) {
+                valueObject = Integer.parseInt(valueString.trim());
+            } else {
+                valueObject = -1;
+            }
+        } else {
+            valueObject = valueString;
+        }
+        return valueObject;
     }
 
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseListElement) {

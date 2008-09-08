@@ -3,7 +3,6 @@
  *
  * Created on 16 July 2008, 14:46
  */
-
 package canreg.client.gui.dataentry;
 
 import canreg.server.database.DatabaseRecord;
@@ -11,6 +10,9 @@ import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
 import java.util.LinkedList;
 import java.util.Map;
+import javax.swing.JOptionPane;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import org.w3c.dom.Document;
 
 /**
@@ -18,26 +20,47 @@ import org.w3c.dom.Document;
  * @author  ervikm
  */
 public class RecordEditor extends javax.swing.JInternalFrame {
+
     private Document doc;
     private Map<Integer, Map<String, String>> dictionary;
     private LinkedList<DatabaseRecord> patientRecords;
     private LinkedList<DatabaseRecord> tumourRecords;
+    private boolean recordHasBeenChanged = false;
 
     /** Creates new form RecordEditor */
     public RecordEditor() {
         initComponents();
         patientRecords = new LinkedList<DatabaseRecord>();
         tumourRecords = new LinkedList<DatabaseRecord>();
+
+        addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosing(InternalFrameEvent e) {
+                int option = JOptionPane.NO_OPTION;
+                option = JOptionPane.showConfirmDialog(null, "Really close?\nChanges made will be lost.");
+                if (option == JOptionPane.YES_OPTION) {
+                    close();
+                }
+            }
+        });
     }
 
     public void setDocument(Document doc) {
         this.doc = doc;
     }
 
-    public void setDictionary(Map<Integer, Map<String, String>> dictionary){
-        this.dictionary = dictionary;
+    public void closing(){
+        
     }
     
+    public void close() {
+        this.dispose();
+    }
+
+    public void setDictionary(Map<Integer, Map<String, String>> dictionary) {
+        this.dictionary = dictionary;
+    }
+
     public void addRecord(DatabaseRecord dbr) {
         RecordEditorPanel rePanel = new RecordEditorPanel();
         rePanel.setDictionary(dictionary);
@@ -46,13 +69,13 @@ public class RecordEditor extends javax.swing.JInternalFrame {
         rePanel.repaint();
         if (dbr.getClass().isInstance(new Patient())) {
             patientRecords.add(dbr);
-            patientTabbedPane.addTab(dbr.toString()+" - " + (patientTabbedPane.getTabCount()+1),rePanel);
+            patientTabbedPane.addTab(dbr.toString() + " - " + (patientTabbedPane.getTabCount() + 1), rePanel);
         } else if (dbr.getClass().isInstance(new Tumour())) {
             tumourRecords.add(dbr);
-            tumourTabbedPane.addTab(dbr.toString()+" - " + (tumourTabbedPane.getTabCount()+1),rePanel);
+            tumourTabbedPane.addTab(dbr.toString() + " - " + (tumourTabbedPane.getTabCount() + 1), rePanel);
         }
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -67,6 +90,7 @@ public class RecordEditor extends javax.swing.JInternalFrame {
         tumourTabbedPane = new javax.swing.JTabbedPane();
 
         setClosable(true);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
@@ -97,14 +121,12 @@ public class RecordEditor extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane patientTabbedPane;

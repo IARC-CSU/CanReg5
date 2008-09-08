@@ -21,13 +21,17 @@ import canreg.server.database.Tumour;
 import java.awt.KeyboardFocusManager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
 /**
@@ -40,6 +44,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
     private Document doc;
     private panelTypes panelType;
     private DatabaseVariablesListElement[] variablesInTable;
+    private Map<String, VariableEditorPanel> variableEditorPanels;
     private Map<Integer, Map<String, String>> dictionary;
     private DatabaseGroupsListElement[] groupListElements;
     private GlobalToolBox globalToolBox;
@@ -94,6 +99,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
     private void buildPanel() {
         String tableName = null;
         dataPanel.removeAll();
+        
+        variableEditorPanels = new TreeMap();
 
         if (panelType == panelTypes.PATIENT) {
             tableName = Globals.PATIENT_TABLE_NAME;
@@ -160,6 +167,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
                 }
                 panel.add(vep);
             }
+            variableEditorPanels.put(currentVariable.getDatabaseVariableName(), vep);
         }
         // Iterate trough groups
         Iterator<Integer> iterator = groupIDtoPanelMap.keySet().iterator();
@@ -199,6 +207,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
         systemPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("systemPanel.border.title"))); // NOI18N
         systemPanel.setName("systemPanel"); // NOI18N
 
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditorPanel.class, this);
+        saveButton.setAction(actionMap.get("saveRecord")); // NOI18N
         saveButton.setText(resourceMap.getString("saveButton.text")); // NOI18N
         saveButton.setName("saveButton"); // NOI18N
 
@@ -262,7 +272,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(systemPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(systemPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE))
         );
@@ -285,5 +295,21 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
         RecordEditorPanel clone = (RecordEditorPanel) super.clone();
 
         return clone();
+    }
+
+    @Action
+    public void saveRecord() {
+        Iterator<VariableEditorPanel> iterator = variableEditorPanels.values().iterator();
+        while (iterator.hasNext()){
+            VariableEditorPanel vep = iterator.next();
+            databaseRecord.setVariable(vep.getKey(), vep.getValue());
+        }
+        try {
+            canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord);
+        } catch (SecurityException ex) {
+            Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

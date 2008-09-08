@@ -35,7 +35,6 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private NetworkServerControl dbServer;
     private SystemDescription systemDescription;
     private String systemCode;
-    private String serverDir;
 
     public CanRegServerImpl() throws RemoteException {
         this("TRN");
