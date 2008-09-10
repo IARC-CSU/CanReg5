@@ -19,7 +19,6 @@ import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import canreg.client.dataentry.Relation;
 
 /**
  *
@@ -155,6 +154,7 @@ public class Import {
             line = bufferedReader.readLine();
             // patientNumber
             int patientIDNumber = 0;
+            int tumourIDNumber = 0;
             int numberOfLinesRead = 1;
             int linesToRead = io.getMaxLines();
             if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
@@ -206,10 +206,16 @@ public class Import {
                 if (mpCodeString != null && mpCodeString.length() > 0) {
                     patientIDNumber = lookUpPatientID(mpCodeString, patientIDNumber, mpCodes);
                 }
-
-                tumour.setVariable("PatientID", patientIDNumber);
-                server.saveTumour(tumour);
-
+                
+                //Set the patient ID number 
+                tumour.setVariable("PatientID",patientIDNumber);
+                tumourIDNumber = server.saveTumour(tumour);
+                
+                patient.setVariable("TumourID", tumourIDNumber);
+                patient.setVariable("id", patientIDNumber);
+                
+                server.editPatient(patient);
+                
                 //Read next line of data
                 line = bufferedReader.readLine();
                 numberOfLinesRead++;

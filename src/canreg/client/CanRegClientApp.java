@@ -469,6 +469,14 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    public void editRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException {
+        if (databaseRecord instanceof Patient) {
+            server.editPatient((Patient) databaseRecord);
+        } else if (databaseRecord instanceof Tumour) {
+            server.editTumour((Tumour) databaseRecord);
+        }
+    }
+    
     public boolean deleteDictionaryEntries(int dictionaryID) throws SecurityException, RemoteException {
         return server.deleteDictionaryEntries(dictionaryID);
     }

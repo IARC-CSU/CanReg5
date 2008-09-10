@@ -251,4 +251,12 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     public DatabaseRecord getRecord(int recordID, String tableName) throws RemoteException, SecurityException {      
         return db.getRecord(recordID, tableName);
     }
+
+    public void editPatient(Patient patient) throws RemoteException, SecurityException {
+        db.editPatient(patient);
+    }
+
+    public void editTumour(Tumour tumour) throws RemoteException, SecurityException {
+        db.editTumour(tumour);
+    }
 }

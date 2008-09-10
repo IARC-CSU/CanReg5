@@ -180,13 +180,10 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return theServer.retrieveRows(theUser, from, to);
     }
 
-    
-    
     public DistributedTableDescription getDistributedTableDescription(Subject theUser, DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, Exception {
         throw new UnsupportedOperationException("Not supported."); // This should not be implemented!
     }
 
-    
     public Object[][] retrieveRows(Subject theUser, int from, int to) throws RemoteException, SecurityException, Exception {
         throw new UnsupportedOperationException("Not supported."); // This should not be implemented!
     }
@@ -197,7 +194,17 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     public DatabaseRecord getRecord(int recordID, String tableName) throws RemoteException, SecurityException {
-        checkPermission("get"+tableName);
-        return theServer.getRecord(recordID,tableName);
+        checkPermission("get" + tableName);
+        return theServer.getRecord(recordID, tableName);
+    }
+
+    public void editPatient(Patient patient) throws RemoteException, SecurityException {
+        checkPermission("editPatient");
+        theServer.editPatient(patient);
+    }
+
+    public void editTumour(Tumour tumour) throws RemoteException, SecurityException {
+        checkPermission("editTumour");
+        theServer.editTumour(tumour);  
     }
 }

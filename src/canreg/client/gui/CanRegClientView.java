@@ -163,6 +163,7 @@ public class CanRegClientView extends FrameView {
         installSystemButton = new javax.swing.JButton();
         jSeparator15 = new javax.swing.JToolBar.Separator();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         desktopPane = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
@@ -274,6 +275,13 @@ public class CanRegClientView extends FrameView {
         jButton1.setName("jButton1"); // NOI18N
         jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(jButton1);
+
+        jButton2.setAction(actionMap.get("createNewRecordSetAction")); // NOI18N
+        jButton2.setFocusable(false);
+        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton2.setName("jButton2"); // NOI18N
+        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(jButton2);
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
@@ -943,6 +951,14 @@ public class CanRegClientView extends FrameView {
         JInternalFrame internalFrame = new FrequenciesByYearInternalFrame(desktopPane);
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
+
+    @Action
+    public void createNewRecordSetAction() {
+        RecordEditor internalFrame = new RecordEditor();
+        internalFrame.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
+        internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
+        showAndCenterInternalFrame(desktopPane, internalFrame);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;
@@ -965,6 +981,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem incidenceTablesMenuItem;
     private javax.swing.JButton installSystemButton;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem18;

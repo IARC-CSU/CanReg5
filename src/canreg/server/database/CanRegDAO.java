@@ -68,6 +68,8 @@ public class CanRegDAO {
         // Prepare the SQL strings
         strSavePatient = QueryGenerator.strSavePatient(doc);
         strSaveTumour = QueryGenerator.strSaveTumour(doc);
+        strEditPatient = QueryGenerator.strEditPatient(doc);
+        strEditTumour = QueryGenerator.strEditTumour(doc);
         strSaveDictionary = QueryGenerator.strSaveDictionary();
         strSaveDictionaryEntry = QueryGenerator.strSaveDictionaryEntry();
 
@@ -366,6 +368,8 @@ public class CanRegDAO {
             //Prepare the SQL statements
             stmtSaveNewPatient = dbConnection.prepareStatement(strSavePatient, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewTumour = dbConnection.prepareStatement(strSaveTumour, Statement.RETURN_GENERATED_KEYS);
+            stmtEditPatient = dbConnection.prepareStatement(strEditPatient, Statement.RETURN_GENERATED_KEYS);
+            stmtEditTumour = dbConnection.prepareStatement(strEditTumour, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewDictionary = dbConnection.prepareStatement(strSaveDictionary, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewDictionaryEntry = dbConnection.prepareStatement(strSaveDictionaryEntry, Statement.RETURN_GENERATED_KEYS);
             stmtDeleteDictionaryEntries = dbConnection.prepareStatement(strDeleteDictionaryEntries);
@@ -579,38 +583,93 @@ public class CanRegDAO {
         return success;
     }
 
+     /**
+     * 
+     * @param patient
+     * @return
+     */
+    public boolean editPatient(Patient patient) {
+        return editRecord("Patient", patient, stmtEditPatient);
+    }
+
     /**
+     * 
+     * @param tumour
+     * @return
+     */
+    public boolean editTumour(Tumour tumour) {
+        return editRecord("Tumour", tumour, stmtEditTumour);
+    }
+    
+     /*
      * 
      * @param record
      * @return
-    
-    public boolean editPatient(Patient record) {
-    boolean bEdited = false;
-    try {
-    stmtUpdateExistingPatient.clearParameters();
-    
-    stmtUpdateExistingPatient.setString(1, record.getLastName());
-    stmtUpdateExistingPatient.setString(2, record.getFirstName());
-    stmtUpdateExistingPatient.setString(3, record.getMiddleName());
-    stmtUpdateExistingPatient.setString(4, record.getPhone());
-    stmtUpdateExistingPatient.setString(5, record.getEmail());
-    stmtUpdateExistingPatient.setString(6, record.getAddress1());
-    stmtUpdateExistingPatient.setString(7, record.getAddress2());
-    stmtUpdateExistingPatient.setString(8, record.getCity());
-    stmtUpdateExistingPatient.setString(9, record.getState());
-    stmtUpdateExistingPatient.setString(10, record.getPostalCode());
-    stmtUpdateExistingPatient.setString(11, record.getCountry());
-    stmtUpdateExistingPatient.setInt(12, record.getId());
-    
-    stmtUpdateExistingPatient.executeUpdate();
-    bEdited = true;
-    } catch (SQLException sqle) {
-    sqle.printStackTrace();
-    }
-    return bEdited;
-    
-    }
      */
+    public synchronized boolean editRecord(String tableName, DatabaseRecord record, PreparedStatement stmtEditRecord) {
+        boolean bEdited = false;
+   
+        int id = -1;
+        try {
+            stmtEditRecord.clearParameters();
+
+            // Get the dictionaries node in the XML
+            NodeList nodes = doc.getElementsByTagName(Globals.NAMESPACE + "variables");
+            Element variablesElement = (Element) nodes.item(0);
+
+            NodeList variables = variablesElement.getElementsByTagName(Globals.NAMESPACE + "variable");
+
+            int patientVariableNumber = 0;
+
+            // Go through all the variable definitions
+            for (int i = 0; i < variables.getLength(); i++) {
+                // Get element
+                Element element = (Element) variables.item(i);
+
+                // Create line
+                String tableNameDB = element.getElementsByTagName(Globals.NAMESPACE + "table").item(0).getTextContent();
+
+                if (tableNameDB.equalsIgnoreCase(tableName)) {
+                    patientVariableNumber++;
+                    String variableType = element.getElementsByTagName(Globals.NAMESPACE + "variable_type").item(0).getTextContent();
+                    Object obj = record.getVariable(element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent());
+                    if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict")) {
+                        if (obj != null) {
+                            String strObj = (String) obj;
+                            if (strObj.length() > 0) {
+                                stmtEditRecord.setString(patientVariableNumber, strObj);
+                            } else {
+                                stmtEditRecord.setString(patientVariableNumber, "");
+                            }
+                        } else {
+                            stmtEditRecord.setString(patientVariableNumber, "");
+                        }
+                    } else if (variableType.equalsIgnoreCase("Number") || variableType.equalsIgnoreCase("Date")) {
+                        if (obj != null) {
+                            Integer intObj = (Integer) obj;
+                            stmtEditRecord.setInt(patientVariableNumber, intObj.intValue());
+                        } else {
+                            stmtEditRecord.setInt(patientVariableNumber, -1);
+                        }
+                    }
+                }
+            }
+            // add the ID
+            
+            int idInt = (Integer) record.getVariable("id");
+            stmtEditRecord.setInt(patientVariableNumber+1,idInt);
+ 
+            int rowCount = stmtEditRecord.executeUpdate();
+
+            bEdited = true;
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return bEdited;
+    }
+
     private boolean fillDictionariesTable() {
         boolean bFilled = false;
 
@@ -767,6 +826,8 @@ public class CanRegDAO {
     private boolean tableOfDictionariesFilled = true;
     private PreparedStatement stmtSaveNewPatient;
     private PreparedStatement stmtSaveNewTumour;
+    private PreparedStatement stmtEditPatient;
+    private PreparedStatement stmtEditTumour;
     private PreparedStatement stmtSaveNewDictionary;
     private PreparedStatement stmtSaveNewDictionaryEntry;
     private PreparedStatement stmtUpdateExistingPatient;
@@ -829,6 +890,8 @@ public class CanRegDAO {
             "WHERE DICTIONARY = ?";    // The Dynamic ones
     private String strSavePatient;
     private String strSaveTumour;
+    private String strEditPatient;
+    private String strEditTumour;
     private String strSaveDictionary;
     private String strSaveDictionaryEntry;
 }

@@ -331,12 +331,12 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         newFilterPart +=
                 " ";
         DatabaseVariablesListElement dvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
-        if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
+        if (!dvle.getVariableType().equalsIgnoreCase("Number")&&!dvle.getVariableType().equalsIgnoreCase("Date")) {
             newFilterPart += "'";
         }
 
         newFilterPart += valueTextField.getText();
-        if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
+        if (!dvle.getVariableType().equalsIgnoreCase("Number")&&!dvle.getVariableType().equalsIgnoreCase("Date")) {
             newFilterPart += "'";
         }
 

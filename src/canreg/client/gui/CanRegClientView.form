@@ -19,7 +19,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="toolBar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="707" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="701" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -108,6 +108,17 @@
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
+                <Property name="verticalTextPosition" type="int" value="3"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="jButton2">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="createNewRecordSetAction" methodName="createNewRecordSetAction"/>
+                </Property>
+                <Property name="focusable" type="boolean" value="false"/>
+                <Property name="horizontalTextPosition" type="int" value="0"/>
+                <Property name="name" type="java.lang.String" value="jButton2" noResource="true"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
             </Component>

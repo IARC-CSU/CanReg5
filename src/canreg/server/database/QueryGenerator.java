@@ -24,7 +24,7 @@ public class QueryGenerator {
         String query = "create table " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase() +
                 // Add the system variables
                 // ID is just a variable for the database
-                " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)"+
+                " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)" +
                 // NEXT_RECORD_DB_ID is a pointer to the ID of the next version of this record - used only by the database 
                 ", NEXT_RECORD_DB_ID INTEGER" +
                 // LAST_RECORD_DB_ID is a pointer to the ID of the last version of this record - used only by the database 
@@ -50,7 +50,7 @@ public class QueryGenerator {
                 query += createVariable(element, doc);
             }
         }
-        
+
         query += ") ";
         return query;
     }
@@ -96,14 +96,14 @@ public class QueryGenerator {
     }
 
     public static final String strSavePatient(Document doc) {
-        return strSaveEntry(doc, "patient");
+        return strSaveRecord(doc, "patient");
     }
 
     public static final String strSaveTumour(Document doc) {
-        return strSaveEntry(doc, "tumour");
+        return strSaveRecord(doc, "tumour");
     }
 
-    private static final String strSaveEntry(Document doc, String tableName) {
+    private static final String strSaveRecord(Document doc, String tableName) {
         String variableNamesPart = "INSERT INTO " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase();
         String valuesPart = "VALUES ";
         // Get the variables node in the XML
@@ -130,7 +130,7 @@ public class QueryGenerator {
                     variableNamesPart += ", ";
                     valuesPart += ", ";
                 }
-                variableNamesPart += "\""+ element.getElementsByTagName(namespace + "short_name").item(0).getTextContent().toUpperCase()+"\"";
+                variableNamesPart += "\"" + element.getElementsByTagName(namespace + "short_name").item(0).getTextContent().toUpperCase() + "\"";
                 valuesPart += "?";
             }
         }
@@ -140,6 +140,46 @@ public class QueryGenerator {
         return variableNamesPart + valuesPart;
     }
 
+        static String strEditPatient(Document doc) {
+        return strEditRecord(doc, "patient");
+    }
+
+    static String strEditTumour(Document doc) {
+        return strEditRecord(doc, "tumour");
+    }
+
+    private static String strEditRecord(Document doc, String tableName) {
+        String variableNamesPart = "UPDATE " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase();
+        // Get the variables node in the XML
+        NodeList nodes = doc.getElementsByTagName(namespace + "variables");
+        Element variablesElement = (Element) nodes.item(0);
+
+        NodeList variables = variablesElement.getElementsByTagName(namespace + "variable");
+
+        variableNamesPart += " SET ";
+        // Go through all the variable definitions
+        boolean first = true;
+        for (int i = 0; i < variables.getLength(); i++) {
+            // Get element
+            Element element = (Element) variables.item(i);
+
+            // Create line
+            String tableNameDB = element.getElementsByTagName(namespace + "table").item(0).getTextContent();
+
+            if (tableNameDB.equalsIgnoreCase(tableName)) {
+                if (first) {
+                    first = false;
+                } else {
+                    variableNamesPart += "\n, ";
+                }
+                variableNamesPart += "\"" + element.getElementsByTagName(namespace + "short_name").item(0).getTextContent().toUpperCase() + "\" = ?";
+            }
+        }
+        variableNamesPart += "\nWHERE ID = ? ";
+
+        return variableNamesPart;
+    }
+    
     private static final String createVariable(Element element, Document doc) {
         String queryLine = "";
 

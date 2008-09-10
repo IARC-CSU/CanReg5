@@ -57,7 +57,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="statusLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="statusComboBox" pref="134" max="32767" attributes="0"/>
+                  <Component id="statusComboBox" pref="114" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="saveButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -84,6 +84,7 @@
               <action class="canreg.client.gui.dataentry.RecordEditorPanel" id="saveRecord" methodName="saveRecord"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="saveButton.text"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="saveButton" noResource="true"/>
           </Properties>
         </Component>

@@ -5,6 +5,8 @@
  */
 package canreg.client.gui.dataentry;
 
+import canreg.common.DatabaseVariablesListElement;
+import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
@@ -13,6 +15,7 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
+import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
 /**
@@ -25,7 +28,6 @@ public class RecordEditor extends javax.swing.JInternalFrame {
     private Map<Integer, Map<String, String>> dictionary;
     private LinkedList<DatabaseRecord> patientRecords;
     private LinkedList<DatabaseRecord> tumourRecords;
-    private boolean recordHasBeenChanged = false;
 
     /** Creates new form RecordEditor */
     public RecordEditor() {
@@ -34,6 +36,7 @@ public class RecordEditor extends javax.swing.JInternalFrame {
         tumourRecords = new LinkedList<DatabaseRecord>();
 
         addInternalFrameListener(new InternalFrameAdapter() {
+
             @Override
             public void internalFrameClosing(InternalFrameEvent e) {
                 int option = JOptionPane.NO_OPTION;
@@ -49,10 +52,9 @@ public class RecordEditor extends javax.swing.JInternalFrame {
         this.doc = doc;
     }
 
-    public void closing(){
-        
+    public void closing() {
     }
-    
+
     public void close() {
         this.dispose();
     }
@@ -88,6 +90,10 @@ public class RecordEditor extends javax.swing.JInternalFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         patientTabbedPane = new javax.swing.JTabbedPane();
         tumourTabbedPane = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -108,29 +114,121 @@ public class RecordEditor extends javax.swing.JInternalFrame {
         tumourTabbedPane.setName("tumourTabbedPane"); // NOI18N
         jSplitPane1.setRightComponent(tumourTabbedPane);
 
+        jPanel1.setName("jPanel1"); // NOI18N
+
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditor.class, this);
+        jButton1.setAction(actionMap.get("addTumourAction")); // NOI18N
+        jButton1.setName("jButton1"); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setAction(actionMap.get("addPatientAction")); // NOI18N
+        jButton2.setName("jButton2"); // NOI18N
+
+        jButton3.setAction(actionMap.get("saveAllAction")); // NOI18N
+        jButton3.setName("jButton3"); // NOI18N
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 336, Short.MAX_VALUE)
+                .addComponent(jButton3)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jButton1)
+                .addComponent(jButton2)
+                .addComponent(jButton3))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 749, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_jButton1ActionPerformed
+
+    @Action
+    public void addTumourAction() {
+        Tumour tumour = new Tumour();
+        populateNewRecord(tumour, doc);
+        addRecord(tumour);
+    }
+
+    @Action
+    public void addPatientAction() {
+        Patient patient = new Patient();
+        populateNewRecord(patient, doc);
+        addRecord(patient);
+    }
+    
+    private static DatabaseRecord populateNewRecord(DatabaseRecord dbr, Document doc) {
+        String tableName = "";
+        if (dbr instanceof Tumour) {
+            tableName = "tumour";
+        } else if (dbr instanceof Patient) {
+            tableName = "patient";
+        }
+        DatabaseVariablesListElement[] variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
+        for (DatabaseVariablesListElement dbvle : variablesInTable) {
+            String type = dbvle.getVariableType();
+            if (type.equalsIgnoreCase("date") || type.equalsIgnoreCase("number")) {
+                dbr.setVariable(dbvle.getShortName(), -1);
+            } else {
+                dbr.setVariable(dbvle.getShortName(), "");
+            }
+        }
+        return dbr;
+    }
+
+    @Action
+    public void saveAllAction() {
+        
+    }
+    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane patientTabbedPane;
     private javax.swing.JTabbedPane tumourTabbedPane;
     // End of variables declaration//GEN-END:variables
 
+    
+
+    
 }

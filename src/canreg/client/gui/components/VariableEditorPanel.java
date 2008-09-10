@@ -5,6 +5,7 @@
  */
 package canreg.client.gui.components;
 
+import canreg.client.gui.dataentry.RecordEditorPanel;
 import canreg.client.gui.tools.MaxLengthDocument;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.server.database.DictionaryEntry;
@@ -14,6 +15,7 @@ import java.awt.Rectangle;
 import java.util.Iterator;
 import java.util.Map;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentListener;
 
 /**
  *
@@ -29,7 +31,6 @@ public class VariableEditorPanel extends javax.swing.JPanel {
     public VariableEditorPanel() {
         initComponents();
         textField1.addFocusListener(new java.awt.event.FocusAdapter() {
-
             @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 componentFocusGained(evt);
@@ -41,6 +42,14 @@ public class VariableEditorPanel extends javax.swing.JPanel {
         return databaseListElement.getDatabaseVariableName();
     }
 
+    public void setPropertyChangeListener(RecordEditorPanel aThis) {
+        textField1.addPropertyChangeListener(aThis);
+    }
+
+    public void setDocumentListener(DocumentListener listener){
+        textField1.getDocument().addDocumentListener(listener);
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -189,7 +198,6 @@ private void textField1ActionPerformed(java.awt.event.FocusEvent evt) {//GEN-FIR
                 }
             }
         }
-
     }
 
     public Object getValue() {

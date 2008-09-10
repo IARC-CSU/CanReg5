@@ -33,6 +33,12 @@ public interface CanRegServerInterface extends Remote {
     public void doOperationB()
             throws RemoteException, SecurityException;
 
+    public void editPatient(Patient patient)
+            throws RemoteException, SecurityException;
+
+    public void editTumour(Tumour tumour)
+            throws RemoteException, SecurityException;
+
     public String getCanRegSystemName()
             throws RemoteException, SecurityException;
 

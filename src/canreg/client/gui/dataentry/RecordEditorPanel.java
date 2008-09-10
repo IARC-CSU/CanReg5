@@ -29,6 +29,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import org.jdesktop.application.Action;
@@ -38,7 +39,7 @@ import org.w3c.dom.Document;
  *
  * @author  ervikm
  */
-public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
+public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, PropertyChangeListener {
 
     private DatabaseRecord databaseRecord;
     private Document doc;
@@ -48,29 +49,19 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
     private Map<Integer, Map<String, String>> dictionary;
     private DatabaseGroupsListElement[] groupListElements;
     private GlobalToolBox globalToolBox;
+    private boolean saveNeeded = false;
 
     private enum panelTypes {
+
         PATIENT, TUMOUR
     }
 
     /** Creates new form RecordEditorPanel */
     public RecordEditorPanel() {
         initComponents();
+        saveButton.setEnabled(true);
 
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(new PropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                // String prop = evt.getPropertyName();
-                if ("focusOwner".equals(evt.getPropertyName())) {
-                    if (evt.getNewValue() instanceof JTextField) {
-                        JTextField textField = (JTextField) evt.getNewValue();
-                        textField.selectAll();
-                    }
-                }
-            }
-        });
-
-
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
     }
 
     public void setDocument(Document doc) {
@@ -99,7 +90,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
     private void buildPanel() {
         String tableName = null;
         dataPanel.removeAll();
-        
+
         variableEditorPanels = new TreeMap();
 
         if (panelType == panelTypes.PATIENT) {
@@ -113,10 +104,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
         Map<String, String> recStatusDict = canreg.client.dataentry.DictionaryHelper.getDictionaryByID(dictionary, canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, "Record status"));
         statusComboBox.setModel(new DefaultComboBoxModel(recStatusDict.values().toArray()));
         Object recStatus = databaseRecord.getVariable("RecS");
-        if (recStatus!=null){
+        if (recStatus != null) {
             statusComboBox.setSelectedItem(recStatusDict.get(recStatus));
         }
-        
+
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
         Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new TreeMap<Integer, VariableEditorGroupPanel>();
 
@@ -154,8 +145,11 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
             } else {
                 vep.setPossibleValues(null);
             }
-            vep.setValue(databaseRecord.getVariable(currentVariable.getDatabaseVariableName()).toString());
-
+            String variableName = currentVariable.getDatabaseVariableName();
+            Object variableValue = databaseRecord.getVariable(variableName);
+            if (variableValue != null) {
+                vep.setValue(variableValue.toString());
+            }
             Integer groupID = currentVariable.getGroupID();
             //Skip 0 and -1 - System groups
             if (groupID > 0) {
@@ -167,6 +161,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
                 }
                 panel.add(vep);
             }
+
+            // vep.setPropertyChangeListener(this);
+
             variableEditorPanels.put(currentVariable.getDatabaseVariableName(), vep);
         }
         // Iterate trough groups
@@ -180,6 +177,22 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
 
         dataPanel.revalidate();
         dataPanel.repaint();
+    }
+
+    public void propertyChange(PropertyChangeEvent e) {
+        String propName = e.getPropertyName();
+        if ("focusOwner".equals(propName)) {
+            if (e.getNewValue() instanceof JTextField) {
+                JTextField textField = (JTextField) e.getNewValue();
+                textField.selectAll();
+            }
+        } /** Called when a field's "value" property changes. */
+        else if ("value".equals(propName)) {
+            saveNeeded = true;
+        // saveButton.setEnabled(saveNeeded);
+        } else {
+            // System.out.println(e.getPropertyName());
+        }
     }
 
     /** This method is called from within the constructor to
@@ -210,6 +223,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditorPanel.class, this);
         saveButton.setAction(actionMap.get("saveRecord")); // NOI18N
         saveButton.setText(resourceMap.getString("saveButton.text")); // NOI18N
+        saveButton.setEnabled(false);
         saveButton.setName("saveButton"); // NOI18N
 
         searchButton.setText(resourceMap.getString("searchButton.text")); // NOI18N
@@ -240,7 +254,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statusComboBox, 0, 134, Short.MAX_VALUE)
+                .addComponent(statusComboBox, 0, 114, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveButton)
                 .addContainerGap())
@@ -300,12 +314,19 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable {
     @Action
     public void saveRecord() {
         Iterator<VariableEditorPanel> iterator = variableEditorPanels.values().iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             VariableEditorPanel vep = iterator.next();
             databaseRecord.setVariable(vep.getKey(), vep.getValue());
         }
         try {
-            canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord);
+            if((Integer) databaseRecord.getVariable("id")!=null)
+                canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord);
+            else 
+                canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord);
+            JOptionPane.showInternalMessageDialog(this, "Record saved.");
+            saveNeeded = false;
+        // saveButton.setEnabled(saveNeeded);
+
         } catch (SecurityException ex) {
             Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
