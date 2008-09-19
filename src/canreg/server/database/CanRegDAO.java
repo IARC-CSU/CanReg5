@@ -171,9 +171,12 @@ public class CanRegDAO {
                 filterString = " AND " + filterString.trim();
             }
             ResultSet countRowSet = statement.executeQuery(strCountPatientsAndTumours + filterString);
+            // Count the rows...
             if (countRowSet.next()) {
                 rowCount = countRowSet.getInt(1);
             }
+            // feed it to the garbage dump
+            countRowSet=null;
             result = statement.executeQuery(strGetPatientsAndTumours + filterString);
         } else {
             throw new Exception("Unknown table name.");

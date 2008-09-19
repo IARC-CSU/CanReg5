@@ -47,7 +47,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="696" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="700" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -190,7 +190,7 @@
                               <Component id="numberOfRecordsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="numberOfRecordsTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="10" max="32767" attributes="0"/>
                           <Component id="previewScrollPane" min="-2" pref="527" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -314,7 +314,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jSplitPane1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variablesScrollPane" pref="618" max="32767" attributes="0"/>
+                      <Component id="variablesScrollPane" pref="622" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -426,7 +426,7 @@
                       <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="170" max="32767" attributes="0"/>
+                      <EmptySpace pref="174" max="32767" attributes="0"/>
                       <Component id="importButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>

@@ -324,21 +324,29 @@
                 <Property name="name" type="java.lang.String" value="jSeparator7" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="nameSexMenuItem">
+            <Menu class="javax.swing.JMenu" name="jMenu1">
               <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.CanRegClientView" id="showNameSexAction" methodName="showNameSexAction"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="nameSexMenuItem.text"/>
-                <Property name="name" type="java.lang.String" value="nameSexMenuItem" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="jMenu1.text"/>
+                <Property name="name" type="java.lang.String" value="jMenu1" noResource="true"/>
               </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="duplicateSearchMenuItem">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="duplicateSearchMenuItem.text"/>
-                <Property name="name" type="java.lang.String" value="duplicateSearchMenuItem" noResource="true"/>
-              </Properties>
-            </MenuItem>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="nameSexMenuItem">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.CanRegClientView" id="showNameSexAction" methodName="showNameSexAction"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" resourceKey="nameSexMenuItem.text"/>
+                    <Property name="name" type="java.lang.String" value="nameSexMenuItem" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="duplicateSearchMenuItem">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="duplicateSearchMenuItem.text"/>
+                    <Property name="name" type="java.lang.String" value="duplicateSearchMenuItem" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+              </SubComponents>
+            </Menu>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator6">
               <Properties>
                 <Property name="name" type="java.lang.String" value="jSeparator6" noResource="true"/>
@@ -364,7 +372,7 @@
                 <MenuItem class="javax.swing.JMenuItem" name="jMenuItem18">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="canreg.client.CanRegClientView" id="showUsersLoggedIn" methodName="showUsersLoggedIn"/>
+                      <action class="canreg.client.gui.CanRegClientView" id="showUsersLoggedIn" methodName="showUsersLoggedIn"/>
                     </Property>
                     <Property name="name" type="java.lang.String" value="showUsersLoggedInMenuItem" noResource="true"/>
                   </Properties>
@@ -502,7 +510,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="aboutMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.CanRegProto2View" id="showAboutBox" methodName="showAboutBox"/>
+                  <action class="canreg.client.gui.CanRegClientView" id="showAboutBox" methodName="showAboutBox"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="aboutMenuItem" noResource="true"/>
               </Properties>

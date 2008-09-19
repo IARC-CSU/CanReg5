@@ -596,6 +596,7 @@ public class ImportView extends javax.swing.JInternalFrame {
     public Task importAction() {
         localSettings.setProperty("import_path", path);
         localSettings.writeSettings();
+        progressBar.setStringPainted(true);
         // this.dispose();
         Task task = new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
         task.addPropertyChangeListener(new PropertyChangeListener() {
@@ -603,6 +604,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("progress".equals(evt.getPropertyName())) {
                     progressBar.setValue((Integer) evt.getNewValue());
+                    progressBar.setString(evt.getNewValue().toString());
                 } else if ("finished".equals(evt.getPropertyName())) {
                     dispose();
                 }

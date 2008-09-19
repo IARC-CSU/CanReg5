@@ -30,7 +30,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jTabbedPane1" alignment="1" pref="452" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="feedbackLabel" pref="215" max="32767" attributes="0"/>
+                      <Component id="feedbackLabel" pref="175" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="109" max="-2" attributes="0"/>
                       <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -45,7 +45,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="213" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="219" max="32767" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="loginButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -61,16 +61,15 @@
     <Component class="javax.swing.JButton" name="loginButton">
       <Properties>
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-          <action class="canreg.client.LoginInternalFrame" id="loginAction" methodName="loginAction"/>
+          <action class="canreg.client.gui.LoginInternalFrame" id="loginAction" methodName="loginAction"/>
         </Property>
-        <Property name="text" type="java.lang.String" resourceKey="loginButton.text"/>
         <Property name="name" type="java.lang.String" value="loginButton" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="cancelButton">
       <Properties>
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-          <action class="canreg.client.LoginInternalFrame" id="cancelAction" methodName="cancelAction"/>
+          <action class="canreg.client.gui.LoginInternalFrame" id="cancelAction" methodName="cancelAction"/>
         </Property>
         <Property name="text" type="java.lang.String" resourceKey="cancelButton.text"/>
         <Property name="name" type="java.lang.String" value="cancelButton" noResource="true"/>
@@ -146,7 +145,7 @@
                           <Component id="rememberPasswordCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="passwordField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="111" max="32767" attributes="0"/>
+                      <EmptySpace pref="117" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -251,7 +250,7 @@
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="advancedCheckBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="132" max="32767" attributes="0"/>
+                              <EmptySpace pref="112" max="32767" attributes="0"/>
                               <Component id="launchServerButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="addServerToListButton" min="-2" max="-2" attributes="0"/>
@@ -284,7 +283,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="advancedPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="15" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

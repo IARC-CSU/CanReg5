@@ -29,7 +29,7 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
     public DistributedTableDataSourceResultSetImpl(ResultSet resultSet) throws SQLException, Exception {
         super();
         this.resultSet = resultSet;
-
+        
         // To get the number of rows - skip to the last and then get ID before skipping back...
         resultSet.last();                 // Jump to last row
         rowCount = resultSet.getRow();    // get the row count
@@ -65,9 +65,9 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
     public Object[][] retrieveRows(int from, int to) throws Exception {
         LinkedList<Object[]> rows = new LinkedList<Object[]>();
         int pos = resultSet.getRow();
-        resultSet.relative(pos - from);
+        resultSet.relative(from - pos);
         boolean hasMore = resultSet.next();
-        while (hasMore) {
+        while (hasMore && rows.size()<to-from) {
             Object[] row = new Object[columnCount];
             for (int i = 0; i < columnCount; i++) {
                 row[i] = resultSet.getObject(i + 1);

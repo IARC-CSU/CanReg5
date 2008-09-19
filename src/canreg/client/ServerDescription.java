@@ -30,6 +30,10 @@ public class ServerDescription {
         String str = getName();
         if (showCode) {
             str = getCode() + " - " + str;
+            // show address if this is run on the network
+            if (!url.equalsIgnoreCase("localhost")){
+                str+=" ("+url+")";
+            }
         }
         return str;
     }

@@ -403,7 +403,10 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      */
     public String restoreBackup(String path) throws SecurityException, RemoteException {
-        return server.restoreFromBackup(path);
+        String message = server.restoreFromBackup(path);
+        // Refresh the dictionary
+        refreshDictionary();
+        return message;
     }
 
     /**

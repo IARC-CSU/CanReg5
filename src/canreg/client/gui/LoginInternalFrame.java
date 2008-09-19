@@ -104,7 +104,6 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(LoginInternalFrame.class, this);
         loginButton.setAction(actionMap.get("loginAction")); // NOI18N
-        loginButton.setText(resourceMap.getString("loginButton.text")); // NOI18N
         loginButton.setName("loginButton"); // NOI18N
 
         cancelButton.setAction(actionMap.get("cancelAction")); // NOI18N
@@ -188,7 +187,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(passwordLabel)
                     .addComponent(rememberPasswordCheckBox)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(111, Short.MAX_VALUE))
+                .addContainerGap(113, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("systemPanel.TabConstraints.tabTitle"), systemPanel); // NOI18N
@@ -306,7 +305,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                             .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)))
                     .addGroup(settingsPanelLayout.createSequentialGroup()
                         .addComponent(advancedCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
                         .addComponent(launchServerButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addServerToListButton)))
@@ -346,7 +345,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(feedbackLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
+                        .addComponent(feedbackLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
                         .addGap(109, 109, 109)
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -357,7 +356,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(loginButton)
@@ -455,10 +454,10 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         String serverObjectString = "rmi://" + server + ":" + port + "/CanRegLogin" + code;
 
         try {
+            saveDefaultValues();
             String canRegSystemName = CanRegClientApp.getApplication().login(serverObjectString, username, password);
             if (canRegSystemName != null) {
                 fv.getFrame().setTitle("CanReg5 - " + canRegSystemName);
-                saveDefaultValues();
                 this.dispose();
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully logged in to " + canRegSystemName + " as " + username + ".", "Logged in", JOptionPane.INFORMATION_MESSAGE);
             } else {
@@ -467,7 +466,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             }
         } catch (LoginException loginException) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
-            feedbackLabel.setText("Error.");     
+            feedbackLabel.setText("Error.");
         } catch (NullPointerException nullPointerException) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
             feedbackLabel.setText("Error.");
@@ -481,10 +480,10 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
             feedbackLabel.setText("Error.");
         } catch (UnknownHostException unknownHostException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not find CanReg server: " + server + ".", "Error", JOptionPane.ERROR_MESSAGE);            
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not find CanReg server: " + server + ".", "Error", JOptionPane.ERROR_MESSAGE);
             feedbackLabel.setText("Error.");
         } catch (WrongCanRegVersionException wrongCanRegVersionException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "CanReg server version different than client version. Server: " + wrongCanRegVersionException.toString() + " Client: "+Globals.VERSION_STRING+".", "Error", JOptionPane.ERROR_MESSAGE);            
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "CanReg server version different than client version. Server: " + wrongCanRegVersionException.toString() + " Client: " + Globals.VERSION_STRING + ".", "Error", JOptionPane.ERROR_MESSAGE);
             feedbackLabel.setText("Error.");
         }
 
@@ -595,11 +594,11 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                 feedbackLabel.setText("Server started.");
                 CanRegClientApp.getApplication().setCanregServerRunningInThisThread(true);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Server started.", "Message", JOptionPane.INFORMATION_MESSAGE);
+                launchServerButton.setEnabled(false);
             } else {
                 feedbackLabel.setText("Server failed to start.");
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Server failed to start.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            launchServerButton.setEnabled(false);
         }
     }
 

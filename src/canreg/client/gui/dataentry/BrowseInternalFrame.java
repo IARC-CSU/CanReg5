@@ -13,6 +13,7 @@ import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.components.BrowserInterface;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals;
+import canreg.common.PagingTableModel;
 import canreg.server.database.DatabaseRecord;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -35,9 +36,9 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
     private JDesktopPane dtp;
     private DistributedTableDescription tableDatadescription;
     private DistributedTableDataSourceClient tableDataSource;
-    private DistributedTableModel tableDataModel;
+    private TableModel tableDataModel;
     private JScrollPane resultScrollPane;
-    private JTable resultTable;
+    private JTable resultTable = new JTable();
 
     /** Creates new form BrowseInternalFrame */
     public BrowseInternalFrame(JDesktopPane dtp) {
@@ -68,8 +69,6 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
         navigationPanel = new canreg.client.gui.components.NavigationPanel();
         variablesPanel1 = new canreg.client.gui.components.VariablesPanel();
         resultPanel = new javax.swing.JPanel();
-        resultScrollPaneWiz = new javax.swing.JScrollPane();
-        resultTableWiz = new javax.swing.JTable();
 
         setClosable(true);
         setMaximizable(true);
@@ -160,38 +159,16 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
 
         resultPanel.setName("resultPanel"); // NOI18N
 
-        resultScrollPaneWiz.setName("resultScrollPaneWiz"); // NOI18N
-
-        resultTableWiz.setAutoCreateRowSorter(true);
-        resultTableWiz.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-
-            }
-        ));
-        resultTableWiz.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        resultTableWiz.setName("resultTableWiz"); // NOI18N
-        resultTableWiz.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                rowClicked(evt);
-            }
-        });
-        resultScrollPaneWiz.setViewportView(resultTableWiz);
-
         javax.swing.GroupLayout resultPanelLayout = new javax.swing.GroupLayout(resultPanel);
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPaneWiz, javax.swing.GroupLayout.DEFAULT_SIZE, 771, Short.MAX_VALUE)
+            .addGap(0, 771, Short.MAX_VALUE)
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPaneWiz, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
+            .addGap(0, 483, Short.MAX_VALUE)
         );
-
-        resultScrollPaneWiz.getVerticalScrollBar().setUnitIncrement(16);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -235,9 +212,31 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
     }// </editor-fold>//GEN-END:initComponents
 
     private void initOtherComponents() {
-        resultTable = resultTableWiz;
-        resultScrollPane = resultScrollPaneWiz;
+        
+        resultScrollPane = canreg.common.LazyViewport.createLazyScrollPaneFor(resultTable);
+        
+        javax.swing.GroupLayout resultPanelLayout = new javax.swing.GroupLayout(resultPanel);
+        resultPanel.setLayout(resultPanelLayout);
+        resultPanelLayout.setHorizontalGroup(
+            resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 771, Short.MAX_VALUE)
+        );
+        resultPanelLayout.setVerticalGroup(
+            resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(resultScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
+        );
+
+        resultScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        resultTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         resultPanel.setVisible(false);
+        
+        resultTable.setName("resultTable"); // NOI18N
+        resultTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                rowClicked(evt);
+            }
+        });
+        
     }
 
     private void initValues() {
@@ -253,8 +252,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
 private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosed
     rangeFilterPanel.close();
 }//GEN-LAST:event_formInternalFrameClosed
-
-private void rowClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rowClicked
+private void rowClicked(java.awt.event.MouseEvent evt) {                            
         String referenceTable;
        
     if (evt.getClickCount() == 2) {
@@ -262,7 +260,7 @@ private void rowClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rowCli
         int rowNumber = target.getSelectedRow();
         boolean found = false;
         TableModel model = target.getModel();
-        int columnNumber = 0;
+        int columnNumber = 0; 
         String lookUpVariable;
         if (rangeFilterPanel.getSelectedTable().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
             lookUpVariable = "REGNO";
@@ -283,8 +281,7 @@ private void rowClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rowCli
         }
 
     }
-}//GEN-LAST:event_rowClicked
-
+}  
     @Action
     public Task refresh() {
         navigationPanel.goToTopAction();
@@ -296,6 +293,7 @@ private void rowClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rowCli
         String tableName = null;
         DatabaseFilter filter = new DatabaseFilter();
         
+        
         RefreshTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
@@ -303,17 +301,25 @@ private void rowClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rowCli
             super(app);
             tableName = rangeFilterPanel.getSelectedTable();
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
+            tableDataSource = null;
         }
         @Override protected Object doInBackground() {
             try {
                 setProgress(0, 0, 4);
                 setMessage("Initiating query...");
                 setProgress(1, 0, 4);
-
+                System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
                 tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
-
+                System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
+                
                 tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
+                System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
+                
                 tableDataModel = new DistributedTableModel(tableDataSource);
+                
+                //tableDataModel = new PagingTableModel(tableDataSource);
+                
+                System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
                 setProgress(2, 0, 4);
 
                 setMessage("Starting a new transaction...");
@@ -321,9 +327,10 @@ private void rowClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rowCli
                  
                 setProgress(3, 0, 4);
 
-                setMessage("Fetching data...");
-                resultTable.setModel(tableDataModel);
+                setMessage("Fetching data...");               
                 resultTable.setColumnSelectionAllowed(false);
+                resultTable.setModel(tableDataModel);
+                System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
                 
                 setProgress(4, 0, 4);
                 setMessage("Finished");
@@ -486,8 +493,6 @@ private void rowClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rowCli
     private javax.swing.JTextField patientNumberTextField;
     private canreg.client.gui.components.RangeFilterPanel rangeFilterPanel;
     private javax.swing.JPanel resultPanel;
-    private javax.swing.JScrollPane resultScrollPaneWiz;
-    private javax.swing.JTable resultTableWiz;
     private javax.swing.JTextField tumourNumberTextField;
     private canreg.client.gui.components.VariablesPanel variablesPanel1;
     // End of variables declaration//GEN-END:variables

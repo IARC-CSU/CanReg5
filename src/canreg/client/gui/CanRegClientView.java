@@ -188,6 +188,7 @@ public class CanRegClientView extends FrameView {
         backupMenuItem = new javax.swing.JMenuItem();
         restoreMenuItem = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JSeparator();
+        jMenu1 = new javax.swing.JMenu();
         nameSexMenuItem = new javax.swing.JMenuItem();
         duplicateSearchMenuItem = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JSeparator();
@@ -398,14 +399,19 @@ public class CanRegClientView extends FrameView {
         jSeparator7.setName("jSeparator7"); // NOI18N
         managementMenu.add(jSeparator7);
 
+        jMenu1.setText(resourceMap.getString("jMenu1.text")); // NOI18N
+        jMenu1.setName("jMenu1"); // NOI18N
+
         nameSexMenuItem.setAction(actionMap.get("showNameSexAction")); // NOI18N
         nameSexMenuItem.setText(resourceMap.getString("nameSexMenuItem.text")); // NOI18N
         nameSexMenuItem.setName("nameSexMenuItem"); // NOI18N
-        managementMenu.add(nameSexMenuItem);
+        jMenu1.add(nameSexMenuItem);
 
         duplicateSearchMenuItem.setText(resourceMap.getString("duplicateSearchMenuItem.text")); // NOI18N
         duplicateSearchMenuItem.setName("duplicateSearchMenuItem"); // NOI18N
-        managementMenu.add(duplicateSearchMenuItem);
+        jMenu1.add(duplicateSearchMenuItem);
+
+        managementMenu.add(jMenu1);
 
         jSeparator6.setName("jSeparator6"); // NOI18N
         managementMenu.add(jSeparator6);
@@ -982,6 +988,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JButton installSystemButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem18;

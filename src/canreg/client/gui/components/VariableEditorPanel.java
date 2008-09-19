@@ -26,11 +26,13 @@ public class VariableEditorPanel extends javax.swing.JPanel {
     protected DatabaseVariablesListElement databaseListElement;
     protected Map<String, DictionaryEntry> possibleValuesMap = null;
     protected int maxLength;
+    protected java.awt.Color mandatoryMissingColor = java.awt.Color.PINK;
 
     /** Creates new form VariableEditorPanel */
     public VariableEditorPanel() {
         initComponents();
         textField1.addFocusListener(new java.awt.event.FocusAdapter() {
+
             @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 componentFocusGained(evt);
@@ -46,10 +48,10 @@ public class VariableEditorPanel extends javax.swing.JPanel {
         textField1.addPropertyChangeListener(aThis);
     }
 
-    public void setDocumentListener(DocumentListener listener){
+    public void setDocumentListener(DocumentListener listener) {
         textField1.getDocument().addDocumentListener(listener);
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -149,7 +151,7 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
                     JOptionPane.INFORMATION_MESSAGE, null,
                     possibleValuesArray, possibleValuesArray[0]);
             if (selectedValue != null) {
-                textField1.setText(selectedValue.getCode());
+                setValue(selectedValue.getCode());
                 textField2.setText(selectedValue.getDescription());
             }
         }
@@ -164,6 +166,7 @@ private void textField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 }//GEN-LAST:event_textField2ActionPerformed
 
 private void textField1ActionPerformed(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_textField1ActionPerformed
+    setValue(textField1.getText());
     if (possibleValuesMap != null) {
         if (textField1.getText().length() > 0) {
             try {
@@ -198,6 +201,12 @@ private void textField1ActionPerformed(java.awt.event.FocusEvent evt) {//GEN-FIR
                 }
             }
         }
+        if (value.trim().length() == 0 && databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
+            // consider making global or configurable
+            textField1.setBackground(mandatoryMissingColor);
+        } else if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
+            textField1.setBackground(java.awt.SystemColor.text);
+        }
     }
 
     public Object getValue() {
@@ -224,6 +233,8 @@ private void textField1ActionPerformed(java.awt.event.FocusEvent evt) {//GEN-FIR
         if (fillInStatus.equalsIgnoreCase("Automatic")) {
             textField1.setFocusable(false);
             textField1.setEditable(false);
+        } else if (fillInStatus.equalsIgnoreCase("Mandatory")) {
+            textField1.setBackground(mandatoryMissingColor);
         }
 
         // String variableType = databaseListElement.getVariableType();
