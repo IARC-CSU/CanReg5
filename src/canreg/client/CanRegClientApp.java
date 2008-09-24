@@ -441,19 +441,6 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     /**
      * 
-     * @param from
-     * @param to
-     * @return
-     * @throws java.rmi.RemoteException
-     * @throws java.lang.SecurityException
-     * @throws java.lang.Exception
-     */
-    public Object[][] retrieveRows(int from, int to) throws RemoteException, SecurityException, Exception {
-        return server.retrieveRows(from, to);
-    }
-
-    /**
-     * 
      * @param recordID
      * @param tableName
      * @return
@@ -522,7 +509,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         int numberOfRecords = distributedTableDescription.getRowCount();
 
         // Retrieve all rows
-        rows = retrieveRows(0, numberOfRecords);
+        rows = retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
 
         String[] columnNames = distributedTableDescription.getColumnNames();
 
@@ -572,6 +559,18 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    public GlobalToolBox getGlobalToolBox() {
+        return globalToolBox;
+    }
+
+    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, Exception {
+        return server.retrieveRows(resultSetID, from, to);
+    }
+    
+    public void releaseResultSet(String resultSetID) throws SecurityException, RemoteException{
+        server.releaseResultSet(resultSetID);
+    }
+    
     /**
      * Main method launching the application.
      * @param args 
@@ -581,7 +580,4 @@ public class CanRegClientApp extends SingleFrameApplication {
         launch(CanRegClientApp.class, args);
     }
 
-    public GlobalToolBox getGlobalToolBox() {
-        return globalToolBox;
-    }
 }

@@ -812,9 +812,14 @@
     <ns3:indexes>
         <ns3:index>
             <ns3:name>Registry no</ns3:name>
+            <ns3:table>Tumour</ns3:table>
+	    <ns3:indexed_variable>
+	        <ns3:variable_name>RegNo</ns3:variable_name>
+            </ns3:indexed_variable>
         </ns3:index>
         <ns3:index>
             <ns3:name>Multiple Primary</ns3:name>
+            <ns3:table>Tumour</ns3:table>
             <ns3:indexed_variable>
                 <ns3:variable_name>MPcode</ns3:variable_name>
             </ns3:indexed_variable>
@@ -824,21 +829,21 @@
         </ns3:index>
         <ns3:index>
             <ns3:name>Incidence date</ns3:name>
+            <ns3:table>Tumour</ns3:table>
             <ns3:indexed_variable>
                 <ns3:variable_name>InciD</ns3:variable_name>
             </ns3:indexed_variable>
         </ns3:index>
         <ns3:index>
             <ns3:name>ICD-10</ns3:name>
+            <ns3:table>Tumour</ns3:table>
             <ns3:indexed_variable>
                 <ns3:variable_name>I10</ns3:variable_name>
-            </ns3:indexed_variable>
-            <ns3:indexed_variable>
-                <ns3:variable_name>Sex</ns3:variable_name>
             </ns3:indexed_variable>
         </ns3:index>
         <ns3:index>
             <ns3:name>Names</ns3:name>
+            <ns3:table>Patient</ns3:table>
             <ns3:indexed_variable>
                 <ns3:variable_name>FamN</ns3:variable_name>
             </ns3:indexed_variable>
@@ -848,6 +853,7 @@
         </ns3:index>
         <ns3:index>
             <ns3:name>Update Date</ns3:name>
+            <ns3:table>Tumour</ns3:table>
             <ns3:indexed_variable>
                 <ns3:variable_name>UpDate</ns3:variable_name>
             </ns3:indexed_variable>

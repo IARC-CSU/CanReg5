@@ -226,22 +226,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return addr;
     }
 
-    // This cannot be called directly
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, Exception {
-        return null;
-    }
-    
-    public DistributedTableDescription getDistributedTableDescription(Subject theUser, DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, Exception {
-        return db.getDistributedTableDescriptionAndInitiateDatabaseQuery(theUser, filter, tableName);
-    }
-
-    // This cannot be called directly
-    public Object[][] retrieveRows(int from, int to) throws RemoteException, SecurityException, Exception {
-        return null;
-    }
-    
-    public Object[][] retrieveRows(Subject theUser, int from, int to) throws RemoteException, SecurityException, Exception {
-        return db.retrieveRows(theUser,from,to);
+        return db.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, tableName);
     }
 
     public DatabaseRecord getPatient(int patientID) throws RemoteException, SecurityException {
@@ -258,5 +244,13 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     public void editTumour(Tumour tumour) throws RemoteException, SecurityException {
         db.editTumour(tumour);
+    }
+
+    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, Exception {
+        return db.retrieveRows(resultSetID,from,to);
+    }
+
+    public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException {
+        db.releaseResultSet(resultSetID);
     }
 }

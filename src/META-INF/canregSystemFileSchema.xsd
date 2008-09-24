@@ -95,6 +95,7 @@
     <xsd:complexType name="Index">
         <xsd:sequence>
             <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="table" type="xsd:string"/>
             <xsd:sequence>
                 <xsd:element name="indexed_variable" type="cr5:IndexedVariable" minOccurs="0" maxOccurs="unbounded"></xsd:element>
             </xsd:sequence>

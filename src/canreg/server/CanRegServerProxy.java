@@ -172,16 +172,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
 
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, Exception {
         checkPermission("getDistributedTableDescription");
-        return theServer.getDistributedTableDescription(theUser, filter, tableName);
-    }
-
-    public Object[][] retrieveRows(int from, int to) throws RemoteException, SecurityException, Exception {
-        checkPermission("retrieveRows");
-        return theServer.retrieveRows(theUser, from, to);
-    }
-
-    public DistributedTableDescription getDistributedTableDescription(Subject theUser, DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, Exception {
-        throw new UnsupportedOperationException("Not supported."); // This should not be implemented!
+        return theServer.getDistributedTableDescription(filter, tableName);
     }
 
     public Object[][] retrieveRows(Subject theUser, int from, int to) throws RemoteException, SecurityException, Exception {
@@ -194,7 +185,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     public DatabaseRecord getRecord(int recordID, String tableName) throws RemoteException, SecurityException {
-        checkPermission("get" + tableName);
+        checkPermission("get:" + tableName);
         return theServer.getRecord(recordID, tableName);
     }
 
@@ -206,5 +197,15 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public void editTumour(Tumour tumour) throws RemoteException, SecurityException {
         checkPermission("editTumour");
         theServer.editTumour(tumour);  
+    }
+
+    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, Exception {
+        checkPermission("retrieveRows:"+resultSetID);
+        return theServer.retrieveRows(resultSetID, from, to);
+    }
+
+    public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException {
+        checkPermission("retrieveRows:"+resultSetID);
+        theServer.releaseResultSet(resultSetID);
     }
 }

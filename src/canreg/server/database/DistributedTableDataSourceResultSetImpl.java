@@ -67,13 +67,19 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         int pos = resultSet.getRow();
         resultSet.relative(from - pos);
         boolean hasMore = resultSet.next();
-        while (hasMore && rows.size()<to-from) {
+       
+        while (hasMore && rows.size()<(to-from+1)) {
             Object[] row = new Object[columnCount];
             for (int i = 0; i < columnCount; i++) {
                 row[i] = resultSet.getObject(i + 1);
             }
             rows.add(row);
             hasMore = resultSet.next();
+            if (!hasMore){
+                // set pointer to last so that we can keep using resultset
+                resultSet.last();
+                System.out.println("last record reached");
+            }
         }
         Object[][] rowsArray = new Object[rows.size()][columnCount];
 

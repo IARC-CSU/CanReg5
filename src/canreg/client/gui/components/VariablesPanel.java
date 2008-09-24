@@ -3,20 +3,98 @@
  *
  * Created on 23 June 2008, 11:52
  */
-
 package canreg.client.gui.components;
+
+import canreg.common.DatabaseVariablesListElement;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  *
  * @author  ervikm
  */
 public class VariablesPanel extends javax.swing.JPanel {
-    
+
+    DatabaseVariablesListElement[] databaseVariablesListElements;
+    Map<String, LinkedList<String>> mapTableVariableNamesKey;
+    Map<String, LinkedList<String>> mapTableVariableNamesMandatory;
+    Map<String, LinkedList<String>> mapTableVariableNamesAll;
+
     /** Creates new form VariablesPanel */
     public VariablesPanel() {
         initComponents();
     }
-    
+
+    public void setDatabaseVariables(DatabaseVariablesListElement[] dbles) {
+        // Build maps
+        mapTableVariableNamesKey = new LinkedHashMap<String, LinkedList<String>>();
+        mapTableVariableNamesMandatory = new LinkedHashMap<String, LinkedList<String>>();
+        mapTableVariableNamesAll = new LinkedHashMap<String, LinkedList<String>>();
+        for (DatabaseVariablesListElement dble : dbles) {
+            if (dble.getStandardVariableName() != null) {
+                // Add it to the proper list
+                LinkedList list = mapTableVariableNamesKey.get(dble.getTable());
+                // Create the list if necessary
+                if (list == null) {
+                    list = new LinkedList<String>();
+                    mapTableVariableNamesKey.put(dble.getDatabaseTableName(), list);
+                }
+                list.add(dble.getDatabaseVariableName().toUpperCase());
+            }
+            if (dble.getFillInStatus().equalsIgnoreCase("Mandatory")||dble.getFillInStatus().equalsIgnoreCase("Automatic")) {
+                // Add it to the proper list
+                LinkedList list = mapTableVariableNamesMandatory.get(dble.getTable());
+                // Create the list if necessary
+                if (list == null) {
+                    list = new LinkedList<String>();
+                    mapTableVariableNamesMandatory.put(dble.getDatabaseTableName(), list);
+                }
+                list.add(dble.getDatabaseVariableName().toUpperCase());
+            }
+            // Add it to the all list
+            LinkedList list = mapTableVariableNamesAll.get(dble.getTable());
+            // Create the list if necessary
+            if (list == null) {
+                list = new LinkedList<String>();
+                mapTableVariableNamesAll.put(dble.getDatabaseTableName(), list);
+            }
+            list.add(dble.getDatabaseVariableName().toUpperCase());
+        }
+
+        LinkedList bothKeylist = new LinkedList<String>();
+        Iterator <LinkedList<String>> it = mapTableVariableNamesKey.values().iterator();
+        while (it.hasNext()){
+            bothKeylist.addAll(it.next());
+        }
+        mapTableVariableNamesKey.put("Both", bothKeylist);
+        
+        LinkedList bothMandatoryList = new LinkedList<String>();
+        Iterator <LinkedList<String>> it2 = mapTableVariableNamesMandatory.values().iterator();
+        while (it2.hasNext()){
+            bothMandatoryList.addAll(it2.next());
+        }
+        mapTableVariableNamesMandatory.put("Both", bothMandatoryList);
+        
+        LinkedList bothAllList = new LinkedList<String>();
+        Iterator <LinkedList<String>> it3 = mapTableVariableNamesAll.values().iterator();
+        while (it3.hasNext()){
+            bothAllList.addAll(it3.next());
+        }
+        mapTableVariableNamesAll.put("Both", bothAllList);
+    }
+
+    public LinkedList<String> getVariablesToShow(String tableName) {
+        if (keyRadioButton.isSelected()) {
+            return mapTableVariableNamesKey.get(tableName);
+        } else if (mandatoryRadioButton.isSelected()) {
+            return mapTableVariableNamesMandatory.get(tableName);
+        } else {
+            return mapTableVariableNamesAll.get(tableName);
+        }
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -84,7 +162,6 @@ public class VariablesPanel extends javax.swing.JPanel {
             .addComponent(variablesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton allRadioButton;
     private javax.swing.ButtonGroup buttonGroup;
@@ -92,5 +169,4 @@ public class VariablesPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton mandatoryRadioButton;
     private javax.swing.JPanel variablesPanel;
     // End of variables declaration//GEN-END:variables
-    
 }

@@ -36,13 +36,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 // import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.security.auth.Subject;
 import org.w3c.dom.*;
 
 /**
@@ -61,7 +61,7 @@ public class CanRegDAO {
 
         this.dbName = dbName;
 
-        distributedDataSources = new LinkedHashMap<Subject, DistributedTableDataSource>();
+        distributedDataSources = new LinkedHashMap<String, DistributedTableDataSource>();
 
         System.out.println(canreg.server.xml.Tools.getTextContent(new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
 
@@ -81,6 +81,7 @@ public class CanRegDAO {
             createDatabase();
             tableOfDictionariesFilled = false;
         }
+        // dbProperties.setProperty("derby.language.logStatementText", "true");
     }
 
     public Map<Integer, Map<String, String>> getDictionary() {
@@ -111,8 +112,8 @@ public class CanRegDAO {
         return dictionaryMap;
     }
 
-    public DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(Subject theUser, DatabaseFilter filter, String tableName) throws SQLException, Exception {
-        distributedDataSources.remove(theUser);
+    public DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(DatabaseFilter filter, String tableName) throws SQLException, Exception {
+        // distributedDataSources.remove(theUser);
         ResultSet result;
         Statement statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         int rowCount = 0;
@@ -189,9 +190,23 @@ public class CanRegDAO {
 
         DistributedTableDescription tableDescription = dataSource.getTableDescription();
         //distributedDataSources.put(tableDescription, dataSource);
-        distributedDataSources.put(theUser, dataSource);
-        System.out.println(tableDescription.toString());
+            
+        boolean foundPlace = false;
+        int i = 0;
+        String place = Integer.toString(i);
+        while (!foundPlace){
+            place = Integer.toString(i++);
+            foundPlace = !distributedDataSources.containsKey(place);           
+        }
+        
+        tableDescription.setResultSetID(place);
+        
+        distributedDataSources.put(place, dataSource);
         return tableDescription;
+    }
+    
+    public void releaseResultSet(String resultSetID){
+        distributedDataSources.remove(resultSetID);
     }
 
     public DatabaseRecord getRecord(int recordID, String tableName) {
@@ -219,15 +234,15 @@ public class CanRegDAO {
         return path;
     }
 
-    public Object[][] retrieveRows(Subject theUser, int from, int to) throws Exception {
-        // DistributedTableDataSource ts = distributedDataSources.get(temporaryGlobalDescription);
-        DistributedTableDataSource ts = distributedDataSources.get(theUser);
+    public synchronized Object[][] retrieveRows(String resultSetID, int from, int to) throws Exception {
+        DistributedTableDataSource ts = distributedDataSources.get(resultSetID);
         if (ts != null) {
             return ts.retrieveRows(from, to);
         } else {
             return null;
         }
     }
+    
     // This only works for Embedded databases - will look into it!
     // When using Derby this is OK as we can access it via Embedded 
     // and Client drivers at the same time...
@@ -279,12 +294,25 @@ public class CanRegDAO {
             statement = dbConnection.createStatement();
 
             // Dynamic creation of tables
-            statement.execute(QueryGenerator.strCreateVariableTable("Tumour", doc));
+            statement.execute(QueryGenerator.strCreateVariableTable("Tumour", doc));           
             statement.execute(QueryGenerator.strCreateVariableTable("Patient", doc));
             // Dictionaries part
             statement.execute(QueryGenerator.strCreateDictionaryTable(doc));
             statement.execute(QueryGenerator.strCreateTablesOfDictionaries(doc));
+            // Create indexes
+            LinkedList<String> tumourIndexList = QueryGenerator.strCreateIndexTable("Tumour", doc);
+            for (String query:tumourIndexList){
+                System.out.println(query);
+                statement.execute(query);
+            }
+            LinkedList<String> patientIndexList = QueryGenerator.strCreateIndexTable("Patient", doc);
+            for (String query:patientIndexList){
+                System.out.println(query);
+                statement.execute(query);
+            }
+
             // System part
+
             // TODO
 
             bCreatedTables = true;
@@ -721,20 +749,6 @@ public class CanRegDAO {
         return bDeleted;
     }
 
-    /**
-     * 
-     * @param record
-     * @return
-    
-    public boolean deleteRecord(Patient record) {
-    int id = record.getId();
-    return deleteRecord(id);
-    }
-     */
-    /**
-     * 
-     * @return
-     */
     public List<ListEntry> getListEntries() {
         List<ListEntry> listEntries = new ArrayList<ListEntry>();
         Statement queryStatement = null;
@@ -825,7 +839,7 @@ public class CanRegDAO {
     private boolean isConnected;
     private String dbName;
     private Document doc;
-    private Map<Subject, DistributedTableDataSource> distributedDataSources;
+    private Map<String, DistributedTableDataSource> distributedDataSources;
     private boolean tableOfDictionariesFilled = true;
     private PreparedStatement stmtSaveNewPatient;
     private PreparedStatement stmtSaveNewTumour;
@@ -857,8 +871,8 @@ public class CanRegDAO {
     private String strCountPatients =
             "SELECT COUNT(*) FROM APP.PATIENT";
     private String strGetPatientsAndTumours =
-            "SELECT * FROM APP.PATIENT, APP.TUMOUR " +
-            "WHERE APP.PATIENT.ID = APP.TUMOUR.PATIENTID";
+            "SELECT * FROM APP.TUMOUR, APP.PATIENT " +
+            "WHERE APP.TUMOUR.PATIENTID = APP.PATIENT.ID";
     private String strCountPatientsAndTumours =
             "SELECT COUNT(*) FROM APP.PATIENT, APP.TUMOUR " +
             "WHERE APP.PATIENT.ID = APP.TUMOUR.PATIENTID";

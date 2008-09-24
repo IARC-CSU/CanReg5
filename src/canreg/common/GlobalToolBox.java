@@ -1,6 +1,8 @@
 package canreg.common;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import org.w3c.dom.Document;
 
@@ -21,13 +23,30 @@ public class GlobalToolBox {
         groupIDToDatabaseGroupListElementMap = buildGroupMap(Tools.getGroupsListElements(doc, Globals.NAMESPACE));
         databaseVariablesListElements = Tools.getVariableListElements(doc, Globals.NAMESPACE);
         standardVariableNameToDatabaseVariableListElementMap = buildVariablesMap(databaseVariablesListElements);
-    }    
+    }
+
+    public DatabaseVariablesListElement[] getVariables() {
+        return databaseVariablesListElements;
+    }
     
     public DatabaseVariablesListElement translateStandardVariableNameToDatabaseListElement(String standardVariableName){
         return standardVariableNameToDatabaseVariableListElementMap.get(standardVariableName);
     }
+    
+    public LinkedList<DatabaseVariablesListElement> getStandardVariables(){
+        Iterator<DatabaseVariablesListElement> it = standardVariableNameToDatabaseVariableListElementMap.values().iterator();
+        DatabaseVariablesListElement dvle;
+        LinkedList<DatabaseVariablesListElement> variables = new LinkedList<DatabaseVariablesListElement>();
+        while (it.hasNext()){
+            dvle = it.next();
+            variables.add(dvle);
+        }
+        return variables;
+    }
+    
+    
 
-    public DatabaseGroupsListElement translateStandardVariableNameToDatabaseListElement(Integer groupID){
+    public DatabaseGroupsListElement translateGroupIDToDatabaseGroupListElement(Integer groupID){
         return groupIDToDatabaseGroupListElementMap.get(groupID);
     }
     

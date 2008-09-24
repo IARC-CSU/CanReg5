@@ -14,6 +14,7 @@ import cachingtableapi.DistributedTableDescription;
  */
 public class DistributedTableDataSourceClient implements DistributedTableDataSource {
     DistributedTableDescription distributedTableDescription;
+    String resultSetID;
 
     	/**
 	 * Constructor for DemoTableDataSource.
@@ -33,7 +34,7 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
     }
     
     public Object[][] retrieveRows(int from, int to) throws Exception {
-        return CanRegClientApp.getApplication().retrieveRows(from, to);
+        return CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), from, to);
     }
 
     public int[] sort(int sortColumn, boolean ascending, int[] selectedRows) throws Exception {

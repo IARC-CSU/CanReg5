@@ -11,6 +11,7 @@ public class DistributedTableDescription implements Serializable {
 	private String[] columnNames;
 	private Class[] columnClasses;
 	private int rowCount;
+        private String resultSetID;
 
 	/**
 	 * Constructor for DistributedTableDescription.
@@ -53,4 +54,12 @@ public class DistributedTableDescription implements Serializable {
 	public int getColumnCount() {
 		return columnNames.length;	
 	}
+
+    public String getResultSetID() {
+        return resultSetID;
+    }
+
+    public void setResultSetID(String resultSetID) {
+        this.resultSetID = resultSetID;
+    }
 }

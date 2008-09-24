@@ -5,6 +5,7 @@
 package canreg.server.database;
 
 import canreg.common.Globals;
+import java.util.LinkedList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -55,6 +56,46 @@ public class QueryGenerator {
         return query;
     }
 
+   static LinkedList<String> strCreateIndexTable(String tableName, Document doc) {
+        LinkedList<String> queries = new LinkedList();
+        
+        NodeList nodes = doc.getElementsByTagName(namespace + "indexes");
+        Element variablesElement = (Element) nodes.item(0);
+
+        NodeList indexes = variablesElement.getElementsByTagName(namespace + "index");
+
+        // Go through all the variable definitions
+        for (int i = 0; i < indexes.getLength(); i++) {
+
+            // Get element
+            Element element = (Element) indexes.item(i);
+
+            // Create line
+            String tableNameDB = element.getElementsByTagName(namespace + "table").item(0).getTextContent().toUpperCase();
+            
+            if (tableNameDB.equalsIgnoreCase(tableName)) {
+                String nameDB = element.getElementsByTagName(namespace + "name").item(0).getTextContent();
+                
+                String query = "create index \""+nameDB+"_idx\" on "+ Globals.SCHEMA_NAME +"."+tableName +" (";
+                NodeList variables = element.getElementsByTagName(namespace + "indexed_variable");
+                
+                // Go through all the variable definitions
+                for (int j = 0; j < variables.getLength(); j++) {
+                    Element variableElement = (Element) variables.item(j);
+                    if (j>0)
+                        query+=", ";
+                    query+= "\""+ variableElement.getElementsByTagName(namespace + "variable_name").item(0).getTextContent().toUpperCase()+"\"";
+                }
+                query += ") ";
+                queries.add(query);
+            }
+        }
+
+        
+
+        return queries;
+    }
+    
     public static final String strCreateTablesOfDictionaries(Document doc) {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".DICTIONARIES" +
                 " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), " +
@@ -102,6 +143,8 @@ public class QueryGenerator {
     public static final String strSaveTumour(Document doc) {
         return strSaveRecord(doc, "tumour");
     }
+
+
 
     private static final String strSaveRecord(Document doc, String tableName) {
         String variableNamesPart = "INSERT INTO " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase();

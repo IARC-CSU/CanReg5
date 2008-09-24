@@ -314,6 +314,10 @@ public class SystemDefinitionConverter {
                     parentElement.appendChild(element);
                     Element childElement = createElement(namespace + "name", readText());
                     element.appendChild(childElement);
+                    // Add the index to the tumour-table by default...
+                    // look into this to have it pick up the table by looking at the first variable...
+                    childElement = createElement(namespace + "table", "Tumour");
+                    element.appendChild(childElement);                    
                     for (int j = 0; j < 3; j++) {
                         int variableIndex = readNumber(2);
                         if (variableIndex > 0) {

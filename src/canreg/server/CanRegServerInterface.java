@@ -107,10 +107,8 @@ public interface CanRegServerInterface extends Remote {
             throws RemoteException, SecurityException;
     
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, Exception;
+    
+    public Object[][] retrieveRows(String resultSetID, int from, int to)  throws RemoteException, SecurityException, Exception;
 
-    public DistributedTableDescription getDistributedTableDescription(Subject theUser, DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, Exception;
-    
-    public Object[][] retrieveRows(Subject theUser, int from, int to) throws RemoteException, SecurityException, Exception ;
-    
-    public Object[][] retrieveRows(int from, int to) throws RemoteException, SecurityException, Exception;
+    public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException;
 }

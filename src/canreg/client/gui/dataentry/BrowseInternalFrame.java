@@ -11,18 +11,25 @@ import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.components.BrowserInterface;
+import canreg.client.gui.tools.XTableColumnModel;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals;
 import canreg.common.PagingTableModel;
 import canreg.server.database.DatabaseRecord;
+import java.awt.Button;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
@@ -39,6 +46,8 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
     private TableModel tableDataModel;
     private JScrollPane resultScrollPane;
     private JTable resultTable = new JTable();
+    private XTableColumnModel tableColumnModel;
+    private LinkedList<String> variablesToShow;
 
     /** Creates new form BrowseInternalFrame */
     public BrowseInternalFrame(JDesktopPane dtp) {
@@ -81,7 +90,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameClosed(evt);
+                browserClosed(evt);
             }
             public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
             }
@@ -167,7 +176,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 483, Short.MAX_VALUE)
+            .addGap(0, 495, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -212,31 +221,35 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
     }// </editor-fold>//GEN-END:initComponents
 
     private void initOtherComponents() {
-        
+
         resultScrollPane = canreg.common.LazyViewport.createLazyScrollPaneFor(resultTable);
-        
+
         javax.swing.GroupLayout resultPanelLayout = new javax.swing.GroupLayout(resultPanel);
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
-            resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 771, Short.MAX_VALUE)
-        );
+                resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 771, Short.MAX_VALUE));
         resultPanelLayout.setVerticalGroup(
-            resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
-        );
+                resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(resultScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE));
 
         resultScrollPane.getVerticalScrollBar().setUnitIncrement(16);
         resultTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        resultTable.setColumnSelectionAllowed(true);
         resultPanel.setVisible(false);
-        
+
         resultTable.setName("resultTable"); // NOI18N
         resultTable.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 rowClicked(evt);
             }
+
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                columnTableMousePressed(evt);
+            }
         });
-        
+
     }
 
     private void initValues() {
@@ -244,44 +257,57 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
         // hook the navigationpanel up to the resulttable
         navigationPanel.setTable(resultTable);
         rangeFilterPanel.setBrowser(this);
+        variablesPanel1.setDatabaseVariables(CanRegClientApp.getApplication().getGlobalToolBox().getVariables());
     // Task task = refresh();
     // task.run();
     // rangeFilterPanel.setRecordsTotal(tableDataModel.getRowCount());
     }
 
-private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosed
+private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_browserClosed
     rangeFilterPanel.close();
-}//GEN-LAST:event_formInternalFrameClosed
+    if (tableDatadescription != null) {
+        try {
+            CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
+        } catch (SecurityException ex) {
+            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+}//GEN-LAST:event_browserClosed
+
 private void rowClicked(java.awt.event.MouseEvent evt) {                            
         String referenceTable;
        
     if (evt.getClickCount() == 2) {
         JTable target = (JTable) evt.getSource();
         int rowNumber = target.getSelectedRow();
-        boolean found = false;
         TableModel model = target.getModel();
         int columnNumber = 0; 
         String lookUpVariable;
-        if (rangeFilterPanel.getSelectedTable().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
-            lookUpVariable = "REGNO";
-            referenceTable = Globals.TUMOUR_TABLE_NAME;
-        } else {
+        if (rangeFilterPanel.getSelectedTable().equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)){
             lookUpVariable = "ID";
             referenceTable = Globals.PATIENT_TABLE_NAME;
-        }     
-        while (!found && columnNumber < target.getColumnCount()) {
-            found = lookUpVariable.equalsIgnoreCase(model.getColumnName(columnNumber++));
-        }
-        if (found) {
-            columnNumber--;
-            editRecord(""+target.getValueAt(rowNumber,
-                    columnNumber), referenceTable);
         } else {
-            // Error
-        }
-
+            lookUpVariable = "REGNO";
+            referenceTable = Globals.TUMOUR_TABLE_NAME;
+        } 
+        columnNumber = tableColumnModel.getColumnIndex(lookUpVariable, false);
+        editRecord(""+tableDataModel.getValueAt(rowNumber,
+            columnNumber), referenceTable);
     }
-}  
+}
+
+private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
+    if (evt.getButton()== java.awt.event.MouseEvent.BUTTON3){
+        JTable target =(JTable) evt.getSource();
+        int columnNumber = target.getSelectedColumn();
+
+        JPopupMenu jpm = new JPopupMenu(""+columnNumber);
+        jpm.add("Column "+tableColumnModel.getColumn(tableColumnModel.getColumnIndexAtX(evt.getX()), true).getHeaderValue());
+        jpm.show(target, evt.getX(), evt.getY());
+    }
+}
     @Action
     public Task refresh() {
         navigationPanel.goToTopAction();
@@ -300,6 +326,7 @@ private void rowClicked(java.awt.event.MouseEvent evt) {
             // to RefreshTask fields, here.
             super(app);
             tableName = rangeFilterPanel.getSelectedTable();
+            variablesToShow = variablesPanel1.getVariablesToShow(tableName);
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
             tableDataSource = null;
         }
@@ -309,15 +336,18 @@ private void rowClicked(java.awt.event.MouseEvent evt) {
                 setMessage("Initiating query...");
                 setProgress(1, 0, 4);
                 System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
+                // release old resultSet
+                if (tableDatadescription!=null){
+                    CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
+                }
                 tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
                 System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
                 
                 tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
                 System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
                 
-                tableDataModel = new DistributedTableModel(tableDataSource);
-                
-                //tableDataModel = new PagingTableModel(tableDataSource);
+                tableDataModel = new DistributedTableModel(tableDataSource); 
+                // tableDataModel = new PagingTableModel(tableDataSource);
                 
                 System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
                 setProgress(2, 0, 4);
@@ -330,11 +360,16 @@ private void rowClicked(java.awt.event.MouseEvent evt) {
                 setMessage("Fetching data...");               
                 resultTable.setColumnSelectionAllowed(false);
                 resultTable.setModel(tableDataModel);
+                tableColumnModel = new XTableColumnModel();
+                resultTable.setColumnModel(tableColumnModel);
+                resultTable.createDefaultColumnsFromModel();
                 System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
                 
                 setProgress(4, 0, 4);
                 setMessage("Finished");
-
+                
+                updateVariablesShown();
+                
             } catch (SQLException ex) {
                 JOptionPane.showInternalMessageDialog(rootPane, "Not a valid filter.", "Error", JOptionPane.ERROR_MESSAGE);
                 return "Not valid";
@@ -356,6 +391,42 @@ private void rowClicked(java.awt.event.MouseEvent evt) {
         }
     }
 
+       private void hideSystemVariables() {
+                TableColumn column;
+                try{
+                    column = tableColumnModel.getColumnByModelIndex(
+                         tableColumnModel.getColumnIndex("ID"));
+                    tableColumnModel.setColumnVisible(column, false);
+                } catch (IllegalArgumentException iae){
+                    //OK
+                }
+                try{
+                    column = tableColumnModel.getColumnByModelIndex(
+                         tableColumnModel.getColumnIndex("NEXT_RECORD_DB_ID"));
+                    tableColumnModel.setColumnVisible(column, false);
+                } catch (IllegalArgumentException iae){
+                    //OK
+                }
+                try{
+                    column = tableColumnModel.getColumnByModelIndex(
+                         tableColumnModel.getColumnIndex("LAST_RECORD_DB_ID"));
+                    tableColumnModel.setColumnVisible(column, false);
+                } catch (IllegalArgumentException iae){
+                    //OK
+                }                    
+        }
+       
+    private void updateVariablesShown(){
+          String tableName = rangeFilterPanel.getSelectedTable();
+          variablesToShow = variablesPanel1.getVariablesToShow(tableName);
+          // first set all invisible
+          Enumeration<TableColumn> tcs = tableColumnModel.getColumns(false);
+          while(tcs.hasMoreElements()){
+                TableColumn column  = tcs.nextElement();
+                tableColumnModel.setColumnVisible(column,variablesToShow.contains(column.getHeaderValue().toString()));               
+          }
+    }
+    
     @Action
     public void editPatientID() {
          editPatientID(patientNumberTextField.getText().trim());
@@ -377,7 +448,8 @@ private void rowClicked(java.awt.event.MouseEvent evt) {
         try {
             distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
             int numberOfRecords = distributedTableDescription.getRowCount();
-            rows = CanRegClientApp.getApplication().retrieveRows(0, numberOfRecords);
+            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
+            CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
             String[] columnNames = distributedTableDescription.getColumnNames();
             int ids[] = new int[numberOfRecords];
             boolean found = false;
@@ -433,7 +505,8 @@ private void rowClicked(java.awt.event.MouseEvent evt) {
         try {
             DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
             int numberOfRecords = distributedTableDescription.getRowCount();
-            rows = CanRegClientApp.getApplication().retrieveRows(0, numberOfRecords);
+            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(),0, numberOfRecords);
+            CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
             String[] columnNames = distributedTableDescription.getColumnNames();
             int ids[] = new int[numberOfRecords];
             boolean found = false;
@@ -459,9 +532,7 @@ private void rowClicked(java.awt.event.MouseEvent evt) {
             else {
                 JOptionPane.showMessageDialog(rootPane, "Variable not found...", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            
 
-            
         } catch (SQLException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {

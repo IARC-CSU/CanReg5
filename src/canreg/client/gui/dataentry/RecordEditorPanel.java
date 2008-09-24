@@ -156,7 +156,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
                 VariableEditorGroupPanel panel = groupIDtoPanelMap.get(groupID);
                 if (panel == null) {
                     panel = new VariableEditorGroupPanel();
-                    panel.setGroupName(globalToolBox.translateStandardVariableNameToDatabaseListElement(groupID).getGroupName());
+                    panel.setGroupName(globalToolBox.translateGroupIDToDatabaseGroupListElement(groupID).getGroupName());
                     groupIDtoPanelMap.put(currentVariable.getGroupID(), panel);
                 }
                 panel.add(vep);
