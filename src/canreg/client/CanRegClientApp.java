@@ -355,6 +355,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             systemName = "";
             loggedIn = false;
             canRegClientView.setUserRightsLevel(Globals.UserRightLevels.NOT_LOGGED_IN);
+            localSettings.writeSettings();
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {

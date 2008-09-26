@@ -877,7 +877,7 @@ public class CanRegClientView extends FrameView {
 
     @Action
     public void editDictionaryAction() {
-        JInternalFrame internalFrame = new EditDictionaryInternalFrame();
+        JInternalFrame internalFrame = new EditDictionaryInternalFrame(desktopPane);
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 

@@ -1,10 +1,12 @@
 package canreg.common;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ervikm
  */
-public class DatabaseVariablesListElement {
+public class DatabaseVariablesListElement implements Serializable {
     // Table in the database for the variable
     private String table;
     // ID of the variable in the database
@@ -187,6 +189,13 @@ public class DatabaseVariablesListElement {
 
     public void setStandardVariableName(String standardVariableName) {
         this.standardVariableName = standardVariableName;
+    }
+    
+    public String getSQLqueryFormat(String string){
+        if (getVariableType().equalsIgnoreCase("Dict")||getVariableType().equalsIgnoreCase("Alpha")){
+            string = "'"+string+"'";
+        }
+        return string;
     }
 }
 

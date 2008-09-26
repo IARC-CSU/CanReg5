@@ -3,7 +3,6 @@
  *
  * Created on 06 August 2008, 16:03
  */
-
 package canreg.client.gui.analysis;
 
 import cachingtableapi.DistributedTableDescription;
@@ -12,14 +11,23 @@ import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.gui.components.BrowserInterface;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.common.DatabaseFilter;
+import canreg.common.DatabaseVariablesListElement;
+import java.awt.MenuItem;
+import java.awt.Point;
+import java.lang.annotation.Annotation;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
+import javax.swing.table.TableColumnModel;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
+import org.jdesktop.application.Task.BlockingScope;
 
 /**
  *
@@ -31,7 +39,12 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     private DistributedTableDataSourceClient tableDataSource;
     private DistributedTableModel tableDataModel;
     private JDesktopPane dtp;
-    
+    private TableColumnModel tableColumnModel;
+    private Set<DatabaseVariablesListElement> chosenVariables;
+    private String tableName = null;
+    private DistributedTableDescription tableDatadescriptionPopUp;
+    private static int MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK = 20;
+
     /** Creates new form FrequenciesByYearInternalFrame */
     public FrequenciesByYearInternalFrame(JDesktopPane dtp) {
         this.dtp = dtp;
@@ -119,8 +132,6 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private canreg.client.gui.components.RangeFilterPanel rangeFilterPanel;
     private javax.swing.JScrollPane resultScrollPane;
@@ -128,7 +139,6 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     private javax.swing.JTabbedPane tabbedPane;
     private canreg.client.gui.components.VariablesChooserPanel variablesChooserPanel;
     // End of variables declaration//GEN-END:variables
-
     @Action
     public Task refresh() {
         // navigationPanel.goToTopAction();
@@ -137,9 +147,9 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     }
 
     private class RefreshTask extends org.jdesktop.application.Task<Object, Void> {
-        String tableName = null;
+
         DatabaseFilter filter = new DatabaseFilter();
-        
+
         RefreshTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
@@ -148,9 +158,12 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             tableName = rangeFilterPanel.getSelectedTable();
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
             filter.setQueryType(DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR);
-            filter.setDatabaseVariables(variablesChooserPanel.getSelectedVariableNames());
+            chosenVariables = variablesChooserPanel.getSelectedVariables();
+            filter.setDatabaseVariables(chosenVariables);
         }
-        @Override protected Object doInBackground() {
+
+        @Override
+        protected Object doInBackground() {
             try {
                 setProgress(0, 0, 4);
                 setMessage("Initiating query...");
@@ -164,13 +177,13 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
 
                 setMessage("Starting a new transaction...");
                 rangeFilterPanel.setRecordsShown(tableDataModel.getRowCount());
-                 
+
                 setProgress(3, 0, 4);
 
                 setMessage("Fetching data...");
                 resultTable.setModel(tableDataModel);
                 resultTable.setColumnSelectionAllowed(false);
-                
+
                 setProgress(4, 0, 4);
                 setMessage("Finished");
 
@@ -181,25 +194,112 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch(InterruptedException ignore) { }
-         catch (Exception ex) {
+            } catch (InterruptedException ignore) {
+            } catch (Exception ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            }
             return "OK";
         }
-        @Override protected void succeeded(Object result) {
+
+        @Override
+        protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             boolean theResult = result.equals("OK");
             resultScrollPane.setVisible(theResult);
             // resultPanel.setVisible(theResult);
+            tableColumnModel = resultTable.getColumnModel();
         }
     }
 
     private void initOtherComponents() {
         rangeFilterPanel.setBrowser(this);
+        rangeFilterPanel.setTableChooserVisible(false);
+        rangeFilterPanel.setRecordPanelvisible(false);
         resultScrollPane.setVisible(false);
         variablesChooserPanel.initPanel();
+        resultTable.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                // rowClicked(evt);
+            }
+
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                rowTableMousePressed(evt);
+            }
+        });
     }
 
+    private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
+        if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
+            JTable target = (JTable) evt.getSource();
+            int columnNumber = target.getSelectedColumn();
+
+            JPopupMenu jpm = new JPopupMenu("" + columnNumber);
+            jpm.add("Column " + tableColumnModel.getColumn(tableColumnModel.getColumnIndexAtX(evt.getX())).getHeaderValue());
+            jpm.show(target, evt.getX(), evt.getY());
+        }
+    }
+
+    private void rowTableMousePressed(java.awt.event.MouseEvent evt) {
+        if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
+            showPopUpMenu(0,evt);
+        }
+ 
+    }
+    
+    public void showPopUpMenu(int offset, java.awt.event.MouseEvent evt){
+            JTable target = (JTable) evt.getSource();
+            int rowNumber = target.rowAtPoint(new Point(evt.getX(), evt.getY()));
+
+            JPopupMenu jpm = new JPopupMenu();
+            jpm.add("Show in browser");
+            // resultTable.get
+            // jpm.add("Column " + rowNumber +" " + tableColumnModel.getColumn(tableColumnModel.getColumnIndexAtX(evt.getX())).getHeaderValue());
+            int year = (Integer) tableDataModel.getValueAt(rowNumber, 0);
+            String filterString = "INCID >= " + year * 10000 + " AND INCID <" + (year + 1) * 10000;
+
+            for (DatabaseVariablesListElement dvle : chosenVariables) {
+                int columnNumber = tableColumnModel.getColumnIndex(dvle.getDatabaseVariableName().toUpperCase());
+                String value = tableDataModel.getValueAt(rowNumber, columnNumber).toString();
+                filterString += " AND " + dvle.getDatabaseVariableName().toUpperCase() + " = " + dvle.getSQLqueryFormat(value);
+            }
+            DatabaseFilter filter = new DatabaseFilter();
+            filter.setFilterString(filterString);
+            System.out.println(filterString);
+            try {
+                tableDatadescriptionPopUp = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
+                Object[][] rows = canreg.client.CanRegClientApp.getApplication().retrieveRows(tableDatadescriptionPopUp.getResultSetID(), 0, MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK);
+                String[] variableNames = tableDatadescriptionPopUp.getColumnNames();
+                for (Object[] row : rows) {
+                    String line = "";
+                    int i = 0;
+                    for (Object obj : row) {
+                        if (obj != null) {
+                            line += variableNames[i] + ": " + obj.toString() + ", ";
+                        }
+                        i++;
+                    }
+                    jpm.add(line);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {
+                Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            int cases = (Integer) tableDataModel.getValueAt(rowNumber, tableColumnModel.getColumnIndex("CASES"));
+            if (MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK<cases){
+                jpm.add("...");
+            }
+            MenuItem menuItem = new MenuItem();
+            
+            jpm.show(target, evt.getX(), evt.getY());
+    }
 }

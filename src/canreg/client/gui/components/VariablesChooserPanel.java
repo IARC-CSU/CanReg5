@@ -9,8 +9,9 @@ import canreg.client.gui.components.VariablesExportDetailsPanel;
 import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.TreeSet;
+import java.util.Set;
 import org.jdesktop.application.Action;
 
 /**
@@ -116,16 +117,16 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
         }
     }
 
-    public String[] getSelectedVariableNames() {
-        TreeSet<String> variableNames = new TreeSet<String>();
+    public Set<DatabaseVariablesListElement> getSelectedVariables() {
+        Set<DatabaseVariablesListElement> variables = new LinkedHashSet<DatabaseVariablesListElement>();
         for (VariablesExportDetailsPanel ved : panelList) {
             if (ved.getCheckboxes()[0]){
-                variableNames.add(ved.getVariable().getDatabaseVariableName());
+                variables.add(ved.getVariable());
             }
         }
-        String[] array = {""};
-        return variableNames.toArray(array);
+        return variables;
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox allVariablesCheckBox;
     private javax.swing.JPanel panel;

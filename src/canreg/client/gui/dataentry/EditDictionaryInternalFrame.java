@@ -6,6 +6,7 @@
 package canreg.client.gui.dataentry;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.CanRegClientView;
 import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.Globals;
 import java.rmi.RemoteException;
@@ -13,6 +14,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
@@ -26,9 +29,11 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
 
     private DatabaseDictionaryListElement[] dictionariesInDB;
     private Document doc;
+    private JDesktopPane desktopPane;
 
     /** Creates new form EditDictionaryInternalFrame */
-    public EditDictionaryInternalFrame() {
+    public EditDictionaryInternalFrame(JDesktopPane dtp) {
+        this.desktopPane = dtp;
         initComponents();
         initValues();
     }
@@ -182,10 +187,14 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
 
     @Action
     public void exportCompleteDictionaryAction() {
+        
     }
 
     @Action
     public void importCompleteDictionaryAction() {
+        JInternalFrame importFrame = new ImportCompleteDictionaryInternalFrame();
+        CanRegClientView.showAndCenterInternalFrame(desktopPane, importFrame);
+        this.dispose();
     }
 
     @Action

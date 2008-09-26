@@ -55,7 +55,7 @@ public class RangeFilterPanel extends javax.swing.JPanel {
 
     public String getSelectedTable() {
         return tableChooserComboBox.getSelectedItem().toString();
-    }
+    }    
 
     public void setDeskTopPane(JDesktopPane dtp) {
         this.dtp = dtp;
@@ -67,6 +67,14 @@ public class RangeFilterPanel extends javax.swing.JPanel {
 
     public void setFilterActive(boolean b) {
         useFilterCheckBox.setSelected(b);
+    }
+
+    public void setTableChooserVisible(boolean visible) {
+        tableChooserComboBox.setVisible(visible);
+    }
+    
+    public void setRecordPanelvisible(boolean visible){
+        recordsPanel.setVisible(visible);
     }
 
     /** This method is called from within the constructor to
@@ -92,7 +100,7 @@ public class RangeFilterPanel extends javax.swing.JPanel {
         recordsTotalTextField = new javax.swing.JTextField();
         recordsTotalLabel = new javax.swing.JLabel();
         andLabel = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        tableChooserPanel = new javax.swing.JPanel();
         tableChooserComboBox = new javax.swing.JComboBox();
         refreshTableButton = new javax.swing.JButton();
 
@@ -213,8 +221,8 @@ public class RangeFilterPanel extends javax.swing.JPanel {
         andLabel.setText(resourceMap.getString("andLabel.text")); // NOI18N
         andLabel.setName("andLabel"); // NOI18N
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Table"));
-        jPanel1.setName("jPanel1"); // NOI18N
+        tableChooserPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Table"));
+        tableChooserPanel.setName("tableChooserPanel"); // NOI18N
 
         tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Both", "Patient", "Tumour" }));
         tableChooserComboBox.setAction(actionMap.get("setTableName")); // NOI18N
@@ -233,16 +241,16 @@ public class RangeFilterPanel extends javax.swing.JPanel {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout tableChooserPanelLayout = new javax.swing.GroupLayout(tableChooserPanel);
+        tableChooserPanel.setLayout(tableChooserPanelLayout);
+        tableChooserPanelLayout.setHorizontalGroup(
+            tableChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(tableChooserComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 172, Short.MAX_VALUE)
             .addComponent(refreshTableButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        tableChooserPanelLayout.setVerticalGroup(
+            tableChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tableChooserPanelLayout.createSequentialGroup()
                 .addComponent(tableChooserComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(refreshTableButton))
@@ -259,7 +267,7 @@ public class RangeFilterPanel extends javax.swing.JPanel {
                 .addGap(16, 16, 16))
             .addComponent(filterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(tableChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(recordsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -274,7 +282,7 @@ public class RangeFilterPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(2, 2, 2)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tableChooserPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(recordsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -292,7 +300,6 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JLabel andLabel;
     private javax.swing.JComboBox filterComboBox;
     private javax.swing.JPanel filterPanel;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JSplitPane limitsSplitPane;
     private javax.swing.JComboBox rangeComboBox;
     private javax.swing.JTextField rangeEndTextField;
@@ -305,6 +312,7 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JTextField recordsTotalTextField;
     private javax.swing.JButton refreshTableButton;
     private javax.swing.JComboBox tableChooserComboBox;
+    private javax.swing.JPanel tableChooserPanel;
     private javax.swing.JCheckBox useFilterCheckBox;
     private javax.swing.JButton wizardButton;
     // End of variables declaration//GEN-END:variables

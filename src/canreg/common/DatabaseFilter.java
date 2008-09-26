@@ -1,6 +1,7 @@
 package canreg.common;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  *
@@ -13,14 +14,14 @@ public class DatabaseFilter implements Serializable {
         FREQUENCIES_BY_YEAR
     }
     private String filterString;
-    private String[] databaseVariables;
+    private Set<DatabaseVariablesListElement> databaseVariables;
     private QueryType queryType;
 
-    public String[] getDatabaseVariables() {
+    public Set<DatabaseVariablesListElement> getDatabaseVariables() {
         return databaseVariables;
     }
 
-    public void setDatabaseVariables(String[] databaseVariables) {
+    public void setDatabaseVariables(Set<DatabaseVariablesListElement> databaseVariables) {
         this.databaseVariables = databaseVariables;
     }
     

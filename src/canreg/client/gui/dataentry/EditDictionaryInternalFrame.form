@@ -134,7 +134,7 @@
                       <Component id="chooseDictionaryComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="displayScrollPane" pref="366" max="32767" attributes="0"/>
+                  <Component id="displayScrollPane" pref="370" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="updateButton" min="-2" max="-2" attributes="0"/>
               </Group>

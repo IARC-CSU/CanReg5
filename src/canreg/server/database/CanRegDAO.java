@@ -18,6 +18,7 @@ package canreg.server.database;
 import cachingtableapi.DistributedTableDataSource;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
+import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.server.ListEntry;
 
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.*;
@@ -118,6 +120,7 @@ public class CanRegDAO {
         Statement statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         int rowCount = 0;
         DistributedTableDataSource dataSource;
+        Set<DatabaseVariablesListElement> variables;
 
         if (DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR.equals(filter.getQueryType())) {
             String filterString = filter.getFilterString();
@@ -125,16 +128,17 @@ public class CanRegDAO {
             if (!filterString.isEmpty()) {
                 filterString = " AND " + filterString;
             }
-            String[] variables = filter.getDatabaseVariables();
+            variables = filter.getDatabaseVariables();
             String variablesList = "";
-            if (variables.length > 0) {
+            if (variables.size() > 0) {
 
-                for (String variable : variables) {
+                for (DatabaseVariablesListElement variable : variables) {
                     if (variable != null) {
-                        variablesList += ", " + variable;
+                        variablesList += ", " + variable.getDatabaseVariableName();
                     }
                 }
-            // variablesList = variablesList.substring(0, variablesList.length() - 2);
+
+                // variablesList = variablesList.substring(0, variablesList.length() - 2);
 
             }
 
