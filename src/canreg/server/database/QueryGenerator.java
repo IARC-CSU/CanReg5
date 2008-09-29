@@ -56,9 +56,9 @@ public class QueryGenerator {
         return query;
     }
 
-   static LinkedList<String> strCreateIndexTable(String tableName, Document doc) {
+    static LinkedList<String> strCreateIndexTable(String tableName, Document doc) {
         LinkedList<String> queries = new LinkedList();
-        
+
         NodeList nodes = doc.getElementsByTagName(namespace + "indexes");
         Element variablesElement = (Element) nodes.item(0);
 
@@ -72,30 +72,31 @@ public class QueryGenerator {
 
             // Create line
             String tableNameDB = element.getElementsByTagName(namespace + "table").item(0).getTextContent().toUpperCase();
-            
+
             if (tableNameDB.equalsIgnoreCase(tableName)) {
                 String nameDB = element.getElementsByTagName(namespace + "name").item(0).getTextContent();
-                
-                String query = "create index \""+nameDB+"_idx\" on "+ Globals.SCHEMA_NAME +"."+tableName +" (";
+
+                String query = "create index \"" + nameDB + "_idx\" on " + Globals.SCHEMA_NAME + "." + tableName + " (";
                 NodeList variables = element.getElementsByTagName(namespace + "indexed_variable");
-                
+
                 // Go through all the variable definitions
                 for (int j = 0; j < variables.getLength(); j++) {
                     Element variableElement = (Element) variables.item(j);
-                    if (j>0)
-                        query+=", ";
-                    query+= "\""+ variableElement.getElementsByTagName(namespace + "variable_name").item(0).getTextContent().toUpperCase()+"\"";
+                    if (j > 0) {
+                        query += ", ";
+                    }
+                    query += "\"" + variableElement.getElementsByTagName(namespace + "variable_name").item(0).getTextContent().toUpperCase() + "\"";
                 }
                 query += ") ";
                 queries.add(query);
             }
         }
 
-        
+
 
         return queries;
     }
-    
+
     public static final String strCreateTablesOfDictionaries(Document doc) {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".DICTIONARIES" +
                 " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), " +
@@ -136,6 +137,50 @@ public class QueryGenerator {
         return queryLine;
     }
 
+    public static final String strCreatePopulationDatasetTable() {
+        String queryLine = "create table " + Globals.SCHEMA_NAME + ".PDSETS (" +
+                "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
+                "PDS_ID INT not null unique," +
+                "PDS_NAME VARCHAR(40)," +
+                "FILTER VARCHAR(255)," +
+                "DATE INT," +
+                "SOURCE VARCHAR(255)," +
+                "AGE_GROUP_STRUCTURE INT" +
+                " )";
+        return queryLine;
+    }
+
+    public static final String strCreatePopulationDatasetsTable() {
+        String queryLine = "create table " + Globals.SCHEMA_NAME + ".PDSET (" +
+                "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
+                "PDS_ID INT not null," +
+                "AGE_GROUP INT," +
+                "COUNT INT" +
+                " )";
+        return queryLine;
+    }
+
+    public static final String strCreateUsersTable() {
+        String queryLine = "create table " + Globals.SCHEMA_NAME + ".USERS (" +
+                "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
+                "USERNAME VARCHAR(255)," +
+                "PASSWORD VARCHAR(255) FOR BIT DATA NOT NULL," +
+                "USER_LEVEL INT," +
+                "EMAIL VARCHAR(255)," +
+                "REAL_NAME VARCHAR(255)" +
+                " )";
+        return queryLine;
+    }
+
+    public static final String strCreateSystemPropertiesTable() {
+        String queryLine = "create table " + Globals.SCHEMA_NAME + ".SYSTEM (" +
+                "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
+                "KEY VARCHAR(255) NOT NULL UNIQUE," +
+                "VALUE VARCHAR(255)" +
+                ")";
+        return queryLine;
+    }
+
     public static final String strSavePatient(Document doc) {
         return strSaveRecord(doc, "patient");
     }
@@ -143,8 +188,6 @@ public class QueryGenerator {
     public static final String strSaveTumour(Document doc) {
         return strSaveRecord(doc, "tumour");
     }
-
-
 
     private static final String strSaveRecord(Document doc, String tableName) {
         String variableNamesPart = "INSERT INTO " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase();
@@ -183,7 +226,7 @@ public class QueryGenerator {
         return variableNamesPart + valuesPart;
     }
 
-        static String strEditPatient(Document doc) {
+    static String strEditPatient(Document doc) {
         return strEditRecord(doc, "patient");
     }
 
@@ -222,7 +265,7 @@ public class QueryGenerator {
 
         return variableNamesPart;
     }
-    
+
     private static final String createVariable(Element element, Document doc) {
         String queryLine = "";
 

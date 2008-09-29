@@ -306,18 +306,22 @@ public class CanRegDAO {
             // Create indexes
             LinkedList<String> tumourIndexList = QueryGenerator.strCreateIndexTable("Tumour", doc);
             for (String query:tumourIndexList){
-                System.out.println(query);
+                // System.out.println(query);
                 statement.execute(query);
             }
             LinkedList<String> patientIndexList = QueryGenerator.strCreateIndexTable("Patient", doc);
             for (String query:patientIndexList){
-                System.out.println(query);
+                // System.out.println(query);
                 statement.execute(query);
             }
 
+            // Population dataset part
+            statement.execute(QueryGenerator.strCreatePopulationDatasetTable());
+            statement.execute(QueryGenerator.strCreatePopulationDatasetsTable());
+            
             // System part
-
-            // TODO
+            statement.execute(QueryGenerator.strCreateUsersTable());
+            statement.execute(QueryGenerator.strCreateSystemPropertiesTable());
 
             bCreatedTables = true;
         } catch (SQLException ex) {

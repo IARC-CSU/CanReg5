@@ -207,6 +207,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         int returnVal = chooser.showOpenDialog(this);
         String fileName = null;
         BufferedWriter bw;
+        int selectedDbdle = chooseDictionaryComboBox.getSelectedIndex();
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 //set the file name
@@ -238,6 +239,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully wrote the dictionaries to: "+fileName, "Dictionaries successfully written to file.", JOptionPane.INFORMATION_MESSAGE);
             }
         }
+        chooseDictionaryComboBox.setSelectedIndex(selectedDbdle);
     }
 
     @Action

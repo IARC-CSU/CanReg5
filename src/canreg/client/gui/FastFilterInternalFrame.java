@@ -5,15 +5,17 @@
  */
 package canreg.client.gui;
 
-import canreg.client.gui.components.RangeFilterPanel;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.server.database.DictionaryEntry;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -23,16 +25,15 @@ import org.w3c.dom.Document;
  */
 public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
 
-    private RangeFilterPanel parentFilterPanel;
     private DatabaseVariablesListElement[] variablesInTable;
     private Document doc;
     private String tableName = "both";
     private Map<Integer, Map<String, String>> dictionary;
     private Map<String, DictionaryEntry> possibleValuesMap;
+    private ActionListener actionListener;
 
     /** Creates new form FastFilterInternalFrame */
-    public FastFilterInternalFrame(RangeFilterPanel parentFilterPanel) {
-        this.parentFilterPanel = parentFilterPanel;
+    public FastFilterInternalFrame() {
         initComponents();
         initValues();
     }
@@ -265,14 +266,12 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         operationComboBox.setModel(new DefaultComboBoxModel(operators));
         operationComboBox.setSelectedIndex(2);
         // Get the system description
-        doc =
-                parentFilterPanel.getDatabseDescription();
+        doc = canreg.client.CanRegClientApp.getApplication().getDatabseDescription();
         refreshVariableList();
 
         String[] logicalOperator = {"", "AND", "OR"};
         logicalOperatorComboBox.setModel(new DefaultComboBoxModel(logicalOperator));
-        dictionary =
-                canreg.client.CanRegClientApp.getApplication().getDictionary();
+        dictionary = canreg.client.CanRegClientApp.getApplication().getDictionary();
         updatePossibleValues();
 
     }
@@ -304,7 +303,10 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
     public void setTableName(String tableName) {
         this.tableName = tableName;
         refreshVariableList();
-
+    }
+    
+    public void setActionListener(ActionListener al){
+        this.actionListener = al;
     }
 
     @Action
@@ -314,8 +316,7 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
 
     @Action
     public void okAction() {
-        parentFilterPanel.setFilter(textPane.getText().trim());
-        parentFilterPanel.setFilterActive(true);
+        actionListener.actionPerformed(new ActionEvent(this, 0, textPane.getText().trim()));
         this.setVisible(false);
     }
 

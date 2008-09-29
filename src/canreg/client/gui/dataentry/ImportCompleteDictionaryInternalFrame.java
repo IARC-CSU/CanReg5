@@ -7,7 +7,6 @@ package canreg.client.gui.dataentry;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
-import canreg.common.Globals;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -204,19 +203,18 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
     }
 
     @Action
     public void previewAction() {
-                // show the contents of the file
+        // show the contents of the file
         BufferedReader br = null;
         try {
             br = new BufferedReader(new FileReader(fileNameTextField.getText().trim()));
             int i = 0;
             String text = new String();
             String line = br.readLine();
-            while (i < Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW && line != null) {
+            while (line != null) {
                 text += line + "\n";
                 line = br.readLine();
                 i++;

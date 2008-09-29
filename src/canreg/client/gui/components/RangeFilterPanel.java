@@ -9,6 +9,8 @@ import canreg.client.gui.*;
 import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.Globals;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -22,7 +24,7 @@ import org.w3c.dom.Document;
  *
  * @author  ervikm
  */
-public class RangeFilterPanel extends javax.swing.JPanel {
+public class RangeFilterPanel extends javax.swing.JPanel implements ActionListener {
 
     private Document doc;
     // private DatabaseVariablesListElement[] variablesInDB;
@@ -296,6 +298,7 @@ private void refreshTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
 private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tableChooserComboBoxActionPerformed
     filterWizardInternalFrame.setTableName(tableChooserComboBox.getSelectedItem().toString());
 }//GEN-LAST:event_tableChooserComboBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel andLabel;
     private javax.swing.JComboBox filterComboBox;
@@ -352,9 +355,11 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
         doc = CanRegClientApp.getApplication().getDatabseDescription();
         // variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
         indexesInDB = canreg.common.Tools.getIndexesListElements(doc, Globals.NAMESPACE);
-        rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(indexesInDB));
+        rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(indexesInDB));      
         
-        filterWizardInternalFrame = new FastFilterInternalFrame(this);
+        filterWizardInternalFrame = new FastFilterInternalFrame();
+        filterWizardInternalFrame.setActionListener(this);
+
         filterWizardInternalFrame.setTableName(tableChooserComboBox.getSelectedItem().toString());
         refreshFilterComboBox();
     }
@@ -421,6 +426,7 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
             dtp.add(filterWizardInternalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
             filterWizardInternalFrame.setLocation(dtp.getWidth() / 2 - filterWizardInternalFrame.getWidth() / 2, dtp.getHeight() / 2 - filterWizardInternalFrame.getHeight() / 2);
             filterWizardInternalFrame.setVisible(false);
+            filterWizardInternalFrame.setActionListener(this);
         }
         if (filterWizardInternalFrame.isVisible()) {
             filterWizardInternalFrame.toFront();
@@ -452,5 +458,12 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
         System.out.println();
         Task task = browser.refresh();
         task.execute();
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource().getClass()==FastFilterInternalFrame.class){
+            setFilter(e.getActionCommand());
+            useFilterCheckBox.setSelected(true);
+        }
     }
 }

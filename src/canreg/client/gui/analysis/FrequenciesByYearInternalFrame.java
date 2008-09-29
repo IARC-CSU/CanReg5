@@ -14,7 +14,6 @@ import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import java.awt.MenuItem;
 import java.awt.Point;
-import java.lang.annotation.Annotation;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Set;
@@ -27,7 +26,6 @@ import javax.swing.JTable;
 import javax.swing.table.TableColumnModel;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
-import org.jdesktop.application.Task.BlockingScope;
 
 /**
  *
