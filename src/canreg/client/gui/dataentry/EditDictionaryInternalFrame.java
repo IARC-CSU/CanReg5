@@ -6,15 +6,21 @@
 package canreg.client.gui.dataentry;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
 import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.Globals;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JFileChooser;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
@@ -30,10 +36,21 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
     private DatabaseDictionaryListElement[] dictionariesInDB;
     private Document doc;
     private JDesktopPane desktopPane;
+    private JFileChooser chooser;
+    private LocalSettings localSettings;
+    private String path;
 
     /** Creates new form EditDictionaryInternalFrame */
     public EditDictionaryInternalFrame(JDesktopPane dtp) {
         this.desktopPane = dtp;
+        localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        path = localSettings.getProperty("dictionary_import_path");
+
+        if (path == null) {
+            chooser = new JFileChooser();
+        } else {
+            chooser = new JFileChooser(path);
+        }
         initComponents();
         initValues();
     }
@@ -187,7 +204,40 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
 
     @Action
     public void exportCompleteDictionaryAction() {
-        
+        int returnVal = chooser.showOpenDialog(this);
+        String fileName = null;
+        BufferedWriter bw;
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                //set the file name
+                fileName = chooser.getSelectedFile().getCanonicalPath();
+                File file = new File(fileName);
+                if (file.exists()) {
+                    int choice = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "File exists: " + fileName + ".\n Overwrite?", "File exists.", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (choice == JOptionPane.CANCEL_OPTION) {
+                        return;
+                    } else if (choice == JOptionPane.NO_OPTION) {
+                        // choose a new file
+                        exportCompleteDictionaryAction();
+                        return;
+                    }
+                }
+                bw = new BufferedWriter(new FileWriter(file));
+                
+                for (DatabaseDictionaryListElement dbdle:dictionariesInDB){
+                    bw.write("#"+dbdle.getDictionaryID()+"\t----"+dbdle.getName()+"\n");
+                    chooseDictionaryComboBox.setSelectedItem(dbdle);
+                    refreshSelectedDictionaryAction();
+                    bw.write(editorTextArea.getText()+"\n");
+                }
+                bw.flush();
+                bw.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            } finally{
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully wrote the dictionaries to: "+fileName, "Dictionaries successfully written to file.", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
     }
 
     @Action
