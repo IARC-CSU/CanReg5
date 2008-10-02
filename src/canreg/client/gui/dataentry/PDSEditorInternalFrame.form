@@ -27,10 +27,12 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="jTabbedPane1" alignment="0" pref="430" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="292" max="32767" attributes="0"/>
-              <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="221" max="32767" attributes="0"/>
+              <Component id="lockedToggleButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+              <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="saveButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -38,11 +40,12 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="jTabbedPane1" pref="403" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="411" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lockedToggleButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -74,21 +77,21 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="filterLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="nameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="sourceLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="descriptionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="ageGroupLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="dateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="nameLabel" alignment="0" pref="140" max="32767" attributes="1"/>
+                          <Component id="filterLabel" alignment="0" max="32767" attributes="1"/>
+                          <Component id="sourceLabel" alignment="0" max="32767" attributes="1"/>
+                          <Component id="descriptionLabel" alignment="0" max="32767" attributes="1"/>
+                          <Component id="ageGroupStructureLabel" alignment="0" max="32767" attributes="1"/>
+                          <Component id="dateLabel" alignment="0" max="32767" attributes="1"/>
+                          <Component id="worldPopulationLabel" alignment="0" max="32767" attributes="1"/>
                       </Group>
-                      <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="jComboBox2" pref="204" max="32767" attributes="0"/>
+                              <Component id="worldPopulationComboBox" pref="204" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                              <Component id="editWorldPopulationButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="dateChooser" alignment="1" pref="261" max="32767" attributes="0"/>
                           <Component id="descriptionScrollPane" alignment="0" pref="261" max="32767" attributes="0"/>
@@ -99,7 +102,11 @@
                               <Component id="filterWizardButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="nameTextField" alignment="0" pref="261" max="32767" attributes="1"/>
-                          <Component id="jComboBox1" alignment="0" pref="261" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="ageGroupStructureComboBox" pref="194" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="otherAgeGroupStructureButton" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -109,14 +116,14 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="nameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="nameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="nameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="filterWizardButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="filterLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="filterTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="filterLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -125,13 +132,14 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="descriptionLabel" min="-2" max="-2" attributes="0"/>
                           <Component id="descriptionScrollPane" min="-2" max="-2" attributes="0"/>
+                          <Component id="descriptionLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="ageGroupLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="ageGroupStructureComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="ageGroupStructureLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="otherAgeGroupStructureButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
@@ -140,11 +148,11 @@
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jComboBox2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="editWorldPopulationButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="worldPopulationComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="worldPopulationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="112" max="32767" attributes="0"/>
+                      <EmptySpace pref="117" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -152,6 +160,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="dateLabel">
               <Properties>
+                <Property name="horizontalAlignment" type="int" value="11"/>
                 <Property name="text" type="java.lang.String" resourceKey="dateLabel.text"/>
                 <Property name="name" type="java.lang.String" value="dateLabel" noResource="true"/>
               </Properties>
@@ -161,7 +170,7 @@
                 <Property name="name" type="java.lang.String" value="dateChooser" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="jComboBox1">
+            <Component class="javax.swing.JComboBox" name="ageGroupStructureComboBox">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="4">
@@ -171,13 +180,17 @@
                     <StringItem index="3" value="Item 4"/>
                   </StringArray>
                 </Property>
-                <Property name="name" type="java.lang.String" value="jComboBox1" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="ageGroupStructureComboBox" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ageGroupStructureChanged"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JLabel" name="ageGroupLabel">
+            <Component class="javax.swing.JLabel" name="ageGroupStructureLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="ageGroupLabel.text"/>
-                <Property name="name" type="java.lang.String" value="ageGroupLabel" noResource="true"/>
+                <Property name="horizontalAlignment" type="int" value="11"/>
+                <Property name="text" type="java.lang.String" resourceKey="ageGroupStructureLabel.text"/>
+                <Property name="name" type="java.lang.String" value="ageGroupStructureLabel" noResource="true"/>
               </Properties>
             </Component>
             <Container class="javax.swing.JScrollPane" name="descriptionScrollPane">
@@ -190,23 +203,25 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTextArea" name="jTextArea1">
+                <Component class="javax.swing.JTextArea" name="descriptionTextArea">
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="name" type="java.lang.String" value="jTextArea1" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="descriptionTextArea" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
             </Container>
             <Component class="javax.swing.JLabel" name="descriptionLabel">
               <Properties>
+                <Property name="horizontalAlignment" type="int" value="11"/>
                 <Property name="text" type="java.lang.String" resourceKey="descriptionLabel.text"/>
                 <Property name="name" type="java.lang.String" value="descriptionLabel" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="sourceLabel">
               <Properties>
+                <Property name="horizontalAlignment" type="int" value="11"/>
                 <Property name="text" type="java.lang.String" resourceKey="sourceLabel.text"/>
                 <Property name="name" type="java.lang.String" value="sourceLabel" noResource="true"/>
               </Properties>
@@ -239,23 +254,26 @@
             </Component>
             <Component class="javax.swing.JLabel" name="nameLabel">
               <Properties>
+                <Property name="horizontalAlignment" type="int" value="11"/>
                 <Property name="text" type="java.lang.String" resourceKey="nameLabel.text"/>
                 <Property name="name" type="java.lang.String" value="nameLabel" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="filterLabel">
               <Properties>
+                <Property name="horizontalAlignment" type="int" value="11"/>
                 <Property name="text" type="java.lang.String" resourceKey="filterLabel.text"/>
                 <Property name="name" type="java.lang.String" value="filterLabel" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel1">
+            <Component class="javax.swing.JLabel" name="worldPopulationLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel1.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel1" noResource="true"/>
+                <Property name="horizontalAlignment" type="int" value="11"/>
+                <Property name="text" type="java.lang.String" resourceKey="worldPopulationLabel.text"/>
+                <Property name="name" type="java.lang.String" value="worldPopulationLabel" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="jComboBox2">
+            <Component class="javax.swing.JComboBox" name="worldPopulationComboBox">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="4">
@@ -265,15 +283,23 @@
                     <StringItem index="3" value="Item 4"/>
                   </StringArray>
                 </Property>
-                <Property name="name" type="java.lang.String" value="jComboBox2" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="worldPopulationComboBox" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton3">
+            <Component class="javax.swing.JButton" name="editWorldPopulationButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.dataentry.PopulationDatasetEditorInternalFrame" id="editWorldPopulation" methodName="editWorldPopulation"/>
                 </Property>
-                <Property name="name" type="java.lang.String" value="jButton3" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="editWorldPopulationButton" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="otherAgeGroupStructureButton">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.dataentry.PopulationDatasetEditorInternalFrame" id="otherAction" methodName="otherAction"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="otherAgeGroupStructureButton" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -300,18 +326,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="409" max="32767" attributes="0"/>
-                  <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane1" alignment="0" pref="409" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="jScrollPane1" alignment="0" pref="409" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="345" max="32767" attributes="0"/>
-                  <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane1" alignment="0" pref="345" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="jScrollPane1" alignment="0" pref="353" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -326,18 +346,87 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="jTable1">
+                <Component class="javax.swing.JTable" name="populationDataSetTable">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="4" rowCount="20">
                         <Column editable="false" title="Age group" type="java.lang.String"/>
-                        <Column editable="true" title="Male" type="java.lang.Integer"/>
-                        <Column editable="true" title="Female" type="java.lang.Integer"/>
+                        <Column editable="true" title="Male" type="java.lang.Integer">
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                        </Column>
+                        <Column editable="true" title="Female" type="java.lang.Integer">
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                        </Column>
                         <Column editable="false" title="Age Group" type="java.lang.String"/>
                       </Table>
                     </Property>
                     <Property name="cellSelectionEnabled" type="boolean" value="true"/>
-                    <Property name="name" type="java.lang.String" value="jTable1" noResource="true"/>
+                    <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                      <TableColumnModel selectionModel="2">
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title resourceKey="populationDataSetTable.columnModel.title0"/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title resourceKey="populationDataSetTable.columnModel.title1"/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title resourceKey="populationDataSetTable.columnModel.title2"/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title resourceKey="populationDataSetTable.columnModel.title3"/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                      </TableColumnModel>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="populationDataSetTable" noResource="true"/>
+                    <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                    </Property>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -346,18 +435,29 @@
         </Container>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="saveButton">
       <Properties>
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
           <action class="canreg.client.gui.dataentry.PopulationDatasetEditorInternalFrame" id="saveAction" methodName="saveAction"/>
         </Property>
-        <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="saveButton" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="cancelButton">
       <Properties>
-        <Property name="text" type="java.lang.String" resourceKey="jButton2.text"/>
-        <Property name="name" type="java.lang.String" value="jButton2" noResource="true"/>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="canreg.client.gui.dataentry.PopulationDatasetEditorInternalFrame" id="cancelAction" methodName="cancelAction"/>
+        </Property>
+        <Property name="text" type="java.lang.String" resourceKey="cancelButton.text"/>
+        <Property name="name" type="java.lang.String" value="cancelButton" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JToggleButton" name="lockedToggleButton">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="canreg.client.gui.dataentry.PopulationDatasetEditorInternalFrame" id="lockedAction" methodName="lockedAction"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="lockedToggleButton" noResource="true"/>
       </Properties>
     </Component>
   </SubComponents>
