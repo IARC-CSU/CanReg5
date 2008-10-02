@@ -20,7 +20,6 @@ import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
-import canreg.server.ListEntry;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,11 +33,9 @@ import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.Statement;
 
-import java.util.ArrayList;
 // import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -65,7 +62,8 @@ public class CanRegDAO {
 
         distributedDataSources = new LinkedHashMap<String, DistributedTableDataSource>();
 
-        System.out.println(canreg.server.xml.Tools.getTextContent(new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
+        System.out.println(canreg.server.xml.Tools.getTextContent(
+                new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
 
         // Prepare the SQL strings
         strSavePatient = QueryGenerator.strSavePatient(doc);
@@ -74,6 +72,8 @@ public class CanRegDAO {
         strEditTumour = QueryGenerator.strEditTumour(doc);
         strSaveDictionary = QueryGenerator.strSaveDictionary();
         strSaveDictionaryEntry = QueryGenerator.strSaveDictionaryEntry();
+        strSavePopoulationDataset = QueryGenerator.strSavePopoulationDataset();
+        strSavePopoulationDatasetsEntry = QueryGenerator.strSavePopoulationDatasetsEntry();
 
         setDBSystemDir();
         dbProperties = loadDBProperties();
@@ -82,8 +82,8 @@ public class CanRegDAO {
         if (!dbExists()) {
             createDatabase();
             tableOfDictionariesFilled = false;
+            tableOfPopulationDataSets = false;
         }
-        // dbProperties.setProperty("derby.language.logStatementText", "true");
     }
 
     public Map<Integer, Map<String, String>> getDictionary() {
@@ -114,6 +114,79 @@ public class CanRegDAO {
         return dictionaryMap;
     }
 
+    public Map<Integer, PopulationDataset> getPopulationDatasets() {
+        Map<Integer, PopulationDataset> populationDatasetMap = new LinkedHashMap<Integer, PopulationDataset>();
+        Statement queryStatement = null;
+        ResultSet results = null;
+
+        try {
+            queryStatement = dbConnection.createStatement();
+            results = queryStatement.executeQuery(strGetPopulationDatasets);
+            while (results.next()) {
+                int id = results.getInt(1);
+                PopulationDataset populationDataset = new PopulationDataset();
+
+                Integer pdsId = results.getInt(2);
+                populationDataset.setPopulationDatasetID(pdsId);
+
+                String name = results.getString(3);
+                populationDataset.setPopulationDatasetName(name);
+
+                String filter = results.getString(4);
+                populationDataset.setFilter(filter);
+
+                Integer date = results.getInt(5);
+                populationDataset.setDate(date);
+
+                String source = results.getString(6);
+                populationDataset.setSource(source);
+
+                String ageGroupStructure = results.getString(7);
+                populationDataset.setAgeGroupStructure(new AgeGroupStructure(ageGroupStructure));
+
+                String description = results.getString(8);
+                populationDataset.setDescription(description);
+
+                Integer worldPopulationPDSID = results.getInt(9);
+                populationDataset.setWorldPopulationID(worldPopulationPDSID);
+
+                boolean worldPopulationBool = results.getInt(10) == 1;
+                populationDataset.setWorldPopulationBool(worldPopulationBool);
+
+                populationDatasetMap.put(pdsId, populationDataset);
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        try {
+            queryStatement = dbConnection.createStatement();
+            results = queryStatement.executeQuery(strGetPopulationDatasetEntries);
+            while (results.next()) {
+                int id = results.getInt(1);
+
+
+                Integer pdsId = results.getInt(2);
+
+                PopulationDataset populationDataset = populationDatasetMap.get(pdsId);
+
+                Integer ageGroup = results.getInt(3);
+                Integer sex = results.getInt(4);
+                Integer count = results.getInt(5);
+
+                PopulationDatasetsEntry populationDatasetEntry = new PopulationDatasetsEntry(ageGroup, sex, count);
+                populationDatasetEntry.setPopulationDatasetID(pdsId);
+                populationDataset.addAgeGroup(populationDatasetEntry);
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return populationDatasetMap;
+    }
+
     public DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(DatabaseFilter filter, String tableName) throws SQLException, Exception {
         // distributedDataSources.remove(theUser);
         ResultSet result;
@@ -138,7 +211,7 @@ public class CanRegDAO {
                     }
                 }
 
-                // variablesList = variablesList.substring(0, variablesList.length() - 2);
+            // variablesList = variablesList.substring(0, variablesList.length() - 2);
 
             }
 
@@ -181,7 +254,7 @@ public class CanRegDAO {
                 rowCount = countRowSet.getInt(1);
             }
             // feed it to the garbage dump
-            countRowSet=null;
+            countRowSet = null;
             result = statement.executeQuery(strGetPatientsAndTumours + filterString);
         } else {
             throw new Exception("Unknown table name.");
@@ -194,22 +267,22 @@ public class CanRegDAO {
 
         DistributedTableDescription tableDescription = dataSource.getTableDescription();
         //distributedDataSources.put(tableDescription, dataSource);
-            
+
         boolean foundPlace = false;
         int i = 0;
         String place = Integer.toString(i);
-        while (!foundPlace){
+        while (!foundPlace) {
             place = Integer.toString(i++);
-            foundPlace = !distributedDataSources.containsKey(place);           
+            foundPlace = !distributedDataSources.containsKey(place);
         }
-        
+
         tableDescription.setResultSetID(place);
-        
+
         distributedDataSources.put(place, dataSource);
         return tableDescription;
     }
-    
-    public void releaseResultSet(String resultSetID){
+
+    public void releaseResultSet(String resultSetID) {
         distributedDataSources.remove(resultSetID);
     }
 
@@ -246,7 +319,6 @@ public class CanRegDAO {
             return null;
         }
     }
-    
     // This only works for Embedded databases - will look into it!
     // When using Derby this is OK as we can access it via Embedded 
     // and Client drivers at the same time...
@@ -298,19 +370,19 @@ public class CanRegDAO {
             statement = dbConnection.createStatement();
 
             // Dynamic creation of tables
-            statement.execute(QueryGenerator.strCreateVariableTable("Tumour", doc));           
+            statement.execute(QueryGenerator.strCreateVariableTable("Tumour", doc));
             statement.execute(QueryGenerator.strCreateVariableTable("Patient", doc));
             // Dictionaries part
             statement.execute(QueryGenerator.strCreateDictionaryTable(doc));
             statement.execute(QueryGenerator.strCreateTablesOfDictionaries(doc));
             // Create indexes
             LinkedList<String> tumourIndexList = QueryGenerator.strCreateIndexTable("Tumour", doc);
-            for (String query:tumourIndexList){
+            for (String query : tumourIndexList) {
                 // System.out.println(query);
                 statement.execute(query);
             }
             LinkedList<String> patientIndexList = QueryGenerator.strCreateIndexTable("Patient", doc);
-            for (String query:patientIndexList){
+            for (String query : patientIndexList) {
                 // System.out.println(query);
                 statement.execute(query);
             }
@@ -318,7 +390,7 @@ public class CanRegDAO {
             // Population dataset part
             statement.execute(QueryGenerator.strCreatePopulationDatasetTable());
             statement.execute(QueryGenerator.strCreatePopulationDatasetsTable());
-            
+
             // System part
             statement.execute(QueryGenerator.strCreateUsersTable());
             statement.execute(QueryGenerator.strCreateSystemPropertiesTable());
@@ -411,7 +483,11 @@ public class CanRegDAO {
             stmtEditTumour = dbConnection.prepareStatement(strEditTumour, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewDictionary = dbConnection.prepareStatement(strSaveDictionary, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewDictionaryEntry = dbConnection.prepareStatement(strSaveDictionaryEntry, Statement.RETURN_GENERATED_KEYS);
+            stmtSaveNewPopoulationDataset = dbConnection.prepareStatement(strSavePopoulationDataset, Statement.RETURN_GENERATED_KEYS);
+            stmtSaveNewPopoulationDatasetsEntry = dbConnection.prepareStatement(strSavePopoulationDatasetsEntry, Statement.RETURN_GENERATED_KEYS);
             stmtDeleteDictionaryEntries = dbConnection.prepareStatement(strDeleteDictionaryEntries);
+            stmtDeletePopoulationDataset = dbConnection.prepareStatement(strDeletePopulationDataset);
+            stmtDeletePopoulationDatasetEntries = dbConnection.prepareStatement(strDeletePopulationDatasetEntries);
             //stmtUpdateExistingPatient = dbConnection.prepareStatement(strUpdatePatient);
             stmtGetPatient = dbConnection.prepareStatement(strGetPatient);
             stmtGetPatients = dbConnection.prepareStatement(strGetPatients);
@@ -430,6 +506,13 @@ public class CanRegDAO {
             if (isConnected && !tableOfDictionariesFilled) {
                 fillDictionariesTable();
             }
+
+            if (isConnected && !tableOfPopulationDataSets) {
+                fillPopulationDatasetTables();
+            }
+
+            // test
+
 
             System.out.println("Cocuou from the database connection...");
         } catch (SQLException ex) {
@@ -607,6 +690,74 @@ public class CanRegDAO {
         return id;
     }
 
+    public int saveNewPopulationDataset(PopulationDataset populationDataSet) {
+
+        Map<Integer, PopulationDataset> populationDataSets;
+        populationDataSets = getPopulationDatasets();
+
+        int dataSetID = 0;
+        while (populationDataSets.get(dataSetID) != null) {
+            dataSetID++;
+        }
+        populationDataSet.setPopulationDatasetID(dataSetID);
+        try {
+            stmtSaveNewPopoulationDataset.clearParameters();
+
+            stmtSaveNewPopoulationDataset.setInt(1, populationDataSet.getPopulationDatasetID());
+            stmtSaveNewPopoulationDataset.setString(2, populationDataSet.getPopulationDatasetName());
+            stmtSaveNewPopoulationDataset.setString(3, populationDataSet.getFilter());
+            stmtSaveNewPopoulationDataset.setInt(4, populationDataSet.getDate());
+            stmtSaveNewPopoulationDataset.setString(5, populationDataSet.getSource());
+            stmtSaveNewPopoulationDataset.setString(6, populationDataSet.getAgeGroupStructure().getConstructor());
+            stmtSaveNewPopoulationDataset.setString(7, populationDataSet.getDescription());
+            stmtSaveNewPopoulationDataset.setInt(8, populationDataSet.getWorldPopulationID());
+            if (populationDataSet.isWorldPopulationBool()) {
+                stmtSaveNewPopoulationDataset.setInt(9, 1);
+            } else {
+                stmtSaveNewPopoulationDataset.setInt(9, 0);
+            }
+            int rowCount = stmtSaveNewPopoulationDataset.executeUpdate();
+            ResultSet results = stmtSaveNewPopoulationDataset.getGeneratedKeys();
+            if (results.next()) {
+                int id = results.getInt(1);
+            }
+
+            // Save entries
+            PopulationDatasetsEntry[] entries = populationDataSet.getAgeGroups();
+            for (PopulationDatasetsEntry entry : entries) {
+                entry.setPopulationDatasetID(populationDataSet.getPopulationDatasetID());
+                savePopoulationDatasetsEntry(entry);
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return populationDataSet.getPopulationDatasetID();
+
+    }
+
+    public int savePopoulationDatasetsEntry(PopulationDatasetsEntry populationDatasetsEntry) {
+        int id = -1;
+        try {
+            stmtSaveNewPopoulationDatasetsEntry.clearParameters();
+
+            stmtSaveNewPopoulationDatasetsEntry.setInt(1, populationDatasetsEntry.getPopulationDatasetID());
+            stmtSaveNewPopoulationDatasetsEntry.setInt(2, populationDatasetsEntry.getAgeGroup());
+            stmtSaveNewPopoulationDatasetsEntry.setInt(3, populationDatasetsEntry.getSex());
+            stmtSaveNewPopoulationDatasetsEntry.setInt(4, populationDatasetsEntry.getCount());
+
+            int rowCount = stmtSaveNewPopoulationDatasetsEntry.executeUpdate();
+            ResultSet results = stmtSaveNewPopoulationDatasetsEntry.getGeneratedKeys();
+            if (results.next()) {
+                id = results.getInt(1);
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return id;
+    }
+
     public boolean deleteDictionaryEntries(int dictionaryID) {
         boolean success = false;
         try {
@@ -622,7 +773,7 @@ public class CanRegDAO {
         return success;
     }
 
-     /**
+    /**
      * 
      * @param patient
      * @return
@@ -639,15 +790,15 @@ public class CanRegDAO {
     public boolean editTumour(Tumour tumour) {
         return editRecord("Tumour", tumour, stmtEditTumour);
     }
-    
-     /*
+
+    /*
      * 
      * @param record
      * @return
      */
     public synchronized boolean editRecord(String tableName, DatabaseRecord record, PreparedStatement stmtEditRecord) {
         boolean bEdited = false;
-   
+
         int id = -1;
         try {
             stmtEditRecord.clearParameters();
@@ -694,10 +845,10 @@ public class CanRegDAO {
                 }
             }
             // add the ID
-            
+
             int idInt = (Integer) record.getVariable("id");
-            stmtEditRecord.setInt(patientVariableNumber+1,idInt);
- 
+            stmtEditRecord.setInt(patientVariableNumber + 1, idInt);
+
             int rowCount = stmtEditRecord.executeUpdate();
 
             bEdited = true;
@@ -707,6 +858,55 @@ public class CanRegDAO {
         }
 
         return bEdited;
+    }
+
+    private boolean fillPopulationDatasetTables() {
+        PopulationDataset pds = new PopulationDataset();
+        pds.setWorldPopulationBool(true);
+        pds.setPopulationDatasetName("World Standard Population");
+        pds.setSource("SEGI 1960 / World Health Organization");
+        pds.setDescription("http://www.who.int/healthinfo/paper31.pdf");
+        pds.setAgeGroupStructure(new AgeGroupStructure(5, 85));
+
+        int i = 0;
+        for (int ageGroupWeight : Globals.standardWorldPopulationWeights) {
+            pds.addAgeGroup(new PopulationDatasetsEntry(i, 1, ageGroupWeight));
+            pds.addAgeGroup(new PopulationDatasetsEntry(i, 2, ageGroupWeight));
+            i++;
+        }
+        saveNewPopulationDataset(pds);
+
+        pds = new PopulationDataset();
+        pds.setWorldPopulationBool(true);
+        pds.setPopulationDatasetName("European Standard Population");
+        pds.setSource("World Health Organization");
+        pds.setDescription("http://www.who.int/healthinfo/paper31.pdf");
+        pds.setAgeGroupStructure(new AgeGroupStructure(5, 85));
+
+        i = 0;
+        for (int ageGroupWeight : Globals.standardEuropeanPopulationWeights) {
+            pds.addAgeGroup(new PopulationDatasetsEntry(i, 1, ageGroupWeight));
+            pds.addAgeGroup(new PopulationDatasetsEntry(i, 2, ageGroupWeight));
+            i++;
+        }
+        saveNewPopulationDataset(pds);
+
+        pds = new PopulationDataset();
+        pds.setWorldPopulationBool(true);
+        pds.setPopulationDatasetName("WHO Standard Population");
+        pds.setSource("World Health Organization");
+        pds.setDescription("http://www.who.int/healthinfo/paper31.pdf");
+        pds.setAgeGroupStructure(new AgeGroupStructure(5, 85));
+
+        i = 0;
+        for (int ageGroupWeight : Globals.standardWHOPopulationWeights) {
+            pds.addAgeGroup(new PopulationDatasetsEntry(i, 1, ageGroupWeight));
+            pds.addAgeGroup(new PopulationDatasetsEntry(i, 2, ageGroupWeight));
+            i++;
+        }
+        saveNewPopulationDataset(pds);
+
+        return true;
     }
 
     private boolean fillDictionariesTable() {
@@ -735,54 +935,10 @@ public class CanRegDAO {
             dic.setFullDictionaryDescriptionLength(element.getElementsByTagName(Globals.NAMESPACE + "full_dictionary_description_length").item(0).getTextContent());
             saveDictionary(dic);
         }
+        bFilled = true;
+
         return bFilled;
     }
-
-    /**
-     * 
-     * @param id
-     * @return
-     */
-    public boolean deleteRecord(int id) {
-        boolean bDeleted = false;
-        try {
-            stmtDeletePatient.clearParameters();
-            stmtDeletePatient.setInt(1, id);
-            stmtDeletePatient.executeUpdate();
-            bDeleted = true;
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
-        }
-
-        return bDeleted;
-    }
-
-    public List<ListEntry> getListEntries() {
-        List<ListEntry> listEntries = new ArrayList<ListEntry>();
-        Statement queryStatement = null;
-        ResultSet results = null;
-
-        try {
-            queryStatement = dbConnection.createStatement();
-            results = queryStatement.executeQuery(strGetListEntries);
-            while (results.next()) {
-                int id = results.getInt(1);
-                String lName = results.getString(2);
-                String fName = results.getString(3);
-                String mName = results.getString(4);
-
-                ListEntry entry = new ListEntry(lName, fName, mName, id);
-                listEntries.add(entry);
-            }
-
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
-
-        }
-
-        return listEntries;
-    }
-
 
     /* 
      * @param index
@@ -849,14 +1005,16 @@ public class CanRegDAO {
     private Document doc;
     private Map<String, DistributedTableDataSource> distributedDataSources;
     private boolean tableOfDictionariesFilled = true;
+    private boolean tableOfPopulationDataSets = true;
     private PreparedStatement stmtSaveNewPatient;
     private PreparedStatement stmtSaveNewTumour;
     private PreparedStatement stmtEditPatient;
     private PreparedStatement stmtEditTumour;
     private PreparedStatement stmtSaveNewDictionary;
     private PreparedStatement stmtSaveNewDictionaryEntry;
+    private PreparedStatement stmtSaveNewPopoulationDatasetsEntry;
+    private PreparedStatement stmtSaveNewPopoulationDataset;
     private PreparedStatement stmtUpdateExistingPatient;
-    private PreparedStatement stmtGetListEntries;
     private PreparedStatement stmtGetPatient;
     private PreparedStatement stmtGetTumour;
     private PreparedStatement stmtGetPatients;
@@ -870,7 +1028,9 @@ public class CanRegDAO {
     private PreparedStatement stmtDeleteDictionaryEntries;
     private PreparedStatement stmtDeletePatient;
     private PreparedStatement stmtDeleteTumour;
-    private String ns = "ns3:";
+    private PreparedStatement stmtDeletePopoulationDataset;
+    private PreparedStatement stmtDeletePopoulationDatasetEntries;
+    private String ns = Globals.NAMESPACE;
     private static final String strGetPatient =
             "SELECT * FROM APP.PATIENT " +
             "WHERE ID = ?";
@@ -901,9 +1061,10 @@ public class CanRegDAO {
             "WHERE ID = ?";
     private static final String strGetDictionaryEntries =
             "SELECT * FROM APP.DICTIONARY ";
-    private static final String strGetListEntries =
-            "SELECT ID, LASTNAME, FIRSTNAME, MIDDLENAME FROM APP.PATIENT " +
-            "ORDER BY LASTNAME ASC";
+    private static final String strGetPopulationDatasetEntries =
+            "SELECT * FROM APP.PDSET ";
+    private static final String strGetPopulationDatasets =
+            "SELECT * FROM APP.PDSETS ";
     private static final String strDeletePatient =
             "DELETE FROM APP.PATIENT " +
             "WHERE ID = ?";
@@ -912,12 +1073,20 @@ public class CanRegDAO {
             "WHERE ID = ?";
     private static final String strDeleteDictionaryEntries =
             "DELETE FROM APP.DICTIONARY " +
-            "WHERE DICTIONARY = ?";    // The Dynamic ones
+            "WHERE DICTIONARY = ?";
+    private static final String strDeletePopulationDataset =
+            "DELETE FROM APP.PDSETS " +
+            "WHERE PDS_ID = ?";
+    private static final String strDeletePopulationDatasetEntries =
+            "DELETE FROM APP.PDSET " +
+            "WHERE PDS_ID = ?";    // The Dynamic ones
     private String strSavePatient;
     private String strSaveTumour;
     private String strEditPatient;
     private String strEditTumour;
     private String strSaveDictionary;
     private String strSaveDictionaryEntry;
+    private String strSavePopoulationDataset;
+    private String strSavePopoulationDatasetsEntry;
 }
 

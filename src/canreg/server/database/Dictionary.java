@@ -99,7 +99,7 @@ public class Dictionary {
         setFullDictionaryDescriptionLength(stringToInt(textContent));
     }
     
-    private int stringToInt(String s){
+    private static int stringToInt(String s){
         return Integer.parseInt(s);
     }
 }

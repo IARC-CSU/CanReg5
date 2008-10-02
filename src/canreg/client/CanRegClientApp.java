@@ -16,6 +16,7 @@ import canreg.server.CanRegServerInterface;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
+import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -61,6 +62,11 @@ public class CanRegClientApp extends SingleFrameApplication {
     private Map<Integer, Map<String, String>> dictionary;
     private boolean canregServerRunningOnThisMachine = false;
     private GlobalToolBox globalToolBox;
+
+    public void saveNewPopulationDataset(PopulationDataset pds) throws SecurityException, RemoteException {
+        int populationDatasetID = server.saveNewPopulationDataset(pds);
+        pds.setPopulationDatasetID(populationDatasetID);
+    }
 
     /**
      * At startup create and show the main frame of the application.
@@ -562,6 +568,10 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public GlobalToolBox getGlobalToolBox() {
         return globalToolBox;
+    }
+    
+    public Map<Integer,PopulationDataset> getPopulationDatasets() throws SecurityException, RemoteException{
+        return server.getPopulationDatasets();
     }
 
     public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, Exception {

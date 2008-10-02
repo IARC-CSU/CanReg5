@@ -7,6 +7,7 @@ import canreg.server.database.CanRegDAO;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
+import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
 import canreg.server.management.SystemDescription;
 import java.net.UnknownHostException;
@@ -252,5 +253,13 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException {
         db.releaseResultSet(resultSetID);
+    }
+
+    public Map<Integer, PopulationDataset> getPopulationDatasets() throws RemoteException, SecurityException {
+        return db.getPopulationDatasets();
+    }
+
+    public int saveNewPopulationDataset(PopulationDataset pds) throws RemoteException, SecurityException {
+        return db.saveNewPopulationDataset(pds);
     }
 }

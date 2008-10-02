@@ -13,6 +13,8 @@ import canreg.client.gui.dataentry.EditDictionaryInternalFrame;
 import canreg.client.gui.StandardDialog;
 import canreg.client.gui.WelcomeInternalFrame;
 import canreg.client.gui.analysis.FrequenciesByYearInternalFrame;
+import canreg.client.gui.dataentry.PDSChooserInternalFrame;
+import canreg.client.gui.dataentry.PDSEditorInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
 import canreg.client.gui.management.RestoreInternalFrame;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
@@ -164,6 +166,7 @@ public class CanRegClientView extends FrameView {
         jSeparator15 = new javax.swing.JToolBar.Separator();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         desktopPane = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
@@ -283,6 +286,13 @@ public class CanRegClientView extends FrameView {
         jButton2.setName("jButton2"); // NOI18N
         jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(jButton2);
+
+        jButton3.setAction(actionMap.get("editPopulationDataSets")); // NOI18N
+        jButton3.setFocusable(false);
+        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton3.setName("jButton3"); // NOI18N
+        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(jButton3);
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
@@ -965,6 +975,19 @@ public class CanRegClientView extends FrameView {
         internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
+
+    @Action
+    public void editPopulationDataSets() {
+        JInternalFrame internalFrame;
+        try {
+            internalFrame = new PDSChooserInternalFrame(desktopPane, CanRegClientApp.getApplication().getPopulationDatasets());
+            showAndCenterInternalFrame(desktopPane, internalFrame);
+        } catch (SecurityException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;
@@ -988,6 +1011,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JButton installSystemButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;

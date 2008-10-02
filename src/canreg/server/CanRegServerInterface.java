@@ -6,6 +6,7 @@ import canreg.server.database.CanRegDAO;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
+import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
 import java.net.InetAddress;
 import java.rmi.Remote;
@@ -50,11 +51,15 @@ public interface CanRegServerInterface extends Remote {
     public CanRegDAO getDatabseConnection()
             throws RemoteException, SecurityException;
 
+    public int saveNewPopulationDataset(PopulationDataset pds) 
+            throws RemoteException, SecurityException;
+ 
+    public DatabaseRecord getRecord(int recordID, String tableName)
+            throws RemoteException, SecurityException;
+     
     // administrative tools
     public void addUser(String username)
             throws RemoteException, SecurityException;
-
-    public DatabaseRecord getRecord(int recordID, String tableName) throws RemoteException, SecurityException;
 
     public void removeUser(String username)
             throws RemoteException, SecurityException;
@@ -111,4 +116,6 @@ public interface CanRegServerInterface extends Remote {
     public Object[][] retrieveRows(String resultSetID, int from, int to)  throws RemoteException, SecurityException, Exception;
 
     public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException;
+    
+    public Map<Integer, PopulationDataset> getPopulationDatasets() throws RemoteException, SecurityException;
 }

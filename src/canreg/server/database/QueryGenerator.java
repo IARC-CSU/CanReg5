@@ -137,6 +137,21 @@ public class QueryGenerator {
         return queryLine;
     }
 
+    public static final String strSavePopoulationDataset() {
+        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".PDSETS " +
+                "   (PDS_ID, PDS_NAME, FILTER, DATE, SOURCE,AGE_GROUP_STRUCTURE, " +
+                "DESCRIPTION, WORLD_POPULATION_ID, WORLD_POPULATION_BOOL) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        return queryLine;
+    }
+
+    public static final String strSavePopoulationDatasetsEntry() {
+        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".PDSET " +
+                "   (PDS_ID, AGE_GROUP, SEX, COUNT) " +
+                "VALUES (?, ?, ?, ?)";
+        return queryLine;
+    }
+    
     public static final String strCreatePopulationDatasetTable() {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".PDSETS (" +
                 "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
@@ -145,7 +160,10 @@ public class QueryGenerator {
                 "FILTER VARCHAR(255)," +
                 "DATE INT," +
                 "SOURCE VARCHAR(255)," +
-                "AGE_GROUP_STRUCTURE INT" +
+                "AGE_GROUP_STRUCTURE VARCHAR(40), " +
+                "DESCRIPTION VARCHAR(255), " +
+                "WORLD_POPULATION_ID INT, " +
+                "WORLD_POPULATION_BOOL INT"+
                 " )";
         return queryLine;
     }
@@ -155,6 +173,7 @@ public class QueryGenerator {
                 "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
                 "PDS_ID INT not null," +
                 "AGE_GROUP INT," +
+                "SEX INT, " +
                 "COUNT INT" +
                 " )";
         return queryLine;
@@ -175,7 +194,7 @@ public class QueryGenerator {
     public static final String strCreateSystemPropertiesTable() {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".SYSTEM (" +
                 "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
-                "KEY VARCHAR(255) NOT NULL UNIQUE," +
+                "LOOKUP VARCHAR(255) NOT NULL UNIQUE," +
                 "VALUE VARCHAR(255)" +
                 ")";
         return queryLine;

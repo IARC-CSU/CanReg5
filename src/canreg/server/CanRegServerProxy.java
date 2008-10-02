@@ -6,6 +6,7 @@ import canreg.server.database.CanRegDAO;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
+import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
 import canreg.server.security.ValidateMethodCall;
 import java.net.InetAddress;
@@ -207,5 +208,15 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException {
         checkPermission("retrieveRows:"+resultSetID);
         theServer.releaseResultSet(resultSetID);
+    }
+
+    public Map<Integer, PopulationDataset> getPopulationDatasets() throws RemoteException, SecurityException {
+        checkPermission("getPopulationDatasets");
+        return theServer.getPopulationDatasets();
+    }
+
+    public int saveNewPopulationDataset(PopulationDataset pds) throws RemoteException, SecurityException {
+        checkPermission("saveNewPopulationDataset");
+        return theServer.saveNewPopulationDataset(pds);
     }
 }
