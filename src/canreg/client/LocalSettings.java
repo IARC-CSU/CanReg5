@@ -26,7 +26,6 @@ import java.util.logging.Logger;
  * @author morten
  */
 public class LocalSettings {
-
     // Programming related
     private String settingsFileName;
     private String settingsDir;
@@ -42,6 +41,8 @@ public class LocalSettings {
     public static String WORKING_DIR_PATH_KEY = "working_path";
     public static String AUTO_START_SERVER_KEY = "auto_start_server";
     public static String LOOK_AND_FEEL_KEY = "look_and_feel";
+    public static String AUTO_BACKUP_KEY = "auto_backup";
+    public static String BACKUP_EVERY_KEY = "backup_every";
     // Property names
     public static String YES_PROPERTY = "yes";
     public static String NO_PROPERTY = "no";
@@ -49,7 +50,6 @@ public class LocalSettings {
     public static String OFF_PROPERTY = "off";
     public static String TRUE_PROPERTY = "true";
     public static String FALSE_PROPERTY = "false";
-    
 
     public LocalSettings(String localSettingsFileName) throws IOException {
         boolean settingsLoaded = false;
@@ -86,23 +86,34 @@ public class LocalSettings {
                 port,
                 code, i);
         addServerDescription(sd);
-        
+
         return i;
     }
 
     /*
     public String[] getLanguageList() {
-        String list[] = new String[Globals.LANGUAGES_AVAILABLE.length];
-        for (int i = 0; i < list.length; i++) {
-            Locale locale = new Locale(Globals.LANGUAGES_AVAILABLE[i]);
-            list[i] = locale.getDisplayLanguage();
-        }
-        return list;
+    String list[] = new String[Globals.LANGUAGES_AVAILABLE.length];
+    for (int i = 0; i < list.length; i++) {
+    Locale locale = new Locale(Globals.LANGUAGES_AVAILABLE[i]);
+    list[i] = locale.getDisplayLanguage();
     }
-    */
-    
+    return list;
+    }
+     */
     public Locale getLocale() {
         return new Locale(properties.getProperty(LOCALE_KEY));
+    }
+
+    public boolean isAutoBackup() {
+        return getProperty(AUTO_BACKUP_KEY).equalsIgnoreCase(TRUE_PROPERTY);
+    }
+
+    public void setAutomaticBackup(boolean b) {
+        if (b) {
+            setProperty(AUTO_BACKUP_KEY, TRUE_PROPERTY);
+        } else {
+            setProperty(AUTO_BACKUP_KEY, FALSE_PROPERTY);
+        }
     }
 
     public void setLocale(String localeCode) {
@@ -193,7 +204,7 @@ public class LocalSettings {
         }
     }
 
-    public String getDefalutProperty(String key) {
+    private String getDefalutProperty(String key) {
         String property = "";
         if (key.equalsIgnoreCase(USERNAME_KEY)) {
             property = "";
@@ -205,8 +216,10 @@ public class LocalSettings {
             property = FALSE_PROPERTY;
         } else if (key.equalsIgnoreCase(WORKING_DIR_PATH_KEY)) {
             property = System.getProperty("user.home", ".") + System.getProperty("file.separator") + "CanReg";
-        } else if (key.equalsIgnoreCase(LOOK_AND_FEEL_KEY)){
+        } else if (key.equalsIgnoreCase(LOOK_AND_FEEL_KEY)) {
             property = "System";
+        } else if (key.equalsIgnoreCase(AUTO_BACKUP_KEY)) {
+            property = TRUE_PROPERTY;
         }
         return property;
     }
@@ -217,6 +230,7 @@ public class LocalSettings {
         setProperty(USERNAME_KEY, getDefalutProperty(USERNAME_KEY));
         setProperty(PASSWORD_KEY, getDefalutProperty(PASSWORD_KEY));
         setProperty(WORKING_DIR_PATH_KEY, getDefalutProperty(WORKING_DIR_PATH_KEY));
+        setProperty(AUTO_BACKUP_KEY, getDefalutProperty(AUTO_BACKUP_KEY));
         settingsChanged = true;
     }
 

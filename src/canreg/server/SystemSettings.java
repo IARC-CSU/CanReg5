@@ -4,6 +4,7 @@
  */
 package canreg.server;
 
+import canreg.common.Globals;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,6 +12,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -26,6 +31,7 @@ public class SystemSettings {
     private String settingsFileName;
     private String settingsDir;
     private Properties properties;
+    private DateFormat dateFormat;
     private boolean settingsChanged;    
     // Key names
     public static String DATE_OF_LAST_BACKUP_KEY = "date_of_last_backup";
@@ -37,9 +43,12 @@ public class SystemSettings {
     public static String OFF_PROPERTY = "off";
     public static String TRUE_PROPERTY = "true";
     public static String FALSE_PROPERTY = "false";
+
     
 
     public SystemSettings(String settingsFileName) throws IOException {
+        dateFormat = new SimpleDateFormat("yyyyMMdd");
+        
         boolean settingsLoaded = false;
         this.settingsFileName = settingsFileName;
         // set (and create) settings directory
@@ -98,7 +107,6 @@ public class SystemSettings {
             try {
                 propOutputStream = new FileOutputStream(settingsDir + System.getProperty("file.separator") + settingsFileName);
                 getProperties().storeToXML(propOutputStream, "CanReg5 system settings");
-
                 success = true;
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(SystemSettings.class.getName()).log(Level.SEVERE, null, ex);
@@ -143,7 +151,7 @@ public class SystemSettings {
         }
     }
 
-    public String getDefalutProperty(String key) {
+    private String getDefalutProperty(String key) {
         String property = "";
         if (key.equalsIgnoreCase(DATE_OF_LAST_BACKUP_KEY)) {
             property = "";
@@ -152,6 +160,7 @@ public class SystemSettings {
     }
 
     private void createDefaultProperties() {
+        setProperty(SYSTEM_DIR_PATH_KEY, getCanRegSystemSettingsDir());
         setProperty(DATE_OF_LAST_BACKUP_KEY, getDefalutProperty(DATE_OF_LAST_BACKUP_KEY));
         settingsChanged = true;
     }
@@ -159,7 +168,7 @@ public class SystemSettings {
     private static String getCanRegSystemSettingsDir() {
         // decide on the db system directory
         String userHomeDir = System.getProperty("user.home", ".");
-        String systemDir = userHomeDir + System.getProperty("file.separator") + ".CanRegServer";
+        String systemDir = userHomeDir + System.getProperty("file.separator") + ".CanRegServer" + System.getProperty("file.separator") + "Settings";
 
         // Create directory if missing
         File settingsFileDir = new File(systemDir);
@@ -191,5 +200,22 @@ public class SystemSettings {
             File fileSystemDir = new File(dir);
             fileSystemDir.mkdir();
         }
+    }
+    
+    public void setDateOfLastbackup(Date date){
+        setProperty(SystemSettings.DATE_OF_LAST_BACKUP_KEY, dateFormat.format(date));
+    }
+    
+    public Date getDateOfLastBackUp(){
+        String dateString = getProperty(SystemSettings.DATE_OF_LAST_BACKUP_KEY);
+        Date date = null;
+        if (dateString != null){
+            try {
+                date = dateFormat.parse(dateString);
+            } catch (ParseException ex) {
+                Logger.getLogger(SystemSettings.class.getName()).log(Level.INFO, null, ex);
+            }
+        }
+        return date;
     }
 }

@@ -12,6 +12,7 @@ import java.net.InetAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Map;
 import javax.security.auth.Subject;
 import org.w3c.dom.Document;
@@ -50,6 +51,8 @@ public interface CanRegServerInterface extends Remote {
     // returns the connection to the database
     public CanRegDAO getDatabseConnection()
             throws RemoteException, SecurityException;
+
+    public Date getDateOfLastBackUp() throws RemoteException, SecurityException;
 
     public int saveNewPopulationDataset(PopulationDataset pds) 
             throws RemoteException, SecurityException;

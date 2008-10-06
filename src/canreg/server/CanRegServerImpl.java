@@ -10,16 +10,20 @@ import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
 import canreg.server.management.SystemDescription;
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.Subject;
 import org.apache.derby.drda.NetworkServerControl;
 import java.net.InetAddress;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import org.w3c.dom.Document;
@@ -36,6 +40,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private NetworkServerControl dbServer;
     private SystemDescription systemDescription;
     private String systemCode;
+    private SystemSettings systemSettings;
 
     public CanRegServerImpl() throws RemoteException {
         this("TRN");
@@ -43,6 +48,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     public CanRegServerImpl(String systemCode) throws RemoteException {
         this.systemCode = systemCode;
+        
         // Step one load the system definition...
         if (!initSystemDefinition()) {
             throw new RemoteException("Faulty system definitions...");
@@ -50,6 +56,11 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         // Step two: start the database...
         if (!initDataBase()) {
             throw new RemoteException("Cannot initialize database...");
+        }
+        try {
+            systemSettings = new SystemSettings(systemCode+"settings.xml");
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -198,6 +209,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     public String performBackup() throws RemoteException, SecurityException {
+        systemSettings.setDateOfLastbackup(new Date());
+        systemSettings.writeSettings();
         return db.performBackup();
     }
 
@@ -261,5 +274,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     public int saveNewPopulationDataset(PopulationDataset pds) throws RemoteException, SecurityException {
         return db.saveNewPopulationDataset(pds);
+    }
+
+    public Date getDateOfLastBackUp() throws RemoteException, SecurityException {
+        return systemSettings.getDateOfLastBackUp();
     }
 }

@@ -11,6 +11,8 @@ import canreg.server.database.PopulationDataset;
 import java.util.LinkedList;
 import java.util.Map;
 import javax.swing.JDesktopPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.jdesktop.application.Action;
 
 /**
@@ -45,10 +47,26 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
         populationDataSetsList = new javax.swing.JList();
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        nameTextField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        sourceTextField = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        dateTextField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        descriptionTextArea = new javax.swing.JTextArea();
+        jLabel4 = new javax.swing.JLabel();
 
         setClosable(true);
         setResizable(true);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PDSChooserInternalFrame.class);
+        setTitle(resourceMap.getString("Form.title")); // NOI18N
         setName("Form"); // NOI18N
+        try {
+            setSelected(true);
+        } catch (java.beans.PropertyVetoException e1) {
+            e1.printStackTrace();
+        }
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(PDSChooserInternalFrame.class, this);
         jButton2.setAction(actionMap.get("editAction")); // NOI18N
@@ -56,11 +74,6 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        populationDataSetsList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         populationDataSetsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         populationDataSetsList.setName("populationDataSetsList"); // NOI18N
         jScrollPane1.setViewportView(populationDataSetsList);
@@ -71,6 +84,38 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
         jButton3.setAction(actionMap.get("newPDSAction")); // NOI18N
         jButton3.setName("jButton3"); // NOI18N
 
+        nameTextField.setEditable(false);
+        nameTextField.setText(resourceMap.getString("nameTextField.text")); // NOI18N
+        nameTextField.setName("nameTextField"); // NOI18N
+
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
+
+        sourceTextField.setEditable(false);
+        sourceTextField.setText(resourceMap.getString("sourceTextField.text")); // NOI18N
+        sourceTextField.setName("sourceTextField"); // NOI18N
+
+        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
+        jLabel2.setName("jLabel2"); // NOI18N
+
+        dateTextField.setEditable(false);
+        dateTextField.setText(resourceMap.getString("dateTextField.text")); // NOI18N
+        dateTextField.setName("dateTextField"); // NOI18N
+
+        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
+        jLabel3.setName("jLabel3"); // NOI18N
+
+        jScrollPane2.setName("jScrollPane2"); // NOI18N
+
+        descriptionTextArea.setColumns(20);
+        descriptionTextArea.setEditable(false);
+        descriptionTextArea.setRows(2);
+        descriptionTextArea.setName("descriptionTextArea"); // NOI18N
+        jScrollPane2.setViewportView(descriptionTextArea);
+
+        jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
+        jLabel4.setName("jLabel4"); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -78,20 +123,50 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                        .addComponent(jButton1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                            .addComponent(dateTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE))
+                            .addComponent(sourceTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(sourceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
@@ -111,11 +186,20 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField dateTextField;
+    private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField nameTextField;
     private javax.swing.JList populationDataSetsList;
+    private javax.swing.JTextField sourceTextField;
     // End of variables declaration//GEN-END:variables
 
     private void initValues() {
@@ -134,8 +218,21 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
             public int getSize() { return populationDatasets.length; }
             public Object getElementAt(int i) { return populationDatasets[i]; }
         });
+        populationDataSetsList.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                listElementChanged(e);
+            }
+        });        
     }
 
+    private void listElementChanged(ListSelectionEvent e){
+        PopulationDataset pds = (PopulationDataset) populationDataSetsList.getSelectedValue();
+        nameTextField.setText(pds.getPopulationDatasetName());
+        sourceTextField.setText(pds.getSource());
+        descriptionTextArea.setText(pds.getDescription());
+        dateTextField.setText(""+pds.getDate());
+    }
+    
     @Action
     public void selectAction() {
         

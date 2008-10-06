@@ -10,10 +10,16 @@ import canreg.client.LocalSettings;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.common.Globals;
 import java.lang.String;
+import java.rmi.RemoteException;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 
@@ -59,7 +65,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         numberOfDaysTextField = new javax.swing.JTextField();
         daysLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        backUpPerformedTextField = new javax.swing.JTextField();
         advancedPanel = new javax.swing.JPanel();
         versionPanel = new javax.swing.JPanel();
         versionInstalledLabel = new javax.swing.JLabel();
@@ -198,11 +204,11 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 
-        jTextField1.setEditable(false);
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextField1.setText(resourceMap.getString("jTextField1.text")); // NOI18N
-        jTextField1.setFocusable(false);
-        jTextField1.setName("jTextField1"); // NOI18N
+        backUpPerformedTextField.setEditable(false);
+        backUpPerformedTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        backUpPerformedTextField.setText(resourceMap.getString("backUpPerformedTextField.text")); // NOI18N
+        backUpPerformedTextField.setFocusable(false);
+        backUpPerformedTextField.setName("backUpPerformedTextField"); // NOI18N
 
         javax.swing.GroupLayout automaticBackupPanelLayout = new javax.swing.GroupLayout(automaticBackupPanel);
         automaticBackupPanel.setLayout(automaticBackupPanelLayout);
@@ -225,7 +231,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                         .addComponent(numberOfDaysTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(daysLabel))
-                    .addComponent(jTextField1)))
+                    .addComponent(backUpPerformedTextField)))
         );
         automaticBackupPanelLayout.setVerticalGroup(
             automaticBackupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -238,7 +244,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                     .addComponent(everyLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(automaticBackupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(backUpPerformedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -405,6 +411,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
     @Action
     public void cancelAction() {
         this.dispose();
@@ -412,17 +419,22 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
 
     @Action
     public void okAction() {
-        // store all info
-        saveValues();
-        // apply new settings
-        crcv.applyPreferences();
-        //and close
-        this.dispose();
+        // First test filds that can be tested
+        if (valuesOK()) {
+            // store all info
+            saveValues();
+            // apply new settings
+            crcv.applyPreferences();
+            //and close
+            this.dispose();
+        } else {
+        }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel advancedPanel;
     private javax.swing.JPanel automaticBackupPanel;
     private javax.swing.JCheckBox automaticbackupCheckBox;
+    private javax.swing.JTextField backUpPerformedTextField;
     private javax.swing.JButton checkButton;
     private javax.swing.JLabel daysLabel;
     private javax.swing.JButton downloadLatestButton;
@@ -436,7 +448,6 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JComboBox languageComboBox;
     private javax.swing.JLabel languageLabel;
     private javax.swing.JLabel latestVersionLabel;
@@ -454,6 +465,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         // Languages
         locales = Locale.getAvailableLocales();
         Arrays.sort(locales, new Comparator<Locale>() {
+
             public int compare(Locale o1, Locale o2) {
                 return o1.getDisplayName(o1).compareToIgnoreCase(o2.getDisplayName(o2));
             }
@@ -464,16 +476,16 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         int numberOfElementsAdded = 0;
         LinkedList localesList = new LinkedList();
         LinkedList localesNamesList = new LinkedList();
-        for(int i = 0; i<locales.length; i++){
-            
-            String country =locales[i].getDisplayCountry(locales[i]);
+        for (int i = 0; i < locales.length; i++) {
+
+            String country = locales[i].getDisplayCountry(locales[i]);
             localeNames[i] = locales[i].getDisplayName(locales[i]);
-            
-            if (country.trim().length()>0){
+
+            if (country.trim().length() > 0) {
                 //skip it
-            } else{
-                if (locales[i].equals(currentLocale)){
-                   currentLocaleIndex = numberOfElementsAdded;
+            } else {
+                if (locales[i].equals(currentLocale)) {
+                    currentLocaleIndex = numberOfElementsAdded;
                 }
                 localesList.add(locales[i]);
                 localesNamesList.add(locales[i].getDisplayName(locales[i]));
@@ -484,15 +496,51 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         locales = (Locale[]) localesList.toArray(locales);
         languageComboBox.setModel(new javax.swing.DefaultComboBoxModel(localesNamesList.toArray()));
         languageComboBox.setSelectedIndex(currentLocaleIndex);
-        
+
         showOutlineCheckBox.setSelected(localSettings.isOutlineDragMode());
         // CanReg verison
         versionInstalledTextField.setText(Globals.VERSION_STRING);
+        try {
+            // Backup
+            Date backUpDate = CanRegClientApp.getApplication().getDateOfLastBackUp();
+            if (backUpDate != null) {
+                backUpPerformedTextField.setText(DateFormat.getDateInstance().format(backUpDate));
+            }
+        } catch (SecurityException ex) {
+            Logger.getLogger(OptionsFrame.class.getName()).log(Level.INFO, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(OptionsFrame.class.getName()).log(Level.INFO, null, ex);
+        }
+        numberOfDaysTextField.setText(localSettings.getProperty(LocalSettings.BACKUP_EVERY_KEY));
+        automaticbackupCheckBox.setSelected(localSettings.isAutoBackup());
     }
 
     private String getNewestVersionNumber() {
         String latestVersionString = canreg.common.Tools.getFileFromURL(Globals.newestVersionURLString);
         return latestVersionString;
+    }
+
+    private boolean valuesOK() {
+        boolean valuesOK = true;
+        if (automaticbackupCheckBox.isSelected()) {
+            try {
+                int numberOfDays = Integer.parseInt(numberOfDaysTextField.getText());
+                if (numberOfDays < 1) {
+                    JOptionPane.showInternalMessageDialog(
+                            CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                            "Number too low.",
+                            "Error in automatic backup options.", JOptionPane.ERROR_MESSAGE);
+                    valuesOK = false;
+                }
+            } catch (NumberFormatException nfe) {
+                JOptionPane.showInternalMessageDialog(
+                        CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                        numberOfDaysTextField.getText() + " is not a number.",
+                        "Error in automatic backup options.", JOptionPane.ERROR_MESSAGE);
+                valuesOK = false;
+            }
+        }
+        return valuesOK;
     }
 
     private void saveValues() {
@@ -504,6 +552,13 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             localSettings.setOutlineDragMode(true);
         } else {
             localSettings.setOutlineDragMode(false);
+        }
+
+        if (automaticbackupCheckBox.isSelected()) {
+            localSettings.setAutomaticBackup(true);
+            localSettings.setProperty(LocalSettings.BACKUP_EVERY_KEY, numberOfDaysTextField.getText());
+        } else {
+            localSettings.setAutomaticBackup(false);
         }
         // write settings to file
         localSettings.writeSettings();
@@ -518,7 +573,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     @Action
     public void checkLatestVersionAction() {
         String lv = getNewestVersionNumber();
-        if (lv != null && lv.trim().length()>0) {
+        if (lv != null && lv.trim().length() > 0) {
             latestVersionTextField.setText(lv);
             latestVersionTextField.setEnabled(true);
             if (!lv.trim().equalsIgnoreCase(Globals.VERSION_STRING)) {

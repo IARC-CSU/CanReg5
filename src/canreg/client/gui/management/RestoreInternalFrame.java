@@ -190,7 +190,7 @@ public class RestoreInternalFrame extends javax.swing.JInternalFrame {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Restore not successfull.", "Error", JOptionPane.ERROR_MESSAGE);      
             } else {
                 // All went well
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Restore successfull.", "Message", JOptionPane.INFORMATION_MESSAGE);      
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Restore successfull.\nPlease restart your CanReg system.", "Message", JOptionPane.INFORMATION_MESSAGE);      
             }
         }
     }

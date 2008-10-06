@@ -305,7 +305,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="daysLabel" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jTextField1" alignment="0" max="32767" attributes="1"/>
+                              <Component id="backUpPerformedTextField" alignment="0" max="32767" attributes="1"/>
                           </Group>
                       </Group>
                   </Group>
@@ -322,7 +322,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="backUpPerformedTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
@@ -362,13 +362,13 @@
                     <Property name="name" type="java.lang.String" value="jLabel2" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="jTextField1">
+                <Component class="javax.swing.JTextField" name="backUpPerformedTextField">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" resourceKey="jTextField1.text"/>
+                    <Property name="text" type="java.lang.String" resourceKey="backUpPerformedTextField.text"/>
                     <Property name="focusable" type="boolean" value="false"/>
-                    <Property name="name" type="java.lang.String" value="jTextField1" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="backUpPerformedTextField" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>

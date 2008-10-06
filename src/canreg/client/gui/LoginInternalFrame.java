@@ -17,6 +17,7 @@ import java.net.UnknownHostException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -460,6 +461,23 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                 fv.getFrame().setTitle("CanReg5 - " + canRegSystemName);
                 this.dispose();
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully logged in to " + canRegSystemName + " as " + username + ".", "Logged in", JOptionPane.INFORMATION_MESSAGE);
+                // test backup
+                if (LocalSettings.TRUE_PROPERTY.equalsIgnoreCase(localSettings.getProperty(LocalSettings.AUTO_BACKUP_KEY))) {
+                    String maxDiffString = localSettings.getProperty(LocalSettings.BACKUP_EVERY_KEY);
+                    if (maxDiffString != null) {
+                        int maxDiff = Integer.parseInt(maxDiffString);
+                        Date date = CanRegClientApp.getApplication().getDateOfLastBackUp();
+                        Date todaysDate = new Date();
+                        int diff = (int) ((todaysDate.getTime() - date.getTime()) / (1000L * 60L * 60L * 24L));
+                        if (diff >= maxDiff) {
+                            int showInternalConfirmDialog = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Last backup was performed " + diff + " day(s) ago.\nPerform backup now?", "Back up?", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                            if (showInternalConfirmDialog == JOptionPane.YES_OPTION) {
+                                Task task = new PerformBackUpActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+                                task.execute();
+                            }
+                        }
+                    }
+                }
             } else {
                 feedbackLabel.setText("Error.");
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -598,6 +616,46 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             } else {
                 feedbackLabel.setText("Server failed to start.");
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Server failed to start.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private class PerformBackUpActionTask extends org.jdesktop.application.Task<Object, Void> {
+
+        WaitFrame waitFrame;
+
+        PerformBackUpActionTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to LaunchCanRegServerActionTask fields, here.
+            super(app);
+            // launchServerButton.setEnabled(false);
+            feedbackLabel.setText("Performing backup...");
+            waitFrame = new WaitFrame();
+            waitFrame.setLabel("Performing backup...");
+            waitFrame.setIndeterminate(true);
+            desktopPane.add(waitFrame, javax.swing.JLayeredPane.POPUP_LAYER);
+            waitFrame.setVisible(true);
+            waitFrame.setLocation((desktopPane.getWidth() - waitFrame.getWidth()) / 2, (desktopPane.getHeight() - waitFrame.getHeight()) / 2);
+        }
+
+        @Override
+        protected Object doInBackground() {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here...
+            String result = null;
+            result = CanRegClientApp.getApplication().performBackup();
+            return result;
+        }
+
+        @Override
+        protected void succeeded(Object resultObject) {
+            waitFrame.dispose();
+            String resultString = (String) resultObject;
+            if (resultString != null) {
+                feedbackLabel.setText("Backup performed.");
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "System backed up to " + resultString + ".", "Backup performed.", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }

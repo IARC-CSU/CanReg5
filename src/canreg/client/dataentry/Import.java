@@ -179,7 +179,7 @@ public class Import {
                         }
                     }
                 }
-                debugOut(patient.toString());
+                // debugOut(patient.toString());
 
                 // Build tumour part
                 Tumour tumour = new Tumour();
@@ -196,7 +196,7 @@ public class Import {
                     }
                 }
 
-                debugOut(tumour.toString());
+                // debugOut(tumour.toString());
                 // add patient to the database
                 patientIDNumber = server.savePatient(patient);
 

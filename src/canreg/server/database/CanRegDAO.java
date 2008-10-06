@@ -55,10 +55,10 @@ public class CanRegDAO {
      * @param dbName
      * @param doc
      */
-    public CanRegDAO(String dbName, Document doc) {
+    public CanRegDAO(String systemCode, Document doc) {
         this.doc = doc;
 
-        this.dbName = dbName;
+        this.systemCode = systemCode;
 
         distributedDataSources = new LinkedHashMap<String, DistributedTableDataSource>();
 
@@ -303,7 +303,8 @@ public class CanRegDAO {
     public String performBackup() {
         String path = null;
         try {
-            path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + dbName);
+            path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + systemCode);
+            canreg.server.xml.Tools.writeXmlFile(doc, path + Globals.FILE_SEPARATOR + systemCode + ".xml");
         // TODO - record date of last backup somewhere...
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -437,7 +438,7 @@ public class CanRegDAO {
         } catch (SQLException e) {
             if (e.getSQLState().equals("08006")) {
                 shutdownSuccess = true; // single db.
-            }
+            } else return "shutdown failed";
             ex = e;
         }
         if (!shutdownSuccess) {
@@ -450,7 +451,7 @@ public class CanRegDAO {
         try {
             dbProperties.remove("shutdown");
             dbConnection.close(); // Close current connection.
-            dbProperties.put("restoreFrom", path + "/" + dbName);
+            dbProperties.put("restoreFrom", path + "/" + systemCode);
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
             bRestored = true;
         } catch (SQLException e) {
@@ -461,6 +462,13 @@ public class CanRegDAO {
         dbProperties.remove("restoreFrom");
         connect(); // Reconnect.
         if (bRestored) {
+            try {
+                // install the xml
+                canreg.common.Tools.fileCopy(path + Globals.FILE_SEPARATOR + systemCode + ".xml", 
+                        Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + systemCode + ".xml");
+            } catch (IOException ex1) {
+                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             return "success";
         } else {
             return "failed";
@@ -543,7 +551,7 @@ public class CanRegDAO {
      * @return String location of the database
      */
     public String getDatabaseLocation() {
-        String dbLocation = System.getProperty("derby.system.home") + "/" + dbName;
+        String dbLocation = System.getProperty("derby.system.home") + "/" + systemCode;
         return dbLocation;
     }
 
@@ -552,7 +560,7 @@ public class CanRegDAO {
      * @return
      */
     public String getDatabaseUrl() {
-        String dbUrl = dbProperties.getProperty("derby.url") + dbName;
+        String dbUrl = dbProperties.getProperty("derby.url") + systemCode;
         return dbUrl;
     }
 
@@ -1001,7 +1009,7 @@ public class CanRegDAO {
     private Connection dbConnection;
     private Properties dbProperties;
     private boolean isConnected;
-    private String dbName;
+    private String systemCode;
     private Document doc;
     private Map<String, DistributedTableDataSource> distributedDataSources;
     private boolean tableOfDictionariesFilled = true;

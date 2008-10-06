@@ -8,6 +8,7 @@ package canreg.client.gui.dataentry;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -238,6 +239,7 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
     @Action
     public Task importAction() {
+        this.dispose();
         return new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
     }
     
@@ -325,8 +327,8 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 try {
-                    br.close();
-                    localSettings.setProperty("dictionary_import_path", path);
+                    br.close();                 
+
                 } catch (IOException ex) {
                     Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -337,6 +339,10 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
            if (result == null) {
+                    File file = new File(fileName);
+                    
+                    localSettings.setProperty("dictionary_import_path", file.getParent());
+                    localSettings.writeSettings();
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully imported dictionaries from file.", "Dictionary successfully imported.", JOptionPane.INFORMATION_MESSAGE);
            }
         }

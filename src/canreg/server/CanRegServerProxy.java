@@ -13,6 +13,7 @@ import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Map;
 import javax.security.auth.Subject;
 import org.w3c.dom.Document;
@@ -218,5 +219,10 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public int saveNewPopulationDataset(PopulationDataset pds) throws RemoteException, SecurityException {
         checkPermission("saveNewPopulationDataset");
         return theServer.saveNewPopulationDataset(pds);
+    }
+
+    public Date getDateOfLastBackUp() throws RemoteException, SecurityException {
+        checkPermission("getDateOfLastBackUp");
+        return theServer.getDateOfLastBackUp();
     }
 }

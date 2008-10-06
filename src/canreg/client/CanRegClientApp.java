@@ -28,6 +28,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.EventObject;
 import java.util.List;
 import java.util.Locale;
@@ -473,7 +474,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             server.editTumour((Tumour) databaseRecord);
         }
     }
-    
+
     public boolean deleteDictionaryEntries(int dictionaryID) throws SecurityException, RemoteException {
         return server.deleteDictionaryEntries(dictionaryID);
     }
@@ -569,19 +570,27 @@ public class CanRegClientApp extends SingleFrameApplication {
     public GlobalToolBox getGlobalToolBox() {
         return globalToolBox;
     }
-    
-    public Map<Integer,PopulationDataset> getPopulationDatasets() throws SecurityException, RemoteException{
+
+    public Map<Integer, PopulationDataset> getPopulationDatasets() throws SecurityException, RemoteException {
         return server.getPopulationDatasets();
     }
 
     public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, Exception {
         return server.retrieveRows(resultSetID, from, to);
     }
-    
-    public void releaseResultSet(String resultSetID) throws SecurityException, RemoteException{
+
+    public void releaseResultSet(String resultSetID) throws SecurityException, RemoteException {
         server.releaseResultSet(resultSetID);
     }
-    
+
+    public Date getDateOfLastBackUp() throws SecurityException, RemoteException {
+        if (server != null) {
+            return server.getDateOfLastBackUp();
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Main method launching the application.
      * @param args 
@@ -590,5 +599,4 @@ public class CanRegClientApp extends SingleFrameApplication {
         init();
         launch(CanRegClientApp.class, args);
     }
-
 }

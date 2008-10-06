@@ -166,7 +166,6 @@ public class CanRegClientView extends FrameView {
         jSeparator15 = new javax.swing.JToolBar.Separator();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         desktopPane = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
@@ -177,6 +176,7 @@ public class CanRegClientView extends FrameView {
         dataEntryMenu = new javax.swing.JMenu();
         browseEditMenuItem = new javax.swing.JMenuItem();
         editDictionaryMenuItem = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         importDataMenuItem = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JSeparator();
         viewWorkFilesMenuItem = new javax.swing.JMenuItem();
@@ -287,13 +287,6 @@ public class CanRegClientView extends FrameView {
         jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(jButton2);
 
-        jButton3.setAction(actionMap.get("editPopulationDataSets")); // NOI18N
-        jButton3.setFocusable(false);
-        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton3.setName("jButton3"); // NOI18N
-        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(jButton3);
-
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
         desktopPane.setAutoscrolls(true);
@@ -345,6 +338,10 @@ public class CanRegClientView extends FrameView {
         editDictionaryMenuItem.setText(resourceMap.getString("dictionaryMenuItem.text")); // NOI18N
         editDictionaryMenuItem.setName("dictionaryMenuItem"); // NOI18N
         dataEntryMenu.add(editDictionaryMenuItem);
+
+        jMenuItem1.setAction(actionMap.get("editPopulationDataSets")); // NOI18N
+        jMenuItem1.setName("jMenuItem1"); // NOI18N
+        dataEntryMenu.add(jMenuItem1);
 
         importDataMenuItem.setAction(actionMap.get("importData")); // NOI18N
         importDataMenuItem.setName("importMenuItem"); // NOI18N
@@ -1011,8 +1008,8 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JButton installSystemButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem18;
