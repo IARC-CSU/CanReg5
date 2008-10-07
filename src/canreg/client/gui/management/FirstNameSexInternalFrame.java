@@ -3,20 +3,35 @@
  *
  * Created on 29 February 2008, 15:12
  */
-
 package canreg.client.gui.management;
+
+import canreg.client.CanRegClientApp;
+import canreg.server.database.NameSexRecord;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URL;
+import java.rmi.RemoteException;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.Task;
 
 /**
  *
  * @author  morten
  */
 public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
-    
+
     /** Creates new form FirstNameSexInternalFrame */
     public FirstNameSexInternalFrame() {
         initComponents();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -25,54 +40,92 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         showFirstnameSexButton = new javax.swing.JButton();
-        separator = new javax.swing.JSeparator();
-        recreateDatabaseOfFirstnameSexButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        namesTextArea = new javax.swing.JTextArea();
+        jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        recreateDatabaseOfFirstnameSexButton = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(FirstNameSexInternalFrame.class);
+        setTitle(resourceMap.getString("Form.title")); // NOI18N
         setName("Form"); // NOI18N
+        try {
+            setSelected(true);
+        } catch (java.beans.PropertyVetoException e1) {
+            e1.printStackTrace();
+        }
+
+        jTabbedPane1.setName("jTabbedPane1"); // NOI18N
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanel1.setName("jPanel1"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(FirstNameSexInternalFrame.class);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(FirstNameSexInternalFrame.class, this);
+        showFirstnameSexButton.setAction(actionMap.get("showFirstNamesBySexAction")); // NOI18N
         showFirstnameSexButton.setText(resourceMap.getString("showFirstnameSexButton.text")); // NOI18N
         showFirstnameSexButton.setName("showFirstnameSexButton"); // NOI18N
 
-        separator.setName("separator"); // NOI18N
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        recreateDatabaseOfFirstnameSexButton.setText(resourceMap.getString("recreateDatabaseOfFirstnameSexButton.text")); // NOI18N
-        recreateDatabaseOfFirstnameSexButton.setName("recreateDatabaseOfFirstnameSexButton"); // NOI18N
-
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
+        namesTextArea.setColumns(20);
+        namesTextArea.setRows(5);
+        namesTextArea.setName("namesTextArea"); // NOI18N
+        jScrollPane1.setViewportView(namesTextArea);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(showFirstnameSexButton, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
-            .addComponent(recreateDatabaseOfFirstnameSexButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
-            .addComponent(separator, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
+            .addComponent(showFirstnameSexButton, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(showFirstnameSexButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
+
+        jPanel2.setName("jPanel2"); // NOI18N
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
+
+        recreateDatabaseOfFirstnameSexButton.setAction(actionMap.get("recreateNameSexDatabase")); // NOI18N
+        recreateDatabaseOfFirstnameSexButton.setName("recreateDatabaseOfFirstnameSexButton"); // NOI18N
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(recreateDatabaseOfFirstnameSexButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(recreateDatabaseOfFirstnameSexButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(319, Short.MAX_VALUE))
         );
+
+        jTabbedPane1.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -80,26 +133,121 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
+    @Action
+    public Task recreateNameSexDatabase() {
+        recreateDatabaseOfFirstnameSexButton.setEnabled(false);
+        return new RecreateNameSexDatabaseTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+    }
+
+    private class RecreateNameSexDatabaseTask extends org.jdesktop.application.Task<Object, Void> {
+        String line;
+        BufferedReader br;
+        
+        RecreateNameSexDatabaseTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to RecreateNameSexDatabaseTask fields, here.
+            super(app);
+            URL nameSexFileURL = this.getClass().getResource("/canreg/client/gui/management/resources/namesex.tsv");
+            try {
+                canreg.client.CanRegClientApp.getApplication().clearNameSexTable();
+                FileReader fileReader = new FileReader(canreg.common.Tools.getTempFileFromURL(nameSexFileURL));
+                br = new BufferedReader(fileReader);
+                line = br.readLine();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+        @Override protected Object doInBackground() throws SecurityException, RemoteException, IOException {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+            
+            while (line!= null){
+
+            String[] strings = line.split("\t");
+
+                if (strings.length == 2) {
+                    String name = strings[0];
+                    int sex = Integer.parseInt(strings[1]);
+                    NameSexRecord nsr = new NameSexRecord();
+                    nsr.setName(name);
+                    nsr.setSex(sex);
+                    canreg.client.CanRegClientApp.getApplication().saveRecord(nsr);
+                }
+
+            line = br.readLine();
+            }
+            
+            return null;  // return your result
+        }
+        @Override protected void succeeded(Object result) {
+            try {
+                // Runs on the EDT.  Update the GUI based on
+                // the result computed by doInBackground().
+                recreateDatabaseOfFirstnameSexButton.setEnabled(true);
+                br.close();
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully restored default database of names.", "Database of names restored.", JOptionPane.INFORMATION_MESSAGE);
+               
+            } catch (IOException ex) {
+                Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    @Action
+    public void showFirstNamesBySexAction() {
+        try {
+            Map<String, Integer> map = canreg.client.CanRegClientApp.getApplication().getNameSexTables();
+            String[] names = new String[3];
+            names[0]="";
+            names[1]="";
+            names[2]="";
+            String maleHeader ="----------\n-  MALE  - \n----------\n\n";
+            String femaleHeader ="----------\n- FEMALE - \n----------\n\n";
+            String unisexHeader ="----------\n- UNISEX - \n----------\n\n";
+            Set<String> set = map.keySet();
+            for(String name:set){
+                Integer sex = map.get(name);
+                names[sex-1]+=name+"\n";
+            }
+            namesTextArea.setText(maleHeader+names[0]+"\n"+
+                    femaleHeader+names[1]+"\n"+
+                    unisexHeader+names[2]);
+            namesTextArea.setCaretPosition(0);
+        } catch (SecurityException ex) {
+            Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextArea namesTextArea;
     private javax.swing.JButton recreateDatabaseOfFirstnameSexButton;
-    private javax.swing.JSeparator separator;
     private javax.swing.JButton showFirstnameSexButton;
     // End of variables declaration//GEN-END:variables
     

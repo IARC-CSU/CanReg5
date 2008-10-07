@@ -5,6 +5,7 @@ import canreg.common.DatabaseFilter;
 import canreg.server.database.CanRegDAO;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.DictionaryEntry;
+import canreg.server.database.NameSexRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
@@ -224,5 +225,20 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public Date getDateOfLastBackUp() throws RemoteException, SecurityException {
         checkPermission("getDateOfLastBackUp");
         return theServer.getDateOfLastBackUp();
+    }
+
+    public Map<String, Integer> getNameSexTables() throws RemoteException, SecurityException {
+        checkPermission("getNameSexTables");
+        return theServer.getNameSexTables();
+    }
+
+    public int saveNameSexRecord(NameSexRecord nameSexRecord) throws RemoteException, SecurityException {
+        checkPermission("saveNameSexRecord");
+        return theServer.saveNameSexRecord(nameSexRecord);
+    }
+
+    public boolean clearNameSexTable() throws RemoteException, SecurityException {
+        checkPermission("clearNameSexTable");
+        return theServer.clearNameSexTable();
     }
 }

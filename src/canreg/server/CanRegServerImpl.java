@@ -6,6 +6,7 @@ import canreg.common.Globals;
 import canreg.server.database.CanRegDAO;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.DictionaryEntry;
+import canreg.server.database.NameSexRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
@@ -15,14 +16,12 @@ import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.Subject;
 import org.apache.derby.drda.NetworkServerControl;
 import java.net.InetAddress;
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
@@ -278,5 +277,17 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     public Date getDateOfLastBackUp() throws RemoteException, SecurityException {
         return systemSettings.getDateOfLastBackUp();
+    }
+
+    public Map<String, Integer> getNameSexTables() throws RemoteException, SecurityException {
+       return db.getNameSexTables();
+    }
+
+    public int saveNameSexRecord(NameSexRecord nameSexRecord) throws RemoteException, SecurityException {
+        return db.saveNameSexRecord(nameSexRecord);
+    }
+
+    public boolean clearNameSexTable() throws RemoteException, SecurityException {
+       return db.clearNameSexTable();
     }
 }

@@ -5,6 +5,7 @@ import canreg.common.DatabaseFilter;
 import canreg.server.database.CanRegDAO;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.DictionaryEntry;
+import canreg.server.database.NameSexRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
@@ -121,4 +122,10 @@ public interface CanRegServerInterface extends Remote {
     public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException;
     
     public Map<Integer, PopulationDataset> getPopulationDatasets() throws RemoteException, SecurityException;
+    
+    public Map<String, Integer> getNameSexTables() throws RemoteException, SecurityException;
+    
+    public int saveNameSexRecord(NameSexRecord nameSexRecord) throws RemoteException, SecurityException;
+    
+    public boolean clearNameSexTable() throws RemoteException, SecurityException;
 }

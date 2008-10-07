@@ -151,7 +151,7 @@ public class QueryGenerator {
                 "VALUES (?, ?, ?, ?)";
         return queryLine;
     }
-    
+
     public static final String strCreatePopulationDatasetTable() {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".PDSETS (" +
                 "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
@@ -163,7 +163,7 @@ public class QueryGenerator {
                 "AGE_GROUP_STRUCTURE VARCHAR(40), " +
                 "DESCRIPTION VARCHAR(255), " +
                 "WORLD_POPULATION_ID INT, " +
-                "WORLD_POPULATION_BOOL INT"+
+                "WORLD_POPULATION_BOOL INT" +
                 " )";
         return queryLine;
     }
@@ -197,6 +197,22 @@ public class QueryGenerator {
                 "LOOKUP VARCHAR(255) NOT NULL UNIQUE," +
                 "VALUE VARCHAR(255)" +
                 ")";
+        return queryLine;
+    }
+
+    static String strCreateNameSexTable() {
+        String queryLine = "create table " + Globals.SCHEMA_NAME + ".NAMESEX (" +
+                "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
+                "NAME VARCHAR(255) NOT NULL UNIQUE," +
+                "SEX INT" +
+                ")";
+        return queryLine;
+    }
+
+    public static final String strSaveNameSexEntry() {
+        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".NAMESEX " +
+                "   (NAME, SEX) " +
+                "VALUES (?, ?)";
         return queryLine;
     }
 

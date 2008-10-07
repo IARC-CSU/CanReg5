@@ -74,6 +74,7 @@ public class CanRegDAO {
         strSaveDictionaryEntry = QueryGenerator.strSaveDictionaryEntry();
         strSavePopoulationDataset = QueryGenerator.strSavePopoulationDataset();
         strSavePopoulationDatasetsEntry = QueryGenerator.strSavePopoulationDatasetsEntry();
+        strSaveNameSexRecord = QueryGenerator.strSaveNameSexEntry();
 
         setDBSystemDir();
         dbProperties = loadDBProperties();
@@ -112,6 +113,28 @@ public class CanRegDAO {
         }
 
         return dictionaryMap;
+    }
+
+    public Map<String, Integer> getNameSexTables() {
+
+        Map<String, Integer> nameSexMap = new LinkedHashMap<String, Integer>();
+        Statement queryStatement = null;
+        ResultSet results = null;
+
+        try {
+            queryStatement = dbConnection.createStatement();
+            results = queryStatement.executeQuery(strGetNameSexRecords);
+            while (results.next()) {
+                int id = results.getInt(1);
+                String name = results.getString(2);
+                Integer sex = results.getInt(3);
+                nameSexMap.put(name, sex);
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return nameSexMap;
     }
 
     public Map<Integer, PopulationDataset> getPopulationDatasets() {
@@ -392,6 +415,9 @@ public class CanRegDAO {
             statement.execute(QueryGenerator.strCreatePopulationDatasetTable());
             statement.execute(QueryGenerator.strCreatePopulationDatasetsTable());
 
+            // name/sex part
+            statement.execute(QueryGenerator.strCreateNameSexTable());
+
             // System part
             statement.execute(QueryGenerator.strCreateUsersTable());
             statement.execute(QueryGenerator.strCreateSystemPropertiesTable());
@@ -427,7 +453,7 @@ public class CanRegDAO {
      * @return true if successfull, false if not
      */
     public String restoreFromBackup(String path) {
-        boolean bRestored = false, shutdownSuccess = false;
+           boolean bRestored = false, shutdownSuccess = false;
         SQLException ex = null;
         String dbUrl = getDatabaseUrl();
 
@@ -438,7 +464,9 @@ public class CanRegDAO {
         } catch (SQLException e) {
             if (e.getSQLState().equals("08006")) {
                 shutdownSuccess = true; // single db.
-            } else return "shutdown failed";
+            } else {
+                return "shutdown failed";
+            }
             ex = e;
         }
         if (!shutdownSuccess) {
@@ -464,7 +492,7 @@ public class CanRegDAO {
         if (bRestored) {
             try {
                 // install the xml
-                canreg.common.Tools.fileCopy(path + Globals.FILE_SEPARATOR + systemCode + ".xml", 
+                canreg.common.Tools.fileCopy(path + Globals.FILE_SEPARATOR + systemCode + ".xml",
                         Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + systemCode + ".xml");
             } catch (IOException ex1) {
                 Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex1);
@@ -493,7 +521,9 @@ public class CanRegDAO {
             stmtSaveNewDictionaryEntry = dbConnection.prepareStatement(strSaveDictionaryEntry, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewPopoulationDataset = dbConnection.prepareStatement(strSavePopoulationDataset, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewPopoulationDatasetsEntry = dbConnection.prepareStatement(strSavePopoulationDatasetsEntry, Statement.RETURN_GENERATED_KEYS);
+            stmtSaveNewNameSexRecord = dbConnection.prepareStatement(strSaveNameSexRecord, Statement.RETURN_GENERATED_KEYS);
             stmtDeleteDictionaryEntries = dbConnection.prepareStatement(strDeleteDictionaryEntries);
+            stmtClearNameSexTable = dbConnection.prepareStatement(strClearNameSexTable); 
             stmtDeletePopoulationDataset = dbConnection.prepareStatement(strDeletePopulationDataset);
             stmtDeletePopoulationDatasetEntries = dbConnection.prepareStatement(strDeletePopulationDatasetEntries);
             //stmtUpdateExistingPatient = dbConnection.prepareStatement(strUpdatePatient);
@@ -766,6 +796,40 @@ public class CanRegDAO {
         return id;
     }
 
+    public int saveNameSexRecord(NameSexRecord nameSexRecord) {
+        int id = -1;
+        try {
+            stmtSaveNewNameSexRecord.clearParameters();
+
+            stmtSaveNewNameSexRecord.setString(1, nameSexRecord.getName());
+            stmtSaveNewNameSexRecord.setInt(2, nameSexRecord.getSex());
+
+            int rowCount = stmtSaveNewNameSexRecord.executeUpdate();
+            ResultSet results = stmtSaveNewNameSexRecord.getGeneratedKeys();
+            if (results.next()) {
+                id = results.getInt(1);
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return id;
+    }
+    
+    public boolean clearNameSexTable(){
+        boolean success = false;
+        try {
+            stmtClearNameSexTable.clearParameters();
+
+            stmtClearNameSexTable.executeUpdate();
+            success = true;
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return success;
+    }
+
     public boolean deleteDictionaryEntries(int dictionaryID) {
         boolean success = false;
         try {
@@ -1022,6 +1086,7 @@ public class CanRegDAO {
     private PreparedStatement stmtSaveNewDictionaryEntry;
     private PreparedStatement stmtSaveNewPopoulationDatasetsEntry;
     private PreparedStatement stmtSaveNewPopoulationDataset;
+    private PreparedStatement stmtSaveNewNameSexRecord;
     private PreparedStatement stmtUpdateExistingPatient;
     private PreparedStatement stmtGetPatient;
     private PreparedStatement stmtGetTumour;
@@ -1034,6 +1099,7 @@ public class CanRegDAO {
     private PreparedStatement stmtGetDictionaryEntry;
     private PreparedStatement stmtDeleteDictionaryEntry;
     private PreparedStatement stmtDeleteDictionaryEntries;
+    private PreparedStatement stmtClearNameSexTable;
     private PreparedStatement stmtDeletePatient;
     private PreparedStatement stmtDeleteTumour;
     private PreparedStatement stmtDeletePopoulationDataset;
@@ -1073,6 +1139,8 @@ public class CanRegDAO {
             "SELECT * FROM APP.PDSET ";
     private static final String strGetPopulationDatasets =
             "SELECT * FROM APP.PDSETS ";
+    private static final String strGetNameSexRecords =
+            "SELECT * FROM APP.NAMESEX ";
     private static final String strDeletePatient =
             "DELETE FROM APP.PATIENT " +
             "WHERE ID = ?";
@@ -1082,6 +1150,8 @@ public class CanRegDAO {
     private static final String strDeleteDictionaryEntries =
             "DELETE FROM APP.DICTIONARY " +
             "WHERE DICTIONARY = ?";
+    private static final String strClearNameSexTable = 
+            "DELETE FROM APP.NAMESEX";
     private static final String strDeletePopulationDataset =
             "DELETE FROM APP.PDSETS " +
             "WHERE PDS_ID = ?";
@@ -1096,5 +1166,6 @@ public class CanRegDAO {
     private String strSaveDictionaryEntry;
     private String strSavePopoulationDataset;
     private String strSavePopoulationDatasetsEntry;
+    private String strSaveNameSexRecord;
 }
 

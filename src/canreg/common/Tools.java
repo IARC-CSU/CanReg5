@@ -190,12 +190,10 @@ public class Tools {
         return variableNames;
     }
 
-    public static String getFileFromURL(String urlString) {
+    public static String getFileFromURL(URL url){
         StringBuffer contents = new StringBuffer();
 
         try {
-            // Create an URL instance
-            URL url = new URL(urlString);
 
             // Get an input stream for reading
             InputStream in = url.openStream();
@@ -215,14 +213,39 @@ public class Tools {
                 }
             }
 
-        } catch (MalformedURLException mue) {
-            System.err.println("Invalid URL");
-        } catch (IOException ioe) {
+        }  catch (IOException ioe) {
             System.err.println("I/O Error - " + ioe);
         }
         return contents.toString();
     }
+    
+    public static String getFileFromURL(String urlString) {
+        String contents = new String();
+        URL url = null; 
+        try {
+            // Create an URL instance
+            url = new URL(urlString);
+            contents = getFileFromURL(url);
+        } catch (MalformedURLException mue) {
+            System.err.println("Invalid URL");
+        } 
+        return contents;
+    }
 
+    public static File getTempFileFromURL(URL url) throws IOException {
+        File file = null;
+        Writer output = null;
+        try {
+            file = File.createTempFile("cr5", "tmp");
+            output = new BufferedWriter(new FileWriter(file));
+            //FileWriter always assumes default encoding is OK!
+            output.write(getFileFromURL(url));
+        } finally {
+            output.close();
+        }
+        return file;
+    }
+    
     public static File getTempFileFromURL(String urlString) throws IOException {
         File file = null;
         Writer output = null;

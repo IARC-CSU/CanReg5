@@ -15,6 +15,7 @@ import canreg.server.CanRegLoginInterface;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.DictionaryEntry;
+import canreg.server.database.NameSexRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
@@ -464,6 +465,8 @@ public class CanRegClientApp extends SingleFrameApplication {
             server.savePatient((Patient) databaseRecord);
         } else if (databaseRecord instanceof Tumour) {
             server.saveTumour((Tumour) databaseRecord);
+        } else if (databaseRecord instanceof NameSexRecord) {
+            server.saveNameSexRecord((NameSexRecord) databaseRecord);
         }
     }
 
@@ -477,6 +480,14 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public boolean deleteDictionaryEntries(int dictionaryID) throws SecurityException, RemoteException {
         return server.deleteDictionaryEntries(dictionaryID);
+    }
+    
+    public boolean clearNameSexTable() throws SecurityException, RemoteException {
+        return server.clearNameSexTable();
+    }
+    
+    public Map<String, Integer> getNameSexTables() throws SecurityException, RemoteException {
+        return server.getNameSexTables();
     }
 
     public void saveDictionaryEntry(DictionaryEntry entry) throws SecurityException, RemoteException {
