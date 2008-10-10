@@ -5,6 +5,7 @@
 package canreg.client.dataentry;
 
 import canreg.client.CanRegClientApp;
+import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.Globals;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.DictionaryEntry;
@@ -12,7 +13,9 @@ import java.rmi.RemoteException;
 // import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import org.w3c.dom.Element;
 import org.w3c.dom.Document;
@@ -23,11 +26,7 @@ import org.w3c.dom.NodeList;
  * @author ervikm
  */
 public class DictionaryHelper {
-    
-    public static Map<String, String> getDictionaryByID(Map<Integer, Map<String, String>> dictionary, int dictionaryID){
-        return dictionary.get(dictionaryID);
-    }
-    
+       
     public static Map<String, DictionaryEntry> buildDictionaryEntriesFromMap(Map<String, String> dictionary) {
         Map<String, DictionaryEntry> dictionaryEntries = new LinkedHashMap <String, DictionaryEntry> ();
         Iterator <String> iterator = dictionary.keySet().iterator();
@@ -83,6 +82,36 @@ public class DictionaryHelper {
             }
         }
         return dictionaryEntries;
+    }
+    
+    public static Map<Integer, String> testDictionary(DatabaseDictionaryListElement dictionary, String str){
+        return testDictionary(dictionary, parseDictionaryText(dictionary.getDictionaryID(), str));
+    }
+    
+    private static Map<Integer, String> testDictionary(DatabaseDictionaryListElement dictionary, Vector<DictionaryEntry> contents){
+        Map<Integer, String> errors = new LinkedHashMap<Integer,String>();
+        Set<String> codes = new LinkedHashSet();
+        int codeLength = dictionary.getCodeLength();
+        int fullCodeLength = dictionary.getFullDictionaryCodeLength();
+        if (!"Compound".equalsIgnoreCase(dictionary.getType())){
+            codeLength=-1;
+        }
+        int i = 1;
+        for (DictionaryEntry de:contents){
+            // first check length of code
+            String code = de.getCode();
+            if (code.length()!=codeLength&&code.length()!=fullCodeLength){
+                errors.put(i, "Line "+i+" - Wrong length: "+code);
+            } 
+            
+            // Then we check if it is a duplicate
+            
+            else if (!codes.add(code)){
+                errors.put(i, "Line "+i+" - Duplicate code: "+code);
+            }
+            i++;
+        }
+        return errors;
     }
 
     public static void replaceDictionary(int dictionaryID, String str, CanRegClientApp app) throws RemoteException {

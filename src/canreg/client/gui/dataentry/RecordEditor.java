@@ -8,6 +8,7 @@ package canreg.client.gui.dataentry;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
+import canreg.server.database.Dictionary;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
 import java.util.LinkedList;
@@ -25,7 +26,7 @@ import org.w3c.dom.Document;
 public class RecordEditor extends javax.swing.JInternalFrame {
 
     private Document doc;
-    private Map<Integer, Map<String, String>> dictionary;
+    private Map<Integer, Dictionary> dictionary;
     private LinkedList<DatabaseRecord> patientRecords;
     private LinkedList<DatabaseRecord> tumourRecords;
 
@@ -59,7 +60,7 @@ public class RecordEditor extends javax.swing.JInternalFrame {
         this.dispose();
     }
 
-    public void setDictionary(Map<Integer, Map<String, String>> dictionary) {
+    public void setDictionary(Map<Integer, Dictionary> dictionary) {
         this.dictionary = dictionary;
     }
 

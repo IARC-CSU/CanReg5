@@ -8,6 +8,7 @@ package canreg.client.gui.components;
 import canreg.client.gui.dataentry.RecordEditorPanel;
 import canreg.client.gui.tools.MaxLengthDocument;
 import canreg.common.DatabaseVariablesListElement;
+import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
 import java.awt.Component;
 import java.awt.Point;
@@ -27,11 +28,13 @@ public class VariableEditorPanel extends javax.swing.JPanel {
     protected Map<String, DictionaryEntry> possibleValuesMap = null;
     protected int maxLength;
     protected java.awt.Color mandatoryMissingColor = java.awt.Color.PINK;
+    private Dictionary dictionary;
 
     /** Creates new form VariableEditorPanel */
     public VariableEditorPanel() {
         initComponents();
-        textField1.addFocusListener(new java.awt.event.FocusAdapter() {
+
+        codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
 
             @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -45,11 +48,11 @@ public class VariableEditorPanel extends javax.swing.JPanel {
     }
 
     public void setPropertyChangeListener(RecordEditorPanel aThis) {
-        textField1.addPropertyChangeListener(aThis);
+        codeTextField.addPropertyChangeListener(aThis);
     }
 
     public void setDocumentListener(DocumentListener listener) {
-        textField1.getDocument().addDocumentListener(listener);
+        codeTextField.getDocument().addDocumentListener(listener);
     }
 
     /** This method is called from within the constructor to
@@ -64,9 +67,9 @@ public class VariableEditorPanel extends javax.swing.JPanel {
         variableNameLabel = new javax.swing.JLabel();
         splitPane1 = new javax.swing.JSplitPane();
         splitPane2 = new javax.swing.JSplitPane();
-        textField2 = new javax.swing.JTextField();
-        textField3 = new javax.swing.JTextField();
-        textField1 = new javax.swing.JTextField();
+        categoryTextField = new javax.swing.JTextField();
+        descriptionTextField = new javax.swing.JTextField();
+        codeTextField = new javax.swing.JTextField();
 
         setName("Form"); // NOI18N
 
@@ -82,38 +85,48 @@ public class VariableEditorPanel extends javax.swing.JPanel {
         splitPane2.setFocusable(false);
         splitPane2.setName("splitPane2"); // NOI18N
 
-        textField2.setEditable(false);
-        textField2.setText(resourceMap.getString("textField2.text")); // NOI18N
-        textField2.setFocusable(false);
-        textField2.setName("textField2"); // NOI18N
-        textField2.addMouseListener(new java.awt.event.MouseAdapter() {
+        categoryTextField.setEditable(false);
+        categoryTextField.setText(resourceMap.getString("categoryTextField.text")); // NOI18N
+        categoryTextField.setFocusable(false);
+        categoryTextField.setName("categoryTextField"); // NOI18N
+        categoryTextField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 mouseClickHandler(evt);
             }
         });
-        textField2.addActionListener(new java.awt.event.ActionListener() {
+        categoryTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textField2ActionPerformed(evt);
+                categoryTextFieldActionPerformed(evt);
             }
         });
-        splitPane2.setLeftComponent(textField2);
+        splitPane2.setLeftComponent(categoryTextField);
 
-        textField3.setEditable(false);
-        textField3.setText(resourceMap.getString("textField3.text")); // NOI18N
-        textField3.setFocusable(false);
-        textField3.setName("textField3"); // NOI18N
-        splitPane2.setRightComponent(textField3);
+        descriptionTextField.setEditable(false);
+        descriptionTextField.setText(resourceMap.getString("descriptionTextField.text")); // NOI18N
+        descriptionTextField.setFocusable(false);
+        descriptionTextField.setName("descriptionTextField"); // NOI18N
+        descriptionTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                descriptionTextFieldMouseClicked(evt);
+            }
+        });
+        descriptionTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                descriptionTextFieldActionPerformed(evt);
+            }
+        });
+        splitPane2.setRightComponent(descriptionTextField);
 
         splitPane1.setRightComponent(splitPane2);
 
-        textField1.setText(resourceMap.getString("textField1.text")); // NOI18N
-        textField1.setName("textField1"); // NOI18N
-        textField1.addFocusListener(new java.awt.event.FocusAdapter() {
+        codeTextField.setText(resourceMap.getString("codeTextField.text")); // NOI18N
+        codeTextField.setName("codeTextField"); // NOI18N
+        codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                textField1ActionPerformed(evt);
+                codeTextFieldActionPerformed(evt);
             }
         });
-        splitPane1.setLeftComponent(textField1);
+        splitPane1.setLeftComponent(codeTextField);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -152,7 +165,7 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
                     possibleValuesArray, possibleValuesArray[0]);
             if (selectedValue != null) {
                 setValue(selectedValue.getCode());
-                textField2.setText(selectedValue.getDescription());
+                descriptionTextField.setText(selectedValue.getDescription());
             }
         }
     } else {
@@ -161,28 +174,36 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
     }
 }//GEN-LAST:event_mouseClickHandler
 
-private void textField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textField2ActionPerformed
+private void categoryTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryTextFieldActionPerformed
 // TODO add your handling code here:
-}//GEN-LAST:event_textField2ActionPerformed
+}//GEN-LAST:event_categoryTextFieldActionPerformed
 
-private void textField1ActionPerformed(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_textField1ActionPerformed
-    setValue(textField1.getText());
+private void codeTextFieldActionPerformed(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_codeTextFieldActionPerformed
+    setValue(codeTextField.getText());
     if (possibleValuesMap != null) {
-        if (textField1.getText().length() > 0) {
+        if (codeTextField.getText().length() > 0) {
             try {
-                textField2.setText((String) possibleValuesMap.get(textField1.getText()).getDescription());
+                descriptionTextField.setText((String) possibleValuesMap.get(codeTextField.getText()).getDescription());
             } catch (NullPointerException e) {
-                JOptionPane.showInternalMessageDialog(this, textField1.getText() + " is not a valid dictionary code.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showInternalMessageDialog(this, codeTextField.getText() + " is not a valid dictionary code.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
-}//GEN-LAST:event_textField1ActionPerformed
+}//GEN-LAST:event_codeTextFieldActionPerformed
+
+private void descriptionTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_descriptionTextFieldActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_descriptionTextFieldActionPerformed
+
+private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_descriptionTextFieldMouseClicked
+    mouseClickHandler(evt);
+}//GEN-LAST:event_descriptionTextFieldMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    protected javax.swing.JTextField categoryTextField;
+    protected javax.swing.JTextField codeTextField;
+    protected javax.swing.JTextField descriptionTextField;
     protected javax.swing.JSplitPane splitPane1;
     protected javax.swing.JSplitPane splitPane2;
-    protected javax.swing.JTextField textField1;
-    protected javax.swing.JTextField textField2;
-    protected javax.swing.JTextField textField3;
     private javax.swing.JLabel variableNameLabel;
     // End of variables declaration//GEN-END:variables
     protected void setVariableName(String variableName) {
@@ -191,27 +212,29 @@ private void textField1ActionPerformed(java.awt.event.FocusEvent evt) {//GEN-FIR
 
     public void setValue(String value) {
 
-        textField1.setText(value);
+        codeTextField.setText(value);
         if (value.trim().length() > 0) {
             if (possibleValuesMap != null) {
                 try {
-                    textField2.setText((String) possibleValuesMap.get(value).getDescription());
+                    descriptionTextField.setText((String) possibleValuesMap.get(value).getDescription());
                 } catch (NullPointerException e) {
-                    textField2.setText("Dictionary Error");
+                    descriptionTextField.setText("Dictionary Error");
                 }
             }
         }
-        if (value.trim().length() == 0 && databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
-            // consider making global or configurable
-            textField1.setBackground(mandatoryMissingColor);
-        } else if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
-            textField1.setBackground(java.awt.SystemColor.text);
+        if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
+            if (value.trim().length() == 0) {
+                codeTextField.setBackground(mandatoryMissingColor);
+            } else {
+                codeTextField.setBackground(java.awt.SystemColor.text);
+            }
         }
+
     }
 
     public Object getValue() {
         Object valueObject = null;
-        String valueString = textField1.getText();
+        String valueString = codeTextField.getText();
         if (databaseListElement.getVariableType().equalsIgnoreCase("Number") ||
                 databaseListElement.getVariableType().equalsIgnoreCase("Date")) {
             if (valueString.trim().length() > 0) {
@@ -228,21 +251,35 @@ private void textField1ActionPerformed(java.awt.event.FocusEvent evt) {//GEN-FIR
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseListElement) {
         this.databaseListElement = databaseListElement;
         setVariableName(databaseListElement.getFullName());
-
+        if (databaseListElement.getDictionaryID()<0){
+            splitPane1.remove(1);
+        }
         String fillInStatus = databaseListElement.getFillInStatus();
         if (fillInStatus.equalsIgnoreCase("Automatic")) {
-            textField1.setFocusable(false);
-            textField1.setEditable(false);
+            codeTextField.setFocusable(false);
+            codeTextField.setEditable(false);
         } else if (fillInStatus.equalsIgnoreCase("Mandatory")) {
-            textField1.setBackground(mandatoryMissingColor);
+            codeTextField.setBackground(mandatoryMissingColor);
         }
 
         // String variableType = databaseListElement.getVariableType();
-
+        descriptionTextField.setVisible(false);
+        categoryTextField.setVisible(false);
         setMaximumLength(databaseListElement.getVariableLength());
     }
 
-    public void setPossibleValues(Map<String, DictionaryEntry> possibleValues) {
+    public void setDictionary(Dictionary dictionary) {
+        this.dictionary = dictionary;
+        if (dictionary != null) {
+            if (dictionary.isCompoundDictionary()) {
+                categoryTextField.setVisible(true);
+            }
+            descriptionTextField.setVisible(true);
+            setPossibleValues(dictionary.getDictionaryEntries());
+        }
+    }
+
+    private void setPossibleValues(Map<String, DictionaryEntry> possibleValues) {
         this.possibleValuesMap = possibleValues;
         DictionaryEntry m;
         if (possibleValuesMap == null) {
@@ -250,7 +287,7 @@ private void textField1ActionPerformed(java.awt.event.FocusEvent evt) {//GEN-FIR
         } else {
             m = possibleValuesMap.get(getValue());
             if (m != null) {
-                textField2.setText(m.getDescription());
+                descriptionTextField.setText(m.getDescription());
             }
         }
     }
@@ -258,7 +295,7 @@ private void textField1ActionPerformed(java.awt.event.FocusEvent evt) {//GEN-FIR
     protected void setMaximumLength(int length) {
         this.maxLength = length;
         if (this.maxLength > 0) {
-            textField1.setDocument(new MaxLengthDocument(maxLength));
+            codeTextField.setDocument(new MaxLengthDocument(maxLength));
         }
     }
 

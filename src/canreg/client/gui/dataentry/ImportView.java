@@ -154,6 +154,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         doChecksCheckBox = new javax.swing.JCheckBox();
         personSearchCheckBox = new javax.swing.JCheckBox();
         queryNewNameCheckBox = new javax.swing.JCheckBox();
+        previousCanRegDataCheckBox = new javax.swing.JCheckBox();
         maxLinesPanel = new javax.swing.JPanel();
         maxLinesTextField = new javax.swing.JTextField();
         testOnlyCheckBox = new javax.swing.JCheckBox();
@@ -230,7 +231,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addGroup(previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(numberOfRecordsLabel)
                     .addComponent(numberOfRecordsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addComponent(previewScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 527, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -347,7 +348,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE)
+                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 626, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -359,6 +360,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         importButton.setName("importButton"); // NOI18N
 
         discrepanciesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Discrepancies"));
+        discrepanciesPanel.setToolTipText(resourceMap.getString("discrepanciesPanel.toolTipText")); // NOI18N
         discrepanciesPanel.setName("discrepanciesPanel"); // NOI18N
 
         rejectRadioButton.setText(resourceMap.getString("rejectRadioButton.text")); // NOI18N
@@ -397,15 +399,23 @@ public class ImportView extends javax.swing.JInternalFrame {
         jPanel7.setName("jPanel7"); // NOI18N
 
         doChecksCheckBox.setText(resourceMap.getString("doChecksCheckBox.text")); // NOI18N
+        doChecksCheckBox.setToolTipText(resourceMap.getString("doChecksCheckBox.toolTipText")); // NOI18N
         doChecksCheckBox.setName("doChecksCheckBox"); // NOI18N
 
         personSearchCheckBox.setSelected(true);
         personSearchCheckBox.setText(resourceMap.getString("personSearchCheckBox.text")); // NOI18N
+        personSearchCheckBox.setToolTipText(resourceMap.getString("personSearchCheckBox.toolTipText")); // NOI18N
         personSearchCheckBox.setName("personSearchCheckBox"); // NOI18N
 
         queryNewNameCheckBox.setSelected(true);
         queryNewNameCheckBox.setText(resourceMap.getString("queryNewNameCheckBox.text")); // NOI18N
+        queryNewNameCheckBox.setToolTipText(resourceMap.getString("queryNewNameCheckBox.toolTipText")); // NOI18N
         queryNewNameCheckBox.setName("queryNewNameCheckBox"); // NOI18N
+
+        previousCanRegDataCheckBox.setSelected(true);
+        previousCanRegDataCheckBox.setText(resourceMap.getString("previousCanRegDataCheckBox.text")); // NOI18N
+        previousCanRegDataCheckBox.setToolTipText(resourceMap.getString("previousCanRegDataCheckBox.toolTipText")); // NOI18N
+        previousCanRegDataCheckBox.setName("previousCanRegDataCheckBox"); // NOI18N
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -416,8 +426,9 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(doChecksCheckBox)
                     .addComponent(personSearchCheckBox)
-                    .addComponent(queryNewNameCheckBox))
-                .addContainerGap(483, Short.MAX_VALUE))
+                    .addComponent(queryNewNameCheckBox)
+                    .addComponent(previousCanRegDataCheckBox))
+                .addContainerGap(395, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -427,16 +438,19 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addComponent(personSearchCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(queryNewNameCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(previousCanRegDataCheckBox)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         maxLinesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Max Lines"));
         maxLinesPanel.setName("maxLinesPanel"); // NOI18N
 
+        maxLinesTextField.setToolTipText(resourceMap.getString("maxLinesTextField.toolTipText")); // NOI18N
         maxLinesTextField.setName("maxLinesTextField"); // NOI18N
 
-        testOnlyCheckBox.setSelected(true);
         testOnlyCheckBox.setText(resourceMap.getString("testOnlyCheckBox.text")); // NOI18N
+        testOnlyCheckBox.setToolTipText(resourceMap.getString("testOnlyCheckBox.toolTipText")); // NOI18N
         testOnlyCheckBox.setName("testOnlyCheckBox"); // NOI18N
 
         javax.swing.GroupLayout maxLinesPanelLayout = new javax.swing.GroupLayout(maxLinesPanel);
@@ -501,7 +515,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 155, Short.MAX_VALUE)
                 .addComponent(importButton)
                 .addContainerGap())
         );
@@ -537,7 +551,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -742,6 +756,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         io.setDoChecks(doChecksCheckBox.isSelected());
         io.setDoPersonSearch(personSearchCheckBox.isSelected());
         io.setQueryNewNames(queryNewNameCheckBox.isSelected());
+        io.setDataFromPreviousCanReg(previousCanRegDataCheckBox.isSelected());
 
         return io;
     }
@@ -832,6 +847,7 @@ public class ImportView extends javax.swing.JInternalFrame {
     private javax.swing.JPanel previewPanel;
     private javax.swing.JScrollPane previewScrollPane;
     private javax.swing.JTextArea previewTextArea;
+    private javax.swing.JCheckBox previousCanRegDataCheckBox;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JCheckBox queryNewNameCheckBox;
     private javax.swing.JRadioButton rejectRadioButton;

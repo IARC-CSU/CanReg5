@@ -10,6 +10,8 @@ import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
 import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.Globals;
+import canreg.server.database.Dictionary;
+import canreg.server.database.DictionaryEntry;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -17,6 +19,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
@@ -263,6 +266,8 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
 
         String dictionaryString;
         DatabaseDictionaryListElement dbdle;
+        boolean testOK = false;
+        private Map<Integer, String> errors;
 
         UpdateDictionaryActionTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
@@ -272,6 +277,19 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
             // first check to see if we have anything at all here
             dictionaryString = editorTextArea.getText().trim();
             dbdle = (DatabaseDictionaryListElement) chooseDictionaryComboBox.getSelectedItem();
+            errors = canreg.client.dataentry.DictionaryHelper.testDictionary(dbdle, dictionaryString);
+            if (errors.size()==0){
+                testOK = true;
+            } else {
+                testOK = false;
+                String errorString = new String();
+                Iterator<Integer> iterator =  errors.keySet().iterator();
+                while (iterator.hasNext()){
+                    Integer line = iterator.next();
+                    errorString += errors.get(line)+"\n";
+                }
+                JOptionPane.showInternalMessageDialog(rootPane, errorString,"Error",JOptionPane.ERROR_MESSAGE);
+            }
         }
 
         @Override
@@ -280,7 +298,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
             // on a background thread, so don't reference
             // the Swing GUI from here.
 
-            if (dictionaryString.trim().length() > 0) {
+            if (testOK&&dictionaryString.trim().length() > 0) {
                 int dictionaryID = dbdle.getDictionaryID();
                 try {
                     canreg.client.dataentry.DictionaryHelper.replaceDictionary(dictionaryID, dictionaryString, CanRegClientApp.getApplication());
@@ -307,16 +325,16 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public void refreshSelectedDictionaryAction() {
         DatabaseDictionaryListElement dbdle = (DatabaseDictionaryListElement) chooseDictionaryComboBox.getSelectedItem();
-        Map<String, String> map = canreg.client.dataentry.DictionaryHelper.getDictionaryByID(CanRegClientApp.getApplication().getDictionary(), dbdle.getDictionaryID());
+        Dictionary dic = CanRegClientApp.getApplication().getDictionary().get(dbdle.getDictionaryID());
         String str = "";
-        if (map != null) {
+        if (dic != null) {
             // Map sortedMap = new TreeMap(map);
-
-            Iterator iterator = map.entrySet().iterator();
+            Map<String,DictionaryEntry> map = dic.getDictionaryEntries();
+            Iterator<Entry<String, DictionaryEntry>> iterator = map.entrySet().iterator();
 
             while (iterator.hasNext()) {
-                Map.Entry entry = (Map.Entry) iterator.next();
-                str += entry.getKey() + "\t" + entry.getValue() + "\n";
+                DictionaryEntry entry = iterator.next().getValue();
+                str += entry.getCode() + "\t" + entry.getDescription() + "\n";
             }
         }
         editorTextArea.setText(str);

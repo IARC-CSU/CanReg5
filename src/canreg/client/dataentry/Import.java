@@ -153,8 +153,8 @@ public class Import {
             // Skip first line
             line = bufferedReader.readLine();
             // patientNumber
-            int patientIDNumber = 0;
-            int tumourIDNumber = 0;
+            int patientDatabaseIDNumber = 0;
+            int tumourDatabaseIDNumber = 0;
             int numberOfLinesRead = 1;
             int linesToRead = io.getMaxLines();
             if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
@@ -198,22 +198,23 @@ public class Import {
 
                 // debugOut(tumour.toString());
                 // add patient to the database
-                patientIDNumber = server.savePatient(patient);
+                patientDatabaseIDNumber = server.savePatient(patient);
 
                 // If this is a multiple primary tumour...
                 String mpCodeString = (String) tumour.getVariable("MPcode");
 
                 if (mpCodeString != null && mpCodeString.length() > 0) {
-                    patientIDNumber = lookUpPatientID(mpCodeString, patientIDNumber, mpCodes);
+                    patientDatabaseIDNumber = lookUpPatientID(mpCodeString, patientDatabaseIDNumber, mpCodes);
                 }
                 
                 //Set the patient ID number 
-                tumour.setVariable("PatientID",patientIDNumber);
-                tumourIDNumber = server.saveTumour(tumour);
+                tumour.setVariable("PatientID",patientDatabaseIDNumber);
+                tumourDatabaseIDNumber = server.saveTumour(tumour);
                 
-                patient.setVariable("TumourID", tumourIDNumber);
-                patient.setVariable("id", patientIDNumber);
-                
+                //Set the tumour ID number
+                patient.setVariable("TumourID", tumourDatabaseIDNumber);
+                patient.setVariable("id", patientDatabaseIDNumber);
+                // and update it
                 server.editPatient(patient);
                 
                 //Read next line of data

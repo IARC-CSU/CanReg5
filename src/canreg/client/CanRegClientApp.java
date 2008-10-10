@@ -14,6 +14,7 @@ import canreg.exceptions.WrongCanRegVersionException;
 import canreg.server.CanRegLoginInterface;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.DatabaseRecord;
+import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.NameSexRecord;
 import canreg.server.database.Patient;
@@ -61,7 +62,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     public boolean loggedIn = false;
     private CanRegClientView canRegClientView;
     private Document doc;
-    private Map<Integer, Map<String, String>> dictionary;
+    private Map<Integer, Dictionary> dictionary;
     private boolean canregServerRunningOnThisMachine = false;
     private GlobalToolBox globalToolBox;
 
@@ -279,7 +280,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * 
      * @return
      */
-    public Map<Integer, Map<String, String>> getDictionary() {
+    public Map<Integer, Dictionary> getDictionary() {
         return dictionary;
     }
 
@@ -384,8 +385,19 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @return
      */
     public Globals.UserRightLevels getUserRightLevel() {
+        Globals.UserRightLevels level = Globals.UserRightLevels.NOT_LOGGED_IN;
+        try {
+            level = server.getUserRightLevel();
+            // For now all users are supervisors
+            // return Globals.UserRightLevels.SUPERVISOR;
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         // For now all users are supervisors
-        return Globals.UserRightLevels.SUPERVISOR;
+        // return Globals.UserRightLevels.SUPERVISOR;
+        return level;
     }
 
     /**

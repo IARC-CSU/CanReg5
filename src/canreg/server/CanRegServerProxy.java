@@ -2,8 +2,11 @@ package canreg.server;
 
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
+import canreg.common.Globals;
+import canreg.common.Globals.UserRightLevels;
 import canreg.server.database.CanRegDAO;
 import canreg.server.database.DatabaseRecord;
+import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.NameSexRecord;
 import canreg.server.database.Patient;
@@ -13,9 +16,11 @@ import canreg.server.security.ValidateMethodCall;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.security.Principal;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 import javax.security.auth.Subject;
 import org.w3c.dom.Document;
 
@@ -163,7 +168,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return theServer.deleteDictionaryEntries(dictionaryID);
     }
 
-    public Map<Integer, Map<String, String>> getDictionary() throws RemoteException, SecurityException {
+    public Map<Integer, Dictionary> getDictionary() throws RemoteException, SecurityException {
         checkPermission("getDictionary");
         return theServer.getDictionary();
     }
@@ -240,5 +245,18 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public boolean clearNameSexTable() throws RemoteException, SecurityException {
         checkPermission("clearNameSexTable");
         return theServer.clearNameSexTable();
+    }
+
+    public UserRightLevels getUserRightLevel() throws RemoteException, SecurityException {
+        checkPermission("getUserRightLevel");
+        Globals.UserRightLevels level = theServer.getUserRightLevel();
+
+        RMILoginPrincipal principal = (RMILoginPrincipal) theUser.getPrincipals().toArray()[0];
+        // Ad hoc to test the user levels in the GUI
+        String userName = principal.getName();
+        if (userName.equalsIgnoreCase("morten")){
+            level = Globals.UserRightLevels.SUPERVISOR;
+        }
+        return level;
     }
 }

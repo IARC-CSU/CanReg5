@@ -15,6 +15,7 @@ import canreg.common.DatabaseVariablesListElementPositionSorter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
+import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
@@ -46,7 +47,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     private panelTypes panelType;
     private DatabaseVariablesListElement[] variablesInTable;
     private Map<String, VariableEditorPanel> variableEditorPanels;
-    private Map<Integer, Map<String, String>> dictionary;
+    private Map<Integer, Dictionary> dictionary;
     private DatabaseGroupsListElement[] groupListElements;
     private GlobalToolBox globalToolBox;
     private boolean saveNeeded = false;
@@ -68,7 +69,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         this.doc = doc;
     }
 
-    public void setDictionary(Map<Integer, Map<String, String>> dictionary) {
+    public void setDictionary(Map<Integer, Dictionary> dictionary) {
         this.dictionary = dictionary;
     }
 
@@ -101,7 +102,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             tableName = Globals.TUMOUR_TABLE_NAME;
             searchButton.setVisible(false);
         }
-        Map<String, String> recStatusDict = canreg.client.dataentry.DictionaryHelper.getDictionaryByID(dictionary, canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, "Record status"));
+        Map<String, DictionaryEntry> recStatusDict = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, "Record status")).getDictionaryEntries();
         statusComboBox.setModel(new DefaultComboBoxModel(recStatusDict.values().toArray()));
         Object recStatus = databaseRecord.getVariable("RecS");
         if (recStatus != null) {
@@ -132,18 +133,13 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             int id = currentVariable.getDictionaryID();
 
             if (id >= 0) {
-                Map map = canreg.client.dataentry.DictionaryHelper.getDictionaryByID(dictionary, id);
+                Dictionary dic = dictionary.get(id);
 
-                if (map != null) {
-                    // Map sortedmap = new TreeMap(map);
-                    possibleValues =
-                            canreg.client.dataentry.DictionaryHelper.buildDictionaryEntriesFromMap(map);
-                } else {
-                    possibleValues = null;
+                if (dic != null) {
+                    vep.setDictionary(dic);
                 }
-                vep.setPossibleValues(possibleValues);
             } else {
-                vep.setPossibleValues(null);
+                vep.setDictionary(null);
             }
             String variableName = currentVariable.getDatabaseVariableName();
             Object variableValue = databaseRecord.getVariable(variableName);
@@ -319,10 +315,11 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             databaseRecord.setVariable(vep.getKey(), vep.getValue());
         }
         try {
-            if((Integer) databaseRecord.getVariable("id")!=null)
+            if ((Integer) databaseRecord.getVariable("id") != null) {
                 canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord);
-            else 
+            } else {
                 canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord);
+            }
             JOptionPane.showInternalMessageDialog(this, "Record saved.");
             saveNeeded = false;
         // saveButton.setEnabled(saveNeeded);

@@ -70,16 +70,16 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTextField" name="textField2">
+            <Component class="javax.swing.JTextField" name="categoryTextField">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
-                <Property name="text" type="java.lang.String" resourceKey="textField2.text"/>
+                <Property name="text" type="java.lang.String" resourceKey="categoryTextField.text"/>
                 <Property name="focusable" type="boolean" value="false"/>
-                <Property name="name" type="java.lang.String" value="textField2" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="categoryTextField" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="mouseClickHandler"/>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textField2ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="categoryTextFieldActionPerformed"/>
               </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
@@ -90,13 +90,17 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JTextField" name="textField3">
+            <Component class="javax.swing.JTextField" name="descriptionTextField">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
-                <Property name="text" type="java.lang.String" resourceKey="textField3.text"/>
+                <Property name="text" type="java.lang.String" resourceKey="descriptionTextField.text"/>
                 <Property name="focusable" type="boolean" value="false"/>
-                <Property name="name" type="java.lang.String" value="textField3" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="descriptionTextField" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="descriptionTextFieldMouseClicked"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="descriptionTextFieldActionPerformed"/>
+              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
               </AuxValues>
@@ -108,13 +112,13 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JTextField" name="textField1">
+        <Component class="javax.swing.JTextField" name="codeTextField">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="textField1.text"/>
-            <Property name="name" type="java.lang.String" value="textField1" noResource="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="codeTextField.text"/>
+            <Property name="name" type="java.lang.String" value="codeTextField" noResource="true"/>
           </Properties>
           <Events>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="textField1ActionPerformed"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="codeTextFieldActionPerformed"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>

@@ -209,10 +209,11 @@ public class SystemSettings {
     public Date getDateOfLastBackUp(){
         String dateString = getProperty(SystemSettings.DATE_OF_LAST_BACKUP_KEY);
         Date date = null;
-        if (dateString != null){
+        if (dateString != null && dateString.trim().length()>0){
             try {
                 date = dateFormat.parse(dateString);
             } catch (ParseException ex) {
+                date = null;
                 Logger.getLogger(SystemSettings.class.getName()).log(Level.INFO, null, ex);
             }
         }

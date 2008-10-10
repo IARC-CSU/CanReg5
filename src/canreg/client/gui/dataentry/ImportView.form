@@ -47,7 +47,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="700" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="704" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -190,7 +190,7 @@
                               <Component id="numberOfRecordsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="numberOfRecordsTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="10" max="32767" attributes="0"/>
+                          <EmptySpace pref="14" max="32767" attributes="0"/>
                           <Component id="previewScrollPane" min="-2" pref="527" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -314,7 +314,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jSplitPane1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variablesScrollPane" pref="622" max="32767" attributes="0"/>
+                      <Component id="variablesScrollPane" pref="626" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -426,7 +426,7 @@
                       <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="174" max="32767" attributes="0"/>
+                      <EmptySpace pref="155" max="32767" attributes="0"/>
                       <Component id="importButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -449,6 +449,7 @@
                     <TitledBorder title="Discrepancies"/>
                   </Border>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="discrepanciesPanel.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="discrepanciesPanel" noResource="true"/>
               </Properties>
 
@@ -519,8 +520,9 @@
                               <Component id="doChecksCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="personSearchCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="queryNewNameCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="previousCanRegDataCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="483" max="32767" attributes="0"/>
+                          <EmptySpace pref="395" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -532,6 +534,8 @@
                           <Component id="personSearchCheckBox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="queryNewNameCheckBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="previousCanRegDataCheckBox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -541,6 +545,7 @@
                 <Component class="javax.swing.JCheckBox" name="doChecksCheckBox">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="doChecksCheckBox.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="doChecksCheckBox.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="doChecksCheckBox" noResource="true"/>
                   </Properties>
                 </Component>
@@ -548,6 +553,7 @@
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" resourceKey="personSearchCheckBox.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="personSearchCheckBox.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="personSearchCheckBox" noResource="true"/>
                   </Properties>
                 </Component>
@@ -555,7 +561,16 @@
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" resourceKey="queryNewNameCheckBox.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="queryNewNameCheckBox.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="queryNewNameCheckBox" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="previousCanRegDataCheckBox">
+                  <Properties>
+                    <Property name="selected" type="boolean" value="true"/>
+                    <Property name="text" type="java.lang.String" resourceKey="previousCanRegDataCheckBox.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="previousCanRegDataCheckBox.toolTipText"/>
+                    <Property name="name" type="java.lang.String" value="previousCanRegDataCheckBox" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -596,13 +611,14 @@
               <SubComponents>
                 <Component class="javax.swing.JTextField" name="maxLinesTextField">
                   <Properties>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="maxLinesTextField.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="maxLinesTextField" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="testOnlyCheckBox">
                   <Properties>
-                    <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" resourceKey="testOnlyCheckBox.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="testOnlyCheckBox.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="testOnlyCheckBox" noResource="true"/>
                   </Properties>
                 </Component>

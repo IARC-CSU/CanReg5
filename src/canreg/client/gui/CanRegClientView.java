@@ -14,13 +14,14 @@ import canreg.client.gui.StandardDialog;
 import canreg.client.gui.WelcomeInternalFrame;
 import canreg.client.gui.analysis.FrequenciesByYearInternalFrame;
 import canreg.client.gui.dataentry.PDSChooserInternalFrame;
-import canreg.client.gui.dataentry.PDSEditorInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
 import canreg.client.gui.management.RestoreInternalFrame;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.tools.CanReg4SystemConverterInternalFrame;
 import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
+import canreg.server.database.Patient;
+import canreg.server.database.Tumour;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.IOException;
@@ -633,8 +634,6 @@ public class CanRegClientView extends FrameView {
         } else {
             LoginInternalFrame loginInternalFrame = new LoginInternalFrame(this, desktopPane);
             showAndCenterInternalFrame(desktopPane, loginInternalFrame);
-
-
         }
     }
 
@@ -970,6 +969,8 @@ public class CanRegClientView extends FrameView {
         RecordEditor internalFrame = new RecordEditor();
         internalFrame.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
         internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
+        internalFrame.addRecord(new Tumour());
+        internalFrame.addRecord(new Patient());
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 

@@ -7,6 +7,7 @@ package canreg.client.gui;
 
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +16,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -28,7 +28,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
     private DatabaseVariablesListElement[] variablesInTable;
     private Document doc;
     private String tableName = "both";
-    private Map<Integer, Map<String, String>> dictionary;
+    private Map<Integer, Dictionary> dictionary;
     private Map<String, DictionaryEntry> possibleValuesMap;
     private ActionListener actionListener;
 
@@ -362,11 +362,10 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
         int id = dbvle.getDictionaryID();
         if (id >= 0) {
-            Map map = canreg.client.dataentry.DictionaryHelper.getDictionaryByID(dictionary, id);
-            if (map != null) {
+            Dictionary dic = dictionary.get(id);
+            if (dic != null) {
                 // Map sortedmap = new TreeMap(map);
-                possibleValuesMap =
-                        canreg.client.dataentry.DictionaryHelper.buildDictionaryEntriesFromMap(map);
+                possibleValuesMap = dic.getDictionaryEntries();
             } else {
                 possibleValuesMap = null;
             }

@@ -173,8 +173,8 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
             } catch (IOException ex) {
                 Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }
+        
         @Override protected Object doInBackground() throws SecurityException, RemoteException, IOException {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference

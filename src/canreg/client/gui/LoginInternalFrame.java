@@ -455,7 +455,8 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
 
         try {
             saveDefaultValues();
-            String canRegSystemName = CanRegClientApp.getApplication().login(serverObjectString, username, password);
+            String canRegSystemName = CanRegClientApp.getApplication().login
+                    (serverObjectString, username, password);
             if (canRegSystemName != null) {
                 fv.getFrame().setTitle("CanReg5 - " + canRegSystemName);
                 this.dispose();
@@ -463,9 +464,9 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                 // test backup
                 if (LocalSettings.TRUE_PROPERTY.equalsIgnoreCase(localSettings.getProperty(LocalSettings.AUTO_BACKUP_KEY))) {
                     String maxDiffString = localSettings.getProperty(LocalSettings.BACKUP_EVERY_KEY);
-                    if (maxDiffString != null) {
+                    Date date = CanRegClientApp.getApplication().getDateOfLastBackUp();
+                    if (date != null && maxDiffString != null) {
                         int maxDiff = Integer.parseInt(maxDiffString);
-                        Date date = CanRegClientApp.getApplication().getDateOfLastBackUp();
                         Date todaysDate = new Date();
                         int diff = (int) ((todaysDate.getTime() - date.getTime()) / (1000L * 60L * 60L * 24L));
                         if (diff >= maxDiff) {
@@ -485,7 +486,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
             feedbackLabel.setText("Error.");
         } catch (NullPointerException nullPointerException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials. Nullpointer." + nullPointerException.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             feedbackLabel.setText("Error.");
         } catch (NotBoundException notBoundException) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);

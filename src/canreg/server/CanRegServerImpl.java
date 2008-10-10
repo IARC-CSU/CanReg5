@@ -3,8 +3,10 @@ package canreg.server;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals;
+import canreg.common.Globals.UserRightLevels;
 import canreg.server.database.CanRegDAO;
 import canreg.server.database.DatabaseRecord;
+import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.NameSexRecord;
 import canreg.server.database.Patient;
@@ -221,7 +223,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return db.deleteDictionaryEntries(dictionaryID);
     }
 
-    public Map<Integer, Map<String, String>> getDictionary() throws RemoteException, SecurityException {
+    public Map<Integer, Dictionary> getDictionary() throws RemoteException, SecurityException {
         return db.getDictionary();
     }
 
@@ -289,5 +291,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     public boolean clearNameSexTable() throws RemoteException, SecurityException {
        return db.clearNameSexTable();
+    }
+
+    public UserRightLevels getUserRightLevel() throws RemoteException, SecurityException {
+        // For now everyone is a supervisor...
+        return Globals.UserRightLevels.REGISTRAR;
     }
 }

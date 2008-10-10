@@ -2,8 +2,10 @@ package canreg.server;
 
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
+import canreg.common.Globals.UserRightLevels;
 import canreg.server.database.CanRegDAO;
 import canreg.server.database.DatabaseRecord;
+import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.NameSexRecord;
 import canreg.server.database.Patient;
@@ -55,6 +57,8 @@ public interface CanRegServerInterface extends Remote {
 
     public Date getDateOfLastBackUp() throws RemoteException, SecurityException;
 
+    public UserRightLevels getUserRightLevel() throws RemoteException, SecurityException;
+
     public int saveNewPopulationDataset(PopulationDataset pds) 
             throws RemoteException, SecurityException;
  
@@ -101,7 +105,7 @@ public interface CanRegServerInterface extends Remote {
     // Drop cases
     public boolean deleteDictionaryEntries(int dictionaryID) throws RemoteException, SecurityException;
     // Get the dictionary
-    public Map<Integer, Map<String, String>> getDictionary() throws RemoteException, SecurityException;
+    public Map<Integer, Dictionary> getDictionary() throws RemoteException, SecurityException;
     // Backup
     public String performBackup()
             throws RemoteException, SecurityException;

@@ -61,7 +61,8 @@ public class CanRegDAO {
         this.systemCode = systemCode;
 
         distributedDataSources = new LinkedHashMap<String, DistributedTableDataSource>();
-
+        dictionaryMap = buildDictionaryMap(doc);
+        
         System.out.println(canreg.server.xml.Tools.getTextContent(
                 new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
 
@@ -87,8 +88,8 @@ public class CanRegDAO {
         }
     }
 
-    public Map<Integer, Map<String, String>> getDictionary() {
-        Map<Integer, Map<String, String>> dictionaryMap = new LinkedHashMap<Integer, Map<String, String>>();
+    public Map<Integer, Dictionary> getDictionary() {
+        // Map<Integer, Dictionary> dictionaryMap = new LinkedHashMap<Integer, Dictionary>();
         Statement queryStatement = null;
         ResultSet results = null;
 
@@ -100,18 +101,16 @@ public class CanRegDAO {
                 Integer dictionary = results.getInt(2);
                 String code = results.getString(3);
                 String desc = results.getString(4);
-                Map dic = dictionaryMap.get(dictionary);
+                Dictionary dic = dictionaryMap.get(dictionary);
                 if (dic == null) {
-                    dic = new LinkedHashMap<String, String>();
+                    dic = new Dictionary();
                 }
                 dictionaryMap.put(dictionary, dic);
-                dic.put(code, desc);
+                dic.addDictionaryEntry(code, new DictionaryEntry(id, code, desc));
             }
-
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
-
         return dictionaryMap;
     }
 
@@ -983,8 +982,20 @@ public class CanRegDAO {
 
     private boolean fillDictionariesTable() {
         boolean bFilled = false;
+        
+        // Go through all the variable definitions
+        for (Dictionary dic:dictionaryMap.values()) {
+             saveDictionary(dic);
+        }
+        bFilled = true;
 
-        // Get the dictionaries node in the XML
+        return bFilled;
+    }
+    
+    private static Map<Integer, Dictionary> buildDictionaryMap(Document doc){
+        
+        Map<Integer, Dictionary> dictionariesMap = new LinkedHashMap();
+                // Get the dictionaries node in the XML
         NodeList nodes = doc.getElementsByTagName(Globals.NAMESPACE + "dictionaries");
         Element variablesElement = (Element) nodes.item(0);
 
@@ -1005,11 +1016,9 @@ public class CanRegDAO {
             dic.setCategoryDescriptionLength(element.getElementsByTagName(Globals.NAMESPACE + "category_description_length").item(0).getTextContent());
             dic.setFullDictionaryCodeLength(element.getElementsByTagName(Globals.NAMESPACE + "full_dictionary_code_length").item(0).getTextContent());
             dic.setFullDictionaryDescriptionLength(element.getElementsByTagName(Globals.NAMESPACE + "full_dictionary_description_length").item(0).getTextContent());
-            saveDictionary(dic);
+            dictionariesMap.put(i, dic);
         }
-        bFilled = true;
-
-        return bFilled;
+        return dictionariesMap;
     }
 
     /* 
@@ -1075,6 +1084,7 @@ public class CanRegDAO {
     private boolean isConnected;
     private String systemCode;
     private Document doc;
+    private Map<Integer, Dictionary> dictionaryMap;
     private Map<String, DistributedTableDataSource> distributedDataSources;
     private boolean tableOfDictionariesFilled = true;
     private boolean tableOfPopulationDataSets = true;

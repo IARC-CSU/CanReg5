@@ -23,6 +23,8 @@ public class ImportOptions {
     private boolean doChecks;
     private boolean doPersonSearch;
     private boolean queryNewNames;
+    
+    private boolean dataFromPreviousCanReg;
 
     public int getMaxLines() {
         return maxLines;
@@ -78,6 +80,14 @@ public class ImportOptions {
 
     public void setSeparator(String separator) {
         this.separator = separator;
+    }
+
+    public boolean isDataFromPreviousCanReg() {
+        return dataFromPreviousCanReg;
+    }
+
+    public void setDataFromPreviousCanReg(boolean dataFromPreviousCanReg) {
+        this.dataFromPreviousCanReg = dataFromPreviousCanReg;
     }
     
     

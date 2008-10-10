@@ -160,6 +160,14 @@ public class Tools {
             dictionaries[i] = new DatabaseDictionaryListElement();
             dictionaries[i].setName(e.getElementsByTagName(namespace + "name").item(0).getTextContent());
             dictionaries[i].setDictionaryID(Integer.parseInt(e.getElementsByTagName(namespace + "dictionary_id").item(0).getTextContent()));
+            dictionaries[i].setFont(e.getElementsByTagName(namespace + "font").item(0).getTextContent());
+            dictionaries[i].setType(e.getElementsByTagName(namespace + "type").item(0).getTextContent());
+            dictionaries[i].setCodeLength(Integer.parseInt(e.getElementsByTagName(namespace + "code_length").item(0).getTextContent()));
+            dictionaries[i].setCategoryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "category_description_length").item(0).getTextContent()));
+            dictionaries[i].setFullDictionaryCodeLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_code_length").item(0).getTextContent()));
+            dictionaries[i].setFullDictionaryCategoryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_description_length").item(0).getTextContent()));
+           
+            
         // TODO -- capture more info...
         }
         return dictionaries;

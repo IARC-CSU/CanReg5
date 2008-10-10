@@ -14,7 +14,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
 
     private com.toedter.calendar.JDateChooser dateChooser;
     private JTextField dateField;
-
+ 
     @Override
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseListElement) {
         this.databaseListElement = databaseListElement;
@@ -25,28 +25,34 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         splitPane1.remove(splitPane1.getRightComponent());
         splitPane1.setTopComponent(dateChooser);
         dateField = (JTextField) dateChooser.getDateEditor().getUiComponent();
-        textField1 = dateField;
+        codeTextField = dateField;
 
         String fillInStatus = databaseListElement.getFillInStatus();
         if (fillInStatus.equalsIgnoreCase("Automatic")) {
             dateField.setFocusable(false);
             dateField.setEditable(false);
         } else if (fillInStatus.equalsIgnoreCase("Mandatory")) {
-            // consider making global or configurable
-            textField1.setBackground(java.awt.Color.YELLOW);
+            dateField.setBackground(mandatoryMissingColor);
         }
         setMaximumLength(databaseListElement.getVariableLength());
+        
+        dateField.addFocusListener(new java.awt.event.FocusAdapter() {
+
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                componentFocusGained(evt);
+            }
+        });
     }
 
     @Override
     public void setValue(String value) {
 
-        if (value.trim().length() == 0 && databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
-            // consider making global or configurable
-            dateField.setBackground(mandatoryMissingColor);
-        } else {
-            if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
-                dateField.setBackground(java.awt.SystemColor.text);
+        if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
+            if (value.trim().length()==0) {
+                codeTextField.setBackground(mandatoryMissingColor);
+            } else {
+                codeTextField.setBackground(java.awt.SystemColor.text);
             }
         }
         try {
