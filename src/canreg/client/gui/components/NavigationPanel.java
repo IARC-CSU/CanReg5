@@ -103,12 +103,6 @@ public class NavigationPanel extends javax.swing.JPanel {
         listSelectionModel.setSelectionInterval(0, 0);
         table.scrollRectToVisible(table.getCellRect(0,0,true));
     }
-
-    @Action
-    public void goOneUpAction() {
-        
-    }
-
     @Action
     public void goToBottomAction() {
         listSelectionModel.setSelectionInterval(table.getRowCount()-1, table.getRowCount()-1);
@@ -116,8 +110,15 @@ public class NavigationPanel extends javax.swing.JPanel {
     }
 
     @Action
+    public void goOneUpAction() {
+        listSelectionModel.setSelectionInterval(Math.max(table.getSelectedRow()-1,0), Math.max(table.getSelectedRow()-1,0));
+        table.scrollRectToVisible(table.getCellRect(table.getSelectedRow(),0,true));
+    }
+
+    @Action
     public void goOneDownAction() {
-        
+        listSelectionModel.setSelectionInterval(Math.min(table.getSelectedRow()+1,table.getRowCount()-1), Math.min(table.getSelectedRow()+1,table.getRowCount()-1));
+        table.scrollRectToVisible(table.getCellRect(table.getSelectedRow(),0,true));
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

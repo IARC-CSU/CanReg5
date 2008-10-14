@@ -13,6 +13,8 @@ import canreg.server.database.DictionaryEntry;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -22,7 +24,7 @@ import javax.swing.event.DocumentListener;
  *
  * @author  ervikm
  */
-public class VariableEditorPanel extends javax.swing.JPanel {
+public class VariableEditorPanel extends javax.swing.JPanel implements ActionListener {
 
     protected DatabaseVariablesListElement databaseListElement;
     protected Map<String, DictionaryEntry> possibleValuesMap = null;
@@ -132,17 +134,20 @@ public class VariableEditorPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(10, 10, 10)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(variableNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(38, 38, 38)
                 .addComponent(splitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(variableNameLabel)
-            .addComponent(splitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(variableNameLabel)
+                    .addComponent(splitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -151,7 +156,7 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
     if (databaseListElement.getVariableType().equalsIgnoreCase("dict")) {
         // System.out.println("Coucou");
         if (possibleValuesMap == null) {
-            JOptionPane.showInternalMessageDialog(this, "Empty dictionary.", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Empty_dictionary."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Warning"), JOptionPane.WARNING_MESSAGE);
         } else {
             DictionaryEntry[] possibleValuesArray = new DictionaryEntry[possibleValuesMap.size()];
             Iterator<String> it = possibleValuesMap.keySet().iterator();
@@ -160,7 +165,7 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
                 possibleValuesArray[i++] = possibleValuesMap.get(it.next());
             }
             DictionaryEntry selectedValue = (DictionaryEntry) JOptionPane.showInternalInputDialog(this,
-                    "Choose one", "Input",
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Choose_one"), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Input"),
                     JOptionPane.INFORMATION_MESSAGE, null,
                     possibleValuesArray, possibleValuesArray[0]);
             if (selectedValue != null) {
@@ -179,16 +184,12 @@ private void categoryTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
 }//GEN-LAST:event_categoryTextFieldActionPerformed
 
 private void codeTextFieldActionPerformed(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_codeTextFieldActionPerformed
-    setValue(codeTextField.getText());
-    if (possibleValuesMap != null) {
-        if (codeTextField.getText().length() > 0) {
-            try {
-                descriptionTextField.setText((String) possibleValuesMap.get(codeTextField.getText()).getDescription());
-            } catch (NullPointerException e) {
-                JOptionPane.showInternalMessageDialog(this, codeTextField.getText() + " is not a valid dictionary code.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+    try {
+        lookUpAndSetDescription();
+    } catch (NullPointerException e) {
+        JOptionPane.showInternalMessageDialog(this, codeTextField.getText() + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("_is_not_a_valid_dictionary_code."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Error"), JOptionPane.ERROR_MESSAGE);
     }
+    updateFilledInStatusColor();
 }//GEN-LAST:event_codeTextFieldActionPerformed
 
 private void descriptionTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_descriptionTextFieldActionPerformed
@@ -211,25 +212,42 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
     }
 
     public void setValue(String value) {
-
         codeTextField.setText(value);
-        if (value.trim().length() > 0) {
+        try {
+            lookUpAndSetDescription();
+        } catch (NullPointerException e) {
+            descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
+        }
+        updateFilledInStatusColor();
+    }
+
+    private void lookUpAndSetDescription() throws NullPointerException {
+        if (codeTextField.getText().trim().length() > 0) {
             if (possibleValuesMap != null) {
                 try {
-                    descriptionTextField.setText((String) possibleValuesMap.get(value).getDescription());
+                    if (dictionary.isCompoundDictionary()) {
+                        categoryTextField.setText(possibleValuesMap.get(
+                                codeTextField.getText().substring(0, dictionary.getCodeLength())).getDescription());
+                    }
+                    descriptionTextField.setText(possibleValuesMap.get(codeTextField.getText()).getDescription());
                 } catch (NullPointerException e) {
-                    descriptionTextField.setText("Dictionary Error");
+                    throw e;
                 }
             }
+        } else {
+            categoryTextField.setText("");
+            descriptionTextField.setText("");
         }
+    }
+
+    private void updateFilledInStatusColor() {
         if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
-            if (value.trim().length() == 0) {
+            if (codeTextField.getText().trim().length() == 0) {
                 codeTextField.setBackground(mandatoryMissingColor);
             } else {
                 codeTextField.setBackground(java.awt.SystemColor.text);
             }
         }
-
     }
 
     public Object getValue() {
@@ -251,7 +269,7 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseListElement) {
         this.databaseListElement = databaseListElement;
         setVariableName(databaseListElement.getFullName());
-        if (databaseListElement.getDictionaryID()<0){
+        if (databaseListElement.getDictionaryID() < 0) {
             splitPane1.remove(1);
         }
         String fillInStatus = databaseListElement.getFillInStatus();
@@ -295,7 +313,7 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
     protected void setMaximumLength(int length) {
         this.maxLength = length;
         if (this.maxLength > 0) {
-            codeTextField.setDocument(new MaxLengthDocument(maxLength));
+            codeTextField.setDocument(new MaxLengthDocument(maxLength, this));
         }
     }
 
@@ -304,5 +322,16 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         Point point = focusedComponent.getLocation();
         point.y += 42; // Trial and error
         this.scrollRectToVisible(new Rectangle(point));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equalsIgnoreCase("Max length reached")) {
+            try{
+            lookUpAndSetDescription();
+            } catch (NullPointerException ne){
+                descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
+            }
+            updateFilledInStatusColor();
+        }
     }
 }

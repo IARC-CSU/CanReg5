@@ -8,6 +8,7 @@ package canreg.client.gui.components;
 import canreg.client.gui.*;
 import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseIndexesListElement;
+import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,9 +16,9 @@ import java.beans.PropertyVetoException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDesktopPane;
 import org.jdesktop.application.Action;
-import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
 
 /**
@@ -32,7 +33,8 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
     private Vector filterCollection;
     private JDesktopPane dtp;
     private FastFilterInternalFrame filterWizardInternalFrame;
-    private BrowserInterface browser;
+    private ActionListener actionListener;
+    private DatabaseVariablesListElement[] variablesInDB;
 
     /** Creates new form RangeFilterPanel */
     public RangeFilterPanel() {
@@ -63,16 +65,12 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         this.dtp = dtp;
     }
 
-    public void setBrowser(BrowserInterface browser) {
-        this.browser = browser;
-    }
-
     public void setFilterActive(boolean b) {
         useFilterCheckBox.setSelected(b);
     }
 
     public void setTableChooserVisible(boolean visible) {
-        tableChooserComboBox.setVisible(visible);
+        tableChooserPanel.setVisible(visible);
     }
     
     public void setRecordPanelvisible(boolean visible){
@@ -99,11 +97,11 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         recordsPanel = new javax.swing.JPanel();
         recordsShownField = new javax.swing.JTextField();
         recordsShownLabel = new javax.swing.JLabel();
-        recordsTotalTextField = new javax.swing.JTextField();
-        recordsTotalLabel = new javax.swing.JLabel();
         andLabel = new javax.swing.JLabel();
         tableChooserPanel = new javax.swing.JPanel();
         tableChooserComboBox = new javax.swing.JComboBox();
+        sortByChooserPanel = new javax.swing.JPanel();
+        sortByChooserComboBox = new javax.swing.JComboBox();
         refreshTableButton = new javax.swing.JButton();
 
         setName("Form"); // NOI18N
@@ -132,7 +130,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
             .addGroup(rangePanelLayout.createSequentialGroup()
                 .addComponent(rangeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(limitsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
+                .addComponent(limitsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE))
         );
         rangePanelLayout.setVerticalGroup(
             rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -161,10 +159,10 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         filterPanel.setLayout(filterPanelLayout);
         filterPanelLayout.setHorizontalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(filterComboBox, 0, 358, Short.MAX_VALUE)
+            .addComponent(filterComboBox, 0, 394, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, filterPanelLayout.createSequentialGroup()
                 .addComponent(useFilterCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 210, Short.MAX_VALUE)
                 .addComponent(wizardButton))
         );
         filterPanelLayout.setVerticalGroup(
@@ -174,7 +172,8 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
                     .addComponent(wizardButton)
                     .addComponent(useFilterCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         recordsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Records"));
@@ -187,13 +186,6 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         recordsShownLabel.setText(resourceMap.getString("recordsShownLabel.text")); // NOI18N
         recordsShownLabel.setName("recordsShownLabel"); // NOI18N
 
-        recordsTotalTextField.setEditable(false);
-        recordsTotalTextField.setText(resourceMap.getString("recordsTotalTextField.text")); // NOI18N
-        recordsTotalTextField.setName("recordsTotalTextField"); // NOI18N
-
-        recordsTotalLabel.setText(resourceMap.getString("recordsTotalLabel.text")); // NOI18N
-        recordsTotalLabel.setName("recordsTotalLabel"); // NOI18N
-
         javax.swing.GroupLayout recordsPanelLayout = new javax.swing.GroupLayout(recordsPanel);
         recordsPanel.setLayout(recordsPanelLayout);
         recordsPanelLayout.setHorizontalGroup(
@@ -203,20 +195,15 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
                 .addComponent(recordsShownField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(recordsShownLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(recordsTotalTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordsTotalLabel))
+                .addGap(78, 78, 78))
         );
         recordsPanelLayout.setVerticalGroup(
             recordsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(recordsPanelLayout.createSequentialGroup()
                 .addGroup(recordsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(recordsShownField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(recordsShownLabel)
-                    .addComponent(recordsTotalTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(recordsTotalLabel))
-                .addContainerGap(25, Short.MAX_VALUE))
+                    .addComponent(recordsShownLabel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         andLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -235,6 +222,39 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
             }
         });
 
+        javax.swing.GroupLayout tableChooserPanelLayout = new javax.swing.GroupLayout(tableChooserPanel);
+        tableChooserPanel.setLayout(tableChooserPanelLayout);
+        tableChooserPanelLayout.setHorizontalGroup(
+            tableChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tableChooserComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 153, Short.MAX_VALUE)
+        );
+        tableChooserPanelLayout.setVerticalGroup(
+            tableChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tableChooserComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        sortByChooserPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("sortByChooserPanel.border.title"))); // NOI18N
+        sortByChooserPanel.setName("sortByChooserPanel"); // NOI18N
+
+        sortByChooserComboBox.setAction(actionMap.get("setTableName")); // NOI18N
+        sortByChooserComboBox.setName("sortByChooserComboBox"); // NOI18N
+        sortByChooserComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sortByChooserComboBoxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout sortByChooserPanelLayout = new javax.swing.GroupLayout(sortByChooserPanel);
+        sortByChooserPanel.setLayout(sortByChooserPanelLayout);
+        sortByChooserPanelLayout.setHorizontalGroup(
+            sortByChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(sortByChooserComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 107, Short.MAX_VALUE)
+        );
+        sortByChooserPanelLayout.setVerticalGroup(
+            sortByChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(sortByChooserComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
         refreshTableButton.setAction(actionMap.get("refreshAction")); // NOI18N
         refreshTableButton.setName("refreshTableButton"); // NOI18N
         refreshTableButton.addActionListener(new java.awt.event.ActionListener() {
@@ -243,35 +263,23 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
             }
         });
 
-        javax.swing.GroupLayout tableChooserPanelLayout = new javax.swing.GroupLayout(tableChooserPanel);
-        tableChooserPanel.setLayout(tableChooserPanelLayout);
-        tableChooserPanelLayout.setHorizontalGroup(
-            tableChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tableChooserComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 172, Short.MAX_VALUE)
-            .addComponent(refreshTableButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-        );
-        tableChooserPanelLayout.setVerticalGroup(
-            tableChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(tableChooserPanelLayout.createSequentialGroup()
-                .addComponent(tableChooserComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(refreshTableButton))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(rangePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(andLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
+                .addComponent(andLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
                 .addGap(16, 16, 16))
+            .addComponent(rangePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(filterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(tableChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(tableChooserPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(sortByChooserPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addComponent(recordsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(refreshTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -281,13 +289,13 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
                 .addComponent(andLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(filterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(tableChooserPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(recordsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tableChooserPanel, 0, 61, Short.MAX_VALUE)
+                    .addComponent(sortByChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                    .addComponent(recordsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(refreshTableButton)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -298,6 +306,10 @@ private void refreshTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
 private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tableChooserComboBoxActionPerformed
     filterWizardInternalFrame.setTableName(tableChooserComboBox.getSelectedItem().toString());
 }//GEN-LAST:event_tableChooserComboBoxActionPerformed
+
+private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortByChooserComboBoxActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_sortByChooserComboBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel andLabel;
@@ -311,9 +323,9 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JPanel recordsPanel;
     private javax.swing.JTextField recordsShownField;
     private javax.swing.JLabel recordsShownLabel;
-    private javax.swing.JLabel recordsTotalLabel;
-    private javax.swing.JTextField recordsTotalTextField;
     private javax.swing.JButton refreshTableButton;
+    private javax.swing.JComboBox sortByChooserComboBox;
+    private javax.swing.JPanel sortByChooserPanel;
     private javax.swing.JComboBox tableChooserComboBox;
     private javax.swing.JPanel tableChooserPanel;
     private javax.swing.JCheckBox useFilterCheckBox;
@@ -361,6 +373,10 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
         filterWizardInternalFrame.setActionListener(this);
 
         filterWizardInternalFrame.setTableName(tableChooserComboBox.getSelectedItem().toString());
+        
+        variablesInDB = CanRegClientApp.getApplication().getGlobalToolBox().getVariables();
+        sortByChooserComboBox.setModel(new DefaultComboBoxModel(variablesInDB));
+        
         refreshFilterComboBox();
     }
 
@@ -404,9 +420,7 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
             refreshFilterComboBox();
             filterComboBox.setSelectedIndex(position);
         }
-        // System.out.println();
-        Task task = browser.refresh();
-        task.run();
+        actionListener.actionPerformed(new ActionEvent(this,0,"refresh"));
     }
 
     /**
@@ -444,20 +458,22 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     public void setRecordsShown(int rec) {
         recordsShownField.setText("" + rec);
     }
-
-    public void setRecordsTotal(int rec) {
-        recordsTotalTextField.setText("" + rec);
+    
+    public void setSortByVariableShown(boolean visible){
+        sortByChooserPanel.setVisible(visible);
     }
 
+    public String getSortByVariable(){
+        return sortByChooserComboBox.getSelectedItem().toString();
+    }
+    
     @Action
     public void refreshTableAction() {
         String filter = filterComboBox.getSelectedItem().toString();
         int position = addFilterToComboBox(filter);
         refreshFilterComboBox();
         filterComboBox.setSelectedIndex(position);
-        System.out.println();
-        Task task = browser.refresh();
-        task.execute();
+        actionListener.actionPerformed(new ActionEvent(this,0,"refresh"));
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -465,5 +481,9 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
             setFilter(e.getActionCommand());
             useFilterCheckBox.setSelected(true);
         }
+    }
+    
+    public void setActionListener(ActionListener actionListener){
+        this.actionListener = actionListener;
     }
 }

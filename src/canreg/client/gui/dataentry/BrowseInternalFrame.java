@@ -10,16 +10,14 @@ import cachingtableapi.DistributedTableModel;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.gui.CanRegClientView;
-import canreg.client.gui.components.BrowserInterface;
 import canreg.client.gui.tools.XTableColumnModel;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals;
-import canreg.common.PagingTableModel;
 import canreg.server.database.DatabaseRecord;
-import java.awt.Button;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -38,7 +36,7 @@ import org.jdesktop.application.Task;
  *
  * @author  morten
  */
-public class BrowseInternalFrame extends javax.swing.JInternalFrame implements BrowserInterface {
+public class BrowseInternalFrame extends javax.swing.JInternalFrame implements ActionListener {
 
     private JDesktopPane dtp;
     private DistributedTableDescription tableDatadescription;
@@ -172,11 +170,11 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 771, Short.MAX_VALUE)
+            .addGap(0, 868, Short.MAX_VALUE)
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 495, Short.MAX_VALUE)
+            .addGap(0, 507, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -188,11 +186,11 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(resultPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
+                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(variablesPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(navigationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(navigationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(variablesPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -204,7 +202,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(buttonsPanel, javax.swing.GroupLayout.Alignment.LEADING, 0, 209, Short.MAX_VALUE)
+                        .addComponent(buttonsPanel, javax.swing.GroupLayout.Alignment.LEADING, 0, 258, Short.MAX_VALUE)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(variablesPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -256,7 +254,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements B
         // Last:
         // hook the navigationpanel up to the resulttable
         navigationPanel.setTable(resultTable);
-        rangeFilterPanel.setBrowser(this);
+        rangeFilterPanel.setActionListener(this);
         variablesPanel1.setDatabaseVariables(CanRegClientApp.getApplication().getGlobalToolBox().getVariables());
     // Task task = refresh();
     // task.run();
@@ -328,6 +326,7 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
             tableName = rangeFilterPanel.getSelectedTable();
             variablesToShow = variablesPanel1.getVariablesToShow(tableName);
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
+            filter.setSortByVariable(rangeFilterPanel.getSortByVariable().trim());
             tableDataSource = null;
         }
         @Override protected Object doInBackground() {
@@ -567,5 +566,12 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
     private javax.swing.JTextField tumourNumberTextField;
     private canreg.client.gui.components.VariablesPanel variablesPanel1;
     // End of variables declaration//GEN-END:variables
+
+    public void actionPerformed(ActionEvent e) {
+        if ("refresh".equalsIgnoreCase(e.getActionCommand())){
+            Task refreshTask = refresh();
+            refreshTask.execute();
+        }
+    }
     
 }

@@ -8,8 +8,9 @@ package canreg.client.gui.analysis;
 import cachingtableapi.DistributedTableDescription;
 import cachingtableapi.DistributedTableModel;
 import canreg.client.DistributedTableDataSourceClient;
-import canreg.client.gui.components.BrowserInterface;
 import canreg.common.DatabaseFilter;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -25,7 +26,7 @@ import org.jdesktop.application.Action;
  *
  * @author  morten
  */
-public class ExportReportInternalFrame extends javax.swing.JInternalFrame implements BrowserInterface {
+public class ExportReportInternalFrame extends javax.swing.JInternalFrame implements ActionListener {
 
     private JDesktopPane dtp;
     private DistributedTableDescription tableDatadescription;
@@ -321,7 +322,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private void initValues() {
         variableChooserPanel1.initPanel();
         rangeFilterPanel.setDeskTopPane(dtp);
-        rangeFilterPanel.setBrowser(this);
+        rangeFilterPanel.setActionListener(this);
     }
 
     private void initOtherComponents() {
@@ -396,6 +397,13 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             // the result computed by doInBackground().
             boolean theResult = result.equals("OK");
             resultPanel.setVisible(theResult);
+        }
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if ("refresh".equalsIgnoreCase(e.getActionCommand())) {
+            Task refreshTask = refresh();
+            refreshTask.execute();
         }
     }
 }

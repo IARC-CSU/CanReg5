@@ -20,7 +20,6 @@ import java.security.Principal;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 import javax.security.auth.Subject;
 import org.w3c.dom.Document;
 

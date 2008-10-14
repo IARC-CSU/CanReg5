@@ -254,6 +254,10 @@ public class CanRegDAO {
             if (countRowSet.next()) {
                 rowCount = countRowSet.getInt(1);
             }
+            if (filter.getSortByVariable()!=null){
+                filterString += " ORDER BY "+filter.getSortByVariable().toUpperCase();
+            }
+            System.out.println(strCountTumours + filterString);
             result = statement.executeQuery(strGetTumours + filterString);
         } else if (tableName.equalsIgnoreCase("patient")) {
             String filterString = filter.getFilterString();
@@ -264,6 +268,10 @@ public class CanRegDAO {
             if (countRowSet.next()) {
                 rowCount = countRowSet.getInt(1);
             }
+            if (filter.getSortByVariable()!=null){
+                filterString += " ORDER BY "+filter.getSortByVariable().toUpperCase();
+            }
+            System.out.println(strCountPatients + filterString);
             result = statement.executeQuery(strGetPatients + filterString);
         } else if (tableName.equalsIgnoreCase("both")) {
             String filterString = filter.getFilterString();
@@ -277,6 +285,11 @@ public class CanRegDAO {
             }
             // feed it to the garbage dump
             countRowSet = null;
+            if (filter.getSortByVariable()!=null){
+                filterString += " ORDER BY "+filter.getSortByVariable().toUpperCase();
+            }
+            System.out.println(strCountPatientsAndTumours + filterString);
+
             result = statement.executeQuery(strGetPatientsAndTumours + filterString);
         } else {
             throw new Exception("Unknown table name.");

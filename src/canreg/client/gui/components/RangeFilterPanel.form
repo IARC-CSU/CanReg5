@@ -18,18 +18,21 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="rangePanel" alignment="0" max="32767" attributes="1"/>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="andLabel" pref="348" max="32767" attributes="0"/>
+              <Component id="andLabel" pref="384" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
           </Group>
+          <Component id="rangePanel" alignment="1" max="32767" attributes="1"/>
           <Component id="filterPanel" alignment="0" max="32767" attributes="1"/>
-          <Group type="102" alignment="1" attributes="0">
-              <Component id="tableChooserPanel" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <Component id="tableChooserPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="recordsPanel" min="-2" max="-2" attributes="1"/>
+              <Component id="sortByChooserPanel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="9" max="32767" attributes="0"/>
+              <Component id="recordsPanel" min="-2" pref="103" max="-2" attributes="1"/>
           </Group>
+          <Component id="refreshTableButton" alignment="0" pref="410" max="32767" attributes="1"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -40,16 +43,14 @@
               <Component id="andLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="filterPanel" min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                      <Component id="tableChooserPanel" min="-2" max="-2" attributes="1"/>
-                  </Group>
-                  <Group type="102" attributes="1">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="recordsPanel" max="32767" attributes="1"/>
-                  </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="tableChooserPanel" min="0" pref="61" max="32767" attributes="1"/>
+                  <Component id="sortByChooserPanel" alignment="0" pref="61" max="32767" attributes="1"/>
+                  <Component id="recordsPanel" alignment="0" max="32767" attributes="1"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="refreshTableButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -72,7 +73,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="rangeComboBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="limitsSplitPane" pref="253" max="32767" attributes="0"/>
+                  <Component id="limitsSplitPane" pref="289" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -148,10 +149,10 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="filterComboBox" alignment="0" pref="358" max="32767" attributes="1"/>
+              <Component id="filterComboBox" alignment="0" pref="394" max="32767" attributes="1"/>
               <Group type="102" alignment="1" attributes="0">
                   <Component id="useFilterCheckBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="174" max="32767" attributes="0"/>
+                  <EmptySpace pref="210" max="32767" attributes="0"/>
                   <Component id="wizardButton" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -165,6 +166,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="filterComboBox" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -213,23 +215,18 @@
                   <Component id="recordsShownField" min="-2" pref="40" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="recordsShownLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="recordsTotalTextField" min="-2" pref="40" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="recordsTotalLabel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="recordsShownField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="recordsShownLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="recordsTotalTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="recordsTotalLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="25" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -246,19 +243,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="recordsShownLabel.text"/>
             <Property name="name" type="java.lang.String" value="recordsShownLabel" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="recordsTotalTextField">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="text" type="java.lang.String" resourceKey="recordsTotalTextField.text"/>
-            <Property name="name" type="java.lang.String" value="recordsTotalTextField" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="recordsTotalLabel">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="recordsTotalLabel.text"/>
-            <Property name="name" type="java.lang.String" value="recordsTotalLabel" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -283,17 +267,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="tableChooserComboBox" alignment="1" pref="172" max="32767" attributes="0"/>
-              <Component id="refreshTableButton" alignment="1" pref="172" max="32767" attributes="1"/>
+              <Component id="tableChooserComboBox" alignment="1" pref="153" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <Component id="tableChooserComboBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="refreshTableButton" min="-2" max="-2" attributes="0"/>
-              </Group>
+              <Component id="tableChooserComboBox" min="-2" max="-2" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -316,18 +295,59 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tableChooserComboBoxActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="refreshTableButton">
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="sortByChooserPanel">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Sort by">
+              <Property name="titleX" resourceKey="sortByChooserPanel.border.title"/>
+            </TitledBorder>
+          </Border>
+        </Property>
+        <Property name="name" type="java.lang.String" value="sortByChooserPanel" noResource="true"/>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Component id="sortByChooserComboBox" alignment="1" pref="107" max="32767" attributes="0"/>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Component id="sortByChooserComboBox" min="-2" max="-2" attributes="0"/>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JComboBox" name="sortByChooserComboBox">
           <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="canreg.client.gui.components.RangeFilterPanel" id="refreshAction" methodName="refreshAction"/>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
             </Property>
-            <Property name="name" type="java.lang.String" value="refreshTableButton" noResource="true"/>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.components.RangeFilterPanel" id="setTableName" methodName="setTableName"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="sortByChooserComboBox" noResource="true"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshTableButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sortByChooserComboBoxActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="refreshTableButton">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="canreg.client.gui.components.RangeFilterPanel" id="refreshAction" methodName="refreshAction"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="refreshTableButton" noResource="true"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshTableButtonActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

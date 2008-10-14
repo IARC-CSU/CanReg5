@@ -108,6 +108,8 @@ public class VariablesPanel extends javax.swing.JPanel {
         allRadioButton = new javax.swing.JRadioButton();
         mandatoryRadioButton = new javax.swing.JRadioButton();
         keyRadioButton = new javax.swing.JRadioButton();
+        personalizedRadioButton = new javax.swing.JRadioButton();
+        jComboBox1 = new javax.swing.JComboBox();
 
         buttonGroup.add(allRadioButton);
         buttonGroup.add(keyRadioButton);
@@ -118,27 +120,38 @@ public class VariablesPanel extends javax.swing.JPanel {
         variablesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Variables"));
         variablesPanel.setName("variablesPanel"); // NOI18N
 
+        buttonGroup.add(allRadioButton);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(VariablesPanel.class);
         allRadioButton.setText(resourceMap.getString("allRadioButton.text")); // NOI18N
         allRadioButton.setName("allRadioButton"); // NOI18N
 
+        buttonGroup.add(mandatoryRadioButton);
         mandatoryRadioButton.setText(resourceMap.getString("mandatoryRadioButton.text")); // NOI18N
         mandatoryRadioButton.setName("mandatoryRadioButton"); // NOI18N
 
+        buttonGroup.add(keyRadioButton);
         keyRadioButton.setSelected(true);
         keyRadioButton.setText(resourceMap.getString("keyRadioButton.text")); // NOI18N
         keyRadioButton.setName("keyRadioButton"); // NOI18N
+
+        buttonGroup.add(personalizedRadioButton);
+        personalizedRadioButton.setText(resourceMap.getString("personalizedRadioButton.text")); // NOI18N
+        personalizedRadioButton.setName("personalizedRadioButton"); // NOI18N
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "<New>" }));
+        jComboBox1.setName("jComboBox1"); // NOI18N
 
         javax.swing.GroupLayout variablesPanelLayout = new javax.swing.GroupLayout(variablesPanel);
         variablesPanel.setLayout(variablesPanelLayout);
         variablesPanelLayout.setHorizontalGroup(
             variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(personalizedRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+            .addComponent(keyRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+            .addComponent(mandatoryRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+            .addComponent(allRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
             .addGroup(variablesPanelLayout.createSequentialGroup()
-                .addGroup(variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(allRadioButton)
-                    .addComponent(mandatoryRadioButton)
-                    .addComponent(keyRadioButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(21, 21, 21)
+                .addComponent(jComboBox1, 0, 124, Short.MAX_VALUE))
         );
         variablesPanelLayout.setVerticalGroup(
             variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -148,6 +161,10 @@ public class VariablesPanel extends javax.swing.JPanel {
                 .addComponent(mandatoryRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(keyRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(personalizedRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -159,14 +176,16 @@ public class VariablesPanel extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(variablesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(variablesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton allRadioButton;
     private javax.swing.ButtonGroup buttonGroup;
+    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JRadioButton keyRadioButton;
     private javax.swing.JRadioButton mandatoryRadioButton;
+    private javax.swing.JRadioButton personalizedRadioButton;
     private javax.swing.JPanel variablesPanel;
     // End of variables declaration//GEN-END:variables
 }
