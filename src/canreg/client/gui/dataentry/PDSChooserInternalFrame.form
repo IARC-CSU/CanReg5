@@ -5,6 +5,7 @@
     <Property name="closable" type="boolean" value="true"/>
     <Property name="resizable" type="boolean" value="true"/>
     <Property name="title" type="java.lang.String" resourceKey="Form.title"/>
+    <Property name="frameIcon" type="javax.swing.Icon" resourceKey="Form.frameIcon"/>
     <Property name="name" type="java.lang.String" value="Form" noResource="true"/>
     <Property name="selected" type="boolean" value="true"/>
   </Properties>
@@ -63,7 +64,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="348" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="352" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>

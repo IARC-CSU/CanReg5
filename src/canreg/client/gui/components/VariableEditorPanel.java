@@ -35,7 +35,7 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
     /** Creates new form VariableEditorPanel */
     public VariableEditorPanel() {
         initComponents();
-
+        
         codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
 
             @Override
@@ -187,7 +187,8 @@ private void codeTextFieldActionPerformed(java.awt.event.FocusEvent evt) {//GEN-
     try {
         lookUpAndSetDescription();
     } catch (NullPointerException e) {
-        JOptionPane.showInternalMessageDialog(this, codeTextField.getText() + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("_is_not_a_valid_dictionary_code."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Error"), JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showInternalMessageDialog(this, codeTextField.getText() + " " 
+                + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("_is_not_a_valid_dictionary_code."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Error"), JOptionPane.ERROR_MESSAGE);
     }
     updateFilledInStatusColor();
 }//GEN-LAST:event_codeTextFieldActionPerformed

@@ -19,7 +19,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="toolBar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="707" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="701" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -349,6 +349,9 @@
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="duplicateSearchMenuItem">
                   <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.CanRegClientView" id="duplicateSearchAction" methodName="duplicateSearchAction"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" resourceKey="duplicateSearchMenuItem.text"/>
                     <Property name="name" type="java.lang.String" value="duplicateSearchMenuItem" noResource="true"/>
                   </Properties>

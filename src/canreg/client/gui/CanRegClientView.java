@@ -23,6 +23,7 @@ import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -40,6 +41,7 @@ import java.io.File;
 import java.rmi.RemoteException;
 import javax.swing.Timer;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -56,15 +58,23 @@ public class CanRegClientView extends FrameView {
 
     public CanRegClientView(SingleFrameApplication app) {
         super(app);
-
+       
         initComponents();
-
+        
+        ResourceMap resourceMap = getResourceMap(); 
+        
+        // Set the main programs icon
+        java.net.URL imageURL = CanRegClientView.class.getResource(resourceMap.getString("icon", String.class));        
+        if (imageURL != null){
+            java.awt.Window.getWindows()[0].setIconImage(new ImageIcon(imageURL).getImage());
+        }
+        
+        
         setUserRightsLevel(userRightsLevel);
-
+        
         applyPreferences();
 
-        // status bar initialization - message timeout, idle icon and busy animation, etc
-        ResourceMap resourceMap = getResourceMap();
+        // status bar initialization - message timeout, idle icon and busy animation, etc  
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
         messageTimer = new Timer(messageTimeout, new ActionListener() {
 
@@ -415,6 +425,7 @@ public class CanRegClientView extends FrameView {
         nameSexMenuItem.setName("nameSexMenuItem"); // NOI18N
         jMenu1.add(nameSexMenuItem);
 
+        duplicateSearchMenuItem.setAction(actionMap.get("duplicateSearchAction")); // NOI18N
         duplicateSearchMenuItem.setText(resourceMap.getString("duplicateSearchMenuItem.text")); // NOI18N
         duplicateSearchMenuItem.setName("duplicateSearchMenuItem"); // NOI18N
         jMenu1.add(duplicateSearchMenuItem);
@@ -985,6 +996,12 @@ public class CanRegClientView extends FrameView {
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Action
+    public void duplicateSearchAction() {
+        
+        
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;

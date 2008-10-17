@@ -34,12 +34,13 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(FirstNameSexInternalFrame.class);
+        setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanel1.setName("jPanel1"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(FirstNameSexInternalFrame.class);
         showFirstnameSexButton.setText(resourceMap.getString("showFirstnameSexButton.text")); // NOI18N
         showFirstnameSexButton.setName("showFirstnameSexButton"); // NOI18N
 
@@ -71,7 +72,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
                 .addComponent(recreateDatabaseOfFirstnameSexButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

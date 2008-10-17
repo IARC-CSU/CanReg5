@@ -69,6 +69,7 @@ public class ImportCompleteDictionaryInternalFrame extends javax.swing.JInternal
         setResizable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(ImportCompleteDictionaryInternalFrame.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
+        setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
 
         chooseFilePanel.setName("chooseFilePanel"); // NOI18N
@@ -112,7 +113,7 @@ public class ImportCompleteDictionaryInternalFrame extends javax.swing.JInternal
         );
         previewPanelLayout.setVerticalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(previewScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+            .addComponent(previewScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
         );
 
         previewButton.setAction(actionMap.get("previewAction")); // NOI18N
