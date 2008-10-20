@@ -1,6 +1,7 @@
 package canreg.common;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -12,7 +13,8 @@ public class DatabaseFilter implements Serializable {
 
     static public enum QueryType {
         BROWSER,
-        FREQUENCIES_BY_YEAR
+        FREQUENCIES_BY_YEAR,
+        PERSON_SEARCH
     }
     private String filterString;
     private Set<DatabaseVariablesListElement> databaseVariables;
@@ -29,6 +31,13 @@ public class DatabaseFilter implements Serializable {
 
     public void setDatabaseVariables(Set<DatabaseVariablesListElement> databaseVariables) {
         this.databaseVariables = databaseVariables;
+    }
+    
+    public void addDatabaseVariable(DatabaseVariablesListElement databaseVariable){
+        if (databaseVariables==null){
+            databaseVariables = new LinkedHashSet<DatabaseVariablesListElement>();
+        }
+        databaseVariables.add(databaseVariable);
     }
     
     public String getFilterString() {

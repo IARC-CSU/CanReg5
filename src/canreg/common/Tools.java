@@ -120,6 +120,10 @@ public class Tools {
             if (standardVariableNameNodeList != null && standardVariableNameNodeList.getLength() > 0) {
                 variables[i].setStandardVariableName(standardVariableNameNodeList.item(0).getTextContent());
             }
+            
+            // TODO
+            // Accommodate unknown codes
+            
         }
         return variables;
     }

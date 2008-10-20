@@ -216,8 +216,21 @@ public class CanRegDAO {
         int rowCount = 0;
         DistributedTableDataSource dataSource;
         Set<DatabaseVariablesListElement> variables;
+        
+        if (DatabaseFilter.QueryType.PERSON_SEARCH.equals(filter.getQueryType())){
+            String query = "";
+            query = "SELECT COUNT(*) FROM APP.PATIENT";
+            ResultSet countRowSet = statement.executeQuery(query);
+            if (countRowSet.next()) {
+                rowCount = countRowSet.getInt(1);
+            }
+            countRowSet = null;
+            query = "SELECT ID FROM APP.PATIENT";
+            System.out.print(query);
+            result = statement.executeQuery(query); 
+        }
 
-        if (DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR.equals(filter.getQueryType())) {
+        else if (DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR.equals(filter.getQueryType())) {
             String filterString = filter.getFilterString();
             String query = "";
             if (!filterString.isEmpty()) {

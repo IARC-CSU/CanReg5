@@ -21,6 +21,7 @@ import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -612,6 +613,10 @@ public class CanRegClientApp extends SingleFrameApplication {
         } else {
             return null;
         }
+    }
+    
+    public Map<Integer, Map<Float, Integer>> performGlobalDuplicateSearch(ActionListener listener) throws SecurityException, RemoteException {
+       return server.performGlobalPersonSearch(listener);
     }
 
     /**

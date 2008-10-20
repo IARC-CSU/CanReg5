@@ -11,6 +11,7 @@ import canreg.server.database.NameSexRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
+import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -132,4 +133,8 @@ public interface CanRegServerInterface extends Remote {
     public int saveNameSexRecord(NameSexRecord nameSexRecord) throws RemoteException, SecurityException;
     
     public boolean clearNameSexTable() throws RemoteException, SecurityException;
+    
+    public Map <Float,Integer> performPersonSearch(Patient patient, ActionListener listener) throws RemoteException, SecurityException;
+
+    public Map<Integer, Map<Float, Integer>> performGlobalPersonSearch(ActionListener listener) throws RemoteException, SecurityException;
 }

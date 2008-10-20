@@ -34,6 +34,8 @@ public class DatabaseVariablesListElement implements Serializable {
     
     private int groupID;
     
+    private Object unknownCode;
+    
     public DatabaseVariablesListElement(
             String databaseTableName,
             int databaseTableVariableID,
@@ -196,6 +198,14 @@ public class DatabaseVariablesListElement implements Serializable {
             string = "'"+string+"'";
         }
         return string;
+    }
+
+    public Object getUnknownCode() {
+        return unknownCode;
+    }
+
+    public void setUnknownCode(Object unknownCode) {
+        this.unknownCode = unknownCode;
     }
 }
 

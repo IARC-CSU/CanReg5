@@ -13,6 +13,7 @@ import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
 import canreg.server.security.ValidateMethodCall;
+import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -257,5 +258,15 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
             level = Globals.UserRightLevels.SUPERVISOR;
         }
         return level;
+    }
+
+    public Map<Float,Integer> performPersonSearch(Patient patient, ActionListener listener) throws RemoteException, SecurityException {
+        checkPermission("performPersonSearch");
+        return theServer.performPersonSearch(patient, listener);
+    }
+
+    public Map<Integer, Map<Float, Integer>> performGlobalPersonSearch(ActionListener listener) throws RemoteException, SecurityException {
+        checkPermission("performGlobalPersonSearch");
+        return theServer.performGlobalPersonSearch(listener);
     }
 }

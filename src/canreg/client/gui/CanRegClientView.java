@@ -23,7 +23,6 @@ import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -68,8 +67,7 @@ public class CanRegClientView extends FrameView {
         if (imageURL != null){
             java.awt.Window.getWindows()[0].setIconImage(new ImageIcon(imageURL).getImage());
         }
-        
-        
+
         setUserRightsLevel(userRightsLevel);
         
         applyPreferences();
@@ -1000,8 +998,8 @@ public class CanRegClientView extends FrameView {
 
     @Action
     public void duplicateSearchAction() {
-        
-        
+        JInternalFrame internalFrame = new PersonSearchFrame(desktopPane);
+        showAndCenterInternalFrame(desktopPane, internalFrame);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
