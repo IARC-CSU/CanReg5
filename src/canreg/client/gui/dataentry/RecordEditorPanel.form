@@ -89,6 +89,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="searchButton">
           <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.dataentry.RecordEditorPanel" id="runPersonSearch" methodName="runPersonSearch"/>
+            </Property>
             <Property name="text" type="java.lang.String" resourceKey="searchButton.text"/>
             <Property name="name" type="java.lang.String" value="searchButton" noResource="true"/>
           </Properties>

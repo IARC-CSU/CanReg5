@@ -220,9 +220,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditorPanel.class, this);
         saveButton.setAction(actionMap.get("saveRecord")); // NOI18N
         saveButton.setText(resourceMap.getString("saveButton.text")); // NOI18N
-        saveButton.setEnabled(false);
         saveButton.setName("saveButton"); // NOI18N
 
+        searchButton.setAction(actionMap.get("runPersonSearch")); // NOI18N
         searchButton.setText(resourceMap.getString("searchButton.text")); // NOI18N
         searchButton.setName("searchButton"); // NOI18N
 
@@ -310,11 +310,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
 
     @Action
     public void saveRecord() {
-        Iterator<VariableEditorPanel> iterator = variableEditorPanels.values().iterator();
-        while (iterator.hasNext()) {
-            VariableEditorPanel vep = iterator.next();
-            databaseRecord.setVariable(vep.getKey(), vep.getValue());
-        }
         try {
             if ((Integer) databaseRecord.getVariable("id") != null) {
                 canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord);
@@ -325,6 +320,35 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             saveNeeded = false;
         // saveButton.setEnabled(saveNeeded);
 
+        } catch (SecurityException ex) {
+            Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void buildDatabaseRecord(){
+        Iterator<VariableEditorPanel> iterator = variableEditorPanels.values().iterator();
+        while (iterator.hasNext()) {
+            VariableEditorPanel vep = iterator.next();
+            databaseRecord.setVariable(vep.getKey(), vep.getValue());
+        }
+    }
+    
+    @Action
+    public void runPersonSearch() {
+        try {
+            buildDatabaseRecord();
+            Map<Integer, Float> map = canreg.client.CanRegClientApp.getApplication().performDuplicateSearch((Patient) databaseRecord, null);
+            if (map.size() == 0) {
+                JOptionPane.showInternalMessageDialog(this, "No duplicates found.");
+            } else {
+                String records = "";
+                for (Integer i : map.keySet()) {
+                    records += i + ": " + map.get(i) + "\n";
+                }
+                JOptionPane.showInternalMessageDialog(this, "Duplicates found:\n" + records);
+            }
         } catch (SecurityException ex) {
             Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {

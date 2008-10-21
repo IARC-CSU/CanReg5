@@ -62,6 +62,24 @@ public class Tools {
         return elementArray;
     }
 
+    public static PersonSearchVariable[] getPersonSearchVariables(Document doc, String namespace) {
+        NodeList nl = doc.getElementsByTagName(namespace + "search_variable");
+        PersonSearchVariable[] variables = new PersonSearchVariable[nl.getLength()];
+        for (int i = 0; i < nl.getLength(); i++) {
+            Element e = (Element) nl.item(i);
+            variables[i] = new PersonSearchVariable();
+            variables[i].setName(e.getElementsByTagName(namespace + "variable_name").item(0).getTextContent());
+             variables[i].setWeight(Integer.parseInt(e.getElementsByTagName(namespace + "weigth").item(0).getTextContent()));
+        }
+        return variables;
+    }
+    
+    public static float getPersonSearchMinimumMatch(Document doc, String namespace) {
+        NodeList nl = doc.getElementsByTagName(namespace + "search_variables");
+        Element e = (Element) nl.item(0);
+        return Integer.parseInt(e.getElementsByTagName(namespace + "minimum_match").item(0).getTextContent());
+    }
+    
     public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
         DatabaseVariablesListElement[] variables = new DatabaseVariablesListElement[nl.getLength()];

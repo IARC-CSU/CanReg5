@@ -3,6 +3,7 @@ package canreg.server;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals.UserRightLevels;
+import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.server.database.CanRegDAO;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Dictionary;
@@ -134,7 +135,7 @@ public interface CanRegServerInterface extends Remote {
     
     public boolean clearNameSexTable() throws RemoteException, SecurityException;
     
-    public Map <Float,Integer> performPersonSearch(Patient patient, ActionListener listener) throws RemoteException, SecurityException;
+    public Map <Integer, Float> performPersonSearch(Patient patient, PersonSearcher searcher) throws RemoteException, SecurityException;
 
-    public Map<Integer, Map<Float, Integer>> performGlobalPersonSearch(ActionListener listener) throws RemoteException, SecurityException;
+    public Map<Integer, Map<Float, Integer>> performGlobalPersonSearch(PersonSearcher searcher) throws RemoteException, SecurityException;
 }

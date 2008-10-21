@@ -4,6 +4,7 @@ import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals;
 import canreg.common.Globals.UserRightLevels;
+import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.server.database.CanRegDAO;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Dictionary;
@@ -260,13 +261,13 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return level;
     }
 
-    public Map<Float,Integer> performPersonSearch(Patient patient, ActionListener listener) throws RemoteException, SecurityException {
+    public Map<Integer, Float> performPersonSearch(Patient patient, PersonSearcher searcher) throws RemoteException, SecurityException {
         checkPermission("performPersonSearch");
-        return theServer.performPersonSearch(patient, listener);
+        return theServer.performPersonSearch(patient, searcher);
     }
 
-    public Map<Integer, Map<Float, Integer>> performGlobalPersonSearch(ActionListener listener) throws RemoteException, SecurityException {
+    public Map<Integer, Map<Float, Integer>> performGlobalPersonSearch(PersonSearcher searcher) throws RemoteException, SecurityException {
         checkPermission("performGlobalPersonSearch");
-        return theServer.performGlobalPersonSearch(listener);
+        return theServer.performGlobalPersonSearch(searcher);
     }
 }

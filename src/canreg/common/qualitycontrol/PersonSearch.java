@@ -1,7 +1,9 @@
 package canreg.common.qualitycontrol;
 
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.PersonSearchVariable;
 import canreg.server.database.Patient;
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -10,7 +12,7 @@ import java.util.Map;
  *
  * @author ervikm
  */
-public class PersonSearch implements PersonSearcher {
+public class PersonSearch implements PersonSearcher, Serializable {
 
     private String[] variableNames;
     static final int missing = -1;  // flag to say variable value missing
@@ -19,8 +21,11 @@ public class PersonSearch implements PersonSearcher {
     private float[] reliability;
     private float[] presence;
     
+    private float threshold = 50;
+    
     private float maximumTotalScore;
     private float[] variableWeights;
+    
     Map <String,DatabaseVariablesListElement> variablesInDBMap;
 
     public PersonSearch(DatabaseVariablesListElement[] variablesInDB) {
@@ -30,6 +35,28 @@ public class PersonSearch implements PersonSearcher {
         }
     }
 
+    public PersonSearchVariable[] getPersonSearchVariables() {
+        PersonSearchVariable[] psvs = new PersonSearchVariable[variableNames.length];
+        for (int i = 0; i< variableNames.length; i++){
+            psvs[i] = new PersonSearchVariable();
+            psvs[i].setName(variableNames[i]);
+            psvs[i].setWeight(variableWeights[i]);
+        }
+        return psvs;
+    }
+
+    public void setSearchVariables(PersonSearchVariable[] personSearchVariables) {
+        int i = 0;
+        String[] tempVariableNames = new String[personSearchVariables.length];
+        float[] tempVariableWeights = new float[personSearchVariables.length];
+        for (PersonSearchVariable psv:personSearchVariables){
+            tempVariableNames[i]=psv.getName();
+            tempVariableWeights[i]=psv.getWeight();        
+            i++;
+        }
+        setWeights(tempVariableNames, tempVariableWeights);
+    }
+ 
     public void setWeights(String[] variableNames, float[] variableWeigths) {
         this.variableNames = variableNames;
         this.variableWeights = variableWeigths;
@@ -41,6 +68,7 @@ public class PersonSearch implements PersonSearcher {
         // Temporarily we set all variables to 1.
         // TODO
         // Find a way to calculate this efficiently...
+        
         for (int i = 0; i<variableNames.length; i++){
             discPower[i]=1;
             reliability[i]=1;
@@ -61,7 +89,7 @@ public class PersonSearch implements PersonSearcher {
         }
     }
 
-    public float compare(Patient patient1, Patient patient2) {
+    public synchronized float compare(Patient patient1, Patient patient2) {
         if (variableNames==null){
             throw (new NullPointerException());
         }
@@ -377,5 +405,13 @@ public class PersonSearch implements PersonSearcher {
         float Score = (sim / 5) * (2 + 4 * rel + 3 * dis) - 60 * rel - 20; // 2007
         //float	Score = (sim / 6) * (2 +4*rel +3*dis + rel*dis) - 6*rel -2;	//	20/08/2003
         return Score;
+    }
+
+    public float getThreshold() {
+        return threshold;
+    }
+    
+    public void setThreshold(float threshold){
+        this.threshold = threshold;
     }
 }

@@ -6,15 +6,18 @@
 package canreg.client.gui;
 
 import canreg.client.CanRegClientApp;
+import canreg.common.DatabaseVariablesListElement;
+import canreg.common.qualitycontrol.PersonSearch;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
+import org.w3c.dom.Document;
 
 /**
  *
@@ -22,9 +25,11 @@ import org.jdesktop.application.Task;
  */
 public class PersonSearchFrame extends javax.swing.JInternalFrame implements ActionListener {
 
-    private JDesktopPane desktopPane;
     private PersonSearchListener listener;
     private Task duplicateSearchTask;
+    private JDesktopPane desktopPane;
+    private Document doc;
+    private DatabaseVariablesListElement[] variablesInDB;
 
     /** Creates new form PersonSearchFrame */
     PersonSearchFrame(JDesktopPane desktopPane) {
@@ -32,6 +37,9 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         initComponents();
         listener = new PersonSearchListener();
         listener.setActionListener(this);
+        doc = canreg.client.CanRegClientApp.getApplication().getDatabseDescription();
+        personSearchVariablesPanel1.setDoc(doc);
+        // personSearchVariablesPanel1.setSearcher(searcher);
     }
 
     /** This method is called from within the constructor to
@@ -44,12 +52,6 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
         jPanel4 = new javax.swing.JPanel();
         jTextField2 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -65,24 +67,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         matchesFoundTextField = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jPanel6 = new javax.swing.JPanel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox();
-        jLabel11 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
-        jComboBox3 = new javax.swing.JComboBox();
-        jTextField9 = new javax.swing.JTextField();
-        jLabel13 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        personSearchVariablesPanel1 = new canreg.client.gui.PersonSearchVariablesPanel();
 
         setClosable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PersonSearchFrame.class);
@@ -98,56 +83,6 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         jTabbedPane1.setName("jTabbedPane1"); // NOI18N
 
         jPanel1.setName("jPanel1"); // NOI18N
-
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jPanel3.setName("jPanel3"); // NOI18N
-
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
-
-        jTextField1.setText(resourceMap.getString("jTextField1.text")); // NOI18N
-        jTextField1.setName("jTextField1"); // NOI18N
-
-        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
-        jLabel2.setName("jLabel2"); // NOI18N
-
-        jCheckBox1.setSelected(true);
-        jCheckBox1.setText(resourceMap.getString("jCheckBox1.text")); // NOI18N
-        jCheckBox1.setName("jCheckBox1"); // NOI18N
-
-        jCheckBox2.setSelected(true);
-        jCheckBox2.setText(resourceMap.getString("jCheckBox2.text")); // NOI18N
-        jCheckBox2.setName("jCheckBox2"); // NOI18N
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2))
-                    .addComponent(jCheckBox1)
-                    .addComponent(jCheckBox2))
-                .addContainerGap(137, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBox1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel4.border.title"))); // NOI18N
         jPanel4.setName("jPanel4"); // NOI18N
@@ -256,193 +191,54 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(matchesFoundTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(matchesFoundTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(122, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(performButton)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(interruptButton, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(interruptButton)))
+                        .addComponent(performButton, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(performButton)
                     .addComponent(interruptButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
 
         jPanel2.setName("jPanel2"); // NOI18N
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel6.border.title"))); // NOI18N
-        jPanel6.setName("jPanel6"); // NOI18N
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "FirstName", "LastName", "Sex", "DateofBirth" }));
-        jComboBox1.setName("jComboBox1"); // NOI18N
-
-        jLabel8.setText(resourceMap.getString("jLabel8.text")); // NOI18N
-        jLabel8.setName("jLabel8"); // NOI18N
-
-        jLabel9.setText(resourceMap.getString("jLabel9.text")); // NOI18N
-        jLabel9.setName("jLabel9"); // NOI18N
-
-        jTextField7.setText(resourceMap.getString("jTextField7.text")); // NOI18N
-        jTextField7.setName("jTextField7"); // NOI18N
-
-        jLabel10.setText(resourceMap.getString("jLabel10.text")); // NOI18N
-        jLabel10.setName("jLabel10"); // NOI18N
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "FirstName", "LastName", "Sex", "DateofBirth" }));
-        jComboBox2.setName("jComboBox2"); // NOI18N
-
-        jLabel11.setText(resourceMap.getString("jLabel11.text")); // NOI18N
-        jLabel11.setName("jLabel11"); // NOI18N
-
-        jTextField8.setText(resourceMap.getString("jTextField8.text")); // NOI18N
-        jTextField8.setName("jTextField8"); // NOI18N
-
-        jLabel12.setText(resourceMap.getString("jLabel12.text")); // NOI18N
-        jLabel12.setName("jLabel12"); // NOI18N
-
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "FirstName", "LastName", "Sex", "DateofBirth" }));
-        jComboBox3.setName("jComboBox3"); // NOI18N
-
-        jTextField9.setText(resourceMap.getString("jTextField9.text")); // NOI18N
-        jTextField9.setName("jTextField9"); // NOI18N
-
-        jLabel13.setText(resourceMap.getString("jLabel13.text")); // NOI18N
-        jLabel13.setName("jLabel13"); // NOI18N
-
-        jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
-        jButton3.setName("jButton3"); // NOI18N
-
-        jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
-        jButton4.setName("jButton4"); // NOI18N
-
-        jButton5.setText(resourceMap.getString("jButton5.text")); // NOI18N
-        jButton5.setName("jButton5"); // NOI18N
-
-        jButton6.setText(resourceMap.getString("jButton6.text")); // NOI18N
-        jButton6.setName("jButton6"); // NOI18N
-
-        jButton7.setText(resourceMap.getString("jButton7.text")); // NOI18N
-        jButton7.setName("jButton7"); // NOI18N
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                        .addComponent(jButton4))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel11))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel13)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                                .addComponent(jButton6))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                                .addComponent(jButton5))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addContainerGap(307, Short.MAX_VALUE)
-                        .addComponent(jButton3))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addContainerGap(303, Short.MAX_VALUE)
-                        .addComponent(jButton7)))
-                .addContainerGap())
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11)
-                    .addComponent(jButton5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13)
-                    .addComponent(jButton6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton7)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        personSearchVariablesPanel1.setName("personSearchVariablesPanel1"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(personSearchVariablesPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(166, Short.MAX_VALUE))
+            .addComponent(personSearchVariablesPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
@@ -476,19 +272,21 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     }
 
     private class PerformDuplicateSearchTask extends org.jdesktop.application.Task<Object, Void> {
+        PersonSearch searcher;
         PerformDuplicateSearchTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
             // to PerformDuplicateSearchTask fields, here.
-            super(app);
-            
+            super(app); 
+            searcher = personSearchVariablesPanel1.getSearcher();
         }
+        
         @Override protected Object doInBackground() {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
             try {
-                CanRegClientApp.getApplication().performGlobalDuplicateSearch(null);
+                CanRegClientApp.getApplication().performGlobalDuplicateSearch(searcher);
             } catch (SecurityException ex) {
                 Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
@@ -496,52 +294,32 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             }
             return null;  // return your result
         }
+        
         @Override protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
+            performButton.setEnabled(true);
+            interruptButton.setEnabled(false);
         }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton interruptButton;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JComboBox jComboBox3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
     private javax.swing.JTextField matchesFoundTextField;
     private javax.swing.JButton performButton;
+    private canreg.client.gui.PersonSearchVariablesPanel personSearchVariablesPanel1;
     private javax.swing.JTextField recordsInRangeField;
     private javax.swing.JTextField recordsTestedTextField;
     // End of variables declaration//GEN-END:variables
@@ -557,11 +335,14 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     @Action
     public void interruptDuplicateSearchAction() {
         if (duplicateSearchTask!=null){
-            duplicateSearchTask.cancel(isIcon);
-            duplicateSearchTask=null;
-            performButton.setEnabled(true);
-            interruptButton.setEnabled(false);
+            boolean cancelled = duplicateSearchTask.cancel(true);
+            if (!cancelled){
+                JOptionPane.showConfirmDialog(this, "Task can not be interupted...");
+            }else {
+                duplicateSearchTask=null;
+                performButton.setEnabled(true);
+                interruptButton.setEnabled(false);
+            }
         }
     }
-
 }

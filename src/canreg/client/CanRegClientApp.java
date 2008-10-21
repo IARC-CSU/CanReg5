@@ -10,6 +10,7 @@ import canreg.client.dataentry.ImportOptions;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.exceptions.WrongCanRegVersionException;
 import canreg.server.CanRegLoginInterface;
 import canreg.server.CanRegServerInterface;
@@ -66,6 +67,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private Map<Integer, Dictionary> dictionary;
     private boolean canregServerRunningOnThisMachine = false;
     private GlobalToolBox globalToolBox;
+
 
     public void saveNewPopulationDataset(PopulationDataset pds) throws SecurityException, RemoteException {
         int populationDatasetID = server.saveNewPopulationDataset(pds);
@@ -615,8 +617,12 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
     
-    public Map<Integer, Map<Float, Integer>> performGlobalDuplicateSearch(ActionListener listener) throws SecurityException, RemoteException {
-       return server.performGlobalPersonSearch(listener);
+    public Map<Integer, Float> performDuplicateSearch(Patient patient, PersonSearcher searcher) throws SecurityException, RemoteException {
+        return server.performPersonSearch(patient, searcher);
+    }
+    
+    public Map<Integer, Map<Float, Integer>> performGlobalDuplicateSearch(PersonSearcher searcher) throws SecurityException, RemoteException {
+       return server.performGlobalPersonSearch(searcher);
     }
 
     /**

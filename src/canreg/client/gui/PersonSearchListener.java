@@ -18,6 +18,7 @@ public class PersonSearchListener implements ActionListener, Serializable {
     public void setActionListener(ActionListener actionListener){
         this.actionListener = actionListener;
     }
+    
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         System.out.println(command);
