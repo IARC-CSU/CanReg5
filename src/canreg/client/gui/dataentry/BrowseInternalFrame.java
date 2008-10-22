@@ -434,7 +434,7 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
     public void editPatientID(String idString){
         String tableName = Globals.PATIENT_TABLE_NAME;
                 
-        RecordEditor recordEditor = new RecordEditor();
+        RecordEditor recordEditor = new RecordEditor(dtp);
         recordEditor.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord record = null;        
@@ -492,7 +492,7 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
     
         public void editTumourID(String idString) {
         
-        RecordEditor recordEditor = new RecordEditor();
+        RecordEditor recordEditor = new RecordEditor(dtp);
         recordEditor.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord record = null;        

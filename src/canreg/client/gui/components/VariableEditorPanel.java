@@ -257,7 +257,12 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         if (databaseListElement.getVariableType().equalsIgnoreCase("Number") ||
                 databaseListElement.getVariableType().equalsIgnoreCase("Date")) {
             if (valueString.trim().length() > 0) {
-                valueObject = Integer.parseInt(valueString.trim());
+                try {
+                    valueObject = Integer.parseInt(valueString.trim());
+                } catch (NumberFormatException numberFormatException) {
+                    valueObject = -1;
+                    System.out.println(databaseListElement.getShortName() + "" + valueString);
+                }
             } else {
                 valueObject = -1;
             }

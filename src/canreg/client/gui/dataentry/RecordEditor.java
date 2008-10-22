@@ -5,15 +5,20 @@
  */
 package canreg.client.gui.dataentry;
 
+import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.tools.PrintUtilities;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.qualitycontrol.CheckResult;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Dictionary;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.Map;
+import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
@@ -24,15 +29,19 @@ import org.w3c.dom.Document;
  *
  * @author  ervikm
  */
-public class RecordEditor extends javax.swing.JInternalFrame {
+public class RecordEditor extends javax.swing.JInternalFrame implements ActionListener {
 
     private Document doc;
     private Map<Integer, Dictionary> dictionary;
     private LinkedList<DatabaseRecord> patientRecords;
     private LinkedList<DatabaseRecord> tumourRecords;
+    private boolean changesDone;
+    private JDesktopPane desktopPane;
 
     /** Creates new form RecordEditor */
-    public RecordEditor() {
+    public RecordEditor(JDesktopPane desktopPane) {
+        this.desktopPane = desktopPane;
+
         initComponents();
         patientRecords = new LinkedList<DatabaseRecord>();
         tumourRecords = new LinkedList<DatabaseRecord>();
@@ -67,6 +76,7 @@ public class RecordEditor extends javax.swing.JInternalFrame {
 
     public void addRecord(DatabaseRecord dbr) {
         RecordEditorPanel rePanel = new RecordEditorPanel();
+        rePanel.setActionListener(this);
         rePanel.setDictionary(dictionary);
         rePanel.setDocument(doc);
         rePanel.setRecord(dbr);
@@ -245,5 +255,40 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JTabbedPane patientTabbedPane;
     private javax.swing.JTabbedPane tumourTabbedPane;
     // End of variables declaration//GEN-END:variables
+
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if (source instanceof RecordEditorPanel){
+            if (e.getActionCommand().equalsIgnoreCase("changed")){
+                changesDone = true;
+            }
+            else if (e.getActionCommand().equalsIgnoreCase("checks")){
+                RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
+                DatabaseRecord record = recordEditorPanel.getRecord();
+                Patient patient;
+                Tumour tumour;
+                if (record instanceof Patient){
+                    patient = (Patient) record;
+                    RecordEditorPanel otherRecordEditorPanel = (RecordEditorPanel) tumourTabbedPane.getSelectedComponent();
+                    tumour = (Tumour) otherRecordEditorPanel.getRecord();
+                } else {
+                    tumour = (Tumour) record;
+                    RecordEditorPanel otherRecordEditorPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
+                    patient = (Patient) otherRecordEditorPanel.getRecord();
+                }
+                LinkedList<CheckResult> results = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumour);
+                EditChecksInternalFrame editChecksInternalFrame = new EditChecksInternalFrame();
+                String message = "";
+                for (CheckResult result:results){
+                    if (result.getResultCode()!=CheckResult.ResultCode.OK){
+                        message += result+"\n";
+                    }
+                    System.out.println(result);
+                }
+                editChecksInternalFrame.setCrossChecksTextAreaText(message);
+                CanRegClientView.showAndCenterInternalFrame(desktopPane, editChecksInternalFrame);
+            }
+        }
+    }
     
 }

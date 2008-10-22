@@ -10,6 +10,8 @@ import canreg.client.dataentry.ImportOptions;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.qualitycontrol.CheckResult;
+import canreg.common.qualitycontrol.Checks;
 import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.exceptions.WrongCanRegVersionException;
 import canreg.server.CanRegLoginInterface;
@@ -22,7 +24,6 @@ import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -34,6 +35,7 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.EventObject;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -67,6 +69,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private Map<Integer, Dictionary> dictionary;
     private boolean canregServerRunningOnThisMachine = false;
     private GlobalToolBox globalToolBox;
+    private Checks checks;
 
 
     public void saveNewPopulationDataset(PopulationDataset pds) throws SecurityException, RemoteException {
@@ -80,7 +83,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     @Override
     protected void startup() {
         applyPreferences();
-
+        
         canRegClientView = new CanRegClientView(this);
 
         show(canRegClientView);
@@ -218,6 +221,9 @@ public class CanRegClientApp extends SingleFrameApplication {
                     equals(server.getIPAddress());
             Globals.UserRightLevels i = getUserRightLevel();
             canRegClientView.setUserRightsLevel(i);
+            
+            checks = new Checks(globalToolBox);
+
             return systemName;
         } else {
             return null;
@@ -619,6 +625,10 @@ public class CanRegClientApp extends SingleFrameApplication {
     
     public Map<Integer, Float> performDuplicateSearch(Patient patient, PersonSearcher searcher) throws SecurityException, RemoteException {
         return server.performPersonSearch(patient, searcher);
+    }
+    
+    public LinkedList<CheckResult> performChecks(Patient patient, Tumour tumour){
+        return checks.performChecks(patient, tumour);
     }
     
     public Map<Integer, Map<Float, Integer>> performGlobalDuplicateSearch(PersonSearcher searcher) throws SecurityException, RemoteException {

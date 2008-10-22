@@ -6,6 +6,8 @@
 
 package canreg.client.gui.dataentry;
 
+import org.jdesktop.application.Action;
+
 /**
  *
  * @author  morten
@@ -16,7 +18,35 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
     public EditChecksInternalFrame() {
         initComponents();
     }
+
+    public void setMandatoryVariablesTextAreaText(String text) {
+        mandatoryVariablesTextArea.setText(text);
+    }
+
+    public void setCrossChecksTextAreaText(String text) {
+        crossChecksTextArea.setText(text);
+    }
     
+    public void setNameSexChecksTextAreaText(String text) {
+        nameSexTextArea.setText(text);
+    }
+
+    public void setLocalChecksTextAreaText(String text) {
+        localChecksTextArea.setText(text);
+    }
+    
+    public void setResultTextFieldText(String text) {
+        resultTextField.setText(text);
+    }
+    
+    public void setICD10TextFieldText(String text) {
+        ICD10TextField.setText(text);
+    }
+    
+    public void setICCCTextFieldText(String text) {
+        ICCCTextField.setText(text);
+    }
+  
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -25,26 +55,26 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jPanel2 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
-        jPanel3 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
-        jPanel4 = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea4 = new javax.swing.JTextArea();
+        mandatoryVariablesPanel = new javax.swing.JPanel();
+        mandatoryVariablesScrollPane = new javax.swing.JScrollPane();
+        mandatoryVariablesTextArea = new javax.swing.JTextArea();
+        crossChecksPanel = new javax.swing.JPanel();
+        crossChecksScrollPane = new javax.swing.JScrollPane();
+        crossChecksTextArea = new javax.swing.JTextArea();
+        nameSexPanel = new javax.swing.JPanel();
+        nameSexScrollPane = new javax.swing.JScrollPane();
+        nameSexTextArea = new javax.swing.JTextArea();
+        localChecksPanel = new javax.swing.JPanel();
+        localChecksScrollPane = new javax.swing.JScrollPane();
+        localChecksTextArea = new javax.swing.JTextArea();
         jPanel5 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jPanel6 = new javax.swing.JPanel();
-        jTextField3 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        ICD10Label = new javax.swing.JLabel();
+        ICD10TextField = new javax.swing.JTextField();
+        ICCCLabel = new javax.swing.JLabel();
+        ICCCTextField = new javax.swing.JTextField();
+        resultPanel = new javax.swing.JPanel();
+        resultTextField = new javax.swing.JTextField();
+        okButton = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -60,116 +90,116 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
             e1.printStackTrace();
         }
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
-        jPanel1.setName("jPanel1"); // NOI18N
+        mandatoryVariablesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("mandatoryVariablesPanel.border.title"))); // NOI18N
+        mandatoryVariablesPanel.setName("mandatoryVariablesPanel"); // NOI18N
 
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
+        mandatoryVariablesScrollPane.setName("mandatoryVariablesScrollPane"); // NOI18N
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setEditable(false);
-        jTextArea1.setRows(5);
-        jTextArea1.setText(resourceMap.getString("jTextArea1.text")); // NOI18N
-        jTextArea1.setName("jTextArea1"); // NOI18N
-        jScrollPane1.setViewportView(jTextArea1);
+        mandatoryVariablesTextArea.setColumns(20);
+        mandatoryVariablesTextArea.setEditable(false);
+        mandatoryVariablesTextArea.setRows(5);
+        mandatoryVariablesTextArea.setText(resourceMap.getString("mandatoryVariablesTextArea.text")); // NOI18N
+        mandatoryVariablesTextArea.setName("mandatoryVariablesTextArea"); // NOI18N
+        mandatoryVariablesScrollPane.setViewportView(mandatoryVariablesTextArea);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
+        javax.swing.GroupLayout mandatoryVariablesPanelLayout = new javax.swing.GroupLayout(mandatoryVariablesPanel);
+        mandatoryVariablesPanel.setLayout(mandatoryVariablesPanelLayout);
+        mandatoryVariablesPanelLayout.setHorizontalGroup(
+            mandatoryVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(mandatoryVariablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
-        );
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Mandatory variables"));
-        jPanel2.setName("jPanel2"); // NOI18N
-
-        jScrollPane2.setName("jScrollPane2"); // NOI18N
-
-        jTextArea2.setColumns(20);
-        jTextArea2.setEditable(false);
-        jTextArea2.setRows(5);
-        jTextArea2.setText(resourceMap.getString("jTextArea2.text")); // NOI18N
-        jTextArea2.setName("jTextArea2"); // NOI18N
-        jScrollPane2.setViewportView(jTextArea2);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
+        mandatoryVariablesPanelLayout.setVerticalGroup(
+            mandatoryVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(mandatoryVariablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel3.border.title"))); // NOI18N
-        jPanel3.setName("jPanel3"); // NOI18N
+        crossChecksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("crossChecksPanel.border.title"))); // NOI18N
+        crossChecksPanel.setName("crossChecksPanel"); // NOI18N
 
-        jScrollPane3.setName("jScrollPane3"); // NOI18N
+        crossChecksScrollPane.setName("crossChecksScrollPane"); // NOI18N
 
-        jTextArea3.setColumns(20);
-        jTextArea3.setEditable(false);
-        jTextArea3.setRows(5);
-        jTextArea3.setText(resourceMap.getString("jTextArea3.text")); // NOI18N
-        jTextArea3.setName("jTextArea3"); // NOI18N
-        jScrollPane3.setViewportView(jTextArea3);
+        crossChecksTextArea.setColumns(20);
+        crossChecksTextArea.setEditable(false);
+        crossChecksTextArea.setRows(5);
+        crossChecksTextArea.setText(resourceMap.getString("crossChecksTextArea.text")); // NOI18N
+        crossChecksTextArea.setName("crossChecksTextArea"); // NOI18N
+        crossChecksScrollPane.setViewportView(crossChecksTextArea);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
+        javax.swing.GroupLayout crossChecksPanelLayout = new javax.swing.GroupLayout(crossChecksPanel);
+        crossChecksPanel.setLayout(crossChecksPanelLayout);
+        crossChecksPanelLayout.setHorizontalGroup(
+            crossChecksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(crossChecksScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+        crossChecksPanelLayout.setVerticalGroup(
+            crossChecksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(crossChecksScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
         );
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel4.border.title"))); // NOI18N
-        jPanel4.setName("jPanel4"); // NOI18N
+        nameSexPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("nameSexPanel.border.title"))); // NOI18N
+        nameSexPanel.setName("nameSexPanel"); // NOI18N
 
-        jScrollPane4.setName("jScrollPane4"); // NOI18N
+        nameSexScrollPane.setName("nameSexScrollPane"); // NOI18N
 
-        jTextArea4.setColumns(20);
-        jTextArea4.setEditable(false);
-        jTextArea4.setRows(5);
-        jTextArea4.setText(resourceMap.getString("jTextArea4.text")); // NOI18N
-        jTextArea4.setEnabled(false);
-        jTextArea4.setName("jTextArea4"); // NOI18N
-        jTextArea4.setOpaque(false);
-        jScrollPane4.setViewportView(jTextArea4);
+        nameSexTextArea.setColumns(20);
+        nameSexTextArea.setEditable(false);
+        nameSexTextArea.setRows(5);
+        nameSexTextArea.setText(resourceMap.getString("nameSexTextArea.text")); // NOI18N
+        nameSexTextArea.setName("nameSexTextArea"); // NOI18N
+        nameSexScrollPane.setViewportView(nameSexTextArea);
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
+        javax.swing.GroupLayout nameSexPanelLayout = new javax.swing.GroupLayout(nameSexPanel);
+        nameSexPanel.setLayout(nameSexPanelLayout);
+        nameSexPanelLayout.setHorizontalGroup(
+            nameSexPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(nameSexScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
+        nameSexPanelLayout.setVerticalGroup(
+            nameSexPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(nameSexScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+        );
+
+        localChecksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("localChecksPanel.border.title"))); // NOI18N
+        localChecksPanel.setName("localChecksPanel"); // NOI18N
+
+        localChecksScrollPane.setName("localChecksScrollPane"); // NOI18N
+
+        localChecksTextArea.setColumns(20);
+        localChecksTextArea.setEditable(false);
+        localChecksTextArea.setRows(5);
+        localChecksTextArea.setText(resourceMap.getString("localChecksTextArea.text")); // NOI18N
+        localChecksTextArea.setEnabled(false);
+        localChecksTextArea.setName("localChecksTextArea"); // NOI18N
+        localChecksTextArea.setOpaque(false);
+        localChecksScrollPane.setViewportView(localChecksTextArea);
+
+        javax.swing.GroupLayout localChecksPanelLayout = new javax.swing.GroupLayout(localChecksPanel);
+        localChecksPanel.setLayout(localChecksPanelLayout);
+        localChecksPanelLayout.setHorizontalGroup(
+            localChecksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(localChecksScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
+        );
+        localChecksPanelLayout.setVerticalGroup(
+            localChecksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(localChecksScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
         );
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel5.border.title"))); // NOI18N
         jPanel5.setName("jPanel5"); // NOI18N
 
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
+        ICD10Label.setText(resourceMap.getString("ICD10Label.text")); // NOI18N
+        ICD10Label.setName("ICD10Label"); // NOI18N
 
-        jTextField1.setEditable(false);
-        jTextField1.setText(resourceMap.getString("jTextField1.text")); // NOI18N
-        jTextField1.setName("jTextField1"); // NOI18N
+        ICD10TextField.setEditable(false);
+        ICD10TextField.setText(resourceMap.getString("ICD10TextField.text")); // NOI18N
+        ICD10TextField.setName("ICD10TextField"); // NOI18N
 
-        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
-        jLabel2.setName("jLabel2"); // NOI18N
+        ICCCLabel.setText(resourceMap.getString("ICCCLabel.text")); // NOI18N
+        ICCCLabel.setName("ICCCLabel"); // NOI18N
 
-        jTextField2.setEditable(false);
-        jTextField2.setText(resourceMap.getString("jTextField2.text")); // NOI18N
-        jTextField2.setName("jTextField2"); // NOI18N
+        ICCCTextField.setEditable(false);
+        ICCCTextField.setText(resourceMap.getString("ICCCTextField.text")); // NOI18N
+        ICCCTextField.setName("ICCCTextField"); // NOI18N
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -177,49 +207,51 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ICD10Label, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ICD10TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))
+                    .addComponent(ICCCLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
+                    .addComponent(ICCCTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
+                    .addComponent(ICD10Label)
+                    .addComponent(ICCCLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(ICD10TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ICCCTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel6.border.title"))); // NOI18N
-        jPanel6.setName("jPanel6"); // NOI18N
+        resultPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("resultPanel.border.title"))); // NOI18N
+        resultPanel.setName("resultPanel"); // NOI18N
 
-        jTextField3.setEditable(false);
-        jTextField3.setText(resourceMap.getString("jTextField3.text")); // NOI18N
-        jTextField3.setName("jTextField3"); // NOI18N
+        resultTextField.setEditable(false);
+        resultTextField.setText(resourceMap.getString("resultTextField.text")); // NOI18N
+        resultTextField.setName("resultTextField"); // NOI18N
 
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
+        javax.swing.GroupLayout resultPanelLayout = new javax.swing.GroupLayout(resultPanel);
+        resultPanel.setLayout(resultPanelLayout);
+        resultPanelLayout.setHorizontalGroup(
+            resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(resultTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
         );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+        resultPanelLayout.setVerticalGroup(
+            resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(resultPanelLayout.createSequentialGroup()
                 .addContainerGap(20, Short.MAX_VALUE)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(resultTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jButton1.setIcon(resourceMap.getIcon("jButton1.icon")); // NOI18N
-        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(EditChecksInternalFrame.class, this);
+        okButton.setAction(actionMap.get("okAction")); // NOI18N
+        okButton.setIcon(resourceMap.getIcon("okButton.icon")); // NOI18N
+        okButton.setText(resourceMap.getString("okButton.text")); // NOI18N
+        okButton.setName("okButton"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -228,63 +260,67 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(crossChecksPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nameSexPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(mandatoryVariablesPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
-                        .addComponent(jButton1))
-                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(resultPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
+                        .addComponent(okButton))
+                    .addComponent(localChecksPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(mandatoryVariablesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(nameSexPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(crossChecksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(localChecksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(resultPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jButton1))
+                    .addComponent(okButton))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
+    @Action
+    public void okAction() {
+        this.dispose();
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
+    private javax.swing.JLabel ICCCLabel;
+    private javax.swing.JTextField ICCCTextField;
+    private javax.swing.JLabel ICD10Label;
+    private javax.swing.JTextField ICD10TextField;
+    private javax.swing.JPanel crossChecksPanel;
+    private javax.swing.JScrollPane crossChecksScrollPane;
+    private javax.swing.JTextArea crossChecksTextArea;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea3;
-    private javax.swing.JTextArea jTextArea4;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JPanel localChecksPanel;
+    private javax.swing.JScrollPane localChecksScrollPane;
+    private javax.swing.JTextArea localChecksTextArea;
+    private javax.swing.JPanel mandatoryVariablesPanel;
+    private javax.swing.JScrollPane mandatoryVariablesScrollPane;
+    private javax.swing.JTextArea mandatoryVariablesTextArea;
+    private javax.swing.JPanel nameSexPanel;
+    private javax.swing.JScrollPane nameSexScrollPane;
+    private javax.swing.JTextArea nameSexTextArea;
+    private javax.swing.JButton okButton;
+    private javax.swing.JPanel resultPanel;
+    private javax.swing.JTextField resultTextField;
     // End of variables declaration//GEN-END:variables
     
 }

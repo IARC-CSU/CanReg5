@@ -21,6 +21,8 @@ import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
 import java.awt.Graphics;
 import java.awt.KeyboardFocusManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
@@ -52,9 +54,13 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     private DatabaseGroupsListElement[] groupListElements;
     private GlobalToolBox globalToolBox;
     private boolean saveNeeded = false;
+    private ActionListener actionListener;
+
+    void setActionListener(ActionListener listener) {
+        this.actionListener = listener;
+    }
 
     private enum panelTypes {
-
         PATIENT, TUMOUR
     }
 
@@ -85,7 +91,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     }
 
     public DatabaseRecord getRecord() {
-        // TODO reconstruct the record...
+        buildDatabaseRecord();
         return databaseRecord;
     }
 
@@ -235,6 +241,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         mpButton.setText(resourceMap.getString("mpButton.text")); // NOI18N
         mpButton.setName("mpButton"); // NOI18N
 
+        checksButton.setAction(actionMap.get("runChecksAction")); // NOI18N
         checksButton.setText(resourceMap.getString("checksButton.text")); // NOI18N
         checksButton.setName("checksButton"); // NOI18N
 
@@ -354,5 +361,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         } catch (RemoteException ex) {
             Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Action
+    public void runChecksAction() {
+        actionListener.actionPerformed(new ActionEvent(this, 0, "checks"));
     }
 }

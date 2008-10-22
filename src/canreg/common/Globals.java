@@ -107,6 +107,8 @@ public class Globals {
         Source3,
         Source4,
         Source5,
-        Source6
+        Source6,
+        PatientID,
+        TumourID
     }
 }
