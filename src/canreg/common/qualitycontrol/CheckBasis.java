@@ -3,7 +3,7 @@ package canreg.common.qualitycontrol;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
-import canreg.common.qualitycontrol.Checks.CheckNames;
+import canreg.common.qualitycontrol.Checker.CheckNames;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -31,7 +31,7 @@ public class CheckBasis implements CheckInterface {
         Unknown
     };
     
-    public Checks.CheckNames checkName = Checks.CheckNames.Basis;
+    public Checker.CheckNames checkName = Checker.CheckNames.Basis;
     
     private static Map<String,BasisCat> basisCatMap = new LinkedHashMap();
             

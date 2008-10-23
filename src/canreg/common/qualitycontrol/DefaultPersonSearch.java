@@ -12,7 +12,7 @@ import java.util.Map;
  *
  * @author ervikm
  */
-public class PersonSearch implements PersonSearcher, Serializable {
+public class DefaultPersonSearch implements PersonSearcher, Serializable {
 
     private String[] variableNames;
     static final int missing = -1;  // flag to say variable value missing
@@ -28,7 +28,7 @@ public class PersonSearch implements PersonSearcher, Serializable {
     
     Map <String,DatabaseVariablesListElement> variablesInDBMap;
 
-    public PersonSearch(DatabaseVariablesListElement[] variablesInDB) {
+    public DefaultPersonSearch(DatabaseVariablesListElement[] variablesInDB) {
         variablesInDBMap = new LinkedHashMap<String,DatabaseVariablesListElement>();
         for (DatabaseVariablesListElement dbvle:variablesInDB){
             variablesInDBMap.put(dbvle.getShortName(), dbvle);

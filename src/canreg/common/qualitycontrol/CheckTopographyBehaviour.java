@@ -1,7 +1,7 @@
 package canreg.common.qualitycontrol;
 
 import canreg.common.Globals;
-import canreg.common.qualitycontrol.Checks.CheckNames;
+import canreg.common.qualitycontrol.Checker.CheckNames;
 import java.util.Map;
 
 /**
@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class CheckTopographyBehaviour implements CheckInterface {
 
-    public Checks.CheckNames checkName = Checks.CheckNames.TopographyBehaviour;
+    public Checker.CheckNames checkName = Checker.CheckNames.TopographyBehaviour;
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames[]{
         Globals.StandardVariableNames.Topography,
         Globals.StandardVariableNames.Behaviour

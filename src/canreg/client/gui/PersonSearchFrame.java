@@ -7,7 +7,7 @@ package canreg.client.gui;
 
 import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseVariablesListElement;
-import canreg.common.qualitycontrol.PersonSearch;
+import canreg.common.qualitycontrol.DefaultPersonSearch;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
@@ -272,7 +272,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     }
 
     private class PerformDuplicateSearchTask extends org.jdesktop.application.Task<Object, Void> {
-        PersonSearch searcher;
+        DefaultPersonSearch searcher;
         PerformDuplicateSearchTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters

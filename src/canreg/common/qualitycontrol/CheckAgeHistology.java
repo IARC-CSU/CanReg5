@@ -1,7 +1,7 @@
 package canreg.common.qualitycontrol;
 
 import canreg.common.Globals;
-import canreg.common.qualitycontrol.Checks.CheckNames;
+import canreg.common.qualitycontrol.Checker.CheckNames;
 import java.util.Map;
 
 /**
@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class CheckAgeHistology implements CheckInterface {
 
-    public Checks.CheckNames checkName = Checks.CheckNames.AgeHistology;
+    public Checker.CheckNames checkName = Checker.CheckNames.AgeHistology;
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames[]{
         Globals.StandardVariableNames.Age,
         Globals.StandardVariableNames.Morphology,

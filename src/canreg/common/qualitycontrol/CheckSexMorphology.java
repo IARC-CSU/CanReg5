@@ -3,7 +3,7 @@ package canreg.common.qualitycontrol;
 import canreg.common.Globals;
 import canreg.common.LookUpFileDescription;
 import canreg.common.LookUpLoader;
-import canreg.common.qualitycontrol.Checks.CheckNames;
+import canreg.common.qualitycontrol.Checker.CheckNames;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -16,9 +16,9 @@ import java.util.logging.Logger;
  *
  * @author ervikm
  */
-public class CheckSexHistology implements CheckInterface {
+public class CheckSexMorphology implements CheckInterface {
 
-    public static Checks.CheckNames checkName = Checks.CheckNames.SexHistology;
+    public static Checker.CheckNames checkName = Checker.CheckNames.SexMorphology;
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames[]{
         Globals.StandardVariableNames.Sex,
         Globals.StandardVariableNames.Morphology,
@@ -26,25 +26,26 @@ public class CheckSexHistology implements CheckInterface {
     };
     public static int maleCode = 1;
     public static int femaleCode = 2;
-
+    
     Map<String,String> morphologicalFamiliesMap;
+    private int codeLength = 4;
+    private String lookUpFileResource = "/canreg/common/resources/lookup/MorphFam.txt";
     
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }
 
-    public CheckSexHistology(){
-        URL resourceURL = this.getClass().getResource("/canreg/common/resources/MorphFam.txt");
-        int codeLength = 4;
+    public CheckSexMorphology(){
+        URL resourceURL = this.getClass().getResource(lookUpFileResource);
         LookUpFileDescription description = new LookUpFileDescription(resourceURL, codeLength);
         try {
             morphologicalFamiliesMap = LookUpLoader.load(description);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(CheckSexHistology.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CheckSexMorphology.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(CheckSexHistology.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CheckSexMorphology.class.getName()).log(Level.SEVERE, null, ex);
         } catch (URISyntaxException ex) {
-            Logger.getLogger(CheckSexHistology.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CheckSexMorphology.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
     
@@ -98,7 +99,11 @@ public class CheckSexHistology implements CheckInterface {
         if (morphologyFamilyString==null){
             System.out.println("not a valid morph code? " + morphologyCode);    
         } else {
-            morphologyFamily = Integer.parseInt(morphologyFamilyString.substring(1, 3));
+            try {
+                morphologyFamily = Integer.parseInt(morphologyFamilyString.substring(1, 3));
+            } catch (NumberFormatException numberFormatException) {
+                morphologyFamily = 0;
+            }
         }
 
         if ((sexNumber == maleCode) && (morphologyFamily == 22 // Vulva, Vagina

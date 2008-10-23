@@ -10,8 +10,10 @@ import canreg.client.dataentry.ImportOptions;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.conversions.ConversionResult;
+import canreg.common.conversions.Converter;
 import canreg.common.qualitycontrol.CheckResult;
-import canreg.common.qualitycontrol.Checks;
+import canreg.common.qualitycontrol.Checker;
 import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.exceptions.WrongCanRegVersionException;
 import canreg.server.CanRegLoginInterface;
@@ -69,7 +71,8 @@ public class CanRegClientApp extends SingleFrameApplication {
     private Map<Integer, Dictionary> dictionary;
     private boolean canregServerRunningOnThisMachine = false;
     private GlobalToolBox globalToolBox;
-    private Checks checks;
+    private Checker checker;
+    private Converter converter;
 
 
     public void saveNewPopulationDataset(PopulationDataset pds) throws SecurityException, RemoteException {
@@ -222,7 +225,8 @@ public class CanRegClientApp extends SingleFrameApplication {
             Globals.UserRightLevels i = getUserRightLevel();
             canRegClientView.setUserRightsLevel(i);
             
-            checks = new Checks(globalToolBox);
+            checker = new Checker(globalToolBox);
+            converter = new Converter(globalToolBox);
 
             return systemName;
         } else {
@@ -628,7 +632,11 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
     
     public LinkedList<CheckResult> performChecks(Patient patient, Tumour tumour){
-        return checks.performChecks(patient, tumour);
+        return checker.performChecks(patient, tumour);
+    }
+    
+    public ConversionResult[] performConversions(Converter.ConversionName conversionName, Patient patient, Tumour tumour){
+        return converter.performConversion(conversionName, patient, tumour);
     }
     
     public Map<Integer, Map<Float, Integer>> performGlobalDuplicateSearch(PersonSearcher searcher) throws SecurityException, RemoteException {

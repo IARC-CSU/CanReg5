@@ -9,6 +9,6 @@ import java.util.Map;
  */
 public interface CheckInterface {
     public Globals.StandardVariableNames[] getVariablesNeeded();
-    public Checks.CheckNames getCheckName();
+    public Checker.CheckNames getCheckName();
     public CheckResult performCheck(Map<Globals.StandardVariableNames, Object> variables);
 }

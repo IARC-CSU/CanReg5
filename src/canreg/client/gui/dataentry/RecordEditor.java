@@ -9,6 +9,8 @@ import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.tools.PrintUtilities;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.conversions.ConversionResult;
+import canreg.common.conversions.Converter;
 import canreg.common.qualitycontrol.CheckResult;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Dictionary;
@@ -276,16 +278,44 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     RecordEditorPanel otherRecordEditorPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
                     patient = (Patient) otherRecordEditorPanel.getRecord();
                 }
-                LinkedList<CheckResult> results = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumour);
+                LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumour);
                 EditChecksInternalFrame editChecksInternalFrame = new EditChecksInternalFrame();
                 String message = "";
-                for (CheckResult result:results){
-                    if (result.getResultCode()!=CheckResult.ResultCode.OK){
-                        message += result+"\n";
+                
+               CheckResult.ResultCode worstResultCodeFound = CheckResult.ResultCode.OK;
+                
+                for (CheckResult result : checkResults) {
+
+                    if (result.getResultCode() != CheckResult.ResultCode.OK) {
+                        message += result + "\n";
+                        if (result.getResultCode() == CheckResult.ResultCode.Invalid) {
+                            worstResultCodeFound = CheckResult.ResultCode.Invalid;
+                        } else if (worstResultCodeFound != CheckResult.ResultCode.Invalid) {
+                            if (result.getResultCode() == CheckResult.ResultCode.Query) {
+                                worstResultCodeFound = CheckResult.ResultCode.Query;
+                            } else if (worstResultCodeFound != CheckResult.ResultCode.Query) {
+                                worstResultCodeFound = result.getResultCode();
+                            }
+                        }
                     }
                     System.out.println(result);
                 }
+                if (worstResultCodeFound == CheckResult.ResultCode.OK){
+                        message += "Cross-check conclusion: Valid";
+                }
+                
                 editChecksInternalFrame.setCrossChecksTextAreaText(message);
+                editChecksInternalFrame.setResultTextFieldText(worstResultCodeFound.toString());
+
+                if (worstResultCodeFound != CheckResult.ResultCode.Invalid) {
+                    // If no errors were found we generate ICD10 code
+                    ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
+                    if (conversionResult != null) {
+                        if (conversionResult[0].getResultCode() != ConversionResult.ResultCode.Invalid) {
+                            editChecksInternalFrame.setICD10TextFieldText(conversionResult[0].getValue() + "");
+                        }
+                    }
+                }
                 CanRegClientView.showAndCenterInternalFrame(desktopPane, editChecksInternalFrame);
             }
         }

@@ -6,7 +6,7 @@ import canreg.common.Globals;
 import canreg.common.Globals.UserRightLevels;
 import canreg.common.PersonSearchVariable;
 import canreg.common.Tools;
-import canreg.common.qualitycontrol.PersonSearch;
+import canreg.common.qualitycontrol.DefaultPersonSearch;
 import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.server.database.CanRegDAO;
 import canreg.server.database.DatabaseRecord;
@@ -66,7 +66,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         // Step three: initiate the quality controllers
-        personSearcher = new PersonSearch(
+        personSearcher = new DefaultPersonSearch(
                 Tools.getVariableListElements(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
         PersonSearchVariable[] searchVariables = Tools.getPersonSearchVariables(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE);
         personSearcher.setSearchVariables(searchVariables);
@@ -346,9 +346,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             }
             releaseResultSet(resultSetID);
         } catch (SQLException ex) {
-            Logger.getLogger(PersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
-            Logger.getLogger(PersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return patientIDScorePatientIDMap;
@@ -387,9 +387,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             }
             releaseResultSet(resultSetID);
         } catch (SQLException ex) {
-            Logger.getLogger(PersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
-            Logger.getLogger(PersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
         }
         return patientIDScoreMap;
     }

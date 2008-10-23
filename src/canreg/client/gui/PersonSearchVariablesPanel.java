@@ -9,7 +9,7 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.common.PersonSearchVariable;
 import canreg.common.Tools;
-import canreg.common.qualitycontrol.PersonSearch;
+import canreg.common.qualitycontrol.DefaultPersonSearch;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,7 +23,7 @@ import org.w3c.dom.Document;
 public class PersonSearchVariablesPanel extends javax.swing.JPanel implements ActionListener {
     private Document doc;
     private DatabaseVariablesListElement[] variablesInDB;
-    private PersonSearch searcher;
+    private DefaultPersonSearch searcher;
 
     /** Creates new form PersonSearchVariablesPanel */
     public PersonSearchVariablesPanel() {
@@ -34,13 +34,13 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
         this.doc=doc;
         variablesInDB = Tools.getVariableListElements(doc, Globals.NAMESPACE, "Patient");
         PersonSearchVariable[] searchVariables = Tools.getPersonSearchVariables(doc, Globals.NAMESPACE);
-        searcher = new PersonSearch(variablesInDB);
+        searcher = new DefaultPersonSearch(variablesInDB);
         searcher.setSearchVariables(searchVariables);
         searcher.setThreshold(Tools.getPersonSearchMinimumMatch(doc, Globals.NAMESPACE));
         setSearcher(searcher);
     }
     
-    private void setSearcher(PersonSearch searcher){
+    private void setSearcher(DefaultPersonSearch searcher){
         PersonSearchVariable[] searchVariables = searcher.getPersonSearchVariables();
         for (PersonSearchVariable searchVariable:searchVariables){
             PersonSearchVariablePanel psvp = new PersonSearchVariablePanel();
@@ -50,12 +50,12 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
         thresholdTextField.setText(searcher.getThreshold()+"");
     }
     
-    public PersonSearch getSearcher(){
+    public DefaultPersonSearch getSearcher(){
         return buildSearcher();
     }
     
-    private PersonSearch buildSearcher(){
-        PersonSearch newPersonSearch = new PersonSearch(variablesInDB);
+    private DefaultPersonSearch buildSearcher(){
+        DefaultPersonSearch newPersonSearch = new DefaultPersonSearch(variablesInDB);
         Component[] components = variablesListPanel.getComponents();
         PersonSearchVariable[] variables = new PersonSearchVariable[components.length];
         int i = 0;
