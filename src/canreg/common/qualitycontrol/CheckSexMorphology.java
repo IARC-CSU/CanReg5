@@ -1,13 +1,12 @@
 package canreg.common.qualitycontrol;
 
 import canreg.common.Globals;
-import canreg.common.LookUpFileDescription;
 import canreg.common.LookUpLoader;
 import canreg.common.qualitycontrol.Checker.CheckNames;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,10 +35,9 @@ public class CheckSexMorphology implements CheckInterface {
     }
 
     public CheckSexMorphology(){
-        URL resourceURL = this.getClass().getResource(lookUpFileResource);
-        LookUpFileDescription description = new LookUpFileDescription(resourceURL, codeLength);
+        InputStream resourceStream = this.getClass().getResourceAsStream(lookUpFileResource);
         try {
-            morphologicalFamiliesMap = LookUpLoader.load(description);
+            morphologicalFamiliesMap = LookUpLoader.load(resourceStream, codeLength);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CheckSexMorphology.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

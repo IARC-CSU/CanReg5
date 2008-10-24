@@ -37,7 +37,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private Map<Integer, Dictionary> dictionary;
     private LinkedList<DatabaseRecord> patientRecords;
     private LinkedList<DatabaseRecord> tumourRecords;
-    private boolean changesDone;
+    private boolean changesDone = false;
     private JDesktopPane desktopPane;
 
     /** Creates new form RecordEditor */
@@ -53,8 +53,12 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             @Override
             public void internalFrameClosing(InternalFrameEvent e) {
                 int option = JOptionPane.NO_OPTION;
-                option = JOptionPane.showConfirmDialog(null, "Really close?\nChanges made will be lost.");
-                if (option == JOptionPane.YES_OPTION) {
+                if (changesDone) {
+                    option = JOptionPane.showConfirmDialog(null, "Really close?\nChanges made will be lost.");
+                    if (option == JOptionPane.YES_OPTION) {
+                        close();
+                    }
+                } else {
                     close();
                 }
             }

@@ -1,13 +1,12 @@
 package canreg.common.qualitycontrol;
 
 import canreg.common.Globals;
-import canreg.common.LookUpFileDescription;
 import canreg.common.LookUpLoader;
 import canreg.common.qualitycontrol.Checker.CheckNames;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,10 +32,9 @@ public class CheckMorphology implements CheckInterface {
     }
 
     public CheckMorphology() {
-        URL resourceURL = this.getClass().getResource(lookUpFileResource);       
-        LookUpFileDescription description = new LookUpFileDescription(resourceURL, codeLength);
+        InputStream resourceStream = this.getClass().getResourceAsStream(lookUpFileResource);
         try {
-            morphologicalFamiliesMap = LookUpLoader.load(description);
+            morphologicalFamiliesMap = LookUpLoader.load(resourceStream, codeLength);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -66,7 +64,7 @@ public class CheckMorphology implements CheckInterface {
         if (morphologyFamilyString == null) {
             result.setMessage(morphologyCode);
             result.setResultCode(CheckResult.ResultCode.Invalid);
-            System.out.println("not a valid morph code? " + morphologyCode);
+            // System.out.println("not a valid morph code? " + morphologyCode);
             return result;
         } else {
             result.setMessage("");

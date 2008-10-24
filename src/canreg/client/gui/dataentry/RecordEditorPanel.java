@@ -60,6 +60,14 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         this.actionListener = listener;
     }
 
+    public boolean isSaveNeeded() {
+        return saveNeeded;
+    }
+
+    public void setSaveNeeded(boolean saveNeeded) {
+        this.saveNeeded = saveNeeded;
+    }
+
     private enum panelTypes {
         PATIENT, TUMOUR
     }
@@ -191,8 +199,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             }
         } /** Called when a field's "value" property changes. */
         else if ("value".equals(propName)) {
-            saveNeeded = true;
-        // saveButton.setEnabled(saveNeeded);
+            setSaveNeeded(true);
+            actionListener.actionPerformed(new ActionEvent(this,0,"changed"));
+            // saveButton.setEnabled(saveNeeded);
         } else {
             // System.out.println(e.getPropertyName());
         }
@@ -324,7 +333,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
                 canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord);
             }
             JOptionPane.showInternalMessageDialog(this, "Record saved.");
-            saveNeeded = false;
+            setSaveNeeded(false);
         // saveButton.setEnabled(saveNeeded);
 
         } catch (SecurityException ex) {

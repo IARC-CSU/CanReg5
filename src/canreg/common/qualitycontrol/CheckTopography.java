@@ -1,13 +1,12 @@
 package canreg.common.qualitycontrol;
 
 import canreg.common.Globals;
-import canreg.common.LookUpFileDescription;
 import canreg.common.LookUpLoader;
 import canreg.common.qualitycontrol.Checker.CheckNames;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,10 +32,9 @@ public class CheckTopography implements CheckInterface {
     }
 
     public CheckTopography() {
-        URL resourceURL = this.getClass().getResource(lookUpFileResource);       
-        LookUpFileDescription description = new LookUpFileDescription(resourceURL, codeLength);
+        InputStream resourceStream = this.getClass().getResourceAsStream(lookUpFileResource);
         try {
-            topographyICD10Map = LookUpLoader.load(description);
+            topographyICD10Map = LookUpLoader.load(resourceStream, codeLength);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CheckTopography.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -66,7 +64,7 @@ public class CheckTopography implements CheckInterface {
         if (morphologyFamilyString == null) {
             result.setMessage(topographyCode);
             result.setResultCode(CheckResult.ResultCode.Invalid);
-            System.out.println("not a valid top code? " + topographyCode);
+            // System.out.println("not a valid top code? " + topographyCode);
             return result;
         } else {
             result.setMessage("");

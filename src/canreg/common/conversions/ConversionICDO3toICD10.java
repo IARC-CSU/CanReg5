@@ -1,7 +1,6 @@
 package canreg.common.conversions;
 
 import canreg.common.Globals.StandardVariableNames;
-import canreg.common.LookUpFileDescription;
 import canreg.common.LookUpLoader;
 import canreg.common.RulesLoader;
 import canreg.common.conversions.ConversionResult.ResultCode;
@@ -56,10 +55,11 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
 
     public ConversionICDO3toICD10() {
         try {
-            topographyICD10Map = LookUpLoader.load(new LookUpFileDescription(this.getClass().getResource(topographyLookUpFileResource), topographyCodeLength));
-            morphologyICD10Map = LookUpLoader.load(new LookUpFileDescription(this.getClass().getResource(morphologyLookUpFileResource), morphologyCodeLength));
-            topographyRule8Map = RulesLoader.load(new LookUpFileDescription(this.getClass().getResource(topographyRule8FileResource), topographyRule8CodeLength));
-            topographyRule9Map = RulesLoader.load(new LookUpFileDescription(this.getClass().getResource(topographyRule9FileResource), topographyRule9CodeLength));
+            // replace by getResourceAsStream to allow for packaging in a jar/!
+            topographyICD10Map = LookUpLoader.load(this.getClass().getResourceAsStream(topographyLookUpFileResource), topographyCodeLength);
+            morphologyICD10Map = LookUpLoader.load(this.getClass().getResourceAsStream(morphologyLookUpFileResource), morphologyCodeLength);
+            topographyRule8Map = RulesLoader.load(this.getClass().getResourceAsStream(topographyRule8FileResource), topographyRule8CodeLength);
+            topographyRule9Map = RulesLoader.load(this.getClass().getResourceAsStream(topographyRule9FileResource), topographyRule9CodeLength);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
