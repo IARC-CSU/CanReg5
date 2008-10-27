@@ -19,7 +19,6 @@ import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
-import java.awt.Graphics;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -200,8 +199,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         } /** Called when a field's "value" property changes. */
         else if ("value".equals(propName)) {
             setSaveNeeded(true);
-            actionListener.actionPerformed(new ActionEvent(this,0,"changed"));
-            // saveButton.setEnabled(saveNeeded);
+            actionListener.actionPerformed(new ActionEvent(this, 0, "changed"));
+        // saveButton.setEnabled(saveNeeded);
         } else {
             // System.out.println(e.getPropertyName());
         }
@@ -343,19 +342,20 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         }
     }
 
-    private void buildDatabaseRecord(){
+    private void buildDatabaseRecord() {
         Iterator<VariableEditorPanel> iterator = variableEditorPanels.values().iterator();
         while (iterator.hasNext()) {
             VariableEditorPanel vep = iterator.next();
             databaseRecord.setVariable(vep.getKey(), vep.getValue());
         }
     }
-    
+
     @Action
     public void runPersonSearch() {
         try {
             buildDatabaseRecord();
-            Map<Integer, Float> map = canreg.client.CanRegClientApp.getApplication().performDuplicateSearch((Patient) databaseRecord, null);
+            Map<Integer, Float> map =
+                    canreg.client.CanRegClientApp.getApplication().performDuplicateSearch((Patient) databaseRecord, null);
             if (map.size() == 0) {
                 JOptionPane.showInternalMessageDialog(this, "No duplicates found.");
             } else {

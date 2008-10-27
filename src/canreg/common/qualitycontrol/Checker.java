@@ -32,6 +32,7 @@ public class Checker {
         Morphology,
         Topography
     }
+    
     LinkedList<CheckInterface> checks;
 
     public Checker(GlobalToolBox toolBox) {
