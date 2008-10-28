@@ -7,18 +7,30 @@ package canreg.client.gui.analysis;
 
 import cachingtableapi.DistributedTableDescription;
 import cachingtableapi.DistributedTableModel;
+import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
+import canreg.client.LocalSettings;
+import canreg.client.gui.tools.XTableColumnModel;
 import canreg.common.DatabaseFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.TransferHandler;
+import javax.swing.table.TableColumn;
 import org.jdesktop.application.Task;
 import org.jdesktop.application.Action;
 
@@ -33,7 +45,13 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private DistributedTableDataSourceClient tableDataSource;
     private DistributedTableModel tableDataModel;
     private JScrollPane resultScrollPane;
-    private JTable resultTable;
+    private JTable resultTable = new JTable();
+    ;
+    private JFileChooser chooser;
+    private String path;
+    private LocalSettings localSettings;
+    private LinkedList<String> variablesToShow;
+    private XTableColumnModel tableColumnModel;
 
     /** Creates new form ExportFrame
      * @param dtp is a pointer to the current desktop pane.
@@ -41,6 +59,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     public ExportReportInternalFrame(JDesktopPane dtp) {
         initComponents();
         this.dtp = dtp;
+        localSettings = CanRegClientApp.getApplication().getLocalSettings();
         initOtherComponents();
         initValues();
     }
@@ -59,22 +78,20 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
         settingsPanel = new javax.swing.JPanel();
         setupPanel = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        loadSetupButton = new javax.swing.JButton();
+        saveSetupButton = new javax.swing.JButton();
         optionsPanel = new javax.swing.JPanel();
-        jCheckBox3 = new javax.swing.JCheckBox();
-        jComboBox3 = new javax.swing.JComboBox();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jComboBox4 = new javax.swing.JComboBox();
-        jCheckBox4 = new javax.swing.JCheckBox();
-        jCheckBox5 = new javax.swing.JCheckBox();
+        headingCheckBox = new javax.swing.JCheckBox();
+        variableNamesComboBox = new javax.swing.JComboBox();
+        variableNamesLabel = new javax.swing.JLabel();
+        fileFormatLabel = new javax.swing.JLabel();
+        fileFormatComboBox = new javax.swing.JComboBox();
+        formatDateCheckBox = new javax.swing.JCheckBox();
+        correctUnknownCheckBox = new javax.swing.JCheckBox();
         exportPanel = new javax.swing.JPanel();
-        jButton4 = new javax.swing.JButton();
+        writeFileButton = new javax.swing.JButton();
         resultPanel = new javax.swing.JPanel();
-        resultScrollPaneWiz = new javax.swing.JScrollPane();
-        resultTableWiz = new javax.swing.JTable();
-        variableChooserPanel1 = new canreg.client.gui.components.VariablesChooserPanel();
+        variableChooserPanel = new canreg.client.gui.components.VariablesChooserPanel();
         rangeFilterPanel = new canreg.client.gui.components.RangeFilterPanel();
 
         setClosable(true);
@@ -97,53 +114,53 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         setupPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("setupPanel.border.title"))); // NOI18N
         setupPanel.setName("setupPanel"); // NOI18N
 
-        jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
-        jButton2.setName("jButton2"); // NOI18N
+        loadSetupButton.setText(resourceMap.getString("loadSetupButton.text")); // NOI18N
+        loadSetupButton.setName("loadSetupButton"); // NOI18N
 
-        jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
-        jButton3.setName("jButton3"); // NOI18N
+        saveSetupButton.setText(resourceMap.getString("saveSetupButton.text")); // NOI18N
+        saveSetupButton.setName("saveSetupButton"); // NOI18N
 
         javax.swing.GroupLayout setupPanelLayout = new javax.swing.GroupLayout(setupPanel);
         setupPanel.setLayout(setupPanelLayout);
         setupPanelLayout.setHorizontalGroup(
             setupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(setupPanelLayout.createSequentialGroup()
-                .addComponent(jButton2)
+                .addComponent(loadSetupButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3))
+                .addComponent(saveSetupButton))
         );
         setupPanelLayout.setVerticalGroup(
             setupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(setupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jButton2)
-                .addComponent(jButton3))
+                .addComponent(loadSetupButton)
+                .addComponent(saveSetupButton))
         );
 
         optionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("optionsPanel.border.title"))); // NOI18N
         optionsPanel.setName("optionsPanel"); // NOI18N
 
-        jCheckBox3.setText(resourceMap.getString("jCheckBox3.text")); // NOI18N
-        jCheckBox3.setName("jCheckBox3"); // NOI18N
+        headingCheckBox.setText(resourceMap.getString("headingCheckBox.text")); // NOI18N
+        headingCheckBox.setName("headingCheckBox"); // NOI18N
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Short", "English", "User" }));
-        jComboBox3.setName("jComboBox3"); // NOI18N
+        variableNamesComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Short", "English", "User" }));
+        variableNamesComboBox.setName("variableNamesComboBox"); // NOI18N
 
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
+        variableNamesLabel.setText(resourceMap.getString("variableNamesLabel.text")); // NOI18N
+        variableNamesLabel.setName("variableNamesLabel"); // NOI18N
 
-        jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
-        jLabel4.setName("jLabel4"); // NOI18N
+        fileFormatLabel.setText(resourceMap.getString("fileFormatLabel.text")); // NOI18N
+        fileFormatLabel.setName("fileFormatLabel"); // NOI18N
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tab Separated Values", "Comma Separated" }));
-        jComboBox4.setName("jComboBox4"); // NOI18N
+        fileFormatComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tab Separated Values", "Comma Separated" }));
+        fileFormatComboBox.setName("fileFormatComboBox"); // NOI18N
 
-        jCheckBox4.setSelected(true);
-        jCheckBox4.setText(resourceMap.getString("jCheckBox4.text")); // NOI18N
-        jCheckBox4.setName("jCheckBox4"); // NOI18N
+        formatDateCheckBox.setSelected(true);
+        formatDateCheckBox.setText(resourceMap.getString("formatDateCheckBox.text")); // NOI18N
+        formatDateCheckBox.setName("formatDateCheckBox"); // NOI18N
 
-        jCheckBox5.setSelected(true);
-        jCheckBox5.setText(resourceMap.getString("jCheckBox5.text")); // NOI18N
-        jCheckBox5.setName("jCheckBox5"); // NOI18N
+        correctUnknownCheckBox.setSelected(true);
+        correctUnknownCheckBox.setText(resourceMap.getString("correctUnknownCheckBox.text")); // NOI18N
+        correctUnknownCheckBox.setName("correctUnknownCheckBox"); // NOI18N
 
         javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
         optionsPanel.setLayout(optionsPanelLayout);
@@ -151,54 +168,53 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(optionsPanelLayout.createSequentialGroup()
                 .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox3)
+                    .addComponent(headingCheckBox)
                     .addGroup(optionsPanelLayout.createSequentialGroup()
-                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(variableNamesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel1))
+                        .addComponent(variableNamesLabel))
                     .addGroup(optionsPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel4)
+                        .addComponent(fileFormatLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jCheckBox4)
-                    .addComponent(jCheckBox5))
-                .addContainerGap(58, Short.MAX_VALUE))
+                        .addComponent(fileFormatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(formatDateCheckBox)
+                    .addComponent(correctUnknownCheckBox))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
         optionsPanelLayout.setVerticalGroup(
             optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(optionsPanelLayout.createSequentialGroup()
-                .addComponent(jCheckBox3)
+                .addComponent(headingCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(variableNamesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(variableNamesLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(fileFormatLabel)
+                    .addComponent(fileFormatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox4)
+                .addComponent(formatDateCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBox5))
+                .addComponent(correctUnknownCheckBox))
         );
 
         exportPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("exportPanel.border.title"))); // NOI18N
         exportPanel.setName("exportPanel"); // NOI18N
 
-        jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
-        jButton4.setName("jButton4"); // NOI18N
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ExportReportInternalFrame.class, this);
+        writeFileButton.setAction(actionMap.get("writeFileAction")); // NOI18N
+        writeFileButton.setName("writeFileButton"); // NOI18N
 
         javax.swing.GroupLayout exportPanelLayout = new javax.swing.GroupLayout(exportPanel);
         exportPanel.setLayout(exportPanelLayout);
         exportPanelLayout.setHorizontalGroup(
             exportPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(exportPanelLayout.createSequentialGroup()
-                .addComponent(jButton4)
-                .addContainerGap(36, Short.MAX_VALUE))
+            .addComponent(writeFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
         );
         exportPanelLayout.setVerticalGroup(
             exportPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jButton4)
+            .addComponent(writeFileButton)
         );
 
         javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
@@ -211,7 +227,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     .addGroup(settingsPanelLayout.createSequentialGroup()
                         .addComponent(setupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(exportPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(exportPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
                     .addComponent(optionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         settingsPanelLayout.setVerticalGroup(
@@ -219,44 +236,27 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(exportPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(setupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(exportPanel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(setupPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
 
         resultPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("resultPanel.border.title"))); // NOI18N
         resultPanel.setName("resultPanel"); // NOI18N
 
-        resultScrollPaneWiz.setName("resultScrollPaneWiz"); // NOI18N
-
-        resultTableWiz.setAutoCreateRowSorter(true);
-        resultTableWiz.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-
-            }
-        ));
-        resultTableWiz.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        resultTableWiz.setName("resultTableWiz"); // NOI18N
-        resultScrollPaneWiz.setViewportView(resultTableWiz);
-
         javax.swing.GroupLayout resultPanelLayout = new javax.swing.GroupLayout(resultPanel);
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPaneWiz, javax.swing.GroupLayout.DEFAULT_SIZE, 908, Short.MAX_VALUE)
+            .addGap(0, 944, Short.MAX_VALUE)
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPaneWiz, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+            .addGap(0, 245, Short.MAX_VALUE)
         );
 
-        resultScrollPaneWiz.getVerticalScrollBar().setUnitIncrement(16);
-
-        variableChooserPanel1.setName("variableChooserPanel1"); // NOI18N
+        variableChooserPanel.setName("variableChooserPanel"); // NOI18N
 
         rangeFilterPanel.setName("rangeFilterPanel"); // NOI18N
 
@@ -271,7 +271,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(variableChooserPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                        .addComponent(variableChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -280,11 +280,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
-                    .addComponent(variableChooserPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
-                    .addComponent(rangeFilterPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(variableChooserPanel, 0, 0, Short.MAX_VALUE)
+                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(resultPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -295,40 +295,71 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         pack();
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox correctUnknownCheckBox;
     private javax.swing.JPanel exportPanel;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
-    private javax.swing.JCheckBox jCheckBox5;
-    private javax.swing.JComboBox jComboBox3;
-    private javax.swing.JComboBox jComboBox4;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JComboBox fileFormatComboBox;
+    private javax.swing.JLabel fileFormatLabel;
+    private javax.swing.JCheckBox formatDateCheckBox;
+    private javax.swing.JCheckBox headingCheckBox;
+    private javax.swing.JButton loadSetupButton;
     private javax.swing.JPanel optionsPanel;
     private canreg.client.gui.components.RangeFilterPanel rangeFilterPanel;
     private javax.swing.JPanel resultPanel;
-    private javax.swing.JScrollPane resultScrollPaneWiz;
-    private javax.swing.JTable resultTableWiz;
+    private javax.swing.JButton saveSetupButton;
     private javax.swing.JPanel settingsPanel;
     private javax.swing.JPanel setupPanel;
-    private canreg.client.gui.components.VariablesChooserPanel variableChooserPanel1;
+    private canreg.client.gui.components.VariablesChooserPanel variableChooserPanel;
+    private javax.swing.JComboBox variableNamesComboBox;
+    private javax.swing.JLabel variableNamesLabel;
+    private javax.swing.JButton writeFileButton;
     // End of variables declaration//GEN-END:variables
     public JDesktopPane getDtp() {
         return dtp;
     }
 
     private void initValues() {
-        variableChooserPanel1.initPanel();
+        variableChooserPanel.initPanel();
         rangeFilterPanel.setDeskTopPane(dtp);
         rangeFilterPanel.setActionListener(this);
     }
 
     private void initOtherComponents() {
-        resultTable = resultTableWiz;
-        resultScrollPane = resultScrollPaneWiz;
+
+        resultScrollPane = canreg.common.LazyViewport.createLazyScrollPaneFor(resultTable);
+
+        javax.swing.GroupLayout resultPanelLayout = new javax.swing.GroupLayout(resultPanel);
+        resultPanel.setLayout(resultPanelLayout);
+        resultPanelLayout.setHorizontalGroup(
+                resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 771, Short.MAX_VALUE));
+        resultPanelLayout.setVerticalGroup(
+                resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(resultScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE));
+
+        resultScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        resultTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        resultTable.setColumnSelectionAllowed(true);
         resultPanel.setVisible(false);
+
+        resultTable.setName("resultTable"); // NOI18N
+        resultTable.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                // rowClicked(evt);
+            }
+
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                // columnTableMousePressed(evt);
+            }
+        });
+
+        path = localSettings.getProperty("export_data_path");
+
+        if (path == null) {
+            chooser = new JFileChooser();
+        } else {
+            chooser = new JFileChooser(path);
+        }
     }
 
     @Action
@@ -350,6 +381,12 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             super(app);
             tableName = rangeFilterPanel.getSelectedTable();
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
+            variablesToShow = variableChooserPanel.getSelectedVariableNames(tableName);
+
+            filter.setFilterString(rangeFilterPanel.getFilter().trim());
+            filter.setSortByVariable(rangeFilterPanel.getSortByVariable().trim());
+
+            tableDataSource = null;
         }
 
         @Override
@@ -374,6 +411,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 resultTable.setModel(tableDataModel);
                 resultTable.setColumnSelectionAllowed(false);
 
+                tableColumnModel = new XTableColumnModel();
+                resultTable.setColumnModel(tableColumnModel);
+                resultTable.createDefaultColumnsFromModel();
+                updateVariablesShown();
+
                 setProgress(4, 0, 4);
                 setMessage("Finished");
 
@@ -396,7 +438,20 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             boolean theResult = result.equals("OK");
+            // resultTable.setAutoResizeMode (JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
             resultPanel.setVisible(theResult);
+
+        }
+    }
+
+    private void updateVariablesShown() {
+        String tableName = rangeFilterPanel.getSelectedTable();
+        variablesToShow = variableChooserPanel.getSelectedVariableNames(tableName);
+        // first set all invisible
+        Enumeration<TableColumn> tcs = tableColumnModel.getColumns(false);
+        while (tcs.hasMoreElements()) {
+            TableColumn column = tcs.nextElement();
+            tableColumnModel.setColumnVisible(column, variablesToShow.contains(column.getHeaderValue().toString()));
         }
     }
 
@@ -404,6 +459,136 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         if ("refresh".equalsIgnoreCase(e.getActionCommand())) {
             Task refreshTask = refresh();
             refreshTask.execute();
+        }
+    }
+
+    @Action
+    public Task writeFileAction() {
+        // Get filename
+        int returnVal = chooser.showSaveDialog(this);
+        String fileName = "";
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                //set the file name
+                fileName = chooser.getSelectedFile().getCanonicalPath();
+                File file = new File(fileName);
+                if (file.exists()) {
+                    int choice = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "File exists: " + fileName + ".\n Overwrite?", "File exists.", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (choice == JOptionPane.CANCEL_OPTION) {
+                        return null;
+                    } else if (choice == JOptionPane.NO_OPTION) {
+                        // choose a new file
+                        writeFileAction();
+                        return null;
+                    }
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return new WriteFileActionTask(fileName, org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+    }
+
+    private class WriteFileActionTask extends org.jdesktop.application.Task<Object, Void> {
+
+        BufferedWriter bw;
+        int rowCount;
+        int columnCount;
+        private String separatingString;
+
+        WriteFileActionTask(String fileName, org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to WriteFileActionTask fields, here.
+            super(app);
+            writeFileButton.setEnabled(false);
+            // refresh the table if necessary
+            if (!resultPanel.isVisible()){
+                Task refresher = refresh();
+                refresher.execute();
+                while(!refresher.isDone()){
+                    // wait 
+                }
+            }
+            
+            // Lock the table
+            resultPanel.setVisible(false);
+            rangeFilterPanel.setRefreshButtonEnabled(false);
+            
+            
+            if (fileFormatComboBox.getSelectedIndex() == 1) {
+                separatingString = ",";
+            } else {
+                separatingString = "\t";
+            }
+
+            try {
+                File file = new File(fileName);
+                localSettings.setProperty("export_data_path", file.getParent());
+                bw = new BufferedWriter(new FileWriter(file));
+                rowCount = resultTable.getRowCount();
+                columnCount = resultTable.getColumnCount();
+            } catch (IOException ex) {
+                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        @Override
+        protected Object doInBackground() {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+
+            // Here we do indeed reference the jtable. However as long as the user does not move the columns it should be ok...
+
+            String line = "";
+
+            try {
+                for (int column = 0; column < columnCount; column++) {
+                    line += resultTable.getColumnName(column);
+                    boolean last = (column == columnCount - 1);
+                    if (!last) {
+                        line += separatingString;
+                    }
+                }
+                bw.write(line + "\n");
+                line = "";
+                for (int row = 0; row < rowCount; row++) {
+                    for (int column = 0; column < columnCount; column++) {
+                        line += resultTable.getValueAt(row, column);
+                        boolean last = (column == columnCount - 1);
+                        if (!last) {
+                            line += separatingString;
+                        }
+                    }
+                    setProgress(100 * row / rowCount);
+                    bw.write(line + "\n");
+                    line = "";
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;  // return your result
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+            try {
+                // Runs on the EDT.  Update the GUI based on
+                // the result computed by doInBackground().
+                bw.flush();
+                bw.close();
+                
+                rangeFilterPanel.setRefreshButtonEnabled(true);
+                resultPanel.setVisible(true);
+                writeFileButton.setEnabled(true);
+
+                localSettings.writeSettings();
+
+            } catch (IOException ex) {
+                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
     }
 }

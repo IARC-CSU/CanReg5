@@ -340,8 +340,7 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
            if (result == null) {
-                    File file = new File(fileName);
-                    
+                    File file = new File(fileName);    
                     localSettings.setProperty("dictionary_import_path", file.getParent());
                     localSettings.writeSettings();
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully imported dictionaries from file.", "Dictionary successfully imported.", JOptionPane.INFORMATION_MESSAGE);

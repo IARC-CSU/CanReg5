@@ -35,7 +35,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variableChooserPanel1" pref="243" max="32767" attributes="0"/>
+                      <Component id="variableChooserPanel" pref="235" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="settingsPanel" min="-2" max="-2" attributes="1"/>
                   </Group>
@@ -48,12 +48,12 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="settingsPanel" pref="288" max="32767" attributes="0"/>
-                  <Component id="variableChooserPanel1" alignment="0" pref="288" max="32767" attributes="0"/>
-                  <Component id="rangeFilterPanel" alignment="1" pref="288" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="rangeFilterPanel" alignment="0" max="32767" attributes="1"/>
+                  <Component id="variableChooserPanel" alignment="0" min="0" pref="0" max="32767" attributes="1"/>
+                  <Component id="settingsPanel" alignment="0" max="32767" attributes="1"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Component id="resultPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -83,6 +83,7 @@
                           <Component id="setupPanel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="exportPanel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                       <Component id="optionsPanel" max="32767" attributes="1"/>
                   </Group>
@@ -94,11 +95,11 @@
               <Group type="102" attributes="0">
                   <Component id="optionsPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="exportPanel" min="-2" max="-2" attributes="0"/>
-                      <Component id="setupPanel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="exportPanel" min="0" max="32767" attributes="1"/>
+                      <Component id="setupPanel" alignment="0" max="32767" attributes="1"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace pref="47" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -120,32 +121,32 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                      <Component id="loadSetupButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                      <Component id="saveSetupButton" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="loadSetupButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="saveSetupButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="jButton2">
+            <Component class="javax.swing.JButton" name="loadSetupButton">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jButton2.text"/>
-                <Property name="name" type="java.lang.String" value="jButton2" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="loadSetupButton.text"/>
+                <Property name="name" type="java.lang.String" value="loadSetupButton" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton3">
+            <Component class="javax.swing.JButton" name="saveSetupButton">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jButton3.text"/>
-                <Property name="name" type="java.lang.String" value="jButton3" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="saveSetupButton.text"/>
+                <Property name="name" type="java.lang.String" value="saveSetupButton" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -167,54 +168,54 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jCheckBox3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="headingCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jComboBox3" min="-2" max="-2" attributes="0"/>
+                              <Component id="variableNamesComboBox" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                              <Component id="variableNamesLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                              <Component id="fileFormatLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jComboBox4" min="-2" max="-2" attributes="0"/>
+                              <Component id="fileFormatComboBox" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jCheckBox4" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jCheckBox5" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="formatDateCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="correctUnknownCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="58" max="32767" attributes="0"/>
+                      <EmptySpace pref="66" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jCheckBox3" min="-2" max="-2" attributes="0"/>
+                      <Component id="headingCheckBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jComboBox3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="variableNamesComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="variableNamesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jComboBox4" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="fileFormatLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="fileFormatComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jCheckBox4" min="-2" max="-2" attributes="0"/>
+                      <Component id="formatDateCheckBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jCheckBox5" min="-2" max="-2" attributes="0"/>
+                      <Component id="correctUnknownCheckBox" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JCheckBox" name="jCheckBox3">
+            <Component class="javax.swing.JCheckBox" name="headingCheckBox">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jCheckBox3.text"/>
-                <Property name="name" type="java.lang.String" value="jCheckBox3" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="headingCheckBox.text"/>
+                <Property name="name" type="java.lang.String" value="headingCheckBox" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="jComboBox3">
+            <Component class="javax.swing.JComboBox" name="variableNamesComboBox">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="3">
@@ -223,22 +224,22 @@
                     <StringItem index="2" value="User"/>
                   </StringArray>
                 </Property>
-                <Property name="name" type="java.lang.String" value="jComboBox3" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="variableNamesComboBox" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel1">
+            <Component class="javax.swing.JLabel" name="variableNamesLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel1.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel1" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="variableNamesLabel.text"/>
+                <Property name="name" type="java.lang.String" value="variableNamesLabel" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel4">
+            <Component class="javax.swing.JLabel" name="fileFormatLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel4.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel4" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="fileFormatLabel.text"/>
+                <Property name="name" type="java.lang.String" value="fileFormatLabel" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="jComboBox4">
+            <Component class="javax.swing.JComboBox" name="fileFormatComboBox">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="2">
@@ -246,21 +247,21 @@
                     <StringItem index="1" value="Comma Separated"/>
                   </StringArray>
                 </Property>
-                <Property name="name" type="java.lang.String" value="jComboBox4" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="fileFormatComboBox" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="jCheckBox4">
+            <Component class="javax.swing.JCheckBox" name="formatDateCheckBox">
               <Properties>
                 <Property name="selected" type="boolean" value="true"/>
-                <Property name="text" type="java.lang.String" resourceKey="jCheckBox4.text"/>
-                <Property name="name" type="java.lang.String" value="jCheckBox4" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="formatDateCheckBox.text"/>
+                <Property name="name" type="java.lang.String" value="formatDateCheckBox" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="jCheckBox5">
+            <Component class="javax.swing.JCheckBox" name="correctUnknownCheckBox">
               <Properties>
                 <Property name="selected" type="boolean" value="true"/>
-                <Property name="text" type="java.lang.String" resourceKey="jCheckBox5.text"/>
-                <Property name="name" type="java.lang.String" value="jCheckBox5" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="correctUnknownCheckBox.text"/>
+                <Property name="name" type="java.lang.String" value="correctUnknownCheckBox" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -280,23 +281,22 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="jButton4" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="36" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="writeFileButton" alignment="0" pref="111" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jButton4" min="-2" max="-2" attributes="0"/>
+                  <Component id="writeFileButton" min="-2" max="-2" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="jButton4">
+            <Component class="javax.swing.JButton" name="writeFileButton">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jButton4.text"/>
-                <Property name="name" type="java.lang.String" value="jButton4" noResource="true"/>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.analysis.ExportReportInternalFrame" id="writeFileAction" methodName="writeFileAction"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="writeFileButton" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -318,46 +318,19 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="resultScrollPaneWiz" alignment="0" pref="908" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="944" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="resultScrollPaneWiz" alignment="0" pref="237" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="245" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
-      <SubComponents>
-        <Container class="javax.swing.JScrollPane" name="resultScrollPaneWiz">
-          <Properties>
-            <Property name="name" type="java.lang.String" value="resultScrollPaneWiz" noResource="true"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="resultScrollPaneWiz.getVerticalScrollBar().setUnitIncrement(16);"/>
-          </AuxValues>
-
-          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-          <SubComponents>
-            <Component class="javax.swing.JTable" name="resultTableWiz">
-              <Properties>
-                <Property name="autoCreateRowSorter" type="boolean" value="true"/>
-                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="0" rowCount="0"/>
-                </Property>
-                <Property name="autoResizeMode" type="int" value="0"/>
-                <Property name="name" type="java.lang.String" value="resultTableWiz" noResource="true"/>
-                <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                  <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
-                </Property>
-              </Properties>
-            </Component>
-          </SubComponents>
-        </Container>
-      </SubComponents>
     </Container>
-    <Component class="canreg.client.gui.components.VariablesChooserPanel" name="variableChooserPanel1">
+    <Component class="canreg.client.gui.components.VariablesChooserPanel" name="variableChooserPanel">
       <Properties>
-        <Property name="name" type="java.lang.String" value="variableChooserPanel1" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="variableChooserPanel" noResource="true"/>
       </Properties>
     </Component>
     <Component class="canreg.client.gui.components.RangeFilterPanel" name="rangeFilterPanel">

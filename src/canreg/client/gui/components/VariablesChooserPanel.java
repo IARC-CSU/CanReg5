@@ -127,6 +127,20 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
         return variables;
     }
     
+    public LinkedList<String> getSelectedVariableNames(String tableName){
+        LinkedList<String> variables = new LinkedList<String>();
+        DatabaseVariablesListElement element = null;
+        for (VariablesExportDetailsPanel ved : panelList) {
+            if (ved.getCheckboxes()[0]){
+                element = ved.getVariable();
+                if ("both".equalsIgnoreCase(tableName)||element.getDatabaseTableName().equalsIgnoreCase(tableName)){
+                    variables.add(element.getDatabaseVariableName().toUpperCase());
+                }
+            }
+        }
+        return variables;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox allVariablesCheckBox;
     private javax.swing.JPanel panel;

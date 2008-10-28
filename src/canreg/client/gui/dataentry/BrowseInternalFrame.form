@@ -42,7 +42,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="navigationPanel" max="32767" attributes="1"/>
-                          <Component id="variablesPanel1" alignment="0" pref="118" max="32767" attributes="1"/>
+                          <Component id="variablesPanel" alignment="0" pref="118" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="buttonsPanel" min="-2" max="-2" attributes="0"/>
@@ -61,7 +61,7 @@
                   <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                       <Component id="buttonsPanel" alignment="0" min="0" pref="258" max="32767" attributes="1"/>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="variablesPanel1" min="-2" max="-2" attributes="0"/>
+                          <Component id="variablesPanel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="navigationPanel" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -179,9 +179,9 @@
         <Property name="name" type="java.lang.String" value="navigationPanel" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="canreg.client.gui.components.VariablesPanel" name="variablesPanel1">
+    <Component class="canreg.client.gui.components.VariablesPanel" name="variablesPanel">
       <Properties>
-        <Property name="name" type="java.lang.String" value="variablesPanel1" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="variablesPanel" noResource="true"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JPanel" name="resultPanel">
@@ -197,7 +197,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="511" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="515" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>

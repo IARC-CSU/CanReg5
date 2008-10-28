@@ -74,7 +74,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         editTumourNumberButton = new javax.swing.JButton();
         rangeFilterPanel = new canreg.client.gui.components.RangeFilterPanel();
         navigationPanel = new canreg.client.gui.components.NavigationPanel();
-        variablesPanel1 = new canreg.client.gui.components.VariablesPanel();
+        variablesPanel = new canreg.client.gui.components.VariablesPanel();
         resultPanel = new javax.swing.JPanel();
 
         setClosable(true);
@@ -162,7 +162,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
 
         navigationPanel.setName("navigationPanel"); // NOI18N
 
-        variablesPanel1.setName("variablesPanel1"); // NOI18N
+        variablesPanel.setName("variablesPanel"); // NOI18N
 
         resultPanel.setName("resultPanel"); // NOI18N
 
@@ -174,7 +174,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 507, Short.MAX_VALUE)
+            .addGap(0, 515, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -190,7 +190,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(navigationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(variablesPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
+                            .addComponent(variablesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -204,7 +204,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(buttonsPanel, javax.swing.GroupLayout.Alignment.LEADING, 0, 258, Short.MAX_VALUE)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(variablesPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(variablesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(navigationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(6, 6, 6)
@@ -255,7 +255,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         // hook the navigationpanel up to the resulttable
         navigationPanel.setTable(resultTable);
         rangeFilterPanel.setActionListener(this);
-        variablesPanel1.setDatabaseVariables(CanRegClientApp.getApplication().getGlobalToolBox().getVariables());
+        variablesPanel.setDatabaseVariables(CanRegClientApp.getApplication().getGlobalToolBox().getVariables());
     // Task task = refresh();
     // task.run();
     // rangeFilterPanel.setRecordsTotal(tableDataModel.getRowCount());
@@ -324,7 +324,7 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
             // to RefreshTask fields, here.
             super(app);
             tableName = rangeFilterPanel.getSelectedTable();
-            variablesToShow = variablesPanel1.getVariablesToShow(tableName);
+            variablesToShow = variablesPanel.getVariablesToShow(tableName);
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
             filter.setSortByVariable(rangeFilterPanel.getSortByVariable().trim());
             tableDataSource = null;
@@ -417,7 +417,7 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
        
     private void updateVariablesShown(){
           String tableName = rangeFilterPanel.getSelectedTable();
-          variablesToShow = variablesPanel1.getVariablesToShow(tableName);
+          variablesToShow = variablesPanel.getVariablesToShow(tableName);
           // first set all invisible
           Enumeration<TableColumn> tcs = tableColumnModel.getColumns(false);
           while(tcs.hasMoreElements()){
@@ -564,7 +564,7 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
     private canreg.client.gui.components.RangeFilterPanel rangeFilterPanel;
     private javax.swing.JPanel resultPanel;
     private javax.swing.JTextField tumourNumberTextField;
-    private canreg.client.gui.components.VariablesPanel variablesPanel1;
+    private canreg.client.gui.components.VariablesPanel variablesPanel;
     // End of variables declaration//GEN-END:variables
 
     public void actionPerformed(ActionEvent e) {

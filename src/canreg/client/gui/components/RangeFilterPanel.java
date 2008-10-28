@@ -65,8 +65,12 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         this.dtp = dtp;
     }
 
-    public void setFilterActive(boolean b) {
-        useFilterCheckBox.setSelected(b);
+    public void setFilterActive(boolean active) {
+        useFilterCheckBox.setSelected(active);
+    }
+
+    public void setRefreshButtonEnabled(boolean enabled) {
+        refreshTableButton.setEnabled(enabled);
     }
 
     public void setTableChooserVisible(boolean visible) {

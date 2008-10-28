@@ -207,7 +207,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
 
     @Action
     public void exportCompleteDictionaryAction() {
-        int returnVal = chooser.showOpenDialog(this);
+        int returnVal = chooser.showSaveDialog(this);
         String fileName = null;
         BufferedWriter bw;
         int selectedDbdle = chooseDictionaryComboBox.getSelectedIndex();
@@ -226,6 +226,10 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                         return;
                     }
                 }
+
+                localSettings.setProperty("dictionary_import_path", file.getParent());
+                localSettings.writeSettings();
+                
                 bw = new BufferedWriter(new FileWriter(file));
                 
                 for (DatabaseDictionaryListElement dbdle:dictionariesInDB){
