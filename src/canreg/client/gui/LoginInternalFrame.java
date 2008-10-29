@@ -8,7 +8,6 @@ package canreg.client.gui;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.ServerDescription;
-import canreg.common.Globals;
 import canreg.exceptions.WrongCanRegVersionException;
 import java.beans.PropertyChangeSupport;
 import java.net.InetAddress;
@@ -501,7 +500,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not find CanReg server: " + server + ".", "Error", JOptionPane.ERROR_MESSAGE);
             feedbackLabel.setText("Error.");
         } catch (WrongCanRegVersionException wrongCanRegVersionException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "CanReg server version different than client version. Server: " + wrongCanRegVersionException.toString() + " Client: " + Globals.VERSION_STRING + ".", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "CanReg server version different than client version. " + wrongCanRegVersionException.toString() + ".", "Error", JOptionPane.ERROR_MESSAGE);
             feedbackLabel.setText("Error.");
         }
     }

@@ -5,6 +5,10 @@
  */
 package canreg.client.gui;
 
+import canreg.common.Globals;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import javax.swing.JDesktopPane;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
@@ -16,11 +20,40 @@ import org.jdesktop.application.FrameView;
 public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
 
     FrameView fv;
+    Properties appInfoProperties;
 
     /** Creates new form WelcomeInternalFrame */
     public WelcomeInternalFrame(FrameView fv) {
         this.fv = fv;
+        
+        appInfoProperties = new Properties();
+        InputStream in = null;
+        //
+        // load properties file
+        //
+        try {
+            //
+            // get Application information
+            //
+            in = getClass().getResourceAsStream(Globals.APPINFO_PROPERTIES_PATH);
+            appInfoProperties.load(in);
+            in.close();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } // end-try-catch
+
         initComponents();
+        // set version
+
+        String versionString = "";
+        for (String part : Globals.versionStringParts) {
+            versionString += appInfoProperties.getProperty(part);
+        }
+        versionString += "b" + appInfoProperties.getProperty("program.BUILDNUM");
+        versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
+        versionLabel.setText(versionLabel.getText() + " " + versionString);
+
     }
 
     /** This method is called from within the constructor to
@@ -38,6 +71,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         buttonPanel = new javax.swing.JPanel();
         loginButton = new javax.swing.JButton();
         restoreBackupButton = new javax.swing.JButton();
+        versionLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setResizable(true);
@@ -107,11 +141,14 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(buttonPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(restoreBackupButton, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                .addComponent(restoreBackupButton, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        versionLabel.setText(resourceMap.getString("versionLabel.text")); // NOI18N
+        versionLabel.setName("versionLabel"); // NOI18N
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -121,6 +158,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(logoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(versionLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                     .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -136,7 +174,9 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(logoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)))
+                        .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(versionLabel)))
                 .addContainerGap())
         );
 
@@ -193,6 +233,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton logoButton;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JButton restoreBackupButton;
+    private javax.swing.JLabel versionLabel;
     // End of variables declaration//GEN-END:variables
     private javax.swing.JDesktopPane desktopPane;
 }

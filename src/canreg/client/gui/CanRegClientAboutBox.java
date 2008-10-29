@@ -6,15 +6,36 @@ package canreg.client.gui;
 
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.common.Globals;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.Properties;
 import org.jdesktop.application.Action;
 
 public class CanRegClientAboutBox extends javax.swing.JDialog {
 
-    String version = Globals.VERSION_STRING;
+    private Properties appInfoProperties;
     
     public CanRegClientAboutBox(java.awt.Frame parent) {
         super(parent);
+        InputStream in = null;
+        appInfoProperties = new Properties();
+        //
+        // load properties file
+        //
+        try {
+            //
+            // get Application information
+            //
+            in = getClass().getResourceAsStream(Globals.APPINFO_PROPERTIES_PATH);
+            appInfoProperties.load(in);
+            in.close();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } // end-try-catch
+                
+                
         initComponents();
         getRootPane().setDefaultButton(closeButton);
     }
@@ -156,14 +177,20 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
                             .addComponent(homepageLabel)
                             .addComponent(appHomepageLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(closeButton))
                     .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        appVersionLabel.setText(Globals.VERSION_STRING);
+        String versionString = "";
+        for (String part:Globals.versionStringParts){
+            versionString += appInfoProperties.getProperty(part);
+        }
+        versionString += "b"+appInfoProperties.getProperty("program.BUILDNUM");
+        versionString += " ("+appInfoProperties.getProperty("program.BUILDDATE")+")";
+        appVersionLabel.setText(versionString);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

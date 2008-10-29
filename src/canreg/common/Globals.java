@@ -1,6 +1,9 @@
 package canreg.common;
 
 import canreg.server.database.AgeGroupStructure;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  *
@@ -9,12 +12,8 @@ import canreg.server.database.AgeGroupStructure;
 public class Globals {
 
     // http://en.wikipedia.org/wiki/Software_versioning
-    static private int VERSION_MAJOR = 4;
-    static private int VERSION_MINOR = 99;
-    static private int VERSION_BUILD = 0;
-    static private int VERSION_REVISION = 0;
-    static private String VERSION_APPENDIX = "";
-    static public String VERSION_STRING = VERSION_MAJOR+"."+VERSION_MINOR+VERSION_APPENDIX;
+    static public String APPINFO_PROPERTIES_PATH = "/appinfo.properties";
+    static public String[] versionStringParts = new String[]{"program.VERSION"};
     static public String downloadCanRegURL = "http://www.iacr.com.fr/iacr_canreg4.htm";
     static public String newestVersionURLString = "http://www.iacr.com.fr/version.txt";
     static public String NAMESPACE = "ns3:";
@@ -47,6 +46,7 @@ public class Globals {
     public static String PATIENT_TABLE_NAME = "Patient";
     // public static String PATIENT_TABLE_NAME = "Patient";
     public static String DATE_FORMAT_STRING = "yyyyMMdd";
+
     static public enum UserRightLevels {NOT_LOGGED_IN, SUPERVISOR, REGISTRAR, ANALYST };
 
     static public String PATIENT_TABLE_RECORD_ID_VARIABLE_NAME = "PRID";
@@ -110,5 +110,5 @@ public class Globals {
         Source6,
         PatientID,
         TumourID
-    }
+    }    
 }

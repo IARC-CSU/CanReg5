@@ -6,7 +6,7 @@ package canreg.exceptions;
  */
 public class  WrongCanRegVersionException extends Exception {
     
-    String message=null;
+    private String message=null;
     
     public WrongCanRegVersionException(String message) {
         this.message = message;

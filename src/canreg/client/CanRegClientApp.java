@@ -28,6 +28,7 @@ import canreg.server.database.Tumour;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
@@ -41,6 +42,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
@@ -73,7 +75,8 @@ public class CanRegClientApp extends SingleFrameApplication {
     private GlobalToolBox globalToolBox;
     private Checker checker;
     private Converter converter;
-
+    private Properties appInfoProperties;
+    private String canRegSystemVersionString;
 
     public void saveNewPopulationDataset(PopulationDataset pds) throws SecurityException, RemoteException {
         int populationDatasetID = server.saveNewPopulationDataset(pds);
@@ -86,6 +89,28 @@ public class CanRegClientApp extends SingleFrameApplication {
     @Override
     protected void startup() {
         applyPreferences();
+
+        InputStream in = null;
+        appInfoProperties = new Properties();
+        //
+        // load properties file
+        //
+        try {
+            //
+            // get Application information
+            //
+            in = getClass().getResourceAsStream(Globals.APPINFO_PROPERTIES_PATH);
+            appInfoProperties.load(in);
+            in.close();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } // end-try-catch
+
+        canRegSystemVersionString = "";
+        for (String part:Globals.versionStringParts){
+            canRegSystemVersionString += appInfoProperties.getProperty(part);
+        }
         
         canRegClientView = new CanRegClientView(this);
 
@@ -117,6 +142,9 @@ public class CanRegClientApp extends SingleFrameApplication {
                 }
             }
         };
+
+
+
         addExitListener(maybeExit);
     }
 
@@ -201,8 +229,9 @@ public class CanRegClientApp extends SingleFrameApplication {
         //authenticate credentials
         loginServer = (CanRegLoginInterface) Naming.lookup(serverObjectString);
         //login object received
-        if (!Globals.VERSION_STRING.equalsIgnoreCase(loginServer.getSystemVersion())) {
-            throw (new WrongCanRegVersionException(loginServer.getSystemVersion()));
+        
+        if (!canRegSystemVersionString.trim().equalsIgnoreCase(loginServer.getSystemVersion().trim())) {
+            throw (new WrongCanRegVersionException("Server: "+ loginServer.getSystemVersion()+", Client: "+canRegSystemVersionString));
         }
         //do the login 
         debugOut("ATTEMPTING LOGIN");
@@ -224,7 +253,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                     equals(server.getIPAddress());
             Globals.UserRightLevels i = getUserRightLevel();
             canRegClientView.setUserRightsLevel(i);
-            
+
             checker = new Checker(globalToolBox);
             converter = new Converter(globalToolBox);
 
@@ -401,8 +430,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         Globals.UserRightLevels level = Globals.UserRightLevels.NOT_LOGGED_IN;
         try {
             level = server.getUserRightLevel();
-            // For now all users are supervisors
-            // return Globals.UserRightLevels.SUPERVISOR;
+        // For now all users are supervisors
+        // return Globals.UserRightLevels.SUPERVISOR;
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {
@@ -506,11 +535,11 @@ public class CanRegClientApp extends SingleFrameApplication {
     public boolean deleteDictionaryEntries(int dictionaryID) throws SecurityException, RemoteException {
         return server.deleteDictionaryEntries(dictionaryID);
     }
-    
+
     public boolean clearNameSexTable() throws SecurityException, RemoteException {
         return server.clearNameSexTable();
     }
-    
+
     public Map<String, Integer> getNameSexTables() throws SecurityException, RemoteException {
         return server.getNameSexTables();
     }
@@ -626,21 +655,25 @@ public class CanRegClientApp extends SingleFrameApplication {
             return null;
         }
     }
-    
+
     public Map<Integer, Float> performDuplicateSearch(Patient patient, PersonSearcher searcher) throws SecurityException, RemoteException {
         return server.performPersonSearch(patient, searcher);
     }
-    
-    public LinkedList<CheckResult> performChecks(Patient patient, Tumour tumour){
+
+    public LinkedList<CheckResult> performChecks(Patient patient, Tumour tumour) {
         return checker.performChecks(patient, tumour);
     }
-    
-    public ConversionResult[] performConversions(Converter.ConversionName conversionName, Patient patient, Tumour tumour){
+
+    public ConversionResult[] performConversions(Converter.ConversionName conversionName, Patient patient, Tumour tumour) {
         return converter.performConversion(conversionName, patient, tumour);
     }
-    
+
     public Map<Integer, Map<Float, Integer>> performGlobalDuplicateSearch(PersonSearcher searcher) throws SecurityException, RemoteException {
-       return server.performGlobalPersonSearch(searcher);
+        return server.performGlobalPersonSearch(searcher);
+    }
+    
+    public String getCanRegVersionString(){
+        return canRegSystemVersionString;
     }
 
     /**

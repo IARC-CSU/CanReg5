@@ -18,6 +18,7 @@ import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
 import canreg.server.management.SystemDescription;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -31,6 +32,7 @@ import java.net.InetAddress;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TreeMap;
 import org.w3c.dom.Document;
 
@@ -48,10 +50,28 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private String systemCode;
     private SystemSettings systemSettings;
     private PersonSearcher personSearcher;
+    private Properties appInfoProperties;
 
     public CanRegServerImpl(String systemCode) throws RemoteException {
         this.systemCode = systemCode;
+        
+        appInfoProperties = new Properties();
+        InputStream in = null;
+        //
+        // load properties file
+        //
+        try {
+            //
+            // get Application information
+            //
+            in = getClass().getResourceAsStream(Globals.APPINFO_PROPERTIES_PATH);
+            appInfoProperties.load(in);
+            in.close();
 
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } // end-try-catch
+        
         // Step one load the system definition...
         if (!initSystemDefinition()) {
             throw new RemoteException("Faulty system definitions...");
@@ -224,7 +244,11 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     public String getCanRegVersion() throws RemoteException, SecurityException {
-        return Globals.VERSION_STRING;
+        String versionString = "";
+        for (String part:Globals.versionStringParts){
+            versionString += appInfoProperties.getProperty(part);
+        }
+        return versionString;
     }
 
     public boolean deleteDictionaryEntries(int dictionaryID) throws RemoteException, SecurityException {

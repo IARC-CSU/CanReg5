@@ -9,15 +9,17 @@ import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.common.Globals;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.String;
 import java.rmi.RemoteException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -32,10 +34,26 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private CanRegClientView crcv;
     private LocalSettings localSettings;
     private Locale[] locales;
+    private Properties appInfoProperties;
 
     /** Creates new form OptionsFrame */
     public OptionsFrame(CanRegClientView crcv) {
         this.crcv = crcv;
+        InputStream in = null;
+        appInfoProperties = new Properties();
+        //
+        // load properties file
+        //
+        try {
+            //
+            // get Application information
+            //
+            in = getClass().getResourceAsStream(Globals.APPINFO_PROPERTIES_PATH);
+            appInfoProperties.load(in);
+            in.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } // end-try-catch
         initComponents();
         initValues();
     }
@@ -499,7 +517,11 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
 
         showOutlineCheckBox.setSelected(localSettings.isOutlineDragMode());
         // CanReg verison
-        versionInstalledTextField.setText(Globals.VERSION_STRING);
+        String versionString = "";
+        for (String part:Globals.versionStringParts){
+            versionString += appInfoProperties.getProperty(part);
+        }
+        versionInstalledTextField.setText(versionString);
         try {
             // Backup
             Date backUpDate = CanRegClientApp.getApplication().getDateOfLastBackUp();
@@ -576,7 +598,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         if (lv != null && lv.trim().length() > 0) {
             latestVersionTextField.setText(lv);
             latestVersionTextField.setEnabled(true);
-            if (!lv.trim().equalsIgnoreCase(Globals.VERSION_STRING)) {
+            if (!lv.trim().equalsIgnoreCase(versionInstalledTextField.getText())) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "You do not have the latest official version of CanReg5 installed.", "Message", JOptionPane.WARNING_MESSAGE);
             } else {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "You have the latest official version of CanReg5 installed.", "Message", JOptionPane.INFORMATION_MESSAGE);

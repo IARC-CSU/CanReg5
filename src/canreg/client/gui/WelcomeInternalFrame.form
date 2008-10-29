@@ -50,6 +50,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="logoButton" alignment="2" min="-2" pref="298" max="-2" attributes="1"/>
+                      <Component id="versionLabel" alignment="0" pref="313" max="32767" attributes="0"/>
                       <Component id="aboutScrollPane" alignment="2" pref="313" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -68,7 +69,9 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="logoButton" min="-2" pref="274" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="aboutScrollPane" pref="262" max="32767" attributes="0"/>
+                          <Component id="aboutScrollPane" pref="249" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="versionLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -141,9 +144,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="loginButton" pref="254" max="32767" attributes="0"/>
+                      <Component id="loginButton" pref="257" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="restoreBackupButton" pref="254" max="32767" attributes="0"/>
+                      <Component id="restoreBackupButton" pref="258" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -173,6 +176,12 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JLabel" name="versionLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="versionLabel.text"/>
+            <Property name="name" type="java.lang.String" value="versionLabel" noResource="true"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>
