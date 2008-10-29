@@ -15,8 +15,25 @@ import java.util.Map;
  */
 public interface ConversionInterface {
 
+    /**
+     * 
+     * @return
+     */
     public ConversionName getConversionName();
+    /**
+     * 
+     * @return
+     */
     public Globals.StandardVariableNames[] getVariablesNeeded();
+    /**
+     * 
+     * @return
+     */
     public Globals.StandardVariableNames[] getVariablesCreated();
+    /**
+     * 
+     * @param variables
+     * @return
+     */
     public ConversionResult[] performConversion(Map<Globals.StandardVariableNames, Object> variables);
 }

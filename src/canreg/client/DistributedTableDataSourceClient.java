@@ -18,7 +18,10 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
 
     	/**
 	 * Constructor for DemoTableDataSource.
-	 */
+         * 
+         * @param distributedTableDescription
+         * @throws Exception 
+         */
 	public DistributedTableDataSourceClient(DistributedTableDescription distributedTableDescription) throws Exception {
 		super();
                 this.distributedTableDescription = distributedTableDescription;
@@ -29,6 +32,10 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
         return distributedTableDescription;
     }
 
+    /**
+     * 
+     * @param distributedTableDescription
+     */
     public void setTableDescription(DistributedTableDescription distributedTableDescription) {
         this.distributedTableDescription = distributedTableDescription;
     }

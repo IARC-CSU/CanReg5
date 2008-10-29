@@ -22,7 +22,9 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
     FrameView fv;
     Properties appInfoProperties;
 
-    /** Creates new form WelcomeInternalFrame */
+    /** Creates new form WelcomeInternalFrame
+     * @param fv 
+     */
     public WelcomeInternalFrame(FrameView fv) {
         this.fv = fv;
         
@@ -199,6 +201,9 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         this.toFront();
     }//GEN-LAST:event_formFocusLost
 
+    /**
+     * 
+     */
     @Action
     public void showLoginFrame() {
 
@@ -212,10 +217,17 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
 
     }
 
+    /**
+     * 
+     * @param dtp
+     */
     public void setDesktopPane(JDesktopPane dtp) {
         desktopPane = dtp;
     }
 
+    /**
+     * 
+     */
     @Action
     public void installNewSystemAction() {
         InstallNewSystemInternalFrame internalFrame = new InstallNewSystemInternalFrame();

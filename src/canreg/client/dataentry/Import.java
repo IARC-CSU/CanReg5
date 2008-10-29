@@ -31,6 +31,13 @@ public class Import {
 
     // function without map - directly on the server...
     // deprecated
+    /**
+     * 
+     * @param doc
+     * @param file
+     * @param canRegDAO
+     * @return
+     */
     public static boolean importFile(Document doc, File file, CanRegDAO canRegDAO) {
         // create the mapping
         BufferedReader bufferedReader = null;
@@ -56,6 +63,14 @@ public class Import {
 
     // function with map - directly on the server...
     // deprecated
+    /**
+     * 
+     * @param doc
+     * @param map
+     * @param file
+     * @param canRegDAO
+     * @return
+     */
     public static boolean importFile(Document doc, List<Relation> map, File file, CanRegDAO canRegDAO) {
 
         boolean success = false;
@@ -139,6 +154,16 @@ public class Import {
         return success;
     }
 
+    /**
+     * 
+     * @param task
+     * @param doc
+     * @param map
+     * @param file
+     * @param server
+     * @param io
+     * @return
+     */
     public static boolean importFile(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) {
 
         boolean success = false;
@@ -239,10 +264,19 @@ public class Import {
         return success;
     }
 
+    /**
+     * 
+     */
     public static void importDictionary() {
         // TODO!
     }
 
+    /**
+     * 
+     * @param doc
+     * @param lineElements
+     * @return
+     */
     public static List<Relation> constructRelations(Document doc, String[] lineElements) {
         LinkedList<Relation> list = new LinkedList();
         NodeList nl = doc.getElementsByTagName(namespace + "variable");

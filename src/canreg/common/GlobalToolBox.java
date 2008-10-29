@@ -18,6 +18,10 @@ public class GlobalToolBox {
     private Map<Integer, DatabaseGroupsListElement> groupIDToDatabaseGroupListElementMap;
     private DatabaseVariablesListElement[] databaseVariablesListElements;
     
+    /**
+     * 
+     * @param doc
+     */
     public GlobalToolBox(Document doc) {
         this.doc = doc;        
         groupIDToDatabaseGroupListElementMap = buildGroupMap(Tools.getGroupsListElements(doc, Globals.NAMESPACE));
@@ -25,14 +29,27 @@ public class GlobalToolBox {
         standardVariableNameToDatabaseVariableListElementMap = buildVariablesMap(databaseVariablesListElements);
     }
 
+    /**
+     * 
+     * @return
+     */
     public DatabaseVariablesListElement[] getVariables() {
         return databaseVariablesListElements;
     }
     
+    /**
+     * 
+     * @param standardVariableName
+     * @return
+     */
     public DatabaseVariablesListElement translateStandardVariableNameToDatabaseListElement(String standardVariableName){
         return standardVariableNameToDatabaseVariableListElementMap.get(standardVariableName);
     }
     
+    /**
+     * 
+     * @return
+     */
     public LinkedList<DatabaseVariablesListElement> getStandardVariables(){
         Iterator<DatabaseVariablesListElement> it = standardVariableNameToDatabaseVariableListElementMap.values().iterator();
         DatabaseVariablesListElement dvle;
@@ -46,6 +63,11 @@ public class GlobalToolBox {
     
     
 
+    /**
+     * 
+     * @param groupID
+     * @return
+     */
     public DatabaseGroupsListElement translateGroupIDToDatabaseGroupListElement(Integer groupID){
         return groupIDToDatabaseGroupListElementMap.get(groupID);
     }

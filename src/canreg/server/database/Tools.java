@@ -221,6 +221,11 @@ public class Tools {
         "YEAR"
     };
     
+    /**
+     * 
+     * @param word
+     * @return
+     */
     static public boolean isReservedWord(String word){
         boolean found = false;
         int i = 0;

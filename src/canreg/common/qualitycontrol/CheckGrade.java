@@ -10,19 +10,34 @@ import java.util.Map;
  */
 public class CheckGrade implements CheckInterface {
     
+    /**
+     * 
+     */
     public Checker.CheckNames checkName = Checker.CheckNames.Grade;
 
+    /**
+     * 
+     */
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames [] {
         Globals.StandardVariableNames.Behaviour,
         Globals.StandardVariableNames.Morphology,
         Globals.StandardVariableNames.Grade
     };
 
+    /**
+     * 
+     * @return
+     */
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }
 
-    public CheckResult performCheck(Map<Globals.StandardVariableNames, Object> variables) {     
+    /**
+     * 
+     * @param variables
+     * @return
+     */
+    public CheckResult performCheck(Map<Globals.StandardVariableNames, Object> variables) {
         CheckResult result = new CheckResult();
         result.setCheckName(checkName.toString());
         
@@ -141,6 +156,10 @@ public class CheckGrade implements CheckInterface {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public CheckNames getCheckName() {
         return checkName;
     }

@@ -10,20 +10,41 @@ import java.util.Map;
  */
 public class CheckSexTopography implements CheckInterface {
 
+    /**
+     * 
+     */
     public static Checker.CheckNames checkName = Checker.CheckNames.SexTopography;
     
+    /**
+     * 
+     */
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames[]{
         Globals.StandardVariableNames.Sex,
         Globals.StandardVariableNames.Topography
     };
 
+    /**
+     * 
+     */
     public static int maleCode = 1;
+    /**
+     * 
+     */
     public static int femaleCode = 2;
     
+    /**
+     * 
+     * @return
+     */
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }
 
+    /**
+     * 
+     * @param variables
+     * @return
+     */
     public CheckResult performCheck(Map<Globals.StandardVariableNames, Object> variables) {
 
         CheckResult result = new CheckResult();
@@ -63,6 +84,10 @@ public class CheckSexTopography implements CheckInterface {
         return result;
     }
 
+    /**
+     * 
+     * @return
+     */
     public CheckNames getCheckName() {
         return checkName;
     }

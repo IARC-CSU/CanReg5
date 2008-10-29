@@ -17,14 +17,30 @@ public class Converter {
     private GlobalToolBox toolBox;
     private LinkedList<DatabaseVariablesListElement> standardVariables;
     
+    /**
+     * 
+     */
     public enum ConversionName{
+        /**
+         * 
+         */
         ICDO3toICD10,
+        /**
+         * 
+         */
         ICDO3toICCC,
+        /**
+         * 
+         */
         BirthIncidencetoAge
     }
     
     Map<ConversionName, ConversionInterface> conversions;
 
+    /**
+     * 
+     * @param toolBox
+     */
     public Converter(GlobalToolBox toolBox) {
         this.toolBox = toolBox;
         standardVariables = toolBox.getStandardVariables();
@@ -37,6 +53,12 @@ public class Converter {
         conversions.put(conversion.getConversionName(),conversion);
     }
     
+    /**
+     * 
+     * @param conversionName
+     * @param variables
+     * @return
+     */
     public ConversionResult[] convert(ConversionName conversionName, Map<StandardVariableNames, Object> variables){
         ConversionResult[] result = null;
         ConversionInterface conversion = conversions.get(conversionName);
@@ -46,6 +68,13 @@ public class Converter {
         return result;
     }
     
+    /**
+     * 
+     * @param conversionName
+     * @param patient
+     * @param tumour
+     * @return
+     */
     public synchronized ConversionResult[] performConversion(ConversionName conversionName, Patient patient, Tumour tumour) {
         // Build map of standard variables
         Map<StandardVariableNames, Object> variables = new LinkedHashMap();

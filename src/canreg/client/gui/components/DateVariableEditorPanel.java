@@ -15,6 +15,10 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
     private com.toedter.calendar.JDateChooser dateChooser;
     private JTextField dateField;
  
+    /**
+     * 
+     * @param databaseListElement
+     */
     @Override
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseListElement) {
         this.databaseListElement = databaseListElement;
@@ -45,6 +49,10 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         });
     }
 
+    /**
+     * 
+     * @param value
+     */
     @Override
     public void setValue(String value) {
 
@@ -75,6 +83,10 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     @Override
     public Object getValue() {
         Object valueObject = null;

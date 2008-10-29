@@ -8,6 +8,10 @@ public class  WrongCanRegVersionException extends Exception {
     
     private String message=null;
     
+    /**
+     * 
+     * @param message
+     */
     public WrongCanRegVersionException(String message) {
         this.message = message;
     }

@@ -165,6 +165,9 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     */
     @Action
     public void browseAction() {
         int returnVal = chooser.showOpenDialog(this);
@@ -179,11 +182,17 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void cancelAction() {
         this.dispose();
     }
 
+    /**
+     * 
+     */
     @Action
     public void convertAction() {
         SystemDefinitionConverter sdc = new SystemDefinitionConverter();

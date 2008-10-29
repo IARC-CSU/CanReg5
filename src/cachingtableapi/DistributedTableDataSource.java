@@ -10,14 +10,15 @@ public interface DistributedTableDataSource {
 	 * Returns an object contain descriptive data for the table, (column 
 	 * names, class types, number of rows and columns). This method will 
 	 * only ever be called once when a table is displayed.
-	 * @throws Exception If something goes wrong.
+         * @return 
+         * @throws Exception If something goes wrong.
 	 */
 	DistributedTableDescription getTableDescription() throws Exception;
 
 	/**
 	 * Method used for data retrieval. 
-	 * @param The row from which you want to retrieve data.
-	 * @param The row to which you want to retrieve data.
+         * @param from 
+         * @param to 
 	 * @return A two dimensional array [row][column] of data from the remote
 	 * table data store.
 	 * @throws Exception If something goes wrong.
@@ -46,14 +47,16 @@ public interface DistributedTableDataSource {
 	/**
 	 * Returns an array corresponding to the row indexes that are currently 
 	 * selected.
-	 * @throws Exception If something goes wrong.
+         * @return 
+         * @throws Exception If something goes wrong.
 	 */
 	int[] getSelectedRows() throws Exception;
 
 	/**
 	 * Returns an array corresponding to the column indexes that are currently 
 	 * selected.
-	 * @throws Exception If something goes wrong.
+         * @return 
+         * @throws Exception If something goes wrong.
 	 */
 	int[] getSelectedColumns() throws Exception;
 }

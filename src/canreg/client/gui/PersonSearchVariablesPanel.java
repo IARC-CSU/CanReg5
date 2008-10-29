@@ -30,6 +30,10 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
         initComponents();
     }
     
+    /**
+     * 
+     * @param doc
+     */
     public void setDoc(Document doc) {
         this.doc=doc;
         variablesInDB = Tools.getVariableListElements(doc, Globals.NAMESPACE, "Patient");
@@ -50,6 +54,10 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
         thresholdTextField.setText(searcher.getThreshold()+"");
     }
     
+    /**
+     * 
+     * @return
+     */
     public DefaultPersonSearch getSearcher(){
         return buildSearcher();
     }
@@ -171,6 +179,9 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     */
     @Action
     public void addVariableAction() {
         System.out.println("coucou");
@@ -187,6 +198,9 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
         variablesListPanel.repaint();
     }
 
+    /**
+     * 
+     */
     @Action
     public void revertToDefaultAction() {
 

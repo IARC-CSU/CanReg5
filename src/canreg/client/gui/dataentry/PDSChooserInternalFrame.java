@@ -25,7 +25,10 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
     PopulationDataset[] worldPopulationDatasets;
     JDesktopPane dtp;
 
-    /** Creates new form PDSChooserInternalFrame */
+    /** Creates new form PDSChooserInternalFrame
+     * @param dtp
+     * @param populationDatasets 
+     */
     public PDSChooserInternalFrame(JDesktopPane dtp, Map<Integer, PopulationDataset> populationDatasets) {
         this.dtp = dtp;
         this.populationDatasetsMap = populationDatasets;
@@ -179,6 +182,9 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     */
     @Action
     public void editAction() {
         PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulationDatasets);
@@ -234,16 +240,25 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
         dateTextField.setText(""+pds.getDate());
     }
     
+    /**
+     * 
+     */
     @Action
     public void selectAction() {
         
     }
 
+    /**
+     * 
+     */
     @Action
     public void closeAction() {
         this.dispose();
     }
 
+    /**
+     * 
+     */
     @Action
     public void newPDSAction() {
         PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulationDatasets);

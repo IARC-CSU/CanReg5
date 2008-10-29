@@ -36,7 +36,9 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private Locale[] locales;
     private Properties appInfoProperties;
 
-    /** Creates new form OptionsFrame */
+    /** Creates new form OptionsFrame
+     * @param crcv 
+     */
     public OptionsFrame(CanRegClientView crcv) {
         this.crcv = crcv;
         InputStream in = null;
@@ -430,11 +432,17 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     */
     @Action
     public void cancelAction() {
         this.dispose();
     }
 
+    /**
+     * 
+     */
     @Action
     public void okAction() {
         // First test filds that can be tested
@@ -586,12 +594,18 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         localSettings.writeSettings();
     }
 
+    /**
+     * 
+     */
     @Action
     public void downloadLatestVersionAction() {
         //  BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.iacr.com.fr/"));
         BareBonesBrowserLaunch.openURL(Globals.downloadCanRegURL);
     }
 
+    /**
+     * 
+     */
     @Action
     public void checkLatestVersionAction() {
         String lv = getNewestVersionNumber();

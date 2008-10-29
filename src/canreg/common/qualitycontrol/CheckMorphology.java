@@ -17,8 +17,14 @@ import java.util.logging.Logger;
  */
 public class CheckMorphology implements CheckInterface {
 
+    /**
+     * 
+     */
     public static Checker.CheckNames checkName = Checker.CheckNames.Morphology;
     
+    /**
+     * 
+     */
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames[]{
         Globals.StandardVariableNames.Morphology,
     };
@@ -27,10 +33,17 @@ public class CheckMorphology implements CheckInterface {
     private int codeLength = 4;
     private String lookUpFileResource = "/canreg/common/resources/lookup/MorphFam.txt";
 
+    /**
+     * 
+     * @return
+     */
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }
 
+    /**
+     * 
+     */
     public CheckMorphology() {
         InputStream resourceStream = this.getClass().getResourceAsStream(lookUpFileResource);
         try {
@@ -44,6 +57,11 @@ public class CheckMorphology implements CheckInterface {
         }
     }
 
+    /**
+     * 
+     * @param variables
+     * @return
+     */
     public CheckResult performCheck(Map<Globals.StandardVariableNames, Object> variables) {
 
         CheckResult result = new CheckResult();
@@ -73,6 +91,10 @@ public class CheckMorphology implements CheckInterface {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public CheckNames getCheckName() {
         return checkName;
     }

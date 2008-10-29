@@ -62,6 +62,10 @@ public class AgeGroupStructure implements Serializable {
         this.constructor = sizeOfGroups + "," + maxAge + "," + sizeOfFirstGroup + "," + cutOfAge;
     }
 
+    /**
+     * 
+     * @param constructor
+     */
     public AgeGroupStructure(String constructor) {
         this.constructor = constructor;
 
@@ -87,6 +91,10 @@ public class AgeGroupStructure implements Serializable {
 
     }
     
+    /**
+     * 
+     * @return
+     */
     public String getConstructor(){
         return constructor;
     }
@@ -99,6 +107,10 @@ public class AgeGroupStructure implements Serializable {
         return ageGroupNames;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getNumberOfAgeGroups() {
         return ageGroupNames.length;
     }

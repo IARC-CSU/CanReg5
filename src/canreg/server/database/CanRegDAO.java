@@ -52,7 +52,7 @@ public class CanRegDAO {
 
     /**
      * 
-     * @param dbName
+     * @param systemCode 
      * @param doc
      */
     public CanRegDAO(String systemCode, Document doc) {
@@ -88,6 +88,10 @@ public class CanRegDAO {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public Map<Integer, Dictionary> getDictionary() {
         // Map<Integer, Dictionary> dictionaryMap = new LinkedHashMap<Integer, Dictionary>();
         Statement queryStatement = null;
@@ -114,6 +118,10 @@ public class CanRegDAO {
         return dictionaryMap;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Map<String, Integer> getNameSexTables() {
 
         Map<String, Integer> nameSexMap = new LinkedHashMap<String, Integer>();
@@ -136,6 +144,10 @@ public class CanRegDAO {
         return nameSexMap;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Map<Integer, PopulationDataset> getPopulationDatasets() {
         Map<Integer, PopulationDataset> populationDatasetMap = new LinkedHashMap<Integer, PopulationDataset>();
         Statement queryStatement = null;
@@ -209,6 +221,14 @@ public class CanRegDAO {
         return populationDatasetMap;
     }
 
+    /**
+     * 
+     * @param filter
+     * @param tableName
+     * @return
+     * @throws java.sql.SQLException
+     * @throws java.lang.Exception
+     */
     public DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(DatabaseFilter filter, String tableName) throws SQLException, Exception {
         // distributedDataSources.remove(theUser);
         ResultSet result;
@@ -330,10 +350,20 @@ public class CanRegDAO {
         return tableDescription;
     }
 
+    /**
+     * 
+     * @param resultSetID
+     */
     public void releaseResultSet(String resultSetID) {
         distributedDataSources.remove(resultSetID);
     }
 
+    /**
+     * 
+     * @param recordID
+     * @param tableName
+     * @return
+     */
     public DatabaseRecord getRecord(int recordID, String tableName) {
         if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             return getPatient(recordID);
@@ -360,6 +390,14 @@ public class CanRegDAO {
         return path;
     }
 
+    /**
+     * 
+     * @param resultSetID
+     * @param from
+     * @param to
+     * @return
+     * @throws java.lang.Exception
+     */
     public synchronized Object[][] retrieveRows(String resultSetID, int from, int to) throws Exception {
         DistributedTableDataSource ts = distributedDataSources.get(resultSetID);
         if (ts != null) {
@@ -729,7 +767,7 @@ public class CanRegDAO {
 
     /**
      * 
-     * @param dictionary
+     * @param dictionaryEntry 
      * @return
      */
     public int saveDictionaryEntry(DictionaryEntry dictionaryEntry) {
@@ -753,6 +791,11 @@ public class CanRegDAO {
         return id;
     }
 
+    /**
+     * 
+     * @param populationDataSet
+     * @return
+     */
     public int saveNewPopulationDataset(PopulationDataset populationDataSet) {
 
         Map<Integer, PopulationDataset> populationDataSets;
@@ -799,6 +842,11 @@ public class CanRegDAO {
 
     }
 
+    /**
+     * 
+     * @param populationDatasetsEntry
+     * @return
+     */
     public int savePopoulationDatasetsEntry(PopulationDatasetsEntry populationDatasetsEntry) {
         int id = -1;
         try {
@@ -821,6 +869,11 @@ public class CanRegDAO {
         return id;
     }
 
+    /**
+     * 
+     * @param nameSexRecord
+     * @return
+     */
     public int saveNameSexRecord(NameSexRecord nameSexRecord) {
         int id = -1;
         try {
@@ -841,6 +894,10 @@ public class CanRegDAO {
         return id;
     }
     
+    /**
+     * 
+     * @return
+     */
     public boolean clearNameSexTable(){
         boolean success = false;
         try {
@@ -855,6 +912,11 @@ public class CanRegDAO {
         return success;
     }
 
+    /**
+     * 
+     * @param dictionaryID
+     * @return
+     */
     public boolean deleteDictionaryEntries(int dictionaryID) {
         boolean success = false;
         try {
@@ -891,6 +953,13 @@ public class CanRegDAO {
     /*
      * 
      * @param record
+     * @return
+     */
+    /**
+     * 
+     * @param tableName
+     * @param record
+     * @param stmtEditRecord
      * @return
      */
     public synchronized boolean editRecord(String tableName, DatabaseRecord record, PreparedStatement stmtEditRecord) {
@@ -1051,6 +1120,11 @@ public class CanRegDAO {
      * @param index
      * @return
      */
+    /**
+     * 
+     * @param recordID
+     * @return
+     */
     public Patient getPatient(int recordID) {
         Patient record = null;
         ResultSetMetaData metadata;
@@ -1079,6 +1153,11 @@ public class CanRegDAO {
 
     /* 
      * @param index
+     * @return
+     */
+    /**
+     * 
+     * @param recordID
      * @return
      */
     public Tumour getTumour(int recordID) {

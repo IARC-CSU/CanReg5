@@ -296,30 +296,51 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         variableComboBox.setModel(new DefaultComboBoxModel(variablesInTable));
     }
 
+    /**
+     * 
+     * @param str
+     */
     public void setTextPane(String str) {
         textPane.setText(str);
     }
 
+    /**
+     * 
+     * @param tableName
+     */
     public void setTableName(String tableName) {
         this.tableName = tableName;
         refreshVariableList();
     }
     
+    /**
+     * 
+     * @param al
+     */
     public void setActionListener(ActionListener al){
         this.actionListener = al;
     }
 
+    /**
+     * 
+     */
     @Action
     public void cancelAction() {
         this.setVisible(false);
     }
 
+    /**
+     * 
+     */
     @Action
     public void okAction() {
         actionListener.actionPerformed(new ActionEvent(this, 0, textPane.getText().trim()));
         this.setVisible(false);
     }
 
+    /**
+     * 
+     */
     @Action
     public void addAction() {
         String newFilterPart = "";
@@ -350,6 +371,9 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         logicalOperatorComboBox.setSelectedIndex(0);
     }
 
+    /**
+     * 
+     */
     @Action
     public void varibleChosenAction() {
         valueTextField.setText("");

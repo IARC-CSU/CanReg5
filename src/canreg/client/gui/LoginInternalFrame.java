@@ -38,9 +38,15 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
     private FrameView fv;
     private JDesktopPane desktopPane;
     private LocalSettings localSettings;
+    /**
+     * 
+     */
     protected final PropertyChangeSupport propertyChangeSupport;
 
-    /** Creates new form LoginInternalFrame */
+    /** Creates new form LoginInternalFrame
+     * @param fv 
+     * @param dtp
+     */
     public LoginInternalFrame(FrameView fv, JDesktopPane dtp) {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
         this.desktopPane = dtp;
@@ -443,6 +449,9 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_usernameTextFieldKeyTyped
 
+    /**
+     * 
+     */
     @Action
     public void loginAction() {
         String server = serverURLTextField.getText().trim();
@@ -505,11 +514,18 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void cancelAction() {
         this.dispose();
     }
 
+    /**
+     * 
+     * @param label
+     */
     public void setFeedbackLabel(javax.swing.JLabel label) {
         this.externalFeedbackLabel = label;
     }
@@ -554,6 +570,10 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     @Action()
     public Task launchCanRegServerAction() {
         return new LaunchCanRegServerActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
@@ -658,6 +678,10 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     @Action
     public boolean testServerConnection() {
         String server = serverURLTextField.getText().trim();
@@ -678,6 +702,9 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void addServerToList() {
         if (testServerConnection()) {
@@ -689,6 +716,9 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void serverComboboxChanged() {
         ServerDescription sd = localSettings.getServerDescriptions().get(canRegSystemComboBox.getSelectedIndex());
@@ -697,6 +727,9 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         codeField.setText(sd.getCode());
     }
 
+    /**
+     * 
+     */
     @Action
     public void getIPaddressAction() {
         try {
@@ -713,6 +746,9 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void changeShowAdvancedAction() {
         advancedPanel.setVisible(advancedCheckBox.isSelected());

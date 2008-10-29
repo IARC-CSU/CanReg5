@@ -117,6 +117,10 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public Set<DatabaseVariablesListElement> getSelectedVariables() {
         Set<DatabaseVariablesListElement> variables = new LinkedHashSet<DatabaseVariablesListElement>();
         for (VariablesExportDetailsPanel ved : panelList) {
@@ -127,6 +131,11 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
         return variables;
     }
     
+    /**
+     * 
+     * @param tableName
+     * @return
+     */
     public LinkedList<String> getSelectedVariableNames(String tableName){
         LinkedList<String> variables = new LinkedList<String>();
         DatabaseVariablesListElement element = null;

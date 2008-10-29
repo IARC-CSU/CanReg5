@@ -567,6 +567,9 @@ public class ImportView extends javax.swing.JInternalFrame {
         changeFile();
     }//GEN-LAST:event_fileNameTextFieldFocusLost
 
+    /**
+     * 
+     */
     @Action
     public void browseFiles() {
 
@@ -582,6 +585,9 @@ public class ImportView extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void jumpToNextTabAction() {
         initializeVariableMappingTab();
@@ -592,6 +598,9 @@ public class ImportView extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void jumpToPreviousTabAction() {
         initializeVariableMappingTab();
@@ -602,11 +611,18 @@ public class ImportView extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void cancelAction() {
         this.dispose();
     }
 
+    /**
+     * 
+     * @return
+     */
     @Action()
     public Task importAction() {
         localSettings.setProperty("import_path", path);
@@ -772,6 +788,9 @@ public class ImportView extends javax.swing.JInternalFrame {
         return sc;
     }
 
+    /**
+     * 
+     */
     @Action
     public void previewAction() {
         // show the contents of the file
@@ -807,11 +826,17 @@ public class ImportView extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void comboBoxChanged() {
         needToRebuildVariableMap = true;
     }
 
+    /**
+     * 
+     */
     @Action
     public void autodetectSeparatingCharacterAction() {
         JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Not yet implemented.", "Error", JOptionPane.ERROR_MESSAGE);

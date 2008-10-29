@@ -12,16 +12,31 @@ import java.util.Map;
  */
 public class CheckTopographyBehaviour implements CheckInterface {
 
+    /**
+     * 
+     */
     public Checker.CheckNames checkName = Checker.CheckNames.TopographyBehaviour;
+    /**
+     * 
+     */
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames[]{
         Globals.StandardVariableNames.Topography,
         Globals.StandardVariableNames.Behaviour
     };
 
+    /**
+     * 
+     * @return
+     */
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }
 
+    /**
+     * 
+     * @param variables
+     * @return
+     */
     public CheckResult performCheck(Map<Globals.StandardVariableNames, Object> variables) {
 
         CheckResult result = new CheckResult();
@@ -67,6 +82,10 @@ public class CheckTopographyBehaviour implements CheckInterface {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public CheckNames getCheckName() {
         return checkName;
     }

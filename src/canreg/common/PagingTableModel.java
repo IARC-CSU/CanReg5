@@ -27,6 +27,11 @@ public class PagingTableModel extends AbstractTableModel {
     private DistributedTableDataSource tableDataSource;
     private DistributedTableDescription tableDescription;
 
+    /**
+     * 
+     * @param tableDataSource
+     * @throws java.lang.Exception
+     */
     public PagingTableModel(DistributedTableDataSource tableDataSource) throws Exception {
         this.tableDataSource = tableDataSource;
         this.tableDescription = tableDataSource.getTableDescription();

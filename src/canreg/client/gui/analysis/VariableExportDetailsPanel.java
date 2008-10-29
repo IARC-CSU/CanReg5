@@ -17,10 +17,18 @@ public class VariableExportDetailsPanel extends javax.swing.JPanel {
         initComponents();
     }
     
+    /**
+     * 
+     * @param variableName
+     */
     public void setVariableName(String variableName){
         variableNameLabel.setText(variableName);
     }
     
+    /**
+     * 
+     * @param type
+     */
     public void setVariableType(String type){
         dictionaryCategoryCheckBox.setVisible(false);
         dictionaryDescriptionCheckBox.setVisible(false);
@@ -29,10 +37,18 @@ public class VariableExportDetailsPanel extends javax.swing.JPanel {
         }
     }
     
+    /**
+     * 
+     * @param bool
+     */
     public void setDataCheckBox(boolean bool){
         dataCheckBox.setSelected(bool);
     }
     
+    /**
+     * 
+     * @return
+     */
     public boolean[] getCheckboxes() {
         return new boolean[] { dataCheckBox.isSelected(), dictionaryCategoryCheckBox.isSelected(), dictionaryDescriptionCheckBox.isSelected() };
     }

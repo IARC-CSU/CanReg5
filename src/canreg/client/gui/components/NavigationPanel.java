@@ -98,23 +98,35 @@ public class NavigationPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     */
     @Action
     public void goToTopAction() {
         listSelectionModel.setSelectionInterval(0, 0);
         table.scrollRectToVisible(table.getCellRect(0,0,true));
     }
+    /**
+     * 
+     */
     @Action
     public void goToBottomAction() {
         listSelectionModel.setSelectionInterval(table.getRowCount()-1, table.getRowCount()-1);
         table.scrollRectToVisible(table.getCellRect(table.getRowCount()-1,0,true));
     }
 
+    /**
+     * 
+     */
     @Action
     public void goOneUpAction() {
         listSelectionModel.setSelectionInterval(Math.max(table.getSelectedRow()-1,0), Math.max(table.getSelectedRow()-1,0));
         table.scrollRectToVisible(table.getCellRect(table.getSelectedRow(),0,true));
     }
 
+    /**
+     * 
+     */
     @Action
     public void goOneDownAction() {
         listSelectionModel.setSelectionInterval(Math.min(table.getSelectedRow()+1,table.getRowCount()-1), Math.min(table.getSelectedRow()+1,table.getRowCount()-1));
@@ -129,6 +141,10 @@ public class NavigationPanel extends javax.swing.JPanel {
     private javax.swing.JButton topButton3;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * 
+     * @param table
+     */
     public void setTable(javax.swing.JTable table) {
         this.table = table;
         this.listSelectionModel = table.getSelectionModel();

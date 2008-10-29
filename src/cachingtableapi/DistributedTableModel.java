@@ -27,7 +27,8 @@ public class DistributedTableModel extends AbstractTableModel implements TableMo
 
 	/**
 	 * Constructor for CachingTableModel.
-	 * @param tableDataSource The object from which data should be retrieved.
+         * @param tableDataSource The object from which data should be retrieved.
+         * @throws Exception 
 	 */
 	public DistributedTableModel(DistributedTableDataSource tableDataSource) throws Exception {
 		this(tableDataSource, 200, 1000);//will set the two ints to their defaults in the constructor
@@ -37,7 +38,8 @@ public class DistributedTableModel extends AbstractTableModel implements TableMo
 	 * Constructor for CachingTableModel.
 	 * @param tableDataSource The object from which data should be retrieved.
 	 * @param chunkSize The number of rows that should be retrieved from the DistributedTableDataSource at one time
-	 * @param maximumCacheSize The number of rows that the DistributedTableModel should hold before overwriting data that's not required.
+         * @param maximumCacheSize The number of rows that the DistributedTableModel should hold before overwriting data that's not required.
+         * @throws Exception 
 	 */
 	public DistributedTableModel(DistributedTableDataSource tableDataSource, int chunkSize, int maximumCacheSize) throws Exception {
 		this.tableDataSource = tableDataSource;
@@ -126,7 +128,8 @@ public class DistributedTableModel extends AbstractTableModel implements TableMo
 	 * @param sortColumn The column to sort on.
 	 * @param ascending Whether the table should be sorted in an ascending or descending order.
 	 * @param selectedRows The row indexes that are currently seleted in the table.
-	 * @return An array of the indexes of the selected rows in the table after the sort.
+         * @return An array of the indexes of the selected rows in the table after the sort.
+         * @throws Exception 
 	 */	
 	public int[] sort(int sortColumn, boolean ascending, int[] selectedRows) throws Exception {
 		tableClientCache.sortOccurred();
@@ -138,7 +141,8 @@ public class DistributedTableModel extends AbstractTableModel implements TableMo
 	 * Sets the rows and columns that are selected by calling <code>setSelectedRowsAndColumns</code>
 	 * on the DistributedTableDataSource.
 	 * @param selectedRows An array of the selected row indexes.
-	 * @param selectedColumns An array of the selected column indexes.
+         * @param selectedColumns An array of the selected column indexes.
+         * @throws Exception 
 	 */
 	public void setSelectedRowsAndColumns(int[] selectedRows, int[] selectedColumns) throws Exception {
 		tableDataSource.setSelectedRowsAndColumns(selectedRows, selectedColumns);
@@ -147,7 +151,10 @@ public class DistributedTableModel extends AbstractTableModel implements TableMo
 	/**
 	 * Returns an array corresponding to the row indexes that are currently 
 	 * selected.
-	 */
+         * 
+         * @return
+         * @throws Exception 
+         */
 	public int[] getSelectedRows() throws Exception {
 		return tableDataSource.getSelectedRows();
 	}
@@ -156,7 +163,10 @@ public class DistributedTableModel extends AbstractTableModel implements TableMo
 	/**
 	 * Returns an array corresponding to the column indexes that are currently 
 	 * selected.
-	 */
+         * 
+         * @return
+         * @throws Exception 
+         */
 	public int[] getSelectedColumns() throws Exception {
 		return tableDataSource.getSelectedColumns();
 	}

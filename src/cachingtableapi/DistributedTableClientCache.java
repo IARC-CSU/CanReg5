@@ -47,7 +47,9 @@ public class DistributedTableClientCache implements Serializable {
      * retrieved from the remote store at a time.
      *@param maximumCacheSize The maximum number of rows that will be cached. When this number is exceeded
      *by new data that has been fetched, the oldest data is overwritten.
-     *@tableDataSource A source of table data, (via the method <code>retrieveRows</code>).
+     *@param tableDataSource 
+     * @throws Exception
+     * @tableDataSource A source of table data, (via the method <code>retrieveRows</code>).
      */
     public DistributedTableClientCache(int chunkSize, int maximumCacheSize, DistributedTableDataSource tableDataSource) throws Exception {
         this.tableDataSource = tableDataSource;
@@ -90,6 +92,7 @@ public class DistributedTableClientCache implements Serializable {
      * the cache it will be retrieved from the DistributedTableDataSource
      * object.
      *@param rowIndex The row index in the table that is to be retrieved.
+     * @return 
      */
     public Object[] retrieveRowFromCache(int rowIndex) {
         ensureRowCached(rowIndex);

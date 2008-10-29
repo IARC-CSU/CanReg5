@@ -16,6 +16,10 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
 
     private Properties appInfoProperties;
     
+    /**
+     * 
+     * @param parent
+     */
     public CanRegClientAboutBox(java.awt.Frame parent) {
         super(parent);
         InputStream in = null;
@@ -40,6 +44,9 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
         getRootPane().setDefaultButton(closeButton);
     }
 
+    /**
+     * 
+     */
     @Action public void closeAboutBox() {
         setVisible(false);
     }

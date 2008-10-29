@@ -6,8 +6,15 @@ import java.util.regex.Pattern;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 
+/**
+ * 
+ * @author ervikm
+ */
 public class RegexDocument extends MaxLengthDocument {
 
+    /**
+     * 
+     */
     protected final Pattern pattern;
 
     /**

@@ -263,6 +263,10 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     * @return
+     */
     @Action
     public Task performDuplicateSearch() {
         duplicateSearchTask = new PerformDuplicateSearchTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
@@ -332,6 +336,9 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void interruptDuplicateSearchAction() {
         if (duplicateSearchTask!=null){

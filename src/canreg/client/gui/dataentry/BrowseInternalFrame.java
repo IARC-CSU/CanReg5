@@ -47,7 +47,9 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
     private XTableColumnModel tableColumnModel;
     private LinkedList<String> variablesToShow;
 
-    /** Creates new form BrowseInternalFrame */
+    /** Creates new form BrowseInternalFrame
+     * @param dtp 
+     */
     public BrowseInternalFrame(JDesktopPane dtp) {
         this.dtp = dtp;
         initComponents();
@@ -306,7 +308,11 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
         jpm.show(target, evt.getX(), evt.getY());
     }
 }
-    @Action
+/**
+ * 
+ * @return
+ */
+@Action
     public Task refresh() {
         navigationPanel.goToTopAction();
         resultPanel.setVisible(false);
@@ -426,11 +432,18 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
           }
     }
     
+    /**
+     * 
+     */
     @Action
     public void editPatientID() {
          editPatientID(patientNumberTextField.getText().trim());
      }
 
+    /**
+     * 
+     * @param idString
+     */
     public void editPatientID(String idString){
         String tableName = Globals.PATIENT_TABLE_NAME;
                 
@@ -485,12 +498,19 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
     }
     
     
+    /**
+     * 
+     */
     @Action
     public void editTumourID() {
         editTumourID(tumourNumberTextField.getText().trim());
     }
     
-        public void editTumourID(String idString) {
+    /**
+     * 
+     * @param idString
+     */
+    public void editTumourID(String idString) {
         
         RecordEditor recordEditor = new RecordEditor(dtp);
         recordEditor.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
@@ -544,6 +564,11 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
     }
     
     
+    /**
+     * 
+     * @param idString
+     * @param tableName
+     */
     public void editRecord(String idString, String tableName) {
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
             editTumourID(idString);

@@ -46,7 +46,9 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     private DistributedTableDescription tableDatadescriptionPopUp;
     private static int MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK = 20;
 
-    /** Creates new form FrequenciesByYearInternalFrame */
+    /** Creates new form FrequenciesByYearInternalFrame
+     * @param dtp 
+     */
     public FrequenciesByYearInternalFrame(JDesktopPane dtp) {
         this.dtp = dtp;
         initComponents();
@@ -160,6 +162,10 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     private javax.swing.JTable resultTable;
     private canreg.client.gui.components.VariablesChooserPanel variablesChooserPanel;
     // End of variables declaration//GEN-END:variables
+    /**
+     * 
+     * @return
+     */
     @Action
     public Task refresh() {
         // navigationPanel.goToTopAction();
@@ -273,6 +279,11 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
 
     }
 
+    /**
+     * 
+     * @param offset
+     * @param evt
+     */
     public void showPopUpMenu(int offset, java.awt.event.MouseEvent evt) {
         JTable target = (JTable) evt.getSource();
         int rowNumber = target.rowAtPoint(new Point(evt.getX(), evt.getY()));
@@ -337,6 +348,9 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
 
     }
 
+    /**
+     * 
+     */
     @Action
     public void printTableAction() {
         try {

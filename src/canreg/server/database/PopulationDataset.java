@@ -40,6 +40,9 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
         ageGroups = new LinkedList<PopulationDatasetsEntry>();
     }
 
+    /**
+     * 
+     */
     public void flushAgeGroups() {
         ageGroups = new LinkedList<PopulationDatasetsEntry>();
     }
@@ -49,82 +52,162 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
         return populationDatasetName;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getPopulationDatasetID() {
         return populationDatasetID;
     }
 
+    /**
+     * 
+     * @param populationDatasetID
+     */
     public void setPopulationDatasetID(int populationDatasetID) {
         this.populationDatasetID = populationDatasetID;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getPopulationDatasetName() {
         return populationDatasetName;
     }
 
+    /**
+     * 
+     * @param populationDatasetName
+     */
     public void setPopulationDatasetName(String populationDatasetName) {
         this.populationDatasetName = populationDatasetName;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getFilter() {
         return filter;
     }
 
+    /**
+     * 
+     * @param filter
+     */
     public void setFilter(String filter) {
         this.filter = filter;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getDate() {
         return date;
     }
 
+    /**
+     * 
+     * @param date
+     */
     public void setDate(int date) {
         this.date = date;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getSource() {
         return source;
     }
 
+    /**
+     * 
+     * @param source
+     */
     public void setSource(String source) {
         this.source = source;
     }
 
+    /**
+     * 
+     * @return
+     */
     public AgeGroupStructure getAgeGroupStructure() {
         return ageGroupStructure;
     }
 
+    /**
+     * 
+     * @param ageGroupStructure
+     */
     public void setAgeGroupStructure(AgeGroupStructure ageGroupStructure) {
         this.ageGroupStructure = ageGroupStructure;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * 
+     * @param description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isWorldPopulationBool() {
         return worldPopulationBool;
     }
 
+    /**
+     * 
+     * @param worldPopulationBool
+     */
     public void setWorldPopulationBool(boolean worldPopulationBool) {
         this.worldPopulationBool = worldPopulationBool;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getWorldPopulationID() {
         return worldPopulationID;
     }
 
+    /**
+     * 
+     * @param worldPopulationID
+     */
     public void setWorldPopulationID(int worldPopulationID) {
         this.worldPopulationID = worldPopulationID;
     }
     
+    /**
+     * 
+     * @param pdse
+     */
     public void addAgeGroup(PopulationDatasetsEntry pdse){
         ageGroups.add(pdse);
     }
     
+    /**
+     * 
+     * @return
+     */
     public PopulationDatasetsEntry[] getAgeGroups(){
         return ageGroups.toArray(new PopulationDatasetsEntry[0]);
     }

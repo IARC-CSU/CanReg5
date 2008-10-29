@@ -8,17 +8,32 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.print.*;
 
+/**
+ * 
+ * @author ervikm
+ */
 public class PrintUtilities implements Printable {
   private Component componentToBePrinted;
 
+  /**
+   * 
+   * @param c
+   */
   public static void printComponent(Component c) {
     new PrintUtilities(c).print();
   }
   
+  /**
+   * 
+   * @param componentToBePrinted
+   */
   public PrintUtilities(Component componentToBePrinted) {
     this.componentToBePrinted = componentToBePrinted;
   }
   
+  /**
+   * 
+   */
   public void print() {
     PrinterJob printJob = PrinterJob.getPrinterJob();
     printJob.setPrintable(this);
@@ -43,11 +58,19 @@ public class PrintUtilities implements Printable {
     }
   }
 
+  /**
+   * 
+   * @param c
+   */
   public static void disableDoubleBuffering(Component c) {
     RepaintManager currentManager = RepaintManager.currentManager(c);
     currentManager.setDoubleBufferingEnabled(false);
   }
 
+  /**
+   * 
+   * @param c
+   */
   public static void enableDoubleBuffering(Component c) {
     RepaintManager currentManager = RepaintManager.currentManager(c);
     currentManager.setDoubleBufferingEnabled(true);

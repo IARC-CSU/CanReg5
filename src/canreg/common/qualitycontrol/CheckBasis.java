@@ -13,12 +13,18 @@ import java.util.Map;
  */
 public class CheckBasis implements CheckInterface {
 
+    /**
+     * 
+     */
     public CheckBasis(){
         init();
     }
     
     private boolean ready = true;
 
+    /**
+     * 
+     */
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames [] {
         Globals.StandardVariableNames.BasisDiagnosis,
         Globals.StandardVariableNames.Morphology,
@@ -31,10 +37,17 @@ public class CheckBasis implements CheckInterface {
         Unknown
     };
     
+    /**
+     * 
+     */
     public Checker.CheckNames checkName = Checker.CheckNames.Basis;
     
     private static Map<String,BasisCat> basisCatMap = new LinkedHashMap();
             
+    /**
+     * 
+     * @return
+     */
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }
@@ -54,6 +67,11 @@ public class CheckBasis implements CheckInterface {
         return ready;
     }
 
+    /**
+     * 
+     * @param variables
+     * @return
+     */
     public CheckResult performCheck(Map<StandardVariableNames, Object> variables)     {
         CheckResult result = new CheckResult();
         result.setCheckName(checkName.toString());
@@ -121,6 +139,10 @@ public class CheckBasis implements CheckInterface {
     	}
     }
 
+    /**
+     * 
+     * @return
+     */
     public CheckNames getCheckName() {
         return checkName;
     }

@@ -14,6 +14,13 @@ import org.jdesktop.application.Action;
  */
 public class StandardDialog extends javax.swing.JDialog {
     
+    /**
+     * 
+     * @param parent
+     * @param modal
+     * @param messageHeader
+     * @param messageBody
+     */
     public StandardDialog(java.awt.Frame parent, boolean modal, String messageHeader, String messageBody) {
         this(parent, modal);
         this.setTitle(messageHeader);
@@ -22,7 +29,10 @@ public class StandardDialog extends javax.swing.JDialog {
     }
     
     
-    /** Creates new form StandardDialog */
+    /** Creates new form StandardDialog
+     * @param parent 
+     * @param modal
+     */
     public StandardDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -107,6 +117,9 @@ public class StandardDialog extends javax.swing.JDialog {
         });
     }
 
+    /**
+     * 
+     */
     @Action
     public void okAction() {
             this.dispose();

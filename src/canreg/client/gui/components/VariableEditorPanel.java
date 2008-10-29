@@ -26,9 +26,21 @@ import javax.swing.event.DocumentListener;
  */
 public class VariableEditorPanel extends javax.swing.JPanel implements ActionListener {
 
+    /**
+     * 
+     */
     protected DatabaseVariablesListElement databaseListElement;
+    /**
+     * 
+     */
     protected Map<String, DictionaryEntry> possibleValuesMap = null;
+    /**
+     * 
+     */
     protected int maxLength;
+    /**
+     * 
+     */
     protected java.awt.Color mandatoryMissingColor = java.awt.Color.PINK;
     private Dictionary dictionary;
 
@@ -45,14 +57,26 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
         });
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getKey() {
         return databaseListElement.getDatabaseVariableName();
     }
 
+    /**
+     * 
+     * @param aThis
+     */
     public void setPropertyChangeListener(RecordEditorPanel aThis) {
         codeTextField.addPropertyChangeListener(aThis);
     }
 
+    /**
+     * 
+     * @param listener
+     */
     public void setDocumentListener(DocumentListener listener) {
         codeTextField.getDocument().addDocumentListener(listener);
     }
@@ -208,10 +232,18 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
     protected javax.swing.JSplitPane splitPane2;
     private javax.swing.JLabel variableNameLabel;
     // End of variables declaration//GEN-END:variables
+    /**
+     * 
+     * @param variableName
+     */
     protected void setVariableName(String variableName) {
         variableNameLabel.setText(variableName);
     }
 
+    /**
+     * 
+     * @param value
+     */
     public void setValue(String value) {
         codeTextField.setText(value);
         try {
@@ -251,6 +283,10 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public Object getValue() {
         Object valueObject = null;
         String valueString = codeTextField.getText();
@@ -272,6 +308,10 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         return valueObject;
     }
 
+    /**
+     * 
+     * @param databaseListElement
+     */
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseListElement) {
         this.databaseListElement = databaseListElement;
         setVariableName(databaseListElement.getFullName());
@@ -292,6 +332,10 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         setMaximumLength(databaseListElement.getVariableLength());
     }
 
+    /**
+     * 
+     * @param dictionary
+     */
     public void setDictionary(Dictionary dictionary) {
         this.dictionary = dictionary;
         if (dictionary != null) {
@@ -316,6 +360,10 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         }
     }
 
+    /**
+     * 
+     * @param length
+     */
     protected void setMaximumLength(int length) {
         this.maxLength = length;
         if (this.maxLength > 0) {
@@ -323,6 +371,10 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         }
     }
 
+    /**
+     * 
+     * @param evt
+     */
     protected void componentFocusGained(java.awt.event.FocusEvent evt) {
         Component focusedComponent = evt.getComponent();
         Point point = focusedComponent.getLocation();

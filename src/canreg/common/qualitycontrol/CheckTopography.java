@@ -17,8 +17,14 @@ import java.util.logging.Logger;
  */
 public class CheckTopography implements CheckInterface {
 
+    /**
+     * 
+     */
     public static Checker.CheckNames checkName = Checker.CheckNames.Topography;
     
+    /**
+     * 
+     */
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames[]{
         Globals.StandardVariableNames.Topography,
     };
@@ -27,10 +33,17 @@ public class CheckTopography implements CheckInterface {
     private int codeLength = 3;
     private String lookUpFileResource = "/canreg/common/resources/lookup/O3_10T.txt";
 
+    /**
+     * 
+     * @return
+     */
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }
 
+    /**
+     * 
+     */
     public CheckTopography() {
         InputStream resourceStream = this.getClass().getResourceAsStream(lookUpFileResource);
         try {
@@ -44,6 +57,11 @@ public class CheckTopography implements CheckInterface {
         }
     }
 
+    /**
+     * 
+     * @param variables
+     * @return
+     */
     public CheckResult performCheck(Map<Globals.StandardVariableNames, Object> variables) {
 
         CheckResult result = new CheckResult();
@@ -73,6 +91,10 @@ public class CheckTopography implements CheckInterface {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public CheckNames getCheckName() {
         return checkName;
     }

@@ -52,6 +52,11 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private PersonSearcher personSearcher;
     private Properties appInfoProperties;
 
+    /**
+     * 
+     * @param systemCode
+     * @throws java.rmi.RemoteException
+     */
     public CanRegServerImpl(String systemCode) throws RemoteException {
         this.systemCode = systemCode;
         
@@ -133,6 +138,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     // Linux: http://www.ibm.com/developerworks/db2/library/techarticle/dm-0409cline2/readme_linux.txt
     // Windows: http://www.ibm.com/developerworks/db2/library/techarticle/dm-0409cline2/readme_win.txt
     //
+    /**
+     * 
+     */
     public void startNetworkDBServer() {
         try {
             debugOut("Start Network DB Server.");
@@ -143,6 +151,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         }
     }
 
+    /**
+     * 
+     */
     public void stopNetworkDBServer() {
         try {
             if (dbServer != null) {
@@ -164,26 +175,63 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         debugOut("Operation B!");
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public Document getDatabseDescription() throws RemoteException, SecurityException {
         return systemDescription.getSystemDescriptionDocument();
     }
 
+    /**
+     * 
+     * @param username
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public void addUser(String username) throws RemoteException, SecurityException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * 
+     * @param username
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public void removeUser(String username) throws RemoteException, SecurityException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * 
+     * @param username
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public void setUserPassword(String username) throws RemoteException, SecurityException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * 
+     * @param username
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public String getUserPassword(String username) throws RemoteException, SecurityException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public String getCanRegSystemName() throws RemoteException, SecurityException {
         String name = null;
 
@@ -193,6 +241,12 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return name;
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public String[] listCurrentUsers() throws RemoteException, SecurityException {
         String[] users = new String[fClients.size()];
         int i = 0;
@@ -204,17 +258,35 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return users;
     }
 
+    /**
+     * 
+     * @param username
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public void userLoggedIn(String username)
             throws RemoteException, SecurityException {
         fClients.add(username);
     }
 
+    /**
+     * 
+     * @param username
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public void userLoggedOut(String username)
             throws RemoteException, SecurityException {
         fClients.remove(fClients.indexOf(username));
     }
 
     // For testing purposes only - not secure enough...
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public CanRegDAO getDatabseConnection() throws RemoteException, SecurityException {
         return db;
     }
@@ -225,24 +297,51 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         }
     }
     // add and remove records
+    /**
+     * 
+     * @param patient
+     * @return
+     */
     public int savePatient(Patient patient) {
         return db.savePatient(patient);
     }
 
+    /**
+     * 
+     * @param tumour
+     * @return
+     */
     public int saveTumour(Tumour tumour) {
         return db.saveTumour(tumour);
     }
 
+    /**
+     * 
+     * @param dictionaryEntry
+     * @return
+     */
     public int saveDictionaryEntry(DictionaryEntry dictionaryEntry) {
         return db.saveDictionaryEntry(dictionaryEntry);
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public String performBackup() throws RemoteException, SecurityException {
         systemSettings.setDateOfLastbackup(new Date());
         systemSettings.writeSettings();
         return db.performBackup();
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public String getCanRegVersion() throws RemoteException, SecurityException {
         String versionString = "";
         for (String part:Globals.versionStringParts){
@@ -251,18 +350,44 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return versionString;
     }
 
+    /**
+     * 
+     * @param dictionaryID
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public boolean deleteDictionaryEntries(int dictionaryID) throws RemoteException, SecurityException {
         return db.deleteDictionaryEntries(dictionaryID);
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public Map<Integer, Dictionary> getDictionary() throws RemoteException, SecurityException {
         return db.getDictionary();
     }
 
+    /**
+     * 
+     * @param path
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public String restoreFromBackup(String path) throws RemoteException, SecurityException {
         return db.restoreFromBackup(path);
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public InetAddress getIPAddress() throws RemoteException, SecurityException {
         InetAddress addr = null;
         try {
@@ -273,63 +398,167 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return addr;
     }
 
+    /**
+     * 
+     * @param filter
+     * @param tableName
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     * @throws java.sql.SQLException
+     * @throws java.lang.Exception
+     */
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, Exception {
         return db.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, tableName);
     }
 
+    /**
+     * 
+     * @param patientID
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public DatabaseRecord getPatient(int patientID) throws RemoteException, SecurityException {
         return db.getPatient(patientID);
     }
 
+    /**
+     * 
+     * @param recordID
+     * @param tableName
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public DatabaseRecord getRecord(int recordID, String tableName) throws RemoteException, SecurityException {
         return db.getRecord(recordID, tableName);
     }
 
+    /**
+     * 
+     * @param patient
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public void editPatient(Patient patient) throws RemoteException, SecurityException {
         db.editPatient(patient);
     }
 
+    /**
+     * 
+     * @param tumour
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public void editTumour(Tumour tumour) throws RemoteException, SecurityException {
         db.editTumour(tumour);
     }
 
+    /**
+     * 
+     * @param resultSetID
+     * @param from
+     * @param to
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     * @throws java.lang.Exception
+     */
     public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, Exception {
         return db.retrieveRows(resultSetID, from, to);
     }
 
+    /**
+     * 
+     * @param resultSetID
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException {
         db.releaseResultSet(resultSetID);
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public Map<Integer, PopulationDataset> getPopulationDatasets() throws RemoteException, SecurityException {
         return db.getPopulationDatasets();
     }
 
+    /**
+     * 
+     * @param pds
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public int saveNewPopulationDataset(PopulationDataset pds) throws RemoteException, SecurityException {
         return db.saveNewPopulationDataset(pds);
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public Date getDateOfLastBackUp() throws RemoteException, SecurityException {
         return systemSettings.getDateOfLastBackUp();
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public Map<String, Integer> getNameSexTables() throws RemoteException, SecurityException {
         return db.getNameSexTables();
     }
 
+    /**
+     * 
+     * @param nameSexRecord
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public int saveNameSexRecord(NameSexRecord nameSexRecord) throws RemoteException, SecurityException {
         return db.saveNameSexRecord(nameSexRecord);
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public boolean clearNameSexTable() throws RemoteException, SecurityException {
         return db.clearNameSexTable();
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public UserRightLevels getUserRightLevel() throws RemoteException, SecurityException {
         // For now everyone is a supervisor...
         return Globals.UserRightLevels.REGISTRAR;
     }
 
+    /**
+     * 
+     * @param searcher
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public Map<Integer, Map<Float, Integer>> performGlobalPersonSearch(PersonSearcher searcher) throws RemoteException, SecurityException {
         Map<Integer, Map<Float, Integer>> patientIDScorePatientIDMap = new TreeMap<Integer, Map<Float, Integer>>();
         DatabaseFilter filter = new DatabaseFilter();
@@ -378,6 +607,14 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return patientIDScorePatientIDMap;
     }
 
+    /**
+     * 
+     * @param patient
+     * @param searcher
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     */
     public Map<Integer, Float> performPersonSearch(Patient patient, PersonSearcher searcher) throws RemoteException, SecurityException {
         DatabaseFilter filter = new DatabaseFilter();
         Map<Integer, Float> patientIDScoreMap = new TreeMap<Integer, Float>();

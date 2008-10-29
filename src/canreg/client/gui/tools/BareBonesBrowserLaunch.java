@@ -15,10 +15,18 @@ package canreg.client.gui.tools;
 import java.lang.reflect.Method;
 import javax.swing.JOptionPane;
 
+/**
+ * 
+ * @author ervikm
+ */
 public class BareBonesBrowserLaunch {
 
    private static final String errMsg = "Error attempting to launch web browser";
 
+   /**
+    * 
+    * @param url
+    */
    public static void openURL(String url) {
       String osName = System.getProperty("os.name");
       try {

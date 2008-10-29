@@ -12,10 +12,18 @@ public class DatabaseIndexesListElement {
         this.indexName = indexName;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getIndexName() {
         return indexName;
     }
 
+    /**
+     * 
+     * @param indexName
+     */
     public void setIndexName(String indexName) {
         this.indexName = indexName;
     }

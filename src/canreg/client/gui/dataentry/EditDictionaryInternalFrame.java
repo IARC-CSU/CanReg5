@@ -43,7 +43,9 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
     private LocalSettings localSettings;
     private String path;
 
-    /** Creates new form EditDictionaryInternalFrame */
+    /** Creates new form EditDictionaryInternalFrame
+     * @param dtp 
+     */
     public EditDictionaryInternalFrame(JDesktopPane dtp) {
         this.desktopPane = dtp;
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -205,6 +207,9 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         chooseDictionaryComboBox.setSelectedIndex(0);
     }
 
+    /**
+     * 
+     */
     @Action
     public void exportCompleteDictionaryAction() {
         int returnVal = chooser.showSaveDialog(this);
@@ -249,6 +254,9 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         chooseDictionaryComboBox.setSelectedIndex(selectedDbdle);
     }
 
+    /**
+     * 
+     */
     @Action
     public void importCompleteDictionaryAction() {
         JInternalFrame importFrame = new ImportCompleteDictionaryInternalFrame();
@@ -256,11 +264,18 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         this.dispose();
     }
 
+    /**
+     * 
+     */
     @Action
     public void selectDictionaryAction() {
         //TODO
     }
 
+    /**
+     * 
+     * @return
+     */
     @Action
     public Task updateDictionaryAction() {
         return new UpdateDictionaryActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
@@ -326,6 +341,9 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void refreshSelectedDictionaryAction() {
         DatabaseDictionaryListElement dbdle = (DatabaseDictionaryListElement) chooseDictionaryComboBox.getSelectedItem();

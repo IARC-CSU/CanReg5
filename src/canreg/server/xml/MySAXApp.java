@@ -13,10 +13,19 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import org.xml.sax.helpers.DefaultHandler;
 
 
+/**
+ * 
+ * @author ervikm
+ */
 public class MySAXApp extends DefaultHandler
 {
 
-    public static void main (String args[])
+    /**
+     * 
+     * @param args
+     * @throws java.lang.Exception
+     */
+    public static void main(String args[])
 	throws Exception
     {
 	XMLReader xr = XMLReaderFactory.createXMLReader();
@@ -33,7 +42,10 @@ public class MySAXApp extends DefaultHandler
     }
 
 
-    public MySAXApp ()
+    /**
+     * 
+     */
+    public MySAXApp()
     {
 	super();
     }

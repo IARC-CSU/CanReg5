@@ -10,16 +10,31 @@ import java.util.Map;
  */
 public class CheckAgeHistology implements CheckInterface {
 
+    /**
+     * 
+     */
     public Checker.CheckNames checkName = Checker.CheckNames.AgeHistology;
+    /**
+     * 
+     */
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames[]{
         Globals.StandardVariableNames.Age,
         Globals.StandardVariableNames.Morphology,
     };
 
+    /**
+     * 
+     * @return
+     */
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }
 
+    /**
+     * 
+     * @param variables
+     * @return
+     */
     public CheckResult performCheck(Map<Globals.StandardVariableNames, Object> variables) {
 
         CheckResult result = new CheckResult();
@@ -72,6 +87,10 @@ public class CheckAgeHistology implements CheckInterface {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public CheckNames getCheckName() {
         return checkName;
     }

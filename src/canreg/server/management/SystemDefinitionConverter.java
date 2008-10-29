@@ -69,8 +69,7 @@ public class SystemDefinitionConverter {
     private String[] mpCopyValues = {"Must", "Prob", "Intr", "Othr"};
 
     /**
-     * @param CanReg4 system definition canReg4FileName 
-     * Convert CanReg4 system definition files into CanReg5 system definition XML
+     * @param args 
      */
     public static void main(String[] args) {
         if (args.length < 1) {
@@ -86,6 +85,12 @@ public class SystemDefinitionConverter {
         }
     }
 
+    /**
+     * 
+     * @param canReg4FileName
+     * @return
+     * @throws java.io.FileNotFoundException
+     */
     public String convert(String canReg4FileName) throws FileNotFoundException {
         this.canReg4FileName = canReg4FileName;
 
@@ -411,14 +416,26 @@ public class SystemDefinitionConverter {
         return ("Success");
     }
 
+    /**
+     * 
+     * @return
+     */
     public Document getDoc() {
         return doc;
     }
 
+    /**
+     * 
+     * @param codeTextField
+     */
     public void setCodeField(JTextField codeTextField) {
         this.codeTextField = codeTextField;
     }
 
+    /**
+     * 
+     * @param nameTextField
+     */
     public void setNameField(JTextField nameTextField) {
         this.nameTextField = nameTextField;
     }
@@ -499,6 +516,11 @@ public class SystemDefinitionConverter {
     }
 
     // Convert a byte array with the most significant byte in the first position to integer
+    /**
+     * 
+     * @param b
+     * @return
+     */
     public static final int byteArrayToIntHL(byte[] b) {
         int value = 0;
         for (int i = 0; i < b.length; i++) {
@@ -514,6 +536,11 @@ public class SystemDefinitionConverter {
     }
 
     // Convert a byte array with the most significant byte in the last position to integer
+    /**
+     * 
+     * @param b
+     * @return
+     */
     public static final int byteArrayToIntLH(byte[] b) {
         int value = 0;
         for (int i = 0; i < b.length; i++) {

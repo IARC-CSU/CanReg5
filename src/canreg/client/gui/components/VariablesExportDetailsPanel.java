@@ -32,16 +32,28 @@ public class VariablesExportDetailsPanel extends javax.swing.JPanel {
         }
     }
     
+    /**
+     * 
+     * @param variable
+     */
     public void setVariable(DatabaseVariablesListElement variable){
         this.variable = variable;
         setVariableName(variable.getFullName());
         setVariableType(variable.getVariableType());
     }
     
+    /**
+     * 
+     * @param bool
+     */
     public void setDataCheckBox(boolean bool){
         dataCheckBox.setSelected(bool);
     }
     
+    /**
+     * 
+     * @return
+     */
     public boolean[] getCheckboxes() {
         return new boolean[] { dataCheckBox.isSelected(), dictionaryCategoryCheckBox.isSelected(), dictionaryDescriptionCheckBox.isSelected() };
     }

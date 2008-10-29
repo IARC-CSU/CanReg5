@@ -67,6 +67,9 @@ public class CanRegClientApp extends SingleFrameApplication {
     private String systemName = null;
     private String username = null;
     private static LocalSettings localSettings;
+    /**
+     * 
+     */
     public boolean loggedIn = false;
     private CanRegClientView canRegClientView;
     private Document doc;
@@ -78,6 +81,12 @@ public class CanRegClientApp extends SingleFrameApplication {
     private Properties appInfoProperties;
     private String canRegSystemVersionString;
 
+    /**
+     * 
+     * @param pds
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public void saveNewPopulationDataset(PopulationDataset pds) throws SecurityException, RemoteException {
         int populationDatasetID = server.saveNewPopulationDataset(pds);
         pds.setPopulationDatasetID(populationDatasetID);
@@ -514,6 +523,12 @@ public class CanRegClientApp extends SingleFrameApplication {
         return server.getRecord(recordID, tableName);
     }
 
+    /**
+     * 
+     * @param databaseRecord
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public void saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException {
         if (databaseRecord instanceof Patient) {
             server.savePatient((Patient) databaseRecord);
@@ -524,6 +539,12 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    /**
+     * 
+     * @param databaseRecord
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public void editRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException {
         if (databaseRecord instanceof Patient) {
             server.editPatient((Patient) databaseRecord);
@@ -532,18 +553,43 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    /**
+     * 
+     * @param dictionaryID
+     * @return
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public boolean deleteDictionaryEntries(int dictionaryID) throws SecurityException, RemoteException {
         return server.deleteDictionaryEntries(dictionaryID);
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public boolean clearNameSexTable() throws SecurityException, RemoteException {
         return server.clearNameSexTable();
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public Map<String, Integer> getNameSexTables() throws SecurityException, RemoteException {
         return server.getNameSexTables();
     }
 
+    /**
+     * 
+     * @param entry
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public void saveDictionaryEntry(DictionaryEntry entry) throws SecurityException, RemoteException {
         server.saveDictionaryEntry(entry);
     }
@@ -632,22 +678,54 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public GlobalToolBox getGlobalToolBox() {
         return globalToolBox;
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public Map<Integer, PopulationDataset> getPopulationDatasets() throws SecurityException, RemoteException {
         return server.getPopulationDatasets();
     }
 
+    /**
+     * 
+     * @param resultSetID
+     * @param from
+     * @param to
+     * @return
+     * @throws java.rmi.RemoteException
+     * @throws java.lang.SecurityException
+     * @throws java.lang.Exception
+     */
     public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, Exception {
         return server.retrieveRows(resultSetID, from, to);
     }
 
+    /**
+     * 
+     * @param resultSetID
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public void releaseResultSet(String resultSetID) throws SecurityException, RemoteException {
         server.releaseResultSet(resultSetID);
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public Date getDateOfLastBackUp() throws SecurityException, RemoteException {
         if (server != null) {
             return server.getDateOfLastBackUp();
@@ -656,22 +734,54 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    /**
+     * 
+     * @param patient
+     * @param searcher
+     * @return
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public Map<Integer, Float> performDuplicateSearch(Patient patient, PersonSearcher searcher) throws SecurityException, RemoteException {
         return server.performPersonSearch(patient, searcher);
     }
 
+    /**
+     * 
+     * @param patient
+     * @param tumour
+     * @return
+     */
     public LinkedList<CheckResult> performChecks(Patient patient, Tumour tumour) {
         return checker.performChecks(patient, tumour);
     }
 
+    /**
+     * 
+     * @param conversionName
+     * @param patient
+     * @param tumour
+     * @return
+     */
     public ConversionResult[] performConversions(Converter.ConversionName conversionName, Patient patient, Tumour tumour) {
         return converter.performConversion(conversionName, patient, tumour);
     }
 
+    /**
+     * 
+     * @param searcher
+     * @return
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public Map<Integer, Map<Float, Integer>> performGlobalDuplicateSearch(PersonSearcher searcher) throws SecurityException, RemoteException {
         return server.performGlobalPersonSearch(searcher);
     }
     
+    /**
+     * 
+     * @return
+     */
     public String getCanRegVersionString(){
         return canRegSystemVersionString;
     }

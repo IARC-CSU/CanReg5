@@ -8,6 +8,10 @@ import java.security.NoSuchAlgorithmException;
 // import sun.misc.BASE64Encoder;
 // import sun.misc.CharacterEncoder;
 
+/**
+ * 
+ * @author ervikm
+ */
 public final class PasswordService
 {
   private static PasswordService instance;
@@ -16,6 +20,12 @@ public final class PasswordService
   {
   }
 
+  /**
+   * 
+   * @param plaintext
+   * @return
+   * @throws canreg.exceptions.SystemUnavailableException
+   */
   public synchronized String encrypt(String plaintext) throws SystemUnavailableException
   {
     MessageDigest md = null;
@@ -44,6 +54,10 @@ public final class PasswordService
     return hash; //step 6
   }
   
+  /**
+   * 
+   * @return
+   */
   public static synchronized PasswordService getInstance() //step 1
   {
     if(instance == null)
@@ -61,7 +75,10 @@ public final class PasswordService
    * A convenience method to convert an array of bytes to a String.  We do
    * this simply by converting each byte to two hexadecimal digits.  Something
    * like Base 64 encoding is more compact, but harder to encode.
-   **/
+     *
+     * @param bytes 
+     * @return
+     */
   public static String hexEncode(byte[] bytes) {
     StringBuffer s = new StringBuffer(bytes.length * 2);
     for(int i = 0; i < bytes.length; i++) {
@@ -75,7 +92,11 @@ public final class PasswordService
   /**
    * A convenience method to convert in the other direction, from a string
    * of hexadecimal digits to an array of bytes.
-   **/
+   *
+   * @param s 
+   * @return
+   * @throws IllegalArgumentException 
+   */
   public static byte[] hexDecode(String s) throws IllegalArgumentException {
     try {
       int len = s.length();

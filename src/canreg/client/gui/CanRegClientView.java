@@ -55,6 +55,10 @@ public class CanRegClientView extends FrameView {
     private static boolean debug = true;
     LocalSettings localSettings;
 
+    /**
+     * 
+     * @param app
+     */
     public CanRegClientView(SingleFrameApplication app) {
         super(app);
        
@@ -133,6 +137,9 @@ public class CanRegClientView extends FrameView {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void showAboutBox() {
         if (aboutBox == null) {
@@ -143,6 +150,9 @@ public class CanRegClientView extends FrameView {
         CanRegClientApp.getApplication().show(aboutBox);
     }
 
+    /**
+     * 
+     */
     public void applyPreferences() {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
         // Apply the outline drag mode
@@ -629,6 +639,9 @@ public class CanRegClientView extends FrameView {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void showLoginFrame() {
         if (CanRegClientApp.getApplication().isLoggedIn()) {
@@ -646,6 +659,9 @@ public class CanRegClientView extends FrameView {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void logOutaction() {
         int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you really want to log out?", "Log out?", JOptionPane.YES_NO_OPTION);
@@ -654,6 +670,10 @@ public class CanRegClientView extends FrameView {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     @Action
     public Task viewWorkFiles() {
         return new ViewWorkFilesTask(getApplication());
@@ -695,6 +715,9 @@ public class CanRegClientView extends FrameView {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void showUsersLoggedIn() {
         try {
@@ -719,6 +742,10 @@ public class CanRegClientView extends FrameView {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     @Action
     public Task startDatabaseServer() {
         return new StartDatabaseServerTask(getApplication());
@@ -763,6 +790,9 @@ public class CanRegClientView extends FrameView {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void stopDatabaseServer() {
         try {
@@ -776,6 +806,10 @@ public class CanRegClientView extends FrameView {
         }
     }
 
+    /**
+     * 
+     * @param userRightsLevel
+     */
     public void setUserRightsLevel(Globals.UserRightLevels userRightsLevel) {
         this.userRightsLevel = userRightsLevel;
         userLevelLabel.setText(userRightsLevel.toString());
@@ -829,11 +863,18 @@ public class CanRegClientView extends FrameView {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void ShowPatient() {
         // PatientFrame1.setVisible(!PatientFrame1.isVisible());
     }
 
+    /**
+     * 
+     * @return
+     */
     @Action
     public Task openICDO3Manual() {
         return new OpenICDO3ManualTask(getApplication());
@@ -845,69 +886,108 @@ public class CanRegClientView extends FrameView {
         userLevelLabel.setText("Not logged in.");
     }
 
+    /**
+     * 
+     * @throws java.io.IOException
+     */
     @Action
     public void openIacrWebsite() throws IOException {
         BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.iacr.com.fr/"));
     }
 
+    /**
+     * 
+     */
     @Action
     public void openICDO3web() {
         BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://training.seer.cancer.gov/module_icdo3/icdo3_home.html"));
     }
 
+    /**
+     * 
+     */
     @Action
     public void showCanRegHelpFile() {
         File file = new File("doc");
         BareBonesBrowserLaunch.openURL("file:" + file.getAbsolutePath() + "/CanReg5-functionality.htm");
     }
 
+    /**
+     * 
+     */
     @Action
     public void openENCRweb() {
         BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.encr.com.fr/"));
     }
 
+    /**
+     * 
+     */
     @Action
     public void importData() {
         ImportView importInternalFrame = new ImportView();
         showAndCenterInternalFrame(desktopPane, importInternalFrame);
     }
 
+    /**
+     * 
+     */
     @Action
     public void showExportFrame() {
         ExportReportInternalFrame exportFrame = new ExportReportInternalFrame(desktopPane);
         showAndCenterInternalFrame(desktopPane, exportFrame);
     }
 
+    /**
+     * 
+     */
     @Action
     public void browseEditAction() {
         JInternalFrame internalFrame = new BrowseInternalFrame(desktopPane);
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
+    /**
+     * 
+     */
     @Action
     public void backupAction() {
         JInternalFrame internalFrame = new BackUpInternalFrame();
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
+    /**
+     * 
+     */
     @Action
     public void editDictionaryAction() {
         JInternalFrame internalFrame = new EditDictionaryInternalFrame(desktopPane);
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
+    /**
+     * 
+     */
     @Action
     public void showOptionFrame() {
         JInternalFrame internalFrame = new OptionsFrame(this);
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
+    /**
+     * 
+     */
     @Action
     public void showNameSexAction() {
         JInternalFrame internalFrame = new FirstNameSexInternalFrame();
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
+    /**
+     * 
+     * @param desktopPane
+     * @param internalFrame
+     */
     public static void showAndCenterInternalFrame(JDesktopPane desktopPane, JInternalFrame internalFrame) {
         desktopPane.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
         internalFrame.setVisible(true);
@@ -918,6 +998,9 @@ public class CanRegClientView extends FrameView {
         internalFrame.setVisible(true);
     }
 
+    /**
+     * 
+     */
     @Action
     public void installSystemAction() {
         // TODO
@@ -928,18 +1011,27 @@ public class CanRegClientView extends FrameView {
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
+    /**
+     * 
+     */
     @Action
     public void convertCanReg4SystemAction() {
         JInternalFrame internalFrame = new CanReg4SystemConverterInternalFrame();
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
+    /**
+     * 
+     */
     @Action
     public void restoreAction() {
         JInternalFrame internalFrame = new RestoreInternalFrame();
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
+    /**
+     * 
+     */
     @Action
     public void showLastRecord() {
         RecordEditor internalFrame = new RecordEditor(desktopPane);
@@ -967,12 +1059,18 @@ public class CanRegClientView extends FrameView {
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
+    /**
+     * 
+     */
     @Action
     public void showFrequenciesFrame() {
         JInternalFrame internalFrame = new FrequenciesByYearInternalFrame(desktopPane);
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
+    /**
+     * 
+     */
     @Action
     public void createNewRecordSetAction() {
         RecordEditor internalFrame = new RecordEditor(desktopPane);
@@ -983,6 +1081,9 @@ public class CanRegClientView extends FrameView {
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
+    /**
+     * 
+     */
     @Action
     public void editPopulationDataSets() {
         JInternalFrame internalFrame;
@@ -996,6 +1097,9 @@ public class CanRegClientView extends FrameView {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void duplicateSearchAction() {
         JInternalFrame internalFrame = new PersonSearchFrame(desktopPane);

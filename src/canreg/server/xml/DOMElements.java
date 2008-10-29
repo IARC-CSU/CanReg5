@@ -8,8 +8,16 @@ import java.io.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 
+/**
+ * 
+ * @author ervikm
+ */
 public class DOMElements{
-   static public void main(String[] arg){
+    /**
+     * 
+     * @param arg
+     */
+    static public void main(String[] arg){
      try {
        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
        System.out.print("Enter XML File name: ");

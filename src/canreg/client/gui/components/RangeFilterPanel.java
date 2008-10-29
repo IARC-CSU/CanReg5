@@ -41,14 +41,25 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         initComponents();
     }
 
+    /**
+     * 
+     */
     public void close() {
         filterWizardInternalFrame.dispose();
     }
 
+    /**
+     * 
+     * @return
+     */
     public Document getDatabseDescription() {
         return doc;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getFilter() {
         if (useFilterCheckBox.isSelected()) {
             return filterComboBox.getSelectedItem().toString().trim();
@@ -57,26 +68,50 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getSelectedTable() {
         return tableChooserComboBox.getSelectedItem().toString();
     }    
 
+    /**
+     * 
+     * @param dtp
+     */
     public void setDeskTopPane(JDesktopPane dtp) {
         this.dtp = dtp;
     }
 
+    /**
+     * 
+     * @param active
+     */
     public void setFilterActive(boolean active) {
         useFilterCheckBox.setSelected(active);
     }
 
+    /**
+     * 
+     * @param enabled
+     */
     public void setRefreshButtonEnabled(boolean enabled) {
         refreshTableButton.setEnabled(enabled);
     }
 
+    /**
+     * 
+     * @param visible
+     */
     public void setTableChooserVisible(boolean visible) {
         tableChooserPanel.setVisible(visible);
     }
     
+    /**
+     * 
+     * @param visible
+     */
     public void setRecordPanelvisible(boolean visible){
         recordsPanel.setVisible(visible);
     }
@@ -349,14 +384,26 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
         return range;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getFromValue(){
         return rangeStartTextField.getText();
     }
     
+    /**
+     * 
+     * @return
+     */
     public String getToValue(){
         return rangeEndTextField.getText();
     }
     
+    /**
+     * 
+     * @return
+     */
     public String getIndexName(){
         return rangeComboBox.getSelectedItem().toString();
     }
@@ -414,6 +461,9 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void refreshAction() {
         int position = -1;
@@ -429,6 +479,7 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
 
     /**
      * Adds a filter to the filter combobox if this is not already there and sets it as the current active filter.
+     * @param filter 
      * @param String the filter to add
      */
     public void setFilter(String filter) {
@@ -437,6 +488,9 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
         filterComboBox.setSelectedIndex(position);
     }
 
+    /**
+     * 
+     */
     @Action
     public void filterWizardAction() {
 
@@ -459,18 +513,33 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
         }
     }
 
+    /**
+     * 
+     * @param rec
+     */
     public void setRecordsShown(int rec) {
         recordsShownField.setText("" + rec);
     }
     
+    /**
+     * 
+     * @param visible
+     */
     public void setSortByVariableShown(boolean visible){
         sortByChooserPanel.setVisible(visible);
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getSortByVariable(){
         return sortByChooserComboBox.getSelectedItem().toString();
     }
     
+    /**
+     * 
+     */
     @Action
     public void refreshTableAction() {
         String filter = filterComboBox.getSelectedItem().toString();
@@ -487,6 +556,10 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
         }
     }
     
+    /**
+     * 
+     * @param actionListener
+     */
     public void setActionListener(ActionListener actionListener){
         this.actionListener = actionListener;
     }

@@ -31,7 +31,13 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
         StandardVariableNames.ICD10
     };
     
+    /**
+     * 
+     */
     public static int maleCode = 1;
+    /**
+     * 
+     */
     public static int femaleCode = 2;
     
     private Map<String, String> topographyICD10Map;
@@ -53,6 +59,9 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
     private boolean sexDependent;
     private String ICD10;
 
+    /**
+     * 
+     */
     public ConversionICDO3toICD10() {
         try {
             // replace by getResourceAsStream to allow for packaging in a jar/!
@@ -69,14 +78,27 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }
 
+    /**
+     * 
+     * @return
+     */
     public StandardVariableNames[] getVariablesCreated() {
         return variablesCreated;
     }
 
+    /**
+     * 
+     * @param variables
+     * @return
+     */
     public ConversionResult[] performConversion(Map<StandardVariableNames, Object> variables) {
         
 	ICD10Male = "?????";
@@ -365,6 +387,10 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
         return string;
     }
 
+    /**
+     * 
+     * @return
+     */
     public ConversionName getConversionName() {
         return conversionName;
     }

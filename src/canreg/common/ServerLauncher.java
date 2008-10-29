@@ -16,7 +16,11 @@ import java.util.logging.Logger;
 public class ServerLauncher {
 
     /**
+     * @param systemCode 
+     * @param port 
      * @param args the command line arguments
+     * @return 
+     * @throws AlreadyBoundException
      */
     public static boolean start(String systemCode, int port) throws AlreadyBoundException {
         // int port = Globals.RMI_PORT;
@@ -48,6 +52,10 @@ public class ServerLauncher {
         return success;
     }
 
+    /**
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
         try {
             if (args.length >= 1) {

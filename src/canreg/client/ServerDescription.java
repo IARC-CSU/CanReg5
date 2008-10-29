@@ -17,6 +17,14 @@ public class ServerDescription {
     private int id;
     private boolean showCode = true;
 
+    /**
+     * 
+     * @param name
+     * @param url
+     * @param port
+     * @param code
+     * @param id
+     */
     public ServerDescription(String name, String url, int port, String code, int id) {
         this.name = name;
         this.url = url;
@@ -38,50 +46,98 @@ public class ServerDescription {
         return str;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * 
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getUrl() {
         return url;
     }
 
+    /**
+     * 
+     * @param url
+     */
     public void setUrl(String url) {
         this.url = url;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getPort() {
         return port;
     }
 
+    /**
+     * 
+     * @param port
+     */
     public void setPort(int port) {
         this.port = port;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getCode() {
         return code;
     }
 
+    /**
+     * 
+     * @param code
+     */
     public void setCode(String code) {
         this.code = code;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * 
+     * @param id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isShowCode() {
         return showCode;
     }
 
+    /**
+     * 
+     * @param showCode
+     */
     public void setShowCode(boolean showCode) {
         this.showCode = showCode;
     }

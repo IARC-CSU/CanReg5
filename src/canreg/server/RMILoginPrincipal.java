@@ -23,7 +23,9 @@ public class RMILoginPrincipal
    private String username;
 
    ////////////////////////
-   /** Class constructor.  @param username The username of the user. */
+   /** Class constructor.  @param username The username of the user.
+    * @param username 
+    */
    public RMILoginPrincipal(String username)
    {
         if(username == null) {

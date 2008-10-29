@@ -23,6 +23,10 @@ public class SystemDescription {
     private String fileName;
     private String namespace = "ns3:";
 
+    /**
+     * 
+     * @param fileName
+     */
     public SystemDescription(String fileName) {
         this.fileName = fileName;
         try {
@@ -46,15 +50,29 @@ public class SystemDescription {
         }
     }
 
+    /**
+     * 
+     * @param fileName
+     * @throws org.xml.sax.SAXException
+     * @throws java.io.IOException
+     */
     public void setSystemDescriptionXML(String fileName) throws SAXException, IOException {
         parser.parse(new InputSource(new FileInputStream(fileName)));
         doc = parser.getDocument();
     }
 
+    /**
+     * 
+     * @return
+     */
     public Document getSystemDescriptionDocument() {
         return doc;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getSystemName() {
         String name = null;
 
@@ -69,6 +87,10 @@ public class SystemDescription {
         return name;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getSystemCode() {
         String name = null;
 
@@ -83,6 +105,10 @@ public class SystemDescription {
         return name;
     }
 
+    /**
+     * 
+     * @param systemName
+     */
     public void setSystemName(String systemName) {
         if (doc != null) {
             NodeList nl = doc.getElementsByTagName(namespace + "registry_name");
@@ -94,6 +120,10 @@ public class SystemDescription {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public Element getVariables() {
         Element element = null;
         if (doc != null) {
@@ -105,6 +135,10 @@ public class SystemDescription {
         return element;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Element getIndexes() {
         Element element = null;
         if (doc != null) {
@@ -116,6 +150,10 @@ public class SystemDescription {
         return element;
     }
 
+    /**
+     * 
+     * @param var
+     */
     public void addVariable(Variable var) {
     }
 

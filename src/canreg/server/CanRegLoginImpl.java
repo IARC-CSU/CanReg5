@@ -16,6 +16,12 @@ public class CanRegLoginImpl extends UnicastRemoteObject
 
     private CanRegServerInterface theServer;
 
+    /**
+     * 
+     * @param server
+     * @throws java.rmi.RemoteException
+     * @throws java.net.MalformedURLException
+     */
     public CanRegLoginImpl(CanRegServerInterface server)
             throws RemoteException, MalformedURLException {
         this.theServer = server;
@@ -35,10 +41,20 @@ public class CanRegLoginImpl extends UnicastRemoteObject
         return new CanRegServerProxy(user, theServer);
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     */
     public String getSystemName() throws RemoteException {
         return theServer.getCanRegSystemName();
     }
 
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     */
     public String getSystemVersion() throws RemoteException {
         return theServer.getCanRegVersion();
     }

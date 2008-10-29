@@ -27,6 +27,10 @@ public class VariablesPanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    /**
+     * 
+     * @param dbles
+     */
     public void setDatabaseVariables(DatabaseVariablesListElement[] dbles) {
         // Build maps
         mapTableVariableNamesKey = new LinkedHashMap<String, LinkedList<String>>();
@@ -85,6 +89,11 @@ public class VariablesPanel extends javax.swing.JPanel {
         mapTableVariableNamesAll.put("Both", bothAllList);
     }
 
+    /**
+     * 
+     * @param tableName
+     * @return
+     */
     public LinkedList<String> getVariablesToShow(String tableName) {
         if (keyRadioButton.isSelected()) {
             return mapTableVariableNamesKey.get(tableName);

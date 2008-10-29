@@ -15,6 +15,10 @@ import java.io.Serializable;
 public class PersonSearchListener implements ActionListener, Serializable {
     private ActionListener actionListener;
     
+    /**
+     * 
+     * @param actionListener
+     */
     public void setActionListener(ActionListener actionListener){
         this.actionListener = actionListener;
     }

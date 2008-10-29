@@ -69,14 +69,26 @@ public class WaitFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    /**
+     * 
+     * @param string
+     */
     public void setLabel(String string){
         label.setText(string);
     }
     
+    /**
+     * 
+     * @param i
+     */
     public void setProgress(int i){
         jProgressBar1.setValue(i);
     }
     
+    /**
+     * 
+     * @param b
+     */
     public void setIndeterminate(boolean b) {
         jProgressBar1.setIndeterminate(b);
     }

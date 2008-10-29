@@ -34,18 +34,47 @@ public class SystemSettings {
     private DateFormat dateFormat;
     private boolean settingsChanged;    
     // Key names
+    /**
+     * 
+     */
     public static String DATE_OF_LAST_BACKUP_KEY = "date_of_last_backup";
+    /**
+     * 
+     */
     public static String SYSTEM_DIR_PATH_KEY = "system_path";
     // Property names
+    /**
+     * 
+     */
     public static String YES_PROPERTY = "yes";
+    /**
+     * 
+     */
     public static String NO_PROPERTY = "no";
+    /**
+     * 
+     */
     public static String ON_PROPERTY = "on";
+    /**
+     * 
+     */
     public static String OFF_PROPERTY = "off";
+    /**
+     * 
+     */
     public static String TRUE_PROPERTY = "true";
+    /**
+     * 
+     */
     public static String FALSE_PROPERTY = "false";
 
     
 
+    /**
+     * 
+     * @param settingsFileName
+     * @throws java.io.IOException
+     */
     public SystemSettings(String settingsFileName) throws IOException {
         dateFormat = new SimpleDateFormat("yyyyMMdd");
         
@@ -100,6 +129,10 @@ public class SystemSettings {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean writeSettings() {
         if (settingsChanged = true) {
             OutputStream propOutputStream = null;
@@ -132,6 +165,11 @@ public class SystemSettings {
         }
     }
 
+    /**
+     * 
+     * @param key
+     * @param string
+     */
     public void setProperty(String key, String string) {
         // Not sure why this didn't work, but OK... 
 //        String property = properties.getProperty(key);
@@ -142,6 +180,11 @@ public class SystemSettings {
         settingsChanged = true;
     }
 
+    /**
+     * 
+     * @param key
+     * @return
+     */
     public String getProperty(String key) {
         String property = properties.getProperty(key);
         if (property == null) {
@@ -192,6 +235,10 @@ public class SystemSettings {
     }
 
 
+    /**
+     * 
+     * @param dir
+     */
     public void createWorkingDir(String dir) {
         setProperty(SYSTEM_DIR_PATH_KEY, dir);
         File settingsFileDir = new File(dir);
@@ -202,10 +249,18 @@ public class SystemSettings {
         }
     }
     
+    /**
+     * 
+     * @param date
+     */
     public void setDateOfLastbackup(Date date){
         setProperty(SystemSettings.DATE_OF_LAST_BACKUP_KEY, dateFormat.format(date));
     }
     
+    /**
+     * 
+     * @return
+     */
     public Date getDateOfLastBackUp(){
         String dateString = getProperty(SystemSettings.DATE_OF_LAST_BACKUP_KEY);
         Date date = null;

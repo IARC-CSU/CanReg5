@@ -107,6 +107,9 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     */
     @Action
     public void installAction() {
         String fileNameWithPath = fileNameTextField.getText().trim();
@@ -144,11 +147,17 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void cancelAction() {
         this.dispose();
     }
 
+    /**
+     * 
+     */
     @Action
     public void browseAction() {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("XML files", "xml");

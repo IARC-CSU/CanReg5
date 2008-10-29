@@ -15,9 +15,12 @@ public class DistributedTableDescription implements Serializable {
 
 	/**
 	 * Constructor for DistributedTableDescription.
-	 * @exception If the columnNames or columnClasses array are null or of differing
-	 * lengths.
-	 */	
+         * 
+         * @param columnNames 
+         * @param columnClasses 
+         * @param rowCount
+         * @throws Exception 
+         */
 	public DistributedTableDescription(String[] columnNames, Class[] columnClasses, int rowCount) throws Exception {
 		if(columnNames == null || columnClasses == null || columnNames.length != columnClasses.length) {
 			throw new Exception("Either the columnNames array or the columnClasses array is null or the lengths of the arrays are not equal.");	
@@ -29,37 +32,53 @@ public class DistributedTableDescription implements Serializable {
 
 	/**
 	 * Returns an array of the column names.
-	 */
+         * 
+         * @return 
+         */
 	public String[] getColumnNames() {
 		return columnNames;		
 	}
 	
 	/**
 	 * Returns an array of the column classes.
-	 */
+         * 
+         * @return 
+         */
 	public Class[] getColumnClasses() {
 		return columnClasses;	
 	}
 	
 	/**
 	 * Returns the row count.
-	 */
+         * 
+         * @return 
+         */
 	public int getRowCount() {
 		return rowCount;	
 	}
 	
 	/**
 	 * Returns the column count.
-	 */
+         * 
+         * @return 
+         */
 	public int getColumnCount() {
 		return columnNames.length;	
 	}
 
-    public String getResultSetID() {
+        /**
+         * 
+         * @return
+         */
+        public String getResultSetID() {
         return resultSetID;
     }
 
-    public void setResultSetID(String resultSetID) {
+        /**
+         * 
+         * @param resultSetID
+         */
+        public void setResultSetID(String resultSetID) {
         this.resultSetID = resultSetID;
     }
 }

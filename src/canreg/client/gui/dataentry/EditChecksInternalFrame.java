@@ -19,30 +19,58 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
         initComponents();
     }
 
+    /**
+     * 
+     * @param text
+     */
     public void setMandatoryVariablesTextAreaText(String text) {
         mandatoryVariablesTextArea.setText(text);
     }
 
+    /**
+     * 
+     * @param text
+     */
     public void setCrossChecksTextAreaText(String text) {
         crossChecksTextArea.setText(text);
     }
     
+    /**
+     * 
+     * @param text
+     */
     public void setNameSexChecksTextAreaText(String text) {
         nameSexTextArea.setText(text);
     }
 
+    /**
+     * 
+     * @param text
+     */
     public void setLocalChecksTextAreaText(String text) {
         localChecksTextArea.setText(text);
     }
     
+    /**
+     * 
+     * @param text
+     */
     public void setResultTextFieldText(String text) {
         resultTextField.setText(text);
     }
     
+    /**
+     * 
+     * @param text
+     */
     public void setICD10TextFieldText(String text) {
         ICD10TextField.setText(text);
     }
     
+    /**
+     * 
+     * @param text
+     */
     public void setICCCTextFieldText(String text) {
         ICCCTextField.setText(text);
     }
@@ -295,6 +323,9 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     */
     @Action
     public void okAction() {
         this.dispose();

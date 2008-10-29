@@ -19,6 +19,12 @@ public class QueryGenerator {
     static final boolean debug = true;
     static final String namespace = "ns3:";
 
+    /**
+     * 
+     * @param tableName
+     * @param doc
+     * @return
+     */
     public static final String strCreateVariableTable(String tableName, Document doc) {
 
         // Common for all tables
@@ -97,6 +103,11 @@ public class QueryGenerator {
         return queries;
     }
 
+    /**
+     * 
+     * @param doc
+     * @return
+     */
     public static final String strCreateTablesOfDictionaries(Document doc) {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".DICTIONARIES" +
                 " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), " +
@@ -112,6 +123,11 @@ public class QueryGenerator {
         return queryLine;
     }
 
+    /**
+     * 
+     * @param doc
+     * @return
+     */
     public static final String strCreateDictionaryTable(Document doc) {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".DICTIONARY" +
                 " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), " +
@@ -122,6 +138,10 @@ public class QueryGenerator {
         return queryLine;
     }
 
+    /**
+     * 
+     * @return
+     */
     public static final String strSaveDictionary() {
         String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".DICTIONARIES " +
                 "   (DICTIONARYID, NAME, FONT, TYPE, CODELENGTH, CATEGORYDESCLENGTH, " +
@@ -130,6 +150,10 @@ public class QueryGenerator {
         return queryLine;
     }
 
+    /**
+     * 
+     * @return
+     */
     public static final String strSaveDictionaryEntry() {
         String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".DICTIONARY " +
                 "   (DICTIONARY, CODE, DESCRIPTION) " +
@@ -137,6 +161,10 @@ public class QueryGenerator {
         return queryLine;
     }
 
+    /**
+     * 
+     * @return
+     */
     public static final String strSavePopoulationDataset() {
         String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".PDSETS " +
                 "   (PDS_ID, PDS_NAME, FILTER, DATE, SOURCE,AGE_GROUP_STRUCTURE, " +
@@ -145,6 +173,10 @@ public class QueryGenerator {
         return queryLine;
     }
 
+    /**
+     * 
+     * @return
+     */
     public static final String strSavePopoulationDatasetsEntry() {
         String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".PDSET " +
                 "   (PDS_ID, AGE_GROUP, SEX, COUNT) " +
@@ -152,6 +184,10 @@ public class QueryGenerator {
         return queryLine;
     }
 
+    /**
+     * 
+     * @return
+     */
     public static final String strCreatePopulationDatasetTable() {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".PDSETS (" +
                 "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
@@ -168,6 +204,10 @@ public class QueryGenerator {
         return queryLine;
     }
 
+    /**
+     * 
+     * @return
+     */
     public static final String strCreatePopulationDatasetsTable() {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".PDSET (" +
                 "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
@@ -179,6 +219,10 @@ public class QueryGenerator {
         return queryLine;
     }
 
+    /**
+     * 
+     * @return
+     */
     public static final String strCreateUsersTable() {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".USERS (" +
                 "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
@@ -191,6 +235,10 @@ public class QueryGenerator {
         return queryLine;
     }
 
+    /**
+     * 
+     * @return
+     */
     public static final String strCreateSystemPropertiesTable() {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".SYSTEM (" +
                 "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
@@ -209,6 +257,10 @@ public class QueryGenerator {
         return queryLine;
     }
 
+    /**
+     * 
+     * @return
+     */
     public static final String strSaveNameSexEntry() {
         String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".NAMESEX " +
                 "   (NAME, SEX) " +
@@ -216,10 +268,20 @@ public class QueryGenerator {
         return queryLine;
     }
 
+    /**
+     * 
+     * @param doc
+     * @return
+     */
     public static final String strSavePatient(Document doc) {
         return strSaveRecord(doc, "patient");
     }
 
+    /**
+     * 
+     * @param doc
+     * @return
+     */
     public static final String strSaveTumour(Document doc) {
         return strSaveRecord(doc, "tumour");
     }

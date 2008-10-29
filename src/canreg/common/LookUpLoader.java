@@ -14,7 +14,16 @@ import java.util.Map;
  * @author ervikm
  */
 public class LookUpLoader {
-       public static Map<String, String> load(InputStream inStream, int codeLength) throws FileNotFoundException, IOException, URISyntaxException{
+    /**
+     * 
+     * @param inStream
+     * @param codeLength
+     * @return
+     * @throws java.io.FileNotFoundException
+     * @throws java.io.IOException
+     * @throws java.net.URISyntaxException
+     */
+    public static Map<String, String> load(InputStream inStream, int codeLength) throws FileNotFoundException, IOException, URISyntaxException{
         Map<String, String> table = new LinkedHashMap <String, String>();
         
         BufferedReader br = new BufferedReader(new InputStreamReader(inStream));

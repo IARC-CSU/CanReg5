@@ -40,7 +40,7 @@ public class XTableColumnModel extends DefaultTableColumnModel {
      * or its visibility status did not change.
      * <p>
      *
-     * @param aColumn        the column to show/hide
+     * @param column 
      * @param visible its new visibility status
  */
     // listeners will receive columnAdded()/columnRemoved() event

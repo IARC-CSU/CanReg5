@@ -31,26 +31,85 @@ public class LocalSettings {
     private String settingsDir;
     private Properties properties;
     private boolean settingsChanged;    // Key names
+    /**
+     * 
+     */
     public static String LAST_SERVER_ID_KEY = "last_server_id";
+    /**
+     * 
+     */
     public static String IMPORT_PATH_KEY = "import_path";
+    /**
+     * 
+     */
     public static String USERNAME_KEY = "username";
+    /**
+     * 
+     */
     public static String PASSWORD_KEY = "password";
+    /**
+     * 
+     */
     public static String LOCALE_KEY = "locale";
+    /**
+     * 
+     */
     public static String REMEMBER_PASSWORD_KEY = "remember_password";
+    /**
+     * 
+     */
     public static String OUTLINE_DRAG_MODE_KEY = "outline_drag_mode";
+    /**
+     * 
+     */
     public static String WORKING_DIR_PATH_KEY = "working_path";
+    /**
+     * 
+     */
     public static String AUTO_START_SERVER_KEY = "auto_start_server";
+    /**
+     * 
+     */
     public static String LOOK_AND_FEEL_KEY = "look_and_feel";
+    /**
+     * 
+     */
     public static String AUTO_BACKUP_KEY = "auto_backup";
+    /**
+     * 
+     */
     public static String BACKUP_EVERY_KEY = "backup_every";
     // Property names
+    /**
+     * 
+     */
     public static String YES_PROPERTY = "yes";
+    /**
+     * 
+     */
     public static String NO_PROPERTY = "no";
+    /**
+     * 
+     */
     public static String ON_PROPERTY = "on";
+    /**
+     * 
+     */
     public static String OFF_PROPERTY = "off";
+    /**
+     * 
+     */
     public static String TRUE_PROPERTY = "true";
+    /**
+     * 
+     */
     public static String FALSE_PROPERTY = "false";
 
+    /**
+     * 
+     * @param localSettingsFileName
+     * @throws java.io.IOException
+     */
     public LocalSettings(String localSettingsFileName) throws IOException {
         boolean settingsLoaded = false;
         this.settingsFileName = localSettingsFileName;
@@ -71,6 +130,14 @@ public class LocalSettings {
         writeSettings();
     }
 
+    /**
+     * 
+     * @param name
+     * @param url
+     * @param port
+     * @param code
+     * @return
+     */
     public int addServerToServerList(String name, String url, int port, String code) {
         boolean found = false;
         int i = 0;
@@ -100,14 +167,26 @@ public class LocalSettings {
     return list;
     }
      */
+    /**
+     * 
+     * @return
+     */
     public Locale getLocale() {
         return new Locale(properties.getProperty(LOCALE_KEY));
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isAutoBackup() {
         return getProperty(AUTO_BACKUP_KEY).equalsIgnoreCase(TRUE_PROPERTY);
     }
 
+    /**
+     * 
+     * @param b
+     */
     public void setAutomaticBackup(boolean b) {
         if (b) {
             setProperty(AUTO_BACKUP_KEY, TRUE_PROPERTY);
@@ -116,6 +195,10 @@ public class LocalSettings {
         }
     }
 
+    /**
+     * 
+     * @param localeCode
+     */
     public void setLocale(String localeCode) {
         setProperty(LOCALE_KEY, localeCode);
     }
@@ -152,6 +235,10 @@ public class LocalSettings {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean writeSettings() {
         if (settingsChanged = true) {
             OutputStream propOutputStream = null;
@@ -185,6 +272,11 @@ public class LocalSettings {
         }
     }
 
+    /**
+     * 
+     * @param key
+     * @param string
+     */
     public void setProperty(String key, String string) {
         // Not sure why this didn't work, but OK... 
 //        String property = properties.getProperty(key);
@@ -195,6 +287,11 @@ public class LocalSettings {
         settingsChanged = true;
     }
 
+    /**
+     * 
+     * @param key
+     * @return
+     */
     public String getProperty(String key) {
         String property = properties.getProperty(key);
         if (property == null) {
@@ -260,6 +357,10 @@ public class LocalSettings {
         settingsChanged = true;
     }
 
+    /**
+     * 
+     * @return
+     */
     public LinkedList<ServerDescription> getServerDescriptions() {
         LinkedList<ServerDescription> serverList = new LinkedList();
         Set<String> set = properties.stringPropertyNames();
@@ -287,6 +388,10 @@ public class LocalSettings {
         return serverList;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String[] getServerNames() {
         Iterator<ServerDescription> sd = getServerDescriptions().iterator();
         int i = 0;
@@ -312,6 +417,11 @@ public class LocalSettings {
         }
     }
 
+    /**
+     * 
+     * @param serverID
+     * @return
+     */
     public ServerDescription getServerDescription(int serverID) {
         LinkedList<ServerDescription> serverList = getServerDescriptions();
         ServerDescription sd = null;
@@ -327,6 +437,10 @@ public class LocalSettings {
         return sd;
     }
 
+    /**
+     * 
+     * @param sd
+     */
     public void addServerDescription(ServerDescription sd) {
         setProperty("server." + sd.getId() + ".name", sd.getName());
         setProperty("server." + sd.getId() + ".port", sd.getPort() + "");
@@ -334,16 +448,28 @@ public class LocalSettings {
         setProperty("server." + sd.getId() + ".url", sd.getUrl());
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getLanguage() {
         String localeString = properties.getProperty(LOCALE_KEY);
         Locale loc = new Locale(localeString);
         return loc.getDisplayLanguage(new Locale("en"));
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getLanguageCode() {
         return properties.getProperty(LOCALE_KEY);
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isOutlineDragMode() {
         boolean isOutLineDragMode = false;
         String isOutlineDragModeString = properties.getProperty(OUTLINE_DRAG_MODE_KEY);
@@ -353,6 +479,10 @@ public class LocalSettings {
         return isOutLineDragMode;
     }
 
+    /**
+     * 
+     * @param outlineDragMode
+     */
     public void setOutlineDragMode(boolean outlineDragMode) {
         if (outlineDragMode) {
             setProperty(OUTLINE_DRAG_MODE_KEY, ON_PROPERTY);
@@ -361,6 +491,10 @@ public class LocalSettings {
         }
     }
 
+    /**
+     * 
+     * @param dir
+     */
     public void createWorkingDir(String dir) {
         setProperty(WORKING_DIR_PATH_KEY, dir);
         File settingsFileDir = new File(dir);

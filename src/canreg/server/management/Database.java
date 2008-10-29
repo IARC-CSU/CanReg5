@@ -12,6 +12,12 @@ import org.w3c.dom.NodeList;
  */
 public class Database {
 
+    /**
+     * 
+     * @param doc
+     * @param con
+     * @return
+     */
     public static boolean buildTableOfDatabases(Document doc, Connection con) {
         String queryLine = "";
 

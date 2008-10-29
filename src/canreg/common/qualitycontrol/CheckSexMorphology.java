@@ -17,23 +17,42 @@ import java.util.logging.Logger;
  */
 public class CheckSexMorphology implements CheckInterface {
 
+    /**
+     * 
+     */
     public static Checker.CheckNames checkName = Checker.CheckNames.SexMorphology;
+    /**
+     * 
+     */
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames[]{
         Globals.StandardVariableNames.Sex,
         Globals.StandardVariableNames.Morphology,
         Globals.StandardVariableNames.Behaviour
     };
+    /**
+     * 
+     */
     public static int maleCode = 1;
+    /**
+     * 
+     */
     public static int femaleCode = 2;
     
     Map<String,String> morphologicalFamiliesMap;
     private int codeLength = 4;
     private String lookUpFileResource = "/canreg/common/resources/lookup/MorphFam.txt";
     
+    /**
+     * 
+     * @return
+     */
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }
 
+    /**
+     * 
+     */
     public CheckSexMorphology(){
         InputStream resourceStream = this.getClass().getResourceAsStream(lookUpFileResource);
         try {
@@ -47,6 +66,11 @@ public class CheckSexMorphology implements CheckInterface {
         } 
     }
     
+    /**
+     * 
+     * @param variables
+     * @return
+     */
     public CheckResult performCheck(Map<Globals.StandardVariableNames, Object> variables) {
 
         CheckResult result = new CheckResult();
@@ -135,6 +159,10 @@ public class CheckSexMorphology implements CheckInterface {
         return result;
     }
 
+    /**
+     * 
+     * @return
+     */
     public CheckNames getCheckName() {
         return checkName;
     }

@@ -20,6 +20,8 @@ public class LazyViewport extends JViewport {
 
     /**
      * equivalent to <b>new JScrollPane(view)</b> except uses a LazyViewport
+     * @param view 
+     * @return
      */
     public static JScrollPane createLazyScrollPaneFor(Component view) {
         LazyViewport vp = new LazyViewport();

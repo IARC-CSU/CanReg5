@@ -147,6 +147,10 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     * @return
+     */
     @Action
     public Task recreateNameSexDatabase() {
         recreateDatabaseOfFirstnameSexButton.setEnabled(false);
@@ -212,6 +216,9 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void showFirstNamesBySexAction() {
         try {

@@ -19,7 +19,8 @@ public class ValidateMethodCall implements PrivilegedExceptionAction {
    *    -> authorizes the call of a certain method
    *  authrmi.permissions.ServerPermission "*"
    *    -> authorizes the call of all methods
-   */
+    * @param methodName 
+    */
     
     public ValidateMethodCall(String methodName)  {
        priveledgedMethodName = methodName;

@@ -194,7 +194,10 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 // TODO add your handling code here:
 }//GEN-LAST:event_browseButtonActionPerformed
 
-    @Action
+/**
+ * 
+ */
+@Action
     public void browseAction() {
         int returnVal = chooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -207,6 +210,9 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void previewAction() {
         // show the contents of the file
@@ -238,6 +244,10 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     @Action
     public Task importAction() {
         this.dispose();

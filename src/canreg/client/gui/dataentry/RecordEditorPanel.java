@@ -59,10 +59,18 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         this.actionListener = listener;
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isSaveNeeded() {
         return saveNeeded;
     }
 
+    /**
+     * 
+     * @param saveNeeded
+     */
     public void setSaveNeeded(boolean saveNeeded) {
         this.saveNeeded = saveNeeded;
     }
@@ -79,14 +87,26 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
     }
 
+    /**
+     * 
+     * @param doc
+     */
     public void setDocument(Document doc) {
         this.doc = doc;
     }
 
+    /**
+     * 
+     * @param dictionary
+     */
     public void setDictionary(Map<Integer, Dictionary> dictionary) {
         this.dictionary = dictionary;
     }
 
+    /**
+     * 
+     * @param dbr
+     */
     public void setRecord(DatabaseRecord dbr) {
         this.databaseRecord = dbr;
         if (databaseRecord.getClass().isInstance(new Patient())) {
@@ -97,6 +117,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         buildPanel();
     }
 
+    /**
+     * 
+     * @return
+     */
     public DatabaseRecord getRecord() {
         buildDatabaseRecord();
         return databaseRecord;
@@ -323,6 +347,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         return clone();
     }
 
+    /**
+     * 
+     */
     @Action
     public void saveRecord() {
         try {
@@ -350,6 +377,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void runPersonSearch() {
         try {
@@ -372,6 +402,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void runChecksAction() {
         actionListener.actionPerformed(new ActionEvent(this, 0, "checks"));

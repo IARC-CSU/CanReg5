@@ -112,6 +112,10 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     * @return
+     */
     @Action
     public Task performBackupAction() {
         return new PerformBackupActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
@@ -145,6 +149,9 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     // This only works in Windows so far...
     public void openFolderAction() {

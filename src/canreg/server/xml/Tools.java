@@ -22,6 +22,12 @@ import org.w3c.dom.NodeList;
 public class Tools {
 
     // This only works for unique XML 
+    /**
+     * 
+     * @param trail
+     * @param doc
+     * @return
+     */
     public static String getTextContent(String[] trail, Document doc){
         if (trail.length<1) return null;
         
@@ -34,6 +40,10 @@ public class Tools {
         return nl.getTextContent();
     }
 
+    /**
+     * 
+     * @param doc
+     */
     public static void flushXMLout(Document doc) {
         NodeList list = doc.getElementsByTagName("*");
         System.out.println("XML Elements: ");
@@ -44,6 +54,11 @@ public class Tools {
         }
     }
 
+    /**
+     * 
+     * @param doc
+     * @param filename
+     */
     public static void writeXmlFile(Document doc, String filename) {
         try {
             // Prepare the DOM document for writing

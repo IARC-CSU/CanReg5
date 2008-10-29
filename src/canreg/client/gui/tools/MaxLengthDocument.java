@@ -25,6 +25,7 @@ public class MaxLengthDocument extends PlainDocument {
      * @param maxLength
      * the maximum number of characters that can be entered in the
      * field
+     * @param actionListener 
      */
     public MaxLengthDocument(final int maxLength, ActionListener actionListener) {
         super();
@@ -32,6 +33,10 @@ public class MaxLengthDocument extends PlainDocument {
         this.actionListener = actionListener;
     }
 
+    /**
+     * 
+     * @param maxLength
+     */
     public MaxLengthDocument(final int maxLength) {
         super();
         this.maxLength = maxLength;

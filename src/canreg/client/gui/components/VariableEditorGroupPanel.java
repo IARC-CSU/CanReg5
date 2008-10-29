@@ -32,6 +32,10 @@ public class VariableEditorGroupPanel extends javax.swing.JPanel {
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     * @param name
+     */
     public void setGroupName(String name){
         this.name = name;
         setBorder(javax.swing.BorderFactory.createTitledBorder(this.name));

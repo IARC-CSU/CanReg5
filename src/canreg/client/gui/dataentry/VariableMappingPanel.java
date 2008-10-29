@@ -77,11 +77,19 @@ public class VariableMappingPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
   
+    /**
+     * 
+     * @return
+     */
     public int getDBVariableIndex() {
         DatabaseVariablesListElement dbVLE = (DatabaseVariablesListElement) dbVariableComboBox.getSelectedItem();
         return dbVLE.getDatabaseTableVariableID();
     }
     
+    /**
+     * 
+     * @return
+     */
     public DatabaseVariablesListElement getSelectedDBVariableObject(){
         Object[] dbve = dbVariableComboBox.getSelectedObjects();
         if (dbve.length>0)
@@ -94,10 +102,18 @@ public class VariableMappingPanel extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * 
+     * @param dbVLE
+     */
     public void setSelectedDBVariableObject(DatabaseVariablesListElement dbVLE){
         dbVariableComboBox.setSelectedItem(dbVLE);
     }
     
+    /**
+     * 
+     * @param i
+     */
     public void setSelectedDBIndex(int i){
         boolean found = false;
         int j = 0;
@@ -117,15 +133,26 @@ public class VariableMappingPanel extends javax.swing.JPanel {
         }
     }
     
+    /**
+     * 
+     * @param variable
+     */
     public void setFileVariableName(String variable){
         fileVariable = variable;
         fileVariableLabel.setText(variable);
     }
     
+    /**
+     * 
+     * @return
+     */
     public String getFileVariableName(){
         return fileVariableLabel.getText();
     }
 
+    /**
+     * 
+     */
     @Action
     public void changeComboBoxAction() {
         DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) dbVariableComboBox.getSelectedItem();

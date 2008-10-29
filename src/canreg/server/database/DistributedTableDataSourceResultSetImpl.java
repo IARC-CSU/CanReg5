@@ -26,6 +26,12 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
     String[] columnNames;
     Class[] columnClasses;
 
+    /**
+     * 
+     * @param resultSet
+     * @throws java.sql.SQLException
+     * @throws java.lang.Exception
+     */
     public DistributedTableDataSourceResultSetImpl(ResultSet resultSet) throws SQLException, Exception {
         super();
         this.resultSet = resultSet;
@@ -45,6 +51,13 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         distributedTableDescription = new DistributedTableDescription(columnNames, columnClasses, rowCount);
     }
 
+    /**
+     * 
+     * @param rowCount
+     * @param resultSet
+     * @throws java.sql.SQLException
+     * @throws java.lang.Exception
+     */
     public DistributedTableDataSourceResultSetImpl(int rowCount, ResultSet resultSet) throws SQLException, Exception {
         super();
         this.resultSet = resultSet;

@@ -24,10 +24,18 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         initComponents();
     }
     
+    /**
+     * 
+     * @param variables
+     */
     public void setDatabaseVariables(DatabaseVariablesListElement[] variables){
         variablesComboBox.setModel(new javax.swing.DefaultComboBoxModel(variables));
     }
     
+    /**
+     * 
+     * @param variable
+     */
     public void setSelectedVariable(DatabaseVariablesListElement variable){
         variablesComboBox.setSelectedItem(variable);
     }
@@ -51,6 +59,10 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         return (DatabaseVariablesListElement) variablesComboBox.getSelectedItem();
     }
     
+    /**
+     * 
+     * @param weight
+     */
     public void setWeigth(int weight){
         weightTextField.setText(weight+"");
     }
@@ -65,10 +77,18 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         return weight;
     }
     
+    /**
+     * 
+     * @param listener
+     */
     public void setActionListener(ActionListener listener){
         this.listener = listener;
     }
 
+    /**
+     * 
+     * @return
+     */
     public PersonSearchVariable getPersonSearchVariable() {
         PersonSearchVariable psv = new PersonSearchVariable();
         psv.setName(getSelectedVariable().getShortName());
@@ -141,6 +161,9 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     */
     @Action
     public void removeVariableAction() {
         listener.actionPerformed(new ActionEvent(this,0,"remove"));

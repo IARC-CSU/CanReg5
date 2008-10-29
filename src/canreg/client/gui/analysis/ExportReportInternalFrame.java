@@ -64,6 +64,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         initValues();
     }
 
+    /**
+     * 
+     * @param dtp
+     */
     public void setDeskTopPane(JDesktopPane dtp) {
         this.dtp = dtp;
     }
@@ -313,6 +317,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private javax.swing.JLabel variableNamesLabel;
     private javax.swing.JButton writeFileButton;
     // End of variables declaration//GEN-END:variables
+    /**
+     * 
+     * @return
+     */
     public JDesktopPane getDtp() {
         return dtp;
     }
@@ -362,6 +370,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     @Action
     public Task refresh() {
         // navigationPanel.goToTopAction();
@@ -462,6 +474,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     @Action
     public Task writeFileAction() {
         // Get filename

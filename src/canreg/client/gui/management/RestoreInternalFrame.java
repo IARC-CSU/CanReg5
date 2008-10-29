@@ -106,6 +106,9 @@ public class RestoreInternalFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     */
     @Action
     public void browseAction() {
 //                FileNameExtensionFilter filter = new FileNameExtensionFilter("XML file", "xml");
@@ -126,11 +129,18 @@ public class RestoreInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void cancelAction() {
         this.dispose();
     }
 
+    /**
+     * 
+     * @return
+     */
     @Action
     public Task okAction() {
         if (folderNameTextField.getText().trim().length()==0){

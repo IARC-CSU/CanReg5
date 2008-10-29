@@ -21,6 +21,9 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
     
     /**
      * Creates a new instance of PopulationDatasetsEntry
+     * @param ageGroup 
+     * @param sex
+     * @param count 
      */
     
     public PopulationDatasetsEntry(int ageGroup, int sex, int count) {
@@ -35,34 +38,66 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
         return "PopulationDatasetEntry: "+ageGroup+ " "+sex+" "+count;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getAgeGroup() {
         return ageGroup;
     }
 
+    /**
+     * 
+     * @param ageGroup
+     */
     public void setAgeGroup(int ageGroup) {
         this.ageGroup = ageGroup;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getCount() {
         return count;
     }
 
+    /**
+     * 
+     * @param count
+     */
     public void setCount(int count) {
         this.count = count;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getPopulationDatasetID() {
         return populationDatasetID;
     }
 
+    /**
+     * 
+     * @param populationDatasetID
+     */
     public void setPopulationDatasetID(int populationDatasetID) {
         this.populationDatasetID = populationDatasetID;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getSex() {
         return sex;
     }
 
+    /**
+     * 
+     * @param sex
+     */
     public void setSex(int sex) {
         this.sex = sex;
     }

@@ -38,7 +38,10 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
     private JTextField dateTextField;
     private PopulationDataset[] worldPopulations;
 
-    /** Creates new form PDSEditorInternalFrame */
+    /** Creates new form PDSEditorInternalFrame
+     * @param dtp
+     * @param worldPopulations 
+     */
     public PDSEditorInternalFrame(JDesktopPane dtp, PopulationDataset[] worldPopulations) {
         this.dtp = dtp;
         this.worldPopulations = worldPopulations;
@@ -46,6 +49,10 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
         initValues();
     }
 
+    /**
+     * 
+     * @param pds
+     */
     public void setPopulationDataset(PopulationDataset pds) {
         this.pds = pds;
         if (pds != null) {
@@ -427,7 +434,10 @@ private void ageGroupStructureChanged(java.awt.event.ActionEvent evt) {//GEN-FIR
     refreshPopulationDataSetTable();
 }//GEN-LAST:event_ageGroupStructureChanged
 
-    @Action
+/**
+ * 
+ */
+@Action
     public void filterWizardAction() {
 
         if (filterWizardInternalFrame.getParent() == null) {
@@ -448,6 +458,9 @@ private void ageGroupStructureChanged(java.awt.event.ActionEvent evt) {//GEN-FIR
         }
     }
     
+    /**
+     * 
+     */
     public void initValues() {
         // Get the system description
         doc = CanRegClientApp.getApplication().getDatabseDescription();
@@ -472,6 +485,9 @@ private void ageGroupStructureChanged(java.awt.event.ActionEvent evt) {//GEN-FIR
         }
     }
 
+    /**
+     * 
+     */
     @Action
     public void saveAction() {
         lockedToggleButton.setSelected(true);
@@ -525,6 +541,9 @@ private void ageGroupStructureChanged(java.awt.event.ActionEvent evt) {//GEN-FIR
         }
     }
     
+    /**
+     * 
+     */
     @Action
     public void editWorldPopulation() {
         PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulations);
@@ -532,16 +551,25 @@ private void ageGroupStructureChanged(java.awt.event.ActionEvent evt) {//GEN-FIR
         CanRegClientView.showAndCenterInternalFrame(dtp, populationDatasetEditorInternalFrame);
     }
 
+    /**
+     * 
+     */
     @Action
     public void lockedAction() {
         lockTheFields();
     }
 
+    /**
+     * 
+     */
     @Action
     public void cancelAction() {
         this.dispose();
     }
 
+    /**
+     * 
+     */
     @Action
     public void otherAction() {
         

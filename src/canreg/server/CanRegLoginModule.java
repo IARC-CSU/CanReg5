@@ -74,7 +74,6 @@ public class CanRegLoginModule implements LoginModule {
      * authentication succeeds - otherwise not.&ltp>
      *
      * @return true in all cases since this LoginModule should not be ignored.
-     * @exception FailedLoginException if authentication fails. &ltp>
      * @exception LoginException if this LoginModule is unable to perform the authentication.
      */
     public boolean login() throws LoginException {

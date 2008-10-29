@@ -11,6 +11,13 @@ import java.sql.SQLException;
  */
 public class Backup {
 
+    /**
+     * 
+     * @param conn
+     * @param backupdirectory
+     * @return
+     * @throws java.sql.SQLException
+     */
     public static String backUpDatabase(Connection conn, String backupdirectory) throws SQLException {
 // Get today's date as a string:
         java.text.SimpleDateFormat todaysDate =

@@ -40,7 +40,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private boolean changesDone = false;
     private JDesktopPane desktopPane;
 
-    /** Creates new form RecordEditor */
+    /** Creates new form RecordEditor
+     * @param desktopPane 
+     */
     public RecordEditor(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
 
@@ -65,21 +67,39 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         });
     }
 
+    /**
+     * 
+     * @param doc
+     */
     public void setDocument(Document doc) {
         this.doc = doc;
     }
 
+    /**
+     * 
+     */
     public void closing() {
     }
 
+    /**
+     * 
+     */
     public void close() {
         this.dispose();
     }
 
+    /**
+     * 
+     * @param dictionary
+     */
     public void setDictionary(Map<Integer, Dictionary> dictionary) {
         this.dictionary = dictionary;
     }
 
+    /**
+     * 
+     * @param dbr
+     */
     public void addRecord(DatabaseRecord dbr) {
         RecordEditorPanel rePanel = new RecordEditorPanel();
         rePanel.setActionListener(this);
@@ -207,13 +227,19 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 // TODO add your handling code here:
 }//GEN-LAST:event_jButton1ActionPerformed
 
-    @Action
+/**
+ * 
+ */
+@Action
     public void addTumourAction() {
         Tumour tumour = new Tumour();
         populateNewRecord(tumour, doc);
         addRecord(tumour);
     }
 
+    /**
+     * 
+     */
     @Action
     public void addPatientAction() {
         Patient patient = new Patient();
@@ -240,11 +266,17 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         return dbr;
     }
 
+    /**
+     * 
+     */
     @Action
     public void saveAllAction() {
         
     }
 
+    /**
+     * 
+     */
     @Action
     public void printAction() {
         PrintUtilities.printComponent(patientTabbedPane.getSelectedComponent());

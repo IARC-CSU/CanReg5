@@ -28,6 +28,10 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     
     Map <String,DatabaseVariablesListElement> variablesInDBMap;
 
+    /**
+     * 
+     * @param variablesInDB
+     */
     public DefaultPersonSearch(DatabaseVariablesListElement[] variablesInDB) {
         variablesInDBMap = new LinkedHashMap<String,DatabaseVariablesListElement>();
         for (DatabaseVariablesListElement dbvle:variablesInDB){
@@ -35,6 +39,10 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public PersonSearchVariable[] getPersonSearchVariables() {
         PersonSearchVariable[] psvs = new PersonSearchVariable[variableNames.length];
         for (int i = 0; i< variableNames.length; i++){
@@ -45,6 +53,10 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         return psvs;
     }
 
+    /**
+     * 
+     * @param personSearchVariables
+     */
     public void setSearchVariables(PersonSearchVariable[] personSearchVariables) {
         int i = 0;
         String[] tempVariableNames = new String[personSearchVariables.length];
@@ -57,6 +69,11 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         setWeights(tempVariableNames, tempVariableWeights);
     }
  
+    /**
+     * 
+     * @param variableNames
+     * @param variableWeigths
+     */
     public void setWeights(String[] variableNames, float[] variableWeigths) {
         this.variableNames = variableNames;
         this.variableWeights = variableWeigths;
@@ -89,6 +106,12 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         }
     }
 
+    /**
+     * 
+     * @param patient1
+     * @param patient2
+     * @return
+     */
     public synchronized float compare(Patient patient1, Patient patient2) {
         if (variableNames==null){
             throw (new NullPointerException());
@@ -407,10 +430,18 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         return Score;
     }
 
+    /**
+     * 
+     * @return
+     */
     public float getThreshold() {
         return threshold;
     }
     
+    /**
+     * 
+     * @param threshold
+     */
     public void setThreshold(float threshold){
         this.threshold = threshold;
     }

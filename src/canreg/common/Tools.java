@@ -14,6 +14,12 @@ import java.util.Date;
  */
 public class Tools {
 
+    /**
+     * 
+     * @param objects
+     * @param object
+     * @return
+     */
     public static int findInArray(Object[] objects, Object object) {
         int position = 0;
         boolean found = false;
@@ -28,6 +34,12 @@ public class Tools {
         return position;
     }
 
+    /**
+     * 
+     * @param separatingCharacter
+     * @param line
+     * @return
+     */
     public static String[] breakDownLine(char separatingCharacter, String line) {
         LinkedList<String> elements = new LinkedList();
         int pointer = 0;
@@ -62,6 +74,12 @@ public class Tools {
         return elementArray;
     }
 
+    /**
+     * 
+     * @param doc
+     * @param namespace
+     * @return
+     */
     public static PersonSearchVariable[] getPersonSearchVariables(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "search_variable");
         PersonSearchVariable[] variables = new PersonSearchVariable[nl.getLength()];
@@ -74,12 +92,24 @@ public class Tools {
         return variables;
     }
     
+    /**
+     * 
+     * @param doc
+     * @param namespace
+     * @return
+     */
     public static float getPersonSearchMinimumMatch(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "search_variables");
         Element e = (Element) nl.item(0);
         return Integer.parseInt(e.getElementsByTagName(namespace + "minimum_match").item(0).getTextContent());
     }
     
+    /**
+     * 
+     * @param doc
+     * @param namespace
+     * @return
+     */
     public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
         DatabaseVariablesListElement[] variables = new DatabaseVariablesListElement[nl.getLength()];
@@ -146,6 +176,13 @@ public class Tools {
         return variables;
     }
 
+    /**
+     * 
+     * @param doc
+     * @param namespace
+     * @param tableName
+     * @return
+     */
     public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace, String tableName) {
         DatabaseVariablesListElement[] variablesInTable = getVariableListElements(doc, namespace);
         LinkedList<DatabaseVariablesListElement> tempVariablesInTable = new LinkedList<DatabaseVariablesListElement>();
@@ -163,6 +200,12 @@ public class Tools {
         return variablesInTable;
     }
 
+    /**
+     * 
+     * @param doc
+     * @param namespace
+     * @return
+     */
     public static DatabaseIndexesListElement[] getIndexesListElements(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "index");
         DatabaseIndexesListElement[] indexes = new DatabaseIndexesListElement[nl.getLength()];
@@ -174,6 +217,12 @@ public class Tools {
         return indexes;
     }
 
+    /**
+     * 
+     * @param doc
+     * @param namespace
+     * @return
+     */
     public static DatabaseDictionaryListElement[] getDictionaryListElements(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "dictionary");
         DatabaseDictionaryListElement[] dictionaries = new DatabaseDictionaryListElement[nl.getLength()];
@@ -195,7 +244,13 @@ public class Tools {
         return dictionaries;
     }
 
-        public static DatabaseGroupsListElement[] getGroupsListElements(Document doc, String namespace) {
+    /**
+     * 
+     * @param doc
+     * @param namespace
+     * @return
+     */
+    public static DatabaseGroupsListElement[] getGroupsListElements(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "group");
         DatabaseGroupsListElement[] indexes = new DatabaseGroupsListElement[nl.getLength()];
         for (int i = 0; i < nl.getLength(); i++) {
@@ -208,7 +263,13 @@ public class Tools {
         return indexes;
     }
     
-    public static String[] getVariableNames(Document doc, String namespace) {
+        /**
+         * 
+         * @param doc
+         * @param namespace
+         * @return
+         */
+        public static String[] getVariableNames(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
         String[] variableNames = new String[nl.getLength()];
         for (int i = 0; i <
@@ -220,7 +281,12 @@ public class Tools {
         return variableNames;
     }
 
-    public static String getFileFromURL(URL url){
+        /**
+         * 
+         * @param url
+         * @return
+         */
+        public static String getFileFromURL(URL url){
         StringBuffer contents = new StringBuffer();
 
         try {
@@ -249,7 +315,12 @@ public class Tools {
         return contents.toString();
     }
     
-    public static String getFileFromURL(String urlString) {
+        /**
+         * 
+         * @param urlString
+         * @return
+         */
+        public static String getFileFromURL(String urlString) {
         String contents = new String();
         URL url = null; 
         try {
@@ -262,6 +333,12 @@ public class Tools {
         return contents;
     }
 
+    /**
+     * 
+     * @param url
+     * @return
+     * @throws java.io.IOException
+     */
     public static File getTempFileFromURL(URL url) throws IOException {
         File file = null;
         Writer output = null;
@@ -276,6 +353,12 @@ public class Tools {
         return file;
     }
     
+    /**
+     * 
+     * @param urlString
+     * @return
+     * @throws java.io.IOException
+     */
     public static File getTempFileFromURL(String urlString) throws IOException {
         File file = null;
         Writer output = null;
@@ -290,6 +373,12 @@ public class Tools {
         return file;
     }
 
+    /**
+     * 
+     * @param from
+     * @param to
+     * @throws java.io.IOException
+     */
     public static void fileCopy(String from, String to) throws IOException {
         File inputFile = new File(from);
         File outputFile = new File(to);
@@ -305,6 +394,12 @@ public class Tools {
         out.close();
     }
 
+    /**
+     * 
+     * @param file
+     * @return
+     * @throws java.io.IOException
+     */
     public static int numberOfLinesInFile(String file) throws IOException {
         //returns the number of lines in a file
         //author : Ravindra S
@@ -324,6 +419,9 @@ public class Tools {
         return countRec;
     }
 
+    /**
+     * 
+     */
     public static void testEnvironment() {
         java.util.Properties prop = System.getProperties();
         java.util.Enumeration enumerator = prop.propertyNames();

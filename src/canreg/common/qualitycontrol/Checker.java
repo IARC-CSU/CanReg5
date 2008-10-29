@@ -20,21 +20,58 @@ public class Checker {
     private GlobalToolBox toolBox;
     private LinkedList<DatabaseVariablesListElement> standardVariables;
 
+    /**
+     * 
+     */
     public static enum CheckNames {
+        /**
+         * 
+         */
         Grade,
+        /**
+         * 
+         */
         Basis,
+        /**
+         * 
+         */
         AgeTopography,
+        /**
+         * 
+         */
         AgeHistology,
+        /**
+         * 
+         */
         AgeTopographyHistology,
+        /**
+         * 
+         */
         TopographyBehaviour,
+        /**
+         * 
+         */
         SexTopography,
+        /**
+         * 
+         */
         SexMorphology,
+        /**
+         * 
+         */
         Morphology,
+        /**
+         * 
+         */
         Topography
     }
     
     LinkedList<CheckInterface> checks;
 
+    /**
+     * 
+     * @param toolBox
+     */
     public Checker(GlobalToolBox toolBox) {
         this.toolBox = toolBox;
         standardVariables = toolBox.getStandardVariables();
@@ -90,6 +127,12 @@ public class Checker {
         }
     }
 
+    /**
+     * 
+     * @param patient
+     * @param tumour
+     * @return
+     */
     public synchronized LinkedList<CheckResult> performChecks(Patient patient, Tumour tumour) {
         LinkedList<CheckResult> results = new LinkedList<CheckResult>();
 

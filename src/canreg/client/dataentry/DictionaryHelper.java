@@ -27,6 +27,11 @@ import org.w3c.dom.NodeList;
  */
 public class DictionaryHelper {
        
+    /**
+     * 
+     * @param dictionary
+     * @return
+     */
     public static Map<String, DictionaryEntry> buildDictionaryEntriesFromMap(Map<String, String> dictionary) {
         Map<String, DictionaryEntry> dictionaryEntries = new LinkedHashMap <String, DictionaryEntry> ();
         Iterator <String> iterator = dictionary.keySet().iterator();
@@ -39,6 +44,12 @@ public class DictionaryHelper {
         return dictionaryEntries;
     }
     
+    /**
+     * 
+     * @param doc
+     * @param name
+     * @return
+     */
     public static int getDictionaryIDbyName(Document doc, String name){
         int id = -1;
         
@@ -62,10 +73,25 @@ public class DictionaryHelper {
         return id;
     }
     
+    /**
+     * 
+     * @param dictionaryID
+     * @param app
+     * @return
+     * @throws java.rmi.RemoteException
+     */
     public static boolean clearDictionary(int dictionaryID, CanRegClientApp app) throws RemoteException {
         return app.deleteDictionaryEntries(dictionaryID);
     }
 
+    /**
+     * 
+     * @param dictionaryEntry
+     * @param server
+     * @return
+     * @throws java.lang.SecurityException
+     * @throws java.rmi.RemoteException
+     */
     public static int saveDictionaryEntry(DictionaryEntry dictionaryEntry, CanRegServerInterface server) throws SecurityException, RemoteException {
         return server.saveDictionaryEntry(dictionaryEntry);
     }
@@ -84,6 +110,12 @@ public class DictionaryHelper {
         return dictionaryEntries;
     }
     
+    /**
+     * 
+     * @param dictionary
+     * @param str
+     * @return
+     */
     public static Map<Integer, String> testDictionary(DatabaseDictionaryListElement dictionary, String str){
         return testDictionary(dictionary, parseDictionaryText(dictionary.getDictionaryID(), str));
     }
@@ -114,6 +146,13 @@ public class DictionaryHelper {
         return errors;
     }
 
+    /**
+     * 
+     * @param dictionaryID
+     * @param str
+     * @param app
+     * @throws java.rmi.RemoteException
+     */
     public static void replaceDictionary(int dictionaryID, String str, CanRegClientApp app) throws RemoteException {
         Vector<DictionaryEntry> dictionaryEntries = parseDictionaryText(dictionaryID, str);
         Map<String, String> dictionaryEntriesMap = new LinkedHashMap<String, String>();
