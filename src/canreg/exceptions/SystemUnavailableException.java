@@ -2,7 +2,7 @@ package canreg.exceptions;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class  SystemUnavailableException extends Exception {
     

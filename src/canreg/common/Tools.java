@@ -10,7 +10,7 @@ import java.util.Date;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class Tools {
 

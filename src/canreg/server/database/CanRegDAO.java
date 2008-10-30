@@ -6,7 +6,7 @@ package canreg.server.database;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 /*
  * CanRegDAO.java
@@ -46,7 +46,7 @@ import org.w3c.dom.*;
 
 /**
  *
- * @author morten (based on code by John O'Conner)
+ * @author ervikm (based on code by John O'Conner)
  */
 public class CanRegDAO {
 

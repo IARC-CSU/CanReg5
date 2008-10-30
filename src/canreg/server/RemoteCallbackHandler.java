@@ -7,7 +7,7 @@ import javax.security.auth.callback.PasswordCallback;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 class RemoteCallbackHandler implements CallbackHandler {
 	private String username;

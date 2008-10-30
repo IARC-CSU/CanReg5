@@ -9,7 +9,7 @@ import javax.security.auth.login.LoginException;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class CanRegLoginImpl extends UnicastRemoteObject
         implements CanRegLoginInterface {

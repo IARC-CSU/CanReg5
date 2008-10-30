@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class SystemDefinitionConverter {
 

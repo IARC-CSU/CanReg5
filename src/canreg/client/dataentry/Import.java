@@ -22,7 +22,7 @@ import org.w3c.dom.NodeList;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class Import {
 

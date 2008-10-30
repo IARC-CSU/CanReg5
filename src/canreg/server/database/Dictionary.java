@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class Dictionary implements Serializable {
 

@@ -7,7 +7,7 @@ package canreg.server.database;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class Relation {
     // Table in the database for the variable

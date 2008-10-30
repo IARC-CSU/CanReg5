@@ -5,7 +5,7 @@ import java.security.AccessController;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class ValidateMethodCall implements PrivilegedExceptionAction {
     private String priveledgedMethodName;

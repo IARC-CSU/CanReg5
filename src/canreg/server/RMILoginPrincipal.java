@@ -2,7 +2,7 @@ package canreg.server;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 /** Class used for representing an authenticated user in the system. */
 public class RMILoginPrincipal

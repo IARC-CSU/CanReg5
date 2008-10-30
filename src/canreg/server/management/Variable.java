@@ -2,7 +2,7 @@ package canreg.server.management;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class Variable {
     String fullName;

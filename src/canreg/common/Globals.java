@@ -7,7 +7,7 @@ import java.util.Properties;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class Globals {
 

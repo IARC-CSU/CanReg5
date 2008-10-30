@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 /**
  * Starts the CanRegLogin Service.
- * @author Morten Ervik
+ * @author ervikm Ervik
  */
 public class ServerLauncher {
 

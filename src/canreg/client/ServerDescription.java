@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package canreg.client;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class ServerDescription {
 
@@ -19,10 +15,10 @@ public class ServerDescription {
 
     /**
      * 
-     * @param name
-     * @param url
-     * @param port
-     * @param code
+     * @param name The name of the CanReg system on the server (i.e. Training Cancer Registry)
+     * @param url The URL of the server (i.e. localhost)
+     * @param port The port of the server (i.e. 1199)
+     * @param code The code of the CanReg system on the server (i.e. TRN)
      * @param id
      */
     public ServerDescription(String name, String url, int port, String code, int id) {

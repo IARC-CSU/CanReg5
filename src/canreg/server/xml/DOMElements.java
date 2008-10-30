@@ -2,7 +2,7 @@ package canreg.server.xml;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 import java.io.*;
 import javax.xml.parsers.*;

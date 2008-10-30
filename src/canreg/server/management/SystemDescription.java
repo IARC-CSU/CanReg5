@@ -13,7 +13,7 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class SystemDescription {
 

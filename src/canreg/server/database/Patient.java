@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class Patient extends DatabaseRecord implements Serializable {
     

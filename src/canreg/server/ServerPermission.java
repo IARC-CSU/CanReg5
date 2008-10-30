@@ -2,7 +2,7 @@ package canreg.server;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class ServerPermission extends java.security.BasicPermission {
 

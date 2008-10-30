@@ -82,8 +82,8 @@ public class CanRegClientApp extends SingleFrameApplication {
     private String canRegSystemVersionString;
 
     /**
-     * 
-     * @param pds
+     * Save a new population dataset on the server
+     * @param pds Population Data Set to save
      * @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
@@ -176,7 +176,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     * Initialize the application
      */
     public static void init() {
         //Testing the environment - disabled
@@ -193,9 +193,9 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
-     * @param serverObjectString
-     * @return
+     * Test the connection to a server
+     * @param serverObjectString The address to a server
+     * @return name of the system, null if not able to connect
      */
     public String testConnection(String serverObjectString) {
         debugOut("testing the connecting to server=" + serverObjectString + ".");
@@ -214,14 +214,13 @@ public class CanRegClientApp extends SingleFrameApplication {
         return sysName;
     }
 
-    //  Log on to the CanReg system and set up the server connection.
-    //  Returns CanReg System's name if successfull - null if not
     /**
-     * 
-     * @param serverObjectString
-     * @param username
-     * @param password
-     * @return
+     * Log on to the CanReg system and set up the server connection.
+     *
+     * @param serverObjectString The address to a server
+     * @param username The username of the user
+     * @param password The password of the user
+     * @return CanReg System's name if successfull - null if not
      * @throws javax.security.auth.login.LoginException
      * @throws java.lang.NullPointerException
      * @throws java.rmi.NotBoundException
@@ -273,8 +272,8 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
-     * @return
+     * Get list of users logged in to the CanReg server
+     * @return List of users logged in
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -283,9 +282,9 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * Simple console trace to system.out for debug purposes only.&Ltp>
+     * Simple console trace to system.out for debug purposes only.
      *
-     * @param msg the message to be printed to the console
+     * @param message the message to be printed to the console
      */
     private static void debugOut(String msg) {
         if (debug) {
@@ -294,7 +293,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     * Start the database server
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -303,7 +302,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     * Stop the database server
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */

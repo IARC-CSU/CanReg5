@@ -4,20 +4,20 @@ import javax.security.auth.login.LoginException;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public interface CanRegLoginInterface extends java.rmi.Remote{
 
     /**
-     * 
-     * @return
+     * Returns the name of the CanReg system running on the server
+     * @return The name
      * @throws java.rmi.RemoteException
      */
     public String getSystemName() throws java.rmi.RemoteException ;
 
     /**
-     * 
-     * @return
+     * Returns the version of CanReg running on the server
+     * @return The version number
      * @throws java.rmi.RemoteException
      */
     public String getSystemVersion()throws java.rmi.RemoteException ;

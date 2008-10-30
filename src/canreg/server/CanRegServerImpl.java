@@ -38,7 +38,7 @@ import org.w3c.dom.Document;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServerInterface {
 

@@ -7,7 +7,7 @@ package canreg.server.database;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class Tools {
     

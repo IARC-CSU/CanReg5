@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 /**
  *
- * @author morten
+ * @author ervikm
  */
 public class DatabaseRecord implements Serializable {
     private HashMap<String, Object> variables;
