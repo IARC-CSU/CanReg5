@@ -324,13 +324,14 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                             Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                    // Read next line
+                    // Read next line 
                     line = br.readLine();
                     // Skip trailing blank lines
                     while (line != null && line.trim().length() == 0) {
                         line = br.readLine();
                     }
                 }
+                
             } catch (FileNotFoundException fileNotFoundException) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not preview file: \'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, fileNotFoundException);
