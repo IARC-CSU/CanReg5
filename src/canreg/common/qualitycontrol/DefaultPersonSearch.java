@@ -7,10 +7,11 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-
 /**
- *
+ * The default person search module
  * @author ervikm
+ * based on code from DEPedits by Andy Cooke 2008
+ * 
  */
 public class DefaultPersonSearch implements PersonSearcher, Serializable {
 
@@ -83,8 +84,8 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         presence = new float[variableNames.length];
         
         // Temporarily we set all variables to 1.
-        // TODO
-        // Find a way to calculate this efficiently...
+
+        // TODO Find a way to calculate weights of variables in person search efficiently...
         
         for (int i = 0; i<variableNames.length; i++){
             discPower[i]=1;

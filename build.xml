@@ -78,7 +78,7 @@
     <entry key="program.DESCRIPTION" default="" />
     <entry key="program.VERSION" default="4.99.0" />
     <entry key="program.BUILDNUM" value="${build.number}" />
-    <entry key="program.BUILDDATE" type="date" value="now" pattern="yyyyMMDDHHmmss" />
+    <entry key="program.BUILDDATE" type="date" value="now" pattern="yyyyMMddHHmmss" />
     </propertyfile>
     <copy file="appinfo.properties" todir="${build.classes.dir}"/>
 </target>

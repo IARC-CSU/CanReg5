@@ -19,7 +19,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="toolBar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="707" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="701" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -396,9 +396,6 @@
                     <Property name="text" type="java.lang.String" resourceKey="startDBMenuItem.text"/>
                     <Property name="name" type="java.lang.String" value="startDBMenuItem" noResource="true"/>
                   </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem16ActionPerformed"/>
-                  </Events>
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="jMenuItem17">
                   <Properties>

@@ -266,13 +266,6 @@ public class Import {
 
     /**
      * 
-     */
-    public static void importDictionary() {
-        // TODO!
-    }
-
-    /**
-     * 
      * @param doc
      * @param lineElements
      * @return

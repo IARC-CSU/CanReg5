@@ -112,7 +112,12 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             patientTabbedPane.addTab(dbr.toString() + " - " + (patientTabbedPane.getTabCount() + 1), rePanel);
         } else if (dbr.getClass().isInstance(new Tumour())) {
             tumourRecords.add(dbr);
-            tumourTabbedPane.addTab(dbr.toString() + " - " + (tumourTabbedPane.getTabCount() + 1), rePanel);
+            Object regno = dbr.getVariable("RegNo");
+            String regnoString = "n/a";
+            if (regno != null) {
+                    regnoString = regno.toString();
+        }
+            tumourTabbedPane.addTab(dbr.toString() + " " + regnoString + " ", rePanel);
         }
     }
 

@@ -59,7 +59,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     public CanRegServerImpl(String systemCode) throws RemoteException {
         this.systemCode = systemCode;
-        
+
         appInfoProperties = new Properties();
         InputStream in = null;
         //
@@ -76,7 +76,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         } catch (IOException ex) {
             ex.printStackTrace();
         } // end-try-catch
-        
+
         // Step one load the system definition...
         if (!initSystemDefinition()) {
             throw new RemoteException("Faulty system definitions...");
@@ -344,7 +344,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     public String getCanRegVersion() throws RemoteException, SecurityException {
         String versionString = "";
-        for (String part:Globals.versionStringParts){
+        for (String part : Globals.versionStringParts) {
             versionString += appInfoProperties.getProperty(part);
         }
         return versionString;
@@ -621,7 +621,15 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         filter.setQueryType(DatabaseFilter.QueryType.PERSON_SEARCH);
         DistributedTableDescription dataDescription;
         String resultSetID;
-        int patientIDA = (Integer) patient.getVariable("ID");
+        Object patientIDAObject = patient.getVariable("ID");
+
+        int patientIDA;
+        if (patientIDAObject != null) {
+            patientIDA = (Integer) patientIDAObject;
+        } else {
+            patientIDA = -1;
+        }
+        
         try {
             dataDescription = db.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.PATIENT_TABLE_NAME);
             resultSetID = dataDescription.getResultSetID();
@@ -636,10 +644,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                     int patientIDB = (Integer) r[0];
                     if (patientIDB != patientIDA) {
                         patientB = (Patient) getPatient(patientIDB);
-                        float score = personSearcher.compare(patient, patientB);                        
+                        float score = personSearcher.compare(patient, patientB);
                         if (score > threshold) {
                             patientIDScoreMap.put(patientIDB, score);
-                            System.out.println("Found " + patientIDB + " " + score);
+                            System.out.println("Found patient id: " + patientIDB + ", score: " + score +"%");
                         } else {
                             // System.out.println("Not found " + patientIDB + " " + score);
                         }

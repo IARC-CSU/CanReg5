@@ -8,17 +8,19 @@ import java.util.Map;
  *
  * @author ervikm
  */
-public class CheckAgeHistology implements CheckInterface {
+public class CheckAgeTopographyMorphology implements CheckInterface {
 
     /**
      * 
      */
-    public Checker.CheckNames checkName = Checker.CheckNames.AgeHistology;
+    public Checker.CheckNames checkName = Checker.CheckNames.AgeTopographyMorphology;
+    
     /**
      * 
      */
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames[]{
         Globals.StandardVariableNames.Age,
+        Globals.StandardVariableNames.Topography,
         Globals.StandardVariableNames.Morphology,
     };
 
@@ -36,21 +38,23 @@ public class CheckAgeHistology implements CheckInterface {
      * @return
      */
     public CheckResult performCheck(Map<Globals.StandardVariableNames, Object> variables) {
-
+        
         CheckResult result = new CheckResult();
         result.setCheckName(checkName.toString());
 
         String ageCode = null;
-        int ageNumber = 0;
-        
+        String topographyCode = null;
         String morphologyCode = null;
-        int morphologyNumber = 0;
 
-        boolean ok = true;
+        int morphologyNumber = 0;
+        int ageNumber = 0;
+        int topographyNumber = 0;
 
         try {
             ageCode = variables.get(Globals.StandardVariableNames.Age).toString();
             ageNumber = Integer.parseInt(ageCode);
+            topographyCode = variables.get(Globals.StandardVariableNames.Topography).toString();
+            topographyNumber = Integer.parseInt(topographyCode);
             morphologyCode = variables.get(Globals.StandardVariableNames.Morphology).toString();
             morphologyNumber = Integer.parseInt(morphologyCode);
         } catch (NumberFormatException numberFormatException) {
@@ -62,29 +66,42 @@ public class CheckAgeHistology implements CheckInterface {
             result.setMessage("Missing variable(s) needed.");
             return result;
         }
-        if (ageNumber <= 25 &&
-                (morphologyNumber == 9730 || morphologyNumber == 9823 || morphologyNumber == 9890)) {
-            ok = false;
-        }
-        if (ageNumber <= 15 && morphologyNumber == 9863) {
-            ok = false;
-        }
-        if (ageNumber >= 15 &&
-                (morphologyNumber == 8910 || morphologyNumber == 8960 || morphologyNumber == 8961 ||
-                morphologyNumber == 8962 || morphologyNumber == 8970 || morphologyNumber == 8981 ||
-                morphologyNumber == 8991 || morphologyNumber == 9072 || morphologyNumber == 9470 ||
-                morphologyNumber == 9687 || morphologyNumber == 9750)) {
-            ok = false;
-        }
-        if (ok) {
-            result.setMessage("");
-            result.setResultCode(CheckResult.ResultCode.OK);
-            return result;
-        } else {
-            result.setMessage(ageCode + ", " + morphologyCode);
-            result.setResultCode(CheckResult.ResultCode.Rare);
-            return result;
-        }
+
+    	int topographyGroup = topographyNumber/10;
+    	boolean ok = true;
+
+    	if (ageNumber < 40 && topographyGroup==61 && (morphologyNumber/10)==814)
+    		ok = false;
+
+    	if (ageNumber < 20 && topographyGroup==17 && morphologyNumber < 9590)
+    		ok = false;
+
+    	if (ageNumber < 20
+    	 && (topographyGroup==33 || topographyGroup==34 || topographyGroup==18)
+    	 && (morphologyNumber/10 != 824))
+    		ok = false;
+
+    	if (ageNumber > 5 && (morphologyNumber==9510 || morphologyNumber==9512)
+    	 && (topographyGroup==69))
+    		ok = false;
+
+    	if ((ageNumber < 15 || ageNumber > 45) && topographyGroup==58 && morphologyNumber==9100)
+    		ok = false;
+
+    	if (ok)
+    	{
+    		result.setMessage("");
+                result.setResultCode(CheckResult.ResultCode.OK);
+                return result;
+    	}
+    	else
+    	{
+    		result.setMessage(ageCode+", "+topographyCode+", "+ morphologyCode);
+                result.setResultCode(CheckResult.ResultCode.Rare);
+                return result;
+    	}
+        
+
     }
 
     /**

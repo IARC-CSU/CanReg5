@@ -269,7 +269,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
      */
     @Action
     public void selectDictionaryAction() {
-        //TODO
+        //TODO select dictionary action
     }
 
     /**

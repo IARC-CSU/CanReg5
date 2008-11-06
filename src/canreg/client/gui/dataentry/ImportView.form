@@ -28,9 +28,10 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="tabbedPane" alignment="0" pref="640" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="backButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -38,7 +39,6 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="nextButton" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="tabbedPane" alignment="0" pref="639" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -48,7 +48,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="708" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="498" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -93,12 +93,12 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="fileNameTextField" pref="440" max="32767" attributes="0"/>
+                                      <Component id="fileNameTextField" pref="441" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="separatingCharacterComboBox" pref="355" max="32767" attributes="0"/>
+                                      <Component id="separatingCharacterComboBox" pref="356" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -176,23 +176,23 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="previewScrollPane" alignment="0" pref="598" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="numberOfRecordsLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="numberOfRecordsTextField" pref="468" max="32767" attributes="0"/>
+                          <Component id="numberOfRecordsTextField" pref="469" max="32767" attributes="0"/>
                       </Group>
+                      <Component id="previewScrollPane" alignment="0" pref="599" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="numberOfRecordsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="numberOfRecordsTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="18" max="32767" attributes="0"/>
-                          <Component id="previewScrollPane" min="-2" pref="527" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="previewScrollPane" pref="329" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -299,9 +299,9 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="variablesScrollPane" alignment="1" pref="614" max="32767" attributes="0"/>
+                          <Component id="variablesScrollPane" alignment="1" pref="615" max="32767" attributes="0"/>
                           <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jSplitPane1" alignment="0" pref="614" max="32767" attributes="0"/>
+                          <Component id="jSplitPane1" alignment="0" pref="615" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -315,7 +315,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jSplitPane1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variablesScrollPane" pref="630" max="32767" attributes="0"/>
+                      <Component id="variablesScrollPane" pref="420" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -409,8 +409,8 @@
                           <Component id="jPanel7" alignment="0" max="32767" attributes="0"/>
                           <Component id="maxLinesPanel" alignment="0" max="32767" attributes="0"/>
                           <Component id="discrepanciesPanel" alignment="1" max="32767" attributes="0"/>
-                          <Component id="importButton" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="importButton" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -418,7 +418,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="discrepanciesPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -427,9 +427,9 @@
                       <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="159" max="32767" attributes="0"/>
-                      <Component id="importButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="importButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="35" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -464,7 +464,7 @@
                               <Component id="updateRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="overwriteRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="519" max="32767" attributes="0"/>
+                          <EmptySpace pref="520" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -523,7 +523,7 @@
                               <Component id="queryNewNameCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="previousCanRegDataCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="395" max="32767" attributes="0"/>
+                          <EmptySpace pref="396" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -592,7 +592,7 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="maxLinesTextField" pref="578" max="32767" attributes="0"/>
+                              <Component id="maxLinesTextField" pref="579" max="32767" attributes="0"/>
                               <Component id="testOnlyCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -640,15 +640,12 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="progressBar" alignment="0" pref="598" max="32767" attributes="0"/>
+                      <Component id="progressBar" alignment="0" pref="599" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="progressBar" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="81" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>

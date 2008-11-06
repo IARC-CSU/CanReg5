@@ -38,7 +38,7 @@
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="resultPanel" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="rangeFilterPanel" pref="417" max="32767" attributes="0"/>
+                      <Component id="rangeFilterPanel" pref="412" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="navigationPanel" max="32767" attributes="1"/>
@@ -192,12 +192,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="868" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="863" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="515" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="351" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>

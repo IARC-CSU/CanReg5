@@ -235,6 +235,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             boolean theResult = result.equals("OK");
             resultScrollPane.setVisible(theResult);
             resultScrollPane.revalidate();
+            resultScrollPane.repaint();
             // resultPanel.setVisible(theResult);
             tableColumnModel = resultTable.getColumnModel();
         }

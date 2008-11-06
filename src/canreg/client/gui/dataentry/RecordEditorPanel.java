@@ -391,7 +391,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             } else {
                 String records = "";
                 for (Integer i : map.keySet()) {
-                    records += i + ": " + map.get(i) + "\n";
+                    // records += i + ": " + map.get(i) + "\n";
+                    records += "Patient id: " + i + ", score: " + map.get(i) +"%\n";
                 }
                 JOptionPane.showInternalMessageDialog(this, "Duplicates found:\n" + records);
             }

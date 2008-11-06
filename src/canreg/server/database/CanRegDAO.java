@@ -1,20 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package canreg.server.database;
 
 /**
  *
  * @author ervikm
  */
-/*
- * CanRegDAO.java
- *
- * Copyright 2006 Sun Microsystems, Inc. ALL RIGHTS RESERVED Use of 
- * this software is authorized pursuant to the terms of the license 
- * found at http://developers.sun.com/berkeley_license.html .
- */
+
 import cachingtableapi.DistributedTableDataSource;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
@@ -383,7 +373,6 @@ public class CanRegDAO {
         try {
             path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + systemCode);
             canreg.server.xml.Tools.writeXmlFile(doc, path + Globals.FILE_SEPARATOR + systemCode + ".xml");
-        // TODO - record date of last backup somewhere...
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -776,8 +765,18 @@ public class CanRegDAO {
             stmtSaveNewDictionaryEntry.clearParameters();
 
             stmtSaveNewDictionaryEntry.setInt(1, dictionaryEntry.getDictionaryID());
+            
+            Dictionary dict = dictionaryMap.get(dictionaryEntry.getDictionaryID());
+            
+            //TODO implement a check for valid dictionary code?
             stmtSaveNewDictionaryEntry.setString(2, dictionaryEntry.getCode());
-            stmtSaveNewDictionaryEntry.setString(3, dictionaryEntry.getDescription());
+
+            //Make sure that we have valid length
+            String description =  dictionaryEntry.getDescription();
+            if (dict.getFullDictionaryDescriptionLength()<description.length()){
+                description = description.substring(0, dict.getFullDictionaryDescriptionLength());
+            }
+            stmtSaveNewDictionaryEntry.setString(3, description);
 
             int rowCount = stmtSaveNewDictionaryEntry.executeUpdate();
             ResultSet results = stmtSaveNewDictionaryEntry.getGeneratedKeys();
@@ -1249,7 +1248,7 @@ public class CanRegDAO {
             "SELECT * FROM APP.DICTIONARY " +
             "WHERE ID = ?";
     private static final String strGetDictionaryEntries =
-            "SELECT * FROM APP.DICTIONARY ";
+            "SELECT * FROM APP.DICTIONARY ORDER BY ID";
     private static final String strGetPopulationDatasetEntries =
             "SELECT * FROM APP.PDSET ";
     private static final String strGetPopulationDatasets =

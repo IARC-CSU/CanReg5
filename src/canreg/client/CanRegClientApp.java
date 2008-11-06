@@ -179,13 +179,12 @@ public class CanRegClientApp extends SingleFrameApplication {
      * Initialize the application
      */
     public static void init() {
-        //Testing the environment - disabled
+        // Testing the environment - disabled
         // canreg.common.Tools.testEnvironment();
         // Initialize the user settings
         try {
             localSettings = new LocalSettings("settings.xml");
             initializeLookAndFeels();
-
         // Locale.setDefault(localSettings.getLocale());
         } catch (IOException ioe) {
             debugOut(ioe.getLocalizedMessage());

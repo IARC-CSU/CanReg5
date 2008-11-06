@@ -460,11 +460,6 @@ public class CanRegClientView extends FrameView {
         jMenuItem16.setAction(actionMap.get("startDatabaseServer")); // NOI18N
         jMenuItem16.setText(resourceMap.getString("startDBMenuItem.text")); // NOI18N
         jMenuItem16.setName("startDBMenuItem"); // NOI18N
-        jMenuItem16.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem16ActionPerformed(evt);
-            }
-        });
         advancedMenu.add(jMenuItem16);
 
         jMenuItem17.setAction(actionMap.get("stopDatabaseServer")); // NOI18N
@@ -592,9 +587,6 @@ public class CanRegClientView extends FrameView {
         setStatusBar(statusPanel);
         setToolBar(toolBar);
     }// </editor-fold>//GEN-END:initComponents
-    private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem16ActionPerformed
 
     private void showWelcomeFrame() {
         WelcomeInternalFrame welcomeInternalFrame = new WelcomeInternalFrame(this);
@@ -1003,7 +995,6 @@ public class CanRegClientView extends FrameView {
      */
     @Action
     public void installSystemAction() {
-        // TODO
         // Choose a system.xml
         // copy it to system folder
         // Give log in window with settings from XML

@@ -39,11 +39,11 @@ public class Checker {
         /**
          * 
          */
-        AgeHistology,
+        AgeMorphology,
         /**
          * 
          */
-        AgeTopographyHistology,
+        AgeTopographyMorphology,
         /**
          * 
          */
@@ -96,12 +96,12 @@ public class Checker {
             checks.add(check);
         }
         // Add age/histology  - DEPedits #23
-        check = new CheckAgeHistology();
+        check = new CheckAgeMorphology();
         if (canPerformThisCheck(check, variableExistSet)) {
             checks.add(check);
         }
         // Add age/topography/histology - DEPedits #24
-        check = new CheckAgeTopographyHistology();
+        check = new CheckAgeTopographyMorphology();
         if (canPerformThisCheck(check, variableExistSet)) {
             checks.add(check);
         }
@@ -139,6 +139,7 @@ public class Checker {
         // Build map of standard variables
         Map<StandardVariableNames, Object> variables = new LinkedHashMap();
 
+        // Run through the standard variables one by one and pick up the necessary data
         for (DatabaseVariablesListElement dbvle : standardVariables) {
             String name = dbvle.getStandardVariableName();
             StandardVariableNames standardVariable = StandardVariableNames.valueOf(name);
