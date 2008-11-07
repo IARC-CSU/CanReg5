@@ -12,7 +12,6 @@ import canreg.server.database.NameSexRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
-import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -28,8 +27,6 @@ import org.w3c.dom.Document;
  */
 public interface CanRegServerInterface extends Remote {
 
-    //Record[] getRecord() throws RemoteException;
-    //void updateRecord(Record r) throws RemoteException, 
     /** The first operation. @throws SecurityException If the client doesn't 
      * have permissions for executing this method.
      * @throws SecurityException 
@@ -73,20 +70,20 @@ public interface CanRegServerInterface extends Remote {
     public String getCanRegSystemName()
             throws RemoteException, SecurityException;
 
-    // returns the description of the database
     /**
-     * 
-     * @return
+     * Returns the description of the database
+     * @return A document description of the database
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     public Document getDatabseDescription()
             throws RemoteException, SecurityException;
 
-    // returns the connection to the database
+    // 
     /**
-     * 
-     * @return
+     * Returns the connection to the database
+     * NOT IN USE - FOR TESTING ONLY
+     * @return The CanRegDAO for the current database
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -94,25 +91,25 @@ public interface CanRegServerInterface extends Remote {
             throws RemoteException, SecurityException;
 
     /**
-     * 
-     * @return
+     * Returns the date of the last backup
+     * @return Date of last backup
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     public Date getDateOfLastBackUp() throws RemoteException, SecurityException;
 
     /**
-     * 
-     * @return
+     * Returns the user right level of the current user
+     * @return the user right level of the current user as a UserRightLevels
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     public UserRightLevels getUserRightLevel() throws RemoteException, SecurityException;
 
     /**
-     * 
-     * @param pds
-     * @return
+     * Store new population data set in the database
+     * @param pds the population dataset to store
+     * @return the database id of the population dataset
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -120,10 +117,10 @@ public interface CanRegServerInterface extends Remote {
             throws RemoteException, SecurityException;
  
     /**
-     * 
-     * @param recordID
-     * @param tableName
-     * @return
+     * Returns a database record with the given details
+     * @param recordID the database record id
+     * @param tableName the table to get the record from
+     * @return a DatabaseRecord
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -184,10 +181,9 @@ public interface CanRegServerInterface extends Remote {
     public void stopNetworkDBServer()
             throws RemoteException, SecurityException;
 
-    //Users
     /**
-     * 
-     * @return
+     * Get a list of users currently logged in to this server
+     * @return a list of users currently logged in to this server as a String array
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -195,7 +191,7 @@ public interface CanRegServerInterface extends Remote {
             throws RemoteException, SecurityException;
 
     /**
-     * 
+     * User logs in
      * @param username
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -204,7 +200,7 @@ public interface CanRegServerInterface extends Remote {
             throws RemoteException, SecurityException;
 
     /**
-     * 
+     * User logs out
      * @param username
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -212,11 +208,10 @@ public interface CanRegServerInterface extends Remote {
     public void userLoggedOut(String username)
             throws RemoteException, SecurityException;
 
-    //Add cases
     /**
-     * 
-     * @param patient
-     * @return
+     * Store a patient in the patient database
+     * @param patient to store
+     * @return database id of the patient
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -241,52 +236,52 @@ public interface CanRegServerInterface extends Remote {
     public int saveTumour(Tumour tumour) throws RemoteException, SecurityException;
 
     /**
-     * 
+     * Store a dictionary entry on the server
      * @param dictionaryEntry
      * @return
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     public int saveDictionaryEntry(DictionaryEntry dictionaryEntry) throws RemoteException, SecurityException;
-    // Drop cases
+
     /**
-     * 
+     * Drop a dictionary
      * @param dictionaryID
-     * @return
+     * @return true if successful, false if not
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     public boolean deleteDictionaryEntries(int dictionaryID) throws RemoteException, SecurityException;
-    // Get the dictionary
+
     /**
-     * 
-     * @return
+     * Get the dictionary
+     * @return a map of dictionary IDs and dictionaries
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     public Map<Integer, Dictionary> getDictionary() throws RemoteException, SecurityException;
-    // Backup
+
     /**
-     * 
-     * @return
+     * Perform backup
+     * @return message
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     public String performBackup()
             throws RemoteException, SecurityException;
+
     /**
-     * 
-     * @param path
-     * @return
+     * Restore from backup
+     * @param path Path to backup - on server
+     * @return message
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     public String restoreFromBackup(String path)
             throws RemoteException, SecurityException;
 
-    // Get version information
     /**
-     * 
+     * Get version information
      * @return
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -295,7 +290,7 @@ public interface CanRegServerInterface extends Remote {
             throws RemoteException, SecurityException;
     
     /**
-     * 
+     * Get the ip-address of the server
      * @return
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -304,7 +299,7 @@ public interface CanRegServerInterface extends Remote {
             throws RemoteException, SecurityException;
     
     /**
-     * 
+     * Initiate a new result set using the filter provided
      * @param filter
      * @param tableName
      * @return
@@ -316,11 +311,11 @@ public interface CanRegServerInterface extends Remote {
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, Exception;
     
     /**
-     * 
-     * @param resultSetID
-     * @param from
-     * @param to
-     * @return
+     * Retrieve rows from a resultset
+     * @param resultSetID id of the resultset 
+     * @param from from this row
+     * @param to to this row
+     * @return a 2D array of objects containing the row data
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      * @throws java.lang.Exception
@@ -328,24 +323,26 @@ public interface CanRegServerInterface extends Remote {
     public Object[][] retrieveRows(String resultSetID, int from, int to)  throws RemoteException, SecurityException, Exception;
 
     /**
-     * 
-     * @param resultSetID
+     * Release result set to avoid unessesary server load
+     * Can this be automated?
+     * Security-issues?
+     * @param resultSetID id of the resultset to be released
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException;
     
     /**
-     * 
-     * @return
+     * Get the population datasets
+     * @return the population datasets 
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     public Map<Integer, PopulationDataset> getPopulationDatasets() throws RemoteException, SecurityException;
     
     /**
-     * 
-     * @return
+     * Get the table of names per sex 
+     * @return the table of names per sex 
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -379,8 +376,8 @@ public interface CanRegServerInterface extends Remote {
     public Map <Integer, Float> performPersonSearch(Patient patient, PersonSearcher searcher) throws RemoteException, SecurityException;
 
     /**
-     * 
-     * @param searcher
+     * Perform global person search
+     * @param searcher 
      * @return
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
