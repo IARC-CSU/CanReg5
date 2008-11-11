@@ -262,7 +262,7 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
     private javax.swing.JLabel variableLabel;
     // End of variables declaration//GEN-END:variables
     private void initValues() {
-        String[] operators = {">", ">=", "=", "<=", "<"};
+        String[] operators = {">", ">=", "=", "<=", "<", "LIKE" };
         operationComboBox.setModel(new DefaultComboBoxModel(operators));
         operationComboBox.setSelectedIndex(2);
         // Get the system description
