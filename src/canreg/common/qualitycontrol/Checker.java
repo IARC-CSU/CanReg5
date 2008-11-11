@@ -39,11 +39,11 @@ public class Checker {
         /**
          * 
          */
-        AgeHistology,
+        AgeMorphology,
         /**
          * 
          */
-        AgeTopographyHistology,
+        AgeTopographyMorphology,
         /**
          * 
          */
@@ -96,12 +96,12 @@ public class Checker {
             checks.add(check);
         }
         // Add age/histology  - DEPedits #23
-        check = new CheckAgeHistology();
+        check = new CheckAgeMorphology();
         if (canPerformThisCheck(check, variableExistSet)) {
             checks.add(check);
         }
         // Add age/topography/histology - DEPedits #24
-        check = new CheckAgeTopographyHistology();
+        check = new CheckAgeTopographyMorphology();
         if (canPerformThisCheck(check, variableExistSet)) {
             checks.add(check);
         }
