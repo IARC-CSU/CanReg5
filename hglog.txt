@@ -1,0 +1,378 @@
+changeset:   71:cf3bf87f5a86
+tag:         tip
+parent:      70:aad792e8c4b6
+parent:      66:d28befdcde7e
+user:        ervikm@X60112
+date:        Tue Nov 11 15:41:52 2008 +0100
+summary:     Merged.
+
+changeset:   70:aad792e8c4b6
+parent:      69:07d68b4157b1
+parent:      63:c3ad99e24ef8
+user:        ervikm@X60112
+date:        Tue Nov 11 15:38:40 2008 +0100
+summary:     Merged.
+
+changeset:   69:07d68b4157b1
+user:        ervikm@X60112
+date:        Tue Nov 11 15:31:40 2008 +0100
+summary:     Removing build folder from repository...
+
+changeset:   68:310ef8ccb90a
+user:        ervikm@X60112
+date:        Tue Nov 11 15:26:57 2008 +0100
+summary:     Merging...
+
+changeset:   67:22932c12b66b
+parent:      65:21c8b5f89395
+user:        ervikm@X60112
+date:        Tue Nov 11 15:26:02 2008 +0100
+summary:     Merging...
+
+changeset:   66:d28befdcde7e
+parent:      64:c388c3e31640
+user:        ervikm@X70245
+date:        Tue Nov 11 11:51:19 2008 +0100
+summary:     ...
+
+changeset:   65:21c8b5f89395
+user:        ervikm@X60112
+date:        Tue Nov 11 15:15:26 2008 +0100
+summary:     Added "LIKE" to FastFilterInternalFrame.
+
+changeset:   64:c388c3e31640
+parent:      61:8c594bea7daf
+user:        ervikm@X70245
+date:        Tue Nov 11 11:43:26 2008 +0100
+summary:     ...
+
+changeset:   63:c3ad99e24ef8
+user:        ervikm@X60112
+date:        Tue Nov 11 11:33:55 2008 +0100
+summary:     Merge
+
+changeset:   62:7d9af1bb6f05
+parent:      59:86d467d27f0d
+user:        ervikm@X60112
+date:        Fri Nov 07 15:46:51 2008 +0100
+summary:     Added documentation.
+
+changeset:   61:8c594bea7daf
+user:        ervikm@X70245
+date:        Thu Nov 06 14:05:59 2008 +0100
+summary:     ...
+
+changeset:   60:938eba8df55f
+user:        ervikm@X70245
+date:        Thu Nov 06 13:52:38 2008 +0100
+summary:     Comments improved. Improved dictionary editior. Other small changes.
+
+changeset:   59:86d467d27f0d
+user:        ervikm@X60112
+date:        Thu Oct 30 10:06:38 2008 +0100
+summary:     Updated javadoc.
+
+changeset:   58:f6311caf392d
+user:        ervikm@X60112
+date:        Wed Oct 29 17:32:10 2008 +0100
+summary:     Added javadoc globally.
+
+changeset:   57:c1a14efce407
+user:        ervikm@X60112
+date:        Wed Oct 29 14:36:42 2008 +0100
+summary:     Automatic build numbering implemented using appinfo.properties and ant.
+
+changeset:   56:a017ff34d9fd
+user:        ervikm@X60112
+date:        Tue Oct 28 17:37:42 2008 +0100
+summary:     Export function implemented.
+
+changeset:   55:5b2561079b33
+user:        ervikm@X60112
+date:        Mon Oct 27 18:17:56 2008 +0100
+summary:     Minor changes.
+
+changeset:   54:6eca6a7cfe1c
+user:        ervikm@X60112
+date:        Fri Oct 24 16:39:29 2008 +0200
+summary:     Improved lookupfileloader and rulesfileloader to also read from .jar files.
+
+changeset:   53:9507c58554e3
+user:        ervikm@X60112
+date:        Thu Oct 23 16:33:16 2008 +0200
+summary:     Coversions started. O3 to 10 implemented. Continued the checks.
+
+changeset:   52:c405d7dd1e1f
+user:        ervikm@X60112
+date:        Wed Oct 22 19:06:23 2008 +0200
+summary:     Checks started. 8 implemented. Lookupreader implemented.
+
+changeset:   51:b072fa3bca4d
+user:        ervikm@X60112
+date:        Tue Oct 21 17:35:17 2008 +0200
+summary:     Person Search improved.
+
+changeset:   50:3bd61b797363
+user:        ervikm@X60112
+date:        Mon Oct 20 18:33:43 2008 +0200
+summary:     Person Search basics implemented. Global and 1 by 1.
+
+changeset:   49:bf82e1a9c075
+user:        ervikm@X60112
+date:        Fri Oct 17 17:23:50 2008 +0200
+summary:     Various changes, like icons and print options.
+
+changeset:   48:468345de9e5e
+user:        ervikm@X60112
+date:        Tue Oct 14 11:49:47 2008 +0200
+summary:     Added ability to print frequency-tables. Improved dataentry. Dictionary lookup performed as the field is filled. Started implementing global actions instead of method calls. Fixed bugs in frequency by year tool.
+
+changeset:   47:0f614980dc3b
+user:        ervikm@X60112
+date:        Fri Oct 10 09:08:28 2008 +0200
+summary:     Various edits.
+
+changeset:   46:f519c7d648a4
+user:        ervikm@X60112
+date:        Tue Oct 07 17:10:23 2008 +0200
+summary:     Name/Sex table implemented. GUI to show and rebuild tables. Default table of names and sex combinations taken from CanReg4.
+
+changeset:   45:47c0e281fddb
+user:        ervikm@X60112
+date:        Mon Oct 06 17:05:36 2008 +0200
+summary:     Automatic backup remainder system implemented.
+
+changeset:   44:24b3a8f4b461
+user:        ervikm@X60112
+date:        Thu Oct 02 16:01:39 2008 +0200
+summary:     Population dataset editor continued. Age group structures and population datasets defined.
+
+changeset:   43:abd6ace6e2c1
+user:        ervikm@X60112
+date:        Thu Oct 02 16:00:16 2008 +0200
+summary:     Population dataset editor continued. Age group structures and population datasets defined.
+
+changeset:   42:082725a9dcfd
+user:        ervikm@X60112
+date:        Mon Sep 29 17:44:07 2008 +0200
+summary:     Export of dictionary files implemented. Population dataset editor started. Tables for PDS and users created.
+
+changeset:   41:2c4c5040daf3
+user:        ervikm@X60112
+date:        Mon Sep 29 14:00:01 2008 +0200
+summary:     Export of dictionary files implemented.
+
+changeset:   40:dad2a79bbffb
+user:        ervikm@X60112
+date:        Fri Sep 26 17:57:23 2008 +0200
+summary:     Frequencies by year improved. Import of entire dictionary files. About.html updated.
+
+changeset:   39:4a5d5bc39033
+user:        ervikm@X60112
+date:        Wed Sep 24 15:46:08 2008 +0200
+summary:     Browser improved. Variable-set chooser active.
+
+changeset:   38:edf9da96e939
+user:        ervikm@X60112
+date:        Fri Sep 19 15:04:01 2008 +0200
+summary:     Browser improved. Colors of mandatory fields added.
+
+changeset:   37:727413c53dac
+user:        ervikm@X60112
+date:        Wed Sep 10 15:59:23 2008 +0200
+summary:     Import fixed. Record editor improved.
+
+changeset:   36:77f50bccbb2d
+user:        ervikm@X60112
+date:        Mon Sep 08 16:47:29 2008 +0200
+summary:     Save possible. Asks when closing record editor.
+
+changeset:   35:d85c8a5d0c6d
+user:        ervikm@X60112
+date:        Fri Aug 08 14:00:33 2008 +0200
+summary:     Frequencies by year added. Various updates and fixes. Better record editor.
+
+changeset:   34:40437891455a
+user:        ervikm@X60112
+date:        Tue Aug 05 16:42:24 2008 +0200
+summary:     Editor panel functionality started. Calendar function added. Localization improved. Plus some restructuring of dictionary functions. About box improved. A dynamic global tool box implemented. Various changes.
+
+changeset:   33:cb6cad481279
+user:        ervikm@X60112
+date:        Fri Aug 01 17:25:48 2008 +0200
+summary:     Editor panel functionality started. Calendar function added. Localization improved. Plus some restructuring of dictionary functions. Various.
+
+changeset:   32:7025a962e8d5
+user:        ervikm@X60112
+date:        Fri Jul 25 17:37:19 2008 +0200
+summary:     Minor adjustments.
+
+changeset:   31:47553c9c96dd
+user:        ervikm@X60112
+date:        Wed Jul 23 13:05:28 2008 +0200
+summary:     Improved getting data from server. Better fastfilter editor.
+
+changeset:   30:13922f4f1809
+user:        ervikm@X60112
+date:        Wed Jul 16 17:31:41 2008 +0200
+summary:     Getting data from server. Started creating record editors. Sees to that server and client are the same. Better exceptions thrown and handled for errors during login.
+
+changeset:   29:4debe133b327
+user:        ervikm@X60112
+date:        Fri Jul 11 17:55:46 2008 +0200
+summary:     Primarily worked on efficiently getting data from server using caching data structures.
+
+changeset:   28:d5beb9797fe7
+user:        ervikm@X60112
+date:        Wed Jul 02 17:38:39 2008 +0200
+summary:     Restore from Backup implemented. Feedback during import. Menus corresponds to if you run the CanReg server locally or not. Various other modifications.
+
+changeset:   27:c64edd3c6435
+user:        ervikm@X60112
+date:        Wed Jul 02 09:48:06 2008 +0200
+summary:     Created tools to install a new CanReg system as well as convert an old system.
+
+changeset:   26:77eb819031fc
+user:        ervikm@X60112
+date:        Tue Jul 01 15:17:34 2008 +0200
+summary:     Added the convert CanReg4 to the GUI. Other slight modifications.
+
+changeset:   25:45ebfaac434d
+parent:      23:014285a04c22
+parent:      24:987d580db3e3
+user:        ervikm@X60112
+date:        Mon Jun 30 18:12:57 2008 +0200
+summary:     Added the "Install System" button. Testing merge.
+
+changeset:   24:987d580db3e3
+parent:      22:cd951847f2c0
+user:        ervikm@X70245
+date:        Mon Jun 30 18:04:53 2008 +0200
+summary:     One comment added. Testing a merge.
+
+changeset:   23:014285a04c22
+user:        ervikm@X60112
+date:        Mon Jun 30 18:09:01 2008 +0200
+summary:     Added the "Install System" button. Testing merge.
+
+changeset:   22:cd951847f2c0
+user:        ervikm@X70245
+date:        Mon Jun 30 17:40:33 2008 +0200
+summary:     System definition files moved. Restructured folder systems. Modified login-screen.
+
+changeset:   21:1802bbaaa35c
+parent:      20:1437eb05a56a
+parent:      19:5e69e3228df6
+user:        ervikm@X70245
+date:        Mon Jun 30 14:57:21 2008 +0200
+summary:     Merged classes...
+
+changeset:   20:1437eb05a56a
+parent:      17:ef5cecf5cd8a
+user:        ervikm@X70245
+date:        Mon Jun 30 14:55:16 2008 +0200
+summary:     Various improvements.
+
+changeset:   19:5e69e3228df6
+parent:      18:c91d14f78b7d
+parent:      9:be9ef8f0c4a4
+user:        ervikm@X70245.iarc.lan
+date:        Mon Jun 30 04:08:59 2008 -0500
+summary:     Automated merge with file:///H:\Users\ervik\Mercurial\CanReg
+
+changeset:   18:c91d14f78b7d
+user:        morten <morten@X60112>
+date:        Mon Jun 23 16:26:26 2008 +0200
+summary:     Fast filter improved. Work on export functions. Backup function implemented.
+
+changeset:   17:ef5cecf5cd8a
+user:        morten <morten@X60112>
+date:        Mon Jun 23 16:25:27 2008 +0200
+summary:     Fast filter improved. Work on export functions. Backup function implemented.
+
+changeset:   16:31c0562b6412
+user:        morten <morten@X60112>
+date:        Tue Jun 17 17:27:10 2008 +0200
+summary:     Continued work on options screen. Automatic launching of the server. Reworked options file and the way to generate default settings. Implemented the checking of the newest version online.
+
+changeset:   15:5e43fb0229ef
+user:        morten <morten@X60112>
+date:        Mon Jun 09 15:09:43 2008 +0200
+summary:     Continued to map the import screen to the import function.
+
+changeset:   14:84285f7eca69
+user:        morten <morten@X60112>
+date:        Mon Jun 09 11:12:26 2008 +0200
+summary:     Continued to map the import screen to the import function.
+
+changeset:   13:3be521d48055
+user:        morten <morten@X60112>
+date:        Mon Jun 02 15:01:48 2008 +0200
+summary:     Continued to map the import screen to the import function. Some refactoring.
+
+changeset:   12:d1942d06a0d3
+user:        morten <morten@X60112>
+date:        Mon Jun 02 14:59:23 2008 +0200
+summary:     VariableMapping rename.
+
+changeset:   11:bd489184b718
+user:        morten <morten@X60112>
+date:        Thu May 29 18:08:19 2008 +0200
+summary:     Continued to map the import screen to the import function.
+
+changeset:   10:f1af32d801bc
+parent:      8:fa3358ab4074
+user:        morten <morten@X60112>
+date:        Wed May 14 15:54:27 2008 +0200
+summary:     Nothing major. Really!
+
+changeset:   9:be9ef8f0c4a4
+user:        ervikm@X70245.iarc.lan
+date:        Mon Jun 30 04:02:48 2008 -0500
+summary:     [no commit message]
+
+changeset:   8:fa3358ab4074
+user:        morten <morten@X60112>
+date:        Tue May 06 16:36:55 2008 +0200
+summary:     Dictionary setup added.
+
+changeset:   7:f201bc56ce6d
+user:        morten <morten@X60112>
+date:        Mon May 05 18:20:42 2008 +0200
+summary:     GUI modifications.
+
+changeset:   6:21850baac4e4
+user:        morten <morten@X60112>
+date:        Wed Apr 30 14:27:49 2008 +0200
+summary:     GUI modifications.
+
+changeset:   5:8db4dd29947a
+user:        morten <morten@X60112>
+date:        Tue Apr 29 18:16:19 2008 +0200
+summary:     GUI modifications.
+
+changeset:   4:364cbe4c0982
+user:        morten <morten@X60112>
+date:        Tue Apr 29 16:33:33 2008 +0200
+summary:     Some refactorisation and removal of dead code.
+
+changeset:   3:4c5c853e8bea
+user:        morten <morten@X60112>
+date:        Tue Apr 29 15:18:23 2008 +0200
+summary:     One line added. Test.
+
+changeset:   2:57044ab366c7
+user:        morten <morten@X60112>
+date:        Tue Apr 29 12:20:17 2008 +0200
+summary:     One line added. Test.
+
+changeset:   1:b8476a181ec4
+user:        morten@X60112
+date:        Tue Apr 29 12:14:48 2008 +0200
+summary:     One line added. Test.
+
+changeset:   0:a02b14639c48
+user:        morten@X60112
+date:        Tue Apr 29 11:53:46 2008 +0200
+summary:     initial commit
+
