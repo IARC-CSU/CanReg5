@@ -120,10 +120,11 @@ public class Tools {
                     Integer.parseInt(e.getElementsByTagName(namespace + "variable_id").item(0).getTextContent()),
                     e.getElementsByTagName(namespace + "short_name").item(0).getTextContent(),
                     e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent());
-            if (e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent().equalsIgnoreCase("dict")) {
+            if (e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent().equalsIgnoreCase("Dict")) {
                 String dictionaryName = e.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
                 int id = canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, dictionaryName);
                 variables[i].setDictionaryID(id);
+                variables[i].setUseDictionary(dictionaryName);
             }
 
             variables[i].setEnglishName(e.getElementsByTagName(namespace + "english_name").item(0).getTextContent());
