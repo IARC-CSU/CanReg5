@@ -4,11 +4,11 @@ package canreg.server.database;
  *
  * @author ervikm
  */
-
 import cachingtableapi.DistributedTableDataSource;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 
 import java.io.File;
@@ -50,9 +50,11 @@ public class CanRegDAO {
 
         this.systemCode = systemCode;
 
+        globalToolBox = new GlobalToolBox(doc);
+
         distributedDataSources = new LinkedHashMap<String, DistributedTableDataSource>();
         dictionaryMap = buildDictionaryMap(doc);
-        
+
         System.out.println(canreg.server.xml.Tools.getTextContent(
                 new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
 
@@ -66,7 +68,8 @@ public class CanRegDAO {
         strSavePopoulationDataset = QueryGenerator.strSavePopoulationDataset();
         strSavePopoulationDatasetsEntry = QueryGenerator.strSavePopoulationDatasetsEntry();
         strSaveNameSexRecord = QueryGenerator.strSaveNameSexEntry();
-
+        strGetPatientsAndTumours = QueryGenerator.strGetPatientsAndTumours(globalToolBox);
+        strCountPatientsAndTumours = QueryGenerator.strCountPatientsAndTumours(globalToolBox);
         setDBSystemDir();
         dbProperties = loadDBProperties();
         String driverName = dbProperties.getProperty("derby.driver");
@@ -226,8 +229,8 @@ public class CanRegDAO {
         int rowCount = 0;
         DistributedTableDataSource dataSource;
         Set<DatabaseVariablesListElement> variables;
-        
-        if (DatabaseFilter.QueryType.PERSON_SEARCH.equals(filter.getQueryType())){
+
+        if (DatabaseFilter.QueryType.PERSON_SEARCH.equals(filter.getQueryType())) {
             String query = "";
             query = "SELECT COUNT(*) FROM APP.PATIENT";
             ResultSet countRowSet = statement.executeQuery(query);
@@ -235,12 +238,10 @@ public class CanRegDAO {
                 rowCount = countRowSet.getInt(1);
             }
             countRowSet = null;
-            query = "SELECT ID FROM APP.PATIENT";
+            query = "SELECT "+Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME+" FROM APP.PATIENT";
             System.out.print(query);
-            result = statement.executeQuery(query); 
-        }
-
-        else if (DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR.equals(filter.getQueryType())) {
+            result = statement.executeQuery(query);
+        } else if (DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR.equals(filter.getQueryType())) {
             String filterString = filter.getFilterString();
             String query = "";
             if (!filterString.isEmpty()) {
@@ -259,10 +260,12 @@ public class CanRegDAO {
             // variablesList = variablesList.substring(0, variablesList.length() - 2);
 
             }
+            String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+            String patientIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
 
             query = "SELECT INCID/10000 " + variablesList + ", COUNT(*) as Cases " +
                     "FROM APP.TUMOUR, APP.PATIENT " +
-                    "WHERE APP.PATIENT.ID = APP.TUMOUR.PATIENTID " + filterString + " " +
+                    "WHERE APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " " + filterString + " " +
                     "GROUP BY INCID/10000 " + variablesList + " " +
                     "ORDER BY INCID/10000 " + variablesList;
             System.out.print(query);
@@ -273,14 +276,15 @@ public class CanRegDAO {
             if (!filterString.isEmpty()) {
                 filterString = " WHERE " + filterString;
             }
+            System.out.println(strCountTumours + filterString);
             ResultSet countRowSet = statement.executeQuery(strCountTumours + filterString);
             if (countRowSet.next()) {
                 rowCount = countRowSet.getInt(1);
             }
-            if (filter.getSortByVariable()!=null){
-                filterString += " ORDER BY "+filter.getSortByVariable().toUpperCase();
+            if (filter.getSortByVariable() != null) {
+                filterString += " ORDER BY " + filter.getSortByVariable().toUpperCase();
             }
-            System.out.println(strCountTumours + filterString);
+
             result = statement.executeQuery(strGetTumours + filterString);
         } else if (tableName.equalsIgnoreCase("patient")) {
             String filterString = filter.getFilterString();
@@ -291,8 +295,8 @@ public class CanRegDAO {
             if (countRowSet.next()) {
                 rowCount = countRowSet.getInt(1);
             }
-            if (filter.getSortByVariable()!=null){
-                filterString += " ORDER BY "+filter.getSortByVariable().toUpperCase();
+            if (filter.getSortByVariable() != null) {
+                filterString += " ORDER BY " + filter.getSortByVariable().toUpperCase();
             }
             System.out.println(strCountPatients + filterString);
             result = statement.executeQuery(strGetPatients + filterString);
@@ -308,8 +312,8 @@ public class CanRegDAO {
             }
             // feed it to the garbage dump
             countRowSet = null;
-            if (filter.getSortByVariable()!=null){
-                filterString += " ORDER BY "+filter.getSortByVariable().toUpperCase();
+            if (filter.getSortByVariable() != null) {
+                filterString += " ORDER BY " + filter.getSortByVariable().toUpperCase();
             }
             System.out.println(strCountPatientsAndTumours + filterString);
 
@@ -329,6 +333,7 @@ public class CanRegDAO {
         boolean foundPlace = false;
         int i = 0;
         String place = Integer.toString(i);
+        // Find a spot in the map of datasources
         while (!foundPlace) {
             place = Integer.toString(i++);
             foundPlace = !distributedDataSources.containsKey(place);
@@ -398,6 +403,7 @@ public class CanRegDAO {
     // This only works for Embedded databases - will look into it!
     // When using Derby this is OK as we can access it via Embedded 
     // and Client drivers at the same time...
+
     private boolean dbExists() {
         boolean bExists = false;
         String dbLocation = getDatabaseLocation();
@@ -505,7 +511,7 @@ public class CanRegDAO {
      * @return true if successfull, false if not
      */
     public String restoreFromBackup(String path) {
-           boolean bRestored = false, shutdownSuccess = false;
+        boolean bRestored = false, shutdownSuccess = false;
         SQLException ex = null;
         String dbUrl = getDatabaseUrl();
 
@@ -575,7 +581,7 @@ public class CanRegDAO {
             stmtSaveNewPopoulationDatasetsEntry = dbConnection.prepareStatement(strSavePopoulationDatasetsEntry, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewNameSexRecord = dbConnection.prepareStatement(strSaveNameSexRecord, Statement.RETURN_GENERATED_KEYS);
             stmtDeleteDictionaryEntries = dbConnection.prepareStatement(strDeleteDictionaryEntries);
-            stmtClearNameSexTable = dbConnection.prepareStatement(strClearNameSexTable); 
+            stmtClearNameSexTable = dbConnection.prepareStatement(strClearNameSexTable);
             stmtDeletePopoulationDataset = dbConnection.prepareStatement(strDeletePopulationDataset);
             stmtDeletePopoulationDatasetEntries = dbConnection.prepareStatement(strDeletePopulationDatasetEntries);
             //stmtUpdateExistingPatient = dbConnection.prepareStatement(strUpdatePatient);
@@ -648,6 +654,7 @@ public class CanRegDAO {
 
     private synchronized int saveRecord(String tableName, DatabaseRecord record, PreparedStatement stmtSaveNewRecord) {
         int id = -1;
+
         try {
             stmtSaveNewRecord.clearParameters();
 
@@ -657,7 +664,7 @@ public class CanRegDAO {
 
             NodeList variables = variablesElement.getElementsByTagName(Globals.NAMESPACE + "variable");
 
-            int patientVariableNumber = 0;
+            int recordVariableNumber = 0;
 
             // Go through all the variable definitions
             for (int i = 0; i < variables.getLength(); i++) {
@@ -668,26 +675,26 @@ public class CanRegDAO {
                 String tableNameDB = element.getElementsByTagName(Globals.NAMESPACE + "table").item(0).getTextContent();
 
                 if (tableNameDB.equalsIgnoreCase(tableName)) {
-                    patientVariableNumber++;
+                    recordVariableNumber++;
                     String variableType = element.getElementsByTagName(Globals.NAMESPACE + "variable_type").item(0).getTextContent();
                     Object obj = record.getVariable(element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent());
                     if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict")) {
                         if (obj != null) {
                             String strObj = (String) obj;
                             if (strObj.length() > 0) {
-                                stmtSaveNewRecord.setString(patientVariableNumber, strObj);
+                                stmtSaveNewRecord.setString(recordVariableNumber, strObj);
                             } else {
-                                stmtSaveNewRecord.setString(patientVariableNumber, "");
+                                stmtSaveNewRecord.setString(recordVariableNumber, "");
                             }
                         } else {
-                            stmtSaveNewRecord.setString(patientVariableNumber, "");
+                            stmtSaveNewRecord.setString(recordVariableNumber, "");
                         }
                     } else if (variableType.equalsIgnoreCase("Number") || variableType.equalsIgnoreCase("Date")) {
                         if (obj != null) {
                             Integer intObj = (Integer) obj;
-                            stmtSaveNewRecord.setInt(patientVariableNumber, intObj.intValue());
+                            stmtSaveNewRecord.setInt(recordVariableNumber, intObj.intValue());
                         } else {
-                            stmtSaveNewRecord.setInt(patientVariableNumber, -1);
+                            stmtSaveNewRecord.setInt(recordVariableNumber, -1);
                         }
                     }
                 }
@@ -765,15 +772,15 @@ public class CanRegDAO {
             stmtSaveNewDictionaryEntry.clearParameters();
 
             stmtSaveNewDictionaryEntry.setInt(1, dictionaryEntry.getDictionaryID());
-            
+
             Dictionary dict = dictionaryMap.get(dictionaryEntry.getDictionaryID());
-            
+
             //TODO implement a check for valid dictionary code?
             stmtSaveNewDictionaryEntry.setString(2, dictionaryEntry.getCode());
 
             //Make sure that we have valid length
-            String description =  dictionaryEntry.getDescription();
-            if (dict.getFullDictionaryDescriptionLength()<description.length()){
+            String description = dictionaryEntry.getDescription();
+            if (dict.getFullDictionaryDescriptionLength() < description.length()) {
                 description = description.substring(0, dict.getFullDictionaryDescriptionLength());
             }
             stmtSaveNewDictionaryEntry.setString(3, description);
@@ -892,12 +899,12 @@ public class CanRegDAO {
         }
         return id;
     }
-    
+
     /**
      * 
      * @return
      */
-    public boolean clearNameSexTable(){
+    public boolean clearNameSexTable() {
         boolean success = false;
         try {
             stmtClearNameSexTable.clearParameters();
@@ -949,11 +956,6 @@ public class CanRegDAO {
         return editRecord("Tumour", tumour, stmtEditTumour);
     }
 
-    /*
-     * 
-     * @param record
-     * @return
-     */
     /**
      * 
      * @param tableName
@@ -1076,20 +1078,20 @@ public class CanRegDAO {
 
     private boolean fillDictionariesTable() {
         boolean bFilled = false;
-        
+
         // Go through all the variable definitions
-        for (Dictionary dic:dictionaryMap.values()) {
-             saveDictionary(dic);
+        for (Dictionary dic : dictionaryMap.values()) {
+            saveDictionary(dic);
         }
         bFilled = true;
 
         return bFilled;
     }
-    
-    private static Map<Integer, Dictionary> buildDictionaryMap(Document doc){
-        
+
+    private static Map<Integer, Dictionary> buildDictionaryMap(Document doc) {
+
         Map<Integer, Dictionary> dictionariesMap = new LinkedHashMap();
-                // Get the dictionaries node in the XML
+        // Get the dictionaries node in the XML
         NodeList nodes = doc.getElementsByTagName(Globals.NAMESPACE + "dictionaries");
         Element variablesElement = (Element) nodes.item(0);
 
@@ -1221,20 +1223,16 @@ public class CanRegDAO {
     private String ns = Globals.NAMESPACE;
     private static final String strGetPatient =
             "SELECT * FROM APP.PATIENT " +
-            "WHERE ID = ?";
+            "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private String strGetPatients =
             "SELECT * FROM APP.PATIENT";
     private String strCountPatients =
             "SELECT COUNT(*) FROM APP.PATIENT";
-    private String strGetPatientsAndTumours =
-            "SELECT * FROM APP.TUMOUR, APP.PATIENT " +
-            "WHERE APP.TUMOUR.PATIENTID = APP.PATIENT.ID";
-    private String strCountPatientsAndTumours =
-            "SELECT COUNT(*) FROM APP.PATIENT, APP.TUMOUR " +
-            "WHERE APP.PATIENT.ID = APP.TUMOUR.PATIENTID";
+    private String strGetPatientsAndTumours;
+    private String strCountPatientsAndTumours;
     private static final String strGetTumour =
             "SELECT * FROM APP.TUMOUR " +
-            "WHERE ID = ?";
+            "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private String strGetTumours =
             "SELECT * FROM APP.TUMOUR";
     private String strCountTumours =
@@ -1264,7 +1262,7 @@ public class CanRegDAO {
     private static final String strDeleteDictionaryEntries =
             "DELETE FROM APP.DICTIONARY " +
             "WHERE DICTIONARY = ?";
-    private static final String strClearNameSexTable = 
+    private static final String strClearNameSexTable =
             "DELETE FROM APP.NAMESEX";
     private static final String strDeletePopulationDataset =
             "DELETE FROM APP.PDSETS " +
@@ -1281,5 +1279,6 @@ public class CanRegDAO {
     private String strSavePopoulationDataset;
     private String strSavePopoulationDatasetsEntry;
     private String strSaveNameSexRecord;
+    private GlobalToolBox globalToolBox;
 }
 

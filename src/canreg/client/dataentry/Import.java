@@ -128,7 +128,7 @@ public class Import {
                 String mpCodeString = (String) tumour.getVariable("MPcode");
 
                 if (mpCodeString != null && mpCodeString.length() > 0) {
-                    patientIDNumber = lookUpPatientID(mpCodeString, patientIDNumber, mpCodes);
+                    patientIDNumber = (Integer) lookUpPatientID(mpCodeString, patientIDNumber, mpCodes);
                 }
 
                 tumour.setVariable("PatientID", patientIDNumber);
@@ -178,7 +178,7 @@ public class Import {
             // Skip first line
             line = bufferedReader.readLine();
             // patientNumber
-            int patientDatabaseIDNumber = 0;
+            int patientDatabaseRecordID = 0;
             int tumourDatabaseIDNumber = 0;
             int numberOfLinesRead = 1;
             int linesToRead = io.getMaxLines();
@@ -187,8 +187,9 @@ public class Import {
             }
             while (line != null && (numberOfLinesRead < linesToRead)) {
                 // We allow for null tasks...
-                if (task!=null)
-                    task.firePropertyChange("progress", (numberOfLinesRead - 1)*100/linesToRead, (numberOfLinesRead)*100/linesToRead);
+                if (task != null) {
+                    task.firePropertyChange("progress", (numberOfLinesRead - 1) * 100 / linesToRead, (numberOfLinesRead) * 100 / linesToRead);
+                }
                 String[] lineElements = line.split(io.getSeparator());
                 // Build patient part
                 Patient patient = new Patient();
@@ -223,30 +224,39 @@ public class Import {
 
                 // debugOut(tumour.toString());
                 // add patient to the database
-                patientDatabaseIDNumber = server.savePatient(patient);
 
-                // If this is a multiple primary tumour...
-                String mpCodeString = (String) tumour.getVariable("MPcode");
+                if (io.isDataFromPreviousCanReg()) {
+                    // set update date for the patient the same as for the tumour
+                    Object updateDate = tumour.getVariable(io.getTumourUpdateDateVariableName());
+                    patient.setVariable(io.getPatientUpdateDateVariableName(), updateDate);
 
-                if (mpCodeString != null && mpCodeString.length() > 0) {
-                    patientDatabaseIDNumber = lookUpPatientID(mpCodeString, patientDatabaseIDNumber, mpCodes);
+                    // Set the patientID the same as the tumourID initially
+                    Object patientID = tumour.getVariable(io.getTumourIDVariablename());
+                    Object patientRecordID = patientID;
+
+                    // And store the record ID
+                    patient.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
+
+                    // If this is a multiple primary tumour...
+                    String mpCodeString = (String) tumour.getVariable(io.getMultiplePrimaryVariableName());
+                    if (mpCodeString != null && mpCodeString.length() > 0) {
+                        patientID = lookUpPatientID(mpCodeString, patientID, mpCodes);
+                    }
+                    //
+                    patient.setVariable(io.getPatientIDVariableName(), patientID);
+
+                    //Set the patient ID number on the tumour
+                    tumour.setVariable(io.getPatientIDTumourTableVariableName(), patientID);
+                    tumour.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
                 }
-                
-                //Set the patient ID number 
-                tumour.setVariable("PatientID",patientDatabaseIDNumber);
+
+                patientDatabaseRecordID = server.savePatient(patient);
                 tumourDatabaseIDNumber = server.saveTumour(tumour);
-                
-                //Set the tumour ID number
-                patient.setVariable("TumourID", tumourDatabaseIDNumber);
-                patient.setVariable("id", patientDatabaseIDNumber);
-                // and update it
-                server.editPatient(patient);
-                
+
                 //Read next line of data
                 line = bufferedReader.readLine();
                 numberOfLinesRead++;
             }
-
 
             success = true;
         } catch (IOException ex) {
@@ -309,13 +319,13 @@ public class Import {
         }
     }
 
-    private static int lookUpPatientID(String mpCodeString, int patientIDNumber, HashMap mpCodes) {
+    private static Object lookUpPatientID(String mpCodeString, Object patientIDNumber, HashMap mpCodes) {
         Object IDNumberObj = mpCodes.get(mpCodeString);
-        int id = patientIDNumber;
+        Object id = patientIDNumber;
         if (IDNumberObj == null) {
             mpCodes.put(mpCodeString, patientIDNumber);
         } else {
-            id = (Integer) IDNumberObj;
+            id = IDNumberObj;
         }
         return id;
     }

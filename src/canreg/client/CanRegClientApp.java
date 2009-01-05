@@ -36,6 +36,8 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EventObject;
 import java.util.LinkedList;
@@ -67,6 +69,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private String systemName = null;
     private String username = null;
     private static LocalSettings localSettings;
+    private DateFormat dateFormat;
     /**
      * 
      */
@@ -117,10 +120,10 @@ public class CanRegClientApp extends SingleFrameApplication {
         } // end-try-catch
 
         canRegSystemVersionString = "";
-        for (String part:Globals.versionStringParts){
+        for (String part : Globals.versionStringParts) {
             canRegSystemVersionString += appInfoProperties.getProperty(part);
         }
-        
+
         canRegClientView = new CanRegClientView(this);
 
         show(canRegClientView);
@@ -152,7 +155,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             }
         };
 
-
+        dateFormat = new SimpleDateFormat(Globals.DATE_FORMAT_STRING);
 
         addExitListener(maybeExit);
     }
@@ -236,9 +239,9 @@ public class CanRegClientApp extends SingleFrameApplication {
         //authenticate credentials
         loginServer = (CanRegLoginInterface) Naming.lookup(serverObjectString);
         //login object received
-        
+
         if (!canRegSystemVersionString.trim().equalsIgnoreCase(loginServer.getSystemVersion().trim())) {
-            throw (new WrongCanRegVersionException("Server: "+ loginServer.getSystemVersion()+", Client: "+canRegSystemVersionString));
+            throw (new WrongCanRegVersionException("Server: " + loginServer.getSystemVersion() + ", Client: " + canRegSystemVersionString));
         }
         //do the login 
         debugOut("ATTEMPTING LOGIN");
@@ -529,8 +532,12 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     public void saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException {
         if (databaseRecord instanceof Patient) {
+            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
+            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdatedBy.toString()).getDatabaseVariableName(), username);
             server.savePatient((Patient) databaseRecord);
         } else if (databaseRecord instanceof Tumour) {
+            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
+            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdatedBy.toString()).getDatabaseVariableName(), username);
             server.saveTumour((Tumour) databaseRecord);
         } else if (databaseRecord instanceof NameSexRecord) {
             server.saveNameSexRecord((NameSexRecord) databaseRecord);
@@ -545,8 +552,10 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     public void editRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException {
         if (databaseRecord instanceof Patient) {
+            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdatedBy.toString()).getDatabaseVariableName(), username);
             server.editPatient((Patient) databaseRecord);
         } else if (databaseRecord instanceof Tumour) {
+            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdatedBy.toString()).getDatabaseVariableName(), username);
             server.editTumour((Tumour) databaseRecord);
         }
     }
@@ -602,24 +611,16 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.sql.SQLException
      * @throws java.lang.Exception
      */
-    public DatabaseRecord[] getRecordsFromOtherTableBasedOnID(String idString, String tableName) throws RemoteException, SecurityException, SQLException, Exception {
+    public DatabaseRecord[] getTumourRecordsBasedOnPatientID(String idString) throws RemoteException, SecurityException, SQLException, Exception {
         DatabaseRecord[] records = null;
         String lookUpTableName = "";
         DatabaseFilter filter = new DatabaseFilter();
         String lookUpColumnName = "";
 
-        // We want the records from the "other table"
-        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-            lookUpTableName = Globals.PATIENT_TABLE_NAME;
-            filter.setFilterString("TUMOURID =" + idString + "");
-            lookUpColumnName = "ID";
-        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-            lookUpTableName = Globals.TUMOUR_TABLE_NAME;
-            filter.setFilterString("PATIENTID = " + idString + "");
-            lookUpColumnName = "ID";
-        } else {
-            return null;
-        }
+        lookUpTableName = Globals.TUMOUR_TABLE_NAME;
+        filter.setFilterString(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName() + " = '" + idString + "'");
+
+        lookUpColumnName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
         Object[][] rows;
 
         DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, lookUpTableName);
@@ -775,12 +776,12 @@ public class CanRegClientApp extends SingleFrameApplication {
     public Map<Integer, Map<Float, Integer>> performGlobalDuplicateSearch(PersonSearcher searcher) throws SecurityException, RemoteException {
         return server.performGlobalPersonSearch(searcher);
     }
-    
+
     /**
      * 
      * @return
      */
-    public String getCanRegVersionString(){
+    public String getCanRegVersionString() {
         return canRegSystemVersionString;
     }
 

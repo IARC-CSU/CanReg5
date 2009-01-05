@@ -35,6 +35,18 @@ public class ImportOptions {
     
     private boolean dataFromPreviousCanReg;
 
+    private String multiplePrimaryVariableName;
+    private String patientIDVariableName;
+    private String tumourIDVariablename;
+
+    private String patientRecordIDVariableName;
+    private String tumourRecordIDVariablename;
+
+    private String tumourUpdateDateVariableName;
+    private String patientUpdateDateVariableName;
+
+    private String patientIDTumourTableVariableName;
+    private String patientRecordIDTumourTableVariableName;
     /**
      * 
      * @return
@@ -162,7 +174,130 @@ public class ImportOptions {
     public void setDataFromPreviousCanReg(boolean dataFromPreviousCanReg) {
         this.dataFromPreviousCanReg = dataFromPreviousCanReg;
     }
-    
-    
-    
+
+    /**
+     * @return the multiplePrimaryVariableName
+     */
+    public String getMultiplePrimaryVariableName() {
+        return multiplePrimaryVariableName;
+    }
+
+    /**
+     * @param multiplePrimaryVariableName the multiplePrimaryVariableName to set
+     */
+    public void setMultiplePrimaryVariableName(String multiplePrimaryVariableName) {
+        this.multiplePrimaryVariableName = multiplePrimaryVariableName;
+    }
+
+    /**
+     * @return the patientIDVariableName
+     */
+    public String getPatientIDVariableName() {
+        return patientIDVariableName;
+    }
+
+    /**
+     * @param patientIDVariableName the patientIDVariableName to set
+     */
+    public void setPatientIDVariableName(String patientIDVariableName) {
+        this.patientIDVariableName = patientIDVariableName;
+    }
+
+    /**
+     * @return the tumourIDVariablename
+     */
+    public String getTumourIDVariablename() {
+        return tumourIDVariablename;
+    }
+
+    /**
+     * @param tumourIDVariablename the tumourIDVariablename to set
+     */
+    public void setTumourIDVariablename(String tumourIDVariablename) {
+        this.tumourIDVariablename = tumourIDVariablename;
+    }
+
+    /**
+     * @return the tumourUpdateDateVariableName
+     */
+    String getTumourUpdateDateVariableName() {
+        return tumourUpdateDateVariableName;
+    }
+
+    /**
+     * @param tumourUpdateDateVariableName the tumourUpdateDateVariableName to set
+     */
+    public void setTumourUpdateDateVariableName(String tumourUpdateDateVariableName) {
+        this.tumourUpdateDateVariableName = tumourUpdateDateVariableName;
+    }
+
+    /**
+     * @return the patientUpdateDateVariableName
+     */
+    public String getPatientUpdateDateVariableName() {
+        return patientUpdateDateVariableName;
+    }
+
+    /**
+     * @param patientUpdateDateVariableName the patientUpdateDateVariableName to set
+     */
+    public void setPatientUpdateDateVariableName(String patientUpdateDateVariableName) {
+        this.patientUpdateDateVariableName = patientUpdateDateVariableName;
+    }
+
+    /**
+     * @return the PatientIDTumourTableVariableName
+     */
+    public String getPatientIDTumourTableVariableName() {
+        return patientIDTumourTableVariableName;
+    }
+
+    /**
+     * @param PatientIDTumourTableVariableName the PatientIDTumourTableVariableName to set
+     */
+    public void setPatientIDTumourTableVariableName(String PatientIDTumourTableVariableName) {
+        this.patientIDTumourTableVariableName = PatientIDTumourTableVariableName;
+    }
+
+    /**
+     * @return the patientRecordIDVariableName
+     */
+    public String getPatientRecordIDVariableName() {
+        return patientRecordIDVariableName;
+    }
+
+    /**
+     * @param patientRecordIDVariableName the patientRecordIDVariableName to set
+     */
+    public void setPatientRecordIDVariableName(String patientRecordIDVariableName) {
+        this.patientRecordIDVariableName = patientRecordIDVariableName;
+    }
+
+    /**
+     * @return the tumourRecordIDVariablename
+     */
+    public String getTumourRecordIDVariablename() {
+        return tumourRecordIDVariablename;
+    }
+
+    /**
+     * @param tumourRecordIDVariablename the tumourRecordIDVariablename to set
+     */
+    public void setTumourRecordIDVariablename(String tumourRecordIDVariablename) {
+        this.tumourRecordIDVariablename = tumourRecordIDVariablename;
+    }
+
+    /**
+     * @return the patientRecordIDTumourTableVariableName
+     */
+    public String getPatientRecordIDTumourTableVariableName() {
+        return patientRecordIDTumourTableVariableName;
+    }
+
+    /**
+     * @param patientRecordIDTumourTableVariableName the patientRecordIDTumourTableVariableName to set
+     */
+    public void setPatientRecordIDTumourTableVariableName(String patientRecordIDTumourTableVariableName) {
+        this.patientRecordIDTumourTableVariableName = patientRecordIDTumourTableVariableName;
+    }
 }

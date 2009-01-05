@@ -12,6 +12,7 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.client.dataentry.Import;
 import canreg.client.dataentry.ImportOptions;
 import canreg.client.dataentry.Relation;
+import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -55,12 +56,15 @@ public class ImportView extends javax.swing.JInternalFrame {
     private JFileChooser chooser;
     private String path;
     private LocalSettings localSettings;
+    private GlobalToolBox globalToolBox;
 
     /** Creates new form ImportView */
     public ImportView() {
 
         initComponents();
         previewPanel.setVisible(false);
+
+        globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
 
         changeTab(0);
 
@@ -772,6 +776,16 @@ public class ImportView extends javax.swing.JInternalFrame {
         io.setDoPersonSearch(personSearchCheckBox.isSelected());
         io.setQueryNewNames(queryNewNameCheckBox.isSelected());
         io.setDataFromPreviousCanReg(previousCanRegDataCheckBox.isSelected());
+        
+        // Set standard variable names
+        io.setMultiplePrimaryVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimCode.toString()).getDatabaseVariableName());
+        io.setPatientIDTumourTableVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName());
+        io.setPatientIDVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
+        io.setTumourUpdateDateVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString()).getDatabaseVariableName());
+        io.setPatientUpdateDateVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName());
+        io.setTumourIDVariablename(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.RegistrationNo.toString()).getDatabaseVariableName());
+        io.setPatientRecordIDVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
+        io.setPatientRecordIDTumourTableVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName());
 
         return io;
     }

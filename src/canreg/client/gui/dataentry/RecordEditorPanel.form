@@ -7,6 +7,7 @@
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="2"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
@@ -93,6 +94,7 @@
               <action class="canreg.client.gui.dataentry.RecordEditorPanel" id="runPersonSearch" methodName="runPersonSearch"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="searchButton.text"/>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="searchButton.toolTipText"/>
             <Property name="name" type="java.lang.String" value="searchButton" noResource="true"/>
           </Properties>
         </Component>
@@ -118,6 +120,7 @@
         <Component class="javax.swing.JButton" name="mpButton">
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="mpButton.text"/>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="mpButton.toolTipText"/>
             <Property name="name" type="java.lang.String" value="mpButton" noResource="true"/>
           </Properties>
         </Component>

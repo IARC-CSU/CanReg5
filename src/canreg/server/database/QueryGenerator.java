@@ -4,6 +4,7 @@
  */
 package canreg.server.database;
 
+import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import java.util.LinkedList;
 import org.w3c.dom.Document;
@@ -27,11 +28,18 @@ public class QueryGenerator {
      */
     public static final String strCreateVariableTable(String tableName, Document doc) {
 
+        String recordIDVariableName = "ID";
+        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
+            recordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
+        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)){
+            recordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
+        }
+
         // Common for all tables
         String query = "create table " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase() +
                 // Add the system variables
                 // ID is just a variable for the database
-                " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)" +
+                " ( " + recordIDVariableName + " INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)" +
                 // NEXT_RECORD_DB_ID is a pointer to the ID of the next version of this record - used only by the database 
                 ", NEXT_RECORD_DB_ID INTEGER" +
                 // LAST_RECORD_DB_ID is a pointer to the ID of the last version of this record - used only by the database 
@@ -94,6 +102,7 @@ public class QueryGenerator {
                     query += "\"" + variableElement.getElementsByTagName(namespace + "variable_name").item(0).getTextContent().toUpperCase() + "\"";
                 }
                 query += ") ";
+                System.out.println(query);
                 queries.add(query);
             }
         }
@@ -286,6 +295,20 @@ public class QueryGenerator {
         return strSaveRecord(doc, "tumour");
     }
 
+    static String strGetPatientsAndTumours(GlobalToolBox globalToolBox) {
+        String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+        String patientIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
+        return "SELECT * FROM APP.TUMOUR, APP.PATIENT " +
+            "WHERE APP.PATIENT."+patientIDVariableNamePatientTable+" = APP.TUMOUR."+patientIDVariableNameTumourTable;
+    }
+
+    static String strCountPatientsAndTumours(GlobalToolBox globalToolBox) {
+        String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+        String patientIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
+        return "SELECT COUNT(*) FROM APP.PATIENT, APP.TUMOUR " +
+            "WHERE APP.PATIENT."+patientIDVariableNamePatientTable+" = APP.TUMOUR."+patientIDVariableNameTumourTable;
+    }
+
     private static final String strSaveRecord(Document doc, String tableName) {
         String variableNamesPart = "INSERT INTO " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase();
         String valuesPart = "VALUES ";
@@ -332,6 +355,14 @@ public class QueryGenerator {
     }
 
     private static String strEditRecord(Document doc, String tableName) {
+
+        String recordIDVariableName = "ID";
+        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
+            recordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
+        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)){
+            recordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
+        }
+
         String variableNamesPart = "UPDATE " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase();
         // Get the variables node in the XML
         NodeList nodes = doc.getElementsByTagName(namespace + "variables");
@@ -358,7 +389,7 @@ public class QueryGenerator {
                 variableNamesPart += "\"" + element.getElementsByTagName(namespace + "short_name").item(0).getTextContent().toUpperCase() + "\" = ?";
             }
         }
-        variableNamesPart += "\nWHERE ID = ? ";
+        variableNamesPart += "\nWHERE "+recordIDVariableName+" = ? ";
 
         return variableNamesPart;
     }

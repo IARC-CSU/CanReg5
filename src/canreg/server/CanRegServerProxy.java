@@ -14,11 +14,9 @@ import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
 import canreg.server.security.ValidateMethodCall;
-import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.security.Principal;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Map;
@@ -35,7 +33,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     private Subject theUser;
 
     public CanRegServerProxy(Subject user, CanRegServerInterface server) throws RemoteException {
-        /** The user associated with this proxy 
+        /** The user associated with this proxy
          */
         this.theUser = user;
         /** A reference to the real server object 

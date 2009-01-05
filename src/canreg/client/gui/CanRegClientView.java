@@ -10,8 +10,6 @@ import canreg.client.gui.analysis.ExportReportInternalFrame;
 import canreg.client.gui.dataentry.ImportView;
 import canreg.client.*;
 import canreg.client.gui.dataentry.EditDictionaryInternalFrame;
-import canreg.client.gui.StandardDialog;
-import canreg.client.gui.WelcomeInternalFrame;
 import canreg.client.gui.analysis.FrequenciesByYearInternalFrame;
 import canreg.client.gui.dataentry.PDSChooserInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
@@ -293,6 +291,8 @@ public class CanRegClientView extends FrameView {
         toolBar.add(jSeparator15);
 
         jButton1.setAction(actionMap.get("showLastRecord")); // NOI18N
+        jButton1.setToolTipText(resourceMap.getString("jButton1.toolTipText")); // NOI18N
+        jButton1.setEnabled(false);
         jButton1.setFocusable(false);
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton1.setName("jButton1"); // NOI18N
@@ -1031,10 +1031,11 @@ public class CanRegClientView extends FrameView {
         DatabaseRecord patientRecord = null;
         DatabaseRecord[] tumourRecords;
         try {
-            int patientID=1;
+            int patientID = 1;
             patientRecord = CanRegClientApp.getApplication().getRecord(patientID,"patient");
+
             internalFrame.addRecord(patientRecord);
-            tumourRecords = CanRegClientApp.getApplication().getRecordsFromOtherTableBasedOnID(patientID+"", "patient");
+            tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID+"");
             for (DatabaseRecord rec : tumourRecords){
                 internalFrame.addRecord(rec);
             }

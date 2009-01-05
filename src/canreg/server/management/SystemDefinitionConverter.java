@@ -44,7 +44,7 @@ public class SystemDefinitionConverter {
         "MultPrimCode",
         "CheckStatus",
         "PersonSearch",
-        "RecordSearch",
+        "RecordStatus",
         "FirstName",
         "Surname",
         "UpdateDate",
@@ -266,9 +266,9 @@ public class SystemDefinitionConverter {
                     if ((groupName.equalsIgnoreCase("patient") || groupName.equalsIgnoreCase("follow up") 
                             || nameInDatabase.equalsIgnoreCase("PerS")) 
                             && !(nameInDatabase.equalsIgnoreCase("age"))) {
-                        element.appendChild(createElement(namespace + "table", "Patient"));
+                        element.appendChild(createElement(namespace + "table", Globals.PATIENT_TABLE_NAME));
                     } else {
-                        element.appendChild(createElement(namespace + "table", "Tumour"));
+                        element.appendChild(createElement(namespace + "table", Globals.TUMOUR_TABLE_NAME));
                     }
                 }
 
@@ -279,33 +279,66 @@ public class SystemDefinitionConverter {
                 //    String variableType, int variableLength, int useDictionary, String table, String standardVariableName) {
                 int variableNumber = numberOfVariables;
 
-                // Pointer to Patient from Tumour
-                parentElement.appendChild(
-                        createVariable(variableNumber++, "Patient ID", "PatientID", "PatientID",
-                        -1, "Automatic", "Othr", "Number", -1, -1, "Tumour", "PatientID"));
-                // Pointer to Tumour from Patient
-                parentElement.appendChild(
-                        createVariable(variableNumber++, "Tumour ID", "TumourID", "TumourID",
-                        -1, "Automatic", "Othr", "Number", -1, -1, "Patient", "TumourID"));
 
-                /* moved to the system Variables
-                // Forward and backward pointers...
-                // Pointer to records of the same Tumour information
-                parentElement.appendChild(
-                createVariable(variableNumber++, "Next Tumour Record ID", "NextTumourRecID", "Next Tumour Record ID",
-                -1, "Automatic", "Othr", "Number", -1, -1, "Tumour", "NextTumourID"));
-                parentElement.appendChild(
-                createVariable(variableNumber++, "Last Tumour Record ID", "LastTumourRecID", "Last Tumour Record ID",
-                -1, "Automatic", "Othr", "Number", -1, -1, "Tumour", "LastTumourID"));
-                // Pointer to records of the same Patient information
-                parentElement.appendChild(
-                createVariable(variableNumber++, "Next Patient Record ID", "NextPatientRecID", "Next Patient Record ID",
-                -1, "Automatic", "Othr", "Number", -1, -1, "Patient", "NextPatientID"));
-                parentElement.appendChild(
-                createVariable(variableNumber++, "Last Patient Record ID", "LastPatientRecID", "Last Patient Record ID",
-                -1, "Automatic", "Othr", "Number", -1, -1, "Patient", "LastPatientID"));
+                {
+                /**
+                 * Obsolete-flags
                  */
+                String variableName = Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString();
+                parentElement.appendChild(
+                        createVariable(variableNumber++, variableName, variableName, variableName,
+                        -1, "Automatic", "Othr", "Number", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                variableName = Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString();
+                parentElement.appendChild(
+                        createVariable(variableNumber++, variableName, variableName, variableName,
+                        -1, "Automatic", "Othr", "Number", 1, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                /**
+                 * PatientID
+                 */
+                variableName = Globals.StandardVariableNames.PatientID.toString();
+                parentElement.appendChild(
+                        createVariable(variableNumber++, variableName, variableName, variableName,
+                        -1, "Automatic", "Othr", "Alpha", 8, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                /**
+                 * PatientRecordID
+                 */
+                variableName = Globals.StandardVariableNames.PatientRecordID.toString();
+                parentElement.appendChild(
+                        createVariable(variableNumber++, variableName, variableName, variableName,
+                        -1, "Automatic", "Othr", "Alpha", 8, -1, Globals.PATIENT_TABLE_NAME, variableName));
 
+                /** 
+                 * Pointer to Patient from Tumour
+                 */
+                variableName = Globals.StandardVariableNames.PatientIDTumourTable.toString();
+                parentElement.appendChild(
+                        createVariable(variableNumber++, variableName, variableName, variableName,
+                        -1, "Automatic", "Othr", "Alpha", 8, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                variableName = Globals.StandardVariableNames.PatientRecordIDTumourTable.toString();
+                parentElement.appendChild(
+                        createVariable(variableNumber++, variableName, variableName, variableName,
+                        -1, "Automatic", "Othr", "Alpha", 8, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+
+                /**
+                 * "Updated by" fields
+                 */
+                variableName = Globals.StandardVariableNames.PatientUpdatedBy.toString();
+                parentElement.appendChild(
+                        createVariable(variableNumber++, variableName, variableName, variableName,
+                        -1, "Automatic", "Othr", "Alpha", 16, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                variableName = Globals.StandardVariableNames.TumourUpdatedBy.toString();
+                parentElement.appendChild(
+                        createVariable(variableNumber++, variableName, variableName, variableName,
+                        -1, "Automatic", "Othr", "Alpha", 16, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+
+                /**
+                 * Update dates
+                 */
+                variableName = Globals.StandardVariableNames.PatientUpdateDate.toString();
+                parentElement.appendChild(
+                        createVariable(variableNumber++, variableName, variableName, variableName,
+                        -1, "Automatic", "Othr", "Number", -1, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                }
 
                 // Create the Indexes part
                 //

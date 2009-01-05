@@ -3,6 +3,8 @@ package canreg.server.xml;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -60,19 +62,31 @@ public class Tools {
      * @param filename
      */
     public static void writeXmlFile(Document doc, String filename) {
-        try {
-            // Prepare the DOM document for writing
-            Source source = new DOMSource(doc);
+        //XMLOutputFactory xmlOutputFactory;
+        TransformerFactory  tfactory = TransformerFactory.newInstance();
+        // TransformerHandler transformHandler;
+        Transformer serializer;
 
+        try {
             // Prepare the output file
             File file = new File(filename);
             Result result = new StreamResult(file);
 
-            // Write the DOM document to the file
-            Transformer xformer = TransformerFactory.newInstance().newTransformer();
-            xformer.transform(source, result);
+            serializer = tfactory.newTransformer();
+
+            //Setup indenting to "pretty print"
+            serializer.setOutputProperty(OutputKeys.INDENT, "yes");
+            serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            serializer.transform(new DOMSource(doc), result);
+
         } catch (TransformerConfigurationException e) {
+            // this is fatal, just dump the stack and throw a runtime exception
+            e.printStackTrace();
+            throw new RuntimeException(e);
         } catch (TransformerException e) {
+            // this is fatal, just dump the stack and throw a runtime exception
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

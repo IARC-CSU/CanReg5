@@ -25,7 +25,10 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -55,6 +58,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     private boolean saveNeeded = false;
     private ActionListener actionListener;
 
+
     void setActionListener(ActionListener listener) {
         this.actionListener = listener;
     }
@@ -76,6 +80,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     }
 
     private enum panelTypes {
+
         PATIENT, TUMOUR
     }
 
@@ -83,7 +88,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     public RecordEditorPanel() {
         initComponents();
         saveButton.setEnabled(true);
-
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
     }
 
@@ -130,6 +134,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         String tableName = null;
         dataPanel.removeAll();
 
+        globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
+
         variableEditorPanels = new TreeMap();
 
         if (panelType == panelTypes.PATIENT) {
@@ -140,14 +146,19 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             tableName = Globals.TUMOUR_TABLE_NAME;
             searchButton.setVisible(false);
         }
-        Map<String, DictionaryEntry> recStatusDict = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, "Record status")).getDictionaryEntries();
+
+        DatabaseVariablesListElement recordStatusVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.RecordStatus.toString());
+
+        Map<String, DictionaryEntry> recStatusDict = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
         statusComboBox.setModel(new DefaultComboBoxModel(recStatusDict.values().toArray()));
-        Object recStatus = databaseRecord.getVariable("RecS");
+
+
+        Object recStatus = databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
+
         if (recStatus != null) {
             statusComboBox.setSelectedItem(recStatusDict.get(recStatus));
         }
 
-        globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
         Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new TreeMap<Integer, VariableEditorGroupPanel>();
 
         variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
@@ -262,6 +273,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
 
         searchButton.setAction(actionMap.get("runPersonSearch")); // NOI18N
         searchButton.setText(resourceMap.getString("searchButton.text")); // NOI18N
+        searchButton.setToolTipText(resourceMap.getString("searchButton.toolTipText")); // NOI18N
         searchButton.setName("searchButton"); // NOI18N
 
         statusLabel.setText(resourceMap.getString("statusLabel.text")); // NOI18N
@@ -271,6 +283,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         statusComboBox.setName("statusComboBox"); // NOI18N
 
         mpButton.setText(resourceMap.getString("mpButton.text")); // NOI18N
+        mpButton.setToolTipText(resourceMap.getString("mpButton.toolTipText")); // NOI18N
         mpButton.setName("mpButton"); // NOI18N
 
         checksButton.setAction(actionMap.get("runChecksAction")); // NOI18N
@@ -340,6 +353,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     private javax.swing.JLabel statusLabel;
     private javax.swing.JPanel systemPanel;
     // End of variables declaration//GEN-END:variables
+
     @Override
     public RecordEditorPanel clone() throws CloneNotSupportedException {
         RecordEditorPanel clone = (RecordEditorPanel) super.clone();
@@ -353,12 +367,15 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     @Action
     public void saveRecord() {
         try {
-            if ((Integer) databaseRecord.getVariable("id") != null) {
+            // id is the internal database id
+            if (databaseRecord.getVariable("id") != null) {
                 canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord);
+                JOptionPane.showInternalMessageDialog(this, "Record saved.");
             } else {
                 canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord);
+                JOptionPane.showInternalMessageDialog(this, "New record saved.");
             }
-            JOptionPane.showInternalMessageDialog(this, "Record saved.");
+
             setSaveNeeded(false);
         // saveButton.setEnabled(saveNeeded);
 
@@ -375,6 +392,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             VariableEditorPanel vep = iterator.next();
             databaseRecord.setVariable(vep.getKey(), vep.getValue());
         }
+    // TODO save record status
     }
 
     /**
@@ -392,9 +410,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
                 String records = "";
                 for (Integer i : map.keySet()) {
                     // records += i + ": " + map.get(i) + "\n";
-                    records += "Patient id: " + i + ", score: " + map.get(i) +"%\n";
+                    records += "Patient id: " + i + ", score: " + map.get(i) + "%\n";
                 }
                 JOptionPane.showInternalMessageDialog(this, "Duplicates found:\n" + records);
+            // TODO add user feedback and options to handle duplicates
             }
         } catch (SecurityException ex) {
             Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);

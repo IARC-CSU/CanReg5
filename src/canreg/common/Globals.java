@@ -1,9 +1,6 @@
 package canreg.common;
 
 import canreg.server.database.AgeGroupStructure;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 
 /**
  *
@@ -109,11 +106,7 @@ public class Globals {
      * 
      */
     public static String TUMOUR_TABLE_NAME = "Tumour";
-    /**
-     * 
-     */
     public static String PATIENT_TABLE_NAME = "Patient";
-    // public static String PATIENT_TABLE_NAME = "Patient";
     /**
      * 
      */
@@ -262,7 +255,7 @@ public class Globals {
         /**
          * 
          */
-        RecordSearch,
+        RecordStatus,
         /**
          * 
          */
@@ -274,9 +267,21 @@ public class Globals {
         /**
          * 
          */
-        UpdateDate,
+        PatientUpdateDate,
         /**
-         * 
+         *
+         */
+        TumourUpdateDate,
+        /**
+         *
+         */
+        PatientUpdatedBy,
+        /**
+         *
+         */
+        TumourUpdatedBy,
+        /**
+         *
          */
         Lastcontact,
         /**
@@ -332,8 +337,28 @@ public class Globals {
          */
         PatientID,
         /**
+         * The ID of the patient in the tumour table
+         */
+        PatientIDTumourTable,
+        /**
+         * The ID of the patient record
+         */
+        PatientRecordID,
+        /**
+         * The ID of the patient record in the tumour table
+         */
+        PatientRecordIDTumourTable,
+        /**
          * 
          */
-        TumourID
+        TumourRecordID,
+        /**
+         * 
+         */
+        ObsoleteFlagTumourTable,
+        /**
+         *
+         */
+        ObsoleteFlagPatientTable
     }    
 }
