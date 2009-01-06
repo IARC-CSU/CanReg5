@@ -47,7 +47,7 @@ public class SystemDefinitionConverter {
         "RecordStatus",
         "FirstName",
         "Surname",
-        "UpdateDate",
+        "TumourUpdateDate",
         "Lastcontact",
         "Grade",
         "ICCC",
