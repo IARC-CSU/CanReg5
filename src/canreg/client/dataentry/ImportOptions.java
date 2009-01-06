@@ -47,6 +47,10 @@ public class ImportOptions {
 
     private String patientIDTumourTableVariableName;
     private String patientRecordIDTumourTableVariableName;
+
+    private String obsoleteTumourFlagVariableName;
+    private String obsoletePatientFlagVariableName;
+
     /**
      * 
      * @return
@@ -299,5 +303,33 @@ public class ImportOptions {
      */
     public void setPatientRecordIDTumourTableVariableName(String patientRecordIDTumourTableVariableName) {
         this.patientRecordIDTumourTableVariableName = patientRecordIDTumourTableVariableName;
+    }
+
+    /**
+     * @return the deprecatedTumourFlagVariableName
+     */
+    public String getObsoleteTumourFlagVariableName() {
+        return obsoleteTumourFlagVariableName;
+    }
+
+    /**
+     * @param deprecatedTumourFlagVariableName the deprecatedTumourFlagVariableName to set
+     */
+    public void setObsoleteTumourFlagVariableName(String deprecatedTumourFlagVariableName) {
+        this.obsoleteTumourFlagVariableName = deprecatedTumourFlagVariableName;
+    }
+
+    /**
+     * @return the deprecatedPatientFlagVariableName
+     */
+    public String getObsoletePatientFlagVariableName() {
+        return obsoletePatientFlagVariableName;
+    }
+
+    /**
+     * @param deprecatedPatientFlagVariableName the deprecatedPatientFlagVariableName to set
+     */
+    public void setObsoletePatientFlagVariableName(String deprecatedPatientFlagVariableName) {
+        this.obsoletePatientFlagVariableName = deprecatedPatientFlagVariableName;
     }
 }

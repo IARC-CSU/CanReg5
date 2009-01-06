@@ -1,5 +1,7 @@
 package canreg.server;
 
+import canreg.common.Globals;
+
 /**
  *
  * @author ervikm
@@ -9,7 +11,8 @@ public class RMILoginPrincipal
    implements java.security.Principal
 {
     private static boolean DEBUG;
-    
+
+    private Globals.UserRightLevels userRightLevel;
     /**
      * Toggles debug status on or off.&ltp>
      * 
@@ -58,4 +61,18 @@ public class RMILoginPrincipal
       public int hashCode() {
          return username.hashCode();
   }
+
+    /**
+     * @return the userRightLevel
+     */
+    public Globals.UserRightLevels getUserRightLevel() {
+        return userRightLevel;
+    }
+
+    /**
+     * @param userRightLevel the userRightLevel to set
+     */
+    public void setUserRightLevel(Globals.UserRightLevels userRightLevel) {
+        this.userRightLevel = userRightLevel;
+    }
 }

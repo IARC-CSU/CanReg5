@@ -300,7 +300,7 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
                     System.out.println(databaseListElement.getShortName() + "" + valueString);
                 }
             } else {
-                valueObject = -1;
+                valueObject = null;
             }
         } else {
             valueObject = valueString;

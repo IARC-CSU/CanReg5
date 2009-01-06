@@ -248,15 +248,17 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
 
     public UserRightLevels getUserRightLevel() throws RemoteException, SecurityException {
         checkPermission("getUserRightLevel");
-        Globals.UserRightLevels level = theServer.getUserRightLevel();
-
         RMILoginPrincipal principal = (RMILoginPrincipal) theUser.getPrincipals().toArray()[0];
+
+        /*
+        Globals.UserRightLevels level = theServer.getUserRightLevel();
         // Ad hoc to test the user levels in the GUI
         String userName = principal.getName();
         if (userName.equalsIgnoreCase("morten")){
             level = Globals.UserRightLevels.SUPERVISOR;
-        }
-        return level;
+        }*/
+
+        return principal.getUserRightLevel();
     }
 
     public Map<Integer, Float> performPersonSearch(Patient patient, PersonSearcher searcher) throws RemoteException, SecurityException {
@@ -267,5 +269,10 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public Map<Integer, Map<Float, Integer>> performGlobalPersonSearch(PersonSearcher searcher) throws RemoteException, SecurityException {
         checkPermission("performGlobalPersonSearch");
         return theServer.performGlobalPersonSearch(searcher);
+    }
+
+    public boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException {
+        checkPermission("deleteRecord"+tableName);
+        return theServer.deleteRecord(id, tableName);
     }
 }

@@ -172,6 +172,8 @@ public class CanRegLoginModule implements LoginModule {
 
             // assume the user we authenticated is the TopsecurityPrincipal
             entity = new RMILoginPrincipal(username);
+            entity.setUserRightLevel(getUserRightLevel(username));
+            
             Set entities = subject.getPrincipals();
             if (!entities.contains(entity)) {
                 entities.add(entity);
@@ -241,4 +243,21 @@ public class CanRegLoginModule implements LoginModule {
         entity = null;
         return true;
     }//end logout()
+
+    private Globals.UserRightLevels getUserRightLevel(String userName){
+
+        try {
+            InputStream levelsPropInputStream = null;
+            levelsPropInputStream = CanRegLoginModule.class.getResourceAsStream(Globals.LEVELS_FILENAME);
+            Properties levels = new Properties();
+            levels.load(levelsPropInputStream);
+
+            String userLevel = levels.getProperty(username);
+            return Globals.UserRightLevels.valueOf(userLevel);
+
+        } catch (java.io.IOException e) {
+            debugOut("File error: " + Globals.PASS_FILENAME + "\n");
+            return null;
+        }
+    }
 }

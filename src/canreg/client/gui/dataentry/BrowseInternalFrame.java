@@ -457,7 +457,7 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
         String tableName = Globals.PATIENT_TABLE_NAME;
                 
         RecordEditor recordEditor = new RecordEditor(dtp);
-        recordEditor.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
+        recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord record = null;        
         DatabaseFilter filter = new DatabaseFilter();
@@ -515,7 +515,7 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
         String tableName = Globals.PATIENT_TABLE_NAME;
 
         RecordEditor recordEditor = new RecordEditor(dtp);
-        recordEditor.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
+        recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord record = null;
         DatabaseFilter filter = new DatabaseFilter();
@@ -581,7 +581,7 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
     public void editTumourID(String idString) {
         
         RecordEditor recordEditor = new RecordEditor(dtp);
-        recordEditor.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
+        recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord record = null;        
         DatabaseFilter filter = new DatabaseFilter();

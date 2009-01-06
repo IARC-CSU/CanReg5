@@ -8,6 +8,7 @@ package canreg.client.gui.dataentry;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.tools.PrintUtilities;
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.conversions.ConversionResult;
 import canreg.common.conversions.Converter;
@@ -18,10 +19,14 @@ import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import org.jdesktop.application.Action;
@@ -39,6 +44,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private LinkedList<DatabaseRecord> tumourRecords;
     private boolean changesDone = false;
     private JDesktopPane desktopPane;
+    private GlobalToolBox globalToolBox;
 
     /** Creates new form RecordEditor
      * @param desktopPane 
@@ -71,8 +77,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
      * 
      * @param doc
      */
-    public void setDocument(Document doc) {
-        this.doc = doc;
+    public void setGlobalToolBox(GlobalToolBox globalToolBox) {
+        this.globalToolBox = globalToolBox;
+        this.doc = globalToolBox.getDocument();
     }
 
     /**
@@ -115,8 +122,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             Object regno = dbr.getVariable("RegNo");
             String regnoString = "n/a";
             if (regno != null) {
-                    regnoString = regno.toString();
-        }
+                regnoString = regno.toString();
+            }
             tumourTabbedPane.addTab(dbr.toString() + " " + regnoString + " ", rePanel);
         }
     }
@@ -232,10 +239,10 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 // TODO add your handling code here:
 }//GEN-LAST:event_jButton1ActionPerformed
 
-/**
- * 
- */
-@Action
+    /**
+     *
+     */
+    @Action
     public void addTumourAction() {
         Tumour tumour = new Tumour();
         populateNewRecord(tumour, doc);
@@ -251,7 +258,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         populateNewRecord(patient, doc);
         addRecord(patient);
     }
-    
+
     private static DatabaseRecord populateNewRecord(DatabaseRecord dbr, Document doc) {
         String tableName = "";
         if (dbr instanceof Tumour) {
@@ -276,7 +283,6 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
      */
     @Action
     public void saveAllAction() {
-        
     }
 
     /**
@@ -287,7 +293,6 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         PrintUtilities.printComponent(patientTabbedPane.getSelectedComponent());
         PrintUtilities.printComponent(tumourTabbedPane.getSelectedComponent());
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -301,16 +306,57 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if (source instanceof RecordEditorPanel){
-            if (e.getActionCommand().equalsIgnoreCase("changed")){
+
+        if (source instanceof RecordEditorPanel) {
+            if (e.getActionCommand().equalsIgnoreCase("changed")) {
                 changesDone = true;
-            }
-            else if (e.getActionCommand().equalsIgnoreCase("checks")){
+            } else if (e.getActionCommand().equalsIgnoreCase("delete")) {
+                int option = JOptionPane.NO_OPTION;
+                option = JOptionPane.showConfirmDialog(null, "Permanently delete record?");
+                if (option == JOptionPane.YES_OPTION) {
+                    boolean success = false;
+                    RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
+                    DatabaseRecord record = recordEditorPanel.getRecord();
+                    int id = -1;
+                    String tableName = null;
+                    JTabbedPane tabbedPane = null;
+                    if (record instanceof Patient) {
+                        Object idObject = record.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                        if (idObject != null) {
+                            id = (Integer) idObject;
+                        }
+                        tableName = Globals.PATIENT_TABLE_NAME;
+                        tabbedPane = patientTabbedPane;
+                    } else if (record instanceof Tumour) {
+                        Object idObject = record.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+                        if (idObject != null) {
+                            id = (Integer) idObject;
+                        }
+                        tableName = Globals.TUMOUR_TABLE_NAME;
+                        tabbedPane = tumourTabbedPane;
+                    }
+                    if (id > 0) {
+                        try {
+                            success = canreg.client.CanRegClientApp.getApplication().deleteRecord(id, tableName);
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    if (success) {
+                        tabbedPane.remove(recordEditorPanel);
+                        JOptionPane.showInternalMessageDialog(this, "Record deleted.");
+                    } else {
+                        JOptionPane.showInternalMessageDialog(this, "Record not deleted.\nError occured...");
+                    }
+                }
+            } else if (e.getActionCommand().equalsIgnoreCase("checks")) {
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
                 DatabaseRecord record = recordEditorPanel.getRecord();
                 Patient patient;
                 Tumour tumour;
-                if (record instanceof Patient){
+                if (record instanceof Patient) {
                     patient = (Patient) record;
                     RecordEditorPanel otherRecordEditorPanel = (RecordEditorPanel) tumourTabbedPane.getSelectedComponent();
                     tumour = (Tumour) otherRecordEditorPanel.getRecord();
@@ -322,9 +368,9 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumour);
                 EditChecksInternalFrame editChecksInternalFrame = new EditChecksInternalFrame();
                 String message = "";
-                
-               CheckResult.ResultCode worstResultCodeFound = CheckResult.ResultCode.OK;
-                
+
+                CheckResult.ResultCode worstResultCodeFound = CheckResult.ResultCode.OK;
+
                 for (CheckResult result : checkResults) {
 
                     if (result.getResultCode() != CheckResult.ResultCode.OK) {
@@ -341,10 +387,11 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     }
                     System.out.println(result);
                 }
-                if (worstResultCodeFound == CheckResult.ResultCode.OK){
-                        message += "Cross-check conclusion: Valid";
+
+                if (worstResultCodeFound == CheckResult.ResultCode.OK) {
+                    message += "Cross-check conclusion: Valid";
                 }
-                
+
                 editChecksInternalFrame.setCrossChecksTextAreaText(message);
                 editChecksInternalFrame.setResultTextFieldText(worstResultCodeFound.toString());
 
@@ -361,5 +408,4 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             }
         }
     }
-    
 }

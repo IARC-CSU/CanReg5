@@ -58,7 +58,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     private boolean saveNeeded = false;
     private ActionListener actionListener;
 
-
     void setActionListener(ActionListener listener) {
         this.actionListener = listener;
     }
@@ -141,10 +140,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         if (panelType == panelTypes.PATIENT) {
             tableName = Globals.PATIENT_TABLE_NAME;
             // checksButton.setVisible(false);
-            mpButton.setVisible(false);
+            mpPanel.setVisible(false);
         } else if (panelType == panelTypes.TUMOUR) {
             tableName = Globals.TUMOUR_TABLE_NAME;
-            searchButton.setVisible(false);
+            personSearchPanel.setVisible(false);
         }
 
         DatabaseVariablesListElement recordStatusVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.RecordStatus.toString());
@@ -252,11 +251,18 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
 
         systemPanel = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
-        searchButton = new javax.swing.JButton();
-        statusLabel = new javax.swing.JLabel();
-        statusComboBox = new javax.swing.JComboBox();
-        mpButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        checksPanel = new javax.swing.JPanel();
         checksButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        personSearchPanel = new javax.swing.JPanel();
+        searchButton = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        mpPanel = new javax.swing.JPanel();
+        mpButton = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        recordStatusPanel = new javax.swing.JPanel();
+        statusComboBox = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         dataPanel = new javax.swing.JPanel();
 
@@ -271,52 +277,137 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         saveButton.setText(resourceMap.getString("saveButton.text")); // NOI18N
         saveButton.setName("saveButton"); // NOI18N
 
-        searchButton.setAction(actionMap.get("runPersonSearch")); // NOI18N
-        searchButton.setText(resourceMap.getString("searchButton.text")); // NOI18N
-        searchButton.setToolTipText(resourceMap.getString("searchButton.toolTipText")); // NOI18N
-        searchButton.setName("searchButton"); // NOI18N
+        jButton1.setAction(actionMap.get("deleteRecord")); // NOI18N
+        jButton1.setName("jButton1"); // NOI18N
 
-        statusLabel.setText(resourceMap.getString("statusLabel.text")); // NOI18N
-        statusLabel.setName("statusLabel"); // NOI18N
-
-        statusComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        statusComboBox.setName("statusComboBox"); // NOI18N
-
-        mpButton.setText(resourceMap.getString("mpButton.text")); // NOI18N
-        mpButton.setToolTipText(resourceMap.getString("mpButton.toolTipText")); // NOI18N
-        mpButton.setName("mpButton"); // NOI18N
+        checksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("checksPanel.border.title"))); // NOI18N
+        checksPanel.setName("checksPanel"); // NOI18N
 
         checksButton.setAction(actionMap.get("runChecksAction")); // NOI18N
         checksButton.setText(resourceMap.getString("checksButton.text")); // NOI18N
         checksButton.setName("checksButton"); // NOI18N
 
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
+
+        javax.swing.GroupLayout checksPanelLayout = new javax.swing.GroupLayout(checksPanel);
+        checksPanel.setLayout(checksPanelLayout);
+        checksPanelLayout.setHorizontalGroup(
+            checksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(checksButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+        );
+        checksPanelLayout.setVerticalGroup(
+            checksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(checksPanelLayout.createSequentialGroup()
+                .addComponent(checksButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1))
+        );
+
+        personSearchPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("personSearchPanel.border.title"))); // NOI18N
+        personSearchPanel.setName("personSearchPanel"); // NOI18N
+
+        searchButton.setAction(actionMap.get("runPersonSearch")); // NOI18N
+        searchButton.setText(resourceMap.getString("searchButton.text")); // NOI18N
+        searchButton.setToolTipText(resourceMap.getString("searchButton.toolTipText")); // NOI18N
+        searchButton.setName("searchButton"); // NOI18N
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
+        jLabel2.setName("jLabel2"); // NOI18N
+
+        javax.swing.GroupLayout personSearchPanelLayout = new javax.swing.GroupLayout(personSearchPanel);
+        personSearchPanel.setLayout(personSearchPanelLayout);
+        personSearchPanelLayout.setHorizontalGroup(
+            personSearchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(searchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+        );
+        personSearchPanelLayout.setVerticalGroup(
+            personSearchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(personSearchPanelLayout.createSequentialGroup()
+                .addComponent(searchButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2))
+        );
+
+        mpPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("mpPanel.border.title"))); // NOI18N
+        mpPanel.setName("mpPanel"); // NOI18N
+
+        mpButton.setText(resourceMap.getString("mpButton.text")); // NOI18N
+        mpButton.setToolTipText(resourceMap.getString("mpButton.toolTipText")); // NOI18N
+        mpButton.setName("mpButton"); // NOI18N
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
+        jLabel3.setName("jLabel3"); // NOI18N
+
+        javax.swing.GroupLayout mpPanelLayout = new javax.swing.GroupLayout(mpPanel);
+        mpPanel.setLayout(mpPanelLayout);
+        mpPanelLayout.setHorizontalGroup(
+            mpPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(mpButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+        );
+        mpPanelLayout.setVerticalGroup(
+            mpPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mpPanelLayout.createSequentialGroup()
+                .addComponent(mpButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3))
+        );
+
+        recordStatusPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("recordStatusPanel.border.title"))); // NOI18N
+        recordStatusPanel.setName("recordStatusPanel"); // NOI18N
+
+        statusComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        statusComboBox.setName("statusComboBox"); // NOI18N
+
+        javax.swing.GroupLayout recordStatusPanelLayout = new javax.swing.GroupLayout(recordStatusPanel);
+        recordStatusPanel.setLayout(recordStatusPanelLayout);
+        recordStatusPanelLayout.setHorizontalGroup(
+            recordStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(recordStatusPanelLayout.createSequentialGroup()
+                .addComponent(statusComboBox, 0, 114, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        recordStatusPanelLayout.setVerticalGroup(
+            recordStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(recordStatusPanelLayout.createSequentialGroup()
+                .addComponent(statusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout systemPanelLayout = new javax.swing.GroupLayout(systemPanel);
         systemPanel.setLayout(systemPanelLayout);
         systemPanelLayout.setHorizontalGroup(
             systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, systemPanelLayout.createSequentialGroup()
-                .addComponent(checksButton)
+            .addGroup(systemPanelLayout.createSequentialGroup()
+                .addComponent(checksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchButton)
+                .addComponent(personSearchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(mpButton)
+                .addComponent(mpPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statusLabel)
+                .addComponent(recordStatusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statusComboBox, 0, 114, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(saveButton)
-                .addContainerGap())
+                .addGroup(systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(saveButton, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)))
         );
         systemPanelLayout.setVerticalGroup(
             systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            .addGroup(systemPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(saveButton)
-                .addComponent(searchButton)
-                .addComponent(checksButton)
-                .addComponent(mpButton)
-                .addComponent(statusLabel)
-                .addComponent(statusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1))
+            .addComponent(mpPanel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(personSearchPanel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(checksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(recordStatusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
@@ -329,28 +420,35 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
             .addComponent(systemPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(systemPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(systemPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE))
         );
 
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton checksButton;
+    private javax.swing.JPanel checksPanel;
     private javax.swing.JPanel dataPanel;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton mpButton;
+    private javax.swing.JPanel mpPanel;
+    private javax.swing.JPanel personSearchPanel;
+    private javax.swing.JPanel recordStatusPanel;
     private javax.swing.JButton saveButton;
     private javax.swing.JButton searchButton;
     private javax.swing.JComboBox statusComboBox;
-    private javax.swing.JLabel statusLabel;
     private javax.swing.JPanel systemPanel;
     // End of variables declaration//GEN-END:variables
 
@@ -366,16 +464,22 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
      */
     @Action
     public void saveRecord() {
+        buildDatabaseRecord();
         try {
             // id is the internal database id
-            if (databaseRecord.getVariable("id") != null) {
-                canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord);
-                JOptionPane.showInternalMessageDialog(this, "Record saved.");
-            } else {
-                canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord);
+            if (databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) == null && databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) == null) {
+                int id = canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord);
+                if (databaseRecord instanceof Patient) {
+                    databaseRecord.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, id);
+                } else if (databaseRecord instanceof Tumour) {
+                    databaseRecord.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, id);
+                }
                 JOptionPane.showInternalMessageDialog(this, "New record saved.");
+            }else {
+                canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord);
+                // TODO: Retrieve updated data if not data can be lost. Get the patient/tumour?
+                JOptionPane.showInternalMessageDialog(this, "Record saved.");
             }
-
             setSaveNeeded(false);
         // saveButton.setEnabled(saveNeeded);
 
@@ -428,5 +532,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     @Action
     public void runChecksAction() {
         actionListener.actionPerformed(new ActionEvent(this, 0, "checks"));
+    }
+
+    @Action
+    public void deleteRecord() {
+        actionListener.actionPerformed(new ActionEvent(this, 0, "delete"));
     }
 }

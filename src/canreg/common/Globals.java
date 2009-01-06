@@ -8,7 +8,6 @@ import canreg.server.database.AgeGroupStructure;
  */
 public class Globals {
 
-    // http://en.wikipedia.org/wiki/Software_versioning
     /**
      * 
      */
@@ -45,6 +44,12 @@ public class Globals {
      * 
      */
     static public String PASS_FILENAME = "Passwords.properties";
+
+    /**
+     *
+     */
+    static public String LEVELS_FILENAME = "Levels.properties";
+    
     /**
      * 
      */

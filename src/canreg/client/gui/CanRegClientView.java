@@ -1026,7 +1026,7 @@ public class CanRegClientView extends FrameView {
     @Action
     public void showLastRecord() {
         RecordEditor internalFrame = new RecordEditor(desktopPane);
-        internalFrame.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
+        internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord patientRecord = null;
         DatabaseRecord[] tumourRecords;
@@ -1066,7 +1066,7 @@ public class CanRegClientView extends FrameView {
     @Action
     public void createNewRecordSetAction() {
         RecordEditor internalFrame = new RecordEditor(desktopPane);
-        internalFrame.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
+        internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
         internalFrame.addRecord(new Tumour());
         internalFrame.addRecord(new Patient());

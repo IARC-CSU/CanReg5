@@ -70,6 +70,8 @@ public class CanRegDAO {
         strSaveNameSexRecord = QueryGenerator.strSaveNameSexEntry();
         strGetPatientsAndTumours = QueryGenerator.strGetPatientsAndTumours(globalToolBox);
         strCountPatientsAndTumours = QueryGenerator.strCountPatientsAndTumours(globalToolBox);
+        strGetHighestPatientID = QueryGenerator.strGetHighestPatientID(globalToolBox);
+        strGetHighestTumourID = QueryGenerator.strGetHighestTumourID(globalToolBox);
         setDBSystemDir();
         dbProperties = loadDBProperties();
         String driverName = dbProperties.getProperty("derby.driver");
@@ -238,7 +240,7 @@ public class CanRegDAO {
                 rowCount = countRowSet.getInt(1);
             }
             countRowSet = null;
-            query = "SELECT "+Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME+" FROM APP.PATIENT";
+            query = "SELECT " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " FROM APP.PATIENT";
             System.out.print(query);
             result = statement.executeQuery(query);
         } else if (DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR.equals(filter.getQueryType())) {
@@ -588,9 +590,14 @@ public class CanRegDAO {
             stmtGetPatient = dbConnection.prepareStatement(strGetPatient);
             stmtGetPatients = dbConnection.prepareStatement(strGetPatients);
             stmtGetPatientsAndTumours = dbConnection.prepareStatement(strGetPatientsAndTumours);
+            stmtGetHighestPatientID = dbConnection.prepareStatement(strGetHighestPatientID);
+            stmtGetHighestTumourID = dbConnection.prepareStatement(strGetHighestTumourID);
 
             stmtGetTumour = dbConnection.prepareStatement(strGetTumour);
             stmtGetTumours = dbConnection.prepareStatement(strGetTumours);
+
+            stmtDeleteTumourRecord = dbConnection.prepareStatement(strDeleteTumourRecord);
+            stmtDeletePatientRecord = dbConnection.prepareStatement(strDeletePatientRecord);
 
             stmtGetDictionary = dbConnection.prepareStatement(strGetDictionary);
             // stmtGetDictionaries = dbConnection.prepareStatement(strGetDictionaries);
@@ -611,6 +618,7 @@ public class CanRegDAO {
 
 
             System.out.println("Cocuou from the database connection...");
+            System.out.println("Next tumour ID = " + getNextTumourID());
         } catch (SQLException ex) {
             System.out.println("SQLerror... ");
             ex.printStackTrace();
@@ -718,6 +726,11 @@ public class CanRegDAO {
      * @return
      */
     public int savePatient(Patient patient) {
+        String patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+        Object patientID = patient.getVariable(patientIDVariableName);
+        if (patientID != null && patientID.toString().trim().length() == 0) {
+            patient.setVariable(patientIDVariableName, getNextPatientID());
+        }
         return saveRecord("Patient", patient, stmtSaveNewPatient);
     }
 
@@ -727,6 +740,11 @@ public class CanRegDAO {
      * @return
      */
     public int saveTumour(Tumour tumour) {
+        String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.RegistrationNo.toString()).getDatabaseVariableName();
+        Object tumourID = tumour.getVariable(tumourIDVariableName);
+        if (tumourID == null && tumourID.toString().trim().length() == 0) {
+            tumour.setVariable(tumourIDVariableName, getNextTumourID());
+        }
         return saveRecord("Tumour", tumour, stmtSaveNewTumour);
     }
 
@@ -938,6 +956,32 @@ public class CanRegDAO {
         return success;
     }
 
+    public boolean deletePatientRecord(int patientRecordID) {
+        boolean success = false;
+        try {
+            stmtDeletePatientRecord.clearParameters();
+            stmtDeletePatientRecord.setInt(1, patientRecordID);
+            stmtDeletePatientRecord.executeUpdate();
+            success = true;
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return success;
+    }
+
+    public boolean deleteTumourRecord(int tumourRecordID) {
+        boolean success = false;
+        try {
+            stmtDeleteTumourRecord.clearParameters();
+            stmtDeleteTumourRecord.setInt(1, tumourRecordID);
+            stmtDeleteTumourRecord.executeUpdate();
+            success = true;
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return success;
+    }
+
     /**
      * 
      * @param patient
@@ -1012,8 +1056,13 @@ public class CanRegDAO {
                 }
             }
             // add the ID
-
-            int idInt = (Integer) record.getVariable("id");
+            String idString = "id";
+            if (record instanceof Patient) {
+                idString = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
+            } else if (record instanceof Tumour) {
+                idString = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
+            }
+            int idInt = (Integer) record.getVariable(idString);
             stmtEditRecord.setInt(patientVariableNumber + 1, idInt);
 
             int rowCount = stmtEditRecord.executeUpdate();
@@ -1185,6 +1234,34 @@ public class CanRegDAO {
         }
         return record;
     }
+
+    public String getNextPatientID() {
+        String patientID = null;
+        try {
+            ResultSet result = stmtGetHighestPatientID.executeQuery();
+            result.next();
+            String highestPatientID = result.getString(1);
+            if (highestPatientID!=null)
+                patientID = canreg.common.Tools.increment(highestPatientID);
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return patientID;
+    }
+
+    public String getNextTumourID() {
+        String tumourID = null;
+        try {
+            ResultSet result = stmtGetHighestTumourID.executeQuery();
+            result.next();
+            String highestTumourID = result.getString(1);
+            if (highestTumourID!=null)
+                tumourID = canreg.common.Tools.increment(highestTumourID);
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return tumourID;
+    }
     private Connection dbConnection;
     private Properties dbProperties;
     private boolean isConnected;
@@ -1216,10 +1293,12 @@ public class CanRegDAO {
     private PreparedStatement stmtDeleteDictionaryEntry;
     private PreparedStatement stmtDeleteDictionaryEntries;
     private PreparedStatement stmtClearNameSexTable;
-    private PreparedStatement stmtDeletePatient;
-    private PreparedStatement stmtDeleteTumour;
+    private PreparedStatement stmtDeletePatientRecord;
+    private PreparedStatement stmtDeleteTumourRecord;
     private PreparedStatement stmtDeletePopoulationDataset;
     private PreparedStatement stmtDeletePopoulationDatasetEntries;
+    private PreparedStatement stmtGetHighestPatientID;
+    private PreparedStatement stmtGetHighestTumourID;
     private String ns = Globals.NAMESPACE;
     private static final String strGetPatient =
             "SELECT * FROM APP.PATIENT " +
@@ -1253,12 +1332,12 @@ public class CanRegDAO {
             "SELECT * FROM APP.PDSETS ";
     private static final String strGetNameSexRecords =
             "SELECT * FROM APP.NAMESEX ";
-    private static final String strDeletePatient =
+    private static final String strDeletePatientRecord =
             "DELETE FROM APP.PATIENT " +
-            "WHERE ID = ?";
-    private static final String strDeleteTumour =
+            "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+    private static final String strDeleteTumourRecord =
             "DELETE FROM APP.TUMOUR " +
-            "WHERE ID = ?";
+            "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private static final String strDeleteDictionaryEntries =
             "DELETE FROM APP.DICTIONARY " +
             "WHERE DICTIONARY = ?";
@@ -1269,7 +1348,9 @@ public class CanRegDAO {
             "WHERE PDS_ID = ?";
     private static final String strDeletePopulationDatasetEntries =
             "DELETE FROM APP.PDSET " +
-            "WHERE PDS_ID = ?";    // The Dynamic ones
+            "WHERE PDS_ID = ?";
+
+    // The Dynamic ones
     private String strSavePatient;
     private String strSaveTumour;
     private String strEditPatient;
@@ -1279,6 +1360,8 @@ public class CanRegDAO {
     private String strSavePopoulationDataset;
     private String strSavePopoulationDatasetsEntry;
     private String strSaveNameSexRecord;
+    private String strGetHighestPatientID;
+    private String strGetHighestTumourID;
     private GlobalToolBox globalToolBox;
 }
 

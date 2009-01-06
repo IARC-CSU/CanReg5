@@ -155,6 +155,10 @@ public interface CanRegServerInterface extends Remote {
     public void setUserPassword(String username)
             throws RemoteException, SecurityException;
 
+    
+    public boolean deleteRecord(int id, String tableName)
+            throws RemoteException, SecurityException;
+    
     /**
      * 
      * @param username

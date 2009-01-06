@@ -280,9 +280,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         fClients.remove(fClients.indexOf(username));
     }
 
-    // For testing purposes only - not secure enough...
+    // 
     /**
-     * 
+     * For testing purposes only - not secure enough...
+     * Not used!
      * @return
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -621,7 +622,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         filter.setQueryType(DatabaseFilter.QueryType.PERSON_SEARCH);
         DistributedTableDescription dataDescription;
         String resultSetID;
-        Object patientIDAObject = patient.getVariable("ID");
+        Object patientIDAObject = patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
 
         int patientIDA;
         if (patientIDAObject != null) {
@@ -661,5 +662,13 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
         }
         return patientIDScoreMap;
+    }
+
+    public boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException {
+        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
+            return db.deleteTumourRecord(id);
+        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+            return db.deletePatientRecord(id);
+        } else return false;
     }
 }

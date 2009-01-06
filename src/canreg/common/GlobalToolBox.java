@@ -29,6 +29,10 @@ public class GlobalToolBox {
         standardVariableNameToDatabaseVariableListElementMap = buildVariablesMap(databaseVariablesListElements);
     }
 
+    public Document getDocument() {
+        return doc;
+    }
+
     /**
      * 
      * @return

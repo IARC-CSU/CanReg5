@@ -395,6 +395,20 @@ public class Tools {
         out.close();
     }
 
+    public static String increment(String ID) {
+        String IDplusOne = null;
+        char lastChar = ID.charAt(ID.length()-1);
+        String theRest = ID.substring(0, ID.length()-1);
+        if (lastChar == '9') {
+            lastChar = '0';
+            IDplusOne = increment(theRest) + lastChar;
+        } else {
+            lastChar += 1;
+            IDplusOne = theRest + lastChar;
+        }
+        return IDplusOne;
+    }
+
     /**
      * 
      * @param file

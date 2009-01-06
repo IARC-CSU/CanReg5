@@ -245,9 +245,13 @@ public class Import {
                     //
                     patient.setVariable(io.getPatientIDVariableName(), patientID);
 
-                    //Set the patient ID number on the tumour
+                    // Set the patient ID number on the tumour
                     tumour.setVariable(io.getPatientIDTumourTableVariableName(), patientID);
                     tumour.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
+
+                    // Set the deprecated flag to 0 - no obsolete records from CR4
+                    tumour.setVariable(io.getObsoleteTumourFlagVariableName(),0);
+                    patient.setVariable(io.getObsoletePatientFlagVariableName(),0);
                 }
 
                 patientDatabaseRecordID = server.savePatient(patient);
