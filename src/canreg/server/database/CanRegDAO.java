@@ -460,11 +460,6 @@ public class CanRegDAO {
             statement.execute(QueryGenerator.strCreateDictionaryTable(doc));
             statement.execute(QueryGenerator.strCreateTablesOfDictionaries(doc));
 
-            LinkedList<String> patientIndexList = QueryGenerator.strCreateIndexTable("Patient", doc);
-            for (String query : patientIndexList) {
-                // System.out.println(query);
-                statement.execute(query);
-            }
 
             // Population dataset part
             statement.execute(QueryGenerator.strCreatePopulationDatasetTable());
@@ -480,6 +475,11 @@ public class CanRegDAO {
             // Create indexes - do last: least important
             LinkedList<String> tumourIndexList = QueryGenerator.strCreateIndexTable("Tumour", doc);
             for (String query : tumourIndexList) {
+                // System.out.println(query);
+                statement.execute(query);
+            }
+            LinkedList<String> patientIndexList = QueryGenerator.strCreateIndexTable("Patient", doc);
+            for (String query : patientIndexList) {
                 // System.out.println(query);
                 statement.execute(query);
             }
