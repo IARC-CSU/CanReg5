@@ -209,16 +209,7 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
             sdc.setCodeField(codeField);
             sdc.convert(fileNameTextField.getText());
 
-            EditDatabaseVariableInternalFrame edvif = new EditDatabaseVariableInternalFrame();
-            try {
-                edvif.loadSystemDefinition(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + codeField.getText() + ".xml");
-                edvif.setDesktopPane(dtp);
-                CanRegClientView.showAndCenterInternalFrame(dtp,edvif);
-            } catch (SAXException ex) {
-                Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
 
             int addServer = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully created the CanReg5 system description: \'" + 
                     Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + 
@@ -229,7 +220,20 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
             if (addServer == JOptionPane.YES_OPTION) {
                 LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
                 localSettings.addServerToServerList(nameTextField.getText(), "localhost", Globals.DEFAULT_PORT, codeField.getText());
+                JOptionPane.showInternalMessageDialog(this, "Please restart CanReg5 after reviewing the database variables.");
             }
+
+            EditDatabaseVariableInternalFrame edvif = new EditDatabaseVariableInternalFrame();
+            try {
+                edvif.loadSystemDefinition(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + codeField.getText() + ".xml");
+                edvif.setDesktopPane(dtp);
+                CanRegClientView.showAndCenterInternalFrame(dtp,edvif);
+            } catch (SAXException ex) {
+                Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
             this.dispose();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
