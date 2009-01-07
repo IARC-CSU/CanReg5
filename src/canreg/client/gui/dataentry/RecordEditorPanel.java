@@ -139,14 +139,13 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
 
         if (panelType == panelTypes.PATIENT) {
             tableName = Globals.PATIENT_TABLE_NAME;
-            // checksButton.setVisible(false);
             mpPanel.setVisible(false);
         } else if (panelType == panelTypes.TUMOUR) {
             tableName = Globals.TUMOUR_TABLE_NAME;
             personSearchPanel.setVisible(false);
         }
 
-        DatabaseVariablesListElement recordStatusVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.RecordStatus.toString());
+        DatabaseVariablesListElement recordStatusVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
 
         Map<String, DictionaryEntry> recStatusDict = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
         statusComboBox.setModel(new DefaultComboBoxModel(recStatusDict.values().toArray()));

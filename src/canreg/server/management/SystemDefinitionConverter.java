@@ -32,7 +32,7 @@ public class SystemDefinitionConverter {
     private String registryName;
     private String registryCode;
     private String[] standardVariablesCR4 = {
-        "RegistrationNo",
+        "TumourID",
         "IncidenceDate",
         "BirthDate",
         "Age",
@@ -45,7 +45,7 @@ public class SystemDefinitionConverter {
         "MultPrimCode",
         "CheckStatus",
         "PersonSearch",
-        "RecordStatus",
+        "TumourRecordStatus",
         "FirstName",
         "Surname",
         "TumourUpdateDate",
@@ -299,7 +299,8 @@ public class SystemDefinitionConverter {
                 parentElement.appendChild(
                         createVariable(variableNumber++, variableName, variableName, variableName,
                         -1, "Automatic", "Othr", "Alpha", 8, -1, Globals.PATIENT_TABLE_NAME, variableName));
-                /**
+
+                 /**
                  * PatientRecordID
                  */
                 variableName = Globals.StandardVariableNames.PatientRecordID.toString();
@@ -436,9 +437,10 @@ public class SystemDefinitionConverter {
             } catch (IOException e) {
                 // Nothing to do
             } finally {
-                File file = new File(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER);
+                
+                File file = new File(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER); // Check to see it the canreg system folder exists
                 if (!file.exists()){
-                    file.mkdirs();
+                    file.mkdirs(); // create it if necessary
                 }
                 canreg.server.xml.Tools.writeXmlFile(doc, Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + registryCode + ".xml");
                 dataStream.close();

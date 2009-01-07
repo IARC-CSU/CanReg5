@@ -182,8 +182,6 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
             }
         }
         canreg.server.xml.Tools.writeXmlFile(doc, fileName);
-        JOptionPane.showInternalMessageDialog(this, "Please restart CanReg5.");
-
         this.dispose();
     }
 

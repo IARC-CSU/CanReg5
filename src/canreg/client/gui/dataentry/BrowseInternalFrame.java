@@ -15,12 +15,17 @@ import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
+import canreg.server.database.Patient;
+import canreg.server.database.Tumour;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.LinkedList;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
@@ -60,13 +65,14 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
         patientIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
         patientIDTumourTablelookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName();
-        tumourIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.RegistrationNo.toString()).getDatabaseVariableName();
+        tumourIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         initComponents();
         initOtherComponents();
         initValues();
     }
     ///
     // org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, new java.util.List(), jTable1);
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -285,43 +291,44 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
     }
 }//GEN-LAST:event_browserClosed
 
-private void rowClicked(java.awt.event.MouseEvent evt) {                            
+    private void rowClicked(java.awt.event.MouseEvent evt) {
         String referenceTable;
-       
-    if (evt.getClickCount() == 2) {
-        JTable target = (JTable) evt.getSource();
-        int rowNumber = target.getSelectedRow();
-        TableModel model = target.getModel();
-        int columnNumber = 0; 
-        String lookUpVariable;
-        if (rangeFilterPanel.getSelectedTable().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
-            lookUpVariable = tumourIDlookupVariable;
-            referenceTable = Globals.TUMOUR_TABLE_NAME;
-        } else {
-            lookUpVariable = patientIDlookupVariable;
-            referenceTable = Globals.PATIENT_TABLE_NAME;
-        } 
-        columnNumber = tableColumnModel.getColumnIndex(lookUpVariable.toUpperCase(), false);
-        editRecord(""+tableDataModel.getValueAt(rowNumber,
-            columnNumber), referenceTable);
-    }
-}
 
-private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
-    if (evt.getButton()== java.awt.event.MouseEvent.BUTTON3){
-        JTable target =(JTable) evt.getSource();
-        int columnNumber = target.getSelectedColumn();
-
-        JPopupMenu jpm = new JPopupMenu(""+columnNumber);
-        jpm.add("Column "+tableColumnModel.getColumn(tableColumnModel.getColumnIndexAtX(evt.getX()), true).getHeaderValue());
-        jpm.show(target, evt.getX(), evt.getY());
+        if (evt.getClickCount() == 2) {
+            JTable target = (JTable) evt.getSource();
+            int rowNumber = target.getSelectedRow();
+            TableModel model = target.getModel();
+            int columnNumber = 0;
+            String lookUpVariable;
+            if (rangeFilterPanel.getSelectedTable().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+                lookUpVariable = tumourIDlookupVariable;
+                referenceTable = Globals.TUMOUR_TABLE_NAME;
+            } else {
+                lookUpVariable = patientIDlookupVariable;
+                referenceTable = Globals.PATIENT_TABLE_NAME;
+            }
+            columnNumber = tableColumnModel.getColumnIndex(lookUpVariable.toUpperCase(), false);
+            editRecord("" + tableDataModel.getValueAt(rowNumber,
+                    columnNumber), referenceTable);
+        }
     }
-}
-/**
- * 
- * @return
- */
-@Action
+
+    private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
+        if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
+            JTable target = (JTable) evt.getSource();
+            int columnNumber = target.getSelectedColumn();
+
+            JPopupMenu jpm = new JPopupMenu("" + columnNumber);
+            jpm.add("Column " + tableColumnModel.getColumn(tableColumnModel.getColumnIndexAtX(evt.getX()), true).getHeaderValue());
+            jpm.show(target, evt.getX(), evt.getY());
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Action
     public Task refresh() {
         navigationPanel.goToTopAction();
         resultPanel.setVisible(false);
@@ -329,10 +336,10 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
     }
 
     private class RefreshTask extends org.jdesktop.application.Task<Object, Void> {
+
         String tableName = null;
         DatabaseFilter filter = new DatabaseFilter();
-        
-        
+
         RefreshTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
@@ -344,46 +351,48 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
             filter.setSortByVariable(rangeFilterPanel.getSortByVariable().trim());
             tableDataSource = null;
         }
-        @Override protected Object doInBackground() {
+
+        @Override
+        protected Object doInBackground() {
             try {
                 setProgress(0, 0, 4);
                 setMessage("Initiating query...");
                 setProgress(1, 0, 4);
-                System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
+                System.out.println(Runtime.getRuntime().freeMemory() + " free memory.");
                 // release old resultSet
-                if (tableDatadescription!=null){
+                if (tableDatadescription != null) {
                     CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
                 }
                 tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
-                System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
-                
+                System.out.println(Runtime.getRuntime().freeMemory() + " free memory.");
+
                 tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
-                System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
-                
-                tableDataModel = new DistributedTableModel(tableDataSource); 
+                System.out.println(Runtime.getRuntime().freeMemory() + " free memory.");
+
+                tableDataModel = new DistributedTableModel(tableDataSource);
                 // tableDataModel = new PagingTableModel(tableDataSource);
-                
-                System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
+
+                System.out.println(Runtime.getRuntime().freeMemory() + " free memory.");
                 setProgress(2, 0, 4);
 
                 setMessage("Starting a new transaction...");
                 rangeFilterPanel.setRecordsShown(tableDataModel.getRowCount());
-                 
+
                 setProgress(3, 0, 4);
 
-                setMessage("Fetching data...");               
+                setMessage("Fetching data...");
                 resultTable.setColumnSelectionAllowed(false);
                 resultTable.setModel(tableDataModel);
                 tableColumnModel = new XTableColumnModel();
                 resultTable.setColumnModel(tableColumnModel);
                 resultTable.createDefaultColumnsFromModel();
-                System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
-                
+                System.out.println(Runtime.getRuntime().freeMemory() + " free memory.");
+
                 setProgress(4, 0, 4);
                 setMessage("Finished");
-                
+
                 updateVariablesShown();
-                
+
             } catch (SQLException ex) {
                 JOptionPane.showInternalMessageDialog(rootPane, "Not a valid filter.", "Error", JOptionPane.ERROR_MESSAGE);
                 return "Not valid";
@@ -391,13 +400,15 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch(InterruptedException ignore) { }
-         catch (Exception ex) {
+            } catch (InterruptedException ignore) {
+            } catch (Exception ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            }
             return "OK";
         }
-        @Override protected void succeeded(Object result) {
+
+        @Override
+        protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             boolean theResult = result.equals("OK");
@@ -405,113 +416,112 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
         }
     }
 
-       private void hideSystemVariables() {
-                TableColumn column;
-                try{
-                    column = tableColumnModel.getColumnByModelIndex(
-                         tableColumnModel.getColumnIndex("ID"));
-                    tableColumnModel.setColumnVisible(column, false);
-                } catch (IllegalArgumentException iae){
-                    //OK
-                }
-                try{
-                    column = tableColumnModel.getColumnByModelIndex(
-                         tableColumnModel.getColumnIndex("NEXT_RECORD_DB_ID"));
-                    tableColumnModel.setColumnVisible(column, false);
-                } catch (IllegalArgumentException iae){
-                    //OK
-                }
-                try{
-                    column = tableColumnModel.getColumnByModelIndex(
-                         tableColumnModel.getColumnIndex("LAST_RECORD_DB_ID"));
-                    tableColumnModel.setColumnVisible(column, false);
-                } catch (IllegalArgumentException iae){
-                    //OK
-                }                    
+    private void hideSystemVariables() {
+        TableColumn column;
+        try {
+            column = tableColumnModel.getColumnByModelIndex(
+                    tableColumnModel.getColumnIndex("ID"));
+            tableColumnModel.setColumnVisible(column, false);
+        } catch (IllegalArgumentException iae) {
+            //OK
         }
-       
-    private void updateVariablesShown(){
-          String tableName = rangeFilterPanel.getSelectedTable();
-          variablesToShow = variablesPanel.getVariablesToShow(tableName);
-          // first set all invisible
-          Enumeration<TableColumn> tcs = tableColumnModel.getColumns(false);
-          while(tcs.hasMoreElements()){
-                TableColumn column  = tcs.nextElement();
-                tableColumnModel.setColumnVisible(column,variablesToShow.contains(column.getHeaderValue().toString()));               
-          }
+        try {
+            column = tableColumnModel.getColumnByModelIndex(
+                    tableColumnModel.getColumnIndex("NEXT_RECORD_DB_ID"));
+            tableColumnModel.setColumnVisible(column, false);
+        } catch (IllegalArgumentException iae) {
+            //OK
+        }
+        try {
+            column = tableColumnModel.getColumnByModelIndex(
+                    tableColumnModel.getColumnIndex("LAST_RECORD_DB_ID"));
+            tableColumnModel.setColumnVisible(column, false);
+        } catch (IllegalArgumentException iae) {
+            //OK
+        }
     }
-    
+
+    private void updateVariablesShown() {
+        String tableName = rangeFilterPanel.getSelectedTable();
+        variablesToShow = variablesPanel.getVariablesToShow(tableName);
+        // first set all invisible
+        Enumeration<TableColumn> tcs = tableColumnModel.getColumns(false);
+        while (tcs.hasMoreElements()) {
+            TableColumn column = tcs.nextElement();
+            tableColumnModel.setColumnVisible(column, variablesToShow.contains(column.getHeaderValue().toString()));
+        }
+    }
+
     /**
      * 
      */
     @Action
     public void editPatientID() {
-         editPatientID(patientNumberTextField.getText().trim());
-     }
+        editPatientID(patientNumberTextField.getText().trim());
+    }
 
     /**
      * 
      * @param idString
-     
-    public void editPatientID(String idString){
-        String tableName = Globals.PATIENT_TABLE_NAME;
-                
-        RecordEditor recordEditor = new RecordEditor(dtp);
-        recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
-        recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
-        DatabaseRecord record = null;        
-        DatabaseFilter filter = new DatabaseFilter();
-        filter.setFilterString(patientIDlookupVariable + " = '"+idString+"' ");
-        DistributedTableDescription distributedTableDescription;
-        Object[][] rows;
-        DatabaseRecord[] tumourRecords;
-        
-        try {
-            distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
-            int numberOfRecords = distributedTableDescription.getRowCount();
-            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
-            CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
-            String[] columnNames = distributedTableDescription.getColumnNames();
-            int ids[] = new int[numberOfRecords];
-            boolean found = false;
-            int idColumnNumber = 0;
-            while (!found && idColumnNumber<columnNames.length){
-                found = columnNames[idColumnNumber++].equalsIgnoreCase(patientIDlookupVariable);
-            }
-            if (found){
-                idColumnNumber--;
-                for (int j=0; j<numberOfRecords;j++){
-                    ids[j]=(Integer) rows[j][idColumnNumber];
-                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME);
-                    recordEditor.addRecord(record);
-                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(ids[j]+"", Globals.PATIENT_TABLE_NAME);
-                    for (DatabaseRecord rec : tumourRecords){
-                        recordEditor.addRecord(rec);
-                    }
-                }
-                CanRegClientView.showAndCenterInternalFrame(dtp, recordEditor);
-            }
-            else {
-                JOptionPane.showMessageDialog(rootPane, "Record not found", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    */
 
-        /**
+    public void editPatientID(String idString){
+    String tableName = Globals.PATIENT_TABLE_NAME;
+
+    RecordEditor recordEditor = new RecordEditor(dtp);
+    recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
+    recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
+    DatabaseRecord record = null;
+    DatabaseFilter filter = new DatabaseFilter();
+    filter.setFilterString(patientIDlookupVariable + " = '"+idString+"' ");
+    DistributedTableDescription distributedTableDescription;
+    Object[][] rows;
+    DatabaseRecord[] tumourRecords;
+
+    try {
+    distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
+    int numberOfRecords = distributedTableDescription.getRowCount();
+    rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
+    CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
+    String[] columnNames = distributedTableDescription.getColumnNames();
+    int ids[] = new int[numberOfRecords];
+    boolean found = false;
+    int idColumnNumber = 0;
+    while (!found && idColumnNumber<columnNames.length){
+    found = columnNames[idColumnNumber++].equalsIgnoreCase(patientIDlookupVariable);
+    }
+    if (found){
+    idColumnNumber--;
+    for (int j=0; j<numberOfRecords;j++){
+    ids[j]=(Integer) rows[j][idColumnNumber];
+    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME);
+    recordEditor.addRecord(record);
+    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(ids[j]+"", Globals.PATIENT_TABLE_NAME);
+    for (DatabaseRecord rec : tumourRecords){
+    recordEditor.addRecord(rec);
+    }
+    }
+    CanRegClientView.showAndCenterInternalFrame(dtp, recordEditor);
+    }
+    else {
+    JOptionPane.showMessageDialog(rootPane, "Record not found", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    } catch (SQLException ex) {
+    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (RemoteException ex) {
+    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (SecurityException ex) {
+    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (Exception ex) {
+    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    }
+     */
+    /**
      *
      * @param idString
      */
-    public void editPatientID(String idString){
+    public void editPatientID(String idString) {
         String tableName = Globals.PATIENT_TABLE_NAME;
 
         RecordEditor recordEditor = new RecordEditor(dtp);
@@ -519,7 +529,7 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord record = null;
         DatabaseFilter filter = new DatabaseFilter();
-        filter.setFilterString(patientIDlookupVariable + " = '"+idString+"' ");
+        filter.setFilterString(patientIDlookupVariable + " = '" + idString + "' ");
         DistributedTableDescription distributedTableDescription;
         Object[][] rows;
         DatabaseRecord[] tumourRecords;
@@ -527,6 +537,18 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
         try {
             distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
             int numberOfRecords = distributedTableDescription.getRowCount();
+
+            if (numberOfRecords == 0) {
+                /*
+                If we don't get any records with that ID - we create one.
+                 */
+                record = new Patient();
+                record.setVariable(patientIDlookupVariable, idString);
+                CanRegClientApp.getApplication().saveRecord(record);
+                distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+                numberOfRecords = distributedTableDescription.getRowCount();
+            }
+
             rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
             CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
             String[] columnNames = distributedTableDescription.getColumnNames();
@@ -534,26 +556,42 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
             boolean found = false;
             int idColumnNumber = 0;
             // First get the patient IDs matching the tumour
-            while (!found && idColumnNumber<columnNames.length){
+            while (!found && idColumnNumber < columnNames.length) {
                 found = columnNames[idColumnNumber++].equalsIgnoreCase(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
             }
-            if (found){
+            if (found) {
                 idColumnNumber--;
-                for (int j=0; j<numberOfRecords;j++){
-                    ids[j]= (Integer) rows[j][idColumnNumber];
+                TreeSet<DatabaseRecord> set = new TreeSet<DatabaseRecord>(new Comparator<DatabaseRecord>() {
+                    public int compare(DatabaseRecord o1, DatabaseRecord o2) {
+                        return (o1.getVariable(tumourIDlookupVariable).toString().compareTo(o2.getVariable(tumourIDlookupVariable).toString()));
+                    }
+                });
+                // Get all the tumour records for all the patient records...
+                for (int j = 0; j < numberOfRecords; j++) {
+                    ids[j] = (Integer) rows[j][idColumnNumber];
                     record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME);
                     recordEditor.addRecord(record);
+
                     tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString);
-                    for (DatabaseRecord rec : tumourRecords){
-                       recordEditor.addRecord(rec);
-                  }
+                    for (DatabaseRecord rec : tumourRecords) {
+                        // store them in a set, so we don't show them several times
+                            set.add(rec);
+                    }
+                }
+                if (set.isEmpty()){
+                    Tumour rec = new Tumour();
+                    rec.setVariable(patientIDTumourTablelookupVariable, idString);
+                    set.add(rec);
+                }
+
+                for (DatabaseRecord rec : set) {
+                    // store them in a map, so we don't show them several times
+                    recordEditor.addRecord(rec);
                 }
                 CanRegClientView.showAndCenterInternalFrame(dtp, recordEditor);
-            }
-            else {
+            } else {
                 JOptionPane.showMessageDialog(rootPane, "Record not found", "Error", JOptionPane.ERROR_MESSAGE);
             }
-
         } catch (SQLException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
@@ -565,7 +603,6 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
         }
     }
 
-    
     /**
      * 
      */
@@ -573,20 +610,20 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
     public void editTumourID() {
         editTumourID(tumourNumberTextField.getText().trim());
     }
-    
+
     /**
      * 
      * @param idString
      */
     public void editTumourID(String idString) {
-        
+
         RecordEditor recordEditor = new RecordEditor(dtp);
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
-        DatabaseRecord record = null;        
+        DatabaseRecord record = null;
         DatabaseFilter filter = new DatabaseFilter();
 
-        filter.setFilterString(tumourIDlookupVariable +" ='"+idString+"'");
+        filter.setFilterString(tumourIDlookupVariable + " ='" + idString + "'");
         Object[][] rows;
         DatabaseRecord[] tumourRecords;
         String patientIdString = null;
@@ -594,24 +631,23 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
         try {
             DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
             int numberOfRecords = distributedTableDescription.getRowCount();
-            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(),0, numberOfRecords);
+            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
             CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
             String[] columnNames = distributedTableDescription.getColumnNames();
             int ids[] = new int[numberOfRecords];
             boolean found = false;
             int idColumnNumber = 0;
-            while (!found && idColumnNumber<columnNames.length){
+            while (!found && idColumnNumber < columnNames.length) {
                 found = columnNames[idColumnNumber++].equalsIgnoreCase(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
             }
-            if (found){
+            if (found) {
                 idColumnNumber--;
-                for (int j=0; j<numberOfRecords;j++){
-                    ids[j]=(Integer) rows[j][idColumnNumber];
+                for (int j = 0; j < numberOfRecords; j++) {
+                    ids[j] = (Integer) rows[j][idColumnNumber];
                     record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.TUMOUR_TABLE_NAME);
                     editPatientID((String) record.getVariable(patientIDTumourTablelookupVariable));
                 }
-            }
-            else {
+            } else {
                 JOptionPane.showMessageDialog(rootPane, "Variable not found...", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
@@ -625,21 +661,19 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
+
     /**
      * 
      * @param idString
      * @param tableName
      */
     public void editRecord(String idString, String tableName) {
-        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
+        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
             editTumourID(idString);
         } else {
             editPatientID(idString);
         }
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JPanel buttonsPanel;
@@ -656,10 +690,9 @@ private void columnTableMousePressed(java.awt.event.MouseEvent evt) {
     // End of variables declaration//GEN-END:variables
 
     public void actionPerformed(ActionEvent e) {
-        if ("refresh".equalsIgnoreCase(e.getActionCommand())){
+        if ("refresh".equalsIgnoreCase(e.getActionCommand())) {
             Task refreshTask = refresh();
             refreshTask.execute();
         }
     }
-    
 }

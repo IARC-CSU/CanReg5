@@ -208,7 +208,7 @@ public class Globals {
         /**
          * 
          */
-        RegistrationNo,
+        TumourID,
         /**
          * 
          */
@@ -260,7 +260,7 @@ public class Globals {
         /**
          * 
          */
-        RecordStatus,
+        TumourRecordStatus,
         /**
          * 
          */
@@ -338,9 +338,13 @@ public class Globals {
          */
         Source6,
         /**
-         * 
+         *
          */
         PatientID,
+        /**
+         *
+         */
+        PatientRecordStatus,
         /**
          * The ID of the patient in the tumour table
          */

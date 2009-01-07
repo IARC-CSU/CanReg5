@@ -45,6 +45,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private boolean changesDone = false;
     private JDesktopPane desktopPane;
     private GlobalToolBox globalToolBox;
+    private boolean titleSet = false;
 
     /** Creates new form RecordEditor
      * @param desktopPane 
@@ -114,17 +115,39 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         rePanel.setDocument(doc);
         rePanel.setRecord(dbr);
         rePanel.repaint();
-        if (dbr.getClass().isInstance(new Patient())) {
+        if (dbr instanceof Patient) {
             patientRecords.add(dbr);
-            patientTabbedPane.addTab(dbr.toString() + " - " + (patientTabbedPane.getTabCount() + 1), rePanel);
-        } else if (dbr.getClass().isInstance(new Tumour())) {
-            tumourRecords.add(dbr);
-            Object regno = dbr.getVariable("RegNo");
+            Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
             String regnoString = "n/a";
             if (regno != null) {
                 regnoString = regno.toString();
+                if (regnoString.length()==0){
+                    regnoString = "n/a";
+                }
             }
-            tumourTabbedPane.addTab(dbr.toString() + " " + regnoString + " ", rePanel);
+            patientTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
+            if (!titleSet){
+                Object patno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
+                String patnoString = "n/a";
+                if (patno != null) {
+                   patnoString = patno.toString();
+                   if (patnoString.length()>0){
+                       this.setTitle("Patient ID:" + patnoString);
+                       titleSet = true;
+                   }
+                }
+            }
+        } else if (dbr instanceof Tumour) {
+            tumourRecords.add(dbr);
+            Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName());
+            String regnoString = "n/a";
+            if (regno != null) {
+                regnoString = regno.toString();
+                if (regnoString.length()==0) {
+                    regnoString = "n/a";
+                }
+            }
+            tumourTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
         }
     }
 
@@ -259,21 +282,38 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         addRecord(patient);
     }
 
-    private static DatabaseRecord populateNewRecord(DatabaseRecord dbr, Document doc) {
+    private DatabaseRecord populateNewRecord(DatabaseRecord dbr, Document doc) {
         String tableName = "";
         if (dbr instanceof Tumour) {
-            tableName = "tumour";
+            tableName = Globals.TUMOUR_TABLE_NAME;
         } else if (dbr instanceof Patient) {
-            tableName = "patient";
+            tableName = Globals.PATIENT_TABLE_NAME;
         }
+        RecordEditorPanel activePatientPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
+        Patient activePatient = (Patient) activePatientPanel.getRecord();
+
         DatabaseVariablesListElement[] variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
         for (DatabaseVariablesListElement dbvle : variablesInTable) {
             String type = dbvle.getVariableType();
             if (type.equalsIgnoreCase("date") || type.equalsIgnoreCase("number")) {
-                dbr.setVariable(dbvle.getShortName(), -1);
+                dbr.setVariable(dbvle.getDatabaseVariableName(), -1);
             } else {
-                dbr.setVariable(dbvle.getShortName(), "");
+                dbr.setVariable(dbvle.getDatabaseVariableName(), "");
             }
+        }
+
+        if (dbr instanceof Patient) {
+            // copy all information
+            for (String variableName : dbr.getVariableNames()) {
+                if (variableName.equalsIgnoreCase(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME)
+                        || variableName.equalsIgnoreCase(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
+                } else {
+                    dbr.setVariable(variableName, activePatient.getVariable(variableName));
+                }
+            }
+            // except the database record ID and the patientTable ID
+            dbr.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, null);
+            dbr.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName(), null);
         }
         return dbr;
     }

@@ -783,7 +783,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         io.setPatientIDVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
         io.setTumourUpdateDateVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString()).getDatabaseVariableName());
         io.setPatientUpdateDateVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName());
-        io.setTumourIDVariablename(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.RegistrationNo.toString()).getDatabaseVariableName());
+        io.setTumourIDVariablename(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName());
         io.setPatientRecordIDVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
         io.setPatientRecordIDTumourTableVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName());
         io.setObsoletePatientFlagVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString()).getDatabaseVariableName());

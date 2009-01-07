@@ -742,7 +742,7 @@ public class CanRegDAO {
      * @return
      */
     public int saveTumour(Tumour tumour) {
-        String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.RegistrationNo.toString()).getDatabaseVariableName();
+        String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         Object tumourID = tumour.getVariable(tumourIDVariableName);
         if (tumourID == null && tumourID.toString().trim().length() == 0) {
             tumour.setVariable(tumourIDVariableName, getNextTumourID());
