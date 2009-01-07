@@ -93,17 +93,19 @@ public class QueryGenerator {
                 String query = "create index \"" + nameDB + "_idx\" on " + Globals.SCHEMA_NAME + "." + tableName + " (";
                 NodeList variables = element.getElementsByTagName(namespace + "indexed_variable");
 
-                // Go through all the variable definitions
-                for (int j = 0; j < variables.getLength(); j++) {
-                    Element variableElement = (Element) variables.item(j);
-                    if (j > 0) {
-                        query += ", ";
+                if (variables.getLength()>0){ // we don't allow empty indexes
+                    // Go through all the variable definitions
+                    for (int j = 0; j < variables.getLength(); j++) {
+                        Element variableElement = (Element) variables.item(j);
+                        if (j > 0) {
+                            query += ", ";
+                        }
+                        query += "\"" + variableElement.getElementsByTagName(namespace + "variable_name").item(0).getTextContent().toUpperCase() + "\"";
                     }
-                    query += "\"" + variableElement.getElementsByTagName(namespace + "variable_name").item(0).getTextContent().toUpperCase() + "\"";
+                    query += ") ";
+                    System.out.println(query);
+                    queries.add(query);
                 }
-                query += ") ";
-                System.out.println(query);
-                queries.add(query);
             }
         }
 
@@ -142,7 +144,7 @@ public class QueryGenerator {
                 " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), " +
                 "DICTIONARY INT, " +
                 "CODE VARCHAR(20), " +
-                "DESCRIPTION VARCHAR(50) " +
+                "DESCRIPTION VARCHAR(256) " + // How long should we allow the labels to be?
                 ")";
         return queryLine;
     }
@@ -360,7 +362,7 @@ public class QueryGenerator {
     }
 
     static String strGetHighestTumourID(GlobalToolBox globalToolBox){
-        String tumourIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.RegistrationNo.toString()).getDatabaseVariableName();
+        String tumourIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         return "SELECT max(\""+tumourIDVariableNamePatientTable.toUpperCase()+"\") FROM APP.TUMOUR";
     }
 
