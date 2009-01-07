@@ -356,12 +356,12 @@ public class QueryGenerator {
 
     static String strGetHighestPatientID(GlobalToolBox globalToolBox){
         String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
-        return "SELECT max("+patientIDVariableNamePatientTable+") FROM APP.PATIENT";
+        return "SELECT max(\""+patientIDVariableNamePatientTable.toUpperCase()+"\") FROM APP.PATIENT";
     }
 
     static String strGetHighestTumourID(GlobalToolBox globalToolBox){
         String tumourIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.RegistrationNo.toString()).getDatabaseVariableName();
-        return "SELECT max("+tumourIDVariableNamePatientTable+") FROM APP.TUMOUR";
+        return "SELECT max(\""+tumourIDVariableNamePatientTable.toUpperCase()+"\") FROM APP.TUMOUR";
     }
 
     private static String strEditRecord(Document doc, String tableName) {
