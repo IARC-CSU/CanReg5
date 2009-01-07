@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.TreeMap;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -181,6 +182,8 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
             }
         }
         canreg.server.xml.Tools.writeXmlFile(doc, fileName);
+        JOptionPane.showInternalMessageDialog(this, "Please restart CanReg5.");
+
         this.dispose();
     }
 
