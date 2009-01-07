@@ -3,10 +3,11 @@
  *
  * Created on 01 July 2008, 13:56
  */
-package canreg.client.gui.tools;
+package canreg.client.gui.management;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
+import canreg.client.gui.CanRegClientView;
 import canreg.common.Globals;
 import canreg.server.management.SystemDefinitionConverter;
 import java.io.File;
@@ -14,10 +15,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.jdesktop.application.Action;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -26,6 +29,7 @@ import org.jdesktop.application.Action;
 public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFrame {
 
     private JFileChooser chooser;
+    private JDesktopPane dtp;
 
     /** Creates new form CanReg4SystemConverterInternalFrame */
     public CanReg4SystemConverterInternalFrame() {
@@ -41,6 +45,10 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
         // Filter only the DEF-files.
         FileNameExtensionFilter filter = new FileNameExtensionFilter("CanReg4 System Definition File", "DEF");
         chooser.addChoosableFileFilter(filter);
+    }
+
+    public void setDesktopPane(JDesktopPane dtp){
+        this.dtp = dtp;
     }
 
     /** This method is called from within the constructor to
@@ -200,11 +208,24 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
             sdc.setNameField(nameTextField);
             sdc.setCodeField(codeField);
             sdc.convert(fileNameTextField.getText());
+
+            EditDatabaseVariableInternalFrame edvif = new EditDatabaseVariableInternalFrame();
+            try {
+                edvif.loadSystemDefinition(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + codeField.getText() + ".xml");
+                edvif.setDesktopPane(dtp);
+                CanRegClientView.showAndCenterInternalFrame(dtp,edvif);
+            } catch (SAXException ex) {
+                Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
             int addServer = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully created the CanReg5 system description: \'" + 
                     Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + 
                     codeField.getText() + "\'.\n" + 
                     "Do you want to add it to your favourite servers?"
                     , "Success", JOptionPane.YES_NO_OPTION);
+
             if (addServer == JOptionPane.YES_OPTION) {
                 LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
                 localSettings.addServerToServerList(nameTextField.getText(), "localhost", Globals.DEFAULT_PORT, codeField.getText());

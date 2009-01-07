@@ -124,7 +124,6 @@ public class SystemDefinitionConverter {
                 Element element;
                 Element parentElement;
 
-
                 // Create the general part
                 //
                 parentElement = doc.createElement(namespace + "general");

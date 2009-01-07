@@ -19,7 +19,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="toolBar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="701" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="707" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -106,7 +106,6 @@
                   <action class="canreg.client.gui.CanRegClientView" id="showLastRecord" methodName="showLastRecord"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" resourceKey="jButton1.toolTipText"/>
-                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>

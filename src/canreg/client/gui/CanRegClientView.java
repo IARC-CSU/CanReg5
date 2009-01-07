@@ -15,7 +15,7 @@ import canreg.client.gui.dataentry.PDSChooserInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
 import canreg.client.gui.management.RestoreInternalFrame;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
-import canreg.client.gui.tools.CanReg4SystemConverterInternalFrame;
+import canreg.client.gui.management.CanReg4SystemConverterInternalFrame;
 import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Patient;
@@ -1007,7 +1007,8 @@ public class CanRegClientView extends FrameView {
      */
     @Action
     public void convertCanReg4SystemAction() {
-        JInternalFrame internalFrame = new CanReg4SystemConverterInternalFrame();
+        CanReg4SystemConverterInternalFrame internalFrame = new CanReg4SystemConverterInternalFrame();
+        internalFrame.setDesktopPane(desktopPane);
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
