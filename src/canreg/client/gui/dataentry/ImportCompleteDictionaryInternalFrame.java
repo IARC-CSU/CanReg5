@@ -309,7 +309,7 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     // read untill blank line
                     while (line != null && line.trim().length() > 0) {
                         if (cr4dictionary) {
-                            line.replace("  ", "\t ");
+                            line = line.replace("  ", "\t ");
                         }
                         dictionaryString += line + "\n";
                         line = br.readLine();
