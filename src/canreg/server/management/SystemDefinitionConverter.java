@@ -8,6 +8,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.DataInputStream;
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -435,9 +436,11 @@ public class SystemDefinitionConverter {
             } catch (IOException e) {
                 // Nothing to do
             } finally {
-                if (debug) {
-                    canreg.server.xml.Tools.writeXmlFile(doc, Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + registryCode + ".xml");
+                File file = new File(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER);
+                if (!file.exists()){
+                    file.mkdirs();
                 }
+                canreg.server.xml.Tools.writeXmlFile(doc, Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + registryCode + ".xml");
                 dataStream.close();
             }
         } catch (ParserConfigurationException ex) {
