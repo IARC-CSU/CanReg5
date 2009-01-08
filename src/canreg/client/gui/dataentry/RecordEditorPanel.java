@@ -124,7 +124,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
      * 
      * @return
      */
-    public DatabaseRecord getRecord() {
+    public DatabaseRecord getDatabaseRecord() {
         buildDatabaseRecord();
         return databaseRecord;
     }
@@ -464,29 +464,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     @Action
     public void saveRecord() {
         buildDatabaseRecord();
-        try {
-            // id is the internal database id
-            if (databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) == null && databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) == null) {
-                int id = canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord);
-                if (databaseRecord instanceof Patient) {
-                    databaseRecord.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, id);
-                } else if (databaseRecord instanceof Tumour) {
-                    databaseRecord.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, id);
-                }
-                JOptionPane.showInternalMessageDialog(this, "New record saved.");
-            }else {
-                canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord);
-                // TODO: Retrieve updated data if not data can be lost. Get the patient/tumour?
-                JOptionPane.showInternalMessageDialog(this, "Record saved.");
-            }
-            setSaveNeeded(false);
-        // saveButton.setEnabled(saveNeeded);
-
-        } catch (SecurityException ex) {
-            Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        actionListener.actionPerformed(new ActionEvent(this, 0, "save"));
     }
 
     private void buildDatabaseRecord() {
@@ -495,7 +473,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             VariableEditorPanel vep = iterator.next();
             databaseRecord.setVariable(vep.getKey(), vep.getValue());
         }
-    // TODO save record status
+        // TODO save record status
     }
 
     /**
@@ -525,6 +503,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         }
     }
 
+
+
     /**
      * 
      */
@@ -537,4 +517,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     public void deleteRecord() {
         actionListener.actionPerformed(new ActionEvent(this, 0, "delete"));
     }
+
+
 }

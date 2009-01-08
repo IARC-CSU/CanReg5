@@ -17,16 +17,20 @@ import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Dictionary;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import org.jdesktop.application.Action;
@@ -41,6 +45,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private Document doc;
     private Map<Integer, Dictionary> dictionary;
     private LinkedList<DatabaseRecord> patientRecords;
+    private TreeMap<Object, RecordEditorPanel> patientRecordsMap;
     private LinkedList<DatabaseRecord> tumourRecords;
     private boolean changesDone = false;
     private JDesktopPane desktopPane;
@@ -56,13 +61,14 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         initComponents();
         patientRecords = new LinkedList<DatabaseRecord>();
         tumourRecords = new LinkedList<DatabaseRecord>();
+        patientRecordsMap = new TreeMap<Object, RecordEditorPanel>();
 
         addInternalFrameListener(new InternalFrameAdapter() {
 
             @Override
             public void internalFrameClosing(InternalFrameEvent e) {
                 int option = JOptionPane.NO_OPTION;
-                if (changesDone) {
+                if (true) { // TODO: Implement "If changes has been made" check...
                     option = JOptionPane.showConfirmDialog(null, "Really close?\nChanges made will be lost.");
                     if (option == JOptionPane.YES_OPTION) {
                         close();
@@ -72,6 +78,29 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 }
             }
         });
+
+        // Add a listener for changing the active tab
+        ChangeListener tabbedPaneChangeListener = new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                JTabbedPane pane = (JTabbedPane) e.getSource();
+                RecordEditorPanel  rep = (RecordEditorPanel) pane.getSelectedComponent();
+                setActiveRecord(rep);
+            }
+        };
+        // And add the listener to the tabbedPane
+        patientTabbedPane.addChangeListener(tabbedPaneChangeListener);
+        tumourTabbedPane.addChangeListener(tabbedPaneChangeListener);
+
+    }
+
+    private void setActiveRecord(RecordEditorPanel rep) {
+        DatabaseRecord dbr = rep.getDatabaseRecord();
+        if (dbr instanceof Tumour){
+            Object patientRecordID = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName());
+            Component comp = patientRecordsMap.get(patientRecordID);
+            if (comp!=null)
+                patientTabbedPane.setSelectedComponent(comp);
+        }
     }
 
     /**
@@ -123,6 +152,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 regnoString = regno.toString();
                 if (regnoString.length()==0){
                     regnoString = "n/a";
+                } else {
+                    patientRecordsMap.put(regno, rePanel);
                 }
             }
             patientTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
@@ -290,7 +321,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             tableName = Globals.PATIENT_TABLE_NAME;
         }
         RecordEditorPanel activePatientPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
-        Patient activePatient = (Patient) activePatientPanel.getRecord();
+        Patient activePatient = (Patient) activePatientPanel.getDatabaseRecord();
 
         DatabaseVariablesListElement[] variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
         for (DatabaseVariablesListElement dbvle : variablesInTable) {
@@ -323,6 +354,25 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
      */
     @Action
     public void saveAllAction() {
+        LinkedList<RecordEditorPanel> reps = new LinkedList<RecordEditorPanel>();
+        
+        for (Component comp: patientTabbedPane.getComponents()){
+            reps.add((RecordEditorPanel) comp);
+        }
+
+        for (Component comp: tumourTabbedPane.getComponents()){
+            reps.add((RecordEditorPanel) comp);
+        }
+
+        for (RecordEditorPanel rep: reps){
+            try {
+                saveRecord(rep.getDatabaseRecord());
+            } catch (SecurityException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     /**
@@ -356,7 +406,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 if (option == JOptionPane.YES_OPTION) {
                     boolean success = false;
                     RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
-                    DatabaseRecord record = recordEditorPanel.getRecord();
+                    DatabaseRecord record = recordEditorPanel.getDatabaseRecord();
                     int id = -1;
                     String tableName = null;
                     JTabbedPane tabbedPane = null;
@@ -393,17 +443,17 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 }
             } else if (e.getActionCommand().equalsIgnoreCase("checks")) {
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
-                DatabaseRecord record = recordEditorPanel.getRecord();
+                DatabaseRecord record = recordEditorPanel.getDatabaseRecord();
                 Patient patient;
                 Tumour tumour;
                 if (record instanceof Patient) {
                     patient = (Patient) record;
                     RecordEditorPanel otherRecordEditorPanel = (RecordEditorPanel) tumourTabbedPane.getSelectedComponent();
-                    tumour = (Tumour) otherRecordEditorPanel.getRecord();
+                    tumour = (Tumour) otherRecordEditorPanel.getDatabaseRecord();
                 } else {
                     tumour = (Tumour) record;
                     RecordEditorPanel otherRecordEditorPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
-                    patient = (Patient) otherRecordEditorPanel.getRecord();
+                    patient = (Patient) otherRecordEditorPanel.getDatabaseRecord();
                 }
                 LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumour);
                 EditChecksInternalFrame editChecksInternalFrame = new EditChecksInternalFrame();
@@ -445,7 +495,51 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     }
                 }
                 CanRegClientView.showAndCenterInternalFrame(desktopPane, editChecksInternalFrame);
+            } 
+            
+            else if (e.getActionCommand().equalsIgnoreCase("save")) {
+                RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
+                DatabaseRecord databaseRecord = recordEditorPanel.getDatabaseRecord();
+                if (databaseRecord instanceof Tumour){
+                    // set the patient id to the active patient number
+                    RecordEditorPanel patientRecordEditorPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
+                    DatabaseRecord patientDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
+                    associateTumourRecordToPatientRecord(databaseRecord, patientDatabaseRecord);
+                }
+                try {
+                    saveRecord(databaseRecord);
+                } catch (SecurityException ex) {
+                    Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
+    }
+
+    private void saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException {
+        // id is the internal database id
+        if (databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) == null &&
+                databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) == null) {
+            int id = canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord);
+            if (databaseRecord instanceof Patient) {
+                databaseRecord.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, id);
+            } else if (databaseRecord instanceof Tumour) {
+                databaseRecord.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, id);
+            }
+            JOptionPane.showInternalMessageDialog(this, "New record saved.");
+        } else {
+            canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord);
+            // TODO: Retrieve updated data if not data can be lost. Get the patient/tumour?
+            JOptionPane.showInternalMessageDialog(this, "Record saved.");
+        }
+    }
+
+    private DatabaseRecord associateTumourRecordToPatientRecord(DatabaseRecord tumourDatabaseRecord, DatabaseRecord patientDatabaseRecord) {
+        tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName(),
+                patientDatabaseRecord.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName()));
+        tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName(),
+                patientDatabaseRecord.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName()));
+        return tumourDatabaseRecord;
     }
 }
