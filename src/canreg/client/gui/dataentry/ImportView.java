@@ -6,7 +6,6 @@
 package canreg.client.gui.dataentry;
 
 import canreg.client.LocalSettings;
-import canreg.client.gui.dataentry.VariableMappingPanel;
 import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.client.dataentry.Import;
