@@ -19,7 +19,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="toolBar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="707" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="701" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -51,22 +51,6 @@
                 <Property name="name" type="java.lang.String" value="jSeparator12" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="startDatabaseServerButton">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.CanRegClientView" id="startDatabaseServer" methodName="startDatabaseServer"/>
-                </Property>
-                <Property name="focusable" type="boolean" value="false"/>
-                <Property name="horizontalTextPosition" type="int" value="0"/>
-                <Property name="name" type="java.lang.String" value="startDatabaseServerButton" noResource="true"/>
-                <Property name="verticalTextPosition" type="int" value="3"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JToolBar$Separator" name="jSeparator13">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="jSeparator13" noResource="true"/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JButton" name="optionsButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
@@ -81,23 +65,6 @@
             <Component class="javax.swing.JToolBar$Separator" name="jSeparator14">
               <Properties>
                 <Property name="name" type="java.lang.String" value="jSeparator14" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="installSystemButton">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.CanRegClientView" id="installSystemAction" methodName="installSystemAction"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="installSystemButton.text"/>
-                <Property name="focusable" type="boolean" value="false"/>
-                <Property name="horizontalTextPosition" type="int" value="0"/>
-                <Property name="name" type="java.lang.String" value="installSystemButton" noResource="true"/>
-                <Property name="verticalTextPosition" type="int" value="3"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JToolBar$Separator" name="jSeparator15">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="jSeparator15" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="jButton1">
@@ -120,6 +87,22 @@
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="name" type="java.lang.String" value="jButton2" noResource="true"/>
+                <Property name="verticalTextPosition" type="int" value="3"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JToolBar$Separator" name="jSeparator13">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="jSeparator13" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="jButton3">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="showCanRegHelpFile" methodName="showCanRegHelpFile"/>
+                </Property>
+                <Property name="focusable" type="boolean" value="false"/>
+                <Property name="horizontalTextPosition" type="int" value="0"/>
+                <Property name="name" type="java.lang.String" value="jButton3" noResource="true"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
             </Component>
@@ -282,6 +265,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="incidenceTablesMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="incidenceTablesMenuItem.text"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="incidenceTablesMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
@@ -336,6 +320,7 @@
             <Menu class="javax.swing.JMenu" name="jMenu1">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="jMenu1.text"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="jMenu1" noResource="true"/>
               </Properties>
               <SubComponents>
@@ -367,6 +352,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="usersMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="usersMenuItem.text"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="usersMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
