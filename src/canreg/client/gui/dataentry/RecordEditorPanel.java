@@ -58,6 +58,11 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     private boolean saveNeeded = false;
     private ActionListener actionListener;
 
+    void refreshDatabaseRecord(DatabaseRecord record) {
+        this.databaseRecord = record;
+        buildPanel();
+    }
+
     void setActionListener(ActionListener listener) {
         this.actionListener = listener;
     }

@@ -237,7 +237,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                     .addComponent(numberOfRecordsLabel)
                     .addComponent(numberOfRecordsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
+                .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))
         );
 
         previewButton.setAction(actionMap.get("previewAction")); // NOI18N
@@ -256,6 +256,8 @@ public class ImportView extends javax.swing.JInternalFrame {
 
         jButton1.setAction(actionMap.get("autodetectSeparatingCharacterAction")); // NOI18N
         jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
+        jButton1.setToolTipText(resourceMap.getString("jButton1.toolTipText")); // NOI18N
+        jButton1.setEnabled(false);
         jButton1.setName("jButton1"); // NOI18N
 
         javax.swing.GroupLayout chooseFilePanelLayout = new javax.swing.GroupLayout(chooseFilePanel);
@@ -353,7 +355,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -366,16 +368,20 @@ public class ImportView extends javax.swing.JInternalFrame {
 
         discrepanciesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Discrepancies"));
         discrepanciesPanel.setToolTipText(resourceMap.getString("discrepanciesPanel.toolTipText")); // NOI18N
+        discrepanciesPanel.setEnabled(false);
         discrepanciesPanel.setName("discrepanciesPanel"); // NOI18N
 
         rejectRadioButton.setText(resourceMap.getString("rejectRadioButton.text")); // NOI18N
+        rejectRadioButton.setEnabled(false);
         rejectRadioButton.setName("rejectRadioButton"); // NOI18N
 
         updateRadioButton.setSelected(true);
         updateRadioButton.setText(resourceMap.getString("updateRadioButton.text")); // NOI18N
+        updateRadioButton.setEnabled(false);
         updateRadioButton.setName("updateRadioButton"); // NOI18N
 
         overwriteRadioButton.setText(resourceMap.getString("overwriteRadioButton.text")); // NOI18N
+        overwriteRadioButton.setEnabled(false);
         overwriteRadioButton.setName("overwriteRadioButton"); // NOI18N
 
         javax.swing.GroupLayout discrepanciesPanelLayout = new javax.swing.GroupLayout(discrepanciesPanel);
@@ -405,16 +411,19 @@ public class ImportView extends javax.swing.JInternalFrame {
 
         doChecksCheckBox.setText(resourceMap.getString("doChecksCheckBox.text")); // NOI18N
         doChecksCheckBox.setToolTipText(resourceMap.getString("doChecksCheckBox.toolTipText")); // NOI18N
+        doChecksCheckBox.setEnabled(false);
         doChecksCheckBox.setName("doChecksCheckBox"); // NOI18N
 
         personSearchCheckBox.setSelected(true);
         personSearchCheckBox.setText(resourceMap.getString("personSearchCheckBox.text")); // NOI18N
         personSearchCheckBox.setToolTipText(resourceMap.getString("personSearchCheckBox.toolTipText")); // NOI18N
+        personSearchCheckBox.setEnabled(false);
         personSearchCheckBox.setName("personSearchCheckBox"); // NOI18N
 
         queryNewNameCheckBox.setSelected(true);
         queryNewNameCheckBox.setText(resourceMap.getString("queryNewNameCheckBox.text")); // NOI18N
         queryNewNameCheckBox.setToolTipText(resourceMap.getString("queryNewNameCheckBox.toolTipText")); // NOI18N
+        queryNewNameCheckBox.setEnabled(false);
         queryNewNameCheckBox.setName("queryNewNameCheckBox"); // NOI18N
 
         previousCanRegDataCheckBox.setSelected(true);
@@ -520,7 +529,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(importButton)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Import File", importFilePanel);
@@ -554,7 +563,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -637,7 +646,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("progress".equals(evt.getPropertyName())) {
                     progressBar.setValue((Integer) evt.getNewValue());
-                    progressBar.setString(evt.getNewValue().toString());
+                    progressBar.setString(evt.getNewValue().toString()+"%");
                 } else if ("finished".equals(evt.getPropertyName())) {
                     dispose();
                 }

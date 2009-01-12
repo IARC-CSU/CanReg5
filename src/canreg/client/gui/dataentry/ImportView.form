@@ -49,7 +49,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="502" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="506" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -193,7 +193,7 @@
                               <Component id="numberOfRecordsTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="previewScrollPane" pref="333" max="32767" attributes="0"/>
+                          <Component id="previewScrollPane" pref="337" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -277,6 +277,8 @@
                   <action class="canreg.client.gui.dataentry.ImportView" id="autodetectSeparatingCharacterAction" methodName="autodetectSeparatingCharacterAction"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jButton1.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="jButton1.toolTipText"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
               </Properties>
             </Component>
@@ -316,7 +318,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jSplitPane1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variablesScrollPane" pref="424" max="32767" attributes="0"/>
+                      <Component id="variablesScrollPane" pref="428" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -430,7 +432,7 @@
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="importButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="39" max="32767" attributes="0"/>
+                      <EmptySpace pref="43" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -452,6 +454,7 @@
                   </Border>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" resourceKey="discrepanciesPanel.toolTipText"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="discrepanciesPanel" noResource="true"/>
               </Properties>
 
@@ -485,6 +488,7 @@
                 <Component class="javax.swing.JRadioButton" name="rejectRadioButton">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="rejectRadioButton.text"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="rejectRadioButton" noResource="true"/>
                   </Properties>
                 </Component>
@@ -492,12 +496,14 @@
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" resourceKey="updateRadioButton.text"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="updateRadioButton" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JRadioButton" name="overwriteRadioButton">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="overwriteRadioButton.text"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="overwriteRadioButton" noResource="true"/>
                   </Properties>
                 </Component>
@@ -548,6 +554,7 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="doChecksCheckBox.text"/>
                     <Property name="toolTipText" type="java.lang.String" resourceKey="doChecksCheckBox.toolTipText"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="doChecksCheckBox" noResource="true"/>
                   </Properties>
                 </Component>
@@ -556,6 +563,7 @@
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" resourceKey="personSearchCheckBox.text"/>
                     <Property name="toolTipText" type="java.lang.String" resourceKey="personSearchCheckBox.toolTipText"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="personSearchCheckBox" noResource="true"/>
                   </Properties>
                 </Component>
@@ -564,6 +572,7 @@
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" resourceKey="queryNewNameCheckBox.text"/>
                     <Property name="toolTipText" type="java.lang.String" resourceKey="queryNewNameCheckBox.toolTipText"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="queryNewNameCheckBox" noResource="true"/>
                   </Properties>
                 </Component>

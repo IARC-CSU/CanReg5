@@ -146,9 +146,13 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         setName("Form"); // NOI18N
 
         rangePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Range"));
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RangeFilterPanel.class);
+        rangePanel.setToolTipText(resourceMap.getString("rangePanel.toolTipText")); // NOI18N
+        rangePanel.setEnabled(false);
         rangePanel.setName("rangePanel"); // NOI18N
 
         rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Record Number", "ICD10", "Names" }));
+        rangeComboBox.setEnabled(false);
         rangeComboBox.setName("rangeComboBox"); // NOI18N
 
         limitsSplitPane.setDividerLocation(125);
@@ -156,9 +160,11 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         limitsSplitPane.setResizeWeight(0.5);
         limitsSplitPane.setName("limitsSplitPane"); // NOI18N
 
+        rangeStartTextField.setEnabled(false);
         rangeStartTextField.setName("rangeStartTextField"); // NOI18N
         limitsSplitPane.setLeftComponent(rangeStartTextField);
 
+        rangeEndTextField.setEnabled(false);
         rangeEndTextField.setName("rangeEndTextField"); // NOI18N
         limitsSplitPane.setRightComponent(rangeEndTextField);
 
@@ -186,7 +192,6 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         filterComboBox.setEditable(true);
         filterComboBox.setName("filterComboBox"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RangeFilterPanel.class);
         useFilterCheckBox.setText(resourceMap.getString("useFilterCheckBox.text")); // NOI18N
         useFilterCheckBox.setName("useFilterCheckBox"); // NOI18N
 

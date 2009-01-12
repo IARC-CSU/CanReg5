@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -81,9 +82,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
         // Add a listener for changing the active tab
         ChangeListener tabbedPaneChangeListener = new ChangeListener() {
+
             public void stateChanged(ChangeEvent e) {
                 JTabbedPane pane = (JTabbedPane) e.getSource();
-                RecordEditorPanel  rep = (RecordEditorPanel) pane.getSelectedComponent();
+                RecordEditorPanel rep = (RecordEditorPanel) pane.getSelectedComponent();
                 setActiveRecord(rep);
             }
         };
@@ -93,13 +95,21 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
     }
 
+    private void addToPatientMap(RecordEditorPanel recordEditorPanel, DatabaseRecord dbr) {
+        Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
+        if (regno != null) {
+            patientRecordsMap.put(regno, recordEditorPanel);
+        }
+    }
+
     private void setActiveRecord(RecordEditorPanel rep) {
         DatabaseRecord dbr = rep.getDatabaseRecord();
-        if (dbr instanceof Tumour){
+        if (dbr instanceof Tumour) {
             Object patientRecordID = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName());
             Component comp = patientRecordsMap.get(patientRecordID);
-            if (comp!=null)
+            if (comp != null) {
                 patientTabbedPane.setSelectedComponent(comp);
+            }
         }
     }
 
@@ -150,22 +160,22 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             String regnoString = "n/a";
             if (regno != null) {
                 regnoString = regno.toString();
-                if (regnoString.length()==0){
+                if (regnoString.length() == 0) {
                     regnoString = "n/a";
                 } else {
                     patientRecordsMap.put(regno, rePanel);
                 }
             }
             patientTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
-            if (!titleSet){
+            if (!titleSet) {
                 Object patno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
                 String patnoString = "n/a";
                 if (patno != null) {
-                   patnoString = patno.toString();
-                   if (patnoString.length()>0){
-                       this.setTitle("Patient ID:" + patnoString);
-                       titleSet = true;
-                   }
+                    patnoString = patno.toString();
+                    if (patnoString.length() > 0) {
+                        this.setTitle("Patient ID:" + patnoString);
+                        titleSet = true;
+                    }
                 }
             }
         } else if (dbr instanceof Tumour) {
@@ -174,7 +184,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             String regnoString = "n/a";
             if (regno != null) {
                 regnoString = regno.toString();
-                if (regnoString.length()==0) {
+                if (regnoString.length() == 0) {
                     regnoString = "n/a";
                 }
             }
@@ -336,8 +346,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         if (dbr instanceof Patient) {
             // copy all information
             for (String variableName : dbr.getVariableNames()) {
-                if (variableName.equalsIgnoreCase(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME)
-                        || variableName.equalsIgnoreCase(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
+                if (variableName.equalsIgnoreCase(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) || variableName.equalsIgnoreCase(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
                 } else {
                     dbr.setVariable(variableName, activePatient.getVariable(variableName));
                 }
@@ -355,24 +364,77 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     @Action
     public void saveAllAction() {
         LinkedList<RecordEditorPanel> reps = new LinkedList<RecordEditorPanel>();
-        
-        for (Component comp: patientTabbedPane.getComponents()){
+
+        for (Component comp : patientTabbedPane.getComponents()) {
             reps.add((RecordEditorPanel) comp);
         }
 
-        for (Component comp: tumourTabbedPane.getComponents()){
+        for (Component comp : tumourTabbedPane.getComponents()) {
             reps.add((RecordEditorPanel) comp);
         }
 
-        for (RecordEditorPanel rep: reps){
+        for (RecordEditorPanel rep : reps) {
             try {
-                saveRecord(rep.getDatabaseRecord());
+                DatabaseRecord dbr = saveRecord(rep.getDatabaseRecord());
+                rep.refreshDatabaseRecord(dbr);
             } catch (SecurityException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    private void refreshTitles(RecordEditorPanel recordEditorPanel, DatabaseRecord dbr){
+
+                    if (dbr instanceof Patient) {
+                        // patientRecords.add(dbr);
+                        Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
+                        String regnoString = "n/a";
+                        if (regno != null) {
+                            regnoString = regno.toString();
+                            if (regnoString.length() == 0) {
+                                regnoString = "n/a";
+                            } else {
+                                // patientRecordsMap.put(regno, recordEditorPanel);
+                            }
+                        }
+                        int index = 0;
+                        for (Component comp : patientTabbedPane.getComponents()) {
+                            if (comp.equals(recordEditorPanel)) {
+                                patientTabbedPane.setTitleAt(index, dbr.toString() + ": " + regnoString);
+                            }
+                            index++;
+                        }
+                        if (!titleSet) {
+                            Object patno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
+                            String patnoString = "n/a";
+                            if (patno != null) {
+                                patnoString = patno.toString();
+                                if (patnoString.length() > 0) {
+                                    this.setTitle("Patient ID:" + patnoString);
+                                    titleSet = true;
+                                }
+                            }
+                        }
+                    } else if (dbr instanceof Tumour) {
+                        // tumourRecords.add(dbr);
+                        Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName());
+                        String regnoString = "n/a";
+                        if (regno != null) {
+                            regnoString = regno.toString();
+                            if (regnoString.length() == 0) {
+                                regnoString = "n/a";
+                            }
+                        }
+                        int index = 0;
+                        for (Component comp : tumourTabbedPane.getComponents()) {
+                            if (comp.equals(recordEditorPanel)) {
+                                tumourTabbedPane.setTitleAt(index, dbr.toString() + ": " + regnoString);
+                            }
+                            index++;
+                        }
+                    }
     }
 
     /**
@@ -495,19 +557,22 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     }
                 }
                 CanRegClientView.showAndCenterInternalFrame(desktopPane, editChecksInternalFrame);
-            } 
-            
-            else if (e.getActionCommand().equalsIgnoreCase("save")) {
+            } else if (e.getActionCommand().equalsIgnoreCase("save")) {
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
                 DatabaseRecord databaseRecord = recordEditorPanel.getDatabaseRecord();
-                if (databaseRecord instanceof Tumour){
+                if (databaseRecord instanceof Tumour) {
                     // set the patient id to the active patient number
                     RecordEditorPanel patientRecordEditorPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
                     DatabaseRecord patientDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
                     associateTumourRecordToPatientRecord(databaseRecord, patientDatabaseRecord);
                 }
                 try {
-                    saveRecord(databaseRecord);
+                    DatabaseRecord dbr = saveRecord(databaseRecord);
+                    recordEditorPanel.refreshDatabaseRecord(dbr);
+                    refreshTitles(recordEditorPanel, dbr);
+                    if (dbr instanceof Patient){
+                        addToPatientMap(recordEditorPanel, dbr);
+                    }
                 } catch (SecurityException ex) {
                     Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (RemoteException ex) {
@@ -517,22 +582,33 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         }
     }
 
-    private void saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException {
+    private DatabaseRecord saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException {
         // id is the internal database id
         if (databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) == null &&
                 databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) == null) {
             int id = canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord);
             if (databaseRecord instanceof Patient) {
-                databaseRecord.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, id);
+                // databaseRecord.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, id);
+                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME);
             } else if (databaseRecord instanceof Tumour) {
-                databaseRecord.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, id);
+                // databaseRecord.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, id);
+                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME);
             }
             JOptionPane.showInternalMessageDialog(this, "New record saved.");
         } else {
             canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord);
             // TODO: Retrieve updated data if not data can be lost. Get the patient/tumour?
+            int id = -1;
+            if (databaseRecord instanceof Patient) {
+                id = (Integer) databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME);
+            } else if (databaseRecord instanceof Tumour) {
+                id = (Integer) databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME);
+            }
             JOptionPane.showInternalMessageDialog(this, "Record saved.");
         }
+        return databaseRecord;
     }
 
     private DatabaseRecord associateTumourRecordToPatientRecord(DatabaseRecord tumourDatabaseRecord, DatabaseRecord patientDatabaseRecord) {
