@@ -387,7 +387,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         if (serverNames != null) {
             canRegSystemComboBox.setModel(new javax.swing.DefaultComboBoxModel(localSettings.getServerDescriptions().toArray()));
             String lastServerIDString = localSettings.getProperty(LocalSettings.LAST_SERVER_ID_KEY);
-            if (lastServerIDString != null) {
+            if (lastServerIDString != null && lastServerIDString.trim().length()>0) {
                 ServerDescription sd = localSettings.getServerDescription(Integer.parseInt(lastServerIDString));
                 if (sd != null) {
                     canRegSystemComboBox.setSelectedItem(sd);
