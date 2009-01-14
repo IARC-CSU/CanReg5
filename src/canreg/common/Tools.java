@@ -7,6 +7,7 @@ import org.w3c.dom.NodeList;
 import java.net.*;
 import java.io.*;
 import java.util.Date;
+import java.util.TreeMap;
 
 /**
  *
@@ -87,11 +88,11 @@ public class Tools {
             Element e = (Element) nl.item(i);
             variables[i] = new PersonSearchVariable();
             variables[i].setName(e.getElementsByTagName(namespace + "variable_name").item(0).getTextContent());
-             variables[i].setWeight(Integer.parseInt(e.getElementsByTagName(namespace + "weigth").item(0).getTextContent()));
+            variables[i].setWeight(Integer.parseInt(e.getElementsByTagName(namespace + "weigth").item(0).getTextContent()));
         }
         return variables;
     }
-    
+
     /**
      * 
      * @param doc
@@ -103,7 +104,7 @@ public class Tools {
         Element e = (Element) nl.item(0);
         return Integer.parseInt(e.getElementsByTagName(namespace + "minimum_match").item(0).getTextContent());
     }
-    
+
     /**
      * 
      * @param doc
@@ -169,10 +170,10 @@ public class Tools {
             if (standardVariableNameNodeList != null && standardVariableNameNodeList.getLength() > 0) {
                 variables[i].setStandardVariableName(standardVariableNameNodeList.item(0).getTextContent());
             }
-            
-            // TODO
-            // Accommodate unknown codes
-            
+
+        // TODO
+        // Accommodate unknown codes
+
         }
         return variables;
     }
@@ -218,6 +219,43 @@ public class Tools {
         return indexes;
     }
 
+    public static TreeMap<String, LinkedList<String>> buildIndexMap(String tableName, Document doc, String namespace) {
+        TreeMap<String, LinkedList<String>> indexMap = new TreeMap<String, LinkedList<String>>();
+
+        NodeList nodes = doc.getElementsByTagName(namespace + "indexes");
+        Element variablesElement = (Element) nodes.item(0);
+
+        NodeList indexes = variablesElement.getElementsByTagName(namespace + "index");
+
+        // Go through all the indexes definitions
+        for (int i = 0; i < indexes.getLength(); i++) {
+
+            // Get element
+            Element element = (Element) indexes.item(i);
+
+            // Create line
+            String tableNameDB = element.getElementsByTagName(namespace + "table").item(0).getTextContent().toUpperCase();
+
+            if (tableNameDB.equalsIgnoreCase(tableName)) {
+                LinkedList<String> indexedVariables = new LinkedList<String>();
+                String nameDB = element.getElementsByTagName(namespace + "name").item(0).getTextContent();
+
+                NodeList variables = element.getElementsByTagName(namespace + "indexed_variable");
+
+                if (variables.getLength() > 0) {
+                    // we don't allow empty indexes
+                    // Go through all the variable definitions
+                    for (int j = 0; j < variables.getLength(); j++) {
+                        Element variableElement = (Element) variables.item(j);
+                        indexedVariables.add(variableElement.getElementsByTagName(namespace + "variable_name").item(0).getTextContent().toUpperCase());
+                    }
+                    indexMap.put(nameDB, indexedVariables);
+                }
+            }
+        }
+        return indexMap;
+    }
+
     /**
      * 
      * @param doc
@@ -238,8 +276,8 @@ public class Tools {
             dictionaries[i].setCategoryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "category_description_length").item(0).getTextContent()));
             dictionaries[i].setFullDictionaryCodeLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_code_length").item(0).getTextContent()));
             dictionaries[i].setFullDictionaryCategoryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_description_length").item(0).getTextContent()));
-           
-            
+
+
         // TODO -- capture more info...
         }
         return dictionaries;
@@ -257,20 +295,19 @@ public class Tools {
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
             indexes[i] = new DatabaseGroupsListElement(
-                    e.getElementsByTagName(namespace + "name").item(0).getTextContent(), 
-                    Integer.parseInt(e.getElementsByTagName(namespace + "group_id").item(0).getTextContent())
-                    );
+                    e.getElementsByTagName(namespace + "name").item(0).getTextContent(),
+                    Integer.parseInt(e.getElementsByTagName(namespace + "group_id").item(0).getTextContent()));
         }
         return indexes;
     }
-    
-        /**
-         * 
-         * @param doc
-         * @param namespace
-         * @return
-         */
-        public static String[] getVariableNames(Document doc, String namespace) {
+
+    /**
+     *
+     * @param doc
+     * @param namespace
+     * @return
+     */
+    public static String[] getVariableNames(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
         String[] variableNames = new String[nl.getLength()];
         for (int i = 0; i <
@@ -282,12 +319,12 @@ public class Tools {
         return variableNames;
     }
 
-        /**
-         * 
-         * @param url
-         * @return
-         */
-        public static String getFileFromURL(URL url){
+    /**
+     *
+     * @param url
+     * @return
+     */
+    public static String getFileFromURL(URL url) {
         StringBuffer contents = new StringBuffer();
 
         try {
@@ -310,27 +347,27 @@ public class Tools {
                 }
             }
 
-        }  catch (IOException ioe) {
+        } catch (IOException ioe) {
             System.err.println("I/O Error - " + ioe);
         }
         return contents.toString();
     }
-    
-        /**
-         * 
-         * @param urlString
-         * @return
-         */
-        public static String getFileFromURL(String urlString) {
+
+    /**
+     *
+     * @param urlString
+     * @return
+     */
+    public static String getFileFromURL(String urlString) {
         String contents = new String();
-        URL url = null; 
+        URL url = null;
         try {
             // Create an URL instance
             url = new URL(urlString);
             contents = getFileFromURL(url);
         } catch (MalformedURLException mue) {
             System.err.println("Invalid URL");
-        } 
+        }
         return contents;
     }
 
@@ -353,7 +390,7 @@ public class Tools {
         }
         return file;
     }
-    
+
     /**
      * 
      * @param urlString
@@ -397,8 +434,8 @@ public class Tools {
 
     public static String increment(String ID) {
         String IDplusOne = null;
-        char lastChar = ID.charAt(ID.length()-1);
-        String theRest = ID.substring(0, ID.length()-1);
+        char lastChar = ID.charAt(ID.length() - 1);
+        String theRest = ID.substring(0, ID.length() - 1);
         if (lastChar == '9') {
             lastChar = '0';
             IDplusOne = increment(theRest) + lastChar;

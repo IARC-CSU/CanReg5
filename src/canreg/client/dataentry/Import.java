@@ -265,6 +265,10 @@ public class Import {
             success = true;
         } catch (IOException ex) {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+            success = false;
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+            success = false;
         } finally {
             if (bufferedReader != null) {
                 try {

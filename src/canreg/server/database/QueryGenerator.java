@@ -7,6 +7,7 @@ package canreg.server.database;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import java.util.LinkedList;
+import java.util.TreeMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -72,45 +73,22 @@ public class QueryGenerator {
 
     static LinkedList<String> strCreateIndexTable(String tableName, Document doc) {
         LinkedList<String> queries = new LinkedList();
-
-        NodeList nodes = doc.getElementsByTagName(namespace + "indexes");
-        Element variablesElement = (Element) nodes.item(0);
-
-        NodeList indexes = variablesElement.getElementsByTagName(namespace + "index");
-
-        // Go through all the variable definitions
-        for (int i = 0; i < indexes.getLength(); i++) {
-
-            // Get element
-            Element element = (Element) indexes.item(i);
-
-            // Create line
-            String tableNameDB = element.getElementsByTagName(namespace + "table").item(0).getTextContent().toUpperCase();
-
-            if (tableNameDB.equalsIgnoreCase(tableName)) {
-                String nameDB = element.getElementsByTagName(namespace + "name").item(0).getTextContent();
-
-                String query = "create index \"" + nameDB + "_idx\" on " + Globals.SCHEMA_NAME + "." + tableName + " (";
-                NodeList variables = element.getElementsByTagName(namespace + "indexed_variable");
-
-                if (variables.getLength()>0){ // we don't allow empty indexes
-                    // Go through all the variable definitions
-                    for (int j = 0; j < variables.getLength(); j++) {
-                        Element variableElement = (Element) variables.item(j);
-                        if (j > 0) {
-                            query += ", ";
-                        }
-                        query += "\"" + variableElement.getElementsByTagName(namespace + "variable_name").item(0).getTextContent().toUpperCase() + "\"";
-                    }
-                    query += ") ";
-                    System.out.println(query);
-                    queries.add(query);
+        TreeMap<String,LinkedList<String>> indexMap = canreg.common.Tools.buildIndexMap(tableName, doc, namespace);
+        // Go through all the indexes definitions...
+        for (String indexName : indexMap.keySet()) {
+            String query = "create index \"" + indexName + "_idx\" on " + Globals.SCHEMA_NAME + "." + tableName + " (";
+            // Go through all database variables in the index...
+            LinkedList<String> indexedVariables = indexMap.get(indexName);
+            for (int j = 0; j < indexedVariables.size(); j++) {
+                if (j > 0) {
+                    query += ", ";
                 }
+                query += "\"" + indexedVariables.get(j) + "\"";
             }
+            query += ") ";
+            System.out.println(query);
+            queries.add(query);
         }
-
-
-
         return queries;
     }
 

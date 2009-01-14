@@ -379,8 +379,8 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param io
      * @throws java.rmi.RemoteException
      */
-    public void importFile(Task<Object, Void> task, Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException {
-        canreg.client.dataentry.Import.importFile(task, doc, map, file, server, io);
+    public boolean importFile(Task<Object, Void> task, Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException {
+        return canreg.client.dataentry.Import.importFile(task, doc, map, file, server, io);
     }
 
     /**

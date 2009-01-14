@@ -16,6 +16,8 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Set;
 import java.util.TreeMap;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
@@ -168,21 +170,73 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
     public void saveAction() {
         //for each variable of the doc update the Table information...
 
+        TreeMap<String, String> variablesToTableMap = new TreeMap<String, String>();
+
         NodeList nl = doc.getElementsByTagName(Globals.NAMESPACE + "variable");
+
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
             String shortName = e.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent();
+            String tableName = e.getElementsByTagName(Globals.NAMESPACE + "table").item(0).getTextContent();
             Element oldChildElement = null;
             oldChildElement = (Element) e.getElementsByTagName(Globals.NAMESPACE + "table").item(0);
             Element newChildElement = doc.createElement(Globals.NAMESPACE + "table");
             EditDatabaseVariableJPanel panel = map.get(shortName);
-            if (panel!=null){
+            if (panel != null) {
                 newChildElement.appendChild(doc.createTextNode(panel.getDble().getDatabaseTableName()));
-                e.replaceChild(newChildElement,oldChildElement);
+                e.replaceChild(newChildElement, oldChildElement);
+                tableName = panel.getDble().getDatabaseTableName();
+            }
+            variablesToTableMap.put(shortName.toUpperCase(), tableName);
+        }
+
+        // Update the Indexes part
+        //
+        TreeMap<String, LinkedList<String>> indexMap = canreg.common.Tools.buildIndexMap(Globals.PATIENT_TABLE_NAME, doc, Globals.NAMESPACE);
+        indexMap.putAll(canreg.common.Tools.buildIndexMap(Globals.TUMOUR_TABLE_NAME, doc, Globals.NAMESPACE));
+
+        Element parentElement = doc.createElement(Globals.NAMESPACE + "indexes");
+
+        // Split the indexes that needs to be split
+        indexMap = canreg.server.management.SystemDefinitionConverter.splitIndexMapInTumourAndPatient(indexMap, variablesToTableMap);
+
+        // then build doc
+        Set<String> indexNames = indexMap.keySet();
+        Element element;
+        // then build doc
+        for (String indexName : indexNames) {
+            String table = null;
+
+            element = doc.createElement(Globals.NAMESPACE + "index");
+            parentElement.appendChild(element);
+            Element childElement = createElement(Globals.NAMESPACE + "name", indexName);
+            element.appendChild(childElement);
+
+            LinkedList<String> variablesInThisIndex = indexMap.get(indexName);
+
+            String tableOfThisIndex = variablesToTableMap.get(variablesInThisIndex.getFirst());
+            childElement = createElement(Globals.NAMESPACE + "table", tableOfThisIndex);
+            element.appendChild(childElement);
+            for (String variableName : variablesInThisIndex) {
+                Element thisElement = doc.createElement(Globals.NAMESPACE + "indexed_variable");
+                element.appendChild(thisElement);
+                thisElement.appendChild(createElement(Globals.NAMESPACE + "variable_name", variableName));
             }
         }
+        // switch the old with the new indexes part
+        Element root = doc.getDocumentElement();
+        Element oldIndexesElement = (Element) doc.getElementsByTagName(Globals.NAMESPACE + "indexes").item(0);
+        root.replaceChild(parentElement, oldIndexesElement);
+
+        // write the xml file
         canreg.server.xml.Tools.writeXmlFile(doc, fileName);
         this.dispose();
+    }
+
+    private Element createElement(String variableName, String value) {
+        Element childElement = doc.createElement(variableName);
+        childElement.appendChild(doc.createTextNode(value));
+        return childElement;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
