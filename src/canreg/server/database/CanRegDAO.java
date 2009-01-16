@@ -247,7 +247,7 @@ public class CanRegDAO {
             String filterString = filter.getFilterString();
             String query = "";
             if (!filterString.isEmpty()) {
-                filterString = " AND " + filterString;
+                filterString = " AND ( " + filterString+" )";
             }
             variables = filter.getDatabaseVariables();
             String variablesList = "";
@@ -265,7 +265,7 @@ public class CanRegDAO {
             String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
             String patientIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
 
-            query = "SELECT INCID/10000 " + variablesList + ", COUNT(*) as Cases " +
+            query = "SELECT INCID/10000 as \"YEAR\" " + variablesList + ", COUNT(*) as Cases " +
                     "FROM APP.TUMOUR, APP.PATIENT " +
                     "WHERE APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " " + filterString + " " +
                     "GROUP BY INCID/10000 " + variablesList + " " +
@@ -291,7 +291,7 @@ public class CanRegDAO {
         } else if (tableName.equalsIgnoreCase("patient")) {
             String filterString = filter.getFilterString();
             if (!filterString.isEmpty()) {
-                filterString = " WHERE " + filterString;
+                filterString = " WHERE (" + filterString +" )";
             }
             ResultSet countRowSet = statement.executeQuery(strCountPatients + filterString);
             if (countRowSet.next()) {
@@ -305,7 +305,7 @@ public class CanRegDAO {
         } else if (tableName.equalsIgnoreCase("both")) {
             String filterString = filter.getFilterString();
             if (!filterString.isEmpty()) {
-                filterString = " AND " + filterString.trim();
+                filterString = " AND (" + filterString.trim()+")";
             }
             ResultSet countRowSet = statement.executeQuery(strCountPatientsAndTumours + filterString);
             // Count the rows...
