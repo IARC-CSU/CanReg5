@@ -57,6 +57,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     private GlobalToolBox globalToolBox;
     private boolean saveNeeded = false;
     private ActionListener actionListener;
+    private DatabaseVariablesListElement recordStatusVariableListElement;
 
     void refreshDatabaseRecord(DatabaseRecord record) {
         this.databaseRecord = record;
@@ -91,6 +92,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     /** Creates new form RecordEditorPanel */
     public RecordEditorPanel() {
         initComponents();
+        globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
         saveButton.setEnabled(true);
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
     }
@@ -119,8 +121,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         this.databaseRecord = dbr;
         if (databaseRecord.getClass().isInstance(new Patient())) {
             panelType = panelTypes.PATIENT;
+            recordStatusVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordStatus.toString());
         } else if (databaseRecord.getClass().isInstance(new Tumour())) {
             panelType = panelTypes.TUMOUR;
+            recordStatusVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
         }
         buildPanel();
     }
@@ -138,8 +142,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         String tableName = null;
         dataPanel.removeAll();
 
-        globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
-
         variableEditorPanels = new TreeMap();
 
         if (panelType == panelTypes.PATIENT) {
@@ -150,16 +152,19 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             personSearchPanel.setVisible(false);
         }
 
-        DatabaseVariablesListElement recordStatusVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
+        if (recordStatusVariableListElement!=null){
 
-        Map<String, DictionaryEntry> recStatusDict = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
-        statusComboBox.setModel(new DefaultComboBoxModel(recStatusDict.values().toArray()));
+            Map<String, DictionaryEntry> recStatusDict = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
 
+            statusComboBox.setModel(new DefaultComboBoxModel(recStatusDict.values().toArray()));
 
-        Object recStatus = databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
+            Object recStatus = databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
 
-        if (recStatus != null) {
-            statusComboBox.setSelectedItem(recStatusDict.get(recStatus));
+            if (recStatus != null) {
+                statusComboBox.setSelectedItem(recStatusDict.get(recStatus));
+            }
+        } else {
+            recordStatusPanel.setVisible(false);
         }
 
         Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new TreeMap<Integer, VariableEditorGroupPanel>();
