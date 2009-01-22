@@ -22,8 +22,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.Statement;
-
-// import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -72,6 +70,10 @@ public class CanRegDAO {
         strCountPatientsAndTumours = QueryGenerator.strCountPatientsAndTumours(globalToolBox);
         strGetHighestPatientID = QueryGenerator.strGetHighestPatientID(globalToolBox);
         strGetHighestTumourID = QueryGenerator.strGetHighestTumourID(globalToolBox);
+        strGetHighestPatientRecordID = QueryGenerator.strGetHighestPatientRecordID(globalToolBox);
+        /* We don't use tumour record ID...
+        strGetHighestTumourRecordID = QueryGenerator.strGetHighestTumourRecordID(globalToolBox);
+        */
         setDBSystemDir();
         dbProperties = loadDBProperties();
         String driverName = dbProperties.getProperty("derby.driver");
@@ -592,9 +594,13 @@ public class CanRegDAO {
             stmtGetPatient = dbConnection.prepareStatement(strGetPatient);
             stmtGetPatients = dbConnection.prepareStatement(strGetPatients);
             stmtGetPatientsAndTumours = dbConnection.prepareStatement(strGetPatientsAndTumours);
+
             stmtGetHighestPatientID = dbConnection.prepareStatement(strGetHighestPatientID);
             stmtGetHighestTumourID = dbConnection.prepareStatement(strGetHighestTumourID);
-
+            stmtGetHighestPatientRecordID = dbConnection.prepareStatement(strGetHighestPatientRecordID);
+            /* We don't use tumour record ID...
+            stmtGetHighestTumourRecordID = dbConnection.prepareStatement(strGetHighestTumourRecordID);
+            */
             stmtGetTumour = dbConnection.prepareStatement(strGetTumour);
             stmtGetTumours = dbConnection.prepareStatement(strGetTumours);
 
@@ -728,10 +734,15 @@ public class CanRegDAO {
      * @return
      */
     public int savePatient(Patient patient) {
-        String patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+        String patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
         Object patientID = patient.getVariable(patientIDVariableName);
-        if (patientID != null && patientID.toString().trim().length() == 0) {
+        if (patientID == null || patientID.toString().trim().length() == 0) {
             patient.setVariable(patientIDVariableName, getNextPatientID());
+        }
+        String patientRecordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+        Object patientRecordID = patient.getVariable(patientRecordIDVariableName);
+        if (patientRecordID == null || patientRecordID.toString().trim().length() == 0) {
+            patient.setVariable(patientRecordIDVariableName, getNextPatientRecordID());
         }
         return saveRecord("Patient", patient, stmtSaveNewPatient);
     }
@@ -744,7 +755,7 @@ public class CanRegDAO {
     public int saveTumour(Tumour tumour) {
         String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         Object tumourID = tumour.getVariable(tumourIDVariableName);
-        if (tumourID == null && tumourID.toString().trim().length() == 0) {
+        if (tumourID == null || tumourID.toString().trim().length() == 0) {
             tumour.setVariable(tumourIDVariableName, getNextTumourID());
         }
         return saveRecord("Tumour", tumour, stmtSaveNewTumour);
@@ -1245,6 +1256,10 @@ public class CanRegDAO {
             String highestPatientID = result.getString(1);
             if (highestPatientID!=null)
                 patientID = canreg.common.Tools.increment(highestPatientID);
+            else {
+                // TODO replace with today's year and 00..001
+                patientID = "1";
+                }
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1259,11 +1274,52 @@ public class CanRegDAO {
             String highestTumourID = result.getString(1);
             if (highestTumourID!=null)
                 tumourID = canreg.common.Tools.increment(highestTumourID);
+            else {
+                // TODO replace with today's year and 00..001
+                tumourID = "1";
+            }
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return tumourID;
     }
+
+    public String getNextPatientRecordID() {
+        String patientRecordID = null;
+        try {
+            ResultSet result = stmtGetHighestPatientRecordID.executeQuery();
+            result.next();
+            String highestPatientRecordID = result.getString(1);
+            if (highestPatientRecordID!=null)
+                patientRecordID = canreg.common.Tools.increment(highestPatientRecordID);
+            else {
+                patientRecordID = "1";
+                }
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return patientRecordID;
+    }
+
+    public String getNextTumourRecordID() {
+        String tumourRecordID = null;
+        try {
+            ResultSet result = stmtGetHighestTumourRecordID.executeQuery();
+            result.next();
+            String highestTumourRecordID = result.getString(1);
+            if (highestTumourRecordID!=null)
+                tumourRecordID = canreg.common.Tools.increment(highestTumourRecordID);
+            else {
+                tumourRecordID = "1";
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return tumourRecordID;
+    }
+
+
+
     private Connection dbConnection;
     private Properties dbProperties;
     private boolean isConnected;
@@ -1300,7 +1356,9 @@ public class CanRegDAO {
     private PreparedStatement stmtDeletePopoulationDataset;
     private PreparedStatement stmtDeletePopoulationDatasetEntries;
     private PreparedStatement stmtGetHighestPatientID;
+    private PreparedStatement stmtGetHighestPatientRecordID;
     private PreparedStatement stmtGetHighestTumourID;
+    private PreparedStatement stmtGetHighestTumourRecordID;
     private String ns = Globals.NAMESPACE;
     private static final String strGetPatient =
             "SELECT * FROM APP.PATIENT " +
@@ -1364,6 +1422,10 @@ public class CanRegDAO {
     private String strSaveNameSexRecord;
     private String strGetHighestPatientID;
     private String strGetHighestTumourID;
+    private String strGetHighestPatientRecordID;
+    /* We don't use tumour record ID...
+    private String strGetHighestTumourRecordID;
+    */
     private GlobalToolBox globalToolBox;
 }
 
