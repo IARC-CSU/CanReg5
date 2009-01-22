@@ -101,12 +101,13 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     // Initialize the database connection
     private boolean initDataBase() {
         boolean success = false;
+        boolean connected = false;
 
         // Connect to the database
         db = new CanRegDAO(systemCode, systemDescription.getSystemDescriptionDocument());
-        db.connect();
+        connected = db.connect();
 
-        if (db != null) {
+        if (connected && db != null) {
             success = true;
         }
 
