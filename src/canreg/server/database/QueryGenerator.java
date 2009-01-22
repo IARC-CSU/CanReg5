@@ -335,7 +335,7 @@ public class QueryGenerator {
     }
 
     static String strGetHighestPatientID(GlobalToolBox globalToolBox){
-        String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+        String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
         return "SELECT max(\""+patientIDVariableNamePatientTable.toUpperCase()+"\") FROM APP.PATIENT";
     }
 
@@ -343,6 +343,18 @@ public class QueryGenerator {
         String tumourIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         return "SELECT max(\""+tumourIDVariableNamePatientTable.toUpperCase()+"\") FROM APP.TUMOUR";
     }
+
+    static String strGetHighestPatientRecordID(GlobalToolBox globalToolBox){
+        String patientRecordIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+        return "SELECT max(\""+patientRecordIDVariableNamePatientTable.toUpperCase()+"\") FROM APP.PATIENT";
+    }
+
+    /* We don't use tumour record ID...
+    static String strGetHighestTumourRecordID(GlobalToolBox globalToolBox){
+        String tumourRecordIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordID.toString()).getDatabaseVariableName();
+        return "SELECT max(\""+tumourRecordIDVariableNamePatientTable.toUpperCase()+"\") FROM APP.TUMOUR";
+    }
+    */
 
     private static String strEditRecord(Document doc, String tableName) {
 
