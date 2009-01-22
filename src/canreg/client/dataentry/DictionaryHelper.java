@@ -26,33 +26,33 @@ import org.w3c.dom.NodeList;
  * @author ervikm
  */
 public class DictionaryHelper {
-       
+
     /**
      * 
      * @param dictionary
      * @return
      */
     public static Map<String, DictionaryEntry> buildDictionaryEntriesFromMap(Map<String, String> dictionary) {
-        Map<String, DictionaryEntry> dictionaryEntries = new LinkedHashMap <String, DictionaryEntry> ();
-        Iterator <String> iterator = dictionary.keySet().iterator();
+        Map<String, DictionaryEntry> dictionaryEntries = new LinkedHashMap<String, DictionaryEntry>();
+        Iterator<String> iterator = dictionary.keySet().iterator();
         int i = 0;
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             String code = iterator.next().toString();
             String description = dictionary.get(code);
-            dictionaryEntries.put(code,new DictionaryEntry(0, code, description));
+            dictionaryEntries.put(code, new DictionaryEntry(0, code, description));
         }
         return dictionaryEntries;
     }
-    
+
     /**
      * 
      * @param doc
      * @param name
      * @return
      */
-    public static int getDictionaryIDbyName(Document doc, String name){
+    public static int getDictionaryIDbyName(Document doc, String name) {
         int id = -1;
-        
+
         // Get the variables node in the XML
         NodeList nodes = doc.getElementsByTagName(Globals.NAMESPACE + "dictionaries");
         Element variablesElement = (Element) nodes.item(0);
@@ -65,14 +65,25 @@ public class DictionaryHelper {
         while (!found && i < dictionaries.getLength()) {
             // Get element
             Element element = (Element) dictionaries.item(i++);
-            found = name.equalsIgnoreCase(element.getElementsByTagName(Globals.NAMESPACE + "name").item(0).getTextContent());          
+            if (element == null) {
+                System.err.println("");
+                return -1;
+            } else {
+                Element nameElement = (Element) element.getElementsByTagName(Globals.NAMESPACE + "name").item(0);
+                if (nameElement != null){
+                    found = name.equalsIgnoreCase(nameElement.getTextContent());
+                } else {
+                    System.err.println("Name of dictionary missing?");
+                    return -1;
+                }
+            }
         }
         if (found) {
-            id = i-1;
+            id = i - 1;
         }
         return id;
     }
-    
+
     /**
      * 
      * @param dictionaryID
@@ -109,37 +120,34 @@ public class DictionaryHelper {
         }
         return dictionaryEntries;
     }
-    
+
     /**
      * 
      * @param dictionary
      * @param str
      * @return
      */
-    public static Map<Integer, String> testDictionary(DatabaseDictionaryListElement dictionary, String str){
+    public static Map<Integer, String> testDictionary(DatabaseDictionaryListElement dictionary, String str) {
         return testDictionary(dictionary, parseDictionaryText(dictionary.getDictionaryID(), str));
     }
-    
-    private static Map<Integer, String> testDictionary(DatabaseDictionaryListElement dictionary, Vector<DictionaryEntry> contents){
-        Map<Integer, String> errors = new LinkedHashMap<Integer,String>();
+
+    private static Map<Integer, String> testDictionary(DatabaseDictionaryListElement dictionary, Vector<DictionaryEntry> contents) {
+        Map<Integer, String> errors = new LinkedHashMap<Integer, String>();
         Set<String> codes = new LinkedHashSet();
         int codeLength = dictionary.getCodeLength();
         int fullCodeLength = dictionary.getFullDictionaryCodeLength();
-        if (!"Compound".equalsIgnoreCase(dictionary.getType())){
-            codeLength=-1;
+        if (!"Compound".equalsIgnoreCase(dictionary.getType())) {
+            codeLength = -1;
         }
         int i = 1;
-        for (DictionaryEntry de:contents){
+        for (DictionaryEntry de : contents) {
             // first check length of code
             String code = de.getCode();
-            if (code.length()!=codeLength&&code.length()!=fullCodeLength){
-                errors.put(i, "Line "+i+" - Wrong length: "+code);
-            } 
-            
-            // Then we check if it is a duplicate
-            
-            else if (!codes.add(code)){
-                errors.put(i, "Line "+i+" - Duplicate code: "+code);
+            if (code.length() != codeLength && code.length() != fullCodeLength) {
+                errors.put(i, "Line " + i + " - Wrong length: " + code);
+            } // Then we check if it is a duplicate
+            else if (!codes.add(code)) {
+                errors.put(i, "Line " + i + " - Duplicate code: " + code);
             }
             i++;
         }
@@ -161,7 +169,7 @@ public class DictionaryHelper {
 
         for (DictionaryEntry entry : dictionaryEntries) {
             app.saveDictionaryEntry(entry);
-            dictionaryEntriesMap.put(entry.getCode(),entry.getDescription());
+            dictionaryEntriesMap.put(entry.getCode(), entry.getDescription());
         }
-    }    
+    }
 }
