@@ -104,7 +104,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
     private void setActiveRecord(RecordEditorPanel rep) {
         DatabaseRecord dbr = rep.getDatabaseRecord();
-        if (dbr instanceof Tumour) {
+        if (dbr!=null && dbr instanceof Tumour) {
             Object patientRecordID = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName());
             Component comp = patientRecordsMap.get(patientRecordID);
             if (comp != null) {
