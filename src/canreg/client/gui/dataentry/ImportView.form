@@ -49,7 +49,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="506" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="510" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -90,16 +90,19 @@
                           <Component id="previewPanel" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="fileLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="fileNameTextField" pref="441" max="32767" attributes="0"/>
                                   </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="fileEncodingLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="separatingCharacterComboBox" pref="356" max="32767" attributes="0"/>
+                                      <Component id="charsetsComboBox" pref="229" max="32767" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="separatingCharacterLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="separatingCharacterComboBox" min="-2" pref="53" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -109,7 +112,7 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="previewButton" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="jButton1" max="32767" attributes="1"/>
+                                  <Component id="autodetectButton" max="32767" attributes="1"/>
                               </Group>
                           </Group>
                       </Group>
@@ -122,17 +125,18 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="previewButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="browseButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="fileLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="fileNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="autodetectButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="separatingCharacterComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="separatingCharacterLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="fileEncodingLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="charsetsComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="previewPanel" max="32767" attributes="0"/>
@@ -142,11 +146,6 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel1">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="jLabel1" noResource="true"/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JTextField" name="fileNameTextField">
               <Properties>
                 <Property name="name" type="java.lang.String" value="fileNameTextField" noResource="true"/>
@@ -193,7 +192,7 @@
                               <Component id="numberOfRecordsTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="previewScrollPane" pref="337" max="32767" attributes="0"/>
+                          <Component id="previewScrollPane" pref="346" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -244,10 +243,10 @@
                 <Property name="name" type="java.lang.String" value="previewButton" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel3">
+            <Component class="javax.swing.JLabel" name="fileLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel3.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel3" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="fileLabel.text"/>
+                <Property name="name" type="java.lang.String" value="fileLabel" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="separatingCharacterComboBox">
@@ -265,21 +264,39 @@
                 <Property name="name" type="java.lang.String" value="separatingCharacterComboBox" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel5">
+            <Component class="javax.swing.JLabel" name="separatingCharacterLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel5.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel5" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="separatingCharacterLabel.text"/>
+                <Property name="name" type="java.lang.String" value="separatingCharacterLabel" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton1">
+            <Component class="javax.swing.JButton" name="autodetectButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.dataentry.ImportView" id="autodetectSeparatingCharacterAction" methodName="autodetectSeparatingCharacterAction"/>
                 </Property>
-                <Property name="text" type="java.lang.String" resourceKey="jButton1.text"/>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="jButton1.toolTipText"/>
-                <Property name="enabled" type="boolean" value="false"/>
-                <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="autodetectButton.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="autodetectButton.toolTipText"/>
+                <Property name="name" type="java.lang.String" value="autodetectButton" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="fileEncodingLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="fileEncodingLabel.text"/>
+                <Property name="name" type="java.lang.String" value="fileEncodingLabel" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="charsetsComboBox">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="4">
+                    <StringItem index="0" value="Item 1"/>
+                    <StringItem index="1" value="Item 2"/>
+                    <StringItem index="2" value="Item 3"/>
+                    <StringItem index="3" value="Item 4"/>
+                  </StringArray>
+                </Property>
+                <Property name="name" type="java.lang.String" value="charsetsComboBox" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -318,7 +335,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jSplitPane1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variablesScrollPane" pref="428" max="32767" attributes="0"/>
+                      <Component id="variablesScrollPane" pref="432" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -432,7 +449,7 @@
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="importButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="43" max="32767" attributes="0"/>
+                      <EmptySpace pref="47" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

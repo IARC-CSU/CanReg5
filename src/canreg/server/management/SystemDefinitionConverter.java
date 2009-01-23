@@ -370,17 +370,13 @@ public class SystemDefinitionConverter {
                             -1, "Automatic", "Othr", "Number", 1, -1, Globals.PATIENT_TABLE_NAME, variableName));
                     /**
                      * PatientID
-                     *
-                     * TODO: adjust the size of this variable to the tumour record ID size...
                      */
                     variableName = Globals.StandardVariableNames.PatientID.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
                             -1, "Automatic", "Othr", "Alpha", recordIDlength, -1, Globals.PATIENT_TABLE_NAME, variableName));
-
                     /**
                      * PatientRecordID
-                     * TODO: adjust the size of this variable to the tumour record ID size...
                      */
                     variableName = Globals.StandardVariableNames.PatientRecordID.toString();
                     variablesParentElement.appendChild(
@@ -389,7 +385,6 @@ public class SystemDefinitionConverter {
 
                     /**
                      * Pointer to Patient from Tumour
-                     * TODO: adjust the size of this variable to the tumour record ID size...
                      */
                     variableName = Globals.StandardVariableNames.PatientIDTumourTable.toString();
                     variablesParentElement.appendChild(

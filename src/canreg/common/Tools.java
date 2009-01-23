@@ -1,11 +1,13 @@
 package canreg.common;
 
+import java.nio.charset.Charset;
 import java.util.LinkedList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.net.*;
 import java.io.*;
+import java.nio.charset.spi.CharsetProvider;
 import java.util.Date;
 import java.util.TreeMap;
 
@@ -488,5 +490,42 @@ public class Tools {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    static Charset getStandardCharset(Document doc, String namespace) {
+        Charset standardEncoding = Charset.defaultCharset();
+        NodeList nl = doc.getElementsByTagName(namespace + "data_entry_language");
+        if (nl.getLength()>0){
+            String dataEntryLanguage = nl.item(0).getTextContent();
+            if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ENGLISH)){
+                standardEncoding = Charset.forName(Globals.CHARSET_ENGLISH);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_FRENCH)){
+                standardEncoding = Charset.forName(Globals.CHARSET_FRENCH);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_SPANISH)){
+                standardEncoding = Charset.forName(Globals.CHARSET_SPANISH);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ITALIAN)){
+                standardEncoding = Charset.forName(Globals.CHARSET_ITALIAN);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_TURKISH)){
+                standardEncoding = Charset.forName(Globals.CHARSET_TURKISH);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ROMANIAN)){
+                standardEncoding = Charset.forName(Globals.CHARSET_ROMANIAN);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_PORTUGUESE)){
+                standardEncoding = Charset.forName(Globals.CHARSET_PORTUGUESE);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_CHINESE)){
+                standardEncoding = Charset.forName(Globals.CHARSET_CHINESE);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_THAI)){
+                standardEncoding = Charset.forName(Globals.CHARSET_THAI);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_KOREAN)){
+                standardEncoding = Charset.forName(Globals.CHARSET_KOREAN);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ARABIC)){
+                standardEncoding = Charset.forName(Globals.CHARSET_ARABIC);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_FARSI)){
+                standardEncoding = Charset.forName(Globals.CHARSET_FARSI);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_RUSSIAN)){
+                standardEncoding = Charset.forName(Globals.CHARSET_RUSSIAN);
+            }
+        }
+
+        return standardEncoding;
     }
 }

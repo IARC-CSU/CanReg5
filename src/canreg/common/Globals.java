@@ -117,6 +117,36 @@ public class Globals {
      */
     public static String DATE_FORMAT_STRING = "yyyyMMdd";
 
+    
+
+    static String DATAENTRY_LANGUAGE_ENGLISH = "E";
+    static String DATAENTRY_LANGUAGE_FRENCH = "F";
+    static String DATAENTRY_LANGUAGE_SPANISH = "S";
+    static String DATAENTRY_LANGUAGE_ITALIAN = "I";
+    static String DATAENTRY_LANGUAGE_TURKISH = "T";
+    static String DATAENTRY_LANGUAGE_ROMANIAN = "R";
+    static String DATAENTRY_LANGUAGE_PORTUGUESE = "P";
+    static String DATAENTRY_LANGUAGE_CHINESE = "C";
+    static String DATAENTRY_LANGUAGE_THAI = "H";
+    static String DATAENTRY_LANGUAGE_KOREAN = "K";
+    static String DATAENTRY_LANGUAGE_ARABIC = "A";
+    static String DATAENTRY_LANGUAGE_FARSI = "Z";
+    static String DATAENTRY_LANGUAGE_RUSSIAN = "U";
+    
+    static String CHARSET_ENGLISH = "ISO-8859-1";
+    static String CHARSET_FRENCH = "ISO-8859-1";
+    static String CHARSET_SPANISH = "ISO-8859-1";
+    static String CHARSET_ITALIAN = "ISO-8859-1";
+    static String CHARSET_TURKISH = "ISO-8859-2";
+    static String CHARSET_ROMANIAN = "ISO-8859-2";
+    static String CHARSET_PORTUGUESE = "ISO-8859-1";
+    static String CHARSET_CHINESE = "UTF-8";
+    static String CHARSET_THAI = "ISO-8859-11";
+    static String CHARSET_KOREAN = "UTF-8";
+    static String CHARSET_ARABIC = "ISO-8859-6";
+    static String CHARSET_FARSI = "UTF-8";
+    static String CHARSET_RUSSIAN = "ISO-8859-5";
+    
     /**
      * 
      */
@@ -346,6 +376,10 @@ public class Globals {
          */
         PatientRecordStatus,
         /**
+         *
+         */
+        PatientCheckStatus,
+        /**
          * The ID of the patient in the tumour table
          */
         PatientIDTumourTable,
@@ -368,6 +402,10 @@ public class Globals {
         /**
          *
          */
-        ObsoleteFlagPatientTable
+        ObsoleteFlagPatientTable,
+        /**
+         *
+         */
+        TumourUnduplicationStatus
     }    
 }

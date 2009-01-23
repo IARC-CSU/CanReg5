@@ -8,8 +8,10 @@ import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +41,9 @@ public class Import {
      * @return
      */
     public static boolean importFile(Document doc, File file, CanRegDAO canRegDAO) {
+        // first detect the encoding
+
+
         // create the mapping
         BufferedReader bufferedReader = null;
         List<Relation> map = null;
@@ -165,15 +170,20 @@ public class Import {
      * @return
      */
     public static boolean importFile(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) {
-
         boolean success = false;
 
         HashMap mpCodes = new HashMap();
 
         BufferedReader bufferedReader = null;
         try {
+            // Tro to detect the encoding...
+            FileInputStream fis = new FileInputStream(file);
+            InputStreamReader isr = new InputStreamReader(fis, io.getFileCharset());
+            // Returns the name of the character encoding 
+            System.out.println("Name of the character encoding "+isr.getEncoding());
+
             int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath()) - 1;
-            bufferedReader = new BufferedReader(new FileReader(file));
+            bufferedReader = new BufferedReader(isr);
             String line = bufferedReader.readLine();
             // Skip first line
             line = bufferedReader.readLine();

@@ -5,6 +5,8 @@
 
 package canreg.client.dataentry;
 
+import java.nio.charset.Charset;
+
 /**
  *
  * @author ervikm
@@ -50,6 +52,8 @@ public class ImportOptions {
 
     private String obsoleteTumourFlagVariableName;
     private String obsoletePatientFlagVariableName;
+
+    private Charset fileCharset;
 
     /**
      * 
@@ -331,5 +335,19 @@ public class ImportOptions {
      */
     public void setObsoletePatientFlagVariableName(String deprecatedPatientFlagVariableName) {
         this.obsoletePatientFlagVariableName = deprecatedPatientFlagVariableName;
+    }
+
+    /**
+     * @return the fileCharset
+     */
+    public Charset getFileCharset() {
+        return fileCharset;
+    }
+
+    /**
+     * @param fileCharset the fileCharset to set
+     */
+    public void setFileCharset(Charset fileCharset) {
+        this.fileCharset = fileCharset;
     }
 }
