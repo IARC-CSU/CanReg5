@@ -86,7 +86,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             public void stateChanged(ChangeEvent e) {
                 JTabbedPane pane = (JTabbedPane) e.getSource();
                 RecordEditorPanel rep = (RecordEditorPanel) pane.getSelectedComponent();
-                setActiveRecord(rep);
+                if (rep!=null){
+                    setActiveRecord(rep);
+                }
             }
         };
         // And add the listener to the tabbedPane

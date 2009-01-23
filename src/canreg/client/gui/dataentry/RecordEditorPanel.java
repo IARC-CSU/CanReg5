@@ -25,10 +25,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -58,6 +55,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     private boolean saveNeeded = false;
     private ActionListener actionListener;
     private DatabaseVariablesListElement recordStatusVariableListElement;
+    private DatabaseVariablesListElement unduplicationVariableListElement;
+    private DatabaseVariablesListElement checkVariableListElement;
+    private Map<String, DictionaryEntry> recStatusDict;
 
     void refreshDatabaseRecord(DatabaseRecord record) {
         this.databaseRecord = record;
@@ -122,9 +122,11 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         if (databaseRecord.getClass().isInstance(new Patient())) {
             panelType = panelTypes.PATIENT;
             recordStatusVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordStatus.toString());
+            unduplicationVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PersonSearch.toString());
         } else if (databaseRecord.getClass().isInstance(new Tumour())) {
             panelType = panelTypes.TUMOUR;
             recordStatusVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
+            unduplicationVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PersonSearch.toString());
         }
         buildPanel();
     }
@@ -152,16 +154,15 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             personSearchPanel.setVisible(false);
         }
 
+        /*
+         * Set the record status.
+         */
         if (recordStatusVariableListElement!=null){
-
-            Map<String, DictionaryEntry> recStatusDict = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
-
-            statusComboBox.setModel(new DefaultComboBoxModel(recStatusDict.values().toArray()));
-
+            recStatusDict = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
+            recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDict.values().toArray()));
             Object recStatus = databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
-
             if (recStatus != null) {
-                statusComboBox.setSelectedItem(recStatusDict.get(recStatus));
+                recordStatusComboBox.setSelectedItem(recStatusDict.get(recStatus));
             }
         } else {
             recordStatusPanel.setVisible(false);
@@ -271,7 +272,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         mpButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         recordStatusPanel = new javax.swing.JPanel();
-        statusComboBox = new javax.swing.JComboBox();
+        recordStatusComboBox = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         dataPanel = new javax.swing.JPanel();
 
@@ -371,21 +372,21 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         recordStatusPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("recordStatusPanel.border.title"))); // NOI18N
         recordStatusPanel.setName("recordStatusPanel"); // NOI18N
 
-        statusComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        statusComboBox.setName("statusComboBox"); // NOI18N
+        recordStatusComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        recordStatusComboBox.setName("recordStatusComboBox"); // NOI18N
 
         javax.swing.GroupLayout recordStatusPanelLayout = new javax.swing.GroupLayout(recordStatusPanel);
         recordStatusPanel.setLayout(recordStatusPanelLayout);
         recordStatusPanelLayout.setHorizontalGroup(
             recordStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(recordStatusPanelLayout.createSequentialGroup()
-                .addComponent(statusComboBox, 0, 114, Short.MAX_VALUE)
+                .addComponent(recordStatusComboBox, 0, 114, Short.MAX_VALUE)
                 .addContainerGap())
         );
         recordStatusPanelLayout.setVerticalGroup(
             recordStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(recordStatusPanelLayout.createSequentialGroup()
-                .addComponent(statusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(recordStatusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
@@ -454,10 +455,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     private javax.swing.JButton mpButton;
     private javax.swing.JPanel mpPanel;
     private javax.swing.JPanel personSearchPanel;
+    private javax.swing.JComboBox recordStatusComboBox;
     private javax.swing.JPanel recordStatusPanel;
     private javax.swing.JButton saveButton;
     private javax.swing.JButton searchButton;
-    private javax.swing.JComboBox statusComboBox;
     private javax.swing.JPanel systemPanel;
     // End of variables declaration//GEN-END:variables
 
@@ -483,7 +484,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             VariableEditorPanel vep = iterator.next();
             databaseRecord.setVariable(vep.getKey(), vep.getValue());
         }
-        // TODO save record status
+        if (recordStatusVariableListElement!=null){
+            DictionaryEntry recordStatusValue = (DictionaryEntry) recordStatusComboBox.getSelectedItem();
+            databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusValue.getCode());
+        }
     }
 
     /**
