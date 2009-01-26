@@ -127,7 +127,11 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
             systemDir = new File(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER);
             systemDir.mkdir();
             // copy the document to the CanReg system folder...
-            canreg.common.Tools.fileCopy(fileNameWithPath, document);
+            if (!fileNameWithPath.equalsIgnoreCase(document)){
+                canreg.common.Tools.fileCopy(fileNameWithPath, document);
+            } else {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), fileNameWithPath+" is already in the system folder. \nNo need to copy.", "Message.", JOptionPane.WARNING_MESSAGE);
+            }
             // load the document
             loadDocument(document);
             // Add this new server to the list of favourite servers
