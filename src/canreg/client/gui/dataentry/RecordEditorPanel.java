@@ -157,7 +157,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         /*
          * Set the record status.
          */
-        if (recordStatusVariableListElement!=null){
+        if (recordStatusVariableListElement!=null &&  recordStatusVariableListElement.getUseDictionary()!=null){
             recStatusDict = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
             recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDict.values().toArray()));
             Object recStatus = databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
@@ -484,7 +484,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             VariableEditorPanel vep = iterator.next();
             databaseRecord.setVariable(vep.getKey(), vep.getValue());
         }
-        if (recordStatusVariableListElement!=null){
+        if (recordStatusVariableListElement!=null &&  recordStatusVariableListElement.getUseDictionary()!=null){
             DictionaryEntry recordStatusValue = (DictionaryEntry) recordStatusComboBox.getSelectedItem();
             databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusValue.getCode());
         }

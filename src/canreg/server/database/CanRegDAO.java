@@ -73,7 +73,7 @@ public class CanRegDAO {
         strGetHighestPatientRecordID = QueryGenerator.strGetHighestPatientRecordID(globalToolBox);
         /* We don't use tumour record ID...
         strGetHighestTumourRecordID = QueryGenerator.strGetHighestTumourRecordID(globalToolBox);
-        */
+         */
         setDBSystemDir();
         dbProperties = loadDBProperties();
         String driverName = dbProperties.getProperty("derby.driver");
@@ -249,7 +249,7 @@ public class CanRegDAO {
             String filterString = filter.getFilterString();
             String query = "";
             if (!filterString.isEmpty()) {
-                filterString = " AND ( " + filterString+" )";
+                filterString = " AND ( " + filterString + " )";
             }
             variables = filter.getDatabaseVariables();
             String variablesList = "";
@@ -293,7 +293,7 @@ public class CanRegDAO {
         } else if (tableName.equalsIgnoreCase("patient")) {
             String filterString = filter.getFilterString();
             if (!filterString.isEmpty()) {
-                filterString = " WHERE (" + filterString +" )";
+                filterString = " WHERE (" + filterString + " )";
             }
             ResultSet countRowSet = statement.executeQuery(strCountPatients + filterString);
             if (countRowSet.next()) {
@@ -307,7 +307,7 @@ public class CanRegDAO {
         } else if (tableName.equalsIgnoreCase("both")) {
             String filterString = filter.getFilterString();
             if (!filterString.isEmpty()) {
-                filterString = " AND (" + filterString.trim()+")";
+                filterString = " AND (" + filterString.trim() + ")";
             }
             ResultSet countRowSet = statement.executeQuery(strCountPatientsAndTumours + filterString);
             // Count the rows...
@@ -474,6 +474,19 @@ public class CanRegDAO {
             statement.execute(QueryGenerator.strCreateUsersTable());
             statement.execute(QueryGenerator.strCreateSystemPropertiesTable());
 
+            // Set primary keys in patient table
+            for (String command : QueryGenerator.strCreatePatientTablePrimaryKey(
+                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
+                statement.execute(command);
+            }
+
+            // Set foreign keys in tumour table
+            for (String command : QueryGenerator.strCreateTumourTableForeignKey(
+                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName(),
+                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
+                statement.execute(command);
+            }
+
             // Create indexes - do last: least important
             LinkedList<String> tumourIndexList = QueryGenerator.strCreateIndexTable("Tumour", doc);
             for (String query : tumourIndexList) {
@@ -600,7 +613,7 @@ public class CanRegDAO {
             stmtGetHighestPatientRecordID = dbConnection.prepareStatement(strGetHighestPatientRecordID);
             /* We don't use tumour record ID...
             stmtGetHighestTumourRecordID = dbConnection.prepareStatement(strGetHighestTumourRecordID);
-            */
+             */
             stmtGetTumour = dbConnection.prepareStatement(strGetTumour);
             stmtGetTumours = dbConnection.prepareStatement(strGetTumours);
 
@@ -1254,12 +1267,12 @@ public class CanRegDAO {
             ResultSet result = stmtGetHighestPatientID.executeQuery();
             result.next();
             String highestPatientID = result.getString(1);
-            if (highestPatientID!=null)
+            if (highestPatientID != null) {
                 patientID = canreg.common.Tools.increment(highestPatientID);
-            else {
+            } else {
                 // TODO replace with today's year and 00..001
                 patientID = "1";
-                }
+            }
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1272,9 +1285,9 @@ public class CanRegDAO {
             ResultSet result = stmtGetHighestTumourID.executeQuery();
             result.next();
             String highestTumourID = result.getString(1);
-            if (highestTumourID!=null)
+            if (highestTumourID != null) {
                 tumourID = canreg.common.Tools.increment(highestTumourID);
-            else {
+            } else {
                 // TODO replace with today's year and 00..001
                 tumourID = "1";
             }
@@ -1290,11 +1303,11 @@ public class CanRegDAO {
             ResultSet result = stmtGetHighestPatientRecordID.executeQuery();
             result.next();
             String highestPatientRecordID = result.getString(1);
-            if (highestPatientRecordID!=null)
+            if (highestPatientRecordID != null) {
                 patientRecordID = canreg.common.Tools.increment(highestPatientRecordID);
-            else {
+            } else {
                 patientRecordID = "1";
-                }
+            }
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1307,9 +1320,9 @@ public class CanRegDAO {
             ResultSet result = stmtGetHighestTumourRecordID.executeQuery();
             result.next();
             String highestTumourRecordID = result.getString(1);
-            if (highestTumourRecordID!=null)
+            if (highestTumourRecordID != null) {
                 tumourRecordID = canreg.common.Tools.increment(highestTumourRecordID);
-            else {
+            } else {
                 tumourRecordID = "1";
             }
         } catch (SQLException ex) {
@@ -1317,9 +1330,6 @@ public class CanRegDAO {
         }
         return tumourRecordID;
     }
-
-
-
     private Connection dbConnection;
     private Properties dbProperties;
     private boolean isConnected;
@@ -1425,7 +1435,7 @@ public class CanRegDAO {
     private String strGetHighestPatientRecordID;
     /* We don't use tumour record ID...
     private String strGetHighestTumourRecordID;
-    */
+     */
     private GlobalToolBox globalToolBox;
 }
 

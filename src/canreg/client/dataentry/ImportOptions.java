@@ -29,7 +29,7 @@ public class ImportOptions {
     private int maxLines;
     private boolean testOnly;
     private int discrepancies;
-    private String separator;
+    private char separator;
     
     private boolean doChecks;
     private boolean doPersonSearch;
@@ -155,7 +155,7 @@ public class ImportOptions {
      * 
      * @return
      */
-    public String getSeparator() {
+    public char getSeparator() {
         return separator;
     }
 
@@ -163,7 +163,7 @@ public class ImportOptions {
      * 
      * @param separator
      */
-    public void setSeparator(String separator) {
+    public void setSeparator(char separator) {
         this.separator = separator;
     }
 

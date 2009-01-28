@@ -29,7 +29,7 @@ public class QueryGenerator {
      */
     public static final String strCreateVariableTable(String tableName, Document doc) {
 
-        String recordIDVariableName = "ID";
+        String recordIDVariableName = new String();
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
             recordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)){
@@ -275,18 +275,40 @@ public class QueryGenerator {
         return strSaveRecord(doc, "tumour");
     }
 
+    static String[] strCreatePatientTablePrimaryKey(String databaseVariableName) {
+        LinkedList<String> commands = new LinkedList<String>();
+        // drop the current primary key
+        commands.add("ALTER TABLE APP.PATIENT DROP PRIMARY KEY");
+        // create primary key
+        commands.add("ALTER TABLE APP.PATIENT ADD PRIMARY KEY ( " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " , " + databaseVariableName.toUpperCase() + ") ");
+        return commands.toArray(new String[0]);
+    }
+
+    static String[] strCreateTumourTableForeignKey(String tumourDatabaseVariableNames, String patientDatabaseVariableNames) {
+        // set variables unique
+        LinkedList<String> commands = new LinkedList<String>();
+        // create foreign key
+        commands.add("ALTER TABLE APP.TUMOUR ADD FOREIGN KEY (" + tumourDatabaseVariableNames.toUpperCase() + ") " +
+                "REFERENCES APP.PATIENT (" + patientDatabaseVariableNames.toUpperCase() + ") ");
+        return commands.toArray(new String[0]);
+    }
+
     static String strGetPatientsAndTumours(GlobalToolBox globalToolBox) {
-        String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
-        String patientIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
+        String patientRecordIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+        String patientRecordIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
         return "SELECT * FROM APP.TUMOUR, APP.PATIENT " +
-            "WHERE APP.PATIENT."+patientIDVariableNamePatientTable+" = APP.TUMOUR."+patientIDVariableNameTumourTable;
+            "WHERE APP.TUMOUR."+patientRecordIDVariableNameTumourTable +"= APP.PATIENT."+patientRecordIDVariableNamePatientTable;
+        //return "SELECT * FROM APP.TUMOUR LEFT OUTER JOIN APP.PATIENT ON " +
+        //    "APP.TUMOUR."+patientRecordIDVariableNameTumourTable +" = APP.PATIENT."+patientRecordIDVariableNamePatientTable;
     }
 
     static String strCountPatientsAndTumours(GlobalToolBox globalToolBox) {
-        String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
-        String patientIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
-        return "SELECT COUNT(*) FROM APP.PATIENT, APP.TUMOUR " +
-            "WHERE APP.PATIENT."+patientIDVariableNamePatientTable+" = APP.TUMOUR."+patientIDVariableNameTumourTable;
+        String patientRecordIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+        String patientRecordIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
+        return "SELECT COUNT(*) FROM APP.TUMOUR, APP.PATIENT " +
+            "WHERE APP.TUMOUR."+patientRecordIDVariableNameTumourTable +"= APP.PATIENT."+patientRecordIDVariableNamePatientTable;
+        //return "SELECT COUNT(*) FROM APP.TUMOUR LEFT OUTER JOIN APP.PATIENT ON " +
+        //    "APP.TUMOUR."+patientRecordIDVariableNameTumourTable +" = APP.PATIENT."+patientRecordIDVariableNamePatientTable;
     }
 
     private static final String strSaveRecord(Document doc, String tableName) {
@@ -424,6 +446,23 @@ public class QueryGenerator {
             }
             if (found) {
                 queryLine += dictionaryElement.getElementsByTagName("ns3:full_dictionary_code_length").item(0).getTextContent() + ") ";
+            }
+        }
+        // unique or not null? Move to XML?
+        NodeList standardVariableNodeList = element.getElementsByTagName(namespace + "standard_variable_name");
+
+        if (standardVariableNodeList.getLength()>0){
+            String standardVariableName = standardVariableNodeList.item(0).getTextContent();
+            if (standardVariableName.equalsIgnoreCase(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString())){
+                queryLine += " NOT NULL ";
+            } else if (standardVariableName.equalsIgnoreCase(Globals.StandardVariableNames.PatientRecordID.toString())){
+                queryLine += " NOT NULL UNIQUE ";
+            } else if (standardVariableName.equalsIgnoreCase(Globals.StandardVariableNames.PatientID.toString())){
+                queryLine += " NOT NULL ";
+            } else if (standardVariableName.equalsIgnoreCase(Globals.StandardVariableNames.TumourID.toString())){
+                queryLine += " NOT NULL ";
+            } else if (standardVariableName.equalsIgnoreCase(Globals.StandardVariableNames.TumourRecordID.toString())){
+                queryLine += " NOT NULL UNIQUE ";
             }
         }
         return queryLine;

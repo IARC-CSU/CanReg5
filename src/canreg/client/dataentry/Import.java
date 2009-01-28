@@ -9,7 +9,6 @@ import canreg.server.database.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -30,134 +29,6 @@ public class Import {
 
     private static String namespace = "ns3:";
     private static boolean debug = true;
-
-    // function without map - directly on the server...
-    // deprecated
-    /**
-     * 
-     * @param doc
-     * @param file
-     * @param canRegDAO
-     * @return
-     */
-    public static boolean importFile(Document doc, File file, CanRegDAO canRegDAO) {
-        // first detect the encoding
-
-
-        // create the mapping
-        BufferedReader bufferedReader = null;
-        List<Relation> map = null;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(file));
-            String line = bufferedReader.readLine();
-            String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
-            map = constructRelations(doc, lineElements);
-        // call import function with map
-
-        } catch (IOException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                bufferedReader.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return importFile(doc, map, file, canRegDAO);
-        }
-    }
-
-    // function with map - directly on the server...
-    // deprecated
-    /**
-     * 
-     * @param doc
-     * @param map
-     * @param file
-     * @param canRegDAO
-     * @return
-     */
-    public static boolean importFile(Document doc, List<Relation> map, File file, CanRegDAO canRegDAO) {
-
-        boolean success = false;
-
-        HashMap mpCodes = new HashMap();
-
-        BufferedReader bufferedReader = null;
-
-        try {
-            bufferedReader = new BufferedReader(new FileReader(file));
-            String line = bufferedReader.readLine();
-            // Skip first line
-            line = bufferedReader.readLine();
-
-            // patientNumber
-            int patientIDNumber = 0;
-            while (line != null) {
-                String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
-                // Build patient part
-                Patient patient = new Patient();
-                for (int i = 0; i < map.size(); i++) {
-                    Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
-                        if (rel.getVariableType().equalsIgnoreCase("Number") || rel.getVariableType().equalsIgnoreCase("Date")) {
-                            if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
-                            }
-                        } else {
-                            patient.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
-                        }
-                    }
-                }
-                debugOut(patient.toString());
-
-                // Build tumour part
-                Tumour tumour = new Tumour();
-                for (int i = 0; i < map.size(); i++) {
-                    Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
-                        if (rel.getVariableType().equalsIgnoreCase("Number") || rel.getVariableType().equalsIgnoreCase("Date")) {
-                            if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
-                            }
-                        } else {
-                            tumour.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
-                        }
-                    }
-                }
-
-                debugOut(tumour.toString());
-                // add patient to the database
-                patientIDNumber = canRegDAO.savePatient(patient);
-
-                // If this is a multiple primary tumour...
-                String mpCodeString = (String) tumour.getVariable("MPcode");
-
-                if (mpCodeString != null && mpCodeString.length() > 0) {
-                    patientIDNumber = (Integer) lookUpPatientID(mpCodeString, patientIDNumber, mpCodes);
-                }
-
-                tumour.setVariable("PatientID", patientIDNumber);
-                canRegDAO.saveTumour(tumour);
-
-                //Read next line of data
-                line = bufferedReader.readLine();
-            }
-
-
-            success = true;
-        } catch (IOException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-        return success;
-    }
 
     /**
      * 
@@ -180,7 +51,7 @@ public class Import {
             FileInputStream fis = new FileInputStream(file);
             InputStreamReader isr = new InputStreamReader(fis, io.getFileCharset());
             // Returns the name of the character encoding 
-            System.out.println("Name of the character encoding "+isr.getEncoding());
+            System.out.println("Name of the character encoding " + isr.getEncoding());
 
             int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath()) - 1;
             bufferedReader = new BufferedReader(isr);
@@ -200,7 +71,7 @@ public class Import {
                 if (task != null) {
                     task.firePropertyChange("progress", (numberOfLinesRead - 1) * 100 / linesToRead, (numberOfLinesRead) * 100 / linesToRead);
                 }
-                String[] lineElements = line.split(io.getSeparator());
+                String[] lineElements = canreg.common.Tools.breakDownLine(io.getSeparator(), line);
                 // Build patient part
                 Patient patient = new Patient();
                 for (int i = 0; i < map.size(); i++) {
@@ -260,8 +131,8 @@ public class Import {
                     tumour.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
 
                     // Set the deprecated flag to 0 - no obsolete records from CR4
-                    tumour.setVariable(io.getObsoleteTumourFlagVariableName(),0);
-                    patient.setVariable(io.getObsoletePatientFlagVariableName(),0);
+                    tumour.setVariable(io.getObsoleteTumourFlagVariableName(), 0);
+                    patient.setVariable(io.getObsoletePatientFlagVariableName(), 0);
                 }
 
                 patientDatabaseRecordID = server.savePatient(patient);
@@ -270,8 +141,12 @@ public class Import {
                 //Read next line of data
                 line = bufferedReader.readLine();
                 numberOfLinesRead++;
-            }
 
+                if (Thread.interrupted()) {
+                    //We've been interrupted: no more importing.
+                    throw new InterruptedException();
+                }
+            }
             success = true;
         } catch (IOException ex) {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
@@ -279,6 +154,8 @@ public class Import {
         } catch (NumberFormatException ex) {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
             success = false;
+        } catch (InterruptedException ex) {
+            success = true;
         } finally {
             if (bufferedReader != null) {
                 try {

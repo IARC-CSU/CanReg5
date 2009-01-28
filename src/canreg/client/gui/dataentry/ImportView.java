@@ -60,6 +60,7 @@ public class ImportView extends javax.swing.JInternalFrame {
     private String path;
     private LocalSettings localSettings;
     private GlobalToolBox globalToolBox;
+    private Task importTask;
 
     /** Creates new form ImportView */
     public ImportView() {
@@ -102,11 +103,11 @@ public class ImportView extends javax.swing.JInternalFrame {
         variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
 
         // get the available charsets
-        SortedMap<String,Charset> charsets = Charset.availableCharsets();
+        SortedMap<String, Charset> charsets = Charset.availableCharsets();
         charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(charsets.values().toArray()));
         // set the default mapping
         charsetsComboBox.setSelectedItem(globalToolBox.getStandardCharset());
-        // initializeVariableMappingTab();
+    // initializeVariableMappingTab();
     }
 
     private void changeFile() {
@@ -643,6 +644,12 @@ public class ImportView extends javax.swing.JInternalFrame {
      */
     @Action
     public void cancelAction() {
+        if (importTask != null) {
+            JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you really want to cancel the import process?", "Please confirm.", JOptionPane.YES_NO_OPTION);
+            importTask.cancel(true);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Import of file interupted.", "Warning.", JOptionPane.WARNING_MESSAGE);
+            importTask = null;
+        }
         this.dispose();
     }
 
@@ -655,20 +662,21 @@ public class ImportView extends javax.swing.JInternalFrame {
         localSettings.setProperty("import_path", path);
         localSettings.writeSettings();
         progressBar.setStringPainted(true);
+        importButton.setEnabled(false);
         // this.dispose();
-        Task task = new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
-        task.addPropertyChangeListener(new PropertyChangeListener() {
+        importTask = new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+        importTask.addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("progress".equals(evt.getPropertyName())) {
                     progressBar.setValue((Integer) evt.getNewValue());
-                    progressBar.setString(evt.getNewValue().toString()+"%");
+                    progressBar.setString(evt.getNewValue().toString() + "%");
                 } else if ("finished".equals(evt.getPropertyName())) {
                     dispose();
                 }
             }
         });
-        return task;
+        return importTask;
     }
 
     private class ImportActionTask extends org.jdesktop.application.Task<Object, Void> {
@@ -699,10 +707,12 @@ public class ImportView extends javax.swing.JInternalFrame {
         protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
-            if (!(Boolean) result){
+            if (!(Boolean) result) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Something wrong with the file " + inFile.getAbsolutePath() + ".", "File NOT successfully imported", JOptionPane.WARNING_MESSAGE);
-            } else
+            } else {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully imported file " + inFile.getAbsolutePath() + ".", "File successfully imported", JOptionPane.INFORMATION_MESSAGE);
+            }
+            importTask = null;
         }
     }
 
@@ -719,7 +729,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 br = new BufferedReader(new FileReader(inFile));
                 String line = br.readLine();
 //                String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
-                String[] lineElements = line.split(getSeparator());
+                String[] lineElements = canreg.common.Tools.breakDownLine(getSeparator(), line);
                 // Build variable mapping
                 map = Import.constructRelations(doc, lineElements);
 
@@ -805,7 +815,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         io.setDoPersonSearch(personSearchCheckBox.isSelected());
         io.setQueryNewNames(queryNewNameCheckBox.isSelected());
         io.setDataFromPreviousCanReg(previousCanRegDataCheckBox.isSelected());
-        
+
         // Set standard variable names
         io.setMultiplePrimaryVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimCode.toString()).getDatabaseVariableName());
         io.setPatientIDTumourTableVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName());
@@ -817,17 +827,24 @@ public class ImportView extends javax.swing.JInternalFrame {
         io.setPatientRecordIDTumourTableVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName());
         io.setObsoletePatientFlagVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString()).getDatabaseVariableName());
         io.setObsoleteTumourFlagVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString()).getDatabaseVariableName());
+
+        // Set the characterset
+        io.setFileCharset((Charset) charsetsComboBox.getSelectedItem());
+
         return io;
     }
 
-    private String getSeparator() {
+    private char getSeparator() {
         String sc = separatingCharacterComboBox.getSelectedItem().toString();
+        char schar = ','; // Default
         if (sc.equalsIgnoreCase("Tab")) {
-            sc = new String("\t");
+            schar = '\t';
         } else if (sc.equalsIgnoreCase("Comma")) {
-            sc = new String(",");
+            schar = ',';
+        } else if (sc.length() > 0) {
+            schar = sc.charAt(0);
         }
-        return sc;
+        return schar;
     }
 
     /**

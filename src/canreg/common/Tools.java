@@ -7,8 +7,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.net.*;
 import java.io.*;
-import java.nio.charset.spi.CharsetProvider;
-import java.util.Date;
 import java.util.TreeMap;
 
 /**
