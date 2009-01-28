@@ -379,7 +379,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param io
      * @throws java.rmi.RemoteException
      */
-    public boolean importFile(Task<Object, Void> task, Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException {
+    public boolean importFile(Task<Object, Void> task, Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException, SQLException {
         return canreg.client.dataentry.Import.importFile(task, doc, map, file, server, io);
     }
 
@@ -530,7 +530,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
-    public int saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException {
+    public int saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException, SQLException {
         int recordNumber = -1;
         if (databaseRecord instanceof Patient) {
             databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName(), Integer.parseInt(dateFormat.format(new Date())));

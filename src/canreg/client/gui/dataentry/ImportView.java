@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
@@ -699,6 +700,9 @@ public class ImportView extends javax.swing.JInternalFrame {
                 success = CanRegClientApp.getApplication().importFile(this, doc, buildMap(), inFile, buildImportOptions());
             } catch (RemoteException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                success = false;
             }
             return success;  // return your result
         }

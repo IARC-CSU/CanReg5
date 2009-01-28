@@ -304,7 +304,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @param patient
      * @return
      */
-    public int savePatient(Patient patient) {
+    public int savePatient(Patient patient) throws SQLException {
         return db.savePatient(patient);
     }
 
@@ -313,7 +313,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @param tumour
      * @return
      */
-    public int saveTumour(Tumour tumour) {
+    public int saveTumour(Tumour tumour) throws SQLException {
         return db.saveTumour(tumour);
     }
 

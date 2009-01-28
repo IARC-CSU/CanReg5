@@ -681,63 +681,60 @@ public class CanRegDAO {
         return dbUrl;
     }
 
-    private synchronized int saveRecord(String tableName, DatabaseRecord record, PreparedStatement stmtSaveNewRecord) {
+    private synchronized int saveRecord(String tableName, DatabaseRecord record, PreparedStatement stmtSaveNewRecord) throws SQLException {
         int id = -1;
 
-        try {
-            stmtSaveNewRecord.clearParameters();
+        stmtSaveNewRecord.clearParameters();
 
-            // Get the dictionaries node in the XML
-            NodeList nodes = doc.getElementsByTagName(Globals.NAMESPACE + "variables");
-            Element variablesElement = (Element) nodes.item(0);
+        // Get the dictionaries node in the XML
+        NodeList nodes = doc.getElementsByTagName(Globals.NAMESPACE + "variables");
+        Element variablesElement = (Element) nodes.item(0);
 
-            NodeList variables = variablesElement.getElementsByTagName(Globals.NAMESPACE + "variable");
+        NodeList variables = variablesElement.getElementsByTagName(Globals.NAMESPACE + "variable");
 
-            int recordVariableNumber = 0;
+        int recordVariableNumber = 0;
 
-            // Go through all the variable definitions
-            for (int i = 0; i < variables.getLength(); i++) {
-                // Get element
-                Element element = (Element) variables.item(i);
+        // Go through all the variable definitions
+        for (int i = 0; i < variables.getLength(); i++) {
+            // Get element
+            Element element = (Element) variables.item(i);
 
-                // Create line
-                String tableNameDB = element.getElementsByTagName(Globals.NAMESPACE + "table").item(0).getTextContent();
+            // Create line
+            String tableNameDB = element.getElementsByTagName(Globals.NAMESPACE + "table").item(0).getTextContent();
 
-                if (tableNameDB.equalsIgnoreCase(tableName)) {
-                    recordVariableNumber++;
-                    String variableType = element.getElementsByTagName(Globals.NAMESPACE + "variable_type").item(0).getTextContent();
-                    Object obj = record.getVariable(element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent());
-                    if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict")) {
-                        if (obj != null) {
-                            String strObj = (String) obj;
-                            if (strObj.length() > 0) {
-                                stmtSaveNewRecord.setString(recordVariableNumber, strObj);
-                            } else {
-                                stmtSaveNewRecord.setString(recordVariableNumber, "");
-                            }
+            if (tableNameDB.equalsIgnoreCase(tableName)) {
+                recordVariableNumber++;
+                String variableType = element.getElementsByTagName(Globals.NAMESPACE + "variable_type").item(0).getTextContent();
+                Object obj = record.getVariable(element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent());
+                if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict")) {
+                    if (obj != null) {
+                        String strObj = (String) obj;
+                        if (strObj.length() > 0) {
+                            stmtSaveNewRecord.setString(recordVariableNumber, strObj);
                         } else {
                             stmtSaveNewRecord.setString(recordVariableNumber, "");
                         }
-                    } else if (variableType.equalsIgnoreCase("Number") || variableType.equalsIgnoreCase("Date")) {
-                        if (obj != null) {
-                            Integer intObj = (Integer) obj;
-                            stmtSaveNewRecord.setInt(recordVariableNumber, intObj.intValue());
-                        } else {
-                            stmtSaveNewRecord.setInt(recordVariableNumber, -1);
-                        }
+                    } else {
+                        stmtSaveNewRecord.setString(recordVariableNumber, "");
+                    }
+                } else if (variableType.equalsIgnoreCase("Number") || variableType.equalsIgnoreCase("Date")) {
+                    if (obj != null) {
+                        Integer intObj = (Integer) obj;
+                        stmtSaveNewRecord.setInt(recordVariableNumber, intObj.intValue());
+                    } else {
+                        stmtSaveNewRecord.setInt(recordVariableNumber, -1);
                     }
                 }
             }
-
-            int rowCount = stmtSaveNewRecord.executeUpdate();
-            ResultSet results = stmtSaveNewRecord.getGeneratedKeys();
-            if (results.next()) {
-                id = results.getInt(1);
-            }
-
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
         }
+
+        int rowCount = stmtSaveNewRecord.executeUpdate();
+        ResultSet results = stmtSaveNewRecord.getGeneratedKeys();
+        if (results.next()) {
+            id = results.getInt(1);
+        }
+
+
         return id;
     }
 
@@ -746,7 +743,7 @@ public class CanRegDAO {
      * @param patient
      * @return
      */
-    public int savePatient(Patient patient) {
+    public int savePatient(Patient patient) throws SQLException {
         String patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
         Object patientID = patient.getVariable(patientIDVariableName);
         if (patientID == null || patientID.toString().trim().length() == 0) {
@@ -765,7 +762,7 @@ public class CanRegDAO {
      * @param tumour
      * @return
      */
-    public int saveTumour(Tumour tumour) {
+    public int saveTumour(Tumour tumour) throws SQLException {
         String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         Object tumourID = tumour.getVariable(tumourIDVariableName);
         if (tumourID == null || tumourID.toString().trim().length() == 0) {

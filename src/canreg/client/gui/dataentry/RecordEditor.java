@@ -21,6 +21,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -383,6 +384,8 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -579,12 +582,14 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (RemoteException ex) {
                     Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
 
-    private DatabaseRecord saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException {
+    private DatabaseRecord saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException, SQLException {
         // id is the internal database id
         if (databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) == null &&
                 databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) == null) {

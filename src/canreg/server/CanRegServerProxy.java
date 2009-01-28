@@ -132,12 +132,12 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return theServer.getDatabseConnection();
     }
 
-    public int savePatient(Patient patient) throws RemoteException, SecurityException {
+    public int savePatient(Patient patient) throws RemoteException, SecurityException, SQLException {
         checkPermission("savePatient");
         return theServer.savePatient(patient);
     }
 
-    public int saveTumour(Tumour tumour) throws RemoteException, SecurityException {
+    public int saveTumour(Tumour tumour) throws RemoteException, SecurityException, SQLException {
         checkPermission("saveTumour");
         return theServer.saveTumour(tumour);
     }
