@@ -13,6 +13,7 @@ import canreg.common.Globals;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
+import java.util.LinkedList;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +35,8 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
     private JDesktopPane dtp;
     private FastFilterInternalFrame filterWizardInternalFrame;
     private ActionListener actionListener;
-    private DatabaseVariablesListElement[] variablesInDB;
+    // private DatabaseVariablesListElement[] variablesInDB;
+    private DatabaseVariablesListElement[] variablesInTable;
 
     /** Creates new form RangeFilterPanel */
     public RangeFilterPanel() {
@@ -257,7 +259,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         tableChooserPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Table"));
         tableChooserPanel.setName("tableChooserPanel"); // NOI18N
 
-        tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Both", "Patient", "Tumour" }));
+        tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tumour", "Patient", "Both" }));
         tableChooserComboBox.setAction(actionMap.get("setTableName")); // NOI18N
         tableChooserComboBox.setName("tableChooserComboBox"); // NOI18N
         tableChooserComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -348,6 +350,7 @@ private void refreshTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
 }//GEN-LAST:event_refreshTableButtonActionPerformed
 
 private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tableChooserComboBoxActionPerformed
+    refreshVariableList();
     filterWizardInternalFrame.setTableName(tableChooserComboBox.getSelectedItem().toString());
 }//GEN-LAST:event_tableChooserComboBoxActionPerformed
 
@@ -430,10 +433,31 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
 
         filterWizardInternalFrame.setTableName(tableChooserComboBox.getSelectedItem().toString());
         
-        variablesInDB = CanRegClientApp.getApplication().getGlobalToolBox().getVariables();
-        sortByChooserComboBox.setModel(new DefaultComboBoxModel(variablesInDB));
-        
+        // variablesInDB = CanRegClientApp.getApplication().getGlobalToolBox().getVariables();
+
+        refreshVariableList();
         refreshFilterComboBox();
+    }
+
+        private void refreshVariableList() {
+        variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+        String tableName = tableChooserComboBox.getSelectedItem().toString();
+        if (!tableName.equalsIgnoreCase("both")) {
+            LinkedList<DatabaseVariablesListElement> tempVariablesInTable = new LinkedList<DatabaseVariablesListElement>();
+            for (int i = 0; i <
+                    variablesInTable.length; i++) {
+                if (variablesInTable[i].getDatabaseTableName().equalsIgnoreCase(tableName)) {
+                    tempVariablesInTable.add(variablesInTable[i]);
+                }
+            }
+            variablesInTable = new DatabaseVariablesListElement[tempVariablesInTable.size()];
+            for (int i = 0; i <
+                    variablesInTable.length; i++) {
+                variablesInTable[i] = tempVariablesInTable.get(i);
+            }
+
+        }
+        sortByChooserComboBox.setModel(new DefaultComboBoxModel(variablesInTable));
     }
 
     /**

@@ -287,9 +287,9 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="3">
-                <StringItem index="0" value="Both"/>
+                <StringItem index="0" value="Tumour"/>
                 <StringItem index="1" value="Patient"/>
-                <StringItem index="2" value="Tumour"/>
+                <StringItem index="2" value="Both"/>
               </StringArray>
             </Property>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
