@@ -29,7 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -87,7 +86,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             public void stateChanged(ChangeEvent e) {
                 JTabbedPane pane = (JTabbedPane) e.getSource();
                 RecordEditorPanel rep = (RecordEditorPanel) pane.getSelectedComponent();
-                if (rep!=null){
+                if (rep != null) {
                     setActiveRecord(rep);
                 }
             }
@@ -107,7 +106,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
     private void setActiveRecord(RecordEditorPanel rep) {
         DatabaseRecord dbr = rep.getDatabaseRecord();
-        if (dbr!=null && dbr instanceof Tumour) {
+        if (dbr != null && dbr instanceof Tumour) {
             Object patientRecordID = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName());
             Component comp = patientRecordsMap.get(patientRecordID);
             if (comp != null) {
@@ -390,56 +389,56 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         }
     }
 
-    private void refreshTitles(RecordEditorPanel recordEditorPanel, DatabaseRecord dbr){
+    private void refreshTitles(RecordEditorPanel recordEditorPanel, DatabaseRecord dbr) {
 
-                    if (dbr instanceof Patient) {
-                        // patientRecords.add(dbr);
-                        Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
-                        String regnoString = "n/a";
-                        if (regno != null) {
-                            regnoString = regno.toString();
-                            if (regnoString.length() == 0) {
-                                regnoString = "n/a";
-                            } else {
-                                // patientRecordsMap.put(regno, recordEditorPanel);
-                            }
-                        }
-                        int index = 0;
-                        for (Component comp : patientTabbedPane.getComponents()) {
-                            if (comp.equals(recordEditorPanel)) {
-                                patientTabbedPane.setTitleAt(index, dbr.toString() + ": " + regnoString);
-                            }
-                            index++;
-                        }
-                        if (!titleSet) {
-                            Object patno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
-                            String patnoString = "n/a";
-                            if (patno != null) {
-                                patnoString = patno.toString();
-                                if (patnoString.length() > 0) {
-                                    this.setTitle("Patient ID:" + patnoString);
-                                    titleSet = true;
-                                }
-                            }
-                        }
-                    } else if (dbr instanceof Tumour) {
-                        // tumourRecords.add(dbr);
-                        Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName());
-                        String regnoString = "n/a";
-                        if (regno != null) {
-                            regnoString = regno.toString();
-                            if (regnoString.length() == 0) {
-                                regnoString = "n/a";
-                            }
-                        }
-                        int index = 0;
-                        for (Component comp : tumourTabbedPane.getComponents()) {
-                            if (comp.equals(recordEditorPanel)) {
-                                tumourTabbedPane.setTitleAt(index, dbr.toString() + ": " + regnoString);
-                            }
-                            index++;
-                        }
+        if (dbr instanceof Patient) {
+            // patientRecords.add(dbr);
+            Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
+            String regnoString = "n/a";
+            if (regno != null) {
+                regnoString = regno.toString();
+                if (regnoString.length() == 0) {
+                    regnoString = "n/a";
+                } else {
+                    // patientRecordsMap.put(regno, recordEditorPanel);
+                }
+            }
+            int index = 0;
+            for (Component comp : patientTabbedPane.getComponents()) {
+                if (comp.equals(recordEditorPanel)) {
+                    patientTabbedPane.setTitleAt(index, dbr.toString() + ": " + regnoString);
+                }
+                index++;
+            }
+            if (!titleSet) {
+                Object patno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
+                String patnoString = "n/a";
+                if (patno != null) {
+                    patnoString = patno.toString();
+                    if (patnoString.length() > 0) {
+                        this.setTitle("Patient ID:" + patnoString);
+                        titleSet = true;
                     }
+                }
+            }
+        } else if (dbr instanceof Tumour) {
+            // tumourRecords.add(dbr);
+            Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName());
+            String regnoString = "n/a";
+            if (regno != null) {
+                regnoString = regno.toString();
+                if (regnoString.length() == 0) {
+                    regnoString = "n/a";
+                }
+            }
+            int index = 0;
+            for (Component comp : tumourTabbedPane.getComponents()) {
+                if (comp.equals(recordEditorPanel)) {
+                    tumourTabbedPane.setTitleAt(index, dbr.toString() + ": " + regnoString);
+                }
+                index++;
+            }
+        }
     }
 
     /**
@@ -575,7 +574,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     DatabaseRecord dbr = saveRecord(databaseRecord);
                     recordEditorPanel.refreshDatabaseRecord(dbr);
                     refreshTitles(recordEditorPanel, dbr);
-                    if (dbr instanceof Patient){
+                    if (dbr instanceof Patient) {
                         addToPatientMap(recordEditorPanel, dbr);
                     }
                 } catch (SecurityException ex) {

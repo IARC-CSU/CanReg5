@@ -1,0 +1,77 @@
+Build 598
+
+changeset:   113:4cee51e2f565
+tag:         tip
+user:        ervikm@X60112
+date:        Wed Jan 28 16:35:58 2009 +0100
+summary:     Improved handling and error reporting of record ids.
+
+changeset:   112:fbda10b542bf
+user:        ervikm@X60112
+date:        Wed Jan 28 11:28:59 2009 +0100
+summary:     RangeFilterPanel: Tumour table now default table, sort by variables only the ones in the table selected.
+
+changeset:   111:3c0c6dee20be
+user:        ervikm@X60112
+date:        Wed Jan 28 09:39:46 2009 +0100
+summary:     Mainly improvemnts in perfomance of SQL queries. Some other more minor changes.
+
+changeset:   110:f0cddfc59a7f
+user:        ervikm@X60112
+date:        Mon Jan 26 11:41:44 2009 +0100
+summary:     Install new system internal frame now checks to see if the file about to be installed is already in the right folder...
+
+changeset:   109:a9b30967c18d
+user:        ervikm@X60112
+date:        Fri Jan 23 16:19:45 2009 +0100
+summary:     CanReg5 takes into account the CanReg4  fileformat when importing files, thus allowing the import of files of other charactersets.
+
+changeset:   108:61393c462892
+user:        ervikm@X60112
+date:        Fri Jan 23 16:17:52 2009 +0100
+summary:     Fixed bugs in the record editor. Record status is now saved.
+
+changeset:   107:9bd994319699
+user:        ervikm@X60112
+date:        Thu Jan 22 16:45:36 2009 +0100
+summary:     DictionaryHelper: fails more gracefully if something goes wrong while retreiving the dictionary ID. Reindentation of code.
+
+changeset:   106:80a05d596eff
+user:        ervikm@X60112
+date:        Thu Jan 22 16:43:33 2009 +0100
+summary:     CanRegServerImpl: now handles better when connection to DB fails for some reason...
+
+changeset:   105:a96f57aa1d1e
+user:        ervikm@X60112
+date:        Thu Jan 22 16:42:35 2009 +0100
+summary:     SystemDefinitionConverter: Fixed bugs dealing with the length of record IDs different than 8. Added some system variables.
+
+changeset:   104:b77bc60cbed6
+user:        ervikm@X60112
+date:        Thu Jan 22 16:41:06 2009 +0100
+summary:     CanRegDAO: Added functionality to generate next patient record ID. Squashed some bugs.
+
+changeset:   103:77fd1ae043a8
+user:        ervikm@X60112
+date:        Thu Jan 22 16:38:31 2009 +0100
+summary:     QueryGenerator: added functionality to get highest patient record id.
+
+changeset:   102:aceba06f204a
+user:        ervikm@X60112
+date:        Thu Jan 22 16:37:37 2009 +0100
+summary:     RecordEditor: Fixed a nullpointer error when "setting active record".
+
+changeset:   101:15300e75b0a4
+user:        ervikm@X60112
+date:        Tue Jan 20 17:23:36 2009 +0100
+summary:     Record status is only shown if the variable is in the system definition.
+
+changeset:   100:dabb3dce07fa
+user:        ervikm@X60112
+date:        Tue Jan 20 10:55:32 2009 +0100
+summary:     Fixed bug in Frequencies by Year. Didn't redraw table properly.
+
+changeset:   99:b56ef77a119c
+user:        ervikm@X60112
+date:        Fri Jan 16 14:54:02 2009 +0100
+summary:     Fixed bug #1: Filter with OR not working.

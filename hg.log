@@ -1,5 +1,20 @@
-changeset:   110:f0cddfc59a7f
+changeset:   113:4cee51e2f565
 tag:         tip
+user:        ervikm@X60112
+date:        Wed Jan 28 16:35:58 2009 +0100
+summary:     Improved handling and error reporting of record ids.
+
+changeset:   112:fbda10b542bf
+user:        ervikm@X60112
+date:        Wed Jan 28 11:28:59 2009 +0100
+summary:     RangeFilterPanel: Tumour table now default table, sort by variables only the ones in the table selected.
+
+changeset:   111:3c0c6dee20be
+user:        ervikm@X60112
+date:        Wed Jan 28 09:39:46 2009 +0100
+summary:     Mainly improvemnts in perfomance of SQL queries. Some other more minor changes.
+
+changeset:   110:f0cddfc59a7f
 user:        ervikm@X60112
 date:        Mon Jan 26 11:41:44 2009 +0100
 summary:     Install new system internal frame now checks to see if the file about to be installed is already in the right folder...

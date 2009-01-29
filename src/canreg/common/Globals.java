@@ -19,7 +19,7 @@ public class Globals {
     /**
      * 
      */
-    static public String downloadCanRegURL = "http://www.iacr.com.fr/iacr_canreg4.htm";
+    static public String downloadCanRegURL = "http://www.iacr.com.fr/CanReg5/CanReg5.zip";
     /**
      * 
      */
