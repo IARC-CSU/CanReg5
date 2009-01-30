@@ -1,16 +1,24 @@
 package canreg.common.qualitycontrol;
 
+import canreg.common.Globals;
 import java.io.Serializable;
+import java.util.LinkedList;
 
 /**
  *
  * @author ervikm
  */
 public class CheckResult implements Serializable {
+
     private boolean passed = false;
     private String checkName = "Check";
-    private String message ="";
+    private String message = "";
     private ResultCode resultCode;
+    private LinkedList<Globals.StandardVariableNames> standardVariablesInvolved;
+
+    public CheckResult() {
+        standardVariablesInvolved = new LinkedList<Globals.StandardVariableNames>();
+    }
 
     /**
      * 
@@ -27,15 +35,16 @@ public class CheckResult implements Serializable {
     public void setResultCode(ResultCode resultCode) {
         this.resultCode = resultCode;
     }
-    
+
     /**
      * 
      */
     public enum ResultCode {
+
         /**
          * 
          */
-        NotDone,  // Relevant variable not declared
+        NotDone, // Relevant variable not declared
         /**
          * 
          */
@@ -43,20 +52,20 @@ public class CheckResult implements Serializable {
         /**
          * 
          */
-        Query ,   // Warning, or other problem, tho' not invalid
+        Query, // Warning, or other problem, tho' not invalid
         /**
          * 
          */
-        Rare,     // Rare, possibly an error
+        Rare, // Rare, possibly an error
         /**
          * 
          */
-        Missing,   // Relevant variable missing value
+        Missing, // Relevant variable missing value
         /**
          * 
          */
         Invalid
- }
+    }
 
     /**
      * 
@@ -98,6 +107,14 @@ public class CheckResult implements Serializable {
         return message;
     }
 
+    public Globals.StandardVariableNames[] getVariablesInvolved() {
+        return standardVariablesInvolved.toArray(new Globals.StandardVariableNames[0]);
+    }
+
+    public void addVariableInvolved(Globals.StandardVariableNames variableInvolved) {
+        standardVariablesInvolved.add(variableInvolved);
+    }
+
     /**
      * 
      * @param message
@@ -105,9 +122,35 @@ public class CheckResult implements Serializable {
     public void setMessage(String message) {
         this.message = message;
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return checkName + ": " + resultCode + " - " + message;
+    }
+
+    public static int compareResultSets(ResultCode resultCodeA, ResultCode resultCodeB) {
+        if (resultCodeA == resultCodeB) {
+            return 0;
+        } else if (decideWorstResultCode(resultCodeA, resultCodeB) == resultCodeA) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    public static ResultCode decideWorstResultCode(ResultCode resultCodeA, ResultCode resultCodeB) {
+        ResultCode worstResultCodeFound = resultCodeB;
+        if (resultCodeA == CheckResult.ResultCode.OK) {
+            worstResultCodeFound = resultCodeB;
+        } else if (resultCodeA == CheckResult.ResultCode.Invalid) {
+            worstResultCodeFound = CheckResult.ResultCode.Invalid;
+        } else if (worstResultCodeFound != CheckResult.ResultCode.Invalid) {
+            if (resultCodeA == CheckResult.ResultCode.Query) {
+                worstResultCodeFound = CheckResult.ResultCode.Query;
+            } else if (worstResultCodeFound != CheckResult.ResultCode.Query) {
+                worstResultCodeFound = resultCodeA;
+            }
+        }
+        return worstResultCodeFound;
     }
 }

@@ -509,49 +509,81 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 }
             } else if (e.getActionCommand().equalsIgnoreCase("checks")) {
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
+                RecordEditorPanel tumourRecordEditorPanel;
+                RecordEditorPanel patientRecordEditorPanel;
                 DatabaseRecord record = recordEditorPanel.getDatabaseRecord();
+                CheckResult.ResultCode worstResultCodeFound = CheckResult.ResultCode.Missing;
+                String message = "";
                 Patient patient;
                 Tumour tumour;
                 if (record instanceof Patient) {
                     patient = (Patient) record;
-                    RecordEditorPanel otherRecordEditorPanel = (RecordEditorPanel) tumourTabbedPane.getSelectedComponent();
-                    tumour = (Tumour) otherRecordEditorPanel.getDatabaseRecord();
+                    patientRecordEditorPanel = recordEditorPanel;
+                    tumourRecordEditorPanel = (RecordEditorPanel) tumourTabbedPane.getSelectedComponent();
+                    tumour = (Tumour) tumourRecordEditorPanel.getDatabaseRecord();
                 } else {
                     tumour = (Tumour) record;
-                    RecordEditorPanel otherRecordEditorPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
-                    patient = (Patient) otherRecordEditorPanel.getDatabaseRecord();
+                    tumourRecordEditorPanel = recordEditorPanel;
+                    patientRecordEditorPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
+                    patient = (Patient) patientRecordEditorPanel.getDatabaseRecord();
                 }
-                LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumour);
+
                 EditChecksInternalFrame editChecksInternalFrame = new EditChecksInternalFrame();
-                String message = "";
 
-                CheckResult.ResultCode worstResultCodeFound = CheckResult.ResultCode.OK;
+                // Check to see if all mandatory variables are there
+                boolean allPresent = patientRecordEditorPanel.areAllVariablesPresent();
+                allPresent = allPresent & tumourRecordEditorPanel.areAllVariablesPresent();
 
-                for (CheckResult result : checkResults) {
+                if (!allPresent) {
+                    editChecksInternalFrame.setMandatoryVariablesTextAreaText("Mandatory variables missing.");
+                    worstResultCodeFound = CheckResult.ResultCode.Missing;
+                    message +="Not performed.";
+                } else {
+                    editChecksInternalFrame.setMandatoryVariablesTextAreaText("All mandatory variables present.");
+                    // Run the checks on the data
+                    LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumour);
 
-                    if (result.getResultCode() != CheckResult.ResultCode.OK) {
-                        message += result + "\n";
-                        if (result.getResultCode() == CheckResult.ResultCode.Invalid) {
-                            worstResultCodeFound = CheckResult.ResultCode.Invalid;
-                        } else if (worstResultCodeFound != CheckResult.ResultCode.Invalid) {
-                            if (result.getResultCode() == CheckResult.ResultCode.Query) {
-                                worstResultCodeFound = CheckResult.ResultCode.Query;
-                            } else if (worstResultCodeFound != CheckResult.ResultCode.Query) {
-                                worstResultCodeFound = result.getResultCode();
+                    Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes = new TreeMap<Globals.StandardVariableNames, CheckResult.ResultCode>();
+                    worstResultCodeFound = CheckResult.ResultCode.OK;
+                    for (CheckResult result : checkResults) {
+                        if (result.getResultCode() != CheckResult.ResultCode.OK) {
+                            message += result + "\n";
+                            worstResultCodeFound = CheckResult.decideWorstResultCode(result.getResultCode(), worstResultCodeFound);
+                            for (Globals.StandardVariableNames standardVariableName : result.getVariablesInvolved()) {
+                                CheckResult.ResultCode worstResultCodeFoundForThisVariable = mapOfVariablesAndWorstResultCodes.get(standardVariableName);
+                                if (worstResultCodeFoundForThisVariable == null) {
+                                    mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());
+                                } else if (CheckResult.compareResultSets(result.getResultCode(), worstResultCodeFoundForThisVariable) > 0) {
+                                    mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());
+                                }
+                            }
+                        }
+                        System.out.println(result);
+                    }
+
+                    if (worstResultCodeFound == CheckResult.ResultCode.OK) {
+                        message += "Cross-check conclusion: Valid";
+                    } else {
+                        // set the various variable panels to respective warnings
+
+
+                        for (Globals.StandardVariableNames standardVariableName : mapOfVariablesAndWorstResultCodes.keySet()) {
+                            DatabaseVariablesListElement dbvle = globalToolBox.translateStandardVariableNameToDatabaseListElement(standardVariableName.toString());
+
+                            if (dbvle.getDatabaseTableName().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+                                tumourRecordEditorPanel.setResultCode(dbvle.getDatabaseVariableName(), mapOfVariablesAndWorstResultCodes.get(standardVariableName));
+                            } else if (dbvle.getDatabaseTableName().equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+                                patientRecordEditorPanel.setResultCode(dbvle.getDatabaseVariableName(), mapOfVariablesAndWorstResultCodes.get(standardVariableName));
                             }
                         }
                     }
-                    System.out.println(result);
                 }
-
-                if (worstResultCodeFound == CheckResult.ResultCode.OK) {
-                    message += "Cross-check conclusion: Valid";
-                }
+                tumourRecordEditorPanel.setChecksResultCode(worstResultCodeFound);
 
                 editChecksInternalFrame.setCrossChecksTextAreaText(message);
                 editChecksInternalFrame.setResultTextFieldText(worstResultCodeFound.toString());
 
-                if (worstResultCodeFound != CheckResult.ResultCode.Invalid) {
+                if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing ) {
                     // If no errors were found we generate ICD10 code
                     ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
                     if (conversionResult != null) {
@@ -560,6 +592,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                         }
                     }
                 }
+
                 CanRegClientView.showAndCenterInternalFrame(desktopPane, editChecksInternalFrame);
             } else if (e.getActionCommand().equalsIgnoreCase("save")) {
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;

@@ -50,8 +50,10 @@ public class CheckAgeMorphology implements CheckInterface {
         boolean ok = true;
 
         try {
+            result.addVariableInvolved(Globals.StandardVariableNames.Age);
             ageCode = variables.get(Globals.StandardVariableNames.Age).toString();
             ageNumber = Integer.parseInt(ageCode);
+            result.addVariableInvolved(Globals.StandardVariableNames.Morphology);
             morphologyCode = variables.get(Globals.StandardVariableNames.Morphology).toString();
             morphologyNumber = Integer.parseInt(morphologyCode);
         } catch (NumberFormatException numberFormatException) {

@@ -14,6 +14,7 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DatabaseVariablesListElementPositionSorter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.qualitycontrol.CheckResult.ResultCode;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
@@ -58,6 +59,23 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     private DatabaseVariablesListElement unduplicationVariableListElement;
     private DatabaseVariablesListElement checkVariableListElement;
     private Map<String, DictionaryEntry> recStatusDict;
+    private ResultCode resultCode = null;
+    private DatabaseVariablesListElement patientIDVariableListElement;
+
+    boolean areAllVariablesPresent() {
+        boolean allPresent = true;
+        for (DatabaseVariablesListElement databaseVariablesListElement : variablesInTable) {
+            VariableEditorPanel panel = variableEditorPanels.get(databaseVariablesListElement.getDatabaseVariableName());
+            if (panel != null) {
+                boolean filledOK = panel.isFilledOK();
+                if (!filledOK) {
+                    panel.updateFilledInStatusColor();
+                }
+                allPresent = allPresent & filledOK;
+            }
+        }
+        return allPresent;
+    }
 
     void refreshDatabaseRecord(DatabaseRecord record) {
         this.databaseRecord = record;
@@ -84,8 +102,21 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         this.saveNeeded = saveNeeded;
     }
 
-    private enum panelTypes {
+    public void setResultCode(String databaseVariableName, ResultCode resultCode) {
+        VariableEditorPanel panel = variableEditorPanels.get(databaseVariableName);
+        panel.setResultCode(resultCode);
+    }
 
+    void setChecksResultCode(ResultCode resultCode) {
+        this.resultCode = resultCode;
+        if (resultCode == null){
+            checksLabel.setText("Not done");
+        } else {
+            checksLabel.setText("Done: "+resultCode.toString());
+        }
+    }
+
+    private enum panelTypes {
         PATIENT, TUMOUR
     }
 
@@ -94,6 +125,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         initComponents();
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
         saveButton.setEnabled(true);
+        setChecksResultCode(resultCode);
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
     }
 
@@ -123,11 +155,13 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             panelType = panelTypes.PATIENT;
             recordStatusVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordStatus.toString());
             unduplicationVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PersonSearch.toString());
+            patientIDVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
         } else if (databaseRecord.getClass().isInstance(new Tumour())) {
             panelType = panelTypes.TUMOUR;
             recordStatusVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
             unduplicationVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PersonSearch.toString());
         }
+
         buildPanel();
     }
 
@@ -157,7 +191,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         /*
          * Set the record status.
          */
-        if (recordStatusVariableListElement!=null &&  recordStatusVariableListElement.getUseDictionary()!=null){
+        if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
             recStatusDict = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
             recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDict.values().toArray()));
             Object recStatus = databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
@@ -264,7 +298,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         jButton1 = new javax.swing.JButton();
         checksPanel = new javax.swing.JPanel();
         checksButton = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        checksLabel = new javax.swing.JLabel();
         personSearchPanel = new javax.swing.JPanel();
         searchButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -297,23 +331,23 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         checksButton.setText(resourceMap.getString("checksButton.text")); // NOI18N
         checksButton.setName("checksButton"); // NOI18N
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
+        checksLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        checksLabel.setText(resourceMap.getString("checksLabel.text")); // NOI18N
+        checksLabel.setName("checksLabel"); // NOI18N
 
         javax.swing.GroupLayout checksPanelLayout = new javax.swing.GroupLayout(checksPanel);
         checksPanel.setLayout(checksPanelLayout);
         checksPanelLayout.setHorizontalGroup(
             checksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(checksButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+            .addComponent(checksLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
         );
         checksPanelLayout.setVerticalGroup(
             checksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(checksPanelLayout.createSequentialGroup()
                 .addComponent(checksButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1))
+                .addComponent(checksLabel))
         );
 
         personSearchPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("personSearchPanel.border.title"))); // NOI18N
@@ -445,10 +479,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton checksButton;
+    private javax.swing.JLabel checksLabel;
     private javax.swing.JPanel checksPanel;
     private javax.swing.JPanel dataPanel;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
@@ -484,7 +518,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             VariableEditorPanel vep = iterator.next();
             databaseRecord.setVariable(vep.getKey(), vep.getValue());
         }
-        if (recordStatusVariableListElement!=null &&  recordStatusVariableListElement.getUseDictionary()!=null){
+        if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
             DictionaryEntry recordStatusValue = (DictionaryEntry) recordStatusComboBox.getSelectedItem();
             databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusValue.getCode());
         }
@@ -505,7 +539,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
                 String records = "";
                 for (Integer i : map.keySet()) {
                     // records += i + ": " + map.get(i) + "\n";
-                    records += "Patient id: " + i + ", score: " + map.get(i) + "%\n";
+                    DatabaseRecord patientRecord = canreg.client.CanRegClientApp.getApplication().getRecord(i, Globals.PATIENT_TABLE_NAME);
+                    
+                    records += "Patient id: " + patientRecord.getVariable(patientIDVariableListElement.getDatabaseVariableName()) + ", score: " + map.get(i) + "%\n";
                 }
                 JOptionPane.showInternalMessageDialog(this, "Duplicates found:\n" + records);
             // TODO add user feedback and options to handle duplicates
@@ -516,8 +552,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-
 
     /**
      * 
@@ -531,6 +565,4 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     public void deleteRecord() {
         actionListener.actionPerformed(new ActionEvent(this, 0, "delete"));
     }
-
-
 }

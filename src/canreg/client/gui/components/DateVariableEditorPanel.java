@@ -36,7 +36,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             dateField.setFocusable(false);
             dateField.setEditable(false);
         } else if (fillInStatus.equalsIgnoreCase("Mandatory")) {
-            dateField.setBackground(mandatoryMissingColor);
+            dateField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
         }
         setMaximumLength(databaseListElement.getVariableLength());
         
@@ -58,7 +58,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
 
         if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
             if (value.trim().length()==0) {
-                codeTextField.setBackground(mandatoryMissingColor);
+                codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
             } else {
                 codeTextField.setBackground(java.awt.SystemColor.text);
             }

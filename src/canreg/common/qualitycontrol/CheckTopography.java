@@ -70,6 +70,7 @@ public class CheckTopography implements CheckInterface {
         String topographyCode = null;
 
         try {
+            result.addVariableInvolved(Globals.StandardVariableNames.Topography);
             topographyCode = variables.get(Globals.StandardVariableNames.Topography).toString();
         } catch (NullPointerException nullPointerException) {
             result.setResultCode(CheckResult.ResultCode.Missing);
