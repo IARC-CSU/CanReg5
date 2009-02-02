@@ -59,7 +59,11 @@ public class Tools {
                     while (tmpChar != '\"' && pointer < line.length()) {
                         tmpString += tmpChar;
                         pointer++;
-                        tmpChar = line.charAt(pointer);
+                        if (pointer < line.length()) {
+                            tmpChar = line.charAt(pointer);
+                        } else {
+                            System.out.println("Warning! Unclosed quote in line "+pointer+".");
+                        }
                     }
                 } else {
                     tmpString += tmpChar;
@@ -73,6 +77,21 @@ public class Tools {
             elementArray[i] = elements.get(i);
         }
         return elementArray;
+    }
+
+    /**
+     *
+     * @param separatingCharacter
+     * @param line
+     * @return
+     */
+    public static String[] breakDownLinePF(char separatingCharacter, String line) {
+        PowerfulTokenizer tokenizer = new PowerfulTokenizer(line, ""+separatingCharacter);
+        String[] stringArray = new String[tokenizer.countTokens()];
+        for (int i = 0; i<stringArray.length; i++){
+            stringArray[i] = tokenizer.nextToken();
+        }
+        return stringArray;
     }
 
     /**
