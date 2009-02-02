@@ -520,7 +520,12 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         }
         if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
             DictionaryEntry recordStatusValue = (DictionaryEntry) recordStatusComboBox.getSelectedItem();
-            databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusValue.getCode());
+            if (recordStatusValue != null) {
+                databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusValue.getCode());
+            } else {
+                // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
+                System.out.println("Warning! Record status dictionary entries missing.");
+            }
         }
     }
 
