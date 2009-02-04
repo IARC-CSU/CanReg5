@@ -3,6 +3,8 @@ package canreg.server.xml;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.Result;
@@ -122,7 +124,7 @@ public class Tools {
                 path = "file://" + path;
                 url = new URL(path);
             } catch (MalformedURLException e) {
-                System.out.println("Cannot create url for: " + fileName);
+                Logger.getLogger(Tools.class.getName()).log(Level.INFO, "Cannot create url for: " + fileName, e);
                 System.exit(0);
             }
         }

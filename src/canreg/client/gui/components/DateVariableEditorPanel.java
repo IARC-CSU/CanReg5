@@ -4,6 +4,8 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import com.toedter.calendar.JDateChooser;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTextField;
 
 /**
@@ -77,9 +79,9 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                 dateField.setText(value);
             }
         } catch (NumberFormatException numberFormatException) {
-            System.out.println(value);
+            Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, numberFormatException);
         } catch (StringIndexOutOfBoundsException stringIndexOutOfBoundsException) {
-            System.out.println(value);
+            Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, stringIndexOutOfBoundsException);
         }
     }
 

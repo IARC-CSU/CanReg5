@@ -45,6 +45,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
@@ -123,6 +125,11 @@ public class CanRegClientApp extends SingleFrameApplication {
         for (String part : Globals.versionStringParts) {
             canRegSystemVersionString += appInfoProperties.getProperty(part);
         }
+        
+        String versionString = canRegSystemVersionString;
+        versionString += "b" + appInfoProperties.getProperty("program.BUILDNUM");
+        versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
+        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, "CanReg version: " + versionString);
 
         canRegClientView = new CanRegClientView(this);
 
@@ -188,7 +195,11 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             localSettings = new LocalSettings("settings.xml");
             initializeLookAndFeels();
-        // Locale.setDefault(localSettings.getLocale());
+            // Locale.setDefault(localSettings.getLocale());
+            // Initialize logger
+            Handler fh = new FileHandler(Globals.LOGFILE_PATTERN);
+            Logger.getLogger("").addHandler(fh);
+            Logger.getLogger("canreg").setLevel(Level.parse(Globals.LOG_LEVEL));
         } catch (IOException ioe) {
             debugOut(ioe.getLocalizedMessage());
         }
@@ -210,7 +221,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             // try to get system name
             sysName = loginServer.getSystemName();
         } catch (Exception e) {
-            System.out.println(e);
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, null, e);
         // System.exit(0);
         }
         return sysName;
@@ -290,7 +301,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     private static void debugOut(String msg) {
         if (debug) {
-            System.out.println("\t[CanRegClient] " + msg);
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, msg);
         }
     }
 

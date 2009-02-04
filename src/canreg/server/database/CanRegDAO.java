@@ -53,7 +53,7 @@ public class CanRegDAO {
         distributedDataSources = new LinkedHashMap<String, DistributedTableDataSource>();
         dictionaryMap = buildDictionaryMap(doc);
 
-        System.out.println(canreg.server.xml.Tools.getTextContent(
+        debugOut(canreg.server.xml.Tools.getTextContent(
                 new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
 
         // Prepare the SQL strings
@@ -280,7 +280,7 @@ public class CanRegDAO {
             if (!filterString.isEmpty()) {
                 filterString = " WHERE " + filterString;
             }
-            System.out.println(strCountTumours + filterString);
+            debugOut(strCountTumours + filterString);
             ResultSet countRowSet = statement.executeQuery(strCountTumours + filterString);
             if (countRowSet.next()) {
                 rowCount = countRowSet.getInt(1);
@@ -302,7 +302,7 @@ public class CanRegDAO {
             if (filter.getSortByVariable() != null) {
                 filterString += " ORDER BY " + filter.getSortByVariable().toUpperCase();
             }
-            System.out.println(strCountPatients + filterString);
+            debugOut(strCountPatients + filterString);
             result = statement.executeQuery(strGetPatients + filterString);
         } else if (tableName.equalsIgnoreCase("both")) {
             String filterString = filter.getFilterString();
@@ -319,7 +319,7 @@ public class CanRegDAO {
             if (filter.getSortByVariable() != null) {
                 filterString += " ORDER BY " + filter.getSortByVariable().toUpperCase();
             }
-            System.out.println(strCountPatientsAndTumours + filterString);
+            debugOut(strCountPatientsAndTumours + filterString);
 
             result = statement.executeQuery(strGetPatientsAndTumours + filterString);
         } else {
@@ -490,12 +490,12 @@ public class CanRegDAO {
             // Create indexes - do last: least important
             LinkedList<String> tumourIndexList = QueryGenerator.strCreateIndexTable("Tumour", doc);
             for (String query : tumourIndexList) {
-                // System.out.println(query);
+                // debugOut(query);
                 statement.execute(query);
             }
             LinkedList<String> patientIndexList = QueryGenerator.strCreateIndexTable("Patient", doc);
             for (String query : patientIndexList) {
-                // System.out.println(query);
+                // debugOut(query);
                 statement.execute(query);
             }
 
@@ -638,10 +638,10 @@ public class CanRegDAO {
             // test
 
 
-            System.out.println("Cocuou from the database connection...");
-            System.out.println("Next tumour ID = " + getNextTumourID());
+            debugOut("Cocuou from the database connection...");
+            debugOut("Next tumour ID = " + getNextTumourID());
         } catch (SQLException ex) {
-            System.out.println("SQLerror... ");
+            debugOut("SQLerror... ");
             ex.printStackTrace();
             isConnected = false;
         }
@@ -1327,6 +1327,18 @@ public class CanRegDAO {
         }
         return tumourRecordID;
     }
+
+        /**
+     * Simple console trace to system.out for debug purposes only.
+     *
+     * @param message the message to be printed to the console
+     */
+    private static void debugOut(String msg) {
+        if (debug) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.INFO, msg);
+        }
+    }
+
     private Connection dbConnection;
     private Properties dbProperties;
     private boolean isConnected;
@@ -1434,5 +1446,6 @@ public class CanRegDAO {
     private String strGetHighestTumourRecordID;
      */
     private GlobalToolBox globalToolBox;
+    private static boolean debug = true;
 }
 

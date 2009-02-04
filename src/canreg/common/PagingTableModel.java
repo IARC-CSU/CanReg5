@@ -3,6 +3,8 @@ package canreg.common;
 import cachingtableapi.DistributedTableDataSource;
 import cachingtableapi.DistributedTableDescription;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
@@ -72,14 +74,13 @@ public class PagingTableModel extends AbstractTableModel {
         int pageIndex = row - dataOffset;
         if (pageIndex < 0 || pageIndex >= page.size()) {
             // not loaded
-            System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
-            System.out.println("object at " + row + " isn't loaded yet");
+            Logger.getLogger(PagingTableModel.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory()+" free memory.\nobject at " + row + " isn't loaded yet");
             schedule(row);
             return "..";
         }
         Object rowObject = page.get(pageIndex)[col];
         // for this simulation just return the whole rowObject
-        System.out.println(Runtime.getRuntime().freeMemory()+" free memory.");
+           Logger.getLogger(PagingTableModel.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory()+" free memory.");
         return rowObject;
     }
 
@@ -129,7 +130,7 @@ public class PagingTableModel extends AbstractTableModel {
                     dataObject = tableDataSource.retrieveRows(startOffset, startOffset+length);
                             
                 } catch (Exception ex) {
-                    System.out.println("error retrieving page at " + startOffset + ": aborting \n"+ex.getMessage());
+                    Logger.getLogger(PagingTableModel.class.getName()).log(Level.WARNING, "error retrieving page at " + startOffset + ": aborting \n"+ex.getMessage(), ex);
                     pending.remove(seg);
                     return;
                 }
@@ -141,7 +142,7 @@ public class PagingTableModel extends AbstractTableModel {
                 SwingUtilities.invokeLater(new Runnable() {
 
                     public void run() {
-                        System.out.println("** loaded " + startOffset + " through " + (startOffset + length - 1));
+                        Logger.getLogger(PagingTableModel.class.getName()).log(Level.WARNING, "** loaded " + startOffset + " through " + (startOffset + length - 1));
                         setData(startOffset, page);
                         pending.remove(seg);
                     }

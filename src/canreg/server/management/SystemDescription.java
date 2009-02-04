@@ -159,7 +159,7 @@ public class SystemDescription {
 
     private static void debugOut(String msg) {
         if (debug) {
-            System.out.println("\t[SystemDescription] " + msg);
+            Logger.getLogger(SystemDescription.class.getName()).log(Level.INFO, msg);
         }
     }
 }

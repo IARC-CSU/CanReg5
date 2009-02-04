@@ -8,6 +8,8 @@ import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import java.util.LinkedList;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -86,7 +88,7 @@ public class QueryGenerator {
                 query += "\"" + indexedVariables.get(j) + "\"";
             }
             query += ") ";
-            System.out.println(query);
+            debugOut(query);
             queries.add(query);
         }
         return queries;
@@ -470,7 +472,7 @@ public class QueryGenerator {
 
     private static void debugOut(String msg) {
         if (debug) {
-            System.out.println("\t[QueryGenerator] " + msg);
+            Logger.getLogger(QueryGenerator.class.getName()).log(Level.INFO, msg);
         }
     }
 }

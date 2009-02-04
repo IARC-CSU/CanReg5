@@ -51,8 +51,9 @@ public class Import {
             // Tro to detect the encoding...
             FileInputStream fis = new FileInputStream(file);
             InputStreamReader isr = new InputStreamReader(fis, io.getFileCharset());
-            // Returns the name of the character encoding 
-            System.out.println("Name of the character encoding " + isr.getEncoding());
+            // Returns the name of the character encoding
+
+            Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + isr.getEncoding());
 
             int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath()) - 1;
             bufferedReader = new BufferedReader(isr);
@@ -211,7 +212,7 @@ public class Import {
 
     private static void debugOut(String msg) {
         if (debug) {
-            System.out.println("\t[QueryGenerator] " + msg);
+            Logger.getLogger(Import.class.getName()).log(Level.INFO, msg);
         }
     }
 

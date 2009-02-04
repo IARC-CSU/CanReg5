@@ -18,6 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentListener;
 
@@ -203,7 +205,6 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
 private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseClickHandler
 
     if (databaseListElement.getVariableType().equalsIgnoreCase("dict")) {
-        // System.out.println("Coucou");
         if (possibleValuesMap == null) {
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Empty_dictionary."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Warning"), JOptionPane.WARNING_MESSAGE);
         } else {
@@ -320,7 +321,7 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
                     valueObject = Integer.parseInt(valueString.trim());
                 } catch (NumberFormatException numberFormatException) {
                     valueObject = -1;
-                    System.out.println(databaseListElement.getShortName() + "" + valueString);
+                    Logger.getLogger(VariableEditorPanel.class.getName()).log(Level.WARNING, databaseListElement.getShortName() + " " + valueString, numberFormatException);
                 }
             } else {
                 valueObject = null;

@@ -271,11 +271,11 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
         // rule and pos are determined by Behaviour
         //------------------------------------------
         if (rule == 0 || rule > 5) {
-            System.out.println("ERROR : ICD10 Rule invalid (O3_10clas.java)");
+            Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.WARNING, "ERROR : ICD10 Rule invalid (O3_10clas.java)");
             return;
         }
         if (O3_10TLookLine.length() < 20) {
-            System.out.println("ERROR : O3_10TLookLine too short");
+            Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.WARNING, "ERROR : O3_10TLookLine too short");
             return;
         }
 

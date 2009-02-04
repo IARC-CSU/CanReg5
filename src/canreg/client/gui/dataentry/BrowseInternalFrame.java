@@ -358,21 +358,21 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
                 setProgress(0, 0, 4);
                 setMessage("Initiating query...");
                 setProgress(1, 0, 4);
-                System.out.println(Runtime.getRuntime().freeMemory() + " free memory.");
+                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
                 // release old resultSet
                 if (tableDatadescription != null) {
                     CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
                 }
                 tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
-                System.out.println(Runtime.getRuntime().freeMemory() + " free memory.");
+                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
 
                 tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
-                System.out.println(Runtime.getRuntime().freeMemory() + " free memory.");
+                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
 
                 tableDataModel = new DistributedTableModel(tableDataSource);
                 // tableDataModel = new PagingTableModel(tableDataSource);
 
-                System.out.println(Runtime.getRuntime().freeMemory() + " free memory.");
+                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
                 setProgress(2, 0, 4);
 
                 setMessage("Starting a new transaction...");
@@ -386,7 +386,7 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
                 tableColumnModel = new XTableColumnModel();
                 resultTable.setColumnModel(tableColumnModel);
                 resultTable.createDefaultColumnsFromModel();
-                System.out.println(Runtime.getRuntime().freeMemory() + " free memory.");
+                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
 
                 setProgress(4, 0, 4);
                 setMessage("Finished");

@@ -308,7 +308,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         }
         DatabaseFilter filter = new DatabaseFilter();
         filter.setFilterString(filterString);
-        System.out.println(filterString);
+        Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, "FilterString: " + filterString);
         try {
             tableDatadescriptionPopUp = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
             Object[][] rows = canreg.client.CanRegClientApp.getApplication().retrieveRows(tableDatadescriptionPopUp.getResultSetID(), 0, MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK);

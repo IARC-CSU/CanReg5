@@ -146,6 +146,8 @@ public class Globals {
     static String CHARSET_ARABIC = "ISO-8859-6";
     static String CHARSET_FARSI = "UTF-8";
     static String CHARSET_RUSSIAN = "ISO-8859-5";
+    public static String LOGFILE_PATTERN = "%h/canreg5client.log";
+    public static String LOG_LEVEL = "FINEST";
     
     /**
      * 

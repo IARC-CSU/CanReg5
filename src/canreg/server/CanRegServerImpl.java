@@ -253,7 +253,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         int i = 0;
         for (Iterator it = fClients.iterator(); it.hasNext();) {
             users[i] = (String) it.next();
-            System.out.println("element is " + users[i]);
+            debugOut("element is " + users[i]);
             i++;
         }
         return users;
@@ -295,7 +295,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     private void debugOut(String msg) {
         if (debug) {
-            System.out.println("\t[CanRegServer] " + msg);
+            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.INFO, msg);
         }
     }
     // add and remove records
@@ -590,7 +590,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                             float score = searcher.compare(patientA, patientB);
                             if (score > threshold) {
                                 patientIDScoreMap.put(score, patientIDB);
-                                System.out.println("Found " + patientIDA + " " + score + " " + patientIDB);
+                                debugOut("Found " + patientIDA + " " + score + " " + patientIDB);
                             }
                         }
                     }
@@ -649,9 +649,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                         float score = personSearcher.compare(patient, patientB);
                         if (score > threshold) {
                             patientIDScoreMap.put(patientIDB, score);
-                            System.out.println("Found patient id: " + patientIDB + ", score: " + score +"%");
+                            debugOut("Found patient id: " + patientIDB + ", score: " + score +"%");
                         } else {
-                            // System.out.println("Not found " + patientIDB + " " + score);
+                            // debugOut("Not found " + patientIDB + " " + score);
                         }
                     }
                 }

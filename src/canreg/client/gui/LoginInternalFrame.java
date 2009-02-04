@@ -566,7 +566,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
      */
     private static void debugOut(String msg) {
         if (debug) {
-            System.out.println("\t[LoginInternalFrame] " + msg);
+            Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.INFO, msg);
         }
     }
 

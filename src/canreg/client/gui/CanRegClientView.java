@@ -581,12 +581,9 @@ public class CanRegClientView extends FrameView {
         WelcomeInternalFrame welcomeInternalFrame = new WelcomeInternalFrame(this);
 
         desktopPane.add(welcomeInternalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        // System.out.println("coucou");
         Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
         welcomeInternalFrame.setVisible(true);
         welcomeInternalFrame.setLocation(scr.width / 2 - welcomeInternalFrame.getWidth() / 2, scr.height / 2 - welcomeInternalFrame.getHeight() / 2 - 142);
-        // debugOut(mainFrame.getWidth() / 2 + " " + mainFrame.getHeight() / 2);
-
         welcomeInternalFrame.setDesktopPane(desktopPane);
 
     }
@@ -692,7 +689,7 @@ public class CanRegClientView extends FrameView {
 
     private static void debugOut(String msg) {
         if (debug) {
-            System.out.println("\t[CanRegClientView] " + msg);
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.INFO, msg);
         }
     }
 

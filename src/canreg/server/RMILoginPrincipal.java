@@ -1,6 +1,8 @@
 package canreg.server;
 
 import canreg.common.Globals;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -35,7 +37,8 @@ public class RMILoginPrincipal
         throw new IllegalArgumentException("Null name");
         }
         this.username = username;
-        if( DEBUG ) System.out.println( "\t[RMILoginPrincipal] Principal " + username + " successfully created." );
+        if( DEBUG )
+            Logger.getLogger(RMILoginPrincipal.class.getName()).log(Level.INFO, "Principal " + username + " successfully created.");
    }
    
    /** Returns the username of the user. @return The username. */

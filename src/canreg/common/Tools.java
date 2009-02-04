@@ -8,6 +8,8 @@ import org.w3c.dom.NodeList;
 import java.net.*;
 import java.io.*;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -62,7 +64,7 @@ public class Tools {
                         if (pointer < line.length()) {
                             tmpChar = line.charAt(pointer);
                         } else {
-                            System.out.println("Warning! Unclosed quote in line "+pointer+".");
+                            Logger.getLogger(Tools.class.getName()).log(Level.WARNING, "Warning! Unclosed quote.");
                         }
                     }
                 } else {

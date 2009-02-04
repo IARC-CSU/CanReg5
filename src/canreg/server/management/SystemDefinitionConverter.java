@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 public class SystemDefinitionConverter {
 
     private String canReg4FileName;
-    private boolean debug = true;
+    private static boolean debug = true;
     private String namespace = "ns3:";
     private Document doc;
     private DataInputStream dataStream;
@@ -161,7 +161,7 @@ public class SystemDefinitionConverter {
                 root.appendChild(dictionariesParentElement);
 
                 int numberOfDictionaries = readNumber(2);
-                System.out.println(numberOfDictionaries);
+                debugOut("Number of dictionaries: " + numberOfDictionaries);
 
                 for (int i = 0; i < numberOfDictionaries; i++) {
                     element = doc.createElement(namespace + "dictionary");
@@ -178,7 +178,7 @@ public class SystemDefinitionConverter {
                         element.appendChild(createElement(namespace + "code_length", "" + readNumber(2)));
                         element.appendChild(createElement(namespace + "category_description_length", "" + readNumber(2)));
                     } else {
-                        System.out.println("Error among the dictionaries...");
+                        debugOut("Error during parsing of the dictionaries...");
                     }
                     element.appendChild(createElement(namespace + "full_dictionary_code_length", "" + readNumber(2)));
                     element.appendChild(createElement(namespace + "full_dictionary_description_length", "" + readNumber(2)));
@@ -190,7 +190,7 @@ public class SystemDefinitionConverter {
                 root.appendChild(groupsParentElement);
 
                 int numberOfGroups = readNumber(2);
-                System.out.println(numberOfGroups);
+                debugOut("Number of Groups: " + numberOfGroups);
 
                 for (int i = 0; i < numberOfGroups; i++) {
                     element = doc.createElement(namespace + "group");
@@ -210,7 +210,7 @@ public class SystemDefinitionConverter {
                 root.appendChild(variablesParentElement);
 
                 int numberOfVariables = readNumber(2);
-                System.out.println(numberOfVariables);
+                debugOut("Number of Variables: " + numberOfVariables);
 
                 for (int i = 0; i < numberOfVariables; i++) {
                     element = doc.createElement(namespace + "variable");
@@ -249,7 +249,7 @@ public class SystemDefinitionConverter {
                         int dictionaryNumber = readNumber(2);
                         Element dictionaryElement = (Element) doc.getElementsByTagName(namespace + "dictionary").item(dictionaryNumber);
                         String dictionaryType = dictionaryElement.getElementsByTagName(namespace + "type").item(0).getTextContent();
-                        // System.out.println(dictionaryElement.getTagName() + " " + dictionaryType);
+                        //  debugOut(dictionaryElement.getTagName() + " " + dictionaryType);
                         element.appendChild(createElement(namespace + "use_dictionary", "" + dictionaryElement.getElementsByTagName(namespace + "name").item(0).getTextContent()));
                         // (0 Simple, 1 Compound)
                         if (dictionaryType.equalsIgnoreCase(dictionaryTypeValues[0])) {
@@ -259,12 +259,12 @@ public class SystemDefinitionConverter {
                             element.appendChild(createElement(namespace + "category_X_pos", "" + readNumber(2)));
                             element.appendChild(createElement(namespace + "category_Y_pos", "" + readNumber(2)));
                         } else {
-                            System.out.println("Invalid dict type...");
+                             debugOut("Invalid dict type...");
                         }
                         element.appendChild(createElement(namespace + "dictionary_X_pos", "" + readNumber(2)));
                         element.appendChild(createElement(namespace + "dictionary_Y_pos", "" + readNumber(2)));
                     } else {
-                        System.out.println("Invalid variable description...");
+                         debugOut("Invalid variable description...");
                     }
                     // Place variable in the right table
                     int groupID = Integer.parseInt(groupIDString);
@@ -284,7 +284,7 @@ public class SystemDefinitionConverter {
                 // We build the doc for this later.
 
                 int numberOfIndexes = readNumber(2);
-                System.out.println("Numebr of Indexes: "+numberOfIndexes);
+                 debugOut("Number of Indexes: "+numberOfIndexes);
 
                 TreeMap<String, LinkedList<String>> indexMap = new TreeMap<String, LinkedList<String>>();
                 // first scan
@@ -310,7 +310,7 @@ public class SystemDefinitionConverter {
                 root.appendChild(searchVariablesParentElement);
 
                 int numberOfSearchVarbs = readNumber(2);
-                System.out.println(numberOfSearchVarbs);
+                debugOut("Number of search variables: " + numberOfSearchVarbs);
                 for (int i = 0; i < numberOfSearchVarbs; i++) {
                     element = doc.createElement(namespace + "search_variable");
                     searchVariablesParentElement.appendChild(element);
@@ -331,12 +331,12 @@ public class SystemDefinitionConverter {
                 // Create the Standard variable part
                 //
                 int numberOfStandardVarbs = readNumber(2);
-                System.out.println(numberOfStandardVarbs);
+                 debugOut("Number of Standard variables:"+numberOfStandardVarbs);
                 for (int i = 0; i < numberOfStandardVarbs; i++) {
                     int variableIndex = readNumber(2);
                     if (variableIndex > -1) {
                         Element variableElement = (Element) doc.getElementsByTagName(namespace + "variable").item(variableIndex);
-                        // System.out.println(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
+                        //  debugOut(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
                         variableElement.appendChild(createElement(namespace + "standard_variable_name", standardVariablesCR4[i]));
                         // Grab some information
                         if (variableIndex == 0){
@@ -525,7 +525,7 @@ public class SystemDefinitionConverter {
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            System.out.println("Something wrong with the file... " + ex);
+            Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.SEVERE, "Something wrong with the file... ", ex);
         }
         return ("Success");
     }
@@ -626,7 +626,7 @@ public class SystemDefinitionConverter {
             element.appendChild(createElement(namespace + "use_dictionary", "" + useDictionary));
         // (0 Simple, 1 Compound)
         } else {
-            System.out.println("Invalid variable description...");
+            debugOut("Invalid variable description...");
         }
         // Place variable in the right table
         element.appendChild(createElement(namespace + "table", table));
@@ -661,7 +661,7 @@ public class SystemDefinitionConverter {
         int b = dataStream.readByte();
 
         while (b != 0) {
-            // System.out.println(""+b);
+            // debugOut(""+b);
             temp += (char) b;
             b = (char) dataStream.readByte();
         }
@@ -716,5 +716,11 @@ public class SystemDefinitionConverter {
             }
         }
         return value;
+    }
+
+    private static void debugOut(String msg) {
+        if (debug) {
+            Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.INFO, msg);
+        }
     }
 }

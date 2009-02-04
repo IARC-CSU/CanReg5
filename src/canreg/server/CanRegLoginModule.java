@@ -5,6 +5,8 @@ import canreg.common.PasswordService;
 import canreg.exceptions.SystemUnavailableException;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.*;
 import javax.security.auth.spi.LoginModule;
@@ -64,7 +66,7 @@ public class CanRegLoginModule implements LoginModule {
      */
     private void debugOut(String msg) {
         if (debug) {
-            System.out.println("\t[CanRegLoginModule] " + msg);
+            Logger.getLogger(CanRegLoginModule.class.getName()).log(Level.INFO, msg);
         }
     }
 

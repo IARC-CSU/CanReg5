@@ -280,7 +280,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             actionListener.actionPerformed(new ActionEvent(this, 0, "changed"));
         // saveButton.setEnabled(saveNeeded);
         } else {
-            // System.out.println(e.getPropertyName());
+        // Do nothing.
         }
     }
 
@@ -524,7 +524,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
                 databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusValue.getCode());
             } else {
                 // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
-                System.out.println("Warning! Record status dictionary entries missing.");
+                Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
             }
         }
     }

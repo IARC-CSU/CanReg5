@@ -330,7 +330,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
 
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        System.out.println(command);
+        Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.INFO, command);
         if (command.startsWith("range")) {
             recordsInRangeField.setText(command.substring(6));
         }

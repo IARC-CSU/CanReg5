@@ -13,6 +13,7 @@
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="2"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
@@ -32,27 +33,22 @@
                       <EmptySpace min="-2" pref="209" max="-2" attributes="0"/>
                       <Component id="closeButton" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="jScrollPane1" alignment="0" pref="268" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane1" alignment="0" pref="268" max="32767" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="versionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="vendorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="homepageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="appVersionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="appVendorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="appHomepageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Component id="appTitleLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="appDescLabel" alignment="0" pref="268" max="32767" attributes="0"/>
+                          <Component id="versionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="vendorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="homepageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="appVersionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="appVendorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="appHomepageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
+                  <Component id="appTitleLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="appDescLabel" alignment="0" pref="268" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -231,7 +227,7 @@
             <Property name="name" type="java.lang.String" value="jEditorPane1" noResource="true"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="URL url = this.getClass().getResource(&quot;/canreg/client/gui/resources/about.html&quot;);&#xa;try{&#xa;    jEditorPane1.setPage(url);&#xa;} &#xa;catch (Exception e)&#xa;{&#xa;    System.out.println( &quot;Problem setting about page&quot;);&#xa;}"/>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="URL url = this.getClass().getResource(&quot;/canreg/client/gui/resources/about.html&quot;);&#xa;try{&#xa;    jEditorPane1.setPage(url);&#xa;} &#xa;catch (Exception e)&#xa;{&#xa;    Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.INFO, &quot;Problem setting about page&quot;, e);&#xa;}"/>
           </AuxValues>
         </Component>
       </SubComponents>

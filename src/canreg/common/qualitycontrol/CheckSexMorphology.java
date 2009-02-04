@@ -122,7 +122,7 @@ public class CheckSexMorphology implements CheckInterface {
         String morphologyFamilyString = morphologicalFamiliesMap.get(morphologyCode);
         
         if (morphologyFamilyString==null){
-            System.out.println("not a valid morph code? " + morphologyCode);    
+            Logger.getLogger(CheckSexMorphology.class.getName()).log(Level.WARNING, "not a valid morph code? " + morphologyCode);
         } else {
             try {
                 morphologyFamily = Integer.parseInt(morphologyFamilyString.substring(1, 3));

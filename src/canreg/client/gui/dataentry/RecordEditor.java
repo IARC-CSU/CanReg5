@@ -537,7 +537,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 if (!allPresent) {
                     editChecksInternalFrame.setMandatoryVariablesTextAreaText("Mandatory variables missing.");
                     worstResultCodeFound = CheckResult.ResultCode.Missing;
-                    message +="Not performed.";
+                    message += "Not performed.";
                 } else {
                     editChecksInternalFrame.setMandatoryVariablesTextAreaText("All mandatory variables present.");
                     // Run the checks on the data
@@ -558,7 +558,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                                 }
                             }
                         }
-                        System.out.println(result);
+                        Logger.getLogger(RecordEditor.class.getName()).log(Level.INFO, result.toString());
                     }
 
                     if (worstResultCodeFound == CheckResult.ResultCode.OK) {
@@ -583,7 +583,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 editChecksInternalFrame.setCrossChecksTextAreaText(message);
                 editChecksInternalFrame.setResultTextFieldText(worstResultCodeFound.toString());
 
-                if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing ) {
+                if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing) {
                     // If no errors were found we generate ICD10 code
                     ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
                     if (conversionResult != null) {
