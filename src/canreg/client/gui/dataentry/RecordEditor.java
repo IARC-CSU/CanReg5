@@ -53,6 +53,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private JDesktopPane desktopPane;
     private GlobalToolBox globalToolBox;
     private boolean titleSet = false;
+    String tumourObsoleteVariableName = null;
+    String patientObsoleteVariableName = null;
 
     /** Creates new form RecordEditor
      * @param desktopPane 
@@ -123,6 +125,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     public void setGlobalToolBox(GlobalToolBox globalToolBox) {
         this.globalToolBox = globalToolBox;
         this.doc = globalToolBox.getDocument();
+
+        patientObsoleteVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString()).getDatabaseVariableName();
+        tumourObsoleteVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString()).getDatabaseVariableName();
+
     }
 
     /**
@@ -169,6 +175,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     patientRecordsMap.put(regno, rePanel);
                 }
             }
+            if (dbr.getVariable(patientObsoleteVariableName).equals(1)) {
+                regnoString += "(o)";
+            }
             patientTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
             if (!titleSet) {
                 Object patno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
@@ -191,8 +200,12 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     regnoString = "n/a";
                 }
             }
+            if (dbr.getVariable(tumourObsoleteVariableName).equals(1)) {
+                regnoString += "(o)";
+            }
             tumourTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
         }
+        refreshShowObsolete();
     }
 
     /** This method is called from within the constructor to
@@ -204,14 +217,15 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane1 = new javax.swing.JSplitPane();
+        recordSplitPane = new javax.swing.JSplitPane();
         patientTabbedPane = new javax.swing.JTabbedPane();
         tumourTabbedPane = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        addTumourRecordButton = new javax.swing.JButton();
+        addpatientRecordButton = new javax.swing.JButton();
+        saveAllButton = new javax.swing.JButton();
+        printButton = new javax.swing.JButton();
+        showObsoleteRecordsCheckBox = new javax.swing.JCheckBox();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -222,60 +236,67 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
 
-        jSplitPane1.setDividerSize(10);
-        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane1.setResizeWeight(0.5);
-        jSplitPane1.setName("jSplitPane1"); // NOI18N
-        jSplitPane1.setOneTouchExpandable(true);
+        recordSplitPane.setDividerSize(10);
+        recordSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        recordSplitPane.setResizeWeight(0.5);
+        recordSplitPane.setName("recordSplitPane"); // NOI18N
+        recordSplitPane.setOneTouchExpandable(true);
 
         patientTabbedPane.setName("patientTabbedPane"); // NOI18N
-        jSplitPane1.setTopComponent(patientTabbedPane);
+        recordSplitPane.setTopComponent(patientTabbedPane);
 
         tumourTabbedPane.setName("tumourTabbedPane"); // NOI18N
-        jSplitPane1.setRightComponent(tumourTabbedPane);
+        recordSplitPane.setRightComponent(tumourTabbedPane);
 
         jPanel1.setName("jPanel1"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditor.class, this);
-        jButton1.setAction(actionMap.get("addTumourAction")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        addTumourRecordButton.setAction(actionMap.get("addTumourAction")); // NOI18N
+        addTumourRecordButton.setName("addTumourRecordButton"); // NOI18N
+        addTumourRecordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                addTumourRecordButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setAction(actionMap.get("addPatientAction")); // NOI18N
-        jButton2.setName("jButton2"); // NOI18N
+        addpatientRecordButton.setAction(actionMap.get("addPatientAction")); // NOI18N
+        addpatientRecordButton.setName("addpatientRecordButton"); // NOI18N
 
-        jButton3.setAction(actionMap.get("saveAllAction")); // NOI18N
-        jButton3.setName("jButton3"); // NOI18N
+        saveAllButton.setAction(actionMap.get("saveAllAction")); // NOI18N
+        saveAllButton.setName("saveAllButton"); // NOI18N
 
-        jButton4.setAction(actionMap.get("printAction")); // NOI18N
-        jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
-        jButton4.setName("jButton4"); // NOI18N
+        printButton.setAction(actionMap.get("printAction")); // NOI18N
+        printButton.setText(resourceMap.getString("printButton.text")); // NOI18N
+        printButton.setName("printButton"); // NOI18N
+
+        showObsoleteRecordsCheckBox.setAction(actionMap.get("toggleShowObsoleteRecords")); // NOI18N
+        showObsoleteRecordsCheckBox.setText(resourceMap.getString("showObsoleteRecordsCheckBox.text")); // NOI18N
+        showObsoleteRecordsCheckBox.setName("showObsoleteRecordsCheckBox"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jButton1)
+                .addComponent(addTumourRecordButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 277, Short.MAX_VALUE)
-                .addComponent(jButton4)
+                .addComponent(addpatientRecordButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(showObsoleteRecordsCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
+                .addComponent(printButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(saveAllButton)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jButton1)
-                .addComponent(jButton2)
-                .addComponent(jButton3)
-                .addComponent(jButton4))
+                .addComponent(addTumourRecordButton)
+                .addComponent(addpatientRecordButton)
+                .addComponent(saveAllButton)
+                .addComponent(printButton)
+                .addComponent(showObsoleteRecordsCheckBox))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -286,7 +307,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE))
+                    .addComponent(recordSplitPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -295,16 +316,16 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
+                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 603, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void addTumourRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTumourRecordButtonActionPerformed
 // TODO add your handling code here:
-}//GEN-LAST:event_jButton1ActionPerformed
+}//GEN-LAST:event_addTumourRecordButtonActionPerformed
 
     /**
      *
@@ -451,13 +472,14 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         PrintUtilities.printComponent(tumourTabbedPane.getSelectedComponent());
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton addTumourRecordButton;
+    private javax.swing.JButton addpatientRecordButton;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane patientTabbedPane;
+    private javax.swing.JButton printButton;
+    private javax.swing.JSplitPane recordSplitPane;
+    private javax.swing.JButton saveAllButton;
+    private javax.swing.JCheckBox showObsoleteRecordsCheckBox;
     private javax.swing.JTabbedPane tumourTabbedPane;
     // End of variables declaration//GEN-END:variables
 
@@ -664,7 +686,8 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
                 int option = JOptionPane.NO_OPTION;
                 option = JOptionPane.showConfirmDialog(null, "Really change obsolete-status?");
-                recordEditorPanel.toggleObsolete(option == JOptionPane.YES_OPTION);
+                boolean toggle = (option == JOptionPane.YES_OPTION);
+                recordEditorPanel.toggleObsolete(toggle);
             } else if (e.getActionCommand().equalsIgnoreCase("runMP")) {
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
                 DatabaseRecord databaseRecord = recordEditorPanel.getDatabaseRecord();
@@ -708,5 +731,34 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName(),
                 patientDatabaseRecord.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName()));
         return tumourDatabaseRecord;
+    }
+
+    private void refreshShowObsolete() {
+        boolean showObsolete = showObsoleteRecordsCheckBox.isSelected();
+        for (Component comp : patientTabbedPane.getComponents()) {
+            RecordEditorPanel rep = (RecordEditorPanel) comp;
+            DatabaseRecord dbr = rep.getDatabaseRecord();
+            int obsoleteFlag = (Integer) dbr.getVariable(patientObsoleteVariableName);
+            if (!showObsolete && obsoleteFlag == 1) {
+                patientTabbedPane.setEnabledAt(patientTabbedPane.indexOfComponent(rep), false);
+            } else {
+                patientTabbedPane.setEnabledAt(patientTabbedPane.indexOfComponent(rep), true);
+            }
+        }
+        for (Component comp : tumourTabbedPane.getComponents()) {
+            RecordEditorPanel rep = (RecordEditorPanel) comp;
+            DatabaseRecord dbr = rep.getDatabaseRecord();
+            int obsoleteFlag = (Integer) dbr.getVariable(tumourObsoleteVariableName);
+            if (!showObsolete && obsoleteFlag == 1) {
+                tumourTabbedPane.setEnabledAt(tumourTabbedPane.indexOfComponent(rep), false);
+            } else {
+                tumourTabbedPane.setEnabledAt(tumourTabbedPane.indexOfComponent(rep), true);
+            }
+        }
+    }
+
+    @Action
+    public void toggleShowObsoleteRecords() {
+        refreshShowObsolete();
     }
 }

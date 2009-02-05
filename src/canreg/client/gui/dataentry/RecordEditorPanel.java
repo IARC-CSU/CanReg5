@@ -61,6 +61,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     private Map<String, DictionaryEntry> recStatusDict;
     private ResultCode resultCode = null;
     private DatabaseVariablesListElement patientIDVariableListElement;
+    private DatabaseVariablesListElement obsoleteFlagVariableListElement;
 
     boolean areAllVariablesPresent() {
         boolean allPresent = true;
@@ -118,18 +119,13 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
 
     void toggleObsolete(boolean confirmed) {
         if (confirmed) {
-            DatabaseVariablesListElement dbvle = null;
-            if (databaseRecord instanceof Patient) {
-                dbvle = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString());
-            } else if (databaseRecord instanceof Tumour) {
-                dbvle = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString());
-            }
+            DatabaseVariablesListElement dbvle = obsoleteFlagVariableListElement;
             if (dbvle != null) {
                 boolean obsolete = obsoleteToggleButton.isSelected();
                 if (obsolete){
-                    databaseRecord.setVariable(dbvle.getDatabaseVariableName(), "1");
+                    databaseRecord.setVariable(dbvle.getDatabaseVariableName(), 1);
                 } else {
-                    databaseRecord.setVariable(dbvle.getDatabaseVariableName(), "0");
+                    databaseRecord.setVariable(dbvle.getDatabaseVariableName(), 0);
                 }
             }
         } else {
@@ -178,10 +174,12 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             recordStatusVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordStatus.toString());
             unduplicationVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PersonSearch.toString());
             patientIDVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
+            obsoleteFlagVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString());
         } else if (databaseRecord.getClass().isInstance(new Tumour())) {
             panelType = panelTypes.TUMOUR;
             recordStatusVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
             unduplicationVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PersonSearch.toString());
+            obsoleteFlagVariableListElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString());
         }
 
         buildPanel();
@@ -223,6 +221,16 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             }
         } else {
             recordStatusPanel.setVisible(false);
+        }
+
+        /*
+         * Set the obsolete status
+         */
+        int obsoleteStatus = (Integer) databaseRecord.getVariable(obsoleteFlagVariableListElement.getDatabaseVariableName());
+        if (obsoleteStatus == 1){
+            obsoleteToggleButton.setSelected(true);
+        } else {
+            obsoleteToggleButton.setSelected(false);
         }
 
         Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new TreeMap<Integer, VariableEditorGroupPanel>();
@@ -592,6 +600,11 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
                 // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
                 Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
             }
+        }
+        if (obsoleteToggleButton.isSelected()){
+            databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), 1);
+        } else {
+            databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), 0);
         }
     }
 
