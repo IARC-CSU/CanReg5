@@ -5,6 +5,7 @@
  */
 package canreg.client.gui.dataentry;
 
+import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.tools.PrintUtilities;
 import canreg.common.DatabaseVariablesListElement;
@@ -617,6 +618,57 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 } catch (SQLException ex) {
                     Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            } else if (e.getActionCommand().equalsIgnoreCase("changePatientRecord")) {
+                RecordEditorPanel tumourRecordEditorPanel = (RecordEditorPanel) source;
+                Tumour tumourDatabaseRecord = (Tumour) tumourRecordEditorPanel.getDatabaseRecord();
+                String requestedPatientRecordID = JOptionPane.showInputDialog(null, "Please enter Patient record ID:", "Assign new Patient Record ID", JOptionPane.QUESTION_MESSAGE);
+                if (requestedPatientRecordID != null) {
+                    // First see if it is one of the records shown
+                    RecordEditorPanel patientRecordEditorPanel = patientRecordsMap.get(requestedPatientRecordID);
+                    Patient patientDatabaseRecord = null;
+                    if (patientRecordEditorPanel != null) {
+                        patientDatabaseRecord = (Patient) patientRecordEditorPanel.getDatabaseRecord();
+                    } else {
+                        try {
+                            patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecord(requestedPatientRecordID);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+
+                    if (patientDatabaseRecord != null) {
+                        associateTumourRecordToPatientRecord(tumourDatabaseRecord, patientDatabaseRecord);
+                        try {
+                            saveRecord(tumourDatabaseRecord);
+                            tumourTabbedPane.remove(tumourRecordEditorPanel);
+                            JOptionPane.showInternalMessageDialog(this, "Record moved.");
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        tumourRecordEditorPanel.refreshDatabaseRecord(tumourDatabaseRecord);
+                    } else {
+                        JOptionPane.showInternalMessageDialog(this, "No such patient record.", "Failed", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            } else if (e.getActionCommand().equalsIgnoreCase("obsolete")) {
+                RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
+                int option = JOptionPane.NO_OPTION;
+                option = JOptionPane.showConfirmDialog(null, "Really change obsolete-status?");
+                recordEditorPanel.toggleObsolete(option == JOptionPane.YES_OPTION);
+            } else if (e.getActionCommand().equalsIgnoreCase("runMP")) {
+                RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
+                DatabaseRecord databaseRecord = recordEditorPanel.getDatabaseRecord();
+
             }
         }
     }

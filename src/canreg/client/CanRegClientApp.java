@@ -86,6 +86,54 @@ public class CanRegClientApp extends SingleFrameApplication {
     private Properties appInfoProperties;
     private String canRegSystemVersionString;
 
+    public Patient getPatientRecord(String requestedPatientRecordID) throws SQLException, RemoteException, SecurityException, Exception {
+        return (Patient) getRecordByID(requestedPatientRecordID, Globals.PATIENT_TABLE_NAME);
+    }
+
+    public Tumour getTumourRecord(String requestedPatientRecordID) throws SQLException, RemoteException, SecurityException, Exception {
+        return (Tumour) getRecordByID(requestedPatientRecordID, Globals.TUMOUR_TABLE_NAME);
+    }
+
+    private DatabaseRecord getRecordByID(String recordID, String tableName) throws SQLException, RemoteException, SecurityException, Exception {
+        String recordIDVariableName = null;
+        String databaseRecordIDVariableName = null;
+        if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+            recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+            databaseRecordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
+        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+            recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordID.toString()).getDatabaseVariableName();
+            databaseRecordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
+        }
+
+        DatabaseFilter filter = new DatabaseFilter();
+        filter.setFilterString(recordIDVariableName + " = '" + recordID + "' ");
+        DistributedTableDescription distributedTableDescription;
+        Object[][] rows;
+        DatabaseRecord record = null;
+
+        distributedTableDescription = getDistributedTableDescription(filter, tableName);
+        int numberOfRecords = distributedTableDescription.getRowCount();
+
+        rows = retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
+        releaseResultSet(distributedTableDescription.getResultSetID());
+        if (rows.length > 0) {
+            String[] columnNames = distributedTableDescription.getColumnNames();
+            int ids[] = new int[numberOfRecords];
+            boolean found = false;
+            int idColumnNumber = 0;
+
+            while (!found && idColumnNumber < columnNames.length) {
+                found = columnNames[idColumnNumber++].equalsIgnoreCase(databaseRecordIDVariableName);
+            }
+            if (found) {
+                idColumnNumber--;
+                int id = (Integer) rows[0][idColumnNumber];
+                record = getRecord(id, Globals.PATIENT_TABLE_NAME);
+            }
+        }
+        return record;
+    }
+
     /**
      * Save a new population dataset on the server
      * @param pds Population Data Set to save
@@ -125,7 +173,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         for (String part : Globals.versionStringParts) {
             canRegSystemVersionString += appInfoProperties.getProperty(part);
         }
-        
+
         String versionString = canRegSystemVersionString;
         versionString += "b" + appInfoProperties.getProperty("program.BUILDNUM");
         versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";

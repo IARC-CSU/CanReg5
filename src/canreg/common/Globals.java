@@ -117,8 +117,6 @@ public class Globals {
      */
     public static String DATE_FORMAT_STRING = "yyyyMMdd";
 
-    
-
     static String DATAENTRY_LANGUAGE_ENGLISH = "E";
     static String DATAENTRY_LANGUAGE_FRENCH = "F";
     static String DATAENTRY_LANGUAGE_SPANISH = "S";
