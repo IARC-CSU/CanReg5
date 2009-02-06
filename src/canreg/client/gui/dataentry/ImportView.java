@@ -646,12 +646,15 @@ public class ImportView extends javax.swing.JInternalFrame {
     @Action
     public void cancelAction() {
         if (importTask != null) {
-            JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you really want to cancel the import process?", "Please confirm.", JOptionPane.YES_NO_OPTION);
-            importTask.cancel(true);
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Import of file interupted.", "Warning.", JOptionPane.WARNING_MESSAGE);
-            importTask = null;
+            if (JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you really want to cancel the import process?", "Please confirm.", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                importTask.cancel(true);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Import of file interupted.", "Warning.", JOptionPane.WARNING_MESSAGE);
+                importTask = null;
+                this.dispose();
+            }
+        } else {
+            this.dispose();
         }
-        this.dispose();
     }
 
     /**
