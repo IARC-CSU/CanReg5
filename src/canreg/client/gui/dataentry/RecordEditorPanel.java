@@ -122,7 +122,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             DatabaseVariablesListElement dbvle = obsoleteFlagVariableListElement;
             if (dbvle != null) {
                 boolean obsolete = obsoleteToggleButton.isSelected();
-                if (obsolete){
+                if (obsolete) {
                     databaseRecord.setVariable(dbvle.getDatabaseVariableName(), 1);
                 } else {
                     databaseRecord.setVariable(dbvle.getDatabaseVariableName(), 0);
@@ -226,8 +226,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         /*
          * Set the obsolete status
          */
-        int obsoleteStatus = (Integer) databaseRecord.getVariable(obsoleteFlagVariableListElement.getDatabaseVariableName());
-        if (obsoleteStatus == 1){
+        Object obsoleteStatus = databaseRecord.getVariable(obsoleteFlagVariableListElement.getDatabaseVariableName());
+        if (obsoleteStatus != null && (Integer) obsoleteStatus == 1) {
             obsoleteToggleButton.setSelected(true);
         } else {
             obsoleteToggleButton.setSelected(false);
@@ -601,7 +601,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
                 Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
             }
         }
-        if (obsoleteToggleButton.isSelected()){
+        if (obsoleteToggleButton.isSelected()) {
             databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), 1);
         } else {
             databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), 0);
@@ -617,19 +617,22 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             buildDatabaseRecord();
             Map<Integer, Float> map =
                     canreg.client.CanRegClientApp.getApplication().performDuplicateSearch((Patient) databaseRecord, null);
-            if (map.size() == 0) {
-                JOptionPane.showInternalMessageDialog(this, "No duplicates found.");
-            } else {
-                String records = "";
-                for (Integer i : map.keySet()) {
-                    // records += i + ": " + map.get(i) + "\n";
-                    DatabaseRecord patientRecord = canreg.client.CanRegClientApp.getApplication().getRecord(i, Globals.PATIENT_TABLE_NAME);
+            //remove patients with the same patientID -- already mapped
+            String patientID = databaseRecord.getVariable(patientIDVariableListElement.getDatabaseVariableName()).toString();
 
-                    records += "Patient id: " + patientRecord.getVariable(patientIDVariableListElement.getDatabaseVariableName()) + ", score: " + map.get(i) + "%\n";
-                }
-                JOptionPane.showInternalMessageDialog(this, "Duplicates found:\n" + records);
-            // TODO add user feedback and options to handle duplicates
+            String records = "";
+            for (Integer i : map.keySet()) {
+                // records += i + ": " + map.get(i) + "\n";
+                DatabaseRecord patientRecord = canreg.client.CanRegClientApp.getApplication().getRecord(i, Globals.PATIENT_TABLE_NAME);
+                String otherPatientID = patientRecord.getVariable(patientIDVariableListElement.getDatabaseVariableName()).toString();
+                if (!patientID.equals(otherPatientID))
+                    records += "Patient id: " + otherPatientID + ", score: " + map.get(i) + "%\n";
             }
+            if (records.length()>0)
+                JOptionPane.showInternalMessageDialog(this, "Duplicates found:\n" + records);
+            else
+                JOptionPane.showInternalMessageDialog(this, "No duplicates found.");
+
         } catch (SecurityException ex) {
             Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {

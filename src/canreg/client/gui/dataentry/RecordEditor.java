@@ -175,8 +175,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     patientRecordsMap.put(regno, rePanel);
                 }
             }
-            if (dbr.getVariable(patientObsoleteVariableName).equals(1)) {
-                regnoString += "(o)";
+            Object patientObsoleteStatus = dbr.getVariable(patientObsoleteVariableName);
+            if (patientObsoleteStatus!=null && patientObsoleteStatus.equals(1)) {
+                regnoString += " (obsolete)";
             }
             patientTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
             if (!titleSet) {
@@ -200,8 +201,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     regnoString = "n/a";
                 }
             }
-            if (dbr.getVariable(tumourObsoleteVariableName).equals(1)) {
-                regnoString += "(o)";
+            Object tumourObsoleteStatus = dbr.getVariable(tumourObsoleteVariableName);
+            if (tumourObsoleteStatus!=null && tumourObsoleteStatus.equals(1)) {
+                regnoString += " (obsolete)";
             }
             tumourTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
         }
@@ -535,7 +537,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 RecordEditorPanel tumourRecordEditorPanel;
                 RecordEditorPanel patientRecordEditorPanel;
                 DatabaseRecord record = recordEditorPanel.getDatabaseRecord();
-                CheckResult.ResultCode worstResultCodeFound = CheckResult.ResultCode.Missing;
+                CheckResult.ResultCode worstResultCodeFound = CheckResult.ResultCode.OK;
                 String message = "";
                 Patient patient;
                 Tumour tumour;
@@ -688,6 +690,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 option = JOptionPane.showConfirmDialog(null, "Really change obsolete-status?");
                 boolean toggle = (option == JOptionPane.YES_OPTION);
                 recordEditorPanel.toggleObsolete(toggle);
+                if (toggle){
+                    refreshShowObsolete();
+                }
             } else if (e.getActionCommand().equalsIgnoreCase("runMP")) {
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
                 DatabaseRecord databaseRecord = recordEditorPanel.getDatabaseRecord();

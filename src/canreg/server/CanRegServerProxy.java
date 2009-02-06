@@ -2,7 +2,6 @@ package canreg.server;
 
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
-import canreg.common.Globals;
 import canreg.common.Globals.UserRightLevels;
 import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.server.database.CanRegDAO;

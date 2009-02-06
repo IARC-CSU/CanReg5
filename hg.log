@@ -1,5 +1,45 @@
-changeset:   113:4cee51e2f565
+changeset:   121:d93b875f313e
 tag:         tip
+user:        ervikm@X60112
+date:        Thu Feb 05 18:27:24 2009 +0100
+summary:     Show/hide obsolete records now implemented.
+
+changeset:   120:ff38cdaad275
+user:        ervikm@X60112
+date:        Thu Feb 05 16:25:43 2009 +0100
+summary:     Obsoletebutton implemented to toggle obsolete-flag. Added GUI-elements to move a tumour from one patient record to another.
+
+changeset:   119:5c17f8a1e5a4
+user:        ervikm@X60112
+date:        Wed Feb 04 15:09:13 2009 +0100
+summary:     Log information redirected to Logger-object (log-file) for all output.
+
+changeset:   118:570031cf011f
+user:        ervikm@X60112
+date:        Mon Feb 02 15:19:26 2009 +0100
+summary:     Tools: break down line no longer crashes if qoutes are not closed at tne end of a line.
+
+changeset:   117:0e63b6046fb2
+user:        ervikm@X60112
+date:        Mon Feb 02 15:18:17 2009 +0100
+summary:     Record editor no longer crashes if the record status dictionary has no entries.
+
+changeset:   116:6e339a00b8a8
+user:        ervikm@X60112
+date:        Mon Feb 02 15:17:13 2009 +0100
+summary:     Edit checks now default to "not done".
+
+changeset:   115:faa6c08e2a4b
+user:        ervikm@X60112
+date:        Fri Jan 30 17:39:46 2009 +0100
+summary:     Edit checks now color variables that might be inflicted. Person search feedback improved.
+
+changeset:   114:1b9d89724abd
+user:        ervikm@X60112
+date:        Thu Jan 29 14:39:28 2009 +0100
+summary:     Version 4.99.1 started. Changed download link.
+
+changeset:   113:4cee51e2f565
 user:        ervikm@X60112
 date:        Wed Jan 28 16:35:58 2009 +0100
 summary:     Improved handling and error reporting of record ids.
