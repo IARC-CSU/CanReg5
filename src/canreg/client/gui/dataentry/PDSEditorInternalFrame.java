@@ -103,7 +103,7 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
                 if (pdse.getAgeGroup() < pdsTableData.length && pdse.getSex() <= 2) {
                     pdsTableData[pdse.getAgeGroup()][pdse.getSex()] = pdse.getCount();
                 } else {
-                    System.out.println("outside skope: " + pdse.getAgeGroup() + " " + pdse.getSex());
+                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Outside skope: " + pdse.getAgeGroup() + " " + pdse.getSex());
                 }
             }
         }
@@ -498,8 +498,7 @@ private void ageGroupStructureChanged(java.awt.event.ActionEvent evt) {//GEN-FIR
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully saved population dataset: " + pds.getPopulationDatasetName() + ".", "Population dataset successfully saved.", JOptionPane.INFORMATION_MESSAGE);        
         }
         else {
-            System.out.println("Already saved... Updating.");
-            
+            Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.INFO, "Already saved... Updating.");
             // CanRegClientApp.getApplication().editRecord(pds);
         }
         } catch (SecurityException ex) {
@@ -534,7 +533,7 @@ private void ageGroupStructureChanged(java.awt.event.ActionEvent evt) {//GEN-FIR
                     count = (Integer) populationDataSetTable.getValueAt(ageGroup, sex);
                 } catch (java.lang.NullPointerException npe) {
                     count = new Integer(0);
-                    System.out.println("Missing value in the pds...");
+                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Missing value in the pds...");
                 }
                 pds.addAgeGroup(new PopulationDatasetsEntry(ageGroup, sex, count));
             }

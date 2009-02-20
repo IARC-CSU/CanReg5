@@ -7,6 +7,8 @@ package canreg.client.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,7 +27,7 @@ public class PersonSearchListener implements ActionListener, Serializable {
     
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        System.out.println(command);
+        Logger.getLogger(PersonSearchListener.class.getName()).log(Level.INFO, command);
         if (command.startsWith("range")) {
             // recordsInRangeField.setText(command.substring(6));
             actionListener.actionPerformed(e);

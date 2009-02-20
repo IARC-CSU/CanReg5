@@ -48,10 +48,13 @@ public class CheckGrade implements CheckInterface {
         int gradeNumber = 0;
         int morphologyNumber = 0;
         try {
+            result.addVariableInvolved(Globals.StandardVariableNames.Grade);
             gradeCode = variables.get(Globals.StandardVariableNames.Grade).toString();
             gradeNumber = Integer.parseInt(gradeCode);
+            result.addVariableInvolved(Globals.StandardVariableNames.Behaviour);
             behaviourCode = variables.get(Globals.StandardVariableNames.Behaviour).toString();
             behaviourNumber = Integer.parseInt(behaviourCode);
+            result.addVariableInvolved(Globals.StandardVariableNames.Morphology);
             morphologyCode = variables.get(Globals.StandardVariableNames.Morphology).toString();
             morphologyNumber = Integer.parseInt(morphologyCode);
         } catch (NumberFormatException numberFormatException) {

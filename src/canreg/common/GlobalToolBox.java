@@ -1,5 +1,6 @@
 package canreg.common;
 
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -17,6 +18,7 @@ public class GlobalToolBox {
     private Map<String, DatabaseVariablesListElement> standardVariableNameToDatabaseVariableListElementMap;
     private Map<Integer, DatabaseGroupsListElement> groupIDToDatabaseGroupListElementMap;
     private DatabaseVariablesListElement[] databaseVariablesListElements;
+    private Charset standardCharSet;
     
     /**
      * 
@@ -27,6 +29,15 @@ public class GlobalToolBox {
         groupIDToDatabaseGroupListElementMap = buildGroupMap(Tools.getGroupsListElements(doc, Globals.NAMESPACE));
         databaseVariablesListElements = Tools.getVariableListElements(doc, Globals.NAMESPACE);
         standardVariableNameToDatabaseVariableListElementMap = buildVariablesMap(databaseVariablesListElements);
+        standardCharSet = Tools.getStandardCharset(doc, Globals.NAMESPACE);
+    }
+
+    public Document getDocument() {
+        return doc;
+    }
+
+    public Charset getStandardCharset() {
+        return standardCharSet;
     }
 
     /**

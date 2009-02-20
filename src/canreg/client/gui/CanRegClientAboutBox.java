@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdesktop.application.Action;
 
 public class CanRegClientAboutBox extends javax.swing.JDialog {
@@ -130,7 +132,7 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
         }
         catch (Exception e)
         {
-            System.out.println( "Problem setting about page");
+            Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.INFO, "Problem setting about page", e);
         }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -144,22 +146,19 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(209, 209, 209)
                         .addComponent(closeButton))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(versionLabel)
+                            .addComponent(vendorLabel)
+                            .addComponent(homepageLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(versionLabel)
-                                    .addComponent(vendorLabel)
-                                    .addComponent(homepageLabel))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(appVersionLabel)
-                                    .addComponent(appVendorLabel)
-                                    .addComponent(appHomepageLabel)))
-                            .addComponent(appTitleLabel)
-                            .addComponent(appDescLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))))
+                            .addComponent(appVersionLabel)
+                            .addComponent(appVendorLabel)
+                            .addComponent(appHomepageLabel)))
+                    .addComponent(appTitleLabel)
+                    .addComponent(appDescLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(

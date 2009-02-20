@@ -12,7 +12,7 @@ import java.util.LinkedList;
  * - the regular size of the groups
  * - the highest age
  * - the size of the lowest age group
- * - the cut of age
+ * - the cut-off age
  * 
  * @author ervikm
  */

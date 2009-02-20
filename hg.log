@@ -1,5 +1,258 @@
-changeset:   71:cf3bf87f5a86
+changeset:   121:d93b875f313e
 tag:         tip
+user:        ervikm@X60112
+date:        Thu Feb 05 18:27:24 2009 +0100
+summary:     Show/hide obsolete records now implemented.
+
+changeset:   120:ff38cdaad275
+user:        ervikm@X60112
+date:        Thu Feb 05 16:25:43 2009 +0100
+summary:     Obsoletebutton implemented to toggle obsolete-flag. Added GUI-elements to move a tumour from one patient record to another.
+
+changeset:   119:5c17f8a1e5a4
+user:        ervikm@X60112
+date:        Wed Feb 04 15:09:13 2009 +0100
+summary:     Log information redirected to Logger-object (log-file) for all output.
+
+changeset:   118:570031cf011f
+user:        ervikm@X60112
+date:        Mon Feb 02 15:19:26 2009 +0100
+summary:     Tools: break down line no longer crashes if qoutes are not closed at tne end of a line.
+
+changeset:   117:0e63b6046fb2
+user:        ervikm@X60112
+date:        Mon Feb 02 15:18:17 2009 +0100
+summary:     Record editor no longer crashes if the record status dictionary has no entries.
+
+changeset:   116:6e339a00b8a8
+user:        ervikm@X60112
+date:        Mon Feb 02 15:17:13 2009 +0100
+summary:     Edit checks now default to "not done".
+
+changeset:   115:faa6c08e2a4b
+user:        ervikm@X60112
+date:        Fri Jan 30 17:39:46 2009 +0100
+summary:     Edit checks now color variables that might be inflicted. Person search feedback improved.
+
+changeset:   114:1b9d89724abd
+user:        ervikm@X60112
+date:        Thu Jan 29 14:39:28 2009 +0100
+summary:     Version 4.99.1 started. Changed download link.
+
+changeset:   113:4cee51e2f565
+user:        ervikm@X60112
+date:        Wed Jan 28 16:35:58 2009 +0100
+summary:     Improved handling and error reporting of record ids.
+
+changeset:   112:fbda10b542bf
+user:        ervikm@X60112
+date:        Wed Jan 28 11:28:59 2009 +0100
+summary:     RangeFilterPanel: Tumour table now default table, sort by variables only the ones in the table selected.
+
+changeset:   111:3c0c6dee20be
+user:        ervikm@X60112
+date:        Wed Jan 28 09:39:46 2009 +0100
+summary:     Mainly improvemnts in perfomance of SQL queries. Some other more minor changes.
+
+changeset:   110:f0cddfc59a7f
+user:        ervikm@X60112
+date:        Mon Jan 26 11:41:44 2009 +0100
+summary:     Install new system internal frame now checks to see if the file about to be installed is already in the right folder...
+
+changeset:   109:a9b30967c18d
+user:        ervikm@X60112
+date:        Fri Jan 23 16:19:45 2009 +0100
+summary:     CanReg5 takes into account the CanReg4  fileformat when importing files, thus allowing the import of files of other charactersets.
+
+changeset:   108:61393c462892
+user:        ervikm@X60112
+date:        Fri Jan 23 16:17:52 2009 +0100
+summary:     Fixed bugs in the record editor. Record status is now saved.
+
+changeset:   107:9bd994319699
+user:        ervikm@X60112
+date:        Thu Jan 22 16:45:36 2009 +0100
+summary:     DictionaryHelper: fails more gracefully if something goes wrong while retreiving the dictionary ID. Reindentation of code.
+
+changeset:   106:80a05d596eff
+user:        ervikm@X60112
+date:        Thu Jan 22 16:43:33 2009 +0100
+summary:     CanRegServerImpl: now handles better when connection to DB fails for some reason...
+
+changeset:   105:a96f57aa1d1e
+user:        ervikm@X60112
+date:        Thu Jan 22 16:42:35 2009 +0100
+summary:     SystemDefinitionConverter: Fixed bugs dealing with the length of record IDs different than 8. Added some system variables.
+
+changeset:   104:b77bc60cbed6
+user:        ervikm@X60112
+date:        Thu Jan 22 16:41:06 2009 +0100
+summary:     CanRegDAO: Added functionality to generate next patient record ID. Squashed some bugs.
+
+changeset:   103:77fd1ae043a8
+user:        ervikm@X60112
+date:        Thu Jan 22 16:38:31 2009 +0100
+summary:     QueryGenerator: added functionality to get highest patient record id.
+
+changeset:   102:aceba06f204a
+user:        ervikm@X60112
+date:        Thu Jan 22 16:37:37 2009 +0100
+summary:     RecordEditor: Fixed a nullpointer error when "setting active record".
+
+changeset:   101:15300e75b0a4
+user:        ervikm@X60112
+date:        Tue Jan 20 17:23:36 2009 +0100
+summary:     Record status is only shown if the variable is in the system definition.
+
+changeset:   100:dabb3dce07fa
+user:        ervikm@X60112
+date:        Tue Jan 20 10:55:32 2009 +0100
+summary:     Fixed bug in Frequencies by Year. Didn't redraw table properly.
+
+changeset:   99:b56ef77a119c
+user:        ervikm@X60112
+date:        Fri Jan 16 14:54:02 2009 +0100
+summary:     Fixed bug #1: Filter with OR not working.
+
+changeset:   98:04b8e4a9d8ed
+user:        ervikm@X60112
+date:        Wed Jan 14 16:26:27 2009 +0100
+summary:     The first BETA version sent to the MECC registries 14.01.2009.
+
+changeset:   97:51bf3737f713
+user:        ervikm@X60112
+date:        Wed Jan 14 15:50:17 2009 +0100
+summary:     Created some extra indexes when going from CanReg4 to 5 in the system definition converter.
+
+changeset:   96:965c40686a99
+user:        ervikm@X60112
+date:        Wed Jan 14 13:54:07 2009 +0100
+summary:     Fixed a bug in the LoginInternalFrame where it crashes if the user has no "last used servers".
+
+changeset:   95:5b80e4b21825
+user:        ervikm@X60112
+date:        Wed Jan 14 10:44:52 2009 +0100
+summary:     Added max lines in import of complete dictionary preview. Only replace the first two blanks while importing from CanReg4.
+
+changeset:   94:52430ffb76c5
+user:        ervikm@X60112
+date:        Mon Jan 12 18:02:19 2009 +0100
+summary:     Disabled the buttons where the functionality is not ready.
+
+changeset:   93:37b15042e778
+user:        ervikm@X60112
+date:        Mon Jan 12 16:57:15 2009 +0100
+summary:     Updated the manual. First beta version for the MECC registries.
+
+changeset:   92:5fcdd1b6905a
+user:        ervikm@X60112
+date:        Mon Jan 12 16:30:48 2009 +0100
+summary:     Updated the about.html. Disabled some program features that are not yet available.
+
+changeset:   91:3777605cf719
+user:        ervikm@X60112
+date:        Mon Jan 12 16:00:21 2009 +0100
+summary:     System Converter: No longer asked to restart, as Local Settings are saved.
+
+changeset:   90:772ad234f90e
+user:        ervikm@X60112
+date:        Thu Jan 08 17:58:30 2009 +0100
+summary:     Improved record editor. Save now properly links Tumour to patient. Patient tab follow tumour tab.
+
+changeset:   89:872de9b22ab3
+user:        ervikm@X60112
+date:        Wed Jan 07 14:34:32 2009 +0100
+summary:     The standard variable name of the ID of the tumours in the database is now TumourID instead of RegistrationNumber.
+
+changeset:   88:54e8978b5524
+user:        ervikm@X60112
+date:        Wed Jan 07 14:33:15 2009 +0100
+summary:     Slight modification of the "to string" function of Patient and Tumour. Maybe it should be moved to i18?
+
+changeset:   87:4419cf943338
+user:        ervikm@X60112
+date:        Wed Jan 07 14:32:24 2009 +0100
+summary:     Dissallow empty indexes.
+
+changeset:   86:f2bb12ceace3
+user:        ervikm@X60112
+date:        Wed Jan 07 11:01:39 2009 +0100
+summary:     Create folder if the folder does not exist during system definition conversion.
+
+changeset:   85:1abcda1dd194
+user:        ervikm@X60112
+date:        Wed Jan 07 10:57:13 2009 +0100
+summary:     Addded a please restart CanReg message to the convert CR4 syst def gui.
+
+changeset:   84:51b7f6d0d515
+user:        ervikm@X60112
+date:        Wed Jan 07 10:54:43 2009 +0100
+summary:     Addded a please restart CanReg message to the convert CR4 syst def gui.
+
+changeset:   83:5bf8825f60c3
+user:        ervikm@X60112
+date:        Wed Jan 07 10:17:20 2009 +0100
+summary:     Created a graphical tool to assign database variables to the two different tables.
+
+changeset:   82:bf214d8a9d55
+user:        ervikm@X60112
+date:        Wed Jan 07 10:16:40 2009 +0100
+summary:     Moved the creation of database indexes to the end of the database creation function as this is the least important one. Patient Indexes as well...
+
+changeset:   81:3672d51b9b8f
+user:        ervikm@X60112
+date:        Wed Jan 07 10:15:52 2009 +0100
+summary:     Moved the creation of database indexes to the end of the database creation function as this is the least important one.
+
+changeset:   80:1a1e6e34a397
+user:        ervikm@X60112
+date:        Wed Jan 07 10:15:08 2009 +0100
+summary:     Fixed a bug in the way the highest tumour/patient IDs are calculated.
+
+changeset:   79:89376da1c08f
+user:        ervikm@X60112
+date:        Wed Jan 07 10:13:39 2009 +0100
+summary:     Fixed a bug in the import of CanReg4 dictionaries.
+
+changeset:   78:075d7af31305
+user:        ervikm@X60112
+date:        Tue Jan 06 14:54:06 2009 +0100
+summary:     Fixed a bug in the name of a standard variable name: UpdateDate -> TumourUpdateDate
+
+changeset:   77:f03d64de1cbb
+user:        ervikm@X60112
+date:        Tue Jan 06 14:06:06 2009 +0100
+summary:     Improved the import function. Added delete record functionality. Improved the record editor. Squashed bugs.
+
+changeset:   76:bc983b296ec8
+user:        ervikm@X60112
+date:        Mon Jan 05 17:18:03 2009 +0100
+summary:     Improved the database structure and the browser. Improved the import function.
+
+changeset:   75:abb88cbe85dd
+user:        ervikm@X60112
+date:        Mon Jan 05 16:44:16 2009 +0100
+summary:     XML writer now indents thus making the XML file more readable.
+
+changeset:   74:1fa27c6b6daf
+parent:      73:de1e38d5f58a
+parent:      72:49810f1d21a7
+user:        ervikm@X70245.iarc.lan
+date:        Fri Nov 14 10:09:35 2008 +0100
+summary:     Merged.
+
+changeset:   73:de1e38d5f58a
+parent:      71:cf3bf87f5a86
+user:        ervikm@X70245
+date:        Fri Nov 14 10:04:10 2008 +0100
+summary:     Ready for Sydney.
+
+changeset:   72:49810f1d21a7
+user:        ervikm@X60112
+date:        Fri Nov 14 09:58:40 2008 +0100
+summary:     Ready for Sydney.
+
+changeset:   71:cf3bf87f5a86
 parent:      70:aad792e8c4b6
 parent:      66:d28befdcde7e
 user:        ervikm@X60112

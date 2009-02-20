@@ -184,7 +184,6 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
      */
     @Action
     public void addVariableAction() {
-        System.out.println("coucou");
         PersonSearchVariablePanel psvp = new PersonSearchVariablePanel();
         addPersonSearchVariablePanel(psvp);
     }

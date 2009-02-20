@@ -8,6 +8,7 @@ package canreg.client.gui.components;
 import canreg.client.gui.dataentry.RecordEditorPanel;
 import canreg.client.gui.tools.MaxLengthDocument;
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.qualitycontrol.CheckResult.ResultCode;
 import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
 import java.awt.Component;
@@ -17,6 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentListener;
 
@@ -41,13 +44,18 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
     /**
      * 
      */
-    protected java.awt.Color mandatoryMissingColor = java.awt.Color.PINK;
+    protected java.awt.Color MANDATORY_VARIABLE_MISSING_COLOR = java.awt.Color.PINK;
+    protected java.awt.Color VARIABLE_INVALID_COLOR = java.awt.Color.PINK;
+    protected java.awt.Color VARIABLE_QUERY_COLOR = java.awt.Color.GREEN;
+    protected java.awt.Color VARIABLE_RARE_COLOR = java.awt.Color.YELLOW;
+    protected java.awt.Color VARIABLE_OK_COLOR = java.awt.SystemColor.text;
     private Dictionary dictionary;
+    private boolean mandatory;
 
     /** Creates new form VariableEditorPanel */
     public VariableEditorPanel() {
         initComponents();
-        
+
         codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
 
             @Override
@@ -65,6 +73,14 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
         return databaseListElement.getDatabaseVariableName();
     }
 
+    public boolean isFilledOK() {
+        boolean filledOK = true;
+        if (mandatory) {
+            filledOK = codeTextField.getText().trim().length() > 0;
+        }
+        return filledOK;
+    }
+
     /**
      * 
      * @param aThis
@@ -79,6 +95,17 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
      */
     public void setDocumentListener(DocumentListener listener) {
         codeTextField.getDocument().addDocumentListener(listener);
+    }
+
+    public void setResultCode(ResultCode resultCode) {
+        switch (resultCode) {
+            case Missing: codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR); break;
+            case Query: codeTextField.setBackground(VARIABLE_QUERY_COLOR); break;
+            case Rare: codeTextField.setBackground(VARIABLE_RARE_COLOR); break;
+            case Invalid: codeTextField.setBackground(VARIABLE_INVALID_COLOR); break;
+            case OK: codeTextField.setBackground(VARIABLE_OK_COLOR); break;
+        }
+        codeTextField.setToolTipText(resultCode.toString());
     }
 
     /** This method is called from within the constructor to
@@ -178,7 +205,6 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
 private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseClickHandler
 
     if (databaseListElement.getVariableType().equalsIgnoreCase("dict")) {
-        // System.out.println("Coucou");
         if (possibleValuesMap == null) {
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Empty_dictionary."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Warning"), JOptionPane.WARNING_MESSAGE);
         } else {
@@ -211,8 +237,7 @@ private void codeTextFieldActionPerformed(java.awt.event.FocusEvent evt) {//GEN-
     try {
         lookUpAndSetDescription();
     } catch (NullPointerException e) {
-        JOptionPane.showInternalMessageDialog(this, codeTextField.getText() + " " 
-                + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("_is_not_a_valid_dictionary_code."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Error"), JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showInternalMessageDialog(this, codeTextField.getText() + " " + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("_is_not_a_valid_dictionary_code."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Error"), JOptionPane.ERROR_MESSAGE);
     }
     updateFilledInStatusColor();
 }//GEN-LAST:event_codeTextFieldActionPerformed
@@ -232,6 +257,7 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
     protected javax.swing.JSplitPane splitPane2;
     private javax.swing.JLabel variableNameLabel;
     // End of variables declaration//GEN-END:variables
+
     /**
      * 
      * @param variableName
@@ -273,13 +299,11 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         }
     }
 
-    private void updateFilledInStatusColor() {
-        if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
-            if (codeTextField.getText().trim().length() == 0) {
-                codeTextField.setBackground(mandatoryMissingColor);
-            } else {
-                codeTextField.setBackground(java.awt.SystemColor.text);
-            }
+    public void updateFilledInStatusColor() {
+        if (!isFilledOK()) {
+            codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
+        } else {
+            codeTextField.setBackground(VARIABLE_OK_COLOR);
         }
     }
 
@@ -297,10 +321,10 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
                     valueObject = Integer.parseInt(valueString.trim());
                 } catch (NumberFormatException numberFormatException) {
                     valueObject = -1;
-                    System.out.println(databaseListElement.getShortName() + "" + valueString);
+                    Logger.getLogger(VariableEditorPanel.class.getName()).log(Level.WARNING, databaseListElement.getShortName() + " " + valueString, numberFormatException);
                 }
             } else {
-                valueObject = -1;
+                valueObject = null;
             }
         } else {
             valueObject = valueString;
@@ -323,13 +347,15 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
             codeTextField.setFocusable(false);
             codeTextField.setEditable(false);
         } else if (fillInStatus.equalsIgnoreCase("Mandatory")) {
-            codeTextField.setBackground(mandatoryMissingColor);
+            codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
         }
 
         // String variableType = databaseListElement.getVariableType();
         descriptionTextField.setVisible(false);
         categoryTextField.setVisible(false);
         setMaximumLength(databaseListElement.getVariableLength());
+
+        mandatory = databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory");
     }
 
     /**
@@ -384,9 +410,9 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
 
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equalsIgnoreCase("Max length reached")) {
-            try{
-            lookUpAndSetDescription();
-            } catch (NullPointerException ne){
+            try {
+                lookUpAndSetDescription();
+            } catch (NullPointerException ne) {
                 descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
             }
             updateFilledInStatusColor();

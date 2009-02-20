@@ -28,8 +28,7 @@ public class ServerLauncher {
         try {
             LocateRegistry.createRegistry(port);
         } catch (Exception exception) {
-            System.out.println("Registry already running...");
-        // Logger.getLogger(ServerLauncher.class.getName()).log(Level.INFO, null, exception);
+            Logger.getLogger(ServerLauncher.class.getName()).log(Level.WARNING, "Registry already running...", exception);
         }
 
         System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);

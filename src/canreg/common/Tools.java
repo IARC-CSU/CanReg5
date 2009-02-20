@@ -1,12 +1,15 @@
 package canreg.common;
 
+import java.nio.charset.Charset;
 import java.util.LinkedList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.net.*;
 import java.io.*;
-import java.util.Date;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -58,7 +61,11 @@ public class Tools {
                     while (tmpChar != '\"' && pointer < line.length()) {
                         tmpString += tmpChar;
                         pointer++;
-                        tmpChar = line.charAt(pointer);
+                        if (pointer < line.length()) {
+                            tmpChar = line.charAt(pointer);
+                        } else {
+                            Logger.getLogger(Tools.class.getName()).log(Level.WARNING, "Warning! Unclosed quote.");
+                        }
                     }
                 } else {
                     tmpString += tmpChar;
@@ -75,6 +82,21 @@ public class Tools {
     }
 
     /**
+     *
+     * @param separatingCharacter
+     * @param line
+     * @return
+     */
+    public static String[] breakDownLinePF(char separatingCharacter, String line) {
+        PowerfulTokenizer tokenizer = new PowerfulTokenizer(line, ""+separatingCharacter);
+        String[] stringArray = new String[tokenizer.countTokens()];
+        for (int i = 0; i<stringArray.length; i++){
+            stringArray[i] = tokenizer.nextToken();
+        }
+        return stringArray;
+    }
+
+    /**
      * 
      * @param doc
      * @param namespace
@@ -87,11 +109,11 @@ public class Tools {
             Element e = (Element) nl.item(i);
             variables[i] = new PersonSearchVariable();
             variables[i].setName(e.getElementsByTagName(namespace + "variable_name").item(0).getTextContent());
-             variables[i].setWeight(Integer.parseInt(e.getElementsByTagName(namespace + "weigth").item(0).getTextContent()));
+            variables[i].setWeight(Integer.parseInt(e.getElementsByTagName(namespace + "weigth").item(0).getTextContent()));
         }
         return variables;
     }
-    
+
     /**
      * 
      * @param doc
@@ -103,7 +125,7 @@ public class Tools {
         Element e = (Element) nl.item(0);
         return Integer.parseInt(e.getElementsByTagName(namespace + "minimum_match").item(0).getTextContent());
     }
-    
+
     /**
      * 
      * @param doc
@@ -120,10 +142,11 @@ public class Tools {
                     Integer.parseInt(e.getElementsByTagName(namespace + "variable_id").item(0).getTextContent()),
                     e.getElementsByTagName(namespace + "short_name").item(0).getTextContent(),
                     e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent());
-            if (e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent().equalsIgnoreCase("dict")) {
+            if (e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent().equalsIgnoreCase("Dict")) {
                 String dictionaryName = e.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
                 int id = canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, dictionaryName);
                 variables[i].setDictionaryID(id);
+                variables[i].setUseDictionary(dictionaryName);
             }
 
             variables[i].setEnglishName(e.getElementsByTagName(namespace + "english_name").item(0).getTextContent());
@@ -168,10 +191,10 @@ public class Tools {
             if (standardVariableNameNodeList != null && standardVariableNameNodeList.getLength() > 0) {
                 variables[i].setStandardVariableName(standardVariableNameNodeList.item(0).getTextContent());
             }
-            
-            // TODO
-            // Accommodate unknown codes
-            
+
+        // TODO
+        // Accommodate unknown codes
+
         }
         return variables;
     }
@@ -217,6 +240,43 @@ public class Tools {
         return indexes;
     }
 
+    public static TreeMap<String, LinkedList<String>> buildIndexMap(String tableName, Document doc, String namespace) {
+        TreeMap<String, LinkedList<String>> indexMap = new TreeMap<String, LinkedList<String>>();
+
+        NodeList nodes = doc.getElementsByTagName(namespace + "indexes");
+        Element variablesElement = (Element) nodes.item(0);
+
+        NodeList indexes = variablesElement.getElementsByTagName(namespace + "index");
+
+        // Go through all the indexes definitions
+        for (int i = 0; i < indexes.getLength(); i++) {
+
+            // Get element
+            Element element = (Element) indexes.item(i);
+
+            // Create line
+            String tableNameDB = element.getElementsByTagName(namespace + "table").item(0).getTextContent().toUpperCase();
+
+            if (tableNameDB.equalsIgnoreCase(tableName)) {
+                LinkedList<String> indexedVariables = new LinkedList<String>();
+                String nameDB = element.getElementsByTagName(namespace + "name").item(0).getTextContent();
+
+                NodeList variables = element.getElementsByTagName(namespace + "indexed_variable");
+
+                if (variables.getLength() > 0) {
+                    // we don't allow empty indexes
+                    // Go through all the variable definitions
+                    for (int j = 0; j < variables.getLength(); j++) {
+                        Element variableElement = (Element) variables.item(j);
+                        indexedVariables.add(variableElement.getElementsByTagName(namespace + "variable_name").item(0).getTextContent().toUpperCase());
+                    }
+                    indexMap.put(nameDB, indexedVariables);
+                }
+            }
+        }
+        return indexMap;
+    }
+
     /**
      * 
      * @param doc
@@ -237,8 +297,8 @@ public class Tools {
             dictionaries[i].setCategoryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "category_description_length").item(0).getTextContent()));
             dictionaries[i].setFullDictionaryCodeLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_code_length").item(0).getTextContent()));
             dictionaries[i].setFullDictionaryCategoryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_description_length").item(0).getTextContent()));
-           
-            
+
+
         // TODO -- capture more info...
         }
         return dictionaries;
@@ -256,20 +316,19 @@ public class Tools {
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
             indexes[i] = new DatabaseGroupsListElement(
-                    e.getElementsByTagName(namespace + "name").item(0).getTextContent(), 
-                    Integer.parseInt(e.getElementsByTagName(namespace + "group_id").item(0).getTextContent())
-                    );
+                    e.getElementsByTagName(namespace + "name").item(0).getTextContent(),
+                    Integer.parseInt(e.getElementsByTagName(namespace + "group_id").item(0).getTextContent()));
         }
         return indexes;
     }
-    
-        /**
-         * 
-         * @param doc
-         * @param namespace
-         * @return
-         */
-        public static String[] getVariableNames(Document doc, String namespace) {
+
+    /**
+     *
+     * @param doc
+     * @param namespace
+     * @return
+     */
+    public static String[] getVariableNames(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
         String[] variableNames = new String[nl.getLength()];
         for (int i = 0; i <
@@ -281,12 +340,12 @@ public class Tools {
         return variableNames;
     }
 
-        /**
-         * 
-         * @param url
-         * @return
-         */
-        public static String getFileFromURL(URL url){
+    /**
+     *
+     * @param url
+     * @return
+     */
+    public static String getFileFromURL(URL url) {
         StringBuffer contents = new StringBuffer();
 
         try {
@@ -309,27 +368,27 @@ public class Tools {
                 }
             }
 
-        }  catch (IOException ioe) {
+        } catch (IOException ioe) {
             System.err.println("I/O Error - " + ioe);
         }
         return contents.toString();
     }
-    
-        /**
-         * 
-         * @param urlString
-         * @return
-         */
-        public static String getFileFromURL(String urlString) {
+
+    /**
+     *
+     * @param urlString
+     * @return
+     */
+    public static String getFileFromURL(String urlString) {
         String contents = new String();
-        URL url = null; 
+        URL url = null;
         try {
             // Create an URL instance
             url = new URL(urlString);
             contents = getFileFromURL(url);
         } catch (MalformedURLException mue) {
             System.err.println("Invalid URL");
-        } 
+        }
         return contents;
     }
 
@@ -352,7 +411,7 @@ public class Tools {
         }
         return file;
     }
-    
+
     /**
      * 
      * @param urlString
@@ -392,6 +451,20 @@ public class Tools {
         }
         in.close();
         out.close();
+    }
+
+    public static String increment(String ID) {
+        String IDplusOne = null;
+        char lastChar = ID.charAt(ID.length() - 1);
+        String theRest = ID.substring(0, ID.length() - 1);
+        if (lastChar == '9') {
+            lastChar = '0';
+            IDplusOne = increment(theRest) + lastChar;
+        } else {
+            lastChar += 1;
+            IDplusOne = theRest + lastChar;
+        }
+        return IDplusOne;
     }
 
     /**
@@ -436,5 +509,42 @@ public class Tools {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    static Charset getStandardCharset(Document doc, String namespace) {
+        Charset standardEncoding = Charset.defaultCharset();
+        NodeList nl = doc.getElementsByTagName(namespace + "data_entry_language");
+        if (nl.getLength()>0){
+            String dataEntryLanguage = nl.item(0).getTextContent();
+            if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ENGLISH)){
+                standardEncoding = Charset.forName(Globals.CHARSET_ENGLISH);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_FRENCH)){
+                standardEncoding = Charset.forName(Globals.CHARSET_FRENCH);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_SPANISH)){
+                standardEncoding = Charset.forName(Globals.CHARSET_SPANISH);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ITALIAN)){
+                standardEncoding = Charset.forName(Globals.CHARSET_ITALIAN);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_TURKISH)){
+                standardEncoding = Charset.forName(Globals.CHARSET_TURKISH);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ROMANIAN)){
+                standardEncoding = Charset.forName(Globals.CHARSET_ROMANIAN);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_PORTUGUESE)){
+                standardEncoding = Charset.forName(Globals.CHARSET_PORTUGUESE);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_CHINESE)){
+                standardEncoding = Charset.forName(Globals.CHARSET_CHINESE);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_THAI)){
+                standardEncoding = Charset.forName(Globals.CHARSET_THAI);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_KOREAN)){
+                standardEncoding = Charset.forName(Globals.CHARSET_KOREAN);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ARABIC)){
+                standardEncoding = Charset.forName(Globals.CHARSET_ARABIC);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_FARSI)){
+                standardEncoding = Charset.forName(Globals.CHARSET_FARSI);
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_RUSSIAN)){
+                standardEncoding = Charset.forName(Globals.CHARSET_RUSSIAN);
+            }
+        }
+
+        return standardEncoding;
     }
 }

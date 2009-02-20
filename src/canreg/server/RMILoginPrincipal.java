@@ -1,5 +1,9 @@
 package canreg.server;
 
+import canreg.common.Globals;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author ervikm
@@ -9,7 +13,8 @@ public class RMILoginPrincipal
    implements java.security.Principal
 {
     private static boolean DEBUG;
-    
+
+    private Globals.UserRightLevels userRightLevel;
     /**
      * Toggles debug status on or off.&ltp>
      * 
@@ -32,7 +37,8 @@ public class RMILoginPrincipal
         throw new IllegalArgumentException("Null name");
         }
         this.username = username;
-        if( DEBUG ) System.out.println( "\t[RMILoginPrincipal] Principal " + username + " successfully created." );
+        if( DEBUG )
+            Logger.getLogger(RMILoginPrincipal.class.getName()).log(Level.INFO, "Principal " + username + " successfully created.");
    }
    
    /** Returns the username of the user. @return The username. */
@@ -58,4 +64,18 @@ public class RMILoginPrincipal
       public int hashCode() {
          return username.hashCode();
   }
+
+    /**
+     * @return the userRightLevel
+     */
+    public Globals.UserRightLevels getUserRightLevel() {
+        return userRightLevel;
+    }
+
+    /**
+     * @param userRightLevel the userRightLevel to set
+     */
+    public void setUserRightLevel(Globals.UserRightLevels userRightLevel) {
+        this.userRightLevel = userRightLevel;
+    }
 }

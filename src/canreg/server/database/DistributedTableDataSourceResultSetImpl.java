@@ -12,6 +12,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -91,7 +93,7 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
             if (!hasMore){
                 // set pointer to last so that we can keep using resultset
                 resultSet.last();
-                System.out.println("last record reached");
+                Logger.getLogger(DistributedTableDataSourceResultSetImpl.class.getName()).log(Level.INFO, "last record reached");
             }
         }
         Object[][] rowsArray = new Object[rows.size()][columnCount];

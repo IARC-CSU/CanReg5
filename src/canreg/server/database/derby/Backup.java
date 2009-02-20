@@ -4,6 +4,8 @@ import canreg.common.Globals;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -29,7 +31,9 @@ public class Backup {
         cs.setString(1, backupdirectory);
         cs.execute();
         cs.close();
-        System.out.println("Backed up database to " + backupdirectory);
+        Logger.getLogger(Backup.class.getName()).log(Level.INFO, "Backed up database to " + backupdirectory);
+
+        System.out.println();
         return backupdirectory;
     }
 }

@@ -7,6 +7,7 @@ package canreg.client.gui.dataentry;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
+import canreg.common.Globals;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -222,7 +223,8 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             int i = 0;
             String text = new String();
             String line = br.readLine();
-            while (line != null) {
+
+            while (line != null && i<Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW) {
                 text += line + "\n";
                 line = br.readLine();
                 i++;
@@ -309,7 +311,7 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     // read untill blank line
                     while (line != null && line.trim().length() > 0) {
                         if (cr4dictionary) {
-                            line.replace("  ", "\t ");
+                            line = line.replaceFirst("  ", "\t ");
                         }
                         dictionaryString += line + "\n";
                         line = br.readLine();

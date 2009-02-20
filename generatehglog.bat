@@ -1,0 +1,1 @@
+hg log > hg.log

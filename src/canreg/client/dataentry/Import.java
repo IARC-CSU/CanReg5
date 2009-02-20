@@ -8,8 +8,10 @@ import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,131 +31,6 @@ public class Import {
     private static String namespace = "ns3:";
     private static boolean debug = true;
 
-    // function without map - directly on the server...
-    // deprecated
-    /**
-     * 
-     * @param doc
-     * @param file
-     * @param canRegDAO
-     * @return
-     */
-    public static boolean importFile(Document doc, File file, CanRegDAO canRegDAO) {
-        // create the mapping
-        BufferedReader bufferedReader = null;
-        List<Relation> map = null;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(file));
-            String line = bufferedReader.readLine();
-            String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
-            map = constructRelations(doc, lineElements);
-        // call import function with map
-
-        } catch (IOException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                bufferedReader.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return importFile(doc, map, file, canRegDAO);
-        }
-    }
-
-    // function with map - directly on the server...
-    // deprecated
-    /**
-     * 
-     * @param doc
-     * @param map
-     * @param file
-     * @param canRegDAO
-     * @return
-     */
-    public static boolean importFile(Document doc, List<Relation> map, File file, CanRegDAO canRegDAO) {
-
-        boolean success = false;
-
-        HashMap mpCodes = new HashMap();
-
-        BufferedReader bufferedReader = null;
-
-        try {
-            bufferedReader = new BufferedReader(new FileReader(file));
-            String line = bufferedReader.readLine();
-            // Skip first line
-            line = bufferedReader.readLine();
-
-            // patientNumber
-            int patientIDNumber = 0;
-            while (line != null) {
-                String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
-                // Build patient part
-                Patient patient = new Patient();
-                for (int i = 0; i < map.size(); i++) {
-                    Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
-                        if (rel.getVariableType().equalsIgnoreCase("Number") || rel.getVariableType().equalsIgnoreCase("Date")) {
-                            if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
-                            }
-                        } else {
-                            patient.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
-                        }
-                    }
-                }
-                debugOut(patient.toString());
-
-                // Build tumour part
-                Tumour tumour = new Tumour();
-                for (int i = 0; i < map.size(); i++) {
-                    Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
-                        if (rel.getVariableType().equalsIgnoreCase("Number") || rel.getVariableType().equalsIgnoreCase("Date")) {
-                            if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
-                            }
-                        } else {
-                            tumour.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
-                        }
-                    }
-                }
-
-                debugOut(tumour.toString());
-                // add patient to the database
-                patientIDNumber = canRegDAO.savePatient(patient);
-
-                // If this is a multiple primary tumour...
-                String mpCodeString = (String) tumour.getVariable("MPcode");
-
-                if (mpCodeString != null && mpCodeString.length() > 0) {
-                    patientIDNumber = lookUpPatientID(mpCodeString, patientIDNumber, mpCodes);
-                }
-
-                tumour.setVariable("PatientID", patientIDNumber);
-                canRegDAO.saveTumour(tumour);
-
-                //Read next line of data
-                line = bufferedReader.readLine();
-            }
-
-
-            success = true;
-        } catch (IOException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-        return success;
-    }
-
     /**
      * 
      * @param task
@@ -164,21 +41,27 @@ public class Import {
      * @param io
      * @return
      */
-    public static boolean importFile(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) {
-
+    public static boolean importFile(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException {
         boolean success = false;
 
         HashMap mpCodes = new HashMap();
 
         BufferedReader bufferedReader = null;
         try {
+            // Tro to detect the encoding...
+            FileInputStream fis = new FileInputStream(file);
+            InputStreamReader isr = new InputStreamReader(fis, io.getFileCharset());
+            // Returns the name of the character encoding
+
+            Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + isr.getEncoding());
+
             int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath()) - 1;
-            bufferedReader = new BufferedReader(new FileReader(file));
+            bufferedReader = new BufferedReader(isr);
             String line = bufferedReader.readLine();
             // Skip first line
             line = bufferedReader.readLine();
             // patientNumber
-            int patientDatabaseIDNumber = 0;
+            int patientDatabaseRecordID = 0;
             int tumourDatabaseIDNumber = 0;
             int numberOfLinesRead = 1;
             int linesToRead = io.getMaxLines();
@@ -187,9 +70,10 @@ public class Import {
             }
             while (line != null && (numberOfLinesRead < linesToRead)) {
                 // We allow for null tasks...
-                if (task!=null)
-                    task.firePropertyChange("progress", (numberOfLinesRead - 1)*100/linesToRead, (numberOfLinesRead)*100/linesToRead);
-                String[] lineElements = line.split(io.getSeparator());
+                if (task != null) {
+                    task.firePropertyChange("progress", (numberOfLinesRead - 1) * 100 / linesToRead, (numberOfLinesRead) * 100 / linesToRead);
+                }
+                String[] lineElements = canreg.common.Tools.breakDownLine(io.getSeparator(), line);
                 // Build patient part
                 Patient patient = new Patient();
                 for (int i = 0; i < map.size(); i++) {
@@ -223,34 +107,57 @@ public class Import {
 
                 // debugOut(tumour.toString());
                 // add patient to the database
-                patientDatabaseIDNumber = server.savePatient(patient);
 
-                // If this is a multiple primary tumour...
-                String mpCodeString = (String) tumour.getVariable("MPcode");
+                if (io.isDataFromPreviousCanReg()) {
+                    // set update date for the patient the same as for the tumour
+                    Object updateDate = tumour.getVariable(io.getTumourUpdateDateVariableName());
+                    patient.setVariable(io.getPatientUpdateDateVariableName(), updateDate);
 
-                if (mpCodeString != null && mpCodeString.length() > 0) {
-                    patientDatabaseIDNumber = lookUpPatientID(mpCodeString, patientDatabaseIDNumber, mpCodes);
+                    // Set the patientID the same as the tumourID initially
+                    Object patientID = tumour.getVariable(io.getTumourIDVariablename());
+                    Object patientRecordID = patientID;
+
+                    // And store the record ID
+                    patient.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
+
+                    // If this is a multiple primary tumour...
+                    String mpCodeString = (String) tumour.getVariable(io.getMultiplePrimaryVariableName());
+                    if (mpCodeString != null && mpCodeString.length() > 0) {
+                        patientID = lookUpPatientID(mpCodeString, patientID, mpCodes);
+                    }
+                    //
+                    patient.setVariable(io.getPatientIDVariableName(), patientID);
+
+                    // Set the patient ID number on the tumour
+                    tumour.setVariable(io.getPatientIDTumourTableVariableName(), patientID);
+                    tumour.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
+
+                    // Set the deprecated flag to 0 - no obsolete records from CR4
+                    tumour.setVariable(io.getObsoleteTumourFlagVariableName(), 0);
+                    patient.setVariable(io.getObsoletePatientFlagVariableName(), 0);
                 }
-                
-                //Set the patient ID number 
-                tumour.setVariable("PatientID",patientDatabaseIDNumber);
+
+                patientDatabaseRecordID = server.savePatient(patient);
                 tumourDatabaseIDNumber = server.saveTumour(tumour);
-                
-                //Set the tumour ID number
-                patient.setVariable("TumourID", tumourDatabaseIDNumber);
-                patient.setVariable("id", patientDatabaseIDNumber);
-                // and update it
-                server.editPatient(patient);
-                
+
                 //Read next line of data
                 line = bufferedReader.readLine();
                 numberOfLinesRead++;
+
+                if (Thread.interrupted()) {
+                    //We've been interrupted: no more importing.
+                    throw new InterruptedException();
+                }
             }
-
-
             success = true;
         } catch (IOException ex) {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+            success = false;
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+            success = false;
+        } catch (InterruptedException ex) {
+            success = true;
         } finally {
             if (bufferedReader != null) {
                 try {
@@ -305,17 +212,17 @@ public class Import {
 
     private static void debugOut(String msg) {
         if (debug) {
-            System.out.println("\t[QueryGenerator] " + msg);
+            Logger.getLogger(Import.class.getName()).log(Level.INFO, msg);
         }
     }
 
-    private static int lookUpPatientID(String mpCodeString, int patientIDNumber, HashMap mpCodes) {
+    private static Object lookUpPatientID(String mpCodeString, Object patientIDNumber, HashMap mpCodes) {
         Object IDNumberObj = mpCodes.get(mpCodeString);
-        int id = patientIDNumber;
+        Object id = patientIDNumber;
         if (IDNumberObj == null) {
             mpCodes.put(mpCodeString, patientIDNumber);
         } else {
-            id = (Integer) IDNumberObj;
+            id = IDNumberObj;
         }
         return id;
     }

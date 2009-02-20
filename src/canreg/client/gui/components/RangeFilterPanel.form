@@ -7,6 +7,7 @@
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="2"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
@@ -64,6 +65,8 @@
             <TitledBorder title="Range"/>
           </Border>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" resourceKey="rangePanel.toolTipText"/>
+        <Property name="enabled" type="boolean" value="false"/>
         <Property name="name" type="java.lang.String" value="rangePanel" noResource="true"/>
       </Properties>
 
@@ -99,6 +102,7 @@
                 <StringItem index="2" value="Names"/>
               </StringArray>
             </Property>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="rangeComboBox" noResource="true"/>
           </Properties>
         </Component>
@@ -114,6 +118,7 @@
           <SubComponents>
             <Component class="javax.swing.JTextField" name="rangeStartTextField">
               <Properties>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="rangeStartTextField" noResource="true"/>
               </Properties>
               <Constraints>
@@ -124,6 +129,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="rangeEndTextField">
               <Properties>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="rangeEndTextField" noResource="true"/>
               </Properties>
               <Constraints>
@@ -281,9 +287,9 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="3">
-                <StringItem index="0" value="Both"/>
+                <StringItem index="0" value="Tumour"/>
                 <StringItem index="1" value="Patient"/>
-                <StringItem index="2" value="Tumour"/>
+                <StringItem index="2" value="Both"/>
               </StringArray>
             </Property>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">

@@ -47,8 +47,10 @@ public class CheckAgeTopography implements CheckInterface {
         int topographyNumber = 0;
 
         try {
+            result.addVariableInvolved(Globals.StandardVariableNames.Age);
             ageCode = variables.get(Globals.StandardVariableNames.Age).toString();
             ageNumber = Integer.parseInt(ageCode);
+            result.addVariableInvolved(Globals.StandardVariableNames.Topography);
             topographyCode = variables.get(Globals.StandardVariableNames.Topography).toString();
             topographyNumber = Integer.parseInt(topographyCode);
         } catch (NumberFormatException numberFormatException) {

@@ -82,10 +82,13 @@ public class CheckBasis implements CheckInterface {
         String morphologyCode = null;
         
         try {
+            result.addVariableInvolved(Globals.StandardVariableNames.BasisDiagnosis);
             basisCode = variables.get(Globals.StandardVariableNames.BasisDiagnosis).toString();
             int basisNumber = Integer.parseInt(basisCode);
+            result.addVariableInvolved(Globals.StandardVariableNames.Morphology);
             morphologyCode = variables.get(Globals.StandardVariableNames.Morphology).toString();
             morphologyNumber = Integer.parseInt(morphologyCode);
+            result.addVariableInvolved(Globals.StandardVariableNames.Topography);
             String topographyCode = variables.get(Globals.StandardVariableNames.Topography).toString();
             topographyNumber = Integer.parseInt(topographyCode);            
         } catch (NumberFormatException numberFormatException) {

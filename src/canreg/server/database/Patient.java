@@ -19,9 +19,9 @@ public class Patient extends DatabaseRecord implements Serializable {
      public Patient(){
         super();
      }
-     
+
     @Override
      public String toString(){
-        return "Patient";
+        return "Patient Record";
      }
 }

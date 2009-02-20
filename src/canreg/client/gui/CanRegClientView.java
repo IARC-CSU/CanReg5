@@ -10,14 +10,12 @@ import canreg.client.gui.analysis.ExportReportInternalFrame;
 import canreg.client.gui.dataentry.ImportView;
 import canreg.client.*;
 import canreg.client.gui.dataentry.EditDictionaryInternalFrame;
-import canreg.client.gui.StandardDialog;
-import canreg.client.gui.WelcomeInternalFrame;
 import canreg.client.gui.analysis.FrequenciesByYearInternalFrame;
 import canreg.client.gui.dataentry.PDSChooserInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
 import canreg.client.gui.management.RestoreInternalFrame;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
-import canreg.client.gui.tools.CanReg4SystemConverterInternalFrame;
+import canreg.client.gui.management.CanReg4SystemConverterInternalFrame;
 import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Patient;
@@ -177,14 +175,12 @@ public class CanRegClientView extends FrameView {
         toolBar = new javax.swing.JToolBar();
         browseEditButton = new javax.swing.JButton();
         jSeparator12 = new javax.swing.JToolBar.Separator();
-        startDatabaseServerButton = new javax.swing.JButton();
-        jSeparator13 = new javax.swing.JToolBar.Separator();
         optionsButton = new javax.swing.JButton();
         jSeparator14 = new javax.swing.JToolBar.Separator();
-        installSystemButton = new javax.swing.JButton();
-        jSeparator15 = new javax.swing.JToolBar.Separator();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jSeparator13 = new javax.swing.JToolBar.Separator();
+        jButton3 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         desktopPane = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
@@ -261,16 +257,6 @@ public class CanRegClientView extends FrameView {
         jSeparator12.setName("jSeparator12"); // NOI18N
         toolBar.add(jSeparator12);
 
-        startDatabaseServerButton.setAction(actionMap.get("startDatabaseServer")); // NOI18N
-        startDatabaseServerButton.setFocusable(false);
-        startDatabaseServerButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        startDatabaseServerButton.setName("startDatabaseServerButton"); // NOI18N
-        startDatabaseServerButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(startDatabaseServerButton);
-
-        jSeparator13.setName("jSeparator13"); // NOI18N
-        toolBar.add(jSeparator13);
-
         optionsButton.setAction(actionMap.get("showOptionFrame")); // NOI18N
         optionsButton.setFocusable(false);
         optionsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -281,18 +267,8 @@ public class CanRegClientView extends FrameView {
         jSeparator14.setName("jSeparator14"); // NOI18N
         toolBar.add(jSeparator14);
 
-        installSystemButton.setAction(actionMap.get("installSystemAction")); // NOI18N
-        installSystemButton.setText(resourceMap.getString("installSystemButton.text")); // NOI18N
-        installSystemButton.setFocusable(false);
-        installSystemButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        installSystemButton.setName("installSystemButton"); // NOI18N
-        installSystemButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(installSystemButton);
-
-        jSeparator15.setName("jSeparator15"); // NOI18N
-        toolBar.add(jSeparator15);
-
         jButton1.setAction(actionMap.get("showLastRecord")); // NOI18N
+        jButton1.setToolTipText(resourceMap.getString("jButton1.toolTipText")); // NOI18N
         jButton1.setFocusable(false);
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton1.setName("jButton1"); // NOI18N
@@ -305,6 +281,16 @@ public class CanRegClientView extends FrameView {
         jButton2.setName("jButton2"); // NOI18N
         jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(jButton2);
+
+        jSeparator13.setName("jSeparator13"); // NOI18N
+        toolBar.add(jSeparator13);
+
+        jButton3.setAction(actionMap.get("showCanRegHelpFile")); // NOI18N
+        jButton3.setFocusable(false);
+        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton3.setName("jButton3"); // NOI18N
+        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(jButton3);
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
@@ -395,6 +381,7 @@ public class CanRegClientView extends FrameView {
         analysisMenu.add(frequenciesMenuItem);
 
         incidenceTablesMenuItem.setText(resourceMap.getString("incidenceTablesMenuItem.text")); // NOI18N
+        incidenceTablesMenuItem.setEnabled(false);
         incidenceTablesMenuItem.setName("incidenceTablesMenuItem"); // NOI18N
         analysisMenu.add(incidenceTablesMenuItem);
 
@@ -426,6 +413,7 @@ public class CanRegClientView extends FrameView {
         managementMenu.add(jSeparator7);
 
         jMenu1.setText(resourceMap.getString("jMenu1.text")); // NOI18N
+        jMenu1.setEnabled(false);
         jMenu1.setName("jMenu1"); // NOI18N
 
         nameSexMenuItem.setAction(actionMap.get("showNameSexAction")); // NOI18N
@@ -444,6 +432,7 @@ public class CanRegClientView extends FrameView {
         managementMenu.add(jSeparator6);
 
         usersMenuItem.setText(resourceMap.getString("usersMenuItem.text")); // NOI18N
+        usersMenuItem.setEnabled(false);
         usersMenuItem.setName("usersMenuItem"); // NOI18N
         managementMenu.add(usersMenuItem);
 
@@ -592,12 +581,9 @@ public class CanRegClientView extends FrameView {
         WelcomeInternalFrame welcomeInternalFrame = new WelcomeInternalFrame(this);
 
         desktopPane.add(welcomeInternalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        // System.out.println("coucou");
         Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
         welcomeInternalFrame.setVisible(true);
         welcomeInternalFrame.setLocation(scr.width / 2 - welcomeInternalFrame.getWidth() / 2, scr.height / 2 - welcomeInternalFrame.getHeight() / 2 - 142);
-        // debugOut(mainFrame.getWidth() / 2 + " " + mainFrame.getHeight() / 2);
-
         welcomeInternalFrame.setDesktopPane(desktopPane);
 
     }
@@ -703,7 +689,7 @@ public class CanRegClientView extends FrameView {
 
     private static void debugOut(String msg) {
         if (debug) {
-            System.out.println("\t[CanRegClientView] " + msg);
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.INFO, msg);
         }
     }
 
@@ -836,7 +822,7 @@ public class CanRegClientView extends FrameView {
         //toolbar buttons        
         // a bit too drastic : toolBar.setVisible(loggedIn);
         browseEditButton.setEnabled(analysis);
-        startDatabaseServerButton.setEnabled(management);
+        // startDatabaseServerButton.setEnabled(management);
         //Menus
         analysisMenu.setEnabled(analysis);
         managementMenu.setEnabled(management);
@@ -848,7 +834,7 @@ public class CanRegClientView extends FrameView {
             toolsMenu.setEnabled(!loggedIn);
             restoreMenuItem.setEnabled(false);
             // We show the install system button if we are not logged in to a remote server...
-            installSystemButton.setEnabled((userRightsLevel == Globals.UserRightLevels.NOT_LOGGED_IN));
+            // installSystemButton.setEnabled((userRightsLevel == Globals.UserRightLevels.NOT_LOGGED_IN));
         } else {
             toolsMenu.setEnabled(true);
             restoreMenuItem.setEnabled(true);
@@ -1007,7 +993,8 @@ public class CanRegClientView extends FrameView {
      */
     @Action
     public void convertCanReg4SystemAction() {
-        JInternalFrame internalFrame = new CanReg4SystemConverterInternalFrame();
+        CanReg4SystemConverterInternalFrame internalFrame = new CanReg4SystemConverterInternalFrame();
+        internalFrame.setDesktopPane(desktopPane);
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
@@ -1026,15 +1013,16 @@ public class CanRegClientView extends FrameView {
     @Action
     public void showLastRecord() {
         RecordEditor internalFrame = new RecordEditor(desktopPane);
-        internalFrame.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
+        internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord patientRecord = null;
         DatabaseRecord[] tumourRecords;
         try {
-            int patientID=1;
+            int patientID = 1;
             patientRecord = CanRegClientApp.getApplication().getRecord(patientID,"patient");
+
             internalFrame.addRecord(patientRecord);
-            tumourRecords = CanRegClientApp.getApplication().getRecordsFromOtherTableBasedOnID(patientID+"", "patient");
+            tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID+"");
             for (DatabaseRecord rec : tumourRecords){
                 internalFrame.addRecord(rec);
             }
@@ -1065,7 +1053,7 @@ public class CanRegClientView extends FrameView {
     @Action
     public void createNewRecordSetAction() {
         RecordEditor internalFrame = new RecordEditor(desktopPane);
-        internalFrame.setDocument(CanRegClientApp.getApplication().getDatabseDescription());
+        internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
         internalFrame.addRecord(new Tumour());
         internalFrame.addRecord(new Patient());
@@ -1116,9 +1104,9 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem icdo3ManualMenuItem;
     private javax.swing.JMenuItem importDataMenuItem;
     private javax.swing.JMenuItem incidenceTablesMenuItem;
-    private javax.swing.JButton installSystemButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem16;
@@ -1131,7 +1119,6 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JToolBar.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator13;
     private javax.swing.JToolBar.Separator jSeparator14;
-    private javax.swing.JToolBar.Separator jSeparator15;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
@@ -1151,7 +1138,6 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem optionsMenuItem;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JMenuItem restoreMenuItem;
-    private javax.swing.JButton startDatabaseServerButton;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;

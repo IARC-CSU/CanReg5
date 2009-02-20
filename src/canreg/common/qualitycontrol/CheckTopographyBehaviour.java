@@ -49,8 +49,10 @@ public class CheckTopographyBehaviour implements CheckInterface {
         int topographyNumber = 0;
 
         try {
+            result.addVariableInvolved(Globals.StandardVariableNames.Behaviour);
             behaviourCode = variables.get(Globals.StandardVariableNames.Behaviour).toString();
             behaviourNumber = Integer.parseInt(behaviourCode);
+            result.addVariableInvolved(Globals.StandardVariableNames.Topography);
             topographyCode = variables.get(Globals.StandardVariableNames.Topography).toString();
             topographyNumber = Integer.parseInt(topographyCode);
         } catch (NumberFormatException numberFormatException) {

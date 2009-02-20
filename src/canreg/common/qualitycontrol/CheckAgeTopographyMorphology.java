@@ -51,10 +51,13 @@ public class CheckAgeTopographyMorphology implements CheckInterface {
         int topographyNumber = 0;
 
         try {
+            result.addVariableInvolved(Globals.StandardVariableNames.Age);
             ageCode = variables.get(Globals.StandardVariableNames.Age).toString();
             ageNumber = Integer.parseInt(ageCode);
+            result.addVariableInvolved(Globals.StandardVariableNames.Topography);
             topographyCode = variables.get(Globals.StandardVariableNames.Topography).toString();
             topographyNumber = Integer.parseInt(topographyCode);
+            result.addVariableInvolved(Globals.StandardVariableNames.Morphology);
             morphologyCode = variables.get(Globals.StandardVariableNames.Morphology).toString();
             morphologyNumber = Integer.parseInt(morphologyCode);
         } catch (NumberFormatException numberFormatException) {

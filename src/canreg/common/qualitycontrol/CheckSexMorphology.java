@@ -85,10 +85,13 @@ public class CheckSexMorphology implements CheckInterface {
         int behaviourNumber = 0;
 
         try {
+            result.addVariableInvolved(Globals.StandardVariableNames.Sex);
             sexCode = variables.get(Globals.StandardVariableNames.Sex).toString();
             sexNumber = Integer.parseInt(sexCode);
+            result.addVariableInvolved(Globals.StandardVariableNames.Morphology);
             morphologyCode = variables.get(Globals.StandardVariableNames.Morphology).toString();
             morphologyNumber = Integer.parseInt(morphologyCode);
+            result.addVariableInvolved(Globals.StandardVariableNames.Behaviour);
             behaviourCode = variables.get(Globals.StandardVariableNames.Behaviour).toString();
         } catch (NumberFormatException numberFormatException) {
             result.setResultCode(CheckResult.ResultCode.Invalid);
@@ -119,7 +122,7 @@ public class CheckSexMorphology implements CheckInterface {
         String morphologyFamilyString = morphologicalFamiliesMap.get(morphologyCode);
         
         if (morphologyFamilyString==null){
-            System.out.println("not a valid morph code? " + morphologyCode);    
+            Logger.getLogger(CheckSexMorphology.class.getName()).log(Level.WARNING, "not a valid morph code? " + morphologyCode);
         } else {
             try {
                 morphologyFamily = Integer.parseInt(morphologyFamilyString.substring(1, 3));

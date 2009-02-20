@@ -222,7 +222,6 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
 private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseClickHandler
     DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
     if (dbvle.getVariableType().equalsIgnoreCase("dict")) {
-        // System.out.println("Coucou");
         if (possibleValuesMap == null) {
             JOptionPane.showInternalMessageDialog(this, "Empty dictionary.", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
@@ -239,7 +238,6 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
             valueTextField.setText(selectedValue.getCode());
         }
     } else {
-        // System.out.println(dbvle.getVariableType());
         // Do nothing
     }
 }//GEN-LAST:event_mouseClickHandler

@@ -21,6 +21,6 @@ public class Tumour extends DatabaseRecord implements Serializable {
      
      @Override
      public String toString(){
-        return "Tumour";
+        return "Tumour Record";
      }
 }

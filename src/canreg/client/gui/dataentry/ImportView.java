@@ -6,23 +6,28 @@
 package canreg.client.gui.dataentry;
 
 import canreg.client.LocalSettings;
-import canreg.client.gui.dataentry.VariableMappingPanel;
 import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.client.dataentry.Import;
 import canreg.client.dataentry.ImportOptions;
 import canreg.client.dataentry.Relation;
+import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
@@ -55,12 +60,16 @@ public class ImportView extends javax.swing.JInternalFrame {
     private JFileChooser chooser;
     private String path;
     private LocalSettings localSettings;
+    private GlobalToolBox globalToolBox;
+    private Task importTask;
 
     /** Creates new form ImportView */
     public ImportView() {
 
         initComponents();
         previewPanel.setVisible(false);
+
+        globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
 
         changeTab(0);
 
@@ -94,6 +103,11 @@ public class ImportView extends javax.swing.JInternalFrame {
         doc = CanRegClientApp.getApplication().getDatabseDescription();
         variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
 
+        // get the available charsets
+        SortedMap<String, Charset> charsets = Charset.availableCharsets();
+        charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(charsets.values().toArray()));
+        // set the default mapping
+        charsetsComboBox.setSelectedItem(globalToolBox.getStandardCharset());
     // initializeVariableMappingTab();
     }
 
@@ -124,7 +138,6 @@ public class ImportView extends javax.swing.JInternalFrame {
 
         tabbedPane = new javax.swing.JTabbedPane();
         chooseFilePanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         fileNameTextField = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
         previewPanel = new javax.swing.JPanel();
@@ -133,10 +146,12 @@ public class ImportView extends javax.swing.JInternalFrame {
         numberOfRecordsLabel = new javax.swing.JLabel();
         numberOfRecordsTextField = new javax.swing.JTextField();
         previewButton = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        fileLabel = new javax.swing.JLabel();
         separatingCharacterComboBox = new javax.swing.JComboBox();
-        jLabel5 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        separatingCharacterLabel = new javax.swing.JLabel();
+        autodetectButton = new javax.swing.JButton();
+        fileEncodingLabel = new javax.swing.JLabel();
+        charsetsComboBox = new javax.swing.JComboBox();
         associateVariablesPanel = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         variablesScrollPane = new javax.swing.JScrollPane();
@@ -181,8 +196,6 @@ public class ImportView extends javax.swing.JInternalFrame {
         tabbedPane.setName("tabbedPane"); // NOI18N
 
         chooseFilePanel.setName("chooseFilePanel"); // NOI18N
-
-        jLabel1.setName("jLabel1"); // NOI18N
 
         fileNameTextField.setName("fileNameTextField"); // NOI18N
         fileNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -233,26 +246,33 @@ public class ImportView extends javax.swing.JInternalFrame {
                     .addComponent(numberOfRecordsLabel)
                     .addComponent(numberOfRecordsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
+                .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE))
         );
 
         previewButton.setAction(actionMap.get("previewAction")); // NOI18N
         previewButton.setName("previewButton"); // NOI18N
 
-        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
-        jLabel3.setName("jLabel3"); // NOI18N
+        fileLabel.setText(resourceMap.getString("fileLabel.text")); // NOI18N
+        fileLabel.setName("fileLabel"); // NOI18N
 
         separatingCharacterComboBox.setEditable(true);
         separatingCharacterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tab", "Comma" }));
         separatingCharacterComboBox.setAction(actionMap.get("comboBoxChanged")); // NOI18N
         separatingCharacterComboBox.setName("separatingCharacterComboBox"); // NOI18N
 
-        jLabel5.setText(resourceMap.getString("jLabel5.text")); // NOI18N
-        jLabel5.setName("jLabel5"); // NOI18N
+        separatingCharacterLabel.setText(resourceMap.getString("separatingCharacterLabel.text")); // NOI18N
+        separatingCharacterLabel.setName("separatingCharacterLabel"); // NOI18N
 
-        jButton1.setAction(actionMap.get("autodetectSeparatingCharacterAction")); // NOI18N
-        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
+        autodetectButton.setAction(actionMap.get("autodetectSeparatingCharacterAction")); // NOI18N
+        autodetectButton.setText(resourceMap.getString("autodetectButton.text")); // NOI18N
+        autodetectButton.setToolTipText(resourceMap.getString("autodetectButton.toolTipText")); // NOI18N
+        autodetectButton.setName("autodetectButton"); // NOI18N
+
+        fileEncodingLabel.setText(resourceMap.getString("fileEncodingLabel.text")); // NOI18N
+        fileEncodingLabel.setName("fileEncodingLabel"); // NOI18N
+
+        charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        charsetsComboBox.setName("charsetsComboBox"); // NOI18N
 
         javax.swing.GroupLayout chooseFilePanelLayout = new javax.swing.GroupLayout(chooseFilePanel);
         chooseFilePanel.setLayout(chooseFilePanelLayout);
@@ -264,22 +284,25 @@ public class ImportView extends javax.swing.JInternalFrame {
                     .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(chooseFilePanelLayout.createSequentialGroup()
                         .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, chooseFilePanelLayout.createSequentialGroup()
-                                .addComponent(jLabel3)
+                                .addComponent(fileLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(fileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, chooseFilePanelLayout.createSequentialGroup()
-                                .addComponent(jLabel5)
+                            .addGroup(chooseFilePanelLayout.createSequentialGroup()
+                                .addComponent(fileEncodingLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(separatingCharacterComboBox, 0, 356, Short.MAX_VALUE)))
+                                .addComponent(charsetsComboBox, 0, 229, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(separatingCharacterLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(separatingCharacterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(chooseFilePanelLayout.createSequentialGroup()
                                 .addComponent(browseButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(previewButton))
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(autodetectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         chooseFilePanelLayout.setVerticalGroup(
@@ -287,16 +310,17 @@ public class ImportView extends javax.swing.JInternalFrame {
             .addGroup(chooseFilePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
                     .addComponent(previewButton)
                     .addComponent(browseButton)
-                    .addComponent(jLabel3)
+                    .addComponent(fileLabel)
                     .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
+                    .addComponent(autodetectButton)
                     .addComponent(separatingCharacterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(separatingCharacterLabel)
+                    .addComponent(fileEncodingLabel)
+                    .addComponent(charsetsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -349,7 +373,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -362,16 +386,20 @@ public class ImportView extends javax.swing.JInternalFrame {
 
         discrepanciesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Discrepancies"));
         discrepanciesPanel.setToolTipText(resourceMap.getString("discrepanciesPanel.toolTipText")); // NOI18N
+        discrepanciesPanel.setEnabled(false);
         discrepanciesPanel.setName("discrepanciesPanel"); // NOI18N
 
         rejectRadioButton.setText(resourceMap.getString("rejectRadioButton.text")); // NOI18N
+        rejectRadioButton.setEnabled(false);
         rejectRadioButton.setName("rejectRadioButton"); // NOI18N
 
         updateRadioButton.setSelected(true);
         updateRadioButton.setText(resourceMap.getString("updateRadioButton.text")); // NOI18N
+        updateRadioButton.setEnabled(false);
         updateRadioButton.setName("updateRadioButton"); // NOI18N
 
         overwriteRadioButton.setText(resourceMap.getString("overwriteRadioButton.text")); // NOI18N
+        overwriteRadioButton.setEnabled(false);
         overwriteRadioButton.setName("overwriteRadioButton"); // NOI18N
 
         javax.swing.GroupLayout discrepanciesPanelLayout = new javax.swing.GroupLayout(discrepanciesPanel);
@@ -401,16 +429,19 @@ public class ImportView extends javax.swing.JInternalFrame {
 
         doChecksCheckBox.setText(resourceMap.getString("doChecksCheckBox.text")); // NOI18N
         doChecksCheckBox.setToolTipText(resourceMap.getString("doChecksCheckBox.toolTipText")); // NOI18N
+        doChecksCheckBox.setEnabled(false);
         doChecksCheckBox.setName("doChecksCheckBox"); // NOI18N
 
         personSearchCheckBox.setSelected(true);
         personSearchCheckBox.setText(resourceMap.getString("personSearchCheckBox.text")); // NOI18N
         personSearchCheckBox.setToolTipText(resourceMap.getString("personSearchCheckBox.toolTipText")); // NOI18N
+        personSearchCheckBox.setEnabled(false);
         personSearchCheckBox.setName("personSearchCheckBox"); // NOI18N
 
         queryNewNameCheckBox.setSelected(true);
         queryNewNameCheckBox.setText(resourceMap.getString("queryNewNameCheckBox.text")); // NOI18N
         queryNewNameCheckBox.setToolTipText(resourceMap.getString("queryNewNameCheckBox.toolTipText")); // NOI18N
+        queryNewNameCheckBox.setEnabled(false);
         queryNewNameCheckBox.setName("queryNewNameCheckBox"); // NOI18N
 
         previousCanRegDataCheckBox.setSelected(true);
@@ -516,7 +547,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(importButton)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Import File", importFilePanel);
@@ -550,7 +581,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -614,7 +645,16 @@ public class ImportView extends javax.swing.JInternalFrame {
      */
     @Action
     public void cancelAction() {
-        this.dispose();
+        if (importTask != null) {
+            if (JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you really want to cancel the import process?", "Please confirm.", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                importTask.cancel(true);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Import of file interupted.", "Warning.", JOptionPane.WARNING_MESSAGE);
+                importTask = null;
+                this.dispose();
+            }
+        } else {
+            this.dispose();
+        }
     }
 
     /**
@@ -626,20 +666,21 @@ public class ImportView extends javax.swing.JInternalFrame {
         localSettings.setProperty("import_path", path);
         localSettings.writeSettings();
         progressBar.setStringPainted(true);
+        importButton.setEnabled(false);
         // this.dispose();
-        Task task = new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
-        task.addPropertyChangeListener(new PropertyChangeListener() {
+        importTask = new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+        importTask.addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("progress".equals(evt.getPropertyName())) {
                     progressBar.setValue((Integer) evt.getNewValue());
-                    progressBar.setString(evt.getNewValue().toString());
+                    progressBar.setString(evt.getNewValue().toString() + "%");
                 } else if ("finished".equals(evt.getPropertyName())) {
                     dispose();
                 }
             }
         });
-        return task;
+        return importTask;
     }
 
     private class ImportActionTask extends org.jdesktop.application.Task<Object, Void> {
@@ -656,20 +697,29 @@ public class ImportView extends javax.swing.JInternalFrame {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
+            boolean success = false;
             try {
                 // Calls the client app import action with the file parameters provided,
-                CanRegClientApp.getApplication().importFile(this, doc, buildMap(), inFile, buildImportOptions());
+                success = CanRegClientApp.getApplication().importFile(this, doc, buildMap(), inFile, buildImportOptions());
             } catch (RemoteException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                success = false;
             }
-            return null;  // return your result
+            return success;  // return your result
         }
 
         @Override
         protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully imported file " + inFile.getAbsolutePath() + ".", "File successfully imported", JOptionPane.INFORMATION_MESSAGE);
+            if (!(Boolean) result) {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Something wrong with the file " + inFile.getAbsolutePath() + ".", "File NOT successfully imported", JOptionPane.WARNING_MESSAGE);
+            } else {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully imported file " + inFile.getAbsolutePath() + ".", "File successfully imported", JOptionPane.INFORMATION_MESSAGE);
+            }
+            importTask = null;
         }
     }
 
@@ -686,7 +736,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 br = new BufferedReader(new FileReader(inFile));
                 String line = br.readLine();
 //                String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
-                String[] lineElements = line.split(getSeparator());
+                String[] lineElements = canreg.common.Tools.breakDownLine(getSeparator(), line);
                 // Build variable mapping
                 map = Import.constructRelations(doc, lineElements);
 
@@ -773,17 +823,35 @@ public class ImportView extends javax.swing.JInternalFrame {
         io.setQueryNewNames(queryNewNameCheckBox.isSelected());
         io.setDataFromPreviousCanReg(previousCanRegDataCheckBox.isSelected());
 
+        // Set standard variable names
+        io.setMultiplePrimaryVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimCode.toString()).getDatabaseVariableName());
+        io.setPatientIDTumourTableVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName());
+        io.setPatientIDVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
+        io.setTumourUpdateDateVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString()).getDatabaseVariableName());
+        io.setPatientUpdateDateVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName());
+        io.setTumourIDVariablename(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName());
+        io.setPatientRecordIDVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
+        io.setPatientRecordIDTumourTableVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName());
+        io.setObsoletePatientFlagVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString()).getDatabaseVariableName());
+        io.setObsoleteTumourFlagVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString()).getDatabaseVariableName());
+
+        // Set the characterset
+        io.setFileCharset((Charset) charsetsComboBox.getSelectedItem());
+
         return io;
     }
 
-    private String getSeparator() {
+    private char getSeparator() {
         String sc = separatingCharacterComboBox.getSelectedItem().toString();
+        char schar = ','; // Default
         if (sc.equalsIgnoreCase("Tab")) {
-            sc = new String("\t");
+            schar = '\t';
         } else if (sc.equalsIgnoreCase("Comma")) {
-            sc = new String(",");
+            schar = ',';
+        } else if (sc.length() > 0) {
+            schar = sc.charAt(0);
         }
-        return sc;
+        return schar;
     }
 
     /**
@@ -796,7 +864,8 @@ public class ImportView extends javax.swing.JInternalFrame {
         try {
             changeFile();
             // numberOfRecordsTextField.setText(""+(canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath())-1));
-            br = new BufferedReader(new FileReader(inFile));
+            FileInputStream fis = new FileInputStream(inFile);
+            br = new BufferedReader(new InputStreamReader(fis, (Charset) charsetsComboBox.getSelectedItem()));
             // Read the entire file into the preview area... 
             // Change this to just a part of the file?
             int i = 0;
@@ -841,21 +910,21 @@ public class ImportView extends javax.swing.JInternalFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel associateVariablesPanel;
+    private javax.swing.JButton autodetectButton;
     private javax.swing.JButton backButton;
     private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JComboBox charsetsComboBox;
     private javax.swing.JPanel chooseFilePanel;
     private javax.swing.JPanel discrepanciesPanel;
     private javax.swing.JCheckBox doChecksCheckBox;
+    private javax.swing.JLabel fileEncodingLabel;
+    private javax.swing.JLabel fileLabel;
     private javax.swing.JTextField fileNameTextField;
     private javax.swing.JButton importButton;
     private javax.swing.JPanel importFilePanel;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel7;
@@ -876,6 +945,7 @@ public class ImportView extends javax.swing.JInternalFrame {
     private javax.swing.JCheckBox queryNewNameCheckBox;
     private javax.swing.JRadioButton rejectRadioButton;
     private javax.swing.JComboBox separatingCharacterComboBox;
+    private javax.swing.JLabel separatingCharacterLabel;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JCheckBox testOnlyCheckBox;
     private javax.swing.JRadioButton updateRadioButton;

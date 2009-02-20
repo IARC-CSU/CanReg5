@@ -7,6 +7,8 @@ package canreg.client.gui.tools;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.print.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -41,7 +43,7 @@ public class PrintUtilities implements Printable {
       try {
         printJob.print();
       } catch(PrinterException pe) {
-        System.out.println("Error printing: " + pe);
+          Logger.getLogger(PrintUtilities.class.getName()).log(Level.INFO, "Error printing: " + pe, pe);
       }
   }
 

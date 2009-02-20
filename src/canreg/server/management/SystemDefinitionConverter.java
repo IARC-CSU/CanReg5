@@ -1,6 +1,7 @@
 package canreg.server.management;
 
 import canreg.common.Globals;
+import java.util.Set;
 import javax.swing.JTextField;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
@@ -8,10 +9,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.DataInputStream;
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,10 +23,11 @@ import java.util.logging.Logger;
  *
  * @author ervikm
  */
+
 public class SystemDefinitionConverter {
 
     private String canReg4FileName;
-    private boolean debug = true;
+    private static boolean debug = true;
     private String namespace = "ns3:";
     private Document doc;
     private DataInputStream dataStream;
@@ -31,42 +36,44 @@ public class SystemDefinitionConverter {
     private String registryName;
     private String registryCode;
     private String[] standardVariablesCR4 = {
-        "RegistrationNo",
-        "IncidenceDate",
-        "BirthDate",
-        "Age",
-        "Sex",
-        "Topography",
-        "Morphology",
-        "Behaviour",
-        "BasisDiagnosis",
-        "ICD10",
-        "MultPrimCode",
-        "CheckStatus",
-        "PersonSearch",
-        "RecordSearch",
-        "FirstName",
-        "Surname",
-        "UpdateDate",
-        "Lastcontact",
-        "Grade",
-        "ICCC",
-        "AddressCode",
-        "MultPrimSeq",
-        "MultPrimTot",
-        "Stage",
-        "Source1",
-        "Source2",
-        "Source3",
-        "Source4",
-        "Source5",
-        "Source6"
+        Globals.StandardVariableNames.TumourID.toString(),
+        Globals.StandardVariableNames.IncidenceDate.toString(),
+        Globals.StandardVariableNames.BirthDate.toString(),
+        Globals.StandardVariableNames.Age.toString(),
+        Globals.StandardVariableNames.Sex.toString(),
+        Globals.StandardVariableNames.Topography.toString(),
+        Globals.StandardVariableNames.Morphology.toString(),
+        Globals.StandardVariableNames.Behaviour.toString(),
+        Globals.StandardVariableNames.BasisDiagnosis.toString(),
+        Globals.StandardVariableNames.ICD10.toString(),
+        Globals.StandardVariableNames.MultPrimCode.toString(),
+        Globals.StandardVariableNames.CheckStatus.toString(),
+        Globals.StandardVariableNames.PersonSearch.toString(),
+        Globals.StandardVariableNames.TumourRecordStatus.toString(),
+        Globals.StandardVariableNames.FirstName.toString(),
+        Globals.StandardVariableNames.Surname.toString(),
+        Globals.StandardVariableNames.TumourUpdateDate.toString(),
+        Globals.StandardVariableNames.Lastcontact.toString(),
+        Globals.StandardVariableNames.Grade.toString(),
+        Globals.StandardVariableNames.ICCC.toString(),
+        Globals.StandardVariableNames.AddressCode.toString(),
+        Globals.StandardVariableNames.MultPrimSeq.toString(),
+        Globals.StandardVariableNames.MultPrimTot.toString(),
+        Globals.StandardVariableNames.Stage.toString(),
+        Globals.StandardVariableNames.Source1.toString(),
+        Globals.StandardVariableNames.Source2.toString(),
+        Globals.StandardVariableNames.Source3.toString(),
+        Globals.StandardVariableNames.Source4.toString(),
+        Globals.StandardVariableNames.Source5.toString(),
+        Globals.StandardVariableNames.Source6.toString()
     };
     private String[] dictionaryFontTypeValues = {"Latin", "Asian"};
     private String[] dictionaryTypeValues = {"Simple", "Compound"};
     private String[] fillInStatusValues = {"Optional", "Mandatory", "Automatic", "System"};
     private String[] variableTypeValues = {"Number", "Alpha", "Date", "Dict", "AsianText"};
     private String[] mpCopyValues = {"Must", "Prob", "Intr", "Othr"};
+    private TreeMap<String, String> variableToTableMap;
+    private int recordIDlength;
 
     /**
      * @param args 
@@ -93,6 +100,8 @@ public class SystemDefinitionConverter {
      */
     public String convert(String canReg4FileName) throws FileNotFoundException {
         this.canReg4FileName = canReg4FileName;
+
+        variableToTableMap = new TreeMap<String, String>();
 
         try {
 
@@ -122,42 +131,41 @@ public class SystemDefinitionConverter {
             try {
                 String temp;
                 Element element;
-                Element parentElement;
-
+                Element generalParentElement;
 
                 // Create the general part
                 //
-                parentElement = doc.createElement(namespace + "general");
-                root.appendChild(parentElement);
+                generalParentElement = doc.createElement(namespace + "general");
+                root.appendChild(generalParentElement);
 
                 // Read and add the 3 letter code
                 registryCode = new String(readBytes(3));
                 if (codeTextField != null) {
                     codeTextField.setText(registryCode);
                 }
-                parentElement.appendChild(createElement(namespace + "registry_code", registryCode));
+                generalParentElement.appendChild(createElement(namespace + "registry_code", registryCode));
                 // Read the region code
-                parentElement.appendChild(createElement(namespace + "region_code", readBytes(1)));
+                generalParentElement.appendChild(createElement(namespace + "region_code", readBytes(1)));
                 // Read the Registry name
                 registryName = new String(readText().replace('|', ' '));
                 if (nameTextField != null) {
                     nameTextField.setText(registryName);
                 }
-                parentElement.appendChild(createElement(namespace + "registry_name", registryName));
+                generalParentElement.appendChild(createElement(namespace + "registry_name", registryName));
                 // Read the working language
-                parentElement.appendChild(createElement(namespace + "working_language", readBytes(1)));
+                generalParentElement.appendChild(createElement(namespace + "working_language", readBytes(1)));
 
                 // Create the Dictionary part
                 //
-                parentElement = doc.createElement(namespace + "dictionaries");
-                root.appendChild(parentElement);
+                Element dictionariesParentElement = doc.createElement(namespace + "dictionaries");
+                root.appendChild(dictionariesParentElement);
 
                 int numberOfDictionaries = readNumber(2);
-                System.out.println(numberOfDictionaries);
+                debugOut("Number of dictionaries: " + numberOfDictionaries);
 
                 for (int i = 0; i < numberOfDictionaries; i++) {
                     element = doc.createElement(namespace + "dictionary");
-                    parentElement.appendChild(element);
+                    dictionariesParentElement.appendChild(element);
                     element.appendChild(createElement(namespace + "dictionary_id", "" + i));
                     element.appendChild(createElement(namespace + "name", readText()));
                     element.appendChild(createElement(namespace + "font", dictionaryFontTypeValues[dataStream.readByte()]));
@@ -170,7 +178,7 @@ public class SystemDefinitionConverter {
                         element.appendChild(createElement(namespace + "code_length", "" + readNumber(2)));
                         element.appendChild(createElement(namespace + "category_description_length", "" + readNumber(2)));
                     } else {
-                        System.out.println("Error among the dictionaries...");
+                        debugOut("Error during parsing of the dictionaries...");
                     }
                     element.appendChild(createElement(namespace + "full_dictionary_code_length", "" + readNumber(2)));
                     element.appendChild(createElement(namespace + "full_dictionary_description_length", "" + readNumber(2)));
@@ -178,15 +186,15 @@ public class SystemDefinitionConverter {
 
                 // Create the Groups part
                 //
-                parentElement = doc.createElement(namespace + "groups");
-                root.appendChild(parentElement);
+                Element groupsParentElement = doc.createElement(namespace + "groups");
+                root.appendChild(groupsParentElement);
 
                 int numberOfGroups = readNumber(2);
-                System.out.println(numberOfGroups);
+                debugOut("Number of Groups: " + numberOfGroups);
 
                 for (int i = 0; i < numberOfGroups; i++) {
                     element = doc.createElement(namespace + "group");
-                    parentElement.appendChild(element);
+                    groupsParentElement.appendChild(element);
                     element.appendChild(createElement(namespace + "group_id", "" + i));
                     element.appendChild(createElement(namespace + "name", readText()));
                     //skip unused variables
@@ -198,15 +206,15 @@ public class SystemDefinitionConverter {
 
                 // Create the Variables part
                 //
-                parentElement = doc.createElement(namespace + "variables");
-                root.appendChild(parentElement);
+                Element variablesParentElement = doc.createElement(namespace + "variables");
+                root.appendChild(variablesParentElement);
 
                 int numberOfVariables = readNumber(2);
-                System.out.println(numberOfVariables);
+                debugOut("Number of Variables: " + numberOfVariables);
 
                 for (int i = 0; i < numberOfVariables; i++) {
                     element = doc.createElement(namespace + "variable");
-                    parentElement.appendChild(element);
+                    variablesParentElement.appendChild(element);
 
                     element.appendChild(createElement(namespace + "variable_id", "" + i));
                     element.appendChild(createElement(namespace + "full_name", readText()));
@@ -241,7 +249,7 @@ public class SystemDefinitionConverter {
                         int dictionaryNumber = readNumber(2);
                         Element dictionaryElement = (Element) doc.getElementsByTagName(namespace + "dictionary").item(dictionaryNumber);
                         String dictionaryType = dictionaryElement.getElementsByTagName(namespace + "type").item(0).getTextContent();
-                        // System.out.println(dictionaryElement.getTagName() + " " + dictionaryType);
+                        //  debugOut(dictionaryElement.getTagName() + " " + dictionaryType);
                         element.appendChild(createElement(namespace + "use_dictionary", "" + dictionaryElement.getElementsByTagName(namespace + "name").item(0).getTextContent()));
                         // (0 Simple, 1 Compound)
                         if (dictionaryType.equalsIgnoreCase(dictionaryTypeValues[0])) {
@@ -251,100 +259,61 @@ public class SystemDefinitionConverter {
                             element.appendChild(createElement(namespace + "category_X_pos", "" + readNumber(2)));
                             element.appendChild(createElement(namespace + "category_Y_pos", "" + readNumber(2)));
                         } else {
-                            System.out.println("Invalid dict type...");
+                             debugOut("Invalid dict type...");
                         }
                         element.appendChild(createElement(namespace + "dictionary_X_pos", "" + readNumber(2)));
                         element.appendChild(createElement(namespace + "dictionary_Y_pos", "" + readNumber(2)));
                     } else {
-                        System.out.println("Invalid variable description...");
+                         debugOut("Invalid variable description...");
                     }
                     // Place variable in the right table
                     int groupID = Integer.parseInt(groupIDString);
                     Element groupElement = (Element) doc.getElementsByTagName(namespace + "group").item(groupID);
                     String groupName = groupElement.getElementsByTagName(namespace + "name").item(0).getTextContent();
-                    
-                    if ((groupName.equalsIgnoreCase("patient") || groupName.equalsIgnoreCase("follow up") 
-                            || nameInDatabase.equalsIgnoreCase("PerS")) 
-                            && !(nameInDatabase.equalsIgnoreCase("age"))) {
-                        element.appendChild(createElement(namespace + "table", "Patient"));
+
+                    if ((groupName.equalsIgnoreCase("patient") || groupName.equalsIgnoreCase("follow up") || nameInDatabase.equalsIgnoreCase("PerS")) && !(nameInDatabase.equalsIgnoreCase("age"))) {
+                        element.appendChild(createElement(namespace + "table", Globals.PATIENT_TABLE_NAME));
+                        variableToTableMap.put(nameInDatabase, Globals.PATIENT_TABLE_NAME);
                     } else {
-                        element.appendChild(createElement(namespace + "table", "Tumour"));
+                        element.appendChild(createElement(namespace + "table", Globals.TUMOUR_TABLE_NAME));
+                        variableToTableMap.put(nameInDatabase, Globals.TUMOUR_TABLE_NAME);
                     }
                 }
 
-
-                // Add the new System variables
-                //    private Element createVariable(int variableId, String fullName, String shortName,
-                //    String englishName, int groupID, String fillInStatus, String multiplePrimaryCopy,
-                //    String variableType, int variableLength, int useDictionary, String table, String standardVariableName) {
-                int variableNumber = numberOfVariables;
-
-                // Pointer to Patient from Tumour
-                parentElement.appendChild(
-                        createVariable(variableNumber++, "Patient ID", "PatientID", "PatientID",
-                        -1, "Automatic", "Othr", "Number", -1, -1, "Tumour", "PatientID"));
-                // Pointer to Tumour from Patient
-                parentElement.appendChild(
-                        createVariable(variableNumber++, "Tumour ID", "TumourID", "TumourID",
-                        -1, "Automatic", "Othr", "Number", -1, -1, "Patient", "TumourID"));
-
-                /* moved to the system Variables
-                // Forward and backward pointers...
-                // Pointer to records of the same Tumour information
-                parentElement.appendChild(
-                createVariable(variableNumber++, "Next Tumour Record ID", "NextTumourRecID", "Next Tumour Record ID",
-                -1, "Automatic", "Othr", "Number", -1, -1, "Tumour", "NextTumourID"));
-                parentElement.appendChild(
-                createVariable(variableNumber++, "Last Tumour Record ID", "LastTumourRecID", "Last Tumour Record ID",
-                -1, "Automatic", "Othr", "Number", -1, -1, "Tumour", "LastTumourID"));
-                // Pointer to records of the same Patient information
-                parentElement.appendChild(
-                createVariable(variableNumber++, "Next Patient Record ID", "NextPatientRecID", "Next Patient Record ID",
-                -1, "Automatic", "Othr", "Number", -1, -1, "Patient", "NextPatientID"));
-                parentElement.appendChild(
-                createVariable(variableNumber++, "Last Patient Record ID", "LastPatientRecID", "Last Patient Record ID",
-                -1, "Automatic", "Othr", "Number", -1, -1, "Patient", "LastPatientID"));
-                 */
-
-
-                // Create the Indexes part
-                //
-                parentElement = doc.createElement(namespace + "indexes");
-                root.appendChild(parentElement);
+                // Read the indexes part
+                // We build the doc for this later.
 
                 int numberOfIndexes = readNumber(2);
-                System.out.println(numberOfIndexes);
+                 debugOut("Number of Indexes: "+numberOfIndexes);
+
+                TreeMap<String, LinkedList<String>> indexMap = new TreeMap<String, LinkedList<String>>();
+                // first scan
                 for (int i = 0; i < numberOfIndexes; i++) {
-                    element = doc.createElement(namespace + "index");
-                    parentElement.appendChild(element);
-                    Element childElement = createElement(namespace + "name", readText());
-                    element.appendChild(childElement);
-                    // Add the index to the tumour-table by default...
-                    // look into this to have it pick up the table by looking at the first variable...
-                    childElement = createElement(namespace + "table", "Tumour");
-                    element.appendChild(childElement);                    
+
+                    String indexName = readText();
+                    LinkedList variables = new LinkedList<String>();
+
                     for (int j = 0; j < 3; j++) {
                         int variableIndex = readNumber(2);
-                        if (variableIndex > 0) {
+                        if (variableIndex >= 0) {
                             Element variableElement = (Element) doc.getElementsByTagName(namespace + "variable").item(variableIndex);
                             String variableName = variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent();
-                            Element thisElement = doc.createElement(namespace + "indexed_variable");
-                            element.appendChild(thisElement);
-                            thisElement.appendChild(createElement(namespace + "variable_name", variableName));
+                            variables.add(variableName);
                         }
                     }
+                    indexMap.put(indexName, variables);
                 }
 
                 // Create the Person Search part
                 //
-                parentElement = doc.createElement(namespace + "search_variables");
-                root.appendChild(parentElement);
+                Element searchVariablesParentElement = doc.createElement(namespace + "search_variables");
+                root.appendChild(searchVariablesParentElement);
 
                 int numberOfSearchVarbs = readNumber(2);
-                System.out.println(numberOfSearchVarbs);
+                debugOut("Number of search variables: " + numberOfSearchVarbs);
                 for (int i = 0; i < numberOfSearchVarbs; i++) {
                     element = doc.createElement(namespace + "search_variable");
-                    parentElement.appendChild(element);
+                    searchVariablesParentElement.appendChild(element);
 
                     int variableIndex = readNumber(2);
                     // Element childElement = createElement(namespace + "name", readText());
@@ -357,31 +326,173 @@ public class SystemDefinitionConverter {
                     element.appendChild(createElement(namespace + "weigth", "" + readNumber(2)));
 
                 }
-                parentElement.appendChild(createElement(namespace + "minimum_match", "" + readNumber(2)));
-
+                searchVariablesParentElement.appendChild(createElement(namespace + "minimum_match", "" + readNumber(2)));
 
                 // Create the Standard variable part
                 //
                 int numberOfStandardVarbs = readNumber(2);
-                System.out.println(numberOfStandardVarbs);
+                 debugOut("Number of Standard variables:"+numberOfStandardVarbs);
                 for (int i = 0; i < numberOfStandardVarbs; i++) {
                     int variableIndex = readNumber(2);
                     if (variableIndex > -1) {
                         Element variableElement = (Element) doc.getElementsByTagName(namespace + "variable").item(variableIndex);
-                        // System.out.println(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
+                        //  debugOut(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
                         variableElement.appendChild(createElement(namespace + "standard_variable_name", standardVariablesCR4[i]));
+                        // Grab some information
+                        if (variableIndex == 0){
+                            String recordIDlengthString = variableElement.getElementsByTagName(namespace + "variable_length").item(0).getTextContent();
+                            if (recordIDlengthString!=null){
+                                recordIDlength = Integer.parseInt(recordIDlengthString);
+                            }
+                        }
+                    }
+                }
+
+
+                // Add the new System variables
+                //    private Element createVariable(int variableId, String fullName, String shortName,
+                //    String englishName, int groupID, String fillInStatus, String multiplePrimaryCopy,
+                //    String variableType, int variableLength, int useDictionary, String table, String standardVariableName) {
+                int variableNumber = numberOfVariables;
+
+
+                {
+                    /**
+                     * Obsolete-flags
+                     */
+                    String variableName = Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString();
+                    variablesParentElement.appendChild(
+                            createVariable(variableNumber++, variableName, variableName, variableName,
+                            -1, "Automatic", "Othr", "Number", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                    variableName = Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString();
+                    variablesParentElement.appendChild(
+                            createVariable(variableNumber++, variableName, variableName, variableName,
+                            -1, "Automatic", "Othr", "Number", 1, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                    /**
+                     * PatientID
+                     */
+                    variableName = Globals.StandardVariableNames.PatientID.toString();
+                    variablesParentElement.appendChild(
+                            createVariable(variableNumber++, variableName, variableName, variableName,
+                            -1, "Automatic", "Othr", "Alpha", recordIDlength, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                    /**
+                     * PatientRecordID
+                     */
+                    variableName = Globals.StandardVariableNames.PatientRecordID.toString();
+                    variablesParentElement.appendChild(
+                            createVariable(variableNumber++, variableName, variableName, variableName,
+                            -1, "Automatic", "Othr", "Alpha", recordIDlength, -1, Globals.PATIENT_TABLE_NAME, variableName));
+
+                    /**
+                     * Pointer to Patient from Tumour
+                     */
+                    variableName = Globals.StandardVariableNames.PatientIDTumourTable.toString();
+                    variablesParentElement.appendChild(
+                            createVariable(variableNumber++, variableName, variableName, variableName,
+                            -1, "Automatic", "Othr", "Alpha", recordIDlength, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                    variableName = Globals.StandardVariableNames.PatientRecordIDTumourTable.toString();
+                    variablesParentElement.appendChild(
+                            createVariable(variableNumber++, variableName, variableName, variableName,
+                            -1, "Automatic", "Othr", "Alpha", recordIDlength, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+
+                    /**
+                     * "Updated by" fields
+                     */
+                    variableName = Globals.StandardVariableNames.PatientUpdatedBy.toString();
+                    variablesParentElement.appendChild(
+                            createVariable(variableNumber++, variableName, variableName, variableName,
+                            -1, "Automatic", "Othr", "Alpha", 16, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                    variableName = Globals.StandardVariableNames.TumourUpdatedBy.toString();
+                    variablesParentElement.appendChild(
+                            createVariable(variableNumber++, variableName, variableName, variableName,
+                            -1, "Automatic", "Othr", "Alpha", 16, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+
+                    /**
+                     * Update dates
+                     */
+                    variableName = Globals.StandardVariableNames.PatientUpdateDate.toString();
+                    variablesParentElement.appendChild(
+                            createVariable(variableNumber++, variableName, variableName, variableName,
+                            -1, "Automatic", "Othr", "Number", -1, -1, Globals.PATIENT_TABLE_NAME, variableName));
+
+                    /*
+                     * Record status Patient table
+                     */
+                    variableName = Globals.StandardVariableNames.PatientRecordStatus.toString();
+                    variablesParentElement.appendChild(
+                            createVariable(variableNumber++, variableName, variableName, variableName,
+                            -1, "Automatic", "Othr", "Number", -1, -1, Globals.PATIENT_TABLE_NAME, variableName));
+
+                     /*
+                     * Check status Patient table
+                     */
+                    variableName = Globals.StandardVariableNames.PatientCheckStatus.toString();
+                    variablesParentElement.appendChild(
+                            createVariable(variableNumber++, variableName, variableName, variableName,
+                            -1, "Automatic", "Othr", "Number", -1, -1, Globals.PATIENT_TABLE_NAME, variableName));
+
+                    /*
+                     * Unduplication status Tumour table
+                     */
+                    variableName = Globals.StandardVariableNames.TumourUnduplicationStatus.toString();
+                    variablesParentElement.appendChild(
+                            createVariable(variableNumber++, variableName, variableName, variableName,
+                            -1, "Automatic", "Othr", "Number", -1, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                }
+
+                // Build the indexes
+                Element indexParentElement = doc.createElement(namespace + "indexes");
+                root.appendChild(indexParentElement);
+
+                // Index some important new variables to speed things up
+                LinkedList<String> tempIndexList;
+
+                // Patient ID in tumour table index
+                tempIndexList = new LinkedList<String>();
+                tempIndexList.add(Globals.StandardVariableNames.PatientIDTumourTable.toString());
+                tempIndexList.add(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString());
+                indexMap.put(Globals.StandardVariableNames.PatientIDTumourTable.toString(), tempIndexList);
+
+                // Patient ID in patient table index
+                tempIndexList = new LinkedList<String>();
+                tempIndexList.add(Globals.StandardVariableNames.PatientID.toString());
+                tempIndexList.add(Globals.StandardVariableNames.PatientRecordID.toString());
+                indexMap.put(Globals.StandardVariableNames.PatientID.toString(), tempIndexList);
+
+                // Split the indexes that needs to be split
+                indexMap = splitIndexMapInTumourAndPatient(indexMap, variableToTableMap);
+
+                // then build doc for the indexes
+                Set<String> indexNames = indexMap.keySet();
+                for (String indexName : indexNames) {
+                    String table = null;
+
+                    element = doc.createElement(namespace + "index");
+                    indexParentElement.appendChild(element);
+                    Element childElement = createElement(namespace + "name", indexName);
+                    element.appendChild(childElement);
+
+                    LinkedList<String> variablesInThisIndex = indexMap.get(indexName);
+
+                    String tableOfThisIndex = variableToTableMap.get(variablesInThisIndex.getFirst());
+                    childElement = createElement(namespace + "table", tableOfThisIndex);
+                    element.appendChild(childElement);
+                    for (String variableName : variablesInThisIndex) {
+                        Element thisElement = doc.createElement(namespace + "indexed_variable");
+                        element.appendChild(thisElement);
+                        thisElement.appendChild(createElement(namespace + "variable_name", variableName));
                     }
                 }
 
                 // Create the Miscellaneous part
                 //
-                parentElement = doc.createElement(namespace + "miscellaneous");
-                root.appendChild(parentElement);
+                Element miscellaneousParentElement = doc.createElement(namespace + "miscellaneous");
+                root.appendChild(miscellaneousParentElement);
 
                 Element codingElement = doc.createElement(namespace + "coding");
-                parentElement.appendChild(codingElement);
+                miscellaneousParentElement.appendChild(codingElement);
                 Element settingsElement = doc.createElement(namespace + "settings");
-                parentElement.appendChild(settingsElement);
+                miscellaneousParentElement.appendChild(settingsElement);
 
                 codingElement.appendChild(createElement(namespace + "male_code", readBytes(1)));
                 codingElement.appendChild(createElement(namespace + "female_code", readBytes(1)));
@@ -403,15 +514,18 @@ public class SystemDefinitionConverter {
             } catch (IOException e) {
                 // Nothing to do
             } finally {
-                if (debug) {
-                    canreg.server.xml.Tools.writeXmlFile(doc, Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + registryCode + ".xml");
+
+                File file = new File(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER); // Check to see it the canreg system folder exists
+                if (!file.exists()) {
+                    file.mkdirs(); // create it if necessary
                 }
+                canreg.server.xml.Tools.writeXmlFile(doc, Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + registryCode + ".xml");
                 dataStream.close();
             }
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            System.out.println("Something wrong with the file... " + ex);
+            Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.SEVERE, "Something wrong with the file... ", ex);
         }
         return ("Success");
     }
@@ -438,6 +552,48 @@ public class SystemDefinitionConverter {
      */
     public void setNameField(JTextField nameTextField) {
         this.nameTextField = nameTextField;
+    }
+
+    /**
+     *
+     * @param indexMap A map between the index name and the variables
+     * @param variableToTableMap A map between the variable names and the respective tables.
+     * @return An indexMap built to suit the two table scheme
+     */
+    public static TreeMap<String, LinkedList<String>> splitIndexMapInTumourAndPatient(TreeMap<String, LinkedList<String>> indexMap, TreeMap<String, String> variableToTableMap) {
+        TreeMap<String, LinkedList<String>> newIndexMap = new TreeMap<String, LinkedList<String>>();
+        Set<String> indexesNames = indexMap.keySet();
+        for (String indexName : indexesNames) {
+            String tableName = null;
+            LinkedList<String> variablesInThisTable = new LinkedList<String>();
+            LinkedList<String> variablesInOtherTable = new LinkedList<String>();
+            String otherTableName = null;
+            for (String indexedVariable : indexMap.get(indexName)) {
+                String tableOfThisVariable = variableToTableMap.get(indexedVariable);
+                if (tableName == null) {
+                    tableName = tableOfThisVariable;
+                    variablesInThisTable.add(indexedVariable);
+                } else if (!tableName.equalsIgnoreCase(tableOfThisVariable)) {
+                    otherTableName = tableOfThisVariable;
+                    variablesInOtherTable.add(indexedVariable);
+                } else {
+                    variablesInThisTable.add(indexedVariable);
+                }
+            }
+            if (indexName.endsWith(tableName)) {
+                newIndexMap.put(indexName, variablesInThisTable);
+            } else {
+                newIndexMap.put(indexName + "-" + tableName, variablesInThisTable);
+            }
+            if (variablesInOtherTable.size() > 0) {
+                if (indexName.endsWith(otherTableName)) {
+                    newIndexMap.put(indexName, variablesInOtherTable);
+                } else {
+                    newIndexMap.put(indexName + "-" + otherTableName, variablesInOtherTable);
+                }
+            }
+        }
+        return newIndexMap;
     }
 
     private String translate(String variableName, String value) {
@@ -470,10 +626,11 @@ public class SystemDefinitionConverter {
             element.appendChild(createElement(namespace + "use_dictionary", "" + useDictionary));
         // (0 Simple, 1 Compound)
         } else {
-            System.out.println("Invalid variable description...");
+            debugOut("Invalid variable description...");
         }
         // Place variable in the right table
         element.appendChild(createElement(namespace + "table", table));
+        variableToTableMap.put(shortName, table);
         element.appendChild(createElement(namespace + "standard_variable_name", standardVariableName));
         return element;
     }
@@ -482,6 +639,12 @@ public class SystemDefinitionConverter {
         Element childElement = doc.createElement(variableName);
         childElement.appendChild(doc.createTextNode(value));
         return childElement;
+    }
+
+    private Element changeValueOfChild(Element element, String childName, String newValue){
+        Element childElement = (Element) element.getElementsByTagName(childName).item(0);
+        childElement.setTextContent(newValue);
+        return element;
     }
 
     private String readBytes(int numberOfBytes) throws IOException {
@@ -498,7 +661,7 @@ public class SystemDefinitionConverter {
         int b = dataStream.readByte();
 
         while (b != 0) {
-            // System.out.println(""+b);
+            // debugOut(""+b);
             temp += (char) b;
             b = (char) dataStream.readByte();
         }
@@ -553,5 +716,11 @@ public class SystemDefinitionConverter {
             }
         }
         return value;
+    }
+
+    private static void debugOut(String msg) {
+        if (debug) {
+            Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.INFO, msg);
+        }
     }
 }

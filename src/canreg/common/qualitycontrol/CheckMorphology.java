@@ -70,6 +70,7 @@ public class CheckMorphology implements CheckInterface {
         String morphologyCode = null;
 
         try {
+            result.addVariableInvolved(Globals.StandardVariableNames.Morphology);
             morphologyCode = variables.get(Globals.StandardVariableNames.Morphology).toString();
         } catch (NullPointerException nullPointerException) {
             result.setResultCode(CheckResult.ResultCode.Missing);

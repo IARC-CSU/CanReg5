@@ -155,6 +155,10 @@ public interface CanRegServerInterface extends Remote {
     public void setUserPassword(String username)
             throws RemoteException, SecurityException;
 
+    
+    public boolean deleteRecord(int id, String tableName)
+            throws RemoteException, SecurityException;
+    
     /**
      * 
      * @param username
@@ -215,7 +219,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public int savePatient(Patient patient) throws RemoteException, SecurityException;
+    public int savePatient(Patient patient) throws RemoteException, SecurityException, SQLException;
 
     /**
      * 
@@ -233,7 +237,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public int saveTumour(Tumour tumour) throws RemoteException, SecurityException;
+    public int saveTumour(Tumour tumour) throws RemoteException, SecurityException, SQLException;
 
     /**
      * Store a dictionary entry on the server

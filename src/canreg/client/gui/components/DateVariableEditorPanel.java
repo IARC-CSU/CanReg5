@@ -4,6 +4,8 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import com.toedter.calendar.JDateChooser;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTextField;
 
 /**
@@ -36,7 +38,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             dateField.setFocusable(false);
             dateField.setEditable(false);
         } else if (fillInStatus.equalsIgnoreCase("Mandatory")) {
-            dateField.setBackground(mandatoryMissingColor);
+            dateField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
         }
         setMaximumLength(databaseListElement.getVariableLength());
         
@@ -58,7 +60,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
 
         if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
             if (value.trim().length()==0) {
-                codeTextField.setBackground(mandatoryMissingColor);
+                codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
             } else {
                 codeTextField.setBackground(java.awt.SystemColor.text);
             }
@@ -77,9 +79,9 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                 dateField.setText(value);
             }
         } catch (NumberFormatException numberFormatException) {
-            System.out.println(value);
+            Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, numberFormatException);
         } catch (StringIndexOutOfBoundsException stringIndexOutOfBoundsException) {
-            System.out.println(value);
+            Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, stringIndexOutOfBoundsException);
         }
     }
 

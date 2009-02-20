@@ -2,7 +2,6 @@ package canreg.server;
 
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
-import canreg.common.Globals;
 import canreg.common.Globals.UserRightLevels;
 import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.server.database.CanRegDAO;
@@ -14,11 +13,9 @@ import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
 import canreg.server.database.Tumour;
 import canreg.server.security.ValidateMethodCall;
-import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.security.Principal;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Map;
@@ -35,7 +32,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     private Subject theUser;
 
     public CanRegServerProxy(Subject user, CanRegServerInterface server) throws RemoteException {
-        /** The user associated with this proxy 
+        /** The user associated with this proxy
          */
         this.theUser = user;
         /** A reference to the real server object 
@@ -134,12 +131,12 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return theServer.getDatabseConnection();
     }
 
-    public int savePatient(Patient patient) throws RemoteException, SecurityException {
+    public int savePatient(Patient patient) throws RemoteException, SecurityException, SQLException {
         checkPermission("savePatient");
         return theServer.savePatient(patient);
     }
 
-    public int saveTumour(Tumour tumour) throws RemoteException, SecurityException {
+    public int saveTumour(Tumour tumour) throws RemoteException, SecurityException, SQLException {
         checkPermission("saveTumour");
         return theServer.saveTumour(tumour);
     }
@@ -250,15 +247,17 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
 
     public UserRightLevels getUserRightLevel() throws RemoteException, SecurityException {
         checkPermission("getUserRightLevel");
-        Globals.UserRightLevels level = theServer.getUserRightLevel();
-
         RMILoginPrincipal principal = (RMILoginPrincipal) theUser.getPrincipals().toArray()[0];
+
+        /*
+        Globals.UserRightLevels level = theServer.getUserRightLevel();
         // Ad hoc to test the user levels in the GUI
         String userName = principal.getName();
         if (userName.equalsIgnoreCase("morten")){
             level = Globals.UserRightLevels.SUPERVISOR;
-        }
-        return level;
+        }*/
+
+        return principal.getUserRightLevel();
     }
 
     public Map<Integer, Float> performPersonSearch(Patient patient, PersonSearcher searcher) throws RemoteException, SecurityException {
@@ -269,5 +268,10 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public Map<Integer, Map<Float, Integer>> performGlobalPersonSearch(PersonSearcher searcher) throws RemoteException, SecurityException {
         checkPermission("performGlobalPersonSearch");
         return theServer.performGlobalPersonSearch(searcher);
+    }
+
+    public boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException {
+        checkPermission("deleteRecord"+tableName);
+        return theServer.deleteRecord(id, tableName);
     }
 }

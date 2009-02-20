@@ -57,8 +57,10 @@ public class CheckSexTopography implements CheckInterface {
         int topographyNumber = 0;
 
         try {
+            result.addVariableInvolved(Globals.StandardVariableNames.Sex);
             sexCode = variables.get(Globals.StandardVariableNames.Sex).toString();
             sexNumber = Integer.parseInt(sexCode);
+            result.addVariableInvolved(Globals.StandardVariableNames.Topography);
             topographyCode = variables.get(Globals.StandardVariableNames.Topography).toString();
             topographyNumber = Integer.parseInt(topographyCode);
         } catch (NumberFormatException numberFormatException) {

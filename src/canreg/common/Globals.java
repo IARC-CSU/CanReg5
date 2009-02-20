@@ -1,9 +1,6 @@
 package canreg.common;
 
 import canreg.server.database.AgeGroupStructure;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 
 /**
  *
@@ -11,7 +8,6 @@ import java.util.Properties;
  */
 public class Globals {
 
-    // http://en.wikipedia.org/wiki/Software_versioning
     /**
      * 
      */
@@ -23,7 +19,7 @@ public class Globals {
     /**
      * 
      */
-    static public String downloadCanRegURL = "http://www.iacr.com.fr/iacr_canreg4.htm";
+    static public String downloadCanRegURL = "http://www.iacr.com.fr/CanReg5/CanReg5.zip";
     /**
      * 
      */
@@ -48,6 +44,12 @@ public class Globals {
      * 
      */
     static public String PASS_FILENAME = "Passwords.properties";
+
+    /**
+     *
+     */
+    static public String LEVELS_FILENAME = "Levels.properties";
+    
     /**
      * 
      */
@@ -109,16 +111,42 @@ public class Globals {
      * 
      */
     public static String TUMOUR_TABLE_NAME = "Tumour";
-    /**
-     * 
-     */
     public static String PATIENT_TABLE_NAME = "Patient";
-    // public static String PATIENT_TABLE_NAME = "Patient";
     /**
      * 
      */
     public static String DATE_FORMAT_STRING = "yyyyMMdd";
 
+    static String DATAENTRY_LANGUAGE_ENGLISH = "E";
+    static String DATAENTRY_LANGUAGE_FRENCH = "F";
+    static String DATAENTRY_LANGUAGE_SPANISH = "S";
+    static String DATAENTRY_LANGUAGE_ITALIAN = "I";
+    static String DATAENTRY_LANGUAGE_TURKISH = "T";
+    static String DATAENTRY_LANGUAGE_ROMANIAN = "R";
+    static String DATAENTRY_LANGUAGE_PORTUGUESE = "P";
+    static String DATAENTRY_LANGUAGE_CHINESE = "C";
+    static String DATAENTRY_LANGUAGE_THAI = "H";
+    static String DATAENTRY_LANGUAGE_KOREAN = "K";
+    static String DATAENTRY_LANGUAGE_ARABIC = "A";
+    static String DATAENTRY_LANGUAGE_FARSI = "Z";
+    static String DATAENTRY_LANGUAGE_RUSSIAN = "U";
+    
+    static String CHARSET_ENGLISH = "ISO-8859-1";
+    static String CHARSET_FRENCH = "ISO-8859-1";
+    static String CHARSET_SPANISH = "ISO-8859-1";
+    static String CHARSET_ITALIAN = "ISO-8859-1";
+    static String CHARSET_TURKISH = "ISO-8859-2";
+    static String CHARSET_ROMANIAN = "ISO-8859-2";
+    static String CHARSET_PORTUGUESE = "ISO-8859-1";
+    static String CHARSET_CHINESE = "UTF-8";
+    static String CHARSET_THAI = "ISO-8859-11";
+    static String CHARSET_KOREAN = "UTF-8";
+    static String CHARSET_ARABIC = "ISO-8859-6";
+    static String CHARSET_FARSI = "UTF-8";
+    static String CHARSET_RUSSIAN = "ISO-8859-5";
+    public static String LOGFILE_PATTERN = "%h/canreg5client.log";
+    public static String LOG_LEVEL = "FINEST";
+    
     /**
      * 
      */
@@ -210,7 +238,7 @@ public class Globals {
         /**
          * 
          */
-        RegistrationNo,
+        TumourID,
         /**
          * 
          */
@@ -262,7 +290,7 @@ public class Globals {
         /**
          * 
          */
-        RecordSearch,
+        TumourRecordStatus,
         /**
          * 
          */
@@ -274,9 +302,21 @@ public class Globals {
         /**
          * 
          */
-        UpdateDate,
+        PatientUpdateDate,
         /**
-         * 
+         *
+         */
+        TumourUpdateDate,
+        /**
+         *
+         */
+        PatientUpdatedBy,
+        /**
+         *
+         */
+        TumourUpdatedBy,
+        /**
+         *
          */
         Lastcontact,
         /**
@@ -328,12 +368,44 @@ public class Globals {
          */
         Source6,
         /**
-         * 
+         *
          */
         PatientID,
         /**
+         *
+         */
+        PatientRecordStatus,
+        /**
+         *
+         */
+        PatientCheckStatus,
+        /**
+         * The ID of the patient in the tumour table
+         */
+        PatientIDTumourTable,
+        /**
+         * The ID of the patient record
+         */
+        PatientRecordID,
+        /**
+         * The ID of the patient record in the tumour table
+         */
+        PatientRecordIDTumourTable,
+        /**
          * 
          */
-        TumourID
+        TumourRecordID,
+        /**
+         * 
+         */
+        ObsoleteFlagTumourTable,
+        /**
+         *
+         */
+        ObsoleteFlagPatientTable,
+        /**
+         *
+         */
+        TumourUnduplicationStatus
     }    
 }

@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -179,7 +180,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
             }
         }
         
-        @Override protected Object doInBackground() throws SecurityException, RemoteException, IOException {
+        @Override protected Object doInBackground() throws SecurityException, RemoteException, IOException, SQLException {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
