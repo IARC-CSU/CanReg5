@@ -97,6 +97,7 @@ public class SystemDefinitionConverter {
      * @param canReg4FileName
      * @return
      * @throws java.io.FileNotFoundException
+     * TODO: look into how the translation of non-latin charachers are treated, ie. Turkish. Ref: mail from Cankut Yatuk 16.02.2009
      */
     public String convert(String canReg4FileName) throws FileNotFoundException {
         this.canReg4FileName = canReg4FileName;
