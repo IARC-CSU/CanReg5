@@ -55,7 +55,7 @@ public class Import {
 
             Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + isr.getEncoding());
 
-            int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath()) - 1;
+            int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath());
             bufferedReader = new BufferedReader(isr);
             String line = bufferedReader.readLine();
             // Skip first line

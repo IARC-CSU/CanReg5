@@ -663,6 +663,7 @@ public class ImportView extends javax.swing.JInternalFrame {
      */
     @Action()
     public Task importAction() {
+        // TODO: Add a handler for errors in the file structure...
         localSettings.setProperty("import_path", path);
         localSettings.writeSettings();
         progressBar.setStringPainted(true);

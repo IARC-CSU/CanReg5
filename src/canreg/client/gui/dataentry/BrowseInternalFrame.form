@@ -129,6 +129,7 @@
         <Component class="javax.swing.JButton" name="createNextButton">
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="createNextButton.text"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="createNextButton" noResource="true"/>
           </Properties>
         </Component>
@@ -198,7 +199,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="359" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="363" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>

@@ -1,5 +1,30 @@
-changeset:   121:d93b875f313e
+changeset:   126:bb38c759336f
 tag:         tip
+user:        ervikm@X60112
+date:        Tue Mar 03 18:02:46 2009 +0100
+summary:     Import: fixed bugs during import of a file. The correct number of records read. Log more information when something goes wrong during import.
+
+changeset:   125:f0884d8d73ed
+user:        ervikm@X60112
+date:        Fri Feb 20 11:12:15 2009 +0100
+summary:     Ready for trip to Syria.
+
+changeset:   124:481dbd3a5c24
+user:        ervikm@X60112
+date:        Thu Feb 19 16:16:32 2009 +0100
+summary:     Updated the about.html.
+
+changeset:   123:1227c9216820
+user:        ervikm@X60112
+date:        Fri Feb 06 17:49:59 2009 +0100
+summary:     4.99.2
+
+changeset:   122:2e61b1fcd4e3
+user:        ervikm@X60112
+date:        Fri Feb 06 15:53:28 2009 +0100
+summary:     Fixed a bug where you couldn't regret cancelling an import.
+
+changeset:   121:d93b875f313e
 user:        ervikm@X60112
 date:        Thu Feb 05 18:27:24 2009 +0100
 summary:     Show/hide obsolete records now implemented.

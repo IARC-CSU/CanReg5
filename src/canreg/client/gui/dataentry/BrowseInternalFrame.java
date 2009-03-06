@@ -122,6 +122,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         buttonsPanel.setName("buttonsPanel"); // NOI18N
 
         createNextButton.setText(resourceMap.getString("createNextButton.text")); // NOI18N
+        createNextButton.setEnabled(false);
         createNextButton.setName("createNextButton"); // NOI18N
 
         editTableRecordButton.setText(resourceMap.getString("editTableRecordButton.text")); // NOI18N
@@ -191,7 +192,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 351, Short.MAX_VALUE)
+            .addGap(0, 363, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -394,6 +395,7 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
                 updateVariablesShown();
 
             } catch (SQLException ex) {
+                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showInternalMessageDialog(rootPane, "Not a valid filter.", "Error", JOptionPane.ERROR_MESSAGE);
                 return "Not valid";
             } catch (RemoteException ex) {
