@@ -667,4 +667,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     public void runMultiplePrimarySearch() {
         actionListener.actionPerformed(new ActionEvent(this, 0, "runMP"));
     }
+
+    @Action
+    public void calculateAge() {
+        actionListener.actionPerformed(new ActionEvent(this, 0, "calcAge"));
+    }
 }

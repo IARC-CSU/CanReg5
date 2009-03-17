@@ -696,7 +696,12 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             } else if (e.getActionCommand().equalsIgnoreCase("runMP")) {
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
                 DatabaseRecord databaseRecord = recordEditorPanel.getDatabaseRecord();
-
+                // TODO: implement MP check
+            }
+            else if (e.getActionCommand().equalsIgnoreCase("calcAge")) {
+                RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
+                DatabaseRecord databaseRecord = recordEditorPanel.getDatabaseRecord();
+                // TODO: implement calculate age
             }
         }
     }

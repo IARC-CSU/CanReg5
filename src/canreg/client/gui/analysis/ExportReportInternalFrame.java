@@ -556,7 +556,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             // the Swing GUI from here.
 
             // Here we do indeed reference the jtable. However as long as the user does not move the columns it should be ok...
-
+            // TODO: reference the data source instead of the resultTable!
+            
             String line = "";
 
             try {
