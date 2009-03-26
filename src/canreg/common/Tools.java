@@ -146,6 +146,8 @@ public class Tools {
                 String dictionaryName = e.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
                 int id = canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, dictionaryName);
                 variables[i].setDictionaryID(id);
+                boolean compound = canreg.client.dataentry.DictionaryHelper.isCompoundDictionarybyName(doc, dictionaryName);
+                variables[i].setDictionaryCompound(compound);
                 variables[i].setUseDictionary(dictionaryName);
             }
 
