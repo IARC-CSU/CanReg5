@@ -3,7 +3,6 @@
  *
  * Created on 23 June 2008, 14:07
  */
-
 package canreg.client.gui.components;
 
 import canreg.common.DatabaseVariablesListElement;
@@ -13,55 +12,63 @@ import canreg.common.DatabaseVariablesListElement;
  * @author  ervikm
  */
 public class VariablesExportDetailsPanel extends javax.swing.JPanel {
+
     private DatabaseVariablesListElement variable;
-    
+
     /** Creates new form VariablesExportDetailsPanel */
     public VariablesExportDetailsPanel() {
         initComponents();
     }
-    
-    private void setVariableName(String variableName){
+
+    private void setVariableName(String variableName) {
         variableNameLabel.setText(variableName);
     }
-    
-    private void setVariableType(String type){
-        dictionaryCategoryCheckBox.setVisible(false);
-        dictionaryDescriptionCheckBox.setVisible(false);
+
+    private void setVariableType(String type) {
+
         if (type.equalsIgnoreCase("Dict")) {
             dictionaryDescriptionCheckBox.setVisible(true);
+            if (variable != null && variable.isDictionaryCompound()) {
+                dictionaryCategoryCheckBox.setVisible(true);
+            } else {
+                dictionaryCategoryCheckBox.setVisible(false);
+            }
+        } else {
+            dictionaryCategoryCheckBox.setVisible(false);
+            dictionaryDescriptionCheckBox.setVisible(false);
         }
     }
-    
+
     /**
      * 
      * @param variable
      */
-    public void setVariable(DatabaseVariablesListElement variable){
+    public void setVariable(DatabaseVariablesListElement variable) {
         this.variable = variable;
         setVariableName(variable.getFullName());
         setVariableType(variable.getVariableType());
     }
-    
+
     /**
      * 
      * @param bool
      */
-    public void setDataCheckBox(boolean bool){
+    public void setDataCheckBox(boolean bool) {
         dataCheckBox.setSelected(bool);
     }
-    
+
     /**
      * 
      * @return
      */
     public boolean[] getCheckboxes() {
-        return new boolean[] { dataCheckBox.isSelected(), dictionaryCategoryCheckBox.isSelected(), dictionaryDescriptionCheckBox.isSelected() };
+        return new boolean[]{dataCheckBox.isSelected(), dictionaryCategoryCheckBox.isSelected(), dictionaryDescriptionCheckBox.isSelected()};
     }
 
     DatabaseVariablesListElement getVariable() {
         return variable;
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -86,9 +93,13 @@ public class VariablesExportDetailsPanel extends javax.swing.JPanel {
         dataCheckBox.setName("dataCheckBox"); // NOI18N
 
         dictionaryCategoryCheckBox.setText(resourceMap.getString("dictionaryCategoryCheckBox.text")); // NOI18N
+        dictionaryCategoryCheckBox.setToolTipText(resourceMap.getString("dictionaryCategoryCheckBox.toolTipText")); // NOI18N
+        dictionaryCategoryCheckBox.setEnabled(false);
         dictionaryCategoryCheckBox.setName("dictionaryCategoryCheckBox"); // NOI18N
 
         dictionaryDescriptionCheckBox.setText(resourceMap.getString("dictionaryDescriptionCheckBox.text")); // NOI18N
+        dictionaryDescriptionCheckBox.setToolTipText(resourceMap.getString("dictionaryDescriptionCheckBox.toolTipText")); // NOI18N
+        dictionaryDescriptionCheckBox.setEnabled(false);
         dictionaryDescriptionCheckBox.setName("dictionaryDescriptionCheckBox"); // NOI18N
 
         jSeparator1.setName("jSeparator1"); // NOI18N
@@ -125,8 +136,6 @@ public class VariablesExportDetailsPanel extends javax.swing.JPanel {
                     .addComponent(dictionaryDescriptionCheckBox)))
         );
     }// </editor-fold>//GEN-END:initComponents
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox dataCheckBox;
     private javax.swing.JCheckBox dictionaryCategoryCheckBox;
@@ -134,5 +143,4 @@ public class VariablesExportDetailsPanel extends javax.swing.JPanel {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel variableNameLabel;
     // End of variables declaration//GEN-END:variables
-    
 }

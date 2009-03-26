@@ -7,6 +7,7 @@
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="2"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
@@ -71,12 +72,16 @@
     <Component class="javax.swing.JCheckBox" name="dictionaryCategoryCheckBox">
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="dictionaryCategoryCheckBox.text"/>
+        <Property name="toolTipText" type="java.lang.String" resourceKey="dictionaryCategoryCheckBox.toolTipText"/>
+        <Property name="enabled" type="boolean" value="false"/>
         <Property name="name" type="java.lang.String" value="dictionaryCategoryCheckBox" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JCheckBox" name="dictionaryDescriptionCheckBox">
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="dictionaryDescriptionCheckBox.text"/>
+        <Property name="toolTipText" type="java.lang.String" resourceKey="dictionaryDescriptionCheckBox.toolTipText"/>
+        <Property name="enabled" type="boolean" value="false"/>
         <Property name="name" type="java.lang.String" value="dictionaryDescriptionCheckBox" noResource="true"/>
       </Properties>
     </Component>
