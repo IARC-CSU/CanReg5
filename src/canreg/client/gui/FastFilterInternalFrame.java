@@ -5,6 +5,7 @@
  */
 package canreg.client.gui;
 
+import canreg.client.dataentry.DictionaryHelper;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.server.database.Dictionary;
@@ -14,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
@@ -28,9 +30,11 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
     private DatabaseVariablesListElement[] variablesInTable;
     private Document doc;
     private String tableName = "both";
-    private Map<Integer, Dictionary> dictionary;
+    private Map<Integer, Dictionary> dictionaries;
+    Dictionary dictionary;
     private Map<String, DictionaryEntry> possibleValuesMap;
     private ActionListener actionListener;
+    private int maxLength;
 
     /** Creates new form FastFilterInternalFrame */
     public FastFilterInternalFrame() {
@@ -225,17 +229,51 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         if (possibleValuesMap == null) {
             JOptionPane.showInternalMessageDialog(this, "Empty dictionary.", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
-            DictionaryEntry[] possibleValuesArray = new DictionaryEntry[possibleValuesMap.size()];
-            Iterator <String> it = possibleValuesMap.keySet().iterator();
-            int i=0;
-            while (it.hasNext()){
-                possibleValuesArray[i++]=possibleValuesMap.get(it.next());
+            DictionaryEntry[] possibleValuesArray;
+
+            Vector<DictionaryEntry> possibleValuesVector = new Vector<DictionaryEntry>();
+            Vector<DictionaryEntry> allValuesVector = new Vector<DictionaryEntry>();
+
+            Iterator<String> it = possibleValuesMap.keySet().iterator();
+            DictionaryEntry tempentry;
+
+            while (it.hasNext()) {
+                tempentry = possibleValuesMap.get(it.next());
+
+                allValuesVector.add (tempentry);
+
+                if (dictionary.isCompoundDictionary()) {
+                    if (tempentry.getCode().length() < maxLength) {
+                        possibleValuesVector.add(tempentry);
+                    }
+                } else {
+                    possibleValuesVector.add(tempentry);
+                }
             }
+            possibleValuesArray = possibleValuesVector.toArray(new DictionaryEntry[0]);
+
             DictionaryEntry selectedValue = (DictionaryEntry) JOptionPane.showInternalInputDialog(this,
-                    "Choose one", "Input",
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Choose_one"), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Input"),
                     JOptionPane.INFORMATION_MESSAGE, null,
                     possibleValuesArray, possibleValuesArray[0]);
-            valueTextField.setText(selectedValue.getCode());
+
+            if (selectedValue != null) {
+                String value = selectedValue.getCode();
+                while (dictionary.isCompoundDictionary() && value.length() < maxLength) {
+                    possibleValuesArray = DictionaryHelper.getDictionaryEntriesStartingWith(value, allValuesVector.toArray(new DictionaryEntry[0]));
+                    if (possibleValuesArray.length > 0) {
+                        selectedValue = (DictionaryEntry) JOptionPane.showInternalInputDialog(this,
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Choose_one"), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Input"),
+                                JOptionPane.INFORMATION_MESSAGE, null,
+                                possibleValuesArray, possibleValuesArray[0]);
+                        value = selectedValue.getCode();
+                    } else {
+                        value = value + "9";
+                    }
+                }
+                // setValue(value);
+                valueTextField.setText(value);
+            }
         }
     } else {
         // Do nothing
@@ -269,7 +307,7 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
 
         String[] logicalOperator = {"", "AND", "OR"};
         logicalOperatorComboBox.setModel(new DefaultComboBoxModel(logicalOperator));
-        dictionary = canreg.client.CanRegClientApp.getApplication().getDictionary();
+        dictionaries = canreg.client.CanRegClientApp.getApplication().getDictionary();
         updatePossibleValues();
 
     }
@@ -382,12 +420,13 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
     @SuppressWarnings("empty-statement")
     private void updatePossibleValues() {
         DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
+        maxLength = dbvle.getVariableLength();
         int id = dbvle.getDictionaryID();
         if (id >= 0) {
-            Dictionary dic = dictionary.get(id);
-            if (dic != null) {
+            dictionary = dictionaries.get(id);
+            if (dictionary != null) {
                 // Map sortedmap = new TreeMap(map);
-                possibleValuesMap = dic.getDictionaryEntries();
+                possibleValuesMap = dictionary.getDictionaryEntries();
             } else {
                 possibleValuesMap = null;
             }
