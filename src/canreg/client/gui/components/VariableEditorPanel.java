@@ -5,6 +5,7 @@
  */
 package canreg.client.gui.components;
 
+import canreg.client.dataentry.DictionaryHelper;
 import canreg.client.gui.dataentry.RecordEditorPanel;
 import canreg.client.gui.tools.MaxLengthDocument;
 import canreg.common.DatabaseVariablesListElement;
@@ -18,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -99,11 +101,21 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
 
     public void setResultCode(ResultCode resultCode) {
         switch (resultCode) {
-            case Missing: codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR); break;
-            case Query: codeTextField.setBackground(VARIABLE_QUERY_COLOR); break;
-            case Rare: codeTextField.setBackground(VARIABLE_RARE_COLOR); break;
-            case Invalid: codeTextField.setBackground(VARIABLE_INVALID_COLOR); break;
-            case OK: codeTextField.setBackground(VARIABLE_OK_COLOR); break;
+            case Missing:
+                codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
+                break;
+            case Query:
+                codeTextField.setBackground(VARIABLE_QUERY_COLOR);
+                break;
+            case Rare:
+                codeTextField.setBackground(VARIABLE_RARE_COLOR);
+                break;
+            case Invalid:
+                codeTextField.setBackground(VARIABLE_INVALID_COLOR);
+                break;
+            case OK:
+                codeTextField.setBackground(VARIABLE_OK_COLOR);
+                break;
         }
         codeTextField.setToolTipText(resultCode.toString());
     }
@@ -194,11 +206,9 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(variableNameLabel)
-                    .addComponent(splitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(variableNameLabel)
+                .addComponent(splitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -208,18 +218,68 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         if (possibleValuesMap == null) {
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Empty_dictionary."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Warning"), JOptionPane.WARNING_MESSAGE);
         } else {
-            DictionaryEntry[] possibleValuesArray = new DictionaryEntry[possibleValuesMap.size()];
+            DictionaryEntry[] possibleValuesArray;
+
+            Vector<DictionaryEntry> possibleValuesVector = new Vector<DictionaryEntry>();
+            Vector<DictionaryEntry> allValuesVector = new Vector<DictionaryEntry>();
+
             Iterator<String> it = possibleValuesMap.keySet().iterator();
-            int i = 0;
+            DictionaryEntry tempentry;
+            int firstLevelLength = -1;
+
             while (it.hasNext()) {
-                possibleValuesArray[i++] = possibleValuesMap.get(it.next());
+                tempentry = possibleValuesMap.get(it.next());
+
+                allValuesVector.add(tempentry);
+
+                if (dictionary.isCompoundDictionary()) {
+                    if (tempentry.getCode().length() < maxLength) {
+                        possibleValuesVector.add(tempentry);
+                        firstLevelLength = tempentry.getCode().length();
+                    }
+                } else {
+                    possibleValuesVector.add(tempentry);
+                }
             }
+            possibleValuesArray = possibleValuesVector.toArray(new DictionaryEntry[0]);
+
+            String oldValue = getValue().toString();
+            DictionaryEntry oldSelection = possibleValuesMap.get(oldValue);
+            DictionaryEntry defaultSelection = possibleValuesArray[0];
+            if (oldSelection != null) {
+                if (dictionary.isCompoundDictionary()) {
+                    defaultSelection = possibleValuesMap.get(oldValue.substring(0, firstLevelLength));
+                } else {
+                    defaultSelection = oldSelection;
+                }
+            }
+
             DictionaryEntry selectedValue = (DictionaryEntry) JOptionPane.showInternalInputDialog(this,
                     java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Choose_one"), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Input"),
                     JOptionPane.INFORMATION_MESSAGE, null,
-                    possibleValuesArray, possibleValuesArray[0]);
+                    possibleValuesArray, defaultSelection);
+
             if (selectedValue != null) {
-                setValue(selectedValue.getCode());
+                String value = selectedValue.getCode();
+                while (dictionary.isCompoundDictionary() && value.length() < maxLength) {
+                    possibleValuesArray = DictionaryHelper.getDictionaryEntriesStartingWith(value, allValuesVector.toArray(new DictionaryEntry[0]));
+                    if (possibleValuesArray.length > 0) {
+                        oldSelection = possibleValuesMap.get(oldValue);
+                        if (oldSelection != null) {
+                            defaultSelection = oldSelection;
+                        } else {
+                            defaultSelection = possibleValuesArray[0];
+                        }
+                        selectedValue = (DictionaryEntry) JOptionPane.showInternalInputDialog(this,
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Choose_one"), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Input"),
+                                JOptionPane.INFORMATION_MESSAGE, null,
+                                possibleValuesArray, defaultSelection);
+                        value = selectedValue.getCode();
+                    } else {
+                        value = value + "9";
+                    }
+                }
+                setValue(value);
                 descriptionTextField.setText(selectedValue.getDescription());
             }
         }
