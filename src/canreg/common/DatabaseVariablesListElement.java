@@ -19,6 +19,8 @@ public class DatabaseVariablesListElement implements Serializable {
     private String useDictionary;
     // Dictionary ID
     private int dictionaryID = -1;
+    // Dictionary Compund?
+    private boolean dictionaryCompound = false;
 
     private String fullName;
     private String englishName;
@@ -367,6 +369,20 @@ public class DatabaseVariablesListElement implements Serializable {
      */
     public void setUnknownCode(Object unknownCode) {
         this.unknownCode = unknownCode;
+    }
+
+    /**
+     * @return the dictionaryCompound
+     */
+    public boolean isDictionaryCompound() {
+        return dictionaryCompound;
+    }
+
+    /**
+     * @param dictionaryCompound the dictionaryCompound to set
+     */
+    public void setDictionaryCompound(boolean dictionaryCompound) {
+        this.dictionaryCompound = dictionaryCompound;
     }
 }
 
