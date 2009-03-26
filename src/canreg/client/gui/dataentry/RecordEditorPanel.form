@@ -318,6 +318,7 @@
                   <action class="canreg.client.gui.dataentry.RecordEditorPanel" id="changePatientRecord" methodName="changePatientRecord"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="changePatientRecordButton.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="changePatientRecordButton.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="changePatientRecordButton" noResource="true"/>
               </Properties>
             </Component>
