@@ -119,9 +119,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         setupPanel.setName("setupPanel"); // NOI18N
 
         loadSetupButton.setText(resourceMap.getString("loadSetupButton.text")); // NOI18N
+        loadSetupButton.setEnabled(false);
         loadSetupButton.setName("loadSetupButton"); // NOI18N
 
         saveSetupButton.setText(resourceMap.getString("saveSetupButton.text")); // NOI18N
+        saveSetupButton.setEnabled(false);
         saveSetupButton.setName("saveSetupButton"); // NOI18N
 
         javax.swing.GroupLayout setupPanelLayout = new javax.swing.GroupLayout(setupPanel);
@@ -144,12 +146,15 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         optionsPanel.setName("optionsPanel"); // NOI18N
 
         headingCheckBox.setText(resourceMap.getString("headingCheckBox.text")); // NOI18N
+        headingCheckBox.setEnabled(false);
         headingCheckBox.setName("headingCheckBox"); // NOI18N
 
         variableNamesComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Short", "English", "User" }));
+        variableNamesComboBox.setEnabled(false);
         variableNamesComboBox.setName("variableNamesComboBox"); // NOI18N
 
         variableNamesLabel.setText(resourceMap.getString("variableNamesLabel.text")); // NOI18N
+        variableNamesLabel.setEnabled(false);
         variableNamesLabel.setName("variableNamesLabel"); // NOI18N
 
         fileFormatLabel.setText(resourceMap.getString("fileFormatLabel.text")); // NOI18N
@@ -160,10 +165,12 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
         formatDateCheckBox.setSelected(true);
         formatDateCheckBox.setText(resourceMap.getString("formatDateCheckBox.text")); // NOI18N
+        formatDateCheckBox.setEnabled(false);
         formatDateCheckBox.setName("formatDateCheckBox"); // NOI18N
 
         correctUnknownCheckBox.setSelected(true);
         correctUnknownCheckBox.setText(resourceMap.getString("correctUnknownCheckBox.text")); // NOI18N
+        correctUnknownCheckBox.setEnabled(false);
         correctUnknownCheckBox.setName("correctUnknownCheckBox"); // NOI18N
 
         javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
@@ -288,7 +295,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(variableChooserPanel, 0, 0, Short.MAX_VALUE)
                     .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addComponent(resultPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
