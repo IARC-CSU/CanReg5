@@ -70,7 +70,7 @@ public class DictionaryHelper {
                 return -1;
             } else {
                 Element nameElement = (Element) element.getElementsByTagName(Globals.NAMESPACE + "name").item(0);
-                if (nameElement != null){
+                if (nameElement != null) {
                     found = name.equalsIgnoreCase(nameElement.getTextContent());
                 } else {
                     System.err.println("Name of dictionary missing?");
@@ -82,6 +82,53 @@ public class DictionaryHelper {
             id = i - 1;
         }
         return id;
+    }
+
+    /**
+     *
+     * @param doc
+     * @param name
+     * @return
+     */
+    public static boolean isCompoundDictionarybyName(Document doc, String name) {
+        boolean compound = false;
+
+        // Get the variables node in the XML
+        NodeList nodes = doc.getElementsByTagName(Globals.NAMESPACE + "dictionaries");
+        Element variablesElement = (Element) nodes.item(0);
+
+        NodeList dictionaries = variablesElement.getElementsByTagName(Globals.NAMESPACE + "dictionary");
+
+        // Go through all the variable definitions
+        boolean found = false;
+        int i = 0;
+        Element element = null;
+        while (!found && i < dictionaries.getLength()) {
+            // Get element
+            element = (Element) dictionaries.item(i++);
+            if (element == null) {
+                System.err.println("");
+                return false;
+            } else {
+                Element nameElement = (Element) element.getElementsByTagName(Globals.NAMESPACE + "name").item(0);
+                if (nameElement != null) {
+                    found = name.equalsIgnoreCase(nameElement.getTextContent());
+                } else {
+                    System.err.println("Name of dictionary missing?");
+                    return false;
+                }
+            }
+        }
+        if (found) {
+            Element compoundElement = (Element) element.getElementsByTagName(Globals.NAMESPACE + "type").item(0);
+            if (compoundElement != null) {
+                compound = "Compound".equalsIgnoreCase(compoundElement.getTextContent());
+            } else {
+                System.err.println("Name of dictionary missing?");
+                return false;
+            }
+        }
+        return compound;
     }
 
     /**
@@ -171,5 +218,16 @@ public class DictionaryHelper {
             app.saveDictionaryEntry(entry);
             dictionaryEntriesMap.put(entry.getCode(), entry.getDescription());
         }
+    }
+
+    public static DictionaryEntry[] getDictionaryEntriesStartingWith(String start, DictionaryEntry[] dictionaryEntries) {
+        Vector<DictionaryEntry> entriesVector = new Vector<DictionaryEntry>();
+        for (DictionaryEntry entry : dictionaryEntries) {
+            String code = entry.getCode();
+            if (code.startsWith(start) && code.length() > start.length()) {
+                entriesVector.add(entry);
+            }
+        }
+        return entriesVector.toArray(new DictionaryEntry[0]);
     }
 }
