@@ -63,8 +63,11 @@ public class Checker {
         /**
          * 
          */
-        Topography
-    }
+        Topography,
+        /**
+         * 
+         */
+        AgeIncidenceDateBirthDate}
     
     LinkedList<CheckInterface> checks;
 
@@ -122,6 +125,11 @@ public class Checker {
         }
         // Add topography - DEPedits #6
         check = new CheckTopography();
+        if (canPerformThisCheck(check, variableExistSet)) {
+            checks.add(check);
+        }
+
+        check = new CheckAgeIncidenceDateBirthDate();
         if (canPerformThisCheck(check, variableExistSet)) {
             checks.add(check);
         }
