@@ -133,11 +133,13 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(BrowseInternalFrame.class, this);
         editPatientNumberButton.setAction(actionMap.get("editPatientID")); // NOI18N
+        editPatientNumberButton.setText(resourceMap.getString("editPatientNumberButton.text")); // NOI18N
         editPatientNumberButton.setName("editPatientNumberButton"); // NOI18N
 
         tumourNumberTextField.setName("tumourNumberTextField"); // NOI18N
 
         editTumourNumberButton.setAction(actionMap.get("editTumourID")); // NOI18N
+        editTumourNumberButton.setText(resourceMap.getString("editTumourNumberButton.text")); // NOI18N
         editTumourNumberButton.setName("editTumourNumberButton"); // NOI18N
 
         javax.swing.GroupLayout buttonsPanelLayout = new javax.swing.GroupLayout(buttonsPanel);
@@ -147,16 +149,16 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
             .addGroup(buttonsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(editTableRecordButton, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
-                    .addComponent(createNextButton, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                    .addComponent(editTableRecordButton, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
+                    .addComponent(createNextButton, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
                     .addGroup(buttonsPanelLayout.createSequentialGroup()
-                        .addComponent(editPatientNumberButton)
+                        .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(editPatientNumberButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editTumourNumberButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(patientNumberTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
-                    .addGroup(buttonsPanelLayout.createSequentialGroup()
-                        .addComponent(editTumourNumberButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tumourNumberTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)))
+                        .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tumourNumberTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                            .addComponent(patientNumberTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         buttonsPanelLayout.setVerticalGroup(
@@ -188,11 +190,11 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 863, Short.MAX_VALUE)
+            .addGap(0, 936, Short.MAX_VALUE)
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 363, Short.MAX_VALUE)
+            .addGap(0, 367, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -204,7 +206,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(resultPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
+                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(navigationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -564,6 +566,7 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
             if (found) {
                 idColumnNumber--;
                 TreeSet<DatabaseRecord> set = new TreeSet<DatabaseRecord>(new Comparator<DatabaseRecord>() {
+
                     public int compare(DatabaseRecord o1, DatabaseRecord o2) {
                         return (o1.getVariable(tumourIDlookupVariable).toString().compareTo(o2.getVariable(tumourIDlookupVariable).toString()));
                     }
@@ -577,10 +580,10 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
                     tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString);
                     for (DatabaseRecord rec : tumourRecords) {
                         // store them in a set, so we don't show them several times
-                            set.add(rec);
+                        set.add(rec);
                     }
                 }
-                if (set.isEmpty()){
+                if (set.isEmpty()) {
                     Tumour rec = new Tumour();
                     rec.setVariable(patientIDTumourTablelookupVariable, idString);
                     set.add(rec);
@@ -633,26 +636,29 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
         try {
             DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
             int numberOfRecords = distributedTableDescription.getRowCount();
-            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
-            CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
-            String[] columnNames = distributedTableDescription.getColumnNames();
-            int ids[] = new int[numberOfRecords];
-            boolean found = false;
-            int idColumnNumber = 0;
-            while (!found && idColumnNumber < columnNames.length) {
-                found = columnNames[idColumnNumber++].equalsIgnoreCase(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
-            }
-            if (found) {
-                idColumnNumber--;
-                for (int j = 0; j < numberOfRecords; j++) {
-                    ids[j] = (Integer) rows[j][idColumnNumber];
-                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.TUMOUR_TABLE_NAME);
-                    editPatientID((String) record.getVariable(patientIDTumourTablelookupVariable));
-                }
+            if (numberOfRecords == 0) {
+                JOptionPane.showMessageDialog(rootPane, "Tumour record not found...", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(rootPane, "Variable not found...", "Error", JOptionPane.ERROR_MESSAGE);
+                rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
+                CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
+                String[] columnNames = distributedTableDescription.getColumnNames();
+                int ids[] = new int[numberOfRecords];
+                boolean found = false;
+                int idColumnNumber = 0;
+                while (!found && idColumnNumber < columnNames.length) {
+                    found = columnNames[idColumnNumber++].equalsIgnoreCase(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+                }
+                if (found) {
+                    idColumnNumber--;
+                    for (int j = 0; j < numberOfRecords; j++) {
+                        ids[j] = (Integer) rows[j][idColumnNumber];
+                        record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.TUMOUR_TABLE_NAME);
+                        editPatientID((String) record.getVariable(patientIDTumourTablelookupVariable));
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Variable not found...", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-
         } catch (SQLException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {

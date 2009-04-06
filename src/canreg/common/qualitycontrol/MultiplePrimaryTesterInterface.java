@@ -16,6 +16,8 @@ public interface MultiplePrimaryTesterInterface {
     public static int mptMultPrim = 3;
     public static int mptUnkTopog = 4;
 
+    public static String[] mptCodes = { "Valid", "Invalid", "Duplicate", "Multiple Primary", "Unknown Topography" };
+
     public int multiplePrimaryTest(String topographyOrig, String morphologyOrig,
             String topographySim, String morphologySim);
 }

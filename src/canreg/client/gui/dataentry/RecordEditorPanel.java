@@ -14,6 +14,7 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DatabaseVariablesListElementPositionSorter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.qualitycontrol.CheckResult;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Dictionary;
@@ -223,6 +224,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PersonSearch.toString());
             obsoleteFlagVariableListElement =
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString());
+            checkVariableListElement =
+                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.CheckStatus.toString());
+
         }
         buildPanel();
     }
@@ -247,6 +251,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             tableName = Globals.PATIENT_TABLE_NAME;
             mpPanel.setVisible(false);
             changePatientRecordButton.setVisible(false);
+            checksPanel.setVisible(false);
         } else if (panelType == panelTypes.TUMOUR) {
             tableName = Globals.TUMOUR_TABLE_NAME;
             personSearchPanel.setVisible(false);
@@ -288,6 +293,18 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             obsoleteToggleButton.setSelected(true);
         } else {
             obsoleteToggleButton.setSelected(false);
+        }
+
+        /*
+         * Set the check status
+         */
+        if (checkVariableListElement != null) {
+            Object checkStatus = databaseRecord.getVariable(checkVariableListElement.getDatabaseVariableName());
+            if (checkStatus != null) {
+                String checkStatusString = (String) checkStatus;
+                resultCode = CheckResult.toResultCode(checkStatusString);
+                setChecksResultCode(resultCode);
+            }
         }
 
         Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new TreeMap<Integer, VariableEditorGroupPanel>();
@@ -372,7 +389,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         } /** Called when a field's "value" property changes. */
         else if ("value".equals(propName)) {
             setSaveNeeded(true);
-            actionListener.actionPerformed(new ActionEvent(this, 0, "changed"));
+            actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
         // saveButton.setEnabled(saveNeeded);
         } else {
             // Do nothing.
@@ -648,7 +665,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     @Action
     public void saveRecord() {
         buildDatabaseRecord();
-        actionListener.actionPerformed(new ActionEvent(this, 0, "save"));
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.SAVE));
     }
 
     private void buildDatabaseRecord() {
@@ -690,7 +707,11 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
                 // records += i + ": " + map.get(i) + "\n";
                 DatabaseRecord patientRecord = canreg.client.CanRegClientApp.getApplication().getRecord(i, Globals.PATIENT_TABLE_NAME);
                 String otherPatientID = patientRecord.getVariable(patientIDVariableListElement.getDatabaseVariableName()).toString();
-                if (!patientID.equals(otherPatientID)) {
+                if (databaseRecord.equals(patientRecord)) {
+                    // do nothing
+                } else if (patientID.equals(otherPatientID)) {
+                    records += "Patient id: " + otherPatientID + ", score: " + map.get(i) + "% (Already matched.)\n";
+                } else {
                     records += "Patient id: " + otherPatientID + ", score: " + map.get(i) + "%\n";
                 }
             }
@@ -712,31 +733,31 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
      */
     @Action
     public void runChecksAction() {
-        actionListener.actionPerformed(new ActionEvent(this, 0, "checks"));
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHECKS));
     }
 
     @Action
     public void deleteRecord() {
-        actionListener.actionPerformed(new ActionEvent(this, 0, "delete"));
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.DELETE));
     }
 
     @Action
     public void changePatientRecord() {
-        actionListener.actionPerformed(new ActionEvent(this, 0, "changePatientRecord"));
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGE_PATIENT_RECORD));
     }
 
     @Action
     public void setObsoleteFlag() {
-        actionListener.actionPerformed(new ActionEvent(this, 0, "obsolete"));
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.OBSOLETE));
     }
 
     @Action
     public void runMultiplePrimarySearch() {
-        actionListener.actionPerformed(new ActionEvent(this, 0, "runMP"));
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.RUN_MP));
     }
 
     @Action
     public void calculateAge() {
-        actionListener.actionPerformed(new ActionEvent(this, 0, "calcAge"));
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CALC_AGE));
     }
 }

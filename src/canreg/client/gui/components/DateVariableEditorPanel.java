@@ -20,7 +20,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
 
     private com.toedter.calendar.JDateChooser dateChooser;
     private JTextField dateField;
- 
+
     /**
      * 
      * @param databaseListElement
@@ -46,7 +46,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             dateField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
         }
         setMaximumLength(databaseListElement.getVariableLength());
-        
+
         dateField.addFocusListener(new java.awt.event.FocusAdapter() {
 
             @Override
@@ -63,34 +63,35 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
     @Override
     public void setValue(String value) {
 
-        if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
-            if (value.trim().length()==0) {
+        if (value.trim().length() == 0) {
+            if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
                 codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
-            } else {
-                codeTextField.setBackground(java.awt.SystemColor.text);
             }
-        }
-        try {
-            GregorianCalendarCanReg date = DateHelper.parseDateStringToGregorianCalendarCanReg(value, Globals.DATE_FORMAT_STRING);
-            dateChooser.setCalendar(date);
-            String dateString = codeTextField.getText();
-            String dateFormatString = dateChooser.getDateFormatString();
-            // dateField.setText(value);
-            if (date.isUnknownDay()){
-                dateString = DateHelper.setDay(dateString, dateFormatString, "99");
+            codeTextField.setText(value);
+        } else {
+            codeTextField.setBackground(java.awt.SystemColor.text);
+            try {
+                GregorianCalendarCanReg date = DateHelper.parseDateStringToGregorianCalendarCanReg(value, Globals.DATE_FORMAT_STRING);
+                dateChooser.setCalendar(date);
+                String dateString = codeTextField.getText();
+                String dateFormatString = dateChooser.getDateFormatString();
+                // dateField.setText(value);
+                if (date.isUnknownDay()) {
+                    dateString = DateHelper.setDay(dateString, dateFormatString, "99");
+                }
+                if (date.isUnknownMonth()) {
+                    dateString = DateHelper.setMonth(dateString, dateFormatString, "99");
+                }
+                dateField.setText(dateString);
+            } catch (ParseException ex) {
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NumberFormatException numberFormatException) {
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, numberFormatException);
+            } catch (IllegalArgumentException ex) {
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (StringIndexOutOfBoundsException stringIndexOutOfBoundsException) {
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, stringIndexOutOfBoundsException);
             }
-            if (date.isUnknownMonth()){
-                dateString = DateHelper.setMonth(dateString, dateFormatString, "99");
-            }
-            dateField.setText(dateString);
-        } catch (ParseException ex) {
-            Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NumberFormatException numberFormatException) {
-            Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, numberFormatException);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }  catch (StringIndexOutOfBoundsException stringIndexOutOfBoundsException) {
-            Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, stringIndexOutOfBoundsException);
         }
     }
 

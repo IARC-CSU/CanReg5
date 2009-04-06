@@ -135,7 +135,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
             }
 
             Object patient1dataObject = patient1.getVariable(variableNames[link]);
-            Object patient2dataObject = patient1.getVariable(variableNames[link]);
+            Object patient2dataObject = patient2.getVariable(variableNames[link]);
 
             if (patient1dataObject != null && patient2dataObject != null) {
 
