@@ -39,7 +39,7 @@
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="resultPanel" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="rangeFilterPanel" pref="412" max="32767" attributes="0"/>
+                      <Component id="rangeFilterPanel" pref="407" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="navigationPanel" max="32767" attributes="1"/>
@@ -87,17 +87,18 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="editTableRecordButton" alignment="0" pref="301" max="32767" attributes="1"/>
-                      <Component id="createNextButton" alignment="0" pref="301" max="32767" attributes="1"/>
+                      <Component id="editTableRecordButton" alignment="0" pref="379" max="32767" attributes="1"/>
+                      <Component id="createNextButton" alignment="0" pref="379" max="32767" attributes="1"/>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="editPatientNumberButton" min="-2" max="-2" attributes="1"/>
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="editPatientNumberButton" alignment="0" max="32767" attributes="1"/>
+                              <Component id="editTumourNumberButton" alignment="0" max="32767" attributes="1"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="patientNumberTextField" pref="204" max="32767" attributes="1"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="editTumourNumberButton" min="-2" max="-2" attributes="1"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="tumourNumberTextField" pref="202" max="32767" attributes="1"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="tumourNumberTextField" alignment="0" pref="242" max="32767" attributes="1"/>
+                              <Component id="patientNumberTextField" pref="242" max="32767" attributes="1"/>
+                          </Group>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -129,6 +130,7 @@
         <Component class="javax.swing.JButton" name="createNextButton">
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="createNextButton.text"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="createNextButton" noResource="true"/>
           </Properties>
         </Component>
@@ -149,6 +151,7 @@
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="editPatientID" methodName="editPatientID"/>
             </Property>
+            <Property name="text" type="java.lang.String" resourceKey="editPatientNumberButton.text"/>
             <Property name="name" type="java.lang.String" value="editPatientNumberButton" noResource="true"/>
           </Properties>
         </Component>
@@ -162,6 +165,7 @@
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="editTumourID" methodName="editTumourID"/>
             </Property>
+            <Property name="text" type="java.lang.String" resourceKey="editTumourNumberButton.text"/>
             <Property name="name" type="java.lang.String" value="editTumourNumberButton" noResource="true"/>
           </Properties>
         </Component>
@@ -193,12 +197,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="863" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="936" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="359" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="367" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>

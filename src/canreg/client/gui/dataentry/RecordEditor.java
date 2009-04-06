@@ -14,6 +14,8 @@ import canreg.common.Globals;
 import canreg.common.conversions.ConversionResult;
 import canreg.common.conversions.Converter;
 import canreg.common.qualitycontrol.CheckResult;
+import canreg.common.qualitycontrol.DefaultMultiplePrimaryTester;
+import canreg.common.qualitycontrol.MultiplePrimaryTesterInterface;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Dictionary;
 import canreg.server.database.Patient;
@@ -30,6 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -43,6 +46,14 @@ import org.w3c.dom.Document;
  * @author  ervikm
  */
 public class RecordEditor extends javax.swing.JInternalFrame implements ActionListener {
+    public static final String CHANGED = "changed";
+    public static final String CHECKS = "checks";
+    public static final String DELETE = "delete";
+    public static final String SAVE = "save";
+    public static final String RUN_MP = "runMP";
+    public static final String OBSOLETE = "obsolete";
+    public static final String CHANGE_PATIENT_RECORD = "changePatientRecord";
+    public static final String CALC_AGE = "calcAge";
 
     private Document doc;
     private Map<Integer, Dictionary> dictionary;
@@ -176,7 +187,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 }
             }
             Object patientObsoleteStatus = dbr.getVariable(patientObsoleteVariableName);
-            if (patientObsoleteStatus!=null && patientObsoleteStatus.equals(1)) {
+            if (patientObsoleteStatus != null && patientObsoleteStatus.equals(1)) {
                 regnoString += " (obsolete)";
             }
             patientTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
@@ -202,7 +213,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 }
             }
             Object tumourObsoleteStatus = dbr.getVariable(tumourObsoleteVariableName);
-            if (tumourObsoleteStatus!=null && tumourObsoleteStatus.equals(1)) {
+            if (tumourObsoleteStatus != null && tumourObsoleteStatus.equals(1)) {
                 regnoString += " (obsolete)";
             }
             tumourTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
@@ -489,9 +500,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         Object source = e.getSource();
 
         if (source instanceof RecordEditorPanel) {
-            if (e.getActionCommand().equalsIgnoreCase("changed")) {
+            if (e.getActionCommand().equalsIgnoreCase(CHANGED)) {
                 changesDone = true;
-            } else if (e.getActionCommand().equalsIgnoreCase("delete")) {
+            } else if (e.getActionCommand().equalsIgnoreCase(DELETE)) {
                 int option = JOptionPane.NO_OPTION;
                 option = JOptionPane.showConfirmDialog(null, "Permanently delete record?");
                 if (option == JOptionPane.YES_OPTION) {
@@ -532,7 +543,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                         JOptionPane.showInternalMessageDialog(this, "Record not deleted.\nError occured...");
                     }
                 }
-            } else if (e.getActionCommand().equalsIgnoreCase("checks")) {
+            } else if (e.getActionCommand().equalsIgnoreCase(CHECKS)) {
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
                 RecordEditorPanel tumourRecordEditorPanel;
                 RecordEditorPanel patientRecordEditorPanel;
@@ -619,7 +630,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 }
 
                 CanRegClientView.showAndCenterInternalFrame(desktopPane, editChecksInternalFrame);
-            } else if (e.getActionCommand().equalsIgnoreCase("save")) {
+            } else if (e.getActionCommand().equalsIgnoreCase(SAVE)) {
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
                 DatabaseRecord databaseRecord = recordEditorPanel.getDatabaseRecord();
                 if (databaseRecord instanceof Tumour) {
@@ -642,7 +653,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 } catch (SQLException ex) {
                     Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } else if (e.getActionCommand().equalsIgnoreCase("changePatientRecord")) {
+            } else if (e.getActionCommand().equalsIgnoreCase(CHANGE_PATIENT_RECORD)) {
                 RecordEditorPanel tumourRecordEditorPanel = (RecordEditorPanel) source;
                 Tumour tumourDatabaseRecord = (Tumour) tumourRecordEditorPanel.getDatabaseRecord();
                 String requestedPatientRecordID = JOptionPane.showInputDialog(null, "Please enter Patient record ID:", "Assign new Patient Record ID", JOptionPane.QUESTION_MESSAGE);
@@ -684,19 +695,46 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                         JOptionPane.showInternalMessageDialog(this, "No such patient record.", "Failed", JOptionPane.WARNING_MESSAGE);
                     }
                 }
-            } else if (e.getActionCommand().equalsIgnoreCase("obsolete")) {
+            } else if (e.getActionCommand().equalsIgnoreCase(OBSOLETE)) {
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
                 int option = JOptionPane.NO_OPTION;
                 option = JOptionPane.showConfirmDialog(null, "Really change obsolete-status?");
                 boolean toggle = (option == JOptionPane.YES_OPTION);
                 recordEditorPanel.toggleObsolete(toggle);
-                if (toggle){
+                if (toggle) {
                     refreshShowObsolete();
                 }
-            } else if (e.getActionCommand().equalsIgnoreCase("runMP")) {
+            } else if (e.getActionCommand().equalsIgnoreCase(RUN_MP)) {
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
-                DatabaseRecord databaseRecord = recordEditorPanel.getDatabaseRecord();
+                DatabaseRecord databaseRecordA = recordEditorPanel.getDatabaseRecord();
+                String topographyA = (String) databaseRecordA.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Topography.toString()).getDatabaseVariableName());
+                String morphologyA = (String) databaseRecordA.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Morphology.toString()).getDatabaseVariableName());
 
+                MultiplePrimaryTesterInterface multiplePrimaryTester = new DefaultMultiplePrimaryTester();
+
+                for (Component tumourPanelComponent : tumourTabbedPane.getComponents()) {
+                    RecordEditorPanel tumourPanel = (RecordEditorPanel) tumourPanelComponent;
+                    if (!source.equals(tumourPanel)) {
+                        DatabaseRecord dbr = tumourPanel.getDatabaseRecord();
+                        String topographyB = (String) dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Topography.toString()).getDatabaseVariableName());
+                        String morphologyB = (String) dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Morphology.toString()).getDatabaseVariableName());
+                        int result = multiplePrimaryTester.multiplePrimaryTest(topographyA, morphologyA, topographyB, morphologyB);
+                        JOptionPane.showInternalMessageDialog(this, "Result: " + multiplePrimaryTester.mptCodes[result], "Result", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            } else if (e.getActionCommand().equalsIgnoreCase(CALC_AGE)) {
+                // this should be called at any time any of the fields birth date or incidence date gets changed
+                RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
+                DatabaseRecord sourceDatabaseRecord = recordEditorPanel.getDatabaseRecord();
+                DatabaseRecord patientDatabaseRecord;
+                // TODO: implement calculate age
+                if (sourceDatabaseRecord instanceof Tumour) {
+                    RecordEditorPanel patientRecordEditorPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
+                    patientDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
+                } else {
+                    // get all the tumour records
+
+                }
             }
         }
     }

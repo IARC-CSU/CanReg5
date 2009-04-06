@@ -286,7 +286,7 @@ public class CanRegDAO {
                 rowCount = countRowSet.getInt(1);
             }
             if (filter.getSortByVariable() != null) {
-                filterString += " ORDER BY " + filter.getSortByVariable().toUpperCase();
+                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase()+"\"";
             }
 
             result = statement.executeQuery(strGetTumours + filterString);
@@ -300,7 +300,7 @@ public class CanRegDAO {
                 rowCount = countRowSet.getInt(1);
             }
             if (filter.getSortByVariable() != null) {
-                filterString += " ORDER BY " + filter.getSortByVariable().toUpperCase();
+                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase()+"\"";
             }
             debugOut(strCountPatients + filterString);
             result = statement.executeQuery(strGetPatients + filterString);
@@ -317,7 +317,7 @@ public class CanRegDAO {
             // feed it to the garbage dump
             countRowSet = null;
             if (filter.getSortByVariable() != null) {
-                filterString += " ORDER BY " + filter.getSortByVariable().toUpperCase();
+                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase()+"\"";
             }
             debugOut(strCountPatientsAndTumours + filterString);
 

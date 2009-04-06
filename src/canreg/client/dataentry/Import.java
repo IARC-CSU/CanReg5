@@ -45,7 +45,7 @@ public class Import {
         boolean success = false;
 
         HashMap mpCodes = new HashMap();
-
+        int numberOfLinesRead = 0;
         BufferedReader bufferedReader = null;
         try {
             // Tro to detect the encoding...
@@ -55,7 +55,7 @@ public class Import {
 
             Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + isr.getEncoding());
 
-            int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath()) - 1;
+            int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath());
             bufferedReader = new BufferedReader(isr);
             String line = bufferedReader.readLine();
             // Skip first line
@@ -63,7 +63,7 @@ public class Import {
             // patientNumber
             int patientDatabaseRecordID = 0;
             int tumourDatabaseIDNumber = 0;
-            int numberOfLinesRead = 1;
+
             int linesToRead = io.getMaxLines();
             if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
                 linesToRead = numberOfRecordsInFile;
@@ -151,14 +151,20 @@ public class Import {
             }
             success = true;
         } catch (IOException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE,  "Error in line: "+(numberOfLinesRead+1+1)+". ", ex);
             success = false;
         } catch (NumberFormatException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE,  "Error in line: "+(numberOfLinesRead+1+1)+". ", ex);
             success = false;
         } catch (InterruptedException ex) {
+            Logger.getLogger(Import.class.getName()).log(Level.INFO,  "Interupted on line: "+(numberOfLinesRead+1)+". ", ex);
             success = true;
-        } finally {
+        } catch (IndexOutOfBoundsException ex){
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: "+(numberOfLinesRead+1+1)+". ",
+                     ex);
+            success = false;
+        }
+        finally {
             if (bufferedReader != null) {
                 try {
                     bufferedReader.close();

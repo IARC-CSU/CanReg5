@@ -1,9 +1,13 @@
 package canreg.client.gui.components;
 
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.DateHelper;
 import canreg.common.Globals;
+import canreg.common.GregorianCalendarCanReg;
 import com.toedter.calendar.JDateChooser;
+import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextField;
@@ -16,7 +20,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
 
     private com.toedter.calendar.JDateChooser dateChooser;
     private JTextField dateField;
- 
+
     /**
      * 
      * @param databaseListElement
@@ -28,6 +32,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
 
         dateChooser = new JDateChooser();
         dateChooser.setDateFormatString(Globals.DATE_FORMAT_STRING);
+        // dateChooser.setDateFormatString("MMMMM d, yyyy");
         splitPane1.remove(splitPane1.getRightComponent());
         splitPane1.setTopComponent(dateChooser);
         dateField = (JTextField) dateChooser.getDateEditor().getUiComponent();
@@ -41,7 +46,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             dateField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
         }
         setMaximumLength(databaseListElement.getVariableLength());
-        
+
         dateField.addFocusListener(new java.awt.event.FocusAdapter() {
 
             @Override
@@ -58,30 +63,35 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
     @Override
     public void setValue(String value) {
 
-        if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
-            if (value.trim().length()==0) {
+        if (value.trim().length() == 0) {
+            if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
                 codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
-            } else {
-                codeTextField.setBackground(java.awt.SystemColor.text);
             }
-        }
-        try {
-            // TODO implement method for unknown dates...
-            int year = Integer.parseInt(value.substring(0, 4));
-            int month = Integer.parseInt(value.substring(4, 6));
-            int day = Integer.parseInt(value.substring(6, 8));
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(year, month - 1, day); //month - the value used to set the MONTH calendar field. Month value is 0-based. e.g., 0 for January.
-            dateChooser.setCalendar(calendar);
-            // dateField.setText(value);
-            if (year == 9999 || year == 0000 || month == 99 || month == 00 || day == 00 || day == 99) {
-                // Unknown date
-                dateField.setText(value);
+            codeTextField.setText(value);
+        } else {
+            codeTextField.setBackground(java.awt.SystemColor.text);
+            try {
+                GregorianCalendarCanReg date = DateHelper.parseDateStringToGregorianCalendarCanReg(value, Globals.DATE_FORMAT_STRING);
+                dateChooser.setCalendar(date);
+                String dateString = codeTextField.getText();
+                String dateFormatString = dateChooser.getDateFormatString();
+                // dateField.setText(value);
+                if (date.isUnknownDay()) {
+                    dateString = DateHelper.setDay(dateString, dateFormatString, "99");
+                }
+                if (date.isUnknownMonth()) {
+                    dateString = DateHelper.setMonth(dateString, dateFormatString, "99");
+                }
+                dateField.setText(dateString);
+            } catch (ParseException ex) {
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NumberFormatException numberFormatException) {
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, numberFormatException);
+            } catch (IllegalArgumentException ex) {
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (StringIndexOutOfBoundsException stringIndexOutOfBoundsException) {
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, stringIndexOutOfBoundsException);
             }
-        } catch (NumberFormatException numberFormatException) {
-            Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, numberFormatException);
-        } catch (StringIndexOutOfBoundsException stringIndexOutOfBoundsException) {
-            Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, stringIndexOutOfBoundsException);
         }
     }
 
@@ -92,10 +102,20 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
     @Override
     public Object getValue() {
         Object valueObject = null;
-        String valueString = dateField.getText();
+        String valueString = dateField.getText().trim();
 
-        if (valueString.trim().length() > 0) {
-            valueObject = Integer.parseInt(valueString.trim());
+        if (valueString.length() > 0) {
+            try {
+                String dateFormatString = dateChooser.getDateFormatString();
+                // valueObject = Integer.parseInt(valueString.trim());
+                GregorianCalendarCanReg tempCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg(valueString, dateFormatString);
+                String valueObjectString = DateHelper.parseGregorianCalendarCanRegToDateString(tempCalendar, Globals.DATE_FORMAT_STRING);
+                valueObject = Integer.parseInt(valueObjectString.trim());
+            } catch (ParseException ex) {
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalArgumentException ex) {
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return valueObject;

@@ -17,25 +17,21 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
 
     private String[] variableNames;
     static final int missing = -1;  // flag to say variable value missing
-    
     private float[] discPower;
     private float[] reliability;
     private float[] presence;
-    
     private float threshold = 50;
-    
     private float maximumTotalScore;
     private float[] variableWeights;
-    
-    Map <String,DatabaseVariablesListElement> variablesInDBMap;
+    Map<String, DatabaseVariablesListElement> variablesInDBMap;
 
     /**
      * 
      * @param variablesInDB
      */
     public DefaultPersonSearch(DatabaseVariablesListElement[] variablesInDB) {
-        variablesInDBMap = new LinkedHashMap<String,DatabaseVariablesListElement>();
-        for (DatabaseVariablesListElement dbvle:variablesInDB){
+        variablesInDBMap = new LinkedHashMap<String, DatabaseVariablesListElement>();
+        for (DatabaseVariablesListElement dbvle : variablesInDB) {
             variablesInDBMap.put(dbvle.getShortName(), dbvle);
         }
     }
@@ -46,7 +42,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
      */
     public PersonSearchVariable[] getPersonSearchVariables() {
         PersonSearchVariable[] psvs = new PersonSearchVariable[variableNames.length];
-        for (int i = 0; i< variableNames.length; i++){
+        for (int i = 0; i < variableNames.length; i++) {
             psvs[i] = new PersonSearchVariable();
             psvs[i].setName(variableNames[i]);
             psvs[i].setWeight(variableWeights[i]);
@@ -62,14 +58,14 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         int i = 0;
         String[] tempVariableNames = new String[personSearchVariables.length];
         float[] tempVariableWeights = new float[personSearchVariables.length];
-        for (PersonSearchVariable psv:personSearchVariables){
-            tempVariableNames[i]=psv.getName();
-            tempVariableWeights[i]=psv.getWeight();        
+        for (PersonSearchVariable psv : personSearchVariables) {
+            tempVariableNames[i] = psv.getName();
+            tempVariableWeights[i] = psv.getWeight();
             i++;
         }
         setWeights(tempVariableNames, tempVariableWeights);
     }
- 
+
     /**
      * 
      * @param variableNames
@@ -78,29 +74,29 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     public void setWeights(String[] variableNames, float[] variableWeigths) {
         this.variableNames = variableNames;
         this.variableWeights = variableWeigths;
-        
+
         discPower = new float[variableNames.length];
         reliability = new float[variableNames.length];
         presence = new float[variableNames.length];
-        
+
         // Temporarily we set all variables to 1.
 
         // TODO Find a way to calculate weights of variables in person search efficiently...
-        
-        for (int i = 0; i<variableNames.length; i++){
-            discPower[i]=1;
-            reliability[i]=1;
-            presence[i]=1;
+
+        for (int i = 0; i < variableNames.length; i++) {
+            discPower[i] = 1;
+            reliability[i] = 1;
+            presence[i] = 1;
         }
-        
+
         maximumTotalScore = 0;
-  
+
         for (int varb = 0; varb < variableNames.length; ++varb) {
 
             float dis = discPower[varb];
             float rel = reliability[varb];
             float pres = presence[varb];
-            
+
             int sim = 100;
             float maxscore = scoreFunction(dis, rel, pres, sim);
             maximumTotalScore += maxscore;
@@ -114,10 +110,10 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
      * @return
      */
     public synchronized float compare(Patient patient1, Patient patient2) {
-        if (variableNames==null){
+        if (variableNames == null) {
             throw (new NullPointerException());
         }
-        float similarity = comparePatients(patient1,patient2);
+        float similarity = comparePatients(patient1, patient2);
         float perCent = 100 * similarity / maximumTotalScore; // scale 0 to max
         //DEPeditsInst.Warning ("PerCent:"+DEPeditsInst.FloatToStr(PerCent,1));
         return perCent;
@@ -128,50 +124,57 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         float TotalScore = 0;
         String patient1data;
         String patient2data;
-        DatabaseVariablesListElement dbvle; 
+        DatabaseVariablesListElement dbvle;
         String varibleType;
-        
+
         for (int link = 0; link < variableNames.length; ++link) {
             dbvle = variablesInDBMap.get(variableNames[link]);
             String unknownCode = null;
-            if (dbvle.getUnknownCode()!= null)
+            if (dbvle.getUnknownCode() != null) {
                 unknownCode = dbvle.getUnknownCode().toString();
+            }
 
-            patient1data = patient1.getVariable(variableNames[link]).toString();
-            patient2data = patient2.getVariable(variableNames[link]).toString();
+            Object patient1dataObject = patient1.getVariable(variableNames[link]);
+            Object patient2dataObject = patient2.getVariable(variableNames[link]);
 
-            varibleType = dbvle.getVariableType();
-            
-            if (patient1data.equals("") || patient2data.equals("")) {
-                similarity = missing;
-            } else if (patient1data.equals(unknownCode)) {
-                similarity = missing;
-            } else if (patient2data.equals(unknownCode)) {
-                similarity = missing;
-            } else if (varibleType.equalsIgnoreCase("Dict")){
+            if (patient1dataObject != null && patient2dataObject != null) {
+
+                patient1data = patient1dataObject.toString();
+                patient2data = patient2dataObject.toString();
+
+                varibleType = dbvle.getVariableType();
+
+                if (patient1data.trim().length()==0 || patient2data.trim().length()==0) {
+                    similarity = missing;
+                } else if (patient1data.equals(unknownCode)) {
+                    similarity = missing;
+                } else if (patient2data.equals(unknownCode)) {
+                    similarity = missing;
+                } else if (varibleType.equalsIgnoreCase("Dict")) {
                     similarity = CompareCodes(patient1data, patient2data);
-            } else if (varibleType.equalsIgnoreCase("Alpha")){
+                } else if (varibleType.equalsIgnoreCase("Alpha")) {
                     similarity = CompareText(patient1data, patient2data);
-            } else if (varibleType.equalsIgnoreCase("Date")){
+                } else if (varibleType.equalsIgnoreCase("Date")) {
                     similarity = CompareDate(patient1data, patient2data);
-            } else if (varibleType.equalsIgnoreCase("Number")){
+                } else if (varibleType.equalsIgnoreCase("Number")) {
                     similarity = CompareNumber(patient1data, patient2data);
-            }
+                }
 
-            float score;
-            if (similarity == missing) {
-                score = 0;
-            } else {
-                float dis = discPower[link];
-                float rel = reliability[link];
-                float pres = presence[link];
-                score = scoreFunction(dis, rel, pres, similarity);
+                float score;
+                if (similarity == missing) {
+                    score = 0;
+                } else {
+                    float dis = discPower[link];
+                    float rel = reliability[link];
+                    float pres = presence[link];
+                    score = scoreFunction(dis, rel, pres, similarity);
+                }
+                //String s = LinkField1[link]+", "+LinkField2[link]+"  Sim:"+Integer.toString(Similarity)+"  Score:"+undup.FloatToStr(Score, 1);
+                //DEPeditsInst.Warning (s);
+                // similDisp[link] = Similarity;
+                // scoreDisp[link] = score;
+                TotalScore += score;
             }
-            //String s = LinkField1[link]+", "+LinkField2[link]+"  Sim:"+Integer.toString(Similarity)+"  Score:"+undup.FloatToStr(Score, 1);
-            //DEPeditsInst.Warning (s);
-            // similDisp[link] = Similarity;
-            // scoreDisp[link] = score;
-            TotalScore += score;
         }
 
         return TotalScore;
@@ -213,6 +216,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         return score;
     }
     //_______________________________________________________________
+
     private int CompareText(String s1, String s2) {
         // called from Compare
         // finds two longest common strings in s1 and s2
@@ -294,6 +298,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         return Score;
     }
     //_______________________________________________________________
+
     private int CompareDate(String s1, String s2) {
         // called from Compare
         // finds similarity between two dates
@@ -383,6 +388,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         return Score;
     }
     //_______________________________________________________________
+
     private int CompareNumber(String s1, String s2) {
         // called from Compare
         // finds similarity of two numbers
@@ -405,9 +411,9 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         int N1;
         int N2;
         try {
-            N1=Integer.parseInt(s1);
-            N2=Integer.parseInt(s1);
-        } catch (NumberFormatException nfe){
+            N1 = Integer.parseInt(s1);
+            N2 = Integer.parseInt(s1);
+        } catch (NumberFormatException nfe) {
             return 0;
         }
         int Diff, Max;
@@ -438,12 +444,12 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     public float getThreshold() {
         return threshold;
     }
-    
+
     /**
      * 
      * @param threshold
      */
-    public void setThreshold(float threshold){
+    public void setThreshold(float threshold) {
         this.threshold = threshold;
     }
 }

@@ -128,6 +128,53 @@ public class CheckResult implements Serializable {
         return checkName + ": " + resultCode + " - " + message;
     }
 
+    /*
+     * 0	Not done
+     * 1	Done: OK
+     * 2	Done: Rare
+     * 3	Done: Invalid
+     */
+    public static String toDatabaseVariable(ResultCode resultCode) {
+        String result = null;
+        if (resultCode == ResultCode.NotDone) {
+            result = "0";
+        } else if (resultCode == ResultCode.OK) {
+            result = "1";
+        } else if (resultCode == ResultCode.Rare) {
+            result = "2";
+        } else if (resultCode == ResultCode.Invalid) {
+            result = "3";
+        } else if (resultCode == ResultCode.Query) {
+            result = "1";
+        } else if (resultCode == ResultCode.Missing) {
+            result = "0";
+        }
+        return result;
+    }
+
+        public static ResultCode toResultCode(String resultCode) {
+        ResultCode result = null;
+        if (resultCode.equals("0")) {
+            result = ResultCode.NotDone;
+        } else if (resultCode.equals("1")) {
+            result = ResultCode.OK;
+        } else if (resultCode.equals("2")) {
+            result = ResultCode.Rare;
+        } else if (resultCode.equals("3")) {
+            result = ResultCode.Invalid;
+        } 
+        
+        /* Never happens
+        
+         else if (resultCode.equals("1")) {
+            result = ResultCode.Query;
+        } else if (resultCode.equals("0")) {
+            result = ResultCode.Missing;
+        }
+         */
+        return result;
+    }
+    
     public static int compareResultSets(ResultCode resultCodeA, ResultCode resultCodeB) {
         if (resultCodeA == resultCodeB) {
             return 0;

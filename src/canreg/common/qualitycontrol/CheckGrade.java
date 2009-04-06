@@ -115,32 +115,50 @@ public class CheckGrade implements CheckInterface {
 
             //-----------------< Well differentiated
             if ((morphologyNumber == 8331 || morphologyNumber == 9187 || morphologyNumber == 9511) && (gradeNumber != 1)) {
-                graderesult = false;            //-----------------< Mod differentiated
+                graderesult = false;
             }
+
+            //-----------------< Mod differentiated
             if ((morphologyNumber == 8332 || morphologyNumber == 9083 || morphologyNumber == 9243 || morphologyNumber == 9372) && (gradeNumber != 2)) {
-                graderesult = false;            //-----------------< Poorly differentiated
+                graderesult = false;
             }
+
+            //-----------------< Poorly differentiated
             if ((morphologyNumber == 8631 || morphologyNumber == 8634) && (gradeNumber != 3)) {
-                graderesult = false;            //-----------------< Undifferentiated, Anaplastic
+                graderesult = false;            
             }
+
+            //-----------------< Undifferentiated, Anaplastic
             if ((morphologyNumber == 8020 || morphologyNumber == 8021 || morphologyNumber == 8805 || morphologyNumber == 9062 || morphologyNumber == 9082 || morphologyNumber == 9390 || morphologyNumber == 9392 || morphologyNumber == 9401 || morphologyNumber == 9451 || morphologyNumber == 9505 || morphologyNumber == 9512) && (gradeNumber != 4)) {
-                graderesult = false;            //------------< if not lymphomas or leukemia..
+                graderesult = false;            
             }
+
+            //------------< if not lymphomas or leukemia..
             if ((gradeNumber >= 5 && gradeNumber <= 8) && morphologyNumber < 9590) {
-                graderesult = false;            //-----------------< T cell lymphomas
+                graderesult = false;            
             }
+
+            //-----------------< T cell lymphomas
             if ((morphologyNumber == 9702 || morphologyNumber == 9705 || morphologyNumber == 9708 || morphologyNumber == 9709 || morphologyNumber == 9714 || morphologyNumber == 9717 || morphologyNumber == 9718 || morphologyNumber == 9719 || morphologyNumber == 9729 || morphologyNumber == 9827 || morphologyNumber == 9834 || morphologyNumber == 9837) && (gradeNumber != 5)) {
-                graderesult = false;            //---------< T-cell and Null cell lymphoma, anaplastic
+                graderesult = false;            
             }
+
+            //---------< T-cell and Null cell lymphoma, anaplastic
             if ((morphologyNumber == 9714) && (gradeNumber != 4 && gradeNumber != 5 && gradeNumber != 7)) {
-                graderesult = false;            //---------< T-cell Killer cell lymphoma
+                graderesult = false;            
             }
+
+            //---------< T-cell Killer cell lymphoma
             if ((morphologyNumber >= 9700 && morphologyNumber <= 9719) && (gradeNumber != 5 && gradeNumber != 8)) {
-                graderesult = false;            //-----------------< B cell lymphomas
+                graderesult = false;            
             }
+
+            //-----------------< B cell lymphomas
             if (((morphologyNumber >= 9670 && morphologyNumber <= 9699) || morphologyNumber == 9728 || morphologyNumber == 9823 || morphologyNumber == 9833 || morphologyNumber == 9836) && (gradeNumber != 6)) {
-                graderesult = false;            //---------< Killer cell
+                graderesult = false;            
             }
+
+            //---------< Killer cell
             if ((morphologyNumber == 9948) && (gradeNumber != 8)) {
                 graderesult = false;
             }

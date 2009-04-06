@@ -17,6 +17,7 @@
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="2"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
@@ -53,7 +54,7 @@
                   <Component id="variableChooserPanel" alignment="0" min="0" pref="0" max="32767" attributes="1"/>
                   <Component id="settingsPanel" alignment="0" max="32767" attributes="1"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="14" max="32767" attributes="0"/>
               <Component id="resultPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -140,12 +141,14 @@
             <Component class="javax.swing.JButton" name="loadSetupButton">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="loadSetupButton.text"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="loadSetupButton" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="saveSetupButton">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="saveSetupButton.text"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="saveSetupButton" noResource="true"/>
               </Properties>
             </Component>
@@ -212,6 +215,7 @@
             <Component class="javax.swing.JCheckBox" name="headingCheckBox">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="headingCheckBox.text"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="headingCheckBox" noResource="true"/>
               </Properties>
             </Component>
@@ -224,12 +228,14 @@
                     <StringItem index="2" value="User"/>
                   </StringArray>
                 </Property>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="variableNamesComboBox" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="variableNamesLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="variableNamesLabel.text"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="variableNamesLabel" noResource="true"/>
               </Properties>
             </Component>
@@ -254,6 +260,7 @@
               <Properties>
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" resourceKey="formatDateCheckBox.text"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="formatDateCheckBox" noResource="true"/>
               </Properties>
             </Component>
@@ -261,6 +268,7 @@
               <Properties>
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" resourceKey="correctUnknownCheckBox.text"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="correctUnknownCheckBox" noResource="true"/>
               </Properties>
             </Component>
