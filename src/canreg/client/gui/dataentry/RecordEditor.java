@@ -83,7 +83,17 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             @Override
             public void internalFrameClosing(InternalFrameEvent e) {
                 int option = JOptionPane.NO_OPTION;
-                if (true) { // TODO: Implement "If changes has been made" check...
+                // Go through all panels and ask if any changes has been done
+                boolean changesDone = false;
+                for(Component component:patientTabbedPane.getComponents()) {
+                    RecordEditorPanel panel = (RecordEditorPanel) component;
+                    changesDone = changesDone || panel.isSaveNeeded();
+                }
+                for(Component component:tumourTabbedPane.getComponents()) {
+                    RecordEditorPanel panel = (RecordEditorPanel) component;
+                    changesDone = changesDone || panel.isSaveNeeded();
+                }
+                if (changesDone) { // TODO: Implement "If changes has been made" check...
                     option = JOptionPane.showConfirmDialog(null, "Really close?\nChanges made will be lost.");
                     if (option == JOptionPane.YES_OPTION) {
                         close();

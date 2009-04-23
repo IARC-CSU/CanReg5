@@ -17,6 +17,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
@@ -52,17 +53,25 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
     protected java.awt.Color VARIABLE_RARE_COLOR = java.awt.Color.YELLOW;
     protected java.awt.Color VARIABLE_OK_COLOR = java.awt.SystemColor.text;
     private Dictionary dictionary;
+    String initialValue;
     private boolean mandatory;
+    private boolean hasChanged;
 
     /** Creates new form VariableEditorPanel */
     public VariableEditorPanel() {
         initComponents();
+        hasChanged = false;
 
         codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
 
             @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 componentFocusGained(evt);
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                componentFocusLost(evt);
             }
         });
     }
@@ -81,6 +90,10 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
             filledOK = codeTextField.getText().trim().length() > 0;
         }
         return filledOK;
+    }
+
+    public boolean hasChanged() {
+        return hasChanged;
     }
 
     /**
@@ -331,6 +344,7 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
      * @param value
      */
     public void setValue(String value) {
+        initialValue = value;
         codeTextField.setText(value);
         try {
             lookUpAndSetDescription();
@@ -466,6 +480,12 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         Point point = focusedComponent.getLocation();
         point.y += 42; // Trial and error
         this.scrollRectToVisible(new Rectangle(point));
+    }
+
+    protected void componentFocusLost(FocusEvent evt) {
+        if (!getValue().toString().equals(initialValue)){
+            hasChanged = true;
+        }
     }
 
     public void actionPerformed(ActionEvent e) {

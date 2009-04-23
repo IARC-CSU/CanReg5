@@ -19,13 +19,31 @@ public class DateHelper {
         boolean unknownMonth = false;
         boolean unknownYear = false;
 
+        int day = 99;
+        int month = 99;
+        int year = 9999;
+
         String yearString = getYear(dateString, dateFormatString);
         String monthString = getMonth(dateString, dateFormatString);
         String dayString = getDay(dateString, dateFormatString);
 
-        int day = Integer.parseInt(dayString);
-        int month = Integer.parseInt(monthString);
-        int year = Integer.parseInt(yearString);
+        if (dayString.trim().length() > 0) {
+            day = Integer.parseInt(dayString);
+        } else {
+            dayString = "99";
+        }
+        if (dayString.trim().length() > 0) {
+            month = Integer.parseInt(monthString);
+        } else {
+            monthString = "99";
+
+        }
+        if (dayString.trim().length() > 0) {
+            year = Integer.parseInt(yearString);
+
+        } else {
+            yearString = "9999";
+        }
 
         GregorianCalendarCanReg calendar = new GregorianCalendarCanReg();
 
@@ -159,7 +177,7 @@ public class DateHelper {
             date.add(Calendar.DAY_OF_MONTH, 1);
             daysBetween++;
         }
-        return daysBetween-1;
+        return daysBetween - 1;
     }
 
     public static long yearsBetween(Calendar startDate, Calendar endDate) {
@@ -169,6 +187,6 @@ public class DateHelper {
             date.add(Calendar.YEAR, 1);
             yearsBetween++;
         }
-        return yearsBetween-1;
+        return yearsBetween - 1;
     }
 }

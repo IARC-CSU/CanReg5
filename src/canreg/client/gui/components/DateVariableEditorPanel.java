@@ -6,8 +6,6 @@ import canreg.common.Globals;
 import canreg.common.GregorianCalendarCanReg;
 import com.toedter.calendar.JDateChooser;
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextField;
@@ -53,6 +51,11 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 componentFocusGained(evt);
             }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                componentFocusLost(evt);
+            }
         });
     }
 
@@ -62,7 +65,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
      */
     @Override
     public void setValue(String value) {
-
+        initialValue = value;
         if (value.trim().length() == 0) {
             if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
                 codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);

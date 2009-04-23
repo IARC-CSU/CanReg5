@@ -56,7 +56,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     private Map<Integer, Dictionary> dictionary;
     private DatabaseGroupsListElement[] groupListElements;
     private GlobalToolBox globalToolBox;
-    private boolean saveNeeded = false;
+    private boolean hasChanged = false;
     private ActionListener actionListener;
     private DatabaseVariablesListElement recordStatusVariableListElement;
     private DatabaseVariablesListElement unduplicationVariableListElement;
@@ -97,7 +97,16 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
      * @return
      */
     public boolean isSaveNeeded() {
-        return saveNeeded;
+        hasChanged = false;
+
+        for (DatabaseVariablesListElement databaseVariablesListElement : variablesInTable) {
+            VariableEditorPanel panel = variableEditorPanels.get(databaseVariablesListElement.getDatabaseVariableName());
+            if (panel != null) {
+                hasChanged = hasChanged || panel.hasChanged();
+            }
+        }
+
+        return hasChanged;
     }
 
     /**
@@ -105,7 +114,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
      * @param saveNeeded
      */
     public void setSaveNeeded(boolean saveNeeded) {
-        this.saveNeeded = saveNeeded;
+        this.hasChanged = saveNeeded;
     }
 
 
