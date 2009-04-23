@@ -666,7 +666,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             } else if (e.getActionCommand().equalsIgnoreCase(CHANGE_PATIENT_RECORD)) {
                 RecordEditorPanel tumourRecordEditorPanel = (RecordEditorPanel) source;
                 Tumour tumourDatabaseRecord = (Tumour) tumourRecordEditorPanel.getDatabaseRecord();
-                String requestedPatientRecordID = JOptionPane.showInputDialog(null, "Please enter Patient record ID:", "Assign new Patient Record ID", JOptionPane.QUESTION_MESSAGE);
+                String requestedPatientRecordID = JOptionPane.showInputDialog(null, "Please enter Patient record ID:", "Move tumour to which Patient Record?", JOptionPane.QUESTION_MESSAGE);
                 if (requestedPatientRecordID != null) {
                     // First see if it is one of the records shown
                     RecordEditorPanel patientRecordEditorPanel = patientRecordsMap.get(requestedPatientRecordID);

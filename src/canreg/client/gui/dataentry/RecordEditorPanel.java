@@ -129,7 +129,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
 
     void setChecksResultCode(ResultCode resultCode) {
         this.resultCode = resultCode;
-        Object recStatus = "0";
+        Object recStatus = null;
         boolean canBeConfirmed = false;
         if (resultCode == null || resultCode == ResultCode.NotDone) {
             checksLabel.setText("Not done");
@@ -143,16 +143,22 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
                 }
             }
         }
+        // Set record status
         if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
+            if (hasChanged) {
+                recStatus = "0";
+            } else {
+                recStatus = databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
+            }
             if (canBeConfirmed) {
                 recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithConfirmArray));
-                recStatus = "0";
+
                 if (recStatus != null) {
                     recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
                 }
             } else {
                 recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithoutConfirmArray));
-                recStatus = "0";
+
                 if (recStatus != null) {
                     recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
                 }
@@ -189,7 +195,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         globalToolBox =
                 CanRegClientApp.getApplication().getGlobalToolBox();
         saveButton.setEnabled(true);
-        setChecksResultCode(resultCode);
+        // setChecksResultCode(resultCode);
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
     }
 
@@ -265,10 +271,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             tableName = Globals.TUMOUR_TABLE_NAME;
             personSearchPanel.setVisible(false);
         }
-
-        /*
-         * Set the record status.
-         */
         if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
             recStatusDictMap = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
 
@@ -283,15 +285,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
                 }
             }
             recStatusDictWithoutConfirmArray = recStatusDictWithoutConfirmVector.toArray(new DictionaryEntry[0]);
-
-            recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithConfirmArray));
-            Object recStatus = databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
-            if (recStatus != null) {
-                recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
-            }
-
-        } else {
-            recordStatusPanel.setVisible(false);
         }
 
         /*
@@ -314,6 +307,20 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
                 resultCode = CheckResult.toResultCode(checkStatusString);
                 setChecksResultCode(resultCode);
             }
+        }
+        /*
+         * Set the record status.
+         */
+        if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
+
+            recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithConfirmArray));
+            Object recStatus = databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
+            if (recStatus != null) {
+                recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
+            }
+
+        } else {
+            recordStatusPanel.setVisible(false);
         }
 
         Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new TreeMap<Integer, VariableEditorGroupPanel>();
