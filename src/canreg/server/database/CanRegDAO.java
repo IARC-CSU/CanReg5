@@ -226,7 +226,7 @@ public class CanRegDAO {
      * @throws java.sql.SQLException
      * @throws java.lang.Exception
      */
-    public DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(DatabaseFilter filter, String tableName) throws SQLException, Exception {
+    public synchronized DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(DatabaseFilter filter, String tableName) throws SQLException, Exception {
         // distributedDataSources.remove(theUser);
         ResultSet result;
         Statement statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -234,6 +234,7 @@ public class CanRegDAO {
         DistributedTableDataSource dataSource;
         Set<DatabaseVariablesListElement> variables;
 
+        // Is this a person search query?
         if (DatabaseFilter.QueryType.PERSON_SEARCH.equals(filter.getQueryType())) {
             String query = "";
             query = "SELECT COUNT(*) FROM APP.PATIENT";
@@ -245,7 +246,11 @@ public class CanRegDAO {
             query = "SELECT " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " FROM APP.PATIENT";
             System.out.print(query);
             result = statement.executeQuery(query);
-        } else if (DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR.equals(filter.getQueryType())) {
+        }
+
+
+        // Or a Frequency by year query?
+        else if (DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR.equals(filter.getQueryType())) {
             String filterString = filter.getFilterString();
             String query = "";
             if (!filterString.isEmpty()) {
@@ -275,7 +280,11 @@ public class CanRegDAO {
             System.out.print(query);
             result = statement.executeQuery(query);
 
-        } else if (tableName.equalsIgnoreCase("tumour")) {
+        }
+
+
+        // Or a "regular" query from the tumour table
+        else if (tableName.equalsIgnoreCase("tumour")) {
             String filterString = filter.getFilterString();
             if (!filterString.isEmpty()) {
                 filterString = " WHERE " + filterString;
@@ -290,7 +299,11 @@ public class CanRegDAO {
             }
 
             result = statement.executeQuery(strGetTumours + filterString);
-        } else if (tableName.equalsIgnoreCase("patient")) {
+        }
+
+
+        // Or a "regular" query from the patient table
+        else if (tableName.equalsIgnoreCase("patient")) {
             String filterString = filter.getFilterString();
             if (!filterString.isEmpty()) {
                 filterString = " WHERE (" + filterString + " )";
@@ -304,7 +317,11 @@ public class CanRegDAO {
             }
             debugOut(strCountPatients + filterString);
             result = statement.executeQuery(strGetPatients + filterString);
-        } else if (tableName.equalsIgnoreCase("both")) {
+        }
+
+
+        // Or a "regular" query from a join of both tables
+        else if (tableName.equalsIgnoreCase("both")) {
             String filterString = filter.getFilterString();
             if (!filterString.isEmpty()) {
                 filterString = " AND (" + filterString.trim() + ")";
@@ -322,9 +339,14 @@ public class CanRegDAO {
             debugOut(strCountPatientsAndTumours + filterString);
 
             result = statement.executeQuery(strGetPatientsAndTumours + filterString);
-        } else {
+        }
+
+        // Or an unknown query...
+        else {
             throw new Exception("Unknown table name.");
         }
+
+
         if (rowCount > 0) {
             dataSource = new DistributedTableDataSourceResultSetImpl(rowCount, result);
         } else {
@@ -353,7 +375,7 @@ public class CanRegDAO {
      * 
      * @param resultSetID
      */
-    public void releaseResultSet(String resultSetID) {
+    public synchronized void releaseResultSet(String resultSetID) {
         distributedDataSources.remove(resultSetID);
     }
 
@@ -363,7 +385,7 @@ public class CanRegDAO {
      * @param tableName
      * @return
      */
-    public DatabaseRecord getRecord(int recordID, String tableName) {
+    public synchronized DatabaseRecord getRecord(int recordID, String tableName) {
         if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             return getPatient(recordID);
         } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
@@ -377,7 +399,7 @@ public class CanRegDAO {
      * Perform backup of the database
      * @return Path to backup
      */
-    public String performBackup() {
+    public synchronized String performBackup() {
         String path = null;
         try {
             path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + systemCode);
@@ -449,7 +471,7 @@ public class CanRegDAO {
         return dbProperties;
     }
 
-    private boolean createTables(Connection dbConnection) {
+    private synchronized boolean createTables(Connection dbConnection) {
         boolean bCreatedTables = false;
         Statement statement = null;
         try {
@@ -529,7 +551,7 @@ public class CanRegDAO {
      * @param path to database backup.
      * @return true if successfull, false if not
      */
-    public String restoreFromBackup(String path) {
+    public synchronized String restoreFromBackup(String path) {
         boolean bRestored = false, shutdownSuccess = false;
         SQLException ex = null;
         String dbUrl = getDatabaseUrl();
@@ -743,7 +765,7 @@ public class CanRegDAO {
      * @param patient
      * @return
      */
-    public int savePatient(Patient patient) throws SQLException {
+    public synchronized int savePatient(Patient patient) throws SQLException {
         String patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
         Object patientID = patient.getVariable(patientIDVariableName);
         if (patientID == null || patientID.toString().trim().length() == 0) {
@@ -762,7 +784,7 @@ public class CanRegDAO {
      * @param tumour
      * @return
      */
-    public int saveTumour(Tumour tumour) throws SQLException {
+    public synchronized int saveTumour(Tumour tumour) throws SQLException {
         String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         Object tumourID = tumour.getVariable(tumourIDVariableName);
         if (tumourID == null || tumourID.toString().trim().length() == 0) {
@@ -776,7 +798,7 @@ public class CanRegDAO {
      * @param dictionary
      * @return
      */
-    public int saveDictionary(Dictionary dictionary) {
+    public synchronized int saveDictionary(Dictionary dictionary) {
         int id = -1;
         try {
             stmtSaveNewDictionary.clearParameters();
@@ -807,7 +829,7 @@ public class CanRegDAO {
      * @param dictionaryEntry 
      * @return
      */
-    public int saveDictionaryEntry(DictionaryEntry dictionaryEntry) {
+    public synchronized int saveDictionaryEntry(DictionaryEntry dictionaryEntry) {
         int id = -1;
         try {
             stmtSaveNewDictionaryEntry.clearParameters();
@@ -843,7 +865,7 @@ public class CanRegDAO {
      * @param populationDataSet
      * @return
      */
-    public int saveNewPopulationDataset(PopulationDataset populationDataSet) {
+    public synchronized int saveNewPopulationDataset(PopulationDataset populationDataSet) {
 
         Map<Integer, PopulationDataset> populationDataSets;
         populationDataSets = getPopulationDatasets();
@@ -894,7 +916,7 @@ public class CanRegDAO {
      * @param populationDatasetsEntry
      * @return
      */
-    public int savePopoulationDatasetsEntry(PopulationDatasetsEntry populationDatasetsEntry) {
+    public synchronized int savePopoulationDatasetsEntry(PopulationDatasetsEntry populationDatasetsEntry) {
         int id = -1;
         try {
             stmtSaveNewPopoulationDatasetsEntry.clearParameters();
@@ -921,7 +943,7 @@ public class CanRegDAO {
      * @param nameSexRecord
      * @return
      */
-    public int saveNameSexRecord(NameSexRecord nameSexRecord) {
+    public synchronized int saveNameSexRecord(NameSexRecord nameSexRecord) {
         int id = -1;
         try {
             stmtSaveNewNameSexRecord.clearParameters();
@@ -945,7 +967,7 @@ public class CanRegDAO {
      * 
      * @return
      */
-    public boolean clearNameSexTable() {
+    public synchronized boolean clearNameSexTable() {
         boolean success = false;
         try {
             stmtClearNameSexTable.clearParameters();
@@ -964,7 +986,7 @@ public class CanRegDAO {
      * @param dictionaryID
      * @return
      */
-    public boolean deleteDictionaryEntries(int dictionaryID) {
+    public synchronized boolean deleteDictionaryEntries(int dictionaryID) {
         boolean success = false;
         try {
             stmtDeleteDictionaryEntries.clearParameters();
@@ -979,7 +1001,7 @@ public class CanRegDAO {
         return success;
     }
 
-    public boolean deletePatientRecord(int patientRecordID) {
+    public synchronized boolean deletePatientRecord(int patientRecordID) {
         boolean success = false;
         try {
             stmtDeletePatientRecord.clearParameters();
@@ -992,7 +1014,7 @@ public class CanRegDAO {
         return success;
     }
 
-    public boolean deleteTumourRecord(int tumourRecordID) {
+    public synchronized boolean deleteTumourRecord(int tumourRecordID) {
         boolean success = false;
         try {
             stmtDeleteTumourRecord.clearParameters();
@@ -1010,7 +1032,7 @@ public class CanRegDAO {
      * @param patient
      * @return
      */
-    public boolean editPatient(Patient patient) {
+    public synchronized boolean editPatient(Patient patient) {
         return editRecord("Patient", patient, stmtEditPatient);
     }
 
@@ -1019,7 +1041,7 @@ public class CanRegDAO {
      * @param tumour
      * @return
      */
-    public boolean editTumour(Tumour tumour) {
+    public synchronized boolean editTumour(Tumour tumour) {
         return editRecord("Tumour", tumour, stmtEditTumour);
     }
 
