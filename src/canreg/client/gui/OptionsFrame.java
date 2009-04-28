@@ -11,7 +11,6 @@ import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.common.Globals;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.String;
 import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.util.Arrays;
@@ -121,13 +120,18 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         generalPanel.setName("generalPanel"); // NOI18N
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel4.border.title"))); // NOI18N
+        jPanel4.setToolTipText(resourceMap.getString("jPanel4.toolTipText")); // NOI18N
+        jPanel4.setEnabled(false);
+        jPanel4.setFocusable(false);
         jPanel4.setName("jPanel4"); // NOI18N
 
         fontSizeLabel.setText(resourceMap.getString("fontSizeLabel.text")); // NOI18N
+        fontSizeLabel.setEnabled(false);
         fontSizeLabel.setName("fontSizeLabel"); // NOI18N
 
         fontSizeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Medium", "Big", "Small" }));
         fontSizeComboBox.setToolTipText(resourceMap.getString("fontSizeComboBox.toolTipText")); // NOI18N
+        fontSizeComboBox.setEnabled(false);
         fontSizeComboBox.setName("fontSizeComboBox"); // NOI18N
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -356,6 +360,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         );
 
         lookAndFeelPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("lookAndFeelPanel.border.title"))); // NOI18N
+        lookAndFeelPanel.setToolTipText(resourceMap.getString("lookAndFeelPanel.toolTipText")); // NOI18N
         lookAndFeelPanel.setName("lookAndFeelPanel"); // NOI18N
 
         showOutlineCheckBox.setSelected(true);
@@ -541,7 +546,9 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(OptionsFrame.class.getName()).log(Level.INFO, null, ex);
         }
-        numberOfDaysTextField.setText(localSettings.getProperty(LocalSettings.BACKUP_EVERY_KEY));
+        String backUpEvery = localSettings.getProperty(LocalSettings.BACKUP_EVERY_KEY);
+
+        numberOfDaysTextField.setText(backUpEvery);
         automaticbackupCheckBox.setSelected(localSettings.isAutoBackup());
     }
 
