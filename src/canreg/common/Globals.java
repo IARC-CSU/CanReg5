@@ -146,6 +146,7 @@ public class Globals {
     static String CHARSET_RUSSIAN = "ISO-8859-5";
     public static String LOGFILE_PATTERN = "%h/canreg5client.log";
     public static String LOG_LEVEL = "FINEST";
+    public static String DEFAULT_BACK_UP_EVERY = "7";
     
     /**
      * 

@@ -4,6 +4,7 @@
  */
 package canreg.client;
 
+import canreg.common.Globals;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -295,13 +296,13 @@ public class LocalSettings {
     public String getProperty(String key) {
         String property = properties.getProperty(key);
         if (property == null) {
-            return getDefalutProperty(key);
+            return getDefaultProperty(key);
         } else {
             return property;
         }
     }
 
-    private String getDefalutProperty(String key) {
+    private String getDefaultProperty(String key) {
         String property = "";
         if (key.equalsIgnoreCase(USERNAME_KEY)) {
             property = "";
@@ -317,17 +318,20 @@ public class LocalSettings {
             property = "System";
         } else if (key.equalsIgnoreCase(AUTO_BACKUP_KEY)) {
             property = TRUE_PROPERTY;
+        } else if (key.equalsIgnoreCase(BACKUP_EVERY_KEY)) {
+            property = Globals.DEFAULT_BACK_UP_EVERY;
         }
         return property;
     }
 
     private void createDefaultProperties() {
-        setProperty(LOCALE_KEY, getDefalutProperty(LOCALE_KEY));
-        setProperty(REMEMBER_PASSWORD_KEY, getDefalutProperty(REMEMBER_PASSWORD_KEY));
-        setProperty(USERNAME_KEY, getDefalutProperty(USERNAME_KEY));
-        setProperty(PASSWORD_KEY, getDefalutProperty(PASSWORD_KEY));
-        setProperty(WORKING_DIR_PATH_KEY, getDefalutProperty(WORKING_DIR_PATH_KEY));
-        setProperty(AUTO_BACKUP_KEY, getDefalutProperty(AUTO_BACKUP_KEY));
+        setProperty(LOCALE_KEY, getDefaultProperty(LOCALE_KEY));
+        setProperty(REMEMBER_PASSWORD_KEY, getDefaultProperty(REMEMBER_PASSWORD_KEY));
+        setProperty(USERNAME_KEY, getDefaultProperty(USERNAME_KEY));
+        setProperty(PASSWORD_KEY, getDefaultProperty(PASSWORD_KEY));
+        setProperty(WORKING_DIR_PATH_KEY, getDefaultProperty(WORKING_DIR_PATH_KEY));
+        setProperty(AUTO_BACKUP_KEY, getDefaultProperty(AUTO_BACKUP_KEY));
+        setProperty(BACKUP_EVERY_KEY, getDefaultProperty(BACKUP_EVERY_KEY));
         settingsChanged = true;
     }
 
