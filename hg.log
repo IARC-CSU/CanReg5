@@ -1,16 +1,783 @@
+changeset:   150:e1acb3744bb1
+tag:         tip
+user:        ervikm@X60112
+date:        Thu Apr 23 15:05:43 2009 +0200
+summary:     Fixed bug that flagged all newly opened cases as pending. Improved some texts.
 
-- Added classes to deal with unknown dates.
-- Multiple primary tests added.
-- Checker: Age check added.
-- DefaultPersonSearch: fixed null pointer errors.
-- CheckAgeIncidenceDateBirthDate implemented.
-- ExportReportInternalFrame: Disabled some buttons not yet implemented.
-- CommonTools: Added functionality for compound dictionaries.
-- FastFilterInternalFrame: Added functionality for compound dictionaries.
-- DictionaryHelper: Added functionality to detect compound dictionaries.
-- DatabaseVariableListElements: Now store information on Compound dictionary or not.
-- RecordEditor: Only Supervisor can now confirm rare cases.
-- VariablesExport: Compound dictionaries now displayed properly.
-- VariableEditor: Better treatment of dictionaries, default selection, compound dictionaries now work.
-- Various small fixes. DateHelperTest.
+changeset:   149:dfbb2f55428a
+user:        ervikm@X70245.iarc.lan
+date:        Thu Apr 23 09:11:44 2009 +0100
+summary:     Started work on detection of changes.
+
+changeset:   148:1dab66748919
+parent:      147:4fbbacdf1013
+parent:      144:609e4f0103d7
+user:        ervikm@X70245.iarc.lan
+date:        Mon Apr 06 14:43:13 2009 +0200
+summary:     Merged.
+
+changeset:   147:4fbbacdf1013
+parent:      146:6e416b3230c7
+parent:      125:f0884d8d73ed
+user:        ervikm@X70245.iarc.lan
+date:        Mon Apr 06 11:27:02 2009 +0200
+summary:     Merged.
+
+changeset:   146:6e416b3230c7
+parent:      145:f606de306062
+parent:      124:481dbd3a5c24
+user:        ervikm@X70245.iarc.lan
+date:        Fri Feb 20 11:32:47 2009 +0100
+summary:     Merged.
+
+changeset:   145:f606de306062
+parent:      74:1fa27c6b6daf
+user:        ervikm@X70245.iarc.lan
+date:        Fri Feb 20 10:40:40 2009 +0100
+summary:     Nothing really...
+
+changeset:   144:609e4f0103d7
+user:        ervikm@X60112
+date:        Mon Apr 06 11:28:30 2009 +0200
+summary:     Fixed bug in person search. Removed check button from Patient. Added error message if tumour record is not found in browser.
+
+changeset:   143:cf79fd99968a
+user:        ervikm@X60112
+date:        Thu Apr 02 14:32:19 2009 +0200
+summary:     Various small fixes. DateHelperTest.
+
+changeset:   142:6503674642e7
+user:        ervikm@X60112
+date:        Thu Apr 02 14:28:38 2009 +0200
+summary:     Added classes to deal with unknown dates.
+
+changeset:   141:26dadb401567
+user:        ervikm@X60112
+date:        Thu Apr 02 14:26:59 2009 +0200
+summary:     Multiple primary tests added.
+
+changeset:   140:64a4e4121368
+user:        ervikm@X60112
+date:        Thu Apr 02 14:26:36 2009 +0200
+summary:     Checker: Age check added.
+
+changeset:   139:162fa4b79c51
+user:        ervikm@X60112
+date:        Thu Apr 02 14:26:10 2009 +0200
+summary:     DefaultPersonSearch: fixed null pointer errors.
+
+changeset:   138:9636fb22fa78
+user:        ervikm@X60112
+date:        Thu Apr 02 14:25:25 2009 +0200
+summary:     CheckAgeIncidenceDateBirthDate implemented.
+
+changeset:   137:e3384a1f3643
+user:        ervikm@X60112
+date:        Thu Mar 26 18:13:55 2009 +0100
+summary:     ExportReportInternalFrame: Disabled some buttons not yet implemented.
+
+changeset:   136:4e85991dff8c
+user:        ervikm@X60112
+date:        Thu Mar 26 18:12:56 2009 +0100
+summary:     CommonTools: Added functionality for compound dictionaries.
+
+changeset:   135:e97d33e6786b
+user:        ervikm@X60112
+date:        Thu Mar 26 18:12:07 2009 +0100
+summary:     FastFilterInternalFrame: Added functionality for compound dictionaries.
+
+changeset:   134:ca8102325aa4
+user:        ervikm@X60112
+date:        Thu Mar 26 18:11:28 2009 +0100
+summary:     DictionaryHelper: Added functionality to detect compound dictionaries.
+
+changeset:   133:6c700fc77de3
+user:        ervikm@X60112
+date:        Thu Mar 26 18:10:36 2009 +0100
+summary:     DatabaseVariableListElements: Now store information on Compound dictionary or not.
+
+changeset:   132:8855403fe7da
+user:        ervikm@X60112
+date:        Thu Mar 26 18:09:51 2009 +0100
+summary:     RecordEditor: Only Supervisor can now confirm rare cases.
+
+changeset:   131:847cd42c7255
+user:        ervikm@X60112
+date:        Thu Mar 26 18:08:52 2009 +0100
+summary:     VriablesExport: Compound dictionaries now displayed properly.
+
+changeset:   130:f7739ef5d9fe
+user:        ervikm@X60112
+date:        Thu Mar 26 18:07:44 2009 +0100
+summary:     VariableEditor: Better treatment of dictionaries, default selection, compound dictionaries now work.
+
+changeset:   129:15c9e23ceb2e
+user:        ervikm@X60112
+date:        Tue Mar 24 15:28:20 2009 +0100
+summary:     CheckGrade: Updated comments.
+
+changeset:   128:1f53e1c1664e
+user:        ervikm@X60112
+date:        Tue Mar 17 16:22:45 2009 +0100
+summary:     Added some todos.
+
+changeset:   127:7bec786ee8cc
+user:        ervikm@X60112
+date:        Fri Mar 06 11:59:41 2009 +0100
+summary:     Import: More logging. Version 4.99.3.
+
+changeset:   126:bb38c759336f
+user:        ervikm@X60112
+date:        Tue Mar 03 18:02:46 2009 +0100
+summary:     Import: fixed bugs during import of a file. The correct number of records read. Log more information when something goes wrong during import.
+
+changeset:   125:f0884d8d73ed
+user:        ervikm@X60112
+date:        Fri Feb 20 11:12:15 2009 +0100
+summary:     Ready for trip to Syria.
+
+changeset:   124:481dbd3a5c24
+user:        ervikm@X60112
+date:        Thu Feb 19 16:16:32 2009 +0100
+summary:     Updated the about.html.
+
+changeset:   123:1227c9216820
+user:        ervikm@X60112
+date:        Fri Feb 06 17:49:59 2009 +0100
+summary:     4.99.2
+
+changeset:   122:2e61b1fcd4e3
+user:        ervikm@X60112
+date:        Fri Feb 06 15:53:28 2009 +0100
+summary:     Fixed a bug where you couldn't regret cancelling an import.
+
+changeset:   121:d93b875f313e
+user:        ervikm@X60112
+date:        Thu Feb 05 18:27:24 2009 +0100
+summary:     Show/hide obsolete records now implemented.
+
+changeset:   120:ff38cdaad275
+user:        ervikm@X60112
+date:        Thu Feb 05 16:25:43 2009 +0100
+summary:     Obsoletebutton implemented to toggle obsolete-flag. Added GUI-elements to move a tumour from one patient record to another.
+
+changeset:   119:5c17f8a1e5a4
+user:        ervikm@X60112
+date:        Wed Feb 04 15:09:13 2009 +0100
+summary:     Log information redirected to Logger-object (log-file) for all output.
+
+changeset:   118:570031cf011f
+user:        ervikm@X60112
+date:        Mon Feb 02 15:19:26 2009 +0100
+summary:     Tools: break down line no longer crashes if qoutes are not closed at tne end of a line.
+
+changeset:   117:0e63b6046fb2
+user:        ervikm@X60112
+date:        Mon Feb 02 15:18:17 2009 +0100
+summary:     Record editor no longer crashes if the record status dictionary has no entries.
+
+changeset:   116:6e339a00b8a8
+user:        ervikm@X60112
+date:        Mon Feb 02 15:17:13 2009 +0100
+summary:     Edit checks now default to "not done".
+
+changeset:   115:faa6c08e2a4b
+user:        ervikm@X60112
+date:        Fri Jan 30 17:39:46 2009 +0100
+summary:     Edit checks now color variables that might be inflicted. Person search feedback improved.
+
+changeset:   114:1b9d89724abd
+user:        ervikm@X60112
+date:        Thu Jan 29 14:39:28 2009 +0100
+summary:     Version 4.99.1 started. Changed download link.
+
+changeset:   113:4cee51e2f565
+user:        ervikm@X60112
+date:        Wed Jan 28 16:35:58 2009 +0100
+summary:     Improved handling and error reporting of record ids.
+
+changeset:   112:fbda10b542bf
+user:        ervikm@X60112
+date:        Wed Jan 28 11:28:59 2009 +0100
+summary:     RangeFilterPanel: Tumour table now default table, sort by variables only the ones in the table selected.
+
+changeset:   111:3c0c6dee20be
+user:        ervikm@X60112
+date:        Wed Jan 28 09:39:46 2009 +0100
+summary:     Mainly improvemnts in perfomance of SQL queries. Some other more minor changes.
+
+changeset:   110:f0cddfc59a7f
+user:        ervikm@X60112
+date:        Mon Jan 26 11:41:44 2009 +0100
+summary:     Install new system internal frame now checks to see if the file about to be installed is already in the right folder...
+
+changeset:   109:a9b30967c18d
+user:        ervikm@X60112
+date:        Fri Jan 23 16:19:45 2009 +0100
+summary:     CanReg5 takes into account the CanReg4  fileformat when importing files, thus allowing the import of files of other charactersets.
+
+changeset:   108:61393c462892
+user:        ervikm@X60112
+date:        Fri Jan 23 16:17:52 2009 +0100
+summary:     Fixed bugs in the record editor. Record status is now saved.
+
+changeset:   107:9bd994319699
+user:        ervikm@X60112
+date:        Thu Jan 22 16:45:36 2009 +0100
+summary:     DictionaryHelper: fails more gracefully if something goes wrong while retreiving the dictionary ID. Reindentation of code.
+
+changeset:   106:80a05d596eff
+user:        ervikm@X60112
+date:        Thu Jan 22 16:43:33 2009 +0100
+summary:     CanRegServerImpl: now handles better when connection to DB fails for some reason...
+
+changeset:   105:a96f57aa1d1e
+user:        ervikm@X60112
+date:        Thu Jan 22 16:42:35 2009 +0100
+summary:     SystemDefinitionConverter: Fixed bugs dealing with the length of record IDs different than 8. Added some system variables.
+
+changeset:   104:b77bc60cbed6
+user:        ervikm@X60112
+date:        Thu Jan 22 16:41:06 2009 +0100
+summary:     CanRegDAO: Added functionality to generate next patient record ID. Squashed some bugs.
+
+changeset:   103:77fd1ae043a8
+user:        ervikm@X60112
+date:        Thu Jan 22 16:38:31 2009 +0100
+summary:     QueryGenerator: added functionality to get highest patient record id.
+
+changeset:   102:aceba06f204a
+user:        ervikm@X60112
+date:        Thu Jan 22 16:37:37 2009 +0100
+summary:     RecordEditor: Fixed a nullpointer error when "setting active record".
+
+changeset:   101:15300e75b0a4
+user:        ervikm@X60112
+date:        Tue Jan 20 17:23:36 2009 +0100
+summary:     Record status is only shown if the variable is in the system definition.
+
+changeset:   100:dabb3dce07fa
+user:        ervikm@X60112
+date:        Tue Jan 20 10:55:32 2009 +0100
+summary:     Fixed bug in Frequencies by Year. Didn't redraw table properly.
+
+changeset:   99:b56ef77a119c
+user:        ervikm@X60112
+date:        Fri Jan 16 14:54:02 2009 +0100
+summary:     Fixed bug #1: Filter with OR not working.
+
+changeset:   98:04b8e4a9d8ed
+user:        ervikm@X60112
+date:        Wed Jan 14 16:26:27 2009 +0100
+summary:     The first BETA version sent to the MECC registries 14.01.2009.
+
+changeset:   97:51bf3737f713
+user:        ervikm@X60112
+date:        Wed Jan 14 15:50:17 2009 +0100
+summary:     Created some extra indexes when going from CanReg4 to 5 in the system definition converter.
+
+changeset:   96:965c40686a99
+user:        ervikm@X60112
+date:        Wed Jan 14 13:54:07 2009 +0100
+summary:     Fixed a bug in the LoginInternalFrame where it crashes if the user has no "last used servers".
+
+changeset:   95:5b80e4b21825
+user:        ervikm@X60112
+date:        Wed Jan 14 10:44:52 2009 +0100
+summary:     Added max lines in import of complete dictionary preview. Only replace the first two blanks while importing from CanReg4.
+
+changeset:   94:52430ffb76c5
+user:        ervikm@X60112
+date:        Mon Jan 12 18:02:19 2009 +0100
+summary:     Disabled the buttons where the functionality is not ready.
+
+changeset:   93:37b15042e778
+user:        ervikm@X60112
+date:        Mon Jan 12 16:57:15 2009 +0100
+summary:     Updated the manual. First beta version for the MECC registries.
+
+changeset:   92:5fcdd1b6905a
+user:        ervikm@X60112
+date:        Mon Jan 12 16:30:48 2009 +0100
+summary:     Updated the about.html. Disabled some program features that are not yet available.
+
+changeset:   91:3777605cf719
+user:        ervikm@X60112
+date:        Mon Jan 12 16:00:21 2009 +0100
+summary:     System Converter: No longer asked to restart, as Local Settings are saved.
+
+changeset:   90:772ad234f90e
+user:        ervikm@X60112
+date:        Thu Jan 08 17:58:30 2009 +0100
+summary:     Improved record editor. Save now properly links Tumour to patient. Patient tab follow tumour tab.
+
+changeset:   89:872de9b22ab3
+user:        ervikm@X60112
+date:        Wed Jan 07 14:34:32 2009 +0100
+summary:     The standard variable name of the ID of the tumours in the database is now TumourID instead of RegistrationNumber.
+
+changeset:   88:54e8978b5524
+user:        ervikm@X60112
+date:        Wed Jan 07 14:33:15 2009 +0100
+summary:     Slight modification of the "to string" function of Patient and Tumour. Maybe it should be moved to i18?
+
+changeset:   87:4419cf943338
+user:        ervikm@X60112
+date:        Wed Jan 07 14:32:24 2009 +0100
+summary:     Dissallow empty indexes.
+
+changeset:   86:f2bb12ceace3
+user:        ervikm@X60112
+date:        Wed Jan 07 11:01:39 2009 +0100
+summary:     Create folder if the folder does not exist during system definition conversion.
+
+changeset:   85:1abcda1dd194
+user:        ervikm@X60112
+date:        Wed Jan 07 10:57:13 2009 +0100
+summary:     Addded a please restart CanReg message to the convert CR4 syst def gui.
+
+changeset:   84:51b7f6d0d515
+user:        ervikm@X60112
+date:        Wed Jan 07 10:54:43 2009 +0100
+summary:     Addded a please restart CanReg message to the convert CR4 syst def gui.
+
+changeset:   83:5bf8825f60c3
+user:        ervikm@X60112
+date:        Wed Jan 07 10:17:20 2009 +0100
+summary:     Created a graphical tool to assign database variables to the two different tables.
+
+changeset:   82:bf214d8a9d55
+user:        ervikm@X60112
+date:        Wed Jan 07 10:16:40 2009 +0100
+summary:     Moved the creation of database indexes to the end of the database creation function as this is the least important one. Patient Indexes as well...
+
+changeset:   81:3672d51b9b8f
+user:        ervikm@X60112
+date:        Wed Jan 07 10:15:52 2009 +0100
+summary:     Moved the creation of database indexes to the end of the database creation function as this is the least important one.
+
+changeset:   80:1a1e6e34a397
+user:        ervikm@X60112
+date:        Wed Jan 07 10:15:08 2009 +0100
+summary:     Fixed a bug in the way the highest tumour/patient IDs are calculated.
+
+changeset:   79:89376da1c08f
+user:        ervikm@X60112
+date:        Wed Jan 07 10:13:39 2009 +0100
+summary:     Fixed a bug in the import of CanReg4 dictionaries.
+
+changeset:   78:075d7af31305
+user:        ervikm@X60112
+date:        Tue Jan 06 14:54:06 2009 +0100
+summary:     Fixed a bug in the name of a standard variable name: UpdateDate -> TumourUpdateDate
+
+changeset:   77:f03d64de1cbb
+user:        ervikm@X60112
+date:        Tue Jan 06 14:06:06 2009 +0100
+summary:     Improved the import function. Added delete record functionality. Improved the record editor. Squashed bugs.
+
+changeset:   76:bc983b296ec8
+user:        ervikm@X60112
+date:        Mon Jan 05 17:18:03 2009 +0100
+summary:     Improved the database structure and the browser. Improved the import function.
+
+changeset:   75:abb88cbe85dd
+user:        ervikm@X60112
+date:        Mon Jan 05 16:44:16 2009 +0100
+summary:     XML writer now indents thus making the XML file more readable.
+
+changeset:   74:1fa27c6b6daf
+parent:      73:de1e38d5f58a
+parent:      72:49810f1d21a7
+user:        ervikm@X70245.iarc.lan
+date:        Fri Nov 14 10:09:35 2008 +0100
+summary:     Merged.
+
+changeset:   73:de1e38d5f58a
+parent:      71:cf3bf87f5a86
+user:        ervikm@X70245
+date:        Fri Nov 14 10:04:10 2008 +0100
+summary:     Ready for Sydney.
+
+changeset:   72:49810f1d21a7
+user:        ervikm@X60112
+date:        Fri Nov 14 09:58:40 2008 +0100
+summary:     Ready for Sydney.
+
+changeset:   71:cf3bf87f5a86
+parent:      70:aad792e8c4b6
+parent:      66:d28befdcde7e
+user:        ervikm@X60112
+date:        Tue Nov 11 15:41:52 2008 +0100
+summary:     Merged.
+
+changeset:   70:aad792e8c4b6
+parent:      69:07d68b4157b1
+parent:      63:c3ad99e24ef8
+user:        ervikm@X60112
+date:        Tue Nov 11 15:38:40 2008 +0100
+summary:     Merged.
+
+changeset:   69:07d68b4157b1
+user:        ervikm@X60112
+date:        Tue Nov 11 15:31:40 2008 +0100
+summary:     Removing build folder from repository...
+
+changeset:   68:310ef8ccb90a
+user:        ervikm@X60112
+date:        Tue Nov 11 15:26:57 2008 +0100
+summary:     Merging...
+
+changeset:   67:22932c12b66b
+parent:      65:21c8b5f89395
+user:        ervikm@X60112
+date:        Tue Nov 11 15:26:02 2008 +0100
+summary:     Merging...
+
+changeset:   66:d28befdcde7e
+parent:      64:c388c3e31640
+user:        ervikm@X70245
+date:        Tue Nov 11 11:51:19 2008 +0100
+summary:     ...
+
+changeset:   65:21c8b5f89395
+user:        ervikm@X60112
+date:        Tue Nov 11 15:15:26 2008 +0100
+summary:     Added "LIKE" to FastFilterInternalFrame.
+
+changeset:   64:c388c3e31640
+parent:      61:8c594bea7daf
+user:        ervikm@X70245
+date:        Tue Nov 11 11:43:26 2008 +0100
+summary:     ...
+
+changeset:   63:c3ad99e24ef8
+user:        ervikm@X60112
+date:        Tue Nov 11 11:33:55 2008 +0100
+summary:     Merge
+
+changeset:   62:7d9af1bb6f05
+parent:      59:86d467d27f0d
+user:        ervikm@X60112
+date:        Fri Nov 07 15:46:51 2008 +0100
+summary:     Added documentation.
+
+changeset:   61:8c594bea7daf
+user:        ervikm@X70245
+date:        Thu Nov 06 14:05:59 2008 +0100
+summary:     ...
+
+changeset:   60:938eba8df55f
+user:        ervikm@X70245
+date:        Thu Nov 06 13:52:38 2008 +0100
+summary:     Comments improved. Improved dictionary editior. Other small changes.
+
+changeset:   59:86d467d27f0d
+user:        ervikm@X60112
+date:        Thu Oct 30 10:06:38 2008 +0100
+summary:     Updated javadoc.
+
+changeset:   58:f6311caf392d
+user:        ervikm@X60112
+date:        Wed Oct 29 17:32:10 2008 +0100
+summary:     Added javadoc globally.
+
+changeset:   57:c1a14efce407
+user:        ervikm@X60112
+date:        Wed Oct 29 14:36:42 2008 +0100
+summary:     Automatic build numbering implemented using appinfo.properties and ant.
+
+changeset:   56:a017ff34d9fd
+user:        ervikm@X60112
+date:        Tue Oct 28 17:37:42 2008 +0100
+summary:     Export function implemented.
+
+changeset:   55:5b2561079b33
+user:        ervikm@X60112
+date:        Mon Oct 27 18:17:56 2008 +0100
+summary:     Minor changes.
+
+changeset:   54:6eca6a7cfe1c
+user:        ervikm@X60112
+date:        Fri Oct 24 16:39:29 2008 +0200
+summary:     Improved lookupfileloader and rulesfileloader to also read from .jar files.
+
+changeset:   53:9507c58554e3
+user:        ervikm@X60112
+date:        Thu Oct 23 16:33:16 2008 +0200
+summary:     Coversions started. O3 to 10 implemented. Continued the checks.
+
+changeset:   52:c405d7dd1e1f
+user:        ervikm@X60112
+date:        Wed Oct 22 19:06:23 2008 +0200
+summary:     Checks started. 8 implemented. Lookupreader implemented.
+
+changeset:   51:b072fa3bca4d
+user:        ervikm@X60112
+date:        Tue Oct 21 17:35:17 2008 +0200
+summary:     Person Search improved.
+
+changeset:   50:3bd61b797363
+user:        ervikm@X60112
+date:        Mon Oct 20 18:33:43 2008 +0200
+summary:     Person Search basics implemented. Global and 1 by 1.
+
+changeset:   49:bf82e1a9c075
+user:        ervikm@X60112
+date:        Fri Oct 17 17:23:50 2008 +0200
+summary:     Various changes, like icons and print options.
+
+changeset:   48:468345de9e5e
+user:        ervikm@X60112
+date:        Tue Oct 14 11:49:47 2008 +0200
+summary:     Added ability to print frequency-tables. Improved dataentry. Dictionary lookup performed as the field is filled. Started implementing global actions instead of method calls. Fixed bugs in frequency by year tool.
+
+changeset:   47:0f614980dc3b
+user:        ervikm@X60112
+date:        Fri Oct 10 09:08:28 2008 +0200
+summary:     Various edits.
+
+changeset:   46:f519c7d648a4
+user:        ervikm@X60112
+date:        Tue Oct 07 17:10:23 2008 +0200
+summary:     Name/Sex table implemented. GUI to show and rebuild tables. Default table of names and sex combinations taken from CanReg4.
+
+changeset:   45:47c0e281fddb
+user:        ervikm@X60112
+date:        Mon Oct 06 17:05:36 2008 +0200
+summary:     Automatic backup remainder system implemented.
+
+changeset:   44:24b3a8f4b461
+user:        ervikm@X60112
+date:        Thu Oct 02 16:01:39 2008 +0200
+summary:     Population dataset editor continued. Age group structures and population datasets defined.
+
+changeset:   43:abd6ace6e2c1
+user:        ervikm@X60112
+date:        Thu Oct 02 16:00:16 2008 +0200
+summary:     Population dataset editor continued. Age group structures and population datasets defined.
+
+changeset:   42:082725a9dcfd
+user:        ervikm@X60112
+date:        Mon Sep 29 17:44:07 2008 +0200
+summary:     Export of dictionary files implemented. Population dataset editor started. Tables for PDS and users created.
+
+changeset:   41:2c4c5040daf3
+user:        ervikm@X60112
+date:        Mon Sep 29 14:00:01 2008 +0200
+summary:     Export of dictionary files implemented.
+
+changeset:   40:dad2a79bbffb
+user:        ervikm@X60112
+date:        Fri Sep 26 17:57:23 2008 +0200
+summary:     Frequencies by year improved. Import of entire dictionary files. About.html updated.
+
+changeset:   39:4a5d5bc39033
+user:        ervikm@X60112
+date:        Wed Sep 24 15:46:08 2008 +0200
+summary:     Browser improved. Variable-set chooser active.
+
+changeset:   38:edf9da96e939
+user:        ervikm@X60112
+date:        Fri Sep 19 15:04:01 2008 +0200
+summary:     Browser improved. Colors of mandatory fields added.
+
+changeset:   37:727413c53dac
+user:        ervikm@X60112
+date:        Wed Sep 10 15:59:23 2008 +0200
+summary:     Import fixed. Record editor improved.
+
+changeset:   36:77f50bccbb2d
+user:        ervikm@X60112
+date:        Mon Sep 08 16:47:29 2008 +0200
+summary:     Save possible. Asks when closing record editor.
+
+changeset:   35:d85c8a5d0c6d
+user:        ervikm@X60112
+date:        Fri Aug 08 14:00:33 2008 +0200
+summary:     Frequencies by year added. Various updates and fixes. Better record editor.
+
+changeset:   34:40437891455a
+user:        ervikm@X60112
+date:        Tue Aug 05 16:42:24 2008 +0200
+summary:     Editor panel functionality started. Calendar function added. Localization improved. Plus some restructuring of dictionary functions. About box improved. A dynamic global tool box implemented. Various changes.
+
+changeset:   33:cb6cad481279
+user:        ervikm@X60112
+date:        Fri Aug 01 17:25:48 2008 +0200
+summary:     Editor panel functionality started. Calendar function added. Localization improved. Plus some restructuring of dictionary functions. Various.
+
+changeset:   32:7025a962e8d5
+user:        ervikm@X60112
+date:        Fri Jul 25 17:37:19 2008 +0200
+summary:     Minor adjustments.
+
+changeset:   31:47553c9c96dd
+user:        ervikm@X60112
+date:        Wed Jul 23 13:05:28 2008 +0200
+summary:     Improved getting data from server. Better fastfilter editor.
+
+changeset:   30:13922f4f1809
+user:        ervikm@X60112
+date:        Wed Jul 16 17:31:41 2008 +0200
+summary:     Getting data from server. Started creating record editors. Sees to that server and client are the same. Better exceptions thrown and handled for errors during login.
+
+changeset:   29:4debe133b327
+user:        ervikm@X60112
+date:        Fri Jul 11 17:55:46 2008 +0200
+summary:     Primarily worked on efficiently getting data from server using caching data structures.
+
+changeset:   28:d5beb9797fe7
+user:        ervikm@X60112
+date:        Wed Jul 02 17:38:39 2008 +0200
+summary:     Restore from Backup implemented. Feedback during import. Menus corresponds to if you run the CanReg server locally or not. Various other modifications.
+
+changeset:   27:c64edd3c6435
+user:        ervikm@X60112
+date:        Wed Jul 02 09:48:06 2008 +0200
+summary:     Created tools to install a new CanReg system as well as convert an old system.
+
+changeset:   26:77eb819031fc
+user:        ervikm@X60112
+date:        Tue Jul 01 15:17:34 2008 +0200
+summary:     Added the convert CanReg4 to the GUI. Other slight modifications.
+
+changeset:   25:45ebfaac434d
+parent:      23:014285a04c22
+parent:      24:987d580db3e3
+user:        ervikm@X60112
+date:        Mon Jun 30 18:12:57 2008 +0200
+summary:     Added the "Install System" button. Testing merge.
+
+changeset:   24:987d580db3e3
+parent:      22:cd951847f2c0
+user:        ervikm@X70245
+date:        Mon Jun 30 18:04:53 2008 +0200
+summary:     One comment added. Testing a merge.
+
+changeset:   23:014285a04c22
+user:        ervikm@X60112
+date:        Mon Jun 30 18:09:01 2008 +0200
+summary:     Added the "Install System" button. Testing merge.
+
+changeset:   22:cd951847f2c0
+user:        ervikm@X70245
+date:        Mon Jun 30 17:40:33 2008 +0200
+summary:     System definition files moved. Restructured folder systems. Modified login-screen.
+
+changeset:   21:1802bbaaa35c
+parent:      20:1437eb05a56a
+parent:      19:5e69e3228df6
+user:        ervikm@X70245
+date:        Mon Jun 30 14:57:21 2008 +0200
+summary:     Merged classes...
+
+changeset:   20:1437eb05a56a
+parent:      17:ef5cecf5cd8a
+user:        ervikm@X70245
+date:        Mon Jun 30 14:55:16 2008 +0200
+summary:     Various improvements.
+
+changeset:   19:5e69e3228df6
+parent:      18:c91d14f78b7d
+parent:      9:be9ef8f0c4a4
+user:        ervikm@X70245.iarc.lan
+date:        Mon Jun 30 04:08:59 2008 -0500
+summary:     Automated merge with file:///H:\Users\ervik\Mercurial\CanReg
+
+changeset:   18:c91d14f78b7d
+user:        morten <morten@X60112>
+date:        Mon Jun 23 16:26:26 2008 +0200
+summary:     Fast filter improved. Work on export functions. Backup function implemented.
+
+changeset:   17:ef5cecf5cd8a
+user:        morten <morten@X60112>
+date:        Mon Jun 23 16:25:27 2008 +0200
+summary:     Fast filter improved. Work on export functions. Backup function implemented.
+
+changeset:   16:31c0562b6412
+user:        morten <morten@X60112>
+date:        Tue Jun 17 17:27:10 2008 +0200
+summary:     Continued work on options screen. Automatic launching of the server. Reworked options file and the way to generate default settings. Implemented the checking of the newest version online.
+
+changeset:   15:5e43fb0229ef
+user:        morten <morten@X60112>
+date:        Mon Jun 09 15:09:43 2008 +0200
+summary:     Continued to map the import screen to the import function.
+
+changeset:   14:84285f7eca69
+user:        morten <morten@X60112>
+date:        Mon Jun 09 11:12:26 2008 +0200
+summary:     Continued to map the import screen to the import function.
+
+changeset:   13:3be521d48055
+user:        morten <morten@X60112>
+date:        Mon Jun 02 15:01:48 2008 +0200
+summary:     Continued to map the import screen to the import function. Some refactoring.
+
+changeset:   12:d1942d06a0d3
+user:        morten <morten@X60112>
+date:        Mon Jun 02 14:59:23 2008 +0200
+summary:     VariableMapping rename.
+
+changeset:   11:bd489184b718
+user:        morten <morten@X60112>
+date:        Thu May 29 18:08:19 2008 +0200
+summary:     Continued to map the import screen to the import function.
+
+changeset:   10:f1af32d801bc
+parent:      8:fa3358ab4074
+user:        morten <morten@X60112>
+date:        Wed May 14 15:54:27 2008 +0200
+summary:     Nothing major. Really!
+
+changeset:   9:be9ef8f0c4a4
+user:        ervikm@X70245.iarc.lan
+date:        Mon Jun 30 04:02:48 2008 -0500
+summary:     [no commit message]
+
+changeset:   8:fa3358ab4074
+user:        morten <morten@X60112>
+date:        Tue May 06 16:36:55 2008 +0200
+summary:     Dictionary setup added.
+
+changeset:   7:f201bc56ce6d
+user:        morten <morten@X60112>
+date:        Mon May 05 18:20:42 2008 +0200
+summary:     GUI modifications.
+
+changeset:   6:21850baac4e4
+user:        morten <morten@X60112>
+date:        Wed Apr 30 14:27:49 2008 +0200
+summary:     GUI modifications.
+
+changeset:   5:8db4dd29947a
+user:        morten <morten@X60112>
+date:        Tue Apr 29 18:16:19 2008 +0200
+summary:     GUI modifications.
+
+changeset:   4:364cbe4c0982
+user:        morten <morten@X60112>
+date:        Tue Apr 29 16:33:33 2008 +0200
+summary:     Some refactorisation and removal of dead code.
+
+changeset:   3:4c5c853e8bea
+user:        morten <morten@X60112>
+date:        Tue Apr 29 15:18:23 2008 +0200
+summary:     One line added. Test.
+
+changeset:   2:57044ab366c7
+user:        morten <morten@X60112>
+date:        Tue Apr 29 12:20:17 2008 +0200
+summary:     One line added. Test.
+
+changeset:   1:b8476a181ec4
+user:        morten@X60112
+date:        Tue Apr 29 12:14:48 2008 +0200
+summary:     One line added. Test.
+
+changeset:   0:a02b14639c48
+user:        morten@X60112
+date:        Tue Apr 29 11:53:46 2008 +0200
+summary:     initial commit
 

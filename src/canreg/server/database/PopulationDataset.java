@@ -211,4 +211,8 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     public PopulationDatasetsEntry[] getAgeGroups(){
         return ageGroups.toArray(new PopulationDatasetsEntry[0]);
     }
+
+    public int getAgeGroupIndex(int age){
+        return ageGroupStructure.whatAgeGroupIsThisAge(age);
+    }
 }

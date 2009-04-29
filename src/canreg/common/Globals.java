@@ -58,6 +58,14 @@ public class Globals {
      * 
      */
     static public String LOGIN_FILENAME = "./conf/CanRegLogin.conf";
+
+
+    static public String TABLES_CONF_PATH = "./conf/tables";
+
+    
+    static public String TABLES_PREVIEW_PATH = "./conf/tables/previews";
+
+    static public String DEFAULT_PREVIEW_FILENAME = "blanc.png";
     
     // FILES AND FOLDERS
     /**

@@ -11,6 +11,7 @@ import canreg.client.gui.dataentry.ImportView;
 import canreg.client.*;
 import canreg.client.gui.dataentry.EditDictionaryInternalFrame;
 import canreg.client.gui.analysis.FrequenciesByYearInternalFrame;
+import canreg.client.gui.analysis.TableBuilderInternalFrame;
 import canreg.client.gui.dataentry.PDSChooserInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
 import canreg.client.gui.management.RestoreInternalFrame;
@@ -380,8 +381,8 @@ public class CanRegClientView extends FrameView {
         frequenciesMenuItem.setName("frequencyDistributionsMenuItem"); // NOI18N
         analysisMenu.add(frequenciesMenuItem);
 
+        incidenceTablesMenuItem.setAction(actionMap.get("showTableBuilder")); // NOI18N
         incidenceTablesMenuItem.setText(resourceMap.getString("incidenceTablesMenuItem.text")); // NOI18N
-        incidenceTablesMenuItem.setEnabled(false);
         incidenceTablesMenuItem.setName("incidenceTablesMenuItem"); // NOI18N
         analysisMenu.add(incidenceTablesMenuItem);
 
@@ -1082,6 +1083,12 @@ public class CanRegClientView extends FrameView {
     @Action
     public void duplicateSearchAction() {
         JInternalFrame internalFrame = new PersonSearchFrame(desktopPane);
+        showAndCenterInternalFrame(desktopPane, internalFrame);
+    }
+
+    @Action
+    public void showTableBuilder() {
+        JInternalFrame internalFrame = new TableBuilderInternalFrame();
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
