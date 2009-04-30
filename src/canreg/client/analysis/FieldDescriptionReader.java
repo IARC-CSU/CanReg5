@@ -17,10 +17,8 @@ import java.io.FileReader;
 import java.util.LinkedList;
 
 class FieldDescriptionReader extends DescriptionReader {
-    public FieldDescriptionReader() {
-    }
 
-    public <FieldDescription> LinkedList readFile(FileReader file) {
+    public static <FieldDescription> LinkedList readFile(FileReader file) {
         String word = readWord(file);
         LinkedList<FieldDescription> li = new LinkedList();
         while (!word.equals("EOF")) {
@@ -33,7 +31,7 @@ class FieldDescriptionReader extends DescriptionReader {
         return li;
     }
 
-    public LinkedList<FieldDescription> readDictionary(FileReader file) {
+    public static LinkedList<FieldDescription> readDictionary(FileReader file) {
         int offsetCounter = 1;
         LinkedList<FieldDescription> list = new LinkedList();
         String word;

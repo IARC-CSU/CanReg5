@@ -1,22 +1,33 @@
 package canreg.client.analysis;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author ervikm
  */
-public class EditorialTableListElement {
+public class TableBuilderListElement {
     private String name;
     private String description;
     private String engineName;
     private String[] engineParameters;
     private String previewImageFilename;
     private String configFileName;
+    private LinkedList<ConfigFields> configFields;
 
     /**
      * @return the name
      */
     public String getName() {
         return name;
+    }
+
+    public void setConfigFields(LinkedList<ConfigFields> configFields) {
+        this.configFields = configFields;
+    }
+
+    public LinkedList<ConfigFields> getConfigFields(){
+        return configFields;
     }
 
     /**

@@ -13,6 +13,8 @@ package canreg.client.analysis;
  * @version 1.0
  */
 
+import canreg.common.Globals.StandardVariableNames;
+import canreg.server.database.PopulationDataset;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
@@ -22,7 +24,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.text.NumberFormat;
 
-public class EditorialTable {
+public abstract class TableBuilder {
 
     double estdPop18[] = {0.08, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07,
                          0.07, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01, 0.01};
@@ -149,6 +151,7 @@ public class EditorialTable {
 
     // foundAgeGroups always corresponds to "our" age group numbering
     boolean[] foundAgeGroups = new boolean[numberOfAgeGroups];
+    
     String ageLabel[] = {"0", "1-", "5-", "10-", "15-", "20-", "25-", "30-",
                         "35-", "40-", "45-", "50-", "55-", "60-", "65-", "70-",
                         "75-", "80-", "85+", "Unknown", "Totals"};
@@ -157,123 +160,17 @@ public class EditorialTable {
 
     LinkedList lineBreaks = null;
 
-    public void loadIncidenceData(String dataFileName,
-                                  LinkedList<FieldDescription>
-            fieldDescriptionList, LinkedList cancerGroups[], int years[],
-            String[] icdList, double casesArray[][][]) {
+    public abstract StandardVariableNames[] getVariablesNeeded();
 
-        bladderCancerGroupIndex = getICD10index("C67", icdList);
-        allCancerGroupsIndex = getICD10index("ALL", icdList);
-
-        FileReader dataFile;
-        int records = 0;
-        // generate statistics
-        try {
-            dataFile = new FileReader(dataFileName);
-            String line = readLine(dataFile);
-            String sexString;
-            String icdString;
-            String yearString;
-            String ageGroupString;
-            int sex, icdNumber, year, icdIndex, yearIndex, ageGroup;
-            while (!line.equals("EOF")) {
-                if (records % recordsPerFeedback == 0) {
-                    System.out.println("Processing record number: " + records);
-                }
-                // Set default
-                icdIndex = -1;
-                // Unknown sex group = 3
-                sex = 3;
-                // Extract data
-                sexString = getContentOfField(fieldDescriptionList,
-                                              "sex", line);
-                sex = Integer.parseInt(sexString.trim());
-
-                // sex = 3 is unknown sex
-
-                if (sex > 2) {
-                    sex = 3;
-                }
-
-                icdString = getContentOfField(fieldDescriptionList,
-                                              "icd", line).trim();
-                if (icdString.trim().substring(0, 1).equals("C")) {
-                    icdString = icdString.trim().substring(1);
-                    icdNumber = Integer.parseInt(icdString);
-                    if (icdString.length() < 3) {
-                        icdNumber = icdNumber * 10;
-                    }
-                    icdIndex = getICD10index(icdNumber, cancerGroups);
-                    if (icdIndex == -1) {
-                        icdIndex = -1;
-                    }
-                } else if (icdString.trim().substring(0, 1).equals("D")) {
-                    icdString = icdString.trim().substring(1);
-                    icdNumber = Integer.parseInt(icdString);
-                    if (icdNumber == 90 || icdNumber == 414) {
-                        icdIndex = bladderCancerGroupIndex;
-                    } else {
-                        icdIndex = leukemiaNOSCancerGroupIndex;
-                    }
-
-                }
-                yearString = getContentOfField(fieldDescriptionList,
-                                               "year_of_incidence", line);
-                year = Integer.parseInt(yearString);
-                yearIndex = year - years[0];
-                ageGroupString = getContentOfField(fieldDescriptionList,
-                        "age_group", line);
-                ageGroup = Integer.parseInt(ageGroupString);
-
-                if (year <= years[1] && year >= years[0]) {
-
-                    if (sex <= numberOfSexes && icdIndex >= 0 &&
-                        icdIndex <= cancerGroups.length) {
-                        // Generate statistics
-                        casesArray[icdIndex][sex - 1][ageGroup]++;
-
-                    } else {
-                        System.out.println("Out of bouds: sex: " + sex +
-                                           ", icdIndex: " + icdIndex +
-                                           ", year: " + year);
-                    }
-                    if (allCancerGroupsIndex >= 0) {
-                        casesArray[allCancerGroupsIndex][sex - 1][ageGroup]++;
-                    }
-                    records++;
-                } else {
-                    System.out.println("Out of bouds: sex: " + sex +
-                                       ", icdIndex: " + icdIndex + ", year: " +
-                                       year);
-                }
-                // Read next line
-                line = readLine(dataFile);
-            }
-            System.out.println("Processed " + records + " records.");
-
-        } catch (IOException e) {
-            System.out.println("Data-file error.");
-        }
-
-    }
-
-    public boolean showC44(String registryNumber) {
-        boolean found = false;
-        FileReader dataFile;
-        String line;
-        try {
-            dataFile = new FileReader(noC44Dictionary);
-            line = readLine(dataFile);
-            while (!line.equals("EOF")) {
-                found = line.trim().equalsIgnoreCase(registryNumber);
-                line = readLine(dataFile);
-            }
-        } catch (IOException e) {
-            System.out.println("C44-file error.");
-        }
-        return found;
-    }
-
+    public abstract void buildTable(String registryLabel,
+            String reportFileName,
+            int startYear,
+            int endYear,
+            Object[][] incidenceData,
+            PopulationDataset[] populations,
+            PopulationDataset[] standardPopulations,
+            LinkedList<ConfigFields> configList,
+            String[] engineParameters);
 
     // Added 30.07.2007
     public boolean showMIIllDefSite(String registryNumber) {

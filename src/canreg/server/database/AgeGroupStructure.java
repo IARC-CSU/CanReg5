@@ -122,18 +122,18 @@ public class AgeGroupStructure implements Serializable {
      */
     public int whatAgeGroupIsThisAge(int age) {
         int group = 0;
-        if (age < sizeOfFirstGroup) {
+        if (age < getSizeOfFirstGroup()) {
             group = 0;
-        } else if (age >= cutOfAge) {
+        } else if (age >= getCutOfAge()) {
             group = -1;
         } else {
-            if (age >= maxAge) {
-                age = maxAge;
+            if (age >= getMaxAge()) {
+                age = getMaxAge();
             }
-            if (sizeOfFirstGroup == 1) {
-                group = age / sizeOfGroups + 1;
+            if (getSizeOfFirstGroup() == 1) {
+                group = age / getSizeOfGroups() + 1;
             } else {
-                group = (age - sizeOfFirstGroup) / sizeOfGroups + 1;
+                group = (age - getSizeOfFirstGroup()) / getSizeOfGroups() + 1;
             }
         }
         return group;
@@ -142,27 +142,27 @@ public class AgeGroupStructure implements Serializable {
     private String[] generateAgeGroupNames() {
         LinkedList<String> strings = new LinkedList<String>();
         int year = 0;
-        if (sizeOfFirstGroup == 1) {
+        if (getSizeOfFirstGroup() == 1) {
             strings.add("0");
             strings.add("1-4");
             year = 5;
         } else {
             String string = year + "-";
-            year = sizeOfFirstGroup;
+            year = getSizeOfFirstGroup();
             string += (year - 1);
             strings.add(string);
         }
-        while (year < maxAge) {
+        while (year < getMaxAge()) {
             String string = year + "-";
-            year += sizeOfGroups;
+            year += getSizeOfGroups();
             string += (year - 1);
             strings.add(string);
         }
-        if (year < cutOfAge) {
-            if (cutOfAge == Integer.MAX_VALUE) {
+        if (year < getCutOfAge()) {
+            if (getCutOfAge() == Integer.MAX_VALUE) {
                 strings.add(year + "+");
             } else {
-                strings.add(year + "-" + (cutOfAge - 1));
+                strings.add(year + "-" + (getCutOfAge() - 1));
             }
         }
         return strings.toArray(new String[0]);
@@ -173,30 +173,30 @@ public class AgeGroupStructure implements Serializable {
     public String toString() {
         String string = new String();
         int year = 0;
-        if (sizeOfFirstGroup == 1) {
+        if (getSizeOfFirstGroup() == 1) {
             string += "0, 1-4";
             year = 5;
         } else {
             string += year + "-";
-            year = sizeOfFirstGroup;
+            year = getSizeOfFirstGroup();
             string += (year - 1);
         }
         int loop = 0;
-        while (year < maxAge && loop < 3) {
+        while (year < getMaxAge() && loop < 3) {
             string += ", " + year + "-";
-            year += sizeOfGroups;
+            year += getSizeOfGroups();
             string += (year - 1);
             loop++;
         }
         if (loop >= 3) {
             string += ", ...";
-            year = maxAge;
+            year = getMaxAge();
         }
-        if (year < cutOfAge) {
-            if (cutOfAge == Integer.MAX_VALUE) {
+        if (year < getCutOfAge()) {
+            if (getCutOfAge() == Integer.MAX_VALUE) {
                 string += ", " + year + "+";
             } else {
-                string += ", " + year + "-" + (cutOfAge - 1);
+                string += ", " + year + "-" + (getCutOfAge() - 1);
             }
         }
         return string;
@@ -206,10 +206,10 @@ public class AgeGroupStructure implements Serializable {
     public boolean equals(Object o) {
         if (o instanceof AgeGroupStructure) {
             AgeGroupStructure ags = (AgeGroupStructure) o;
-            return (sizeOfGroups == ags.sizeOfGroups &&
-                    sizeOfFirstGroup == ags.sizeOfFirstGroup &&
-                    maxAge == ags.maxAge &&
-                    cutOfAge == ags.cutOfAge);
+            return (getSizeOfGroups() == ags.getSizeOfGroups() &&
+                    getSizeOfFirstGroup() == ags.getSizeOfFirstGroup() &&
+                    getMaxAge() == ags.getMaxAge() &&
+                    getCutOfAge() == ags.getCutOfAge());
         } else {
             return false;
         }
@@ -218,10 +218,38 @@ public class AgeGroupStructure implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 17 * hash + this.sizeOfGroups;
-        hash = 17 * hash + this.maxAge;
-        hash = 17 * hash + this.sizeOfFirstGroup;
-        hash = 17 * hash + this.cutOfAge;
+        hash = 17 * hash + this.getSizeOfGroups();
+        hash = 17 * hash + this.getMaxAge();
+        hash = 17 * hash + this.getSizeOfFirstGroup();
+        hash = 17 * hash + this.getCutOfAge();
         return hash;
+    }
+
+    /**
+     * @return the sizeOfGroups
+     */
+    public int getSizeOfGroups() {
+        return sizeOfGroups;
+    }
+
+    /**
+     * @return the maxAge
+     */
+    public int getMaxAge() {
+        return maxAge;
+    }
+
+    /**
+     * @return the sizeOfFirstGroup
+     */
+    public int getSizeOfFirstGroup() {
+        return sizeOfFirstGroup;
+    }
+
+    /**
+     * @return the cutOfAge
+     */
+    public int getCutOfAge() {
+        return cutOfAge;
     }
 }

@@ -19,8 +19,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     static String DESCRIPTION_KEY = "DESCRIPTION";
     static String WORLD_POPULATION_ID_KEY = "WORLD_POPULATION_ID";
     static String WORLD_POPULATION_BOOL_KEY = "WORLD_POPULATION_BOOL";
-    static AgeGroupStructure[] AGE_GROUP_STRUCTURES = {new AgeGroupStructure(5,85)};
-    
+    static AgeGroupStructure[] AGE_GROUP_STRUCTURES = {new AgeGroupStructure(5, 85)};
     private int populationDatasetID = -1;
     private String populationDatasetName = null;
     private String filter = null;
@@ -31,7 +30,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     private boolean worldPopulationBool = false;
     private int worldPopulationID = 0;
     private LinkedList<PopulationDatasetsEntry> ageGroups;
-    
+
     /**
      * Creates a new instance of PopulationDatasetsEntry
      */
@@ -39,6 +38,8 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
         super();
         ageGroups = new LinkedList<PopulationDatasetsEntry>();
     }
+
+
 
     /**
      * 
@@ -195,24 +196,45 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     public void setWorldPopulationID(int worldPopulationID) {
         this.worldPopulationID = worldPopulationID;
     }
-    
+
     /**
      * 
      * @param pdse
      */
-    public void addAgeGroup(PopulationDatasetsEntry pdse){
+    public void addAgeGroup(PopulationDatasetsEntry pdse) {
         ageGroups.add(pdse);
     }
-    
+
     /**
      * 
      * @return
      */
-    public PopulationDatasetsEntry[] getAgeGroups(){
+    public PopulationDatasetsEntry[] getAgeGroups() {
         return ageGroups.toArray(new PopulationDatasetsEntry[0]);
     }
 
-    public int getAgeGroupIndex(int age){
+    public int getAgeGroupIndex(int age) {
         return ageGroupStructure.whatAgeGroupIsThisAge(age);
+    }
+
+    public void addPopulationDataToArrayForTableBuilder(double[][] populationArray, boolean[] foundAgeGroups, AgeGroupStructure targetAgeGroupStructure) {
+
+        // load population data
+        for (PopulationDatasetsEntry pdse : ageGroups) {
+            int sex = pdse.getSex()-1;
+            if (sex>1){
+                sex=2;
+            }
+            int ageGroup = pdse.getAgeGroup();
+            if (ageGroupStructure.getSizeOfFirstGroup()!=1){
+                ageGroup = ageGroup+1;
+            }
+            foundAgeGroups[ageGroup] = true;
+            int population = pdse.getCount();
+            populationArray[sex][ageGroup] += population;
+            // For the total
+            populationArray[sex][populationArray.length-1] += population;
+
+        }
     }
 }

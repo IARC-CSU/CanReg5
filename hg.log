@@ -1,5 +1,30 @@
-changeset:   150:e1acb3744bb1
+changeset:   155:653fd33cf112
 tag:         tip
+user:        ervikm@X60112
+date:        Wed Apr 29 15:04:11 2009 +0200
+summary:     Table builder GUI partially implemented.
+
+changeset:   154:a2febed653ba
+user:        ervikm@X60112
+date:        Wed Apr 29 14:51:42 2009 +0200
+summary:     Table configurations started.
+
+changeset:   153:2af4681e9cdd
+user:        ervikm@X60112
+date:        Tue Apr 28 11:32:38 2009 +0200
+summary:     Syncronized more functions in the database access to resolve some issues with the browser.
+
+changeset:   152:294e3263d016
+user:        ervikm@X60112
+date:        Tue Apr 28 11:31:53 2009 +0200
+summary:     Fixed bug that blocked when "back up every... days" was not set... contd.
+
+changeset:   151:368a19c1abf7
+user:        ervikm@X60112
+date:        Tue Apr 28 11:31:15 2009 +0200
+summary:     Fixed bug that blocked when "back up every... days" was not set.
+
+changeset:   150:e1acb3744bb1
 user:        ervikm@X60112
 date:        Thu Apr 23 15:05:43 2009 +0200
 summary:     Fixed bug that flagged all newly opened cases as pending. Improved some texts.
