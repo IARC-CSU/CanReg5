@@ -525,7 +525,11 @@ private void ageGroupStructureChanged(java.awt.event.ActionEvent evt) {//GEN-FIR
         pds.setWorldPopulationID(wpds.getWorldPopulationID());
         
         int numberOfAgeGroups = pds.getAgeGroupStructure().getNumberOfAgeGroups();
-        
+
+        if (populationDataSetTable.isEditing()){
+            populationDataSetTable.getCellEditor().stopCellEditing();
+        }
+
         for (int ageGroup = 0; ageGroup < numberOfAgeGroups; ageGroup++) {
             for (int sex = 1; sex <= 2; sex++) {
                 Integer count;
@@ -536,6 +540,7 @@ private void ageGroupStructureChanged(java.awt.event.ActionEvent evt) {//GEN-FIR
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Missing value in the pds...");
                 }
                 pds.addAgeGroup(new PopulationDatasetsEntry(ageGroup, sex, count));
+                System.out.println(sex+" - "+ageGroup + ": "+ count);
             }
         }
     }
