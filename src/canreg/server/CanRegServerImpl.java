@@ -672,4 +672,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             return db.deletePatientRecord(id);
         } else return false;
     }
+
+    public boolean deletePopulationDataset(int populationDatasetID) throws RemoteException, SecurityException {
+        return db.deletePopulationDataSet(populationDatasetID);
+    }
 }

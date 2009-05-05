@@ -271,7 +271,12 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     public boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException {
-        checkPermission("deleteRecord"+tableName);
+        checkPermission("deleteRecord: "+tableName);
         return theServer.deleteRecord(id, tableName);
+    }
+
+    public boolean deletePopulationDataset(int populationDatasetID) throws RemoteException, SecurityException {
+        checkPermission("deletePopulationDataset");
+        return theServer.deletePopulationDataset(populationDatasetID);
     }
 }

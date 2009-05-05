@@ -85,6 +85,8 @@ public class CanRegDAO {
         }
     }
 
+
+
     /**
      * 
      * @return
@@ -1020,6 +1022,25 @@ public class CanRegDAO {
             stmtDeleteTumourRecord.clearParameters();
             stmtDeleteTumourRecord.setInt(1, tumourRecordID);
             stmtDeleteTumourRecord.executeUpdate();
+            success = true;
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return success;
+    }
+
+    public boolean deletePopulationDataSet(int id) {
+        boolean success = false;
+        try {
+            // First delete entries
+            stmtDeletePopoulationDatasetEntries.clearParameters();
+            stmtDeletePopoulationDatasetEntries.setInt(1, id);
+            stmtDeletePopoulationDatasetEntries.executeUpdate();
+
+            // Then delete description
+            stmtDeletePopoulationDataset.clearParameters();
+            stmtDeletePopoulationDataset.setInt(1, id);
+            stmtDeletePopoulationDataset.executeUpdate();
             success = true;
         } catch (SQLException sqle) {
             sqle.printStackTrace();

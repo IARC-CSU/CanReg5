@@ -27,6 +27,8 @@ import org.w3c.dom.Document;
  */
 public interface CanRegServerInterface extends Remote {
 
+    public boolean deletePopulationDataset(int populationDatasetID) throws RemoteException, SecurityException;
+
     /** The first operation. @throws SecurityException If the client doesn't 
      * have permissions for executing this method.
      * @throws SecurityException 
