@@ -88,9 +88,9 @@ public class Tools {
      * @return
      */
     public static String[] breakDownLinePF(char separatingCharacter, String line) {
-        PowerfulTokenizer tokenizer = new PowerfulTokenizer(line, ""+separatingCharacter);
+        PowerfulTokenizer tokenizer = new PowerfulTokenizer(line, "" + separatingCharacter);
         String[] stringArray = new String[tokenizer.countTokens()];
-        for (int i = 0; i<stringArray.length; i++){
+        for (int i = 0; i < stringArray.length; i++) {
             stringArray[i] = tokenizer.nextToken();
         }
         return stringArray;
@@ -513,36 +513,50 @@ public class Tools {
         }
     }
 
+    public static void openFile(String fileName) throws IOException {
+        String osName = System.getProperty("os.name");
+        File file = new File(fileName);
+        if (osName.startsWith("Windows")) {
+            Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL " + file.getAbsolutePath());
+        } else if (osName.startsWith("Mac OS")) {
+            Runtime.getRuntime().exec("open " + file.getAbsolutePath());
+        } else if (osName.startsWith("Lin")) {
+            Runtime.getRuntime().exec("open " + file.getAbsolutePath());
+        } else {
+            Runtime.getRuntime().exec("open " + file.getAbsolutePath());
+        }
+    }
+
     static Charset getStandardCharset(Document doc, String namespace) {
         Charset standardEncoding = Charset.defaultCharset();
         NodeList nl = doc.getElementsByTagName(namespace + "data_entry_language");
-        if (nl.getLength()>0){
+        if (nl.getLength() > 0) {
             String dataEntryLanguage = nl.item(0).getTextContent();
-            if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ENGLISH)){
+            if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ENGLISH)) {
                 standardEncoding = Charset.forName(Globals.CHARSET_ENGLISH);
-            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_FRENCH)){
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_FRENCH)) {
                 standardEncoding = Charset.forName(Globals.CHARSET_FRENCH);
-            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_SPANISH)){
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_SPANISH)) {
                 standardEncoding = Charset.forName(Globals.CHARSET_SPANISH);
-            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ITALIAN)){
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ITALIAN)) {
                 standardEncoding = Charset.forName(Globals.CHARSET_ITALIAN);
-            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_TURKISH)){
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_TURKISH)) {
                 standardEncoding = Charset.forName(Globals.CHARSET_TURKISH);
-            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ROMANIAN)){
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ROMANIAN)) {
                 standardEncoding = Charset.forName(Globals.CHARSET_ROMANIAN);
-            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_PORTUGUESE)){
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_PORTUGUESE)) {
                 standardEncoding = Charset.forName(Globals.CHARSET_PORTUGUESE);
-            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_CHINESE)){
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_CHINESE)) {
                 standardEncoding = Charset.forName(Globals.CHARSET_CHINESE);
-            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_THAI)){
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_THAI)) {
                 standardEncoding = Charset.forName(Globals.CHARSET_THAI);
-            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_KOREAN)){
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_KOREAN)) {
                 standardEncoding = Charset.forName(Globals.CHARSET_KOREAN);
-            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ARABIC)){
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_ARABIC)) {
                 standardEncoding = Charset.forName(Globals.CHARSET_ARABIC);
-            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_FARSI)){
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_FARSI)) {
                 standardEncoding = Charset.forName(Globals.CHARSET_FARSI);
-            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_RUSSIAN)){
+            } else if (dataEntryLanguage.equalsIgnoreCase(Globals.DATAENTRY_LANGUAGE_RUSSIAN)) {
                 standardEncoding = Charset.forName(Globals.CHARSET_RUSSIAN);
             }
         }
