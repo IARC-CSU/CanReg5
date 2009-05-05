@@ -60,19 +60,19 @@ public class CanRegClientView extends FrameView {
      */
     public CanRegClientView(SingleFrameApplication app) {
         super(app);
-       
+
         initComponents();
-        
-        ResourceMap resourceMap = getResourceMap(); 
-        
+
+        ResourceMap resourceMap = getResourceMap();
+
         // Set the main programs icon
-        java.net.URL imageURL = CanRegClientView.class.getResource(resourceMap.getString("icon", String.class));        
-        if (imageURL != null){
+        java.net.URL imageURL = CanRegClientView.class.getResource(resourceMap.getString("icon", String.class));
+        if (imageURL != null) {
             java.awt.Window.getWindows()[0].setIconImage(new ImageIcon(imageURL).getImage());
         }
 
         setUserRightsLevel(userRightsLevel);
-        
+
         applyPreferences();
 
         // status bar initialization - message timeout, idle icon and busy animation, etc  
@@ -600,15 +600,8 @@ public class CanRegClientView extends FrameView {
 
         @Override
         protected Object doInBackground() throws IOException {
-            // Your Task's code here.  This method runs
-            // on a background thread, so don't reference
-            // the Swing GUI from here.
-            if (System.getProperty("os.name").toString().substring(0, 3).equalsIgnoreCase("win")) {
-                File file = new File("c:\\admtools.chm");
-                Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL " + file.getAbsolutePath());
-            }
-
-            return null;  // return your result
+            canreg.common.Tools.openFile("c:\\admtools.chm");
+            return null;
         }
 
         @Override
@@ -834,8 +827,8 @@ public class CanRegClientView extends FrameView {
         if (!CanRegClientApp.getApplication().isCanRegServerRunningOnThisMachine()) {
             toolsMenu.setEnabled(!loggedIn);
             restoreMenuItem.setEnabled(false);
-            // We show the install system button if we are not logged in to a remote server...
-            // installSystemButton.setEnabled((userRightsLevel == Globals.UserRightLevels.NOT_LOGGED_IN));
+        // We show the install system button if we are not logged in to a remote server...
+        // installSystemButton.setEnabled((userRightsLevel == Globals.UserRightLevels.NOT_LOGGED_IN));
         } else {
             toolsMenu.setEnabled(true);
             restoreMenuItem.setEnabled(true);
@@ -1020,11 +1013,11 @@ public class CanRegClientView extends FrameView {
         DatabaseRecord[] tumourRecords;
         try {
             int patientID = 1;
-            patientRecord = CanRegClientApp.getApplication().getRecord(patientID,"patient");
+            patientRecord = CanRegClientApp.getApplication().getRecord(patientID, "patient");
 
             internalFrame.addRecord(patientRecord);
-            tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID+"");
-            for (DatabaseRecord rec : tumourRecords){
+            tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "");
+            for (DatabaseRecord rec : tumourRecords) {
                 internalFrame.addRecord(rec);
             }
         } catch (RemoteException ex) {
@@ -1035,7 +1028,7 @@ public class CanRegClientView extends FrameView {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
 
@@ -1087,9 +1080,35 @@ public class CanRegClientView extends FrameView {
     }
 
     @Action
-    public void showTableBuilder() {
-        JInternalFrame internalFrame = new TableBuilderInternalFrame();
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+    public Task showTableBuilder() {
+        return new ShowTableBuilderTask(getApplication());
+    }
+
+    private class ShowTableBuilderTask extends org.jdesktop.application.Task<Object, Void> {
+
+        ShowTableBuilderTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to ShowTableBuilderTask fields, here.
+            super(app);
+
+        }
+
+        @Override
+        protected Object doInBackground() {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+            JInternalFrame internalFrame = new TableBuilderInternalFrame();
+            showAndCenterInternalFrame(desktopPane, internalFrame);
+            return null;  // return your result
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
+        }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
