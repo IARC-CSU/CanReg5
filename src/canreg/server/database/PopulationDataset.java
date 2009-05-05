@@ -229,11 +229,13 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
             if (ageGroupStructure.getSizeOfFirstGroup()!=1){
                 ageGroup = ageGroup+1;
             }
-            foundAgeGroups[ageGroup] = true;
+            if (foundAgeGroups!= null && ageGroup<foundAgeGroups.length){
+                foundAgeGroups[ageGroup] = true;
+            }
             int population = pdse.getCount();
             populationArray[sex][ageGroup] += population;
             // For the total
-            populationArray[sex][populationArray.length-1] += population;
+            populationArray[sex][populationArray[0].length-1] += population;
 
         }
     }
