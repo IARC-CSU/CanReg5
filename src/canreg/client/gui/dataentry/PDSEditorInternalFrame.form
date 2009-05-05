@@ -29,7 +29,9 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="jTabbedPane1" alignment="0" pref="430" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="221" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="deleteButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="148" max="32767" attributes="0"/>
               <Component id="lockedToggleButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
@@ -42,12 +44,13 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="jTabbedPane1" pref="419" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="423" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="lockedToggleButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="deleteButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -86,14 +89,14 @@
                           <Component id="descriptionLabel" alignment="0" max="32767" attributes="1"/>
                           <Component id="ageGroupStructureLabel" alignment="0" max="32767" attributes="1"/>
                           <Component id="dateLabel" alignment="0" max="32767" attributes="1"/>
-                          <Component id="worldPopulationLabel" alignment="0" max="32767" attributes="1"/>
+                          <Component id="standardPopulationLabel" alignment="0" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="worldPopulationComboBox" pref="204" max="32767" attributes="0"/>
+                              <Component id="standardPopulationComboBox" pref="204" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="editWorldPopulationButton" min="-2" max="-2" attributes="0"/>
+                              <Component id="editStandardPopulationButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="dateChooser" alignment="1" pref="261" max="32767" attributes="0"/>
                           <Component id="descriptionScrollPane" alignment="0" pref="261" max="32767" attributes="0"/>
@@ -150,11 +153,11 @@
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="editWorldPopulationButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="worldPopulationComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="worldPopulationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="editStandardPopulationButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="standardPopulationComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="standardPopulationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="125" max="32767" attributes="0"/>
+                      <EmptySpace pref="129" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -268,14 +271,14 @@
                 <Property name="name" type="java.lang.String" value="filterLabel" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="worldPopulationLabel">
+            <Component class="javax.swing.JLabel" name="standardPopulationLabel">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="11"/>
-                <Property name="text" type="java.lang.String" resourceKey="worldPopulationLabel.text"/>
-                <Property name="name" type="java.lang.String" value="worldPopulationLabel" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="standardPopulationLabel.text"/>
+                <Property name="name" type="java.lang.String" value="standardPopulationLabel" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="worldPopulationComboBox">
+            <Component class="javax.swing.JComboBox" name="standardPopulationComboBox">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="4">
@@ -285,15 +288,15 @@
                     <StringItem index="3" value="Item 4"/>
                   </StringArray>
                 </Property>
-                <Property name="name" type="java.lang.String" value="worldPopulationComboBox" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="standardPopulationComboBox" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="editWorldPopulationButton">
+            <Component class="javax.swing.JButton" name="editStandardPopulationButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.dataentry.PopulationDatasetEditorInternalFrame" id="editWorldPopulation" methodName="editWorldPopulation"/>
                 </Property>
-                <Property name="name" type="java.lang.String" value="editWorldPopulationButton" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="editStandardPopulationButton" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="otherAgeGroupStructureButton">
@@ -333,7 +336,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="361" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="365" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -460,6 +463,17 @@
           <action class="canreg.client.gui.dataentry.PopulationDatasetEditorInternalFrame" id="lockedAction" methodName="lockedAction"/>
         </Property>
         <Property name="name" type="java.lang.String" value="lockedToggleButton" noResource="true"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="lockedToggleButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="deleteButton">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="canreg.client.gui.dataentry.PDSEditorInternalFrame" id="deletePopulationDataSetAction" methodName="deletePopulationDataSetAction"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="deleteButton" noResource="true"/>
       </Properties>
     </Component>
   </SubComponents>
