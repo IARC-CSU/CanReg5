@@ -19,7 +19,7 @@ public class GlobalToolBox {
     private Map<Integer, DatabaseGroupsListElement> groupIDToDatabaseGroupListElementMap;
     private DatabaseVariablesListElement[] databaseVariablesListElements;
     private Charset standardCharSet;
-    
+   
     /**
      * 
      * @param doc
