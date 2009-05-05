@@ -19,6 +19,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Map;
+import java.util.Vector;
 import javax.security.auth.Subject;
 import org.w3c.dom.Document;
 
@@ -38,28 +39,6 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         /** A reference to the real server object 
          */
         this.theServer = server;
-    }
-
-    /**
-     * Proxy implementation of (1st) method in the server interface.
-     * 
-     * The client calls this method. If he client has the
-     * appropriate permissions, the call goes through.
-     */
-    public void doOperationA() throws java.rmi.RemoteException, SecurityException {
-        checkPermission("doOperationA");
-        theServer.doOperationA();
-    }
-
-    /**
-     * Proxy implementation of (2nd) method in the server interface.
-     * 
-     * The client calls this method. If he client has the
-     * appropriate permissions, the call goes through.
-     */
-    public void doOperationB() throws java.rmi.RemoteException, SecurityException {
-        checkPermission("doOperationB");
-        theServer.doOperationB();
     }
 
     private void checkPermission(String methodName) throws SecurityException {
@@ -202,16 +181,16 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
 
     public void editTumour(Tumour tumour) throws RemoteException, SecurityException {
         checkPermission("editTumour");
-        theServer.editTumour(tumour);  
+        theServer.editTumour(tumour);
     }
 
     public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, Exception {
-        checkPermission("retrieveRows:"+resultSetID);
+        checkPermission("retrieveRows:" + resultSetID);
         return theServer.retrieveRows(resultSetID, from, to);
     }
 
     public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException {
-        checkPermission("retrieveRows:"+resultSetID);
+        checkPermission("retrieveRows:" + resultSetID);
         theServer.releaseResultSet(resultSetID);
     }
 
@@ -254,7 +233,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         // Ad hoc to test the user levels in the GUI
         String userName = principal.getName();
         if (userName.equalsIgnoreCase("morten")){
-            level = Globals.UserRightLevels.SUPERVISOR;
+        level = Globals.UserRightLevels.SUPERVISOR;
         }*/
 
         return principal.getUserRightLevel();
@@ -271,12 +250,17 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     public boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException {
-        checkPermission("deleteRecord: "+tableName);
+        checkPermission("deleteRecord: " + tableName);
         return theServer.deleteRecord(id, tableName);
     }
 
     public boolean deletePopulationDataset(int populationDatasetID) throws RemoteException, SecurityException {
         checkPermission("deletePopulationDataset");
         return theServer.deletePopulationDataset(populationDatasetID);
+    }
+
+    public Vector<User> listUsers() throws RemoteException, SecurityException {
+        checkPermission("listUsers");
+        return theServer.listUsers();
     }
 }

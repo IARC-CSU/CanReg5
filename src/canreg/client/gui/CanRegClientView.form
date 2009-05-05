@@ -322,7 +322,6 @@
             <Menu class="javax.swing.JMenu" name="jMenu1">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="jMenu1.text"/>
-                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="jMenu1" noResource="true"/>
               </Properties>
               <SubComponents>
@@ -353,8 +352,10 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="usersMenuItem">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="showUserManagement" methodName="showUserManagement"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="usersMenuItem.text"/>
-                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="usersMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>

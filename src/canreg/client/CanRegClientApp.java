@@ -18,6 +18,7 @@ import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.exceptions.WrongCanRegVersionException;
 import canreg.server.CanRegLoginInterface;
 import canreg.server.CanRegServerInterface;
+import canreg.server.User;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
@@ -45,6 +46,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Vector;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -859,6 +861,9 @@ public class CanRegClientApp extends SingleFrameApplication {
         return canRegSystemVersionString;
     }
 
+    public Vector<User> listUsers() throws SecurityException, RemoteException{
+        return server.listUsers();
+    }
     /**
      * Main method launching the application.
      * @param args 

@@ -18,6 +18,7 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Map;
+import java.util.Vector;
 import javax.security.auth.Subject;
 import org.w3c.dom.Document;
 
@@ -29,24 +30,9 @@ public interface CanRegServerInterface extends Remote {
 
     public boolean deletePopulationDataset(int populationDatasetID) throws RemoteException, SecurityException;
 
-    /** The first operation. @throws SecurityException If the client doesn't 
-     * have permissions for executing this method.
-     * @throws SecurityException 
-     * @throws RemoteException
-     */
-    public void doOperationA()
-            throws RemoteException, SecurityException;
-
-    /** The second operation. @throws SecurityException If the client doesn't 
-     * have permissions for executing this method.
-     * @throws SecurityException 
-     * @throws RemoteException
-     */
-    public void doOperationB()
-            throws RemoteException, SecurityException;
-
     /**
-     * 
+     * @throws SecurityException If the client doesn't
+     * have permissions for executing this method.
      * @param patient
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -117,7 +103,7 @@ public interface CanRegServerInterface extends Remote {
      */
     public int saveNewPopulationDataset(PopulationDataset pds)
             throws RemoteException, SecurityException;
- 
+
     /**
      * Returns a database record with the given details
      * @param recordID the database record id
@@ -128,7 +114,7 @@ public interface CanRegServerInterface extends Remote {
      */
     public DatabaseRecord getRecord(int recordID, String tableName)
             throws RemoteException, SecurityException;
-     
+
     // administrative tools
     /**
      * 
@@ -157,10 +143,9 @@ public interface CanRegServerInterface extends Remote {
     public void setUserPassword(String username)
             throws RemoteException, SecurityException;
 
-    
     public boolean deleteRecord(int id, String tableName)
             throws RemoteException, SecurityException;
-    
+
     /**
      * 
      * @param username
@@ -195,6 +180,8 @@ public interface CanRegServerInterface extends Remote {
      */
     public String[] listCurrentUsers()
             throws RemoteException, SecurityException;
+
+    public Vector<User> listUsers() throws RemoteException, SecurityException;
 
     /**
      * User logs in
@@ -294,7 +281,7 @@ public interface CanRegServerInterface extends Remote {
      */
     public String getCanRegVersion()
             throws RemoteException, SecurityException;
-    
+
     /**
      * Get the ip-address of the server
      * @return
@@ -303,7 +290,7 @@ public interface CanRegServerInterface extends Remote {
      */
     public InetAddress getIPAddress()
             throws RemoteException, SecurityException;
-    
+
     /**
      * Initiate a new result set using the filter provided
      * @param filter
@@ -315,7 +302,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.lang.Exception
      */
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, Exception;
-    
+
     /**
      * Retrieve rows from a resultset
      * @param resultSetID id of the resultset 
@@ -326,7 +313,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.lang.SecurityException
      * @throws java.lang.Exception
      */
-    public Object[][] retrieveRows(String resultSetID, int from, int to)  throws RemoteException, SecurityException, Exception;
+    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, Exception;
 
     /**
      * Release result set to avoid unessesary server load
@@ -337,7 +324,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.lang.SecurityException
      */
     public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException;
-    
+
     /**
      * Get the population datasets
      * @return the population datasets 
@@ -345,7 +332,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.lang.SecurityException
      */
     public Map<Integer, PopulationDataset> getPopulationDatasets() throws RemoteException, SecurityException;
-    
+
     /**
      * Get the table of names per sex 
      * @return the table of names per sex 
@@ -353,7 +340,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.lang.SecurityException
      */
     public Map<String, Integer> getNameSexTables() throws RemoteException, SecurityException;
-    
+
     /**
      * 
      * @param nameSexRecord
@@ -362,7 +349,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.lang.SecurityException
      */
     public int saveNameSexRecord(NameSexRecord nameSexRecord) throws RemoteException, SecurityException;
-    
+
     /**
      * 
      * @return
@@ -370,7 +357,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.lang.SecurityException
      */
     public boolean clearNameSexTable() throws RemoteException, SecurityException;
-    
+
     /**
      * 
      * @param patient
@@ -379,7 +366,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public Map <Integer, Float> performPersonSearch(Patient patient, PersonSearcher searcher) throws RemoteException, SecurityException;
+    public Map<Integer, Float> performPersonSearch(Patient patient, PersonSearcher searcher) throws RemoteException, SecurityException;
 
     /**
      * Perform global person search

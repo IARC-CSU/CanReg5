@@ -17,6 +17,7 @@ import canreg.client.gui.dataentry.RecordEditor;
 import canreg.client.gui.management.RestoreInternalFrame;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.management.CanReg4SystemConverterInternalFrame;
+import canreg.client.gui.management.UserManagerInternalFrame;
 import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Patient;
@@ -414,7 +415,6 @@ public class CanRegClientView extends FrameView {
         managementMenu.add(jSeparator7);
 
         jMenu1.setText(resourceMap.getString("jMenu1.text")); // NOI18N
-        jMenu1.setEnabled(false);
         jMenu1.setName("jMenu1"); // NOI18N
 
         nameSexMenuItem.setAction(actionMap.get("showNameSexAction")); // NOI18N
@@ -432,8 +432,8 @@ public class CanRegClientView extends FrameView {
         jSeparator6.setName("jSeparator6"); // NOI18N
         managementMenu.add(jSeparator6);
 
+        usersMenuItem.setAction(actionMap.get("showUserManagement")); // NOI18N
         usersMenuItem.setText(resourceMap.getString("usersMenuItem.text")); // NOI18N
-        usersMenuItem.setEnabled(false);
         usersMenuItem.setName("usersMenuItem"); // NOI18N
         managementMenu.add(usersMenuItem);
 
@@ -1110,6 +1110,13 @@ public class CanRegClientView extends FrameView {
             // the result computed by doInBackground().
         }
     }
+
+    @Action
+    public void showUserManagement() {
+        JInternalFrame internalFrame = new UserManagerInternalFrame();
+        showAndCenterInternalFrame(desktopPane, internalFrame);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;

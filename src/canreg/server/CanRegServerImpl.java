@@ -166,16 +166,6 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         }
     }
 
-    /** The first operation. */
-    public void doOperationA() {
-        debugOut("Operation A!");
-    }
-
-    /** The second operation. */
-    public void doOperationB() {
-        debugOut("Operation B!");
-    }
-
     /**
      * 
      * @return
@@ -259,6 +249,30 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return users;
     }
 
+    public Vector<User> listUsers() throws RemoteException, SecurityException {
+        Vector<User> users = new Vector<User>();
+        try {
+            InputStream levelsPropInputStream = null;
+            levelsPropInputStream = CanRegLoginModule.class.getResourceAsStream(Globals.LEVELS_FILENAME);
+            Properties levels = new Properties();
+            levels.load(levelsPropInputStream);
+            
+            for (String userName:levels.stringPropertyNames()){
+                User user = new User();
+                user.setUserName(userName);
+                String userRightLevel = levels.getProperty(userName);
+                user.setUserRightLevel(Globals.UserRightLevels.valueOf(userRightLevel));
+                users.add(user);
+            }
+
+        } catch (java.io.IOException e) {
+            debugOut("File error: " + Globals.LEVELS_FILENAME + "\n");
+            return null;
+        }
+
+        return users;
+    }
+
     /**
      * 
      * @param username
@@ -299,6 +313,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         }
     }
     // add and remove records
+
     /**
      * 
      * @param patient
@@ -631,7 +646,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         } else {
             patientIDA = -1;
         }
-        
+
         try {
             dataDescription = db.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.PATIENT_TABLE_NAME);
             resultSetID = dataDescription.getResultSetID();
@@ -649,7 +664,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                         float score = personSearcher.compare(patient, patientB);
                         if (score > threshold) {
                             patientIDScoreMap.put(patientIDB, score);
-                            debugOut("Found patient id: " + patientIDB + ", score: " + score +"%");
+                            debugOut("Found patient id: " + patientIDB + ", score: " + score + "%");
                         } else {
                             // debugOut("Not found " + patientIDB + " " + score);
                         }
@@ -666,11 +681,13 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     public boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException {
-        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
+        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
             return db.deleteTumourRecord(id);
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             return db.deletePatientRecord(id);
-        } else return false;
+        } else {
+            return false;
+        }
     }
 
     public boolean deletePopulationDataset(int populationDatasetID) throws RemoteException, SecurityException {
