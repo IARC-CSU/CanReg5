@@ -86,6 +86,10 @@ public class CanRegClientApp extends SingleFrameApplication {
     private Properties appInfoProperties;
     private String canRegSystemVersionString;
 
+    public boolean deletePopulationDataset(int populationDatasetID) throws SQLException, RemoteException, SecurityException {
+        return server.deletePopulationDataset(populationDatasetID);
+    }
+
     public Patient getPatientRecord(String requestedPatientRecordID) throws SQLException, RemoteException, SecurityException, Exception {
         return (Patient) getRecordByID(requestedPatientRecordID, Globals.PATIENT_TABLE_NAME);
     }
@@ -332,6 +336,9 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    public String getSystemName(){
+        return systemName;
+    }
     /**
      * Get list of users logged in to the CanReg server
      * @return List of users logged in
@@ -721,7 +728,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * Installs the JGoodies Look & Feels, if available, in classpath.
      */
     public static void initializeLookAndFeels() {
-        // if in classpath thry to load JGoodies Plastic Look & Feel
+        // if in classpath try to load JGoodies Plastic Look & Feel
         try {
             LookAndFeelInfo[] lnfs = UIManager.getInstalledLookAndFeels();
             boolean found = false;
