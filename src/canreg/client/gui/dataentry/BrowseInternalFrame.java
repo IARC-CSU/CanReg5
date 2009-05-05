@@ -10,6 +10,7 @@ import cachingtableapi.DistributedTableModel;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.gui.CanRegClientView;
+import canreg.client.gui.tools.TableColumnAdjuster;
 import canreg.client.gui.tools.XTableColumnModel;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
@@ -358,9 +359,9 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
         @Override
         protected Object doInBackground() {
             try {
-                setProgress(0, 0, 4);
+                // setProgress(0, 0, 4);
                 setMessage("Initiating query...");
-                setProgress(1, 0, 4);
+                // setProgress(1, 0, 4);
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
                 // release old resultSet
                 if (tableDatadescription != null) {
@@ -376,12 +377,12 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
                 // tableDataModel = new PagingTableModel(tableDataSource);
 
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
-                setProgress(2, 0, 4);
+                // setProgress(2, 0, 4);
 
                 setMessage("Starting a new transaction...");
                 rangeFilterPanel.setRecordsShown(tableDataModel.getRowCount());
 
-                setProgress(3, 0, 4);
+                // setProgress(3, 0, 4);
 
                 setMessage("Fetching data...");
                 resultTable.setColumnSelectionAllowed(false);
@@ -391,7 +392,7 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
                 resultTable.createDefaultColumnsFromModel();
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
 
-                setProgress(4, 0, 4);
+                // setProgress(4, 0, 4);
                 setMessage("Finished");
 
                 updateVariablesShown();
@@ -416,6 +417,11 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             boolean theResult = result.equals("OK");
+            resultTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            TableColumnAdjuster tca = new TableColumnAdjuster(resultTable);
+            tca.setColumnDataIncluded(false);
+            tca.setOnlyAdjustLarger(false);
+            tca.adjustColumns();
             resultPanel.setVisible(theResult);
         }
     }
