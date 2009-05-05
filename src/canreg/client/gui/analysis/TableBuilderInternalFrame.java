@@ -11,10 +11,13 @@
 package canreg.client.gui.analysis;
 
 import cachingtableapi.DistributedTableDescription;
+import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
+import canreg.client.LocalSettings;
 import canreg.client.analysis.AgeSpecificFinalTableBuilder;
 import canreg.client.analysis.ConfigFields;
 import canreg.client.analysis.ConfigFieldsReader;
+import canreg.client.analysis.PopulationPyramidTableBuilder;
 import canreg.client.analysis.TableBuilder;
 import canreg.client.analysis.TableBuilderListElement;
 import canreg.client.gui.components.LabelAndComboBoxJPanel;
@@ -26,6 +29,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -38,6 +42,8 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 
 /**
@@ -49,11 +55,23 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private Map<Integer, PopulationDataset> populationDatasetsMap;
     private PopulationDataset[] populationDatasetsArray;
     private LinkedList<LabelAndComboBoxJPanel> populationDatasetChooserPanels;
+    private LocalSettings localSettings;
+    private String path;
+    private JFileChooser chooser;
 
     /** Creates new form TableBuilderInternalFrame */
     public TableBuilderInternalFrame() {
         initComponents();
         initData();
+
+        localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        path = localSettings.getProperty("tables_path");
+
+        if (path == null) {
+            chooser = new JFileChooser();
+        } else {
+            chooser = new JFileChooser(path);
+        }
     }
 
     private PopulationDataset[] getSelectedPopulations() {
@@ -588,13 +606,37 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         TableBuilder tableBuilder = null;
         TableBuilderListElement tble = (TableBuilderListElement) tableTypeList.getSelectedValue();
 
-        if (tble.getEngineName().equalsIgnoreCase("incidencerates")) {
+        if (tble == null) {
+            JOptionPane.showMessageDialog(this, "No table type selected.", "No table type selected.", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (tble.getEngineName().equalsIgnoreCase("incidencerates")) {
             tableBuilder = new AgeSpecificFinalTableBuilder();
+        } else if (tble.getEngineName().equalsIgnoreCase("populationpyramids")) {
+            tableBuilder = new PopulationPyramidTableBuilder();
         }
+
         Set<DatabaseVariablesListElement> variables = new LinkedHashSet<DatabaseVariablesListElement>();
         DistributedTableDescription tableDatadescription;
 
-        if (tableBuilder != null) {
+        if (tableBuilder == null) {
+            JOptionPane.showMessageDialog(this, "Table type not yet implemented.", "Table type not yet implemented.", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            String fileName = null;
+            // Choose file name;
+            int returnVal = chooser.showSaveDialog(this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                try {
+                    localSettings.setProperty("tables_path", chooser.getSelectedFile().getCanonicalPath());
+                    fileName = chooser.getSelectedFile().getAbsolutePath();
+                } catch (IOException ex) {
+                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                // cancelled
+                return;
+            }
+
             int startYear = startYearChooser.getValue();
             int endYear = endYearChooser.getValue();
             PopulationDataset[] populations = getSelectedPopulations();
@@ -613,8 +655,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             }
 
             Globals.StandardVariableNames[] variablesNeeded = tableBuilder.getVariablesNeeded();
-            for (Globals.StandardVariableNames standardVariableName : variablesNeeded) {
-                variables.add(canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(standardVariableName.toString()));
+            if (variablesNeeded != null) {
+                for (Globals.StandardVariableNames standardVariableName : variablesNeeded) {
+                    variables.add(canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(standardVariableName.toString()));
+                }
             }
             DatabaseFilter filter = new DatabaseFilter();
             String tableName = "both";
@@ -644,7 +688,19 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 if (tableDatadescription.getRowCount() > 0) {
                     incidenceData = tableDataSource.retrieveRows(0, tableDatadescription.getRowCount());
                 }
-                tableBuilder.buildTable("Registry name ("+startYear+"-"+endYear+")", "TestFileName", startYear, endYear, incidenceData, populations, standardPopulations, tble.getConfigFields(), tble.getEngineParameters());
+                String heading = canreg.client.CanRegClientApp.getApplication().getSystemName() + " (" + startYear;
+                if (endYear != startYear) {
+                    heading += "-" + endYear;
+                }
+                heading += ")";
+                LinkedList<String> filesGenerated = tableBuilder.buildTable(heading, fileName, startYear, endYear, incidenceData, populations, standardPopulations, tble.getConfigFields(), tble.getEngineParameters());
+                JOptionPane.showMessageDialog(this, "Tables built.", "Tables built.", JOptionPane.INFORMATION_MESSAGE);
+
+                // Opening the resulting files...
+                for (String resultFileName : filesGenerated) {
+                    canreg.common.Tools.openFile(resultFileName);
+                }
+
             } catch (SQLException ex) {
                 Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
@@ -655,8 +711,6 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-        } else {
-            // Engine not initialized yet...
         }
     }
 }

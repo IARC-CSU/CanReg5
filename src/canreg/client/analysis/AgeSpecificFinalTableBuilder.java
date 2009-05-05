@@ -5,7 +5,6 @@ import canreg.server.database.AgeGroupStructure;
 import canreg.server.database.PopulationDataset;
 import java.util.LinkedList;
 import java.io.IOException;
-import java.io.FileReader;
 import java.text.NumberFormat;
 import java.io.File;
 import java.io.PrintStream;
@@ -40,8 +39,10 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
     private static int MORPHOLOGY_COLUMN = 4;
     private static int BEHAVIOUR_COLUMN = 5;
     private static int BASIS_DIAGNOSIS_COLUMN = 6;
+    private static int CASES_COLUMN = 7;
+    private double[][] standardPopulationArray;
 
-    public void buildTable(String registryLabel,
+    public LinkedList<String> buildTable(String registryLabel,
             String reportFileName,
             int startYear,
             int endYear,
@@ -51,23 +52,24 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
             LinkedList<ConfigFields> configList,
             String[] engineParameters) {
 
+        LinkedList<String> generatedFiles = new LinkedList<String>();
+
         String footerString = "CanReg5";
 
         String notesString = "Notes?";
-
-        int[] years = {startYear, endYear};
 
         double tableFontSize = 7.5;
         String font = "Times";
 
         boolean reportToFile = true;
+        int[] years = {startYear, endYear};
 
         double casesArray[][][] = null; // a 3D array of sex, icd and agegroup - with one extra layer in all dimensions containing a sum of all
         double populationArray[][] = null; // contains population count in the following format: [sex][agegroup]
 
 //      double RegPop[][];
-        double CA[][];
-        double CR[][];
+        double totalCasesPerHundredThousand[][];
+        double crudeRate[][];
         double MV[][];
         double ASR[][];
         double ASRbyAgeGroup[][][];
@@ -150,11 +152,6 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
 
         numberOfCancerGroups = cancerGroupsLocal.length;
 
-        if (registryLabel.charAt(0) == 's') {
-            isSpecialized = true;
-            registryLabel = registryLabel.substring(1).trim();
-        }
-
         lineBreaks = parseLineBreaks(ConfigFieldsReader.findConfig("line_breaks", configList));
 
         numberOfYears = years[1] - years[0] + 1;
@@ -177,10 +174,22 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
             population.addPopulationDataToArrayForTableBuilder(populationArray, foundAgeGroups, new AgeGroupStructure(5, 85, 1));
         }
 
+        standardPopulationArray = new double[numberOfSexes][numberOfAgeGroups];
+
+        for (PopulationDataset stdPopulation:standardPopulations){
+            stdPopulation.addPopulationDataToArrayForTableBuilder(standardPopulationArray, null, new AgeGroupStructure(5, 85, 1));
+        }
+
+        // standardize population array
+        for (int sexNumber = 0; sexNumber < numberOfSexes; sexNumber++){
+            for (int ageGroupNumber = 0; ageGroupNumber<numberOfAgeGroups; ageGroupNumber++){
+                standardPopulationArray[sexNumber][ageGroupNumber]=(standardPopulationArray[sexNumber][ageGroupNumber]/standardPopulationArray[sexNumber][numberOfAgeGroups-1])*100000;
+            }
+        }
+
         highestPopulationAgeGroup = findHighestAgeGroup(foundAgeGroups);
         lowestPopulationAgeGroup = findLowestAgeGroup(foundAgeGroups);
 
-        FileReader dataFile;
         int records = 0;
         // generate statistics
 
@@ -196,13 +205,17 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
         String yearString;
         String ageString;
         String basisString;
-        int sex, icdNumber, year, icdIndex, yearIndex, ageGroup, basis;
+        String casesString;
+
+        int sex, icdNumber, year, icdIndex, yearIndex, ageGroup, basis, cases;
 
         for (Object[] line : incidenceData) {
 
 
             // Set default
             icdIndex = -1;
+            cases = 0;
+
             // Unknown sex group = 3
             sex = 3;
             // Extract data
@@ -276,9 +289,13 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
 
             ageGroup = populations[yearIndex].getAgeGroupIndex(Integer.parseInt(ageString));
 
+            // Adjust age group
             if (populations[yearIndex].getAgeGroupStructure().getSizeOfFirstGroup()!=1){
                 ageGroup+=1;
             }
+
+            // Extract cases
+            cases = (Integer) line[CASES_COLUMN];
 
             if (year <= years[1] && year >= years[0]) {
 
@@ -293,40 +310,40 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
                 if (sex <= numberOfSexes && icdIndex >= 0 &&
                         icdIndex <= cancerGroupsLocal.length) {
 
-                    casesArray[icdIndex][sex - 1][ageGroup]++;
+                    casesArray[icdIndex][sex - 1][ageGroup]+=cases;
 
                     //
                     if (basis == 00) {
-                        DCO[sex - 1][icdIndex]++;
+                        DCO[sex - 1][icdIndex]+=cases;
                     } else if (basis >= 10 && basis <= 19) {
-                        MV[sex - 1][icdIndex]++;
+                        MV[sex - 1][icdIndex]+=cases;
                     }
                 } else {
                     if (otherCancerGroupsIndex >= 0) {
                         casesArray[otherCancerGroupsIndex][sex -
-                                1][ageGroup]++;
+                                1][ageGroup]+=cases;
                     }
                 }
                 if (allCancerGroupsIndex >= 0) {
-                    casesArray[allCancerGroupsIndex][sex - 1][ageGroup]++;
+                    casesArray[allCancerGroupsIndex][sex - 1][ageGroup]+=cases;
                     if (basis == 0) {
-                        DCO[sex - 1][allCancerGroupsIndex]++;
+                        DCO[sex - 1][allCancerGroupsIndex]+=cases;
                     } else if (basis >= 10 && basis <= 19) {
-                        MV[sex - 1][allCancerGroupsIndex]++;
+                        MV[sex - 1][allCancerGroupsIndex]+=cases;
                     }
                 }
                 if (allCancerGroupsButSkinIndex >= 0 &&
                         skinCancerGroupIndex >= 0 &&
                         icdIndex != skinCancerGroupIndex) {
                     casesArray[allCancerGroupsButSkinIndex][sex -
-                            1][ageGroup]++;
+                            1][ageGroup]+=cases;
                     if (basis == 0) {
-                        DCO[sex - 1][allCancerGroupsButSkinIndex]++;
+                        DCO[sex - 1][allCancerGroupsButSkinIndex]+=cases;
                     } else if (basis >= 10 && basis <= 19) {
-                        MV[sex - 1][allCancerGroupsButSkinIndex]++;
+                        MV[sex - 1][allCancerGroupsButSkinIndex]+=cases;
                     }
                 }
-                records++;
+                records+=cases;
                 if (records % recordsPerFeedback == 0) {
                     System.out.println("Processing record number: " + records);
                 }
@@ -347,9 +364,9 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
         variLbyAgeGroup = new double[numberOfSexes][numberOfCancerGroups][numberOfAgeGroups];
 
         // Total casesPerHundredThousand
-        CA = new double[numberOfSexes][numberOfCancerGroups];
+        totalCasesPerHundredThousand = new double[numberOfSexes][numberOfCancerGroups];
         // Crude rate
-        CR = new double[numberOfSexes][numberOfCancerGroups];
+        crudeRate = new double[numberOfSexes][numberOfCancerGroups];
 
         for (int sexNumber = 0; sexNumber < 2; sexNumber++) {
 
@@ -377,7 +394,7 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
                                     ag++) {
                                 previousAgeGroupCases += casesArray[icdGroup][sexNumber][ag];
                                 previousAgeGroupPopulation += populationArray[sexNumber][ag];
-                                previousAgeGroupWstdPopulation += wstdPop[ag];
+                                previousAgeGroupWstdPopulation += standardPopulationArray[sexNumber][ag];
                             }
                         }
                         if (foundAgeGroups[ageGroupNumber] &&
@@ -396,7 +413,7 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
                         } else {
                             previousAgeGroupCases += casesArray[icdGroup][sexNumber][ageGroupNumber];
                             previousAgeGroupPopulation += populationArray[sexNumber][ageGroupNumber];
-                            previousAgeGroupWstdPopulation += wstdPop[ageGroupNumber];
+                            previousAgeGroupWstdPopulation += standardPopulationArray[sexNumber][ageGroupNumber];
                         }
                     }
                     // We calculate the "leftovers" from the last age group
@@ -428,7 +445,7 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
                 double lastAgeGroupPopulation = 0;
                 double lastAgeGroupWstdPopulation = 0;
 
-                CA[sexNumber][icdGroup] += casesArray[icdGroup][sexNumber][0];
+                totalCasesPerHundredThousand[sexNumber][icdGroup] += casesArray[icdGroup][sexNumber][0];
 
                 for (int ageGroupNumber = 1; ageGroupNumber < unknownAgeGroupIndex;
                         ageGroupNumber++) {
@@ -437,7 +454,7 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
                                 ag++) {
                             previousAgeGroupCases += casesArray[icdGroup][sexNumber][ag];
                             previousAgeGroupPopulation += populationArray[sexNumber][ag];
-                            previousAgeGroupWstdPopulation += wstdPop[ag];
+                            previousAgeGroupWstdPopulation += standardPopulationArray[sexNumber][ag];
                         }
                     }
                     if (foundAgeGroups[ageGroupNumber] &&
@@ -449,7 +466,7 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
                                 (previousAgeGroupPopulation +
                                 populationArray[sexNumber][ageGroupNumber]),
                                 (previousAgeGroupWstdPopulation +
-                                wstdPop[ageGroupNumber]));
+                                standardPopulationArray[sexNumber][ageGroupNumber]));
 
                         ASR[sexNumber][icdGroup] += asr;
 
@@ -477,15 +494,15 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
                     } else if (ageGroupNumber < highestPopulationAgeGroup) {
                         previousAgeGroupCases += casesArray[icdGroup][sexNumber][ageGroupNumber];
                         previousAgeGroupPopulation += populationArray[sexNumber][ageGroupNumber];
-                        previousAgeGroupWstdPopulation += wstdPop[ageGroupNumber];
+                        previousAgeGroupWstdPopulation += standardPopulationArray[sexNumber][ageGroupNumber];
 
                     } else {
                         lastAgeGroupCases += casesArray[icdGroup][sexNumber][ageGroupNumber];
                         lastAgeGroupPopulation += populationArray[sexNumber][ageGroupNumber];
-                        lastAgeGroupWstdPopulation += wstdPop[ageGroupNumber];
+                        lastAgeGroupWstdPopulation += standardPopulationArray[sexNumber][ageGroupNumber];
                     }
 
-                    CA[sexNumber][icdGroup] += casesArray[icdGroup][sexNumber][ageGroupNumber];
+                    totalCasesPerHundredThousand[sexNumber][icdGroup] += casesArray[icdGroup][sexNumber][ageGroupNumber];
                 }
 
                 // We calculate the "leftovers" from the last age group
@@ -510,16 +527,16 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
                 }
 
                 // and take the unknown age group into account
-                CA[sexNumber][icdGroup] += casesArray[icdGroup][sexNumber][unknownAgeGroupIndex];
+                totalCasesPerHundredThousand[sexNumber][icdGroup] += casesArray[icdGroup][sexNumber][unknownAgeGroupIndex];
 
-                if (CA[sexNumber][icdGroup] > 0) {
+                if (totalCasesPerHundredThousand[sexNumber][icdGroup] > 0) {
 
                     DCO[sexNumber][icdGroup] = 100 * (int) DCO[sexNumber][icdGroup] /
-                            CA[sexNumber][icdGroup];
+                            totalCasesPerHundredThousand[sexNumber][icdGroup];
                     MV[sexNumber][icdGroup] = 100 * (int) MV[sexNumber][icdGroup] /
-                            CA[sexNumber][icdGroup];
-                    CR[sexNumber][icdGroup] = CA[sexNumber][icdGroup] *
-                            wstdPop[allAgeGroupsIndex] /
+                            totalCasesPerHundredThousand[sexNumber][icdGroup];
+                    crudeRate[sexNumber][icdGroup] = totalCasesPerHundredThousand[sexNumber][icdGroup] *
+                            standardPopulationArray[sexNumber][allAgeGroupsIndex] /
                             (populationArray[sexNumber][allAgeGroupsIndex]);
 
                     /* We don't use confidence intervals so this was removed 16.07.07
@@ -545,8 +562,8 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
 
                     // adjust the ASR and cum rates for unknown ages
                     if (ASR[sexNumber][icdGroup] > 0) {
-                        double ratio = CA[sexNumber][icdGroup] /
-                                (CA[sexNumber][icdGroup] -
+                        double ratio = totalCasesPerHundredThousand[sexNumber][icdGroup] /
+                                (totalCasesPerHundredThousand[sexNumber][icdGroup] -
                                 casesArray[icdGroup][sexNumber][unknownAgeGroupIndex]);
                         ASR[sexNumber][icdGroup] *= ratio;
                         cumRate64[sexNumber][icdGroup] *= ratio;
@@ -608,6 +625,7 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
 
         for (int sexNumber = 0; sexNumber < numberOfSexes - 1; sexNumber++) {
             String psFileName = reportFileName + sexNumber + ".ps";
+            generatedFiles.add(psFileName);
             try {
                 FileWriter fw = new FileWriter(psFileName);
                 nf.setMaximumFractionDigits(1);
@@ -878,8 +896,8 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
 
                         if (j != allCancerGroupsIndex && allCancerGroupsButSkinIndex >= 0) {
                             fw.write("0 " + k + " MT (" +
-                                    formatNumber(100 * CA[sexNumber][j] /
-                                    CA[sexNumber][allCancerGroupsButSkinIndex]) +
+                                    formatNumber(100 * totalCasesPerHundredThousand[sexNumber][j] /
+                                    totalCasesPerHundredThousand[sexNumber][allCancerGroupsButSkinIndex]) +
                                     ") RS\n");
                         }
                         k -= (tableFontSize);
@@ -905,7 +923,7 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
                             fw.write("Tablefont SF\n");
                         }
 
-                        fw.write("0 " + k + " MT (" + formatNumber(CR[sexNumber][j]) +
+                        fw.write("0 " + k + " MT (" + formatNumber(crudeRate[sexNumber][j]) +
                                 ") RS\n");
                         k -= (tableFontSize);
                     }
@@ -931,7 +949,7 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
                         }
 
                         fw.write("0 " + k + " MT (" +
-                                formatNumber(CA[sexNumber][j], 0) + ") RS\n");
+                                formatNumber(totalCasesPerHundredThousand[sexNumber][j], 0) + ") RS\n");
                         k -= (tableFontSize);
                     }
                 }
@@ -1043,6 +1061,8 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
         }
 
         System.out.println("Fini!");
+
+        return generatedFiles;
     }
 
     /**

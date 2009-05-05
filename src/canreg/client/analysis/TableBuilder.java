@@ -162,7 +162,7 @@ public abstract class TableBuilder {
 
     public abstract StandardVariableNames[] getVariablesNeeded();
 
-    public abstract void buildTable(String registryLabel,
+    public abstract LinkedList<String> buildTable(String registryLabel,
             String reportFileName,
             int startYear,
             int endYear,
