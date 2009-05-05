@@ -10,6 +10,7 @@ import cachingtableapi.DistributedTableModel;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.LocalSettings;
+import canreg.client.gui.tools.TableColumnAdjuster;
 import canreg.client.gui.tools.XTableColumnModel;
 import canreg.common.DatabaseFilter;
 import java.awt.event.ActionEvent;
@@ -411,20 +412,20 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         @Override
         protected Object doInBackground() {
             try {
-                setProgress(0, 0, 4);
+                //setProgress(0, 0, 4);
                 setMessage("Initiating query...");
-                setProgress(1, 0, 4);
+                //setProgress(1, 0, 4);
 
                 tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
 
                 tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
                 tableDataModel = new DistributedTableModel(tableDataSource);
-                setProgress(2, 0, 4);
+                //setProgress(2, 0, 4);
 
                 setMessage("Starting a new transaction...");
                 rangeFilterPanel.setRecordsShown(tableDataModel.getRowCount());
 
-                setProgress(3, 0, 4);
+                //setProgress(3, 0, 4);
 
                 setMessage("Fetching data...");
                 resultTable.setModel(tableDataModel);
@@ -435,7 +436,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 resultTable.createDefaultColumnsFromModel();
                 updateVariablesShown();
 
-                setProgress(4, 0, 4);
+                //setProgress(4, 0, 4);
                 setMessage("Finished");
 
             } catch (SQLException ex) {
@@ -458,8 +459,12 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             // the result computed by doInBackground().
             boolean theResult = result.equals("OK");
             // resultTable.setAutoResizeMode (JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+            resultTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            TableColumnAdjuster tca = new TableColumnAdjuster(resultTable);
+            tca.setColumnDataIncluded(false);
+            tca.setOnlyAdjustLarger(false);
+            tca.adjustColumns();
             resultPanel.setVisible(theResult);
-
         }
     }
 
