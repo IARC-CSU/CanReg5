@@ -176,12 +176,12 @@ public class CanRegClientView extends FrameView {
         mainPanel = new javax.swing.JPanel();
         toolBar = new javax.swing.JToolBar();
         browseEditButton = new javax.swing.JButton();
-        jSeparator12 = new javax.swing.JToolBar.Separator();
+        jButton2 = new javax.swing.JButton();
+        jSeparator13 = new javax.swing.JToolBar.Separator();
         optionsButton = new javax.swing.JButton();
         jSeparator14 = new javax.swing.JToolBar.Separator();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jSeparator13 = new javax.swing.JToolBar.Separator();
+        jSeparator15 = new javax.swing.JToolBar.Separator();
         jButton3 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         desktopPane = new javax.swing.JDesktopPane();
@@ -208,7 +208,7 @@ public class CanRegClientView extends FrameView {
         backupMenuItem = new javax.swing.JMenuItem();
         restoreMenuItem = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JSeparator();
-        jMenu1 = new javax.swing.JMenu();
+        qualityControlMenu = new javax.swing.JMenu();
         nameSexMenuItem = new javax.swing.JMenuItem();
         duplicateSearchMenuItem = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JSeparator();
@@ -256,8 +256,15 @@ public class CanRegClientView extends FrameView {
         browseEditButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(browseEditButton);
 
-        jSeparator12.setName("jSeparator12"); // NOI18N
-        toolBar.add(jSeparator12);
+        jButton2.setAction(actionMap.get("createNewRecordSetAction")); // NOI18N
+        jButton2.setFocusable(false);
+        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton2.setName("jButton2"); // NOI18N
+        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(jButton2);
+
+        jSeparator13.setName("jSeparator13"); // NOI18N
+        toolBar.add(jSeparator13);
 
         optionsButton.setAction(actionMap.get("showOptionFrame")); // NOI18N
         optionsButton.setFocusable(false);
@@ -269,23 +276,15 @@ public class CanRegClientView extends FrameView {
         jSeparator14.setName("jSeparator14"); // NOI18N
         toolBar.add(jSeparator14);
 
-        jButton1.setAction(actionMap.get("showLastRecord")); // NOI18N
-        jButton1.setToolTipText(resourceMap.getString("jButton1.toolTipText")); // NOI18N
+        jButton1.setAction(actionMap.get("showTableBuilder")); // NOI18N
         jButton1.setFocusable(false);
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton1.setName("jButton1"); // NOI18N
         jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(jButton1);
 
-        jButton2.setAction(actionMap.get("createNewRecordSetAction")); // NOI18N
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setName("jButton2"); // NOI18N
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(jButton2);
-
-        jSeparator13.setName("jSeparator13"); // NOI18N
-        toolBar.add(jSeparator13);
+        jSeparator15.setName("jSeparator15"); // NOI18N
+        toolBar.add(jSeparator15);
 
         jButton3.setAction(actionMap.get("showCanRegHelpFile")); // NOI18N
         jButton3.setFocusable(false);
@@ -414,20 +413,20 @@ public class CanRegClientView extends FrameView {
         jSeparator7.setName("jSeparator7"); // NOI18N
         managementMenu.add(jSeparator7);
 
-        jMenu1.setText(resourceMap.getString("jMenu1.text")); // NOI18N
-        jMenu1.setName("jMenu1"); // NOI18N
+        qualityControlMenu.setText(resourceMap.getString("qualityControlMenu.text")); // NOI18N
+        qualityControlMenu.setName("qualityControlMenu"); // NOI18N
 
         nameSexMenuItem.setAction(actionMap.get("showNameSexAction")); // NOI18N
         nameSexMenuItem.setText(resourceMap.getString("nameSexMenuItem.text")); // NOI18N
         nameSexMenuItem.setName("nameSexMenuItem"); // NOI18N
-        jMenu1.add(nameSexMenuItem);
+        qualityControlMenu.add(nameSexMenuItem);
 
         duplicateSearchMenuItem.setAction(actionMap.get("duplicateSearchAction")); // NOI18N
         duplicateSearchMenuItem.setText(resourceMap.getString("duplicateSearchMenuItem.text")); // NOI18N
         duplicateSearchMenuItem.setName("duplicateSearchMenuItem"); // NOI18N
-        jMenu1.add(duplicateSearchMenuItem);
+        qualityControlMenu.add(duplicateSearchMenuItem);
 
-        managementMenu.add(jMenu1);
+        managementMenu.add(qualityControlMenu);
 
         jSeparator6.setName("jSeparator6"); // NOI18N
         managementMenu.add(jSeparator6);
@@ -818,8 +817,14 @@ public class CanRegClientView extends FrameView {
         browseEditButton.setEnabled(analysis);
         // startDatabaseServerButton.setEnabled(management);
         //Menus
+        editDictionaryMenuItem.setEnabled(management);
+
         analysisMenu.setEnabled(analysis);
-        managementMenu.setEnabled(management);
+        managementMenu.setEnabled(loggedIn);
+
+        advancedMenu.setEnabled(management);
+        qualityControlMenu.setEnabled(management);
+
         dataEntryMenu.setEnabled(dataEntry);
         logOutMenuItem.setEnabled(loggedIn);
 
@@ -1140,7 +1145,6 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
@@ -1149,9 +1153,9 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator11;
-    private javax.swing.JToolBar.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator13;
     private javax.swing.JToolBar.Separator jSeparator14;
+    private javax.swing.JToolBar.Separator jSeparator15;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
@@ -1170,6 +1174,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JButton optionsButton;
     private javax.swing.JMenuItem optionsMenuItem;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JMenu qualityControlMenu;
     private javax.swing.JMenuItem restoreMenuItem;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;

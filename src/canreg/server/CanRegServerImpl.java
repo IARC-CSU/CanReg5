@@ -1,5 +1,7 @@
 package canreg.server;
 
+import canreg.server.database.User;
+import canreg.server.management.UserManagerNew;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals;
@@ -12,6 +14,7 @@ import canreg.server.database.CanRegDAO;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
+import canreg.server.database.Migrator;
 import canreg.server.database.NameSexRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
@@ -30,7 +33,6 @@ import javax.security.auth.Subject;
 import org.apache.derby.drda.NetworkServerControl;
 import java.net.InetAddress;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
@@ -43,7 +45,6 @@ import org.w3c.dom.Document;
 public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServerInterface {
 
     private static boolean debug = true;
-    Vector fClients = new Vector();
     private CanRegDAO db;
     private NetworkServerControl dbServer;
     private SystemDescription systemDescription;
@@ -51,6 +52,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private SystemSettings systemSettings;
     private PersonSearcher personSearcher;
     private Properties appInfoProperties;
+    private UserManagerNew userManager;
 
     /**
      * 
@@ -90,12 +92,21 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         } catch (IOException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        // migrate the database if necessary
+        Migrator migrator = new Migrator(getCanRegVersion(), db);
+        migrator.migrate();
+
         // Step three: initiate the quality controllers
         personSearcher = new DefaultPersonSearch(
                 Tools.getVariableListElements(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
         PersonSearchVariable[] searchVariables = Tools.getPersonSearchVariables(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE);
         personSearcher.setSearchVariables(searchVariables);
         personSearcher.setThreshold(Tools.getPersonSearchMinimumMatch(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
+
+
+        // Step four: start the user manager
+        userManager = new UserManagerNew(db);
+        userManager.writePasswordsToFile();
     }
 
     // Initialize the database connection
@@ -182,8 +193,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public void addUser(String username) throws RemoteException, SecurityException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void addUser(User user) throws RemoteException, SecurityException {
+        userManager.addUser(user);
     }
 
     /**
@@ -192,8 +203,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public void removeUser(String username) throws RemoteException, SecurityException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void removeUser(User user) throws RemoteException, SecurityException {
+        userManager.removeUser(user);
     }
 
     /**
@@ -202,19 +213,13 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public void setUserPassword(String username) throws RemoteException, SecurityException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * 
-     * @param username
-     * @return
-     * @throws java.rmi.RemoteException
-     * @throws java.lang.SecurityException
-     */
-    public String getUserPassword(String username) throws RemoteException, SecurityException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void setUserPassword(String username, String password) throws RemoteException, SecurityException {
+        for (User user:listUsers()){
+            if (user.getUserName().equalsIgnoreCase(username)){
+                user.setPassword(password.toCharArray());
+                saveUser(user);
+            }
+        }
     }
 
     /**
@@ -239,38 +244,11 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.lang.SecurityException
      */
     public String[] listCurrentUsers() throws RemoteException, SecurityException {
-        String[] users = new String[fClients.size()];
-        int i = 0;
-        for (Iterator it = fClients.iterator(); it.hasNext();) {
-            users[i] = (String) it.next();
-            debugOut("element is " + users[i]);
-            i++;
-        }
-        return users;
+        return userManager.listCurrentUsers();
     }
 
     public Vector<User> listUsers() throws RemoteException, SecurityException {
-        Vector<User> users = new Vector<User>();
-        try {
-            InputStream levelsPropInputStream = null;
-            levelsPropInputStream = CanRegLoginModule.class.getResourceAsStream(Globals.LEVELS_FILENAME);
-            Properties levels = new Properties();
-            levels.load(levelsPropInputStream);
-            
-            for (String userName:levels.stringPropertyNames()){
-                User user = new User();
-                user.setUserName(userName);
-                String userRightLevel = levels.getProperty(userName);
-                user.setUserRightLevel(Globals.UserRightLevels.valueOf(userRightLevel));
-                users.add(user);
-            }
-
-        } catch (java.io.IOException e) {
-            debugOut("File error: " + Globals.LEVELS_FILENAME + "\n");
-            return null;
-        }
-
-        return users;
+        return userManager.listUsers();
     }
 
     /**
@@ -281,7 +259,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     public void userLoggedIn(String username)
             throws RemoteException, SecurityException {
-        fClients.add(username);
+        userManager.userLoggedIn(username);
     }
 
     /**
@@ -292,7 +270,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     public void userLoggedOut(String username)
             throws RemoteException, SecurityException {
-        fClients.remove(fClients.indexOf(username));
+        userManager.userLoggedOut(username);
     }
 
     // 
@@ -565,8 +543,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.lang.SecurityException
      */
     public UserRightLevels getUserRightLevel() throws RemoteException, SecurityException {
-        // For now everyone is a supervisor...
-        return Globals.UserRightLevels.REGISTRAR;
+        // This should never be called but be taken care of by the proxy...
+        return Globals.UserRightLevels.NOT_LOGGED_IN;
     }
 
     /**
@@ -681,16 +659,25 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     public boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException {
+        boolean success = false;
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-            return db.deleteTumourRecord(id);
+            success = db.deleteTumourRecord(id);
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-            return db.deletePatientRecord(id);
-        } else {
-            return false;
+            success = db.deletePatientRecord(id);
+        } else if (tableName.equalsIgnoreCase(Globals.USERS_TABLE_NAME)){
+            success = db.deleteRecord(id, Globals.USERS_TABLE_NAME);
+            userManager.writePasswordsToFile();
         }
+        return success;
     }
 
     public boolean deletePopulationDataset(int populationDatasetID) throws RemoteException, SecurityException {
         return db.deletePopulationDataSet(populationDatasetID);
+    }
+
+    public int saveUser(User user) throws RemoteException, SecurityException {
+        int id = db.saveUser(user);
+        userManager.writePasswordsToFile();
+        return id;
     }
 }

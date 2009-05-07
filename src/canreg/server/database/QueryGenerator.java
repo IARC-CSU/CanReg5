@@ -152,6 +152,28 @@ public class QueryGenerator {
         return queryLine;
     }
 
+        /**
+     *
+     * @return
+     */
+    public static final String strSaveUser() {
+        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".USERS " +
+                "   (USERNAME, PASSWORD, USER_LEVEL, EMAIL, REAL_NAME) " +
+                "VALUES (?, ?, ?, ?, ?)";
+        return queryLine;
+    }
+
+            /**
+     *
+     * @return
+     */
+    public static final String strEditUser() {
+        String queryLine = "UPDATE " + Globals.SCHEMA_NAME + ".USERS " +
+                "   SET USERNAME = ?, PASSWORD = ?, USER_LEVEL = ?, EMAIL = ?, REAL_NAME = ? " +
+                "WHERE ID = ?";
+        return queryLine;
+    }
+
     /**
      * 
      * @return
@@ -218,7 +240,7 @@ public class QueryGenerator {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".USERS (" +
                 "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
                 "USERNAME VARCHAR(255)," +
-                "PASSWORD VARCHAR(255) FOR BIT DATA NOT NULL," +
+                "PASSWORD VARCHAR(255)," +
                 "USER_LEVEL INT," +
                 "EMAIL VARCHAR(255)," +
                 "REAL_NAME VARCHAR(255)" +

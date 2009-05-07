@@ -36,6 +36,14 @@ public class Globals {
      * 
      */
     static public boolean DEBUG = true;
+    // FILES AND FOLDERS
+    /**
+     *
+     */
+    static public String FILE_SEPARATOR = System.getProperty("file.separator", ".");
+    static private String CANREG_USER_FOLDER = System.getProperty("user.home", ".");
+    static private String CANREG_SERVER_FOLDER_NAME = ".CanRegServer";
+    static private String CANREG_CLIENT_FOLDER_NAME = ".CanRegClient";
     /**
      * 
      */
@@ -44,12 +52,10 @@ public class Globals {
      * 
      */
     static public String PASS_FILENAME = "Passwords.properties";
-
     /**
      *
      */
     static public String LEVELS_FILENAME = "Levels.properties";
-    
     /**
      * 
      */
@@ -58,23 +64,9 @@ public class Globals {
      * 
      */
     static public String LOGIN_FILENAME = "./conf/CanRegLogin.conf";
-
-
     static public String TABLES_CONF_PATH = "./conf/tables";
-
-    
     static public String TABLES_PREVIEW_PATH = "./conf/tables/previews";
-
     static public String DEFAULT_PREVIEW_FILENAME = "blanc.png";
-    
-    // FILES AND FOLDERS
-    /**
-     * 
-     */
-    static public String FILE_SEPARATOR = System.getProperty("file.separator", ".");
-    static private String CANREG_USER_FOLDER = System.getProperty("user.home", ".");
-    static private String CANREG_SERVER_FOLDER_NAME = ".CanRegServer";
-    static private String CANREG_CLIENT_FOLDER_NAME = ".CanRegClient";
     /**
      * 
      */
@@ -86,6 +78,8 @@ public class Globals {
     static private String CANREG_SERVER_SYSTEM_CONFIG_FOLDER_NAME = "System";
     static private String CANREG_SERVER_DATABASE_FOLDER_NAME = "Database";
     static private String CANREG_BACKUP_FOLDER_NAME = "Backup";
+    static public String CANREG_PASSWORD_FILE_NAME = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + "passwords.properties";
+    static public String CANREG_LEVELS_FILE_NAME = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + "levels.properties";
     /**
      * 
      */
@@ -102,7 +96,6 @@ public class Globals {
      * 
      */
     public static String CANREG4_SYSTEM_FOLDER = "C:\\CR4SHARE\\CANREG4\\CR4-SYST\\";
-
     /**
      * 
      */
@@ -124,7 +117,6 @@ public class Globals {
      * 
      */
     public static String DATE_FORMAT_STRING = "yyyyMMdd";
-
     static String DATAENTRY_LANGUAGE_ENGLISH = "E";
     static String DATAENTRY_LANGUAGE_FRENCH = "F";
     static String DATAENTRY_LANGUAGE_SPANISH = "S";
@@ -138,7 +130,6 @@ public class Globals {
     static String DATAENTRY_LANGUAGE_ARABIC = "A";
     static String DATAENTRY_LANGUAGE_FARSI = "Z";
     static String DATAENTRY_LANGUAGE_RUSSIAN = "U";
-    
     static String CHARSET_ENGLISH = "ISO-8859-1";
     static String CHARSET_FRENCH = "ISO-8859-1";
     static String CHARSET_SPANISH = "ISO-8859-1";
@@ -155,7 +146,8 @@ public class Globals {
     public static String LOGFILE_PATTERN = "%h/canreg5client.log";
     public static String LOG_LEVEL = "FINEST";
     public static String DEFAULT_BACK_UP_EVERY = "7";
-    
+    public static String USERS_TABLE_NAME = "USERS";
+
     /**
      * 
      */
@@ -178,7 +170,6 @@ public class Globals {
          */
         ANALYST
     };
-
     /**
      * 
      */
@@ -187,41 +178,35 @@ public class Globals {
      * 
      */
     static public String TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME = "TRID";
-    
     /**
      * 
      */
     static public AgeGroupStructure[] defaultAgeGroupStructures = {
-        new AgeGroupStructure(5,85),
-        new AgeGroupStructure(5,75),        
-        new AgeGroupStructure(5,65),
-        new AgeGroupStructure(5,75,15),        
-        new AgeGroupStructure(5,65,15),
-        new AgeGroupStructure(5,15,1,15)
+        new AgeGroupStructure(5, 85),
+        new AgeGroupStructure(5, 75),
+        new AgeGroupStructure(5, 65),
+        new AgeGroupStructure(5, 75, 15),
+        new AgeGroupStructure(5, 65, 15),
+        new AgeGroupStructure(5, 15, 1, 15)
     };
-    
     /**
      * 
      */
-    static public int[] standardWorldPopulationWeights =
-    { 120,100,90,90,80,80,60,60,60,60,50,40,40,30,20,10,5,5 };
-    
+    static public int[] standardWorldPopulationWeights = {120, 100, 90, 90, 80, 80, 60, 60, 60, 60, 50, 40, 40, 30, 20, 10, 5, 5};
     /**
      * 
      */
-    static public int[] standardEuropeanPopulationWeights =
-    { 80,70,70,70,70,70,70,70,70,70,70,60,50,40,30,20,10,10 };
-    
+    static public int[] standardEuropeanPopulationWeights = {80, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 60, 50, 40, 30, 20, 10, 10};
     /**
      * 
      */
-    static public int[] standardWHOPopulationWeights =
-    { 886,869,860,847,822,793,761,715,659,604,537,455,372,296,221,152, 91, 63 };
+    static public int[] standardWHOPopulationWeights = {886, 869, 860, 847, 822, 793, 761, 715, 659, 604, 537, 455, 372, 296, 221, 152, 91, 63};
 
     /**
      * 
      */
-    public static enum SystemVariableNames{
+    public static enum SystemVariableNames {
+
         /**
          * 
          */
@@ -239,11 +224,12 @@ public class Globals {
          */
         LAST_RECORD_DB_ID
     }
-    
+
     /**
      * 
      */
     public static enum StandardVariableNames {
+
         /**
          * 
          */
@@ -416,5 +402,5 @@ public class Globals {
          *
          */
         TumourUnduplicationStatus
-    }    
+    }
 }

@@ -1,5 +1,6 @@
 package canreg.server;
 
+import canreg.server.database.User;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals.UserRightLevels;
@@ -53,20 +54,20 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
 
     }
 
-    public void addUser(String username) throws RemoteException, SecurityException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void addUser(User user) throws RemoteException, SecurityException {
+        checkPermission("addUser");
+        theServer.addUser(user);
     }
 
-    public void removeUser(String username) throws RemoteException, SecurityException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void removeUser(User user) throws RemoteException, SecurityException {
+        checkPermission("removeUser");
+        theServer.removeUser(user);
     }
 
-    public void setUserPassword(String username) throws RemoteException, SecurityException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public String getUserPassword(String username) throws RemoteException, SecurityException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void setUserPassword(String username, String password) throws RemoteException, SecurityException {
+        RMILoginPrincipal principal = (RMILoginPrincipal) theUser.getPrincipals().toArray()[0];
+        username = principal.getName();
+        theServer.setUserPassword(username, password);
     }
 
     public String getCanRegSystemName() throws RemoteException, SecurityException {
@@ -262,5 +263,10 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public Vector<User> listUsers() throws RemoteException, SecurityException {
         checkPermission("listUsers");
         return theServer.listUsers();
+    }
+
+    public int saveUser(User user) throws RemoteException, SecurityException {
+        checkPermission("saveUser");
+        return theServer.saveUser(user);
     }
 }

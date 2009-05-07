@@ -46,9 +46,20 @@
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JToolBar$Separator" name="jSeparator12">
+            <Component class="javax.swing.JButton" name="jButton2">
               <Properties>
-                <Property name="name" type="java.lang.String" value="jSeparator12" noResource="true"/>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="createNewRecordSetAction" methodName="createNewRecordSetAction"/>
+                </Property>
+                <Property name="focusable" type="boolean" value="false"/>
+                <Property name="horizontalTextPosition" type="int" value="0"/>
+                <Property name="name" type="java.lang.String" value="jButton2" noResource="true"/>
+                <Property name="verticalTextPosition" type="int" value="3"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JToolBar$Separator" name="jSeparator13">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="jSeparator13" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="optionsButton">
@@ -70,29 +81,17 @@
             <Component class="javax.swing.JButton" name="jButton1">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.CanRegClientView" id="showLastRecord" methodName="showLastRecord"/>
+                  <action class="canreg.client.gui.CanRegClientView" id="showTableBuilder" methodName="showTableBuilder"/>
                 </Property>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="jButton1.toolTipText"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton2">
+            <Component class="javax.swing.JToolBar$Separator" name="jSeparator15">
               <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.CanRegClientView" id="createNewRecordSetAction" methodName="createNewRecordSetAction"/>
-                </Property>
-                <Property name="focusable" type="boolean" value="false"/>
-                <Property name="horizontalTextPosition" type="int" value="0"/>
-                <Property name="name" type="java.lang.String" value="jButton2" noResource="true"/>
-                <Property name="verticalTextPosition" type="int" value="3"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JToolBar$Separator" name="jSeparator13">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="jSeparator13" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="jSeparator15" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="jButton3">
@@ -319,10 +318,10 @@
                 <Property name="name" type="java.lang.String" value="jSeparator7" noResource="true"/>
               </Properties>
             </MenuItem>
-            <Menu class="javax.swing.JMenu" name="jMenu1">
+            <Menu class="javax.swing.JMenu" name="qualityControlMenu">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jMenu1.text"/>
-                <Property name="name" type="java.lang.String" value="jMenu1" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="qualityControlMenu.text"/>
+                <Property name="name" type="java.lang.String" value="qualityControlMenu" noResource="true"/>
               </Properties>
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="nameSexMenuItem">

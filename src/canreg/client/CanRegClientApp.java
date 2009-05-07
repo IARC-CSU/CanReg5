@@ -18,7 +18,7 @@ import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.exceptions.WrongCanRegVersionException;
 import canreg.server.CanRegLoginInterface;
 import canreg.server.CanRegServerInterface;
-import canreg.server.User;
+import canreg.server.database.User;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
@@ -88,6 +88,10 @@ public class CanRegClientApp extends SingleFrameApplication {
     private Properties appInfoProperties;
     private String canRegSystemVersionString;
 
+    public void changePassword(String encrypted) throws SecurityException, RemoteException {
+        server.setUserPassword(null, encrypted);
+    }
+
     public boolean deletePopulationDataset(int populationDatasetID) throws SQLException, RemoteException, SecurityException {
         return server.deletePopulationDataset(populationDatasetID);
     }
@@ -98,6 +102,10 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public Tumour getTumourRecord(String requestedPatientRecordID) throws SQLException, RemoteException, SecurityException, Exception {
         return (Tumour) getRecordByID(requestedPatientRecordID, Globals.TUMOUR_TABLE_NAME);
+    }
+
+    public void saveUser(User user) throws SQLException, RemoteException, SecurityException {
+        server.saveUser(user);
     }
 
     private DatabaseRecord getRecordByID(String recordID, String tableName) throws SQLException, RemoteException, SecurityException, Exception {
@@ -194,14 +202,14 @@ public class CanRegClientApp extends SingleFrameApplication {
             public boolean canExit(EventObject e) {
                 int option = JOptionPane.NO_OPTION;
                 if (!isCanregServerRunningInThisThread()) {
-                    option = JOptionPane.showConfirmDialog(null, "Really exit?");
+                    option = JOptionPane.showConfirmDialog(null, "Really exit?", "Really exit?", JOptionPane.YES_NO_OPTION);
                 } else {
                     try {
                         if (loggedIn) {
                             int users = listUsersLoggedIn().length - 1;
-                            option = JOptionPane.showConfirmDialog(null, "Really exit?\n" + users + " other user(s) connected to this server will be disconnected.");
+                            option = JOptionPane.showConfirmDialog(null, "Really exit?\n" + users + " other user(s) connected to this server will be disconnected.", "Really exit?", JOptionPane.YES_NO_OPTION);
                         } else {
-                            option = JOptionPane.showConfirmDialog(null, "Really exit?\nOther user(s) connected to this server will be disconnected.");
+                            option = JOptionPane.showConfirmDialog(null, "Really exit?\nOther user(s) connected to this server will be disconnected.", "Really exit?", JOptionPane.YES_NO_OPTION);
                         }
                     } catch (RemoteException ex) {
                     }

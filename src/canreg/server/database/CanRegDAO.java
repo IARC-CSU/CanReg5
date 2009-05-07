@@ -10,11 +10,9 @@ import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,7 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
-
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,6 +68,8 @@ public class CanRegDAO {
         strGetHighestPatientID = QueryGenerator.strGetHighestPatientID(globalToolBox);
         strGetHighestTumourID = QueryGenerator.strGetHighestTumourID(globalToolBox);
         strGetHighestPatientRecordID = QueryGenerator.strGetHighestPatientRecordID(globalToolBox);
+        strEditUser = QueryGenerator.strEditUser();
+        strSaveUser = QueryGenerator.strSaveUser();
         /* We don't use tumour record ID...
         strGetHighestTumourRecordID = QueryGenerator.strGetHighestTumourRecordID(globalToolBox);
          */
@@ -85,13 +84,11 @@ public class CanRegDAO {
         }
     }
 
-
-
     /**
      * 
      * @return
      */
-    public Map<Integer, Dictionary> getDictionary() {
+    public synchronized Map<Integer, Dictionary> getDictionary() {
         // Map<Integer, Dictionary> dictionaryMap = new LinkedHashMap<Integer, Dictionary>();
         Statement queryStatement = null;
         ResultSet results = null;
@@ -121,7 +118,7 @@ public class CanRegDAO {
      * 
      * @return
      */
-    public Map<String, Integer> getNameSexTables() {
+    public synchronized Map<String, Integer> getNameSexTables() {
 
         Map<String, Integer> nameSexMap = new LinkedHashMap<String, Integer>();
         Statement queryStatement = null;
@@ -143,11 +140,144 @@ public class CanRegDAO {
         return nameSexMap;
     }
 
+    public synchronized String getSystemPropery(String lookup) {
+        String value = null;
+        try {
+            String query = "SELECT * FROM " + Globals.SCHEMA_NAME + ".SYSTEM WHERE LOOKUP = '" + lookup + "'";
+            Statement queryStatement = null;
+            ResultSet results = null;
+            queryStatement = dbConnection.createStatement();
+            results = queryStatement.executeQuery(query);
+            while (results.next()) {
+                value = results.getString(3);
+                debugOut(query);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return value;
+    }
+
+    public synchronized void setSystemPropery(String lookup, String value) {
+        try {
+            String query = "DELETE FROM " + Globals.SCHEMA_NAME + ".SYSTEM WHERE LOOKUP = '" + lookup + "'";
+            Statement queryStatement = null;
+            queryStatement = dbConnection.createStatement();
+            boolean result = queryStatement.execute(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            String query = "INSERT INTO " + Globals.SCHEMA_NAME + ".SYSTEM (LOOKUP, VALUE) VALUES ('"+lookup + "', '"+value+"')";
+            Statement queryStatement = null;
+            queryStatement = dbConnection.createStatement();
+            boolean result = queryStatement.execute(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public synchronized int saveUser(User user) {
+        int ID = user.getID();
+
+        if (ID > -1) {
+            // edit user
+            ID = editUser(user);
+        } else {
+            // save new user
+            ID = saveNewUser(user);
+        }
+        return ID;
+    }
+
+    private synchronized int editUser(User user) {
+        int ID = user.getID();
+        ResultSet results = null;
+        try {
+            stmtEditUser.clearParameters();
+            stmtEditUser.setString(1, user.getUserName());
+            stmtEditUser.setString(2, new String(user.getPassword()));
+            stmtEditUser.setInt(3, user.getUserRightLevelIndex());
+            stmtEditUser.setString(4, user.getEmail());
+            stmtEditUser.setString(5, user.getRealName());
+            stmtEditUser.setInt(6, ID);
+
+            int rowCount = stmtEditUser.executeUpdate();
+
+            results = stmtEditUser.getGeneratedKeys();
+            if (results != null) {
+                if (results.next()) {
+                    ID = results.getInt(1);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return ID;
+    }
+
+    private synchronized int saveNewUser(User user) {
+        int ID = -1;
+        ResultSet results = null;
+        try {
+            stmtSaveNewUser.clearParameters();
+            stmtSaveNewUser.setString(1, user.getUserName());
+            stmtSaveNewUser.setString(2, new String(user.getPassword()));
+            stmtSaveNewUser.setInt(3, user.getUserRightLevelIndex());
+            stmtSaveNewUser.setString(4, user.getEmail());
+            stmtSaveNewUser.setString(5, user.getRealName());
+            int rowCount = stmtSaveNewUser.executeUpdate();
+
+            results = stmtSaveNewUser.getGeneratedKeys();
+            if (results != null) {
+                if (results.next()) {
+                    ID = results.getInt(1);
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ID;
+    }
+
+    public synchronized Map<String, User> getUsers() {
+        Map<String, User> usersMap = new LinkedHashMap<String, User>();
+        Statement queryStatement = null;
+        ResultSet results = null;
+        try {
+            queryStatement = dbConnection.createStatement();
+            results = queryStatement.executeQuery(strGetUsers);
+            while (results.next()) {
+                int id = results.getInt(1);
+                String username = results.getString(2);
+                String password = results.getString(3);
+                int userLevelIndex = results.getInt(4);
+                String email = results.getString(5);
+                String realName = results.getString(6);
+
+                User user = new User();
+                user.setID(id);
+                user.setUserName(username);
+                user.setPassword(password.toCharArray());
+                user.setUserRightLevelIndex(userLevelIndex);
+                user.setEmail(email);
+                user.setRealName(realName);
+                usersMap.put(username, user);
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return usersMap;
+    }
+
     /**
      * 
      * @return
      */
-    public Map<Integer, PopulationDataset> getPopulationDatasets() {
+    public synchronized Map<Integer, PopulationDataset> getPopulationDatasets() {
         Map<Integer, PopulationDataset> populationDatasetMap = new LinkedHashMap<Integer, PopulationDataset>();
         Statement queryStatement = null;
         ResultSet results = null;
@@ -248,10 +378,7 @@ public class CanRegDAO {
             query = "SELECT " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " FROM APP.PATIENT";
             System.out.print(query);
             result = statement.executeQuery(query);
-        }
-
-
-        // Or a Frequency by year query?
+        } // Or a Frequency by year query?
         else if (DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR.equals(filter.getQueryType())) {
             String filterString = filter.getFilterString();
             String query = "";
@@ -282,10 +409,7 @@ public class CanRegDAO {
             System.out.print(query);
             result = statement.executeQuery(query);
 
-        }
-
-
-        // Or a "regular" query from the tumour table
+        } // Or a "regular" query from the tumour table
         else if (tableName.equalsIgnoreCase("tumour")) {
             String filterString = filter.getFilterString();
             if (!filterString.isEmpty()) {
@@ -297,14 +421,11 @@ public class CanRegDAO {
                 rowCount = countRowSet.getInt(1);
             }
             if (filter.getSortByVariable() != null) {
-                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase()+"\"";
+                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
             }
 
             result = statement.executeQuery(strGetTumours + filterString);
-        }
-
-
-        // Or a "regular" query from the patient table
+        } // Or a "regular" query from the patient table
         else if (tableName.equalsIgnoreCase("patient")) {
             String filterString = filter.getFilterString();
             if (!filterString.isEmpty()) {
@@ -315,14 +436,11 @@ public class CanRegDAO {
                 rowCount = countRowSet.getInt(1);
             }
             if (filter.getSortByVariable() != null) {
-                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase()+"\"";
+                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
             }
             debugOut(strCountPatients + filterString);
             result = statement.executeQuery(strGetPatients + filterString);
-        }
-
-
-        // Or a "regular" query from a join of both tables
+        } // Or a "regular" query from a join of both tables
         else if (tableName.equalsIgnoreCase("both")) {
             String filterString = filter.getFilterString();
             if (!filterString.isEmpty()) {
@@ -336,14 +454,12 @@ public class CanRegDAO {
             // feed it to the garbage dump
             countRowSet = null;
             if (filter.getSortByVariable() != null) {
-                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase()+"\"";
+                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
             }
             debugOut(strCountPatientsAndTumours + filterString);
 
             result = statement.executeQuery(strGetPatientsAndTumours + filterString);
-        }
-
-        // Or an unknown query...
+        } // Or an unknown query...
         else {
             throw new Exception("Unknown table name.");
         }
@@ -622,6 +738,8 @@ public class CanRegDAO {
             stmtSaveNewDictionaryEntry = dbConnection.prepareStatement(strSaveDictionaryEntry, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewPopoulationDataset = dbConnection.prepareStatement(strSavePopoulationDataset, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewPopoulationDatasetsEntry = dbConnection.prepareStatement(strSavePopoulationDatasetsEntry, Statement.RETURN_GENERATED_KEYS);
+            stmtSaveNewUser = dbConnection.prepareStatement(strSaveUser);
+            stmtEditUser = dbConnection.prepareStatement(strEditUser);
             stmtSaveNewNameSexRecord = dbConnection.prepareStatement(strSaveNameSexRecord, Statement.RETURN_GENERATED_KEYS);
             stmtDeleteDictionaryEntries = dbConnection.prepareStatement(strDeleteDictionaryEntries);
             stmtClearNameSexTable = dbConnection.prepareStatement(strClearNameSexTable);
@@ -1029,7 +1147,21 @@ public class CanRegDAO {
         return success;
     }
 
-    public boolean deletePopulationDataSet(int id) {
+    public synchronized boolean deleteRecord(int recordID, String tableName) {
+        boolean success = false;
+        String idString = "ID";
+        try {
+            Statement statement = null;
+            ResultSet results = null;
+            statement = dbConnection.createStatement();
+            statement.execute("DELETE FROM " + Globals.SCHEMA_NAME + "." + tableName + " WHERE " + idString + " = " + recordID );
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return success;
+    }
+
+    public synchronized boolean deletePopulationDataSet(int id) {
         boolean success = false;
         try {
             // First delete entries
@@ -1142,7 +1274,7 @@ public class CanRegDAO {
         return bEdited;
     }
 
-    private boolean fillPopulationDatasetTables() {
+    private synchronized boolean fillPopulationDatasetTables() {
         PopulationDataset pds = new PopulationDataset();
         pds.setWorldPopulationBool(true);
         pds.setPopulationDatasetName("World Standard Population");
@@ -1191,7 +1323,7 @@ public class CanRegDAO {
         return true;
     }
 
-    private boolean fillDictionariesTable() {
+    private synchronized boolean fillDictionariesTable() {
         boolean bFilled = false;
 
         // Go through all the variable definitions
@@ -1203,7 +1335,7 @@ public class CanRegDAO {
         return bFilled;
     }
 
-    private static Map<Integer, Dictionary> buildDictionaryMap(Document doc) {
+    private synchronized static Map<Integer, Dictionary> buildDictionaryMap(Document doc) {
 
         Map<Integer, Dictionary> dictionariesMap = new LinkedHashMap();
         // Get the dictionaries node in the XML
@@ -1241,7 +1373,7 @@ public class CanRegDAO {
      * @param recordID
      * @return
      */
-    public Patient getPatient(int recordID) {
+    public synchronized Patient getPatient(int recordID) {
         Patient record = null;
         ResultSetMetaData metadata;
         try {
@@ -1276,7 +1408,7 @@ public class CanRegDAO {
      * @param recordID
      * @return
      */
-    public Tumour getTumour(int recordID) {
+    public synchronized Tumour getTumour(int recordID) {
         Tumour record = null;
         ResultSetMetaData metadata;
         try {
@@ -1301,7 +1433,7 @@ public class CanRegDAO {
         return record;
     }
 
-    public String getNextPatientID() {
+    public synchronized String getNextPatientID() {
         String patientID = null;
         try {
             ResultSet result = stmtGetHighestPatientID.executeQuery();
@@ -1319,7 +1451,7 @@ public class CanRegDAO {
         return patientID;
     }
 
-    public String getNextTumourID() {
+    public synchronized String getNextTumourID() {
         String tumourID = null;
         try {
             ResultSet result = stmtGetHighestTumourID.executeQuery();
@@ -1337,7 +1469,7 @@ public class CanRegDAO {
         return tumourID;
     }
 
-    public String getNextPatientRecordID() {
+    public synchronized String getNextPatientRecordID() {
         String patientRecordID = null;
         try {
             ResultSet result = stmtGetHighestPatientRecordID.executeQuery();
@@ -1354,7 +1486,7 @@ public class CanRegDAO {
         return patientRecordID;
     }
 
-    public String getNextTumourRecordID() {
+    public synchronized String getNextTumourRecordID() {
         String tumourRecordID = null;
         try {
             ResultSet result = stmtGetHighestTumourRecordID.executeQuery();
@@ -1371,7 +1503,19 @@ public class CanRegDAO {
         return tumourRecordID;
     }
 
-        /**
+    protected synchronized void dropAndRebuildUsersTable() {
+        try {
+            Statement statement = null;
+            ResultSet results = null;
+            statement = dbConnection.createStatement();
+            statement.execute("DROP TABLE " + Globals.SCHEMA_NAME + ".USERS");
+            statement.execute(QueryGenerator.strCreateUsersTable());
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
      * Simple console trace to system.out for debug purposes only.
      *
      * @param message the message to be printed to the console
@@ -1381,7 +1525,6 @@ public class CanRegDAO {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.INFO, msg);
         }
     }
-
     private Connection dbConnection;
     private Properties dbProperties;
     private boolean isConnected;
@@ -1398,6 +1541,8 @@ public class CanRegDAO {
     private PreparedStatement stmtSaveNewDictionary;
     private PreparedStatement stmtSaveNewDictionaryEntry;
     private PreparedStatement stmtSaveNewPopoulationDatasetsEntry;
+    private PreparedStatement stmtSaveNewUser;
+    private PreparedStatement stmtEditUser;
     private PreparedStatement stmtSaveNewPopoulationDataset;
     private PreparedStatement stmtSaveNewNameSexRecord;
     private PreparedStatement stmtUpdateExistingPatient;
@@ -1427,6 +1572,8 @@ public class CanRegDAO {
             "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private String strGetPatients =
             "SELECT * FROM APP.PATIENT";
+    private String strGetUsers =
+            "SELECT * FROM APP.USERS";
     private String strCountPatients =
             "SELECT COUNT(*) FROM APP.PATIENT";
     private String strGetPatientsAndTumours;
@@ -1485,6 +1632,8 @@ public class CanRegDAO {
     private String strGetHighestPatientID;
     private String strGetHighestTumourID;
     private String strGetHighestPatientRecordID;
+    private String strEditUser;
+    private String strSaveUser;
     /* We don't use tumour record ID...
     private String strGetHighestTumourRecordID;
      */

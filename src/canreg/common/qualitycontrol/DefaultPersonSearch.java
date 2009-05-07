@@ -84,9 +84,9 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         // TODO Find a way to calculate weights of variables in person search efficiently...
 
         for (int i = 0; i < variableNames.length; i++) {
-            discPower[i] = 1;
-            reliability[i] = 1;
-            presence[i] = 1;
+            discPower[i] = calculateDiscPower(variableNames[i]);
+            reliability[i] = calculateReliability(variableNames[i]);
+            presence[i] = calculatePresence(variableNames[i]);
         }
 
         maximumTotalScore = 0;
@@ -102,6 +102,25 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
             maximumTotalScore += maxscore;
         }
     }
+
+    private float calculateDiscPower(String variableName){
+        float tempDiscPower = 1;
+
+        return tempDiscPower;
+    }
+
+    private float calculateReliability(String variableName){
+        float tempReliability = 1;
+
+        return tempReliability;
+    }
+
+    private float calculatePresence(String variableName){
+        float tempPresence = 1;
+
+        return tempPresence;
+    }
+
 
     /**
      * 

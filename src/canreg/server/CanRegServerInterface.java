@@ -1,5 +1,6 @@
 package canreg.server;
 
+import canreg.server.database.User;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals.UserRightLevels;
@@ -122,7 +123,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public void addUser(String username)
+    public void addUser(User user)
             throws RemoteException, SecurityException;
 
     /**
@@ -131,7 +132,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public void removeUser(String username)
+    public void removeUser(User user)
             throws RemoteException, SecurityException;
 
     /**
@@ -140,20 +141,10 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public void setUserPassword(String username)
+    public void setUserPassword(String username, String password)
             throws RemoteException, SecurityException;
 
     public boolean deleteRecord(int id, String tableName)
-            throws RemoteException, SecurityException;
-
-    /**
-     * 
-     * @param username
-     * @return
-     * @throws java.rmi.RemoteException
-     * @throws java.lang.SecurityException
-     */
-    public String getUserPassword(String username)
             throws RemoteException, SecurityException;
 
     /**
@@ -182,6 +173,8 @@ public interface CanRegServerInterface extends Remote {
             throws RemoteException, SecurityException;
 
     public Vector<User> listUsers() throws RemoteException, SecurityException;
+
+    public int saveUser(User user) throws RemoteException, SecurityException;
 
     /**
      * User logs in

@@ -114,10 +114,9 @@ public class CanRegLoginModule implements LoginModule {
         String realPassword = null;
 
         try {
-            InputStream passPropInputStream = null;
-            passPropInputStream = CanRegLoginModule.class.getResourceAsStream(Globals.PASS_FILENAME);            
+            InputStream passPropInputStream = new FileInputStream(Globals.CANREG_PASSWORD_FILE_NAME);
             Properties passwords = new Properties();
-            passwords.load(passPropInputStream);
+            passwords.loadFromXML(passPropInputStream);
 
             realPassword = passwords.getProperty(username);
 
@@ -246,19 +245,19 @@ public class CanRegLoginModule implements LoginModule {
         return true;
     }//end logout()
 
-    private Globals.UserRightLevels getUserRightLevel(String userName){
+    private Globals.UserRightLevels getUserRightLevel(String username){
 
         try {
             InputStream levelsPropInputStream = null;
-            levelsPropInputStream = CanRegLoginModule.class.getResourceAsStream(Globals.LEVELS_FILENAME);
+            levelsPropInputStream = new FileInputStream(Globals.CANREG_LEVELS_FILE_NAME);
             Properties levels = new Properties();
-            levels.load(levelsPropInputStream);
+            levels.loadFromXML(levelsPropInputStream);
 
             String userLevel = levels.getProperty(username);
             return Globals.UserRightLevels.valueOf(userLevel);
 
         } catch (java.io.IOException e) {
-            debugOut("File error: " + Globals.PASS_FILENAME + "\n");
+            debugOut("File error: " + Globals.CANREG_LEVELS_FILE_NAME + "\n");
             return null;
         }
     }
