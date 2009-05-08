@@ -1,5 +1,85 @@
-changeset:   155:653fd33cf112
+changeset:   171:6787d9683760
 tag:         tip
+user:        ervikm@X60112
+date:        Thu May 07 18:08:25 2009 +0200
+summary:     User manager implementation almost done. Migrator function implemented for situations where we need to change database structure between versions of CanReg. Better handling of the menus available for the different users. The loginmodule updated. Passwords and user levels now stored in the database.
+
+changeset:   170:da670701573e
+user:        ervikm@X60112
+date:        Tue May 05 18:20:05 2009 +0200
+summary:     User manager implementation started.
+
+changeset:   169:34c96540e078
+user:        ervikm@X60112
+date:        Tue May 05 16:50:01 2009 +0200
+summary:     Tidied.
+
+changeset:   168:3372ff12a96c
+user:        ervikm@X60112
+date:        Tue May 05 16:47:39 2009 +0200
+summary:     Various fixes.
+
+changeset:   167:1c2400c6fa1d
+user:        ervikm@X60112
+date:        Tue May 05 16:47:08 2009 +0200
+summary:     ClientView: table builder now starts as a backgroupd task to make GUI more responsive.
+
+changeset:   166:5073d47acf61
+user:        ervikm@X60112
+date:        Tue May 05 16:46:05 2009 +0200
+summary:     Tables: population pyramid implemented, tablebuilder now has a nice file selector that remembers last path
+
+changeset:   165:28e76e4ac6bb
+user:        ervikm@X60112
+date:        Tue May 05 16:44:54 2009 +0200
+summary:     PDSEditor: delete now possible, bugfix: last value is properly stored.
+
+changeset:   164:fef9b668bcaf
+user:        ervikm@X60112
+date:        Tue May 05 16:44:01 2009 +0200
+summary:     Common Tools: implemented a method to open files on Mac, Linux and Windows.
+
+changeset:   163:864161bf74ef
+user:        ervikm@X60112
+date:        Tue May 05 16:42:27 2009 +0200
+summary:     PDS: fixed a bug in the calculation of totals and detection of found age groups.
+
+changeset:   162:32d68276d52c
+user:        ervikm@X60112
+date:        Tue May 05 16:41:41 2009 +0200
+summary:     Server: Delete pds implemented.
+
+changeset:   161:45346823b186
+user:        ervikm@X60112
+date:        Tue May 05 16:41:06 2009 +0200
+summary:     CanRegClientApp: Get System name and delete pds implemented.
+
+changeset:   160:301fd7f0510a
+user:        ervikm@X60112
+date:        Tue May 05 12:13:59 2009 +0200
+summary:     Table configs updated. Now states if the engine is implemented or not.
+
+changeset:   159:728920e3b714
+user:        ervikm@X60112
+date:        Tue May 05 10:46:37 2009 +0200
+summary:     Automatic resizing of the columns in the Export browser implemented.
+
+changeset:   158:5aee8b652c77
+user:        ervikm@X60112
+date:        Tue May 05 10:42:00 2009 +0200
+summary:     Automatic resizing of the columns in the Browser implemented. Some speed improvements.
+
+changeset:   157:353ed99dd0d7
+user:        ervikm@X60112
+date:        Mon May 04 14:42:51 2009 +0200
+summary:     Fixed a bug in the population dataset editor where the last age group, femal was sometimes set to 0.
+
+changeset:   156:ce4785d119c4
+user:        ervikm@X60112
+date:        Thu Apr 30 16:50:00 2009 +0200
+summary:     Table builder GUI implemented. First table almost up and running.
+
+changeset:   155:653fd33cf112
 user:        ervikm@X60112
 date:        Wed Apr 29 15:04:11 2009 +0200
 summary:     Table builder GUI partially implemented.
