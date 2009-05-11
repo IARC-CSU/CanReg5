@@ -22,7 +22,7 @@ public class ServerLauncher {
      * @return 
      * @throws AlreadyBoundException
      */
-    public static boolean start(String systemCode, int port) throws AlreadyBoundException {
+    public static boolean start(String systemURL, String systemCode, int port) throws AlreadyBoundException {
         // int port = Globals.RMI_PORT;
         boolean success = false;
         try {
@@ -38,7 +38,7 @@ public class ServerLauncher {
 
             CanRegServerInterface server = new CanRegServerImpl(systemCode);
             CanRegLoginInterface service = new CanRegLoginImpl(server);
-            Naming.bind("rmi://localhost:" + port + "/CanRegLogin" + systemCode, service);
+            Naming.bind("rmi://"+systemURL+":" + port + "/CanRegLogin" + systemCode, service);
             success = true;
 
         } catch (MalformedURLException ex) {
@@ -58,7 +58,7 @@ public class ServerLauncher {
     public static void main(String[] args) {
         try {
             if (args.length >= 1) {
-                start(args[0], 1199);
+                start("localhost", args[0], 1199);
             }
         } catch (AlreadyBoundException ex) {
             Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex);

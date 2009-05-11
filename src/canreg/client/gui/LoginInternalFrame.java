@@ -605,7 +605,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             // the Swing GUI from here...
             String result = "stopped";
             try {
-                if (canreg.common.ServerLauncher.start(codeField.getText(), Integer.parseInt(portField.getText()))) {
+                if (canreg.common.ServerLauncher.start(serverURLTextField.getText(), codeField.getText(), Integer.parseInt(portField.getText()))) {
                     result = "started";
                 }
             } catch (AlreadyBoundException ex) {
