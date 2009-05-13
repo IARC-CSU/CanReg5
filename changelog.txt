@@ -1,77 +1,131 @@
-Build 598
+Changelog
 
-changeset:   113:4cee51e2f565
-tag:         tip
-user:        ervikm@X60112
-date:        Wed Jan 28 16:35:58 2009 +0100
-summary:     Improved handling and error reporting of record ids.
+4.99.6 Build 648
+- Fixed a bug in the way the server addresses were handled on machines with multiple network interfaces.
 
-changeset:   112:fbda10b542bf
-user:        ervikm@X60112
-date:        Wed Jan 28 11:28:59 2009 +0100
-summary:     RangeFilterPanel: Tumour table now default table, sort by variables only the ones in the table selected.
+- Changed default coding schemes for various languages during import of old data to fix bug found by the Jordanian cancer registry on Arabic letters not imported properly.
 
-changeset:   111:3c0c6dee20be
-user:        ervikm@X60112
-date:        Wed Jan 28 09:39:46 2009 +0100
-summary:     Mainly improvemnts in perfomance of SQL queries. Some other more minor changes.
+4.99.5 Build 645
+- User manager implemented. 
 
-changeset:   110:f0cddfc59a7f
-user:        ervikm@X60112
-date:        Mon Jan 26 11:41:44 2009 +0100
-summary:     Install new system internal frame now checks to see if the file about to be installed is already in the right folder...
+- Migrator function implemented for situations where we need to change database structure between versions of CanReg. 
 
-changeset:   109:a9b30967c18d
-user:        ervikm@X60112
-date:        Fri Jan 23 16:19:45 2009 +0100
-summary:     CanReg5 takes into account the CanReg4  fileformat when importing files, thus allowing the import of files of other charactersets.
+- Better handling of the menus available for the different users. 
 
-changeset:   108:61393c462892
-user:        ervikm@X60112
-date:        Fri Jan 23 16:17:52 2009 +0100
-summary:     Fixed bugs in the record editor. Record status is now saved.
+- The login module updated. Passwords and user levels now stored in the database.
 
-changeset:   107:9bd994319699
-user:        ervikm@X60112
-date:        Thu Jan 22 16:45:36 2009 +0100
-summary:     DictionaryHelper: fails more gracefully if something goes wrong while retreiving the dictionary ID. Reindentation of code.
+- ClientView: table builder now starts as a backgroupd task to make GUI more responsive.
 
-changeset:   106:80a05d596eff
-user:        ervikm@X60112
-date:        Thu Jan 22 16:43:33 2009 +0100
-summary:     CanRegServerImpl: now handles better when connection to DB fails for some reason...
+- Tables: incidence rates (period), population pyramid implemented, tablebuilder now has a nice file selector that remembers last path
 
-changeset:   105:a96f57aa1d1e
-user:        ervikm@X60112
-date:        Thu Jan 22 16:42:35 2009 +0100
-summary:     SystemDefinitionConverter: Fixed bugs dealing with the length of record IDs different than 8. Added some system variables.
+- PDSEditor: delete now possible.
 
-changeset:   104:b77bc60cbed6
-user:        ervikm@X60112
-date:        Thu Jan 22 16:41:06 2009 +0100
-summary:     CanRegDAO: Added functionality to generate next patient record ID. Squashed some bugs.
+- Common Tools: implemented a method to open files on Mac, Linux and Windows.
 
-changeset:   103:77fd1ae043a8
-user:        ervikm@X60112
-date:        Thu Jan 22 16:38:31 2009 +0100
-summary:     QueryGenerator: added functionality to get highest patient record id.
+- PDS: fixed a bug in the calculation of totals and detection of found age groups.
 
-changeset:   102:aceba06f204a
-user:        ervikm@X60112
-date:        Thu Jan 22 16:37:37 2009 +0100
-summary:     RecordEditor: Fixed a nullpointer error when "setting active record".
+- Table configs updated. Now states if the engine is implemented or not.
 
-changeset:   101:15300e75b0a4
-user:        ervikm@X60112
-date:        Tue Jan 20 17:23:36 2009 +0100
-summary:     Record status is only shown if the variable is in the system definition.
+- Automatic resizing of the columns in the Export browser implemented.
 
-changeset:   100:dabb3dce07fa
-user:        ervikm@X60112
-date:        Tue Jan 20 10:55:32 2009 +0100
-summary:     Fixed bug in Frequencies by Year. Didn't redraw table properly.
+- Automatic resizing of the columns in the Browser implemented. Some speed improvements.
 
-changeset:   99:b56ef77a119c
-user:        ervikm@X60112
-date:        Fri Jan 16 14:54:02 2009 +0100
-summary:     Fixed bug #1: Filter with OR not working.
+- Fixed a bug in the population dataset editor where the last age group, female was sometimes set to 0.
+
+- Table builder GUI implemented. First table almost up and running.
+
+- Synchronized more functions in the database access to resolve some issues with the browser.
+
+- Fixed bug that blocked when "back up every... days" was not set.
+
+- Various fixes.
+
+4.99.4 Build 624
+- Fixed bug that flagged all opened cases as pending.
+
+- Started work on detection of changes.
+
+- Fixed bug in person search. Removed check button from Patient. Added error message if tumour record is not found in browser.
+
+- Added classes to deal with unknown dates.
+
+- Multiple primary tests added.
+
+- Age check added.
+
+- Unknown dates handled better.
+
+- Better treatment of dictionaries, default selection
+
+- Compound dictionaries handled better.
+
+- Disabled some buttons not yet implemented.
+
+- Only Supervisor can now confirm rare cases.
+
+- Various small fixes and improvements.
+
+4.99.3 Build 612
+- Browser: It should now be possible to sort results on variables with “.” in the name. (ie. “RegNo.” or similar).
+
+- Import: Fixed bugs during import of a file. The correct number of records read. 
+
+- Import: Log more information when something goes wrong during import.
+
+- Other bug fixes.
+
+4.99.2 Build 607
+- Show/hide obsolete records implemented.
+
+- Obsolete-button implemented to toggle obsolete-flag. 
+
+- Added GUI-elements to move a tumour from one patient record to another.
+
+- Log information redirected to Logger-object (log-file) for all output.
+
+- Tools: break down line no longer crashes if quotes are not closed at the end of a line.
+
+- Record editor no longer crashes if the record status dictionary has no entries.
+
+- Edit checks now default to "not done".
+
+- Edit checks now color variables that might be inflicted. Person search feedback improved.
+
+- Changed download link.
+
+- Other bug fixes
+
+
+4.99.1 Build 598
+- Improved handling and error reporting of record ids.
+
+- RangeFilterPanel: Tumour table now default table, sort by variables only the ones in the table selected.
+
+- Improvemnts in perfomance of SQL queries. Some other more minor changes.
+
+- Install new system internal frame now checks to see if the file about to be installed is already in the right folder...
+
+- CanReg5 takes into account the CanReg4  fileformat when importing files, thus allowing the import of files of other charactersets.
+
+- Fixed bugs in the record editor. Record status is now saved.
+
+- DictionaryHelper: fails more gracefully if something goes wrong while retreiving the dictionary ID.
+
+- CanRegServerImpl: now handles better when connection to DB fails for some reason...
+
+- SystemDefinitionConverter: Fixed bugs dealing with the length of record IDs different than 8. Added some system variables.
+
+- CanRegDAO: Added functionality to generate next patient record ID. Squashed some bugs.
+
+- QueryGenerator: added functionality to get highest patient record id.
+
+- RecordEditor: Fixed a nullpointer error when "setting active record".
+
+- Record status is only shown if the variable is in the system definition.
+
+- Fixed bug in Frequencies by Year. Didn't redraw table properly.
+
+- Fixed bug #1: Filter with OR not working.
+
+4.99.0 Build 590
+- First beta release

@@ -113,6 +113,8 @@ public class Globals {
      */
     public static String TUMOUR_TABLE_NAME = "Tumour";
     public static String PATIENT_TABLE_NAME = "Patient";
+    public static String USERS_TABLE_NAME = "USERS";
+
     /**
      * 
      */
@@ -146,7 +148,6 @@ public class Globals {
     public static String LOGFILE_PATTERN = "%h/canreg5client.log";
     public static String LOG_LEVEL = "FINEST";
     public static String DEFAULT_BACK_UP_EVERY = "7";
-    public static String USERS_TABLE_NAME = "USERS";
 
     /**
      * 
