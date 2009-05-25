@@ -353,6 +353,7 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
             variablesToShow = variablesPanel.getVariablesToShow(tableName);
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
             filter.setSortByVariable(rangeFilterPanel.getSortByVariable().trim());
+            filter.setRange(rangeFilterPanel.getRange());
             tableDataSource = null;
         }
 

@@ -76,7 +76,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
      */
     public String getSelectedTable() {
         return tableChooserComboBox.getSelectedItem().toString();
-    }    
+    }
 
     /**
      * 
@@ -109,12 +109,12 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
     public void setTableChooserVisible(boolean visible) {
         tableChooserPanel.setVisible(visible);
     }
-    
+
     /**
      * 
      * @param visible
      */
-    public void setRecordPanelvisible(boolean visible){
+    public void setRecordPanelvisible(boolean visible) {
         recordsPanel.setVisible(visible);
     }
 
@@ -154,7 +154,8 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         rangePanel.setName("rangePanel"); // NOI18N
 
         rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Record Number", "ICD10", "Names" }));
-        rangeComboBox.setEnabled(false);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RangeFilterPanel.class, this);
+        rangeComboBox.setAction(actionMap.get("rangeComboboxChanged")); // NOI18N
         rangeComboBox.setName("rangeComboBox"); // NOI18N
 
         limitsSplitPane.setDividerLocation(125);
@@ -162,11 +163,9 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         limitsSplitPane.setResizeWeight(0.5);
         limitsSplitPane.setName("limitsSplitPane"); // NOI18N
 
-        rangeStartTextField.setEnabled(false);
         rangeStartTextField.setName("rangeStartTextField"); // NOI18N
         limitsSplitPane.setLeftComponent(rangeStartTextField);
 
-        rangeEndTextField.setEnabled(false);
         rangeEndTextField.setName("rangeEndTextField"); // NOI18N
         limitsSplitPane.setRightComponent(rangeEndTextField);
 
@@ -197,7 +196,6 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         useFilterCheckBox.setText(resourceMap.getString("useFilterCheckBox.text")); // NOI18N
         useFilterCheckBox.setName("useFilterCheckBox"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RangeFilterPanel.class, this);
         wizardButton.setAction(actionMap.get("filterWizardAction")); // NOI18N
         wizardButton.setName("wizardButton"); // NOI18N
 
@@ -346,11 +344,34 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void refreshIndexList() {
+        DatabaseIndexesListElement[] indexesInTableTemp;
+        String tableName = tableChooserComboBox.getSelectedItem().toString();
+        if (!tableName.equalsIgnoreCase("both")) {
+            LinkedList<DatabaseIndexesListElement> tempIndexesInTable = new LinkedList<DatabaseIndexesListElement>();
+            for (int i = 0; i <
+                    indexesInDB.length; i++) {
+                if (indexesInDB[i].getDatabaseTableName().equalsIgnoreCase(tableName)) {
+                    tempIndexesInTable.add(indexesInDB[i]);
+                }
+            }
+            indexesInTableTemp = new DatabaseIndexesListElement[tempIndexesInTable.size()];
+            for (int i = 0; i <
+                    indexesInTableTemp.length; i++) {
+                indexesInTableTemp[i] = tempIndexesInTable.get(i);
+            }
+        } else {
+            indexesInTableTemp = indexesInDB;
+        }
+        rangeComboBox.setModel(new DefaultComboBoxModel(indexesInTableTemp));
+    }
+
 private void refreshTableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshTableButtonActionPerformed
 }//GEN-LAST:event_refreshTableButtonActionPerformed
 
 private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tableChooserComboBoxActionPerformed
     refreshVariableList();
+    refreshIndexList();
     filterWizardInternalFrame.setTableName(tableChooserComboBox.getSelectedItem().toString());
 }//GEN-LAST:event_tableChooserComboBoxActionPerformed
 
@@ -378,15 +399,16 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JCheckBox useFilterCheckBox;
     private javax.swing.JButton wizardButton;
     // End of variables declaration//GEN-END:variables
+
     /**
      * Get the details on the range.
      *
-     * @return            an array of String of the following format:
-     * [the range variable, the start, the end]
+     * @return an array of Objects of the following format:
+     * [the database index list object, the start, the end]
      */
-    public String[] getRange() {
-        String[] range = new String[3];
-        range[0] = rangeComboBox.getSelectedItem().toString();
+    public Object[] getRange() {
+        Object[] range = new Object[3];
+        range[0] = rangeComboBox.getSelectedItem();
         range[1] = rangeStartTextField.getText();
         range[2] = rangeEndTextField.getText();
         return range;
@@ -396,26 +418,26 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
      * 
      * @return
      */
-    public String getFromValue(){
+    public String getFromValue() {
         return rangeStartTextField.getText();
     }
-    
+
     /**
      * 
      * @return
      */
-    public String getToValue(){
+    public String getToValue() {
         return rangeEndTextField.getText();
     }
-    
+
     /**
      * 
      * @return
      */
-    public String getIndexName(){
+    public String getIndexName() {
         return rangeComboBox.getSelectedItem().toString();
     }
-    
+
     /**
      * Initialize the values of the panel.
      *
@@ -426,21 +448,23 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
         doc = CanRegClientApp.getApplication().getDatabseDescription();
         // variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
         indexesInDB = canreg.common.Tools.getIndexesListElements(doc, Globals.NAMESPACE);
-        rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(indexesInDB));      
-        
+        variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+        rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(indexesInDB));
+
         filterWizardInternalFrame = new FastFilterInternalFrame();
         filterWizardInternalFrame.setActionListener(this);
 
         filterWizardInternalFrame.setTableName(tableChooserComboBox.getSelectedItem().toString());
-        
+
         // variablesInDB = CanRegClientApp.getApplication().getGlobalToolBox().getVariables();
 
         refreshVariableList();
         refreshFilterComboBox();
+        refreshIndexList();
     }
 
-        private void refreshVariableList() {
-        variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+    private void refreshVariableList() {
+        DatabaseVariablesListElement[] variablesInTableTemp;
         String tableName = tableChooserComboBox.getSelectedItem().toString();
         if (!tableName.equalsIgnoreCase("both")) {
             LinkedList<DatabaseVariablesListElement> tempVariablesInTable = new LinkedList<DatabaseVariablesListElement>();
@@ -450,14 +474,15 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
                     tempVariablesInTable.add(variablesInTable[i]);
                 }
             }
-            variablesInTable = new DatabaseVariablesListElement[tempVariablesInTable.size()];
+            variablesInTableTemp = new DatabaseVariablesListElement[tempVariablesInTable.size()];
             for (int i = 0; i <
-                    variablesInTable.length; i++) {
-                variablesInTable[i] = tempVariablesInTable.get(i);
+                    variablesInTableTemp.length; i++) {
+                variablesInTableTemp[i] = tempVariablesInTable.get(i);
             }
-
+        } else {
+            variablesInTableTemp = variablesInTable;
         }
-        sortByChooserComboBox.setModel(new DefaultComboBoxModel(variablesInTable));
+        sortByChooserComboBox.setModel(new DefaultComboBoxModel(variablesInTableTemp));
     }
 
     /**
@@ -503,7 +528,7 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
             refreshFilterComboBox();
             filterComboBox.setSelectedIndex(position);
         }
-        actionListener.actionPerformed(new ActionEvent(this,0,"refresh"));
+        actionListener.actionPerformed(new ActionEvent(this, 0, "refresh"));
     }
 
     /**
@@ -549,12 +574,12 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
     public void setRecordsShown(int rec) {
         recordsShownField.setText("" + rec);
     }
-    
+
     /**
      * 
      * @param visible
      */
-    public void setSortByVariableShown(boolean visible){
+    public void setSortByVariableShown(boolean visible) {
         sortByChooserPanel.setVisible(visible);
     }
 
@@ -562,10 +587,10 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
      * 
      * @return
      */
-    public String getSortByVariable(){
+    public String getSortByVariable() {
         return sortByChooserComboBox.getSelectedItem().toString();
     }
-    
+
     /**
      * 
      */
@@ -575,21 +600,27 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
         int position = addFilterToComboBox(filter);
         refreshFilterComboBox();
         filterComboBox.setSelectedIndex(position);
-        actionListener.actionPerformed(new ActionEvent(this,0,"refresh"));
+        actionListener.actionPerformed(new ActionEvent(this, 0, "refresh"));
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource().getClass()==FastFilterInternalFrame.class){
+        if (e.getSource().getClass() == FastFilterInternalFrame.class) {
             setFilter(e.getActionCommand());
             useFilterCheckBox.setSelected(true);
         }
     }
-    
+
     /**
      * 
      * @param actionListener
      */
-    public void setActionListener(ActionListener actionListener){
+    public void setActionListener(ActionListener actionListener) {
         this.actionListener = actionListener;
+    }
+
+    @Action
+    public void rangeComboboxChanged() {
+        rangeStartTextField.setText("");
+        rangeEndTextField.setText("");
     }
 }
