@@ -168,7 +168,7 @@ public class CanRegDAO {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            String query = "INSERT INTO " + Globals.SCHEMA_NAME + ".SYSTEM (LOOKUP, VALUE) VALUES ('"+lookup + "', '"+value+"')";
+            String query = "INSERT INTO " + Globals.SCHEMA_NAME + ".SYSTEM (LOOKUP, VALUE) VALUES ('" + lookup + "', '" + value + "')";
             Statement queryStatement = null;
             queryStatement = dbConnection.createStatement();
             boolean result = queryStatement.execute(query);
@@ -385,6 +385,17 @@ public class CanRegDAO {
             if (!filterString.isEmpty()) {
                 filterString = " AND ( " + filterString + " )";
             }
+
+            // Add the range part
+            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
+                if (filterString.isEmpty()) {
+                    filterString = " WHERE " + filterString;
+                } else {
+                    filterString += " AND ";
+                }
+                filterString += QueryGenerator.buildRangePart(filter);
+            }
+
             variables = filter.getDatabaseVariables();
             String variablesList = "";
             if (variables.size() > 0) {
@@ -410,11 +421,22 @@ public class CanRegDAO {
             result = statement.executeQuery(query);
 
         } // Or a "regular" query from the tumour table
-        else if (tableName.equalsIgnoreCase("tumour")) {
+        else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
             String filterString = filter.getFilterString();
             if (!filterString.isEmpty()) {
                 filterString = " WHERE " + filterString;
             }
+
+            // Add the range part
+            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
+                if (filterString.isEmpty()) {
+                    filterString = " WHERE " + filterString;
+                } else {
+                    filterString += " AND ";
+                }
+                filterString += QueryGenerator.buildRangePart(filter);
+            }
+
             debugOut(strCountTumours + filterString);
             ResultSet countRowSet = statement.executeQuery(strCountTumours + filterString);
             if (countRowSet.next()) {
@@ -431,6 +453,16 @@ public class CanRegDAO {
             if (!filterString.isEmpty()) {
                 filterString = " WHERE (" + filterString + " )";
             }
+            // Add the range part
+            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
+                if (filterString.isEmpty()) {
+                    filterString = " WHERE " + filterString;
+                } else {
+                    filterString += " AND ";
+                }
+                filterString += QueryGenerator.buildRangePart(filter);
+            }
+            debugOut(strCountPatients + filterString);
             ResultSet countRowSet = statement.executeQuery(strCountPatients + filterString);
             if (countRowSet.next()) {
                 rowCount = countRowSet.getInt(1);
@@ -438,7 +470,7 @@ public class CanRegDAO {
             if (filter.getSortByVariable() != null) {
                 filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
             }
-            debugOut(strCountPatients + filterString);
+
             result = statement.executeQuery(strGetPatients + filterString);
         } // Or a "regular" query from a join of both tables
         else if (tableName.equalsIgnoreCase("both")) {
@@ -446,6 +478,16 @@ public class CanRegDAO {
             if (!filterString.isEmpty()) {
                 filterString = " AND (" + filterString.trim() + ")";
             }
+            // Add the range part
+            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
+
+                filterString += " AND ";
+
+                filterString += QueryGenerator.buildRangePart(filter);
+            }
+
+            debugOut(strCountPatientsAndTumours + filterString);
+
             ResultSet countRowSet = statement.executeQuery(strCountPatientsAndTumours + filterString);
             // Count the rows...
             if (countRowSet.next()) {
@@ -456,7 +498,6 @@ public class CanRegDAO {
             if (filter.getSortByVariable() != null) {
                 filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
             }
-            debugOut(strCountPatientsAndTumours + filterString);
 
             result = statement.executeQuery(strGetPatientsAndTumours + filterString);
         } // Or an unknown query...
@@ -1154,7 +1195,7 @@ public class CanRegDAO {
             Statement statement = null;
             ResultSet results = null;
             statement = dbConnection.createStatement();
-            statement.execute("DELETE FROM " + Globals.SCHEMA_NAME + "." + tableName + " WHERE " + idString + " = " + recordID );
+            statement.execute("DELETE FROM " + Globals.SCHEMA_NAME + "." + tableName + " WHERE " + idString + " = " + recordID);
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
