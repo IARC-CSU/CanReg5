@@ -13,6 +13,7 @@ import canreg.common.qualitycontrol.DefaultPersonSearch;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -21,21 +22,24 @@ import org.w3c.dom.Document;
  * @author  ervikm
  */
 public class PersonSearchVariablesPanel extends javax.swing.JPanel implements ActionListener {
+
     private Document doc;
     private DatabaseVariablesListElement[] variablesInDB;
+    private LinkedList<PersonSearchVariablePanel> personSearchVariablePanelList;
     private DefaultPersonSearch searcher;
 
     /** Creates new form PersonSearchVariablesPanel */
     public PersonSearchVariablesPanel() {
         initComponents();
+
     }
-    
+
     /**
      * 
      * @param doc
      */
     public void setDoc(Document doc) {
-        this.doc=doc;
+        this.doc = doc;
         variablesInDB = Tools.getVariableListElements(doc, Globals.NAMESPACE, "Patient");
         PersonSearchVariable[] searchVariables = Tools.getPersonSearchVariables(doc, Globals.NAMESPACE);
         searcher = new DefaultPersonSearch(variablesInDB);
@@ -43,46 +47,50 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
         searcher.setThreshold(Tools.getPersonSearchMinimumMatch(doc, Globals.NAMESPACE));
         setSearcher(searcher);
     }
-    
-    private void setSearcher(DefaultPersonSearch searcher){
+
+    private void setSearcher(DefaultPersonSearch searcher) {
         PersonSearchVariable[] searchVariables = searcher.getPersonSearchVariables();
-        for (PersonSearchVariable searchVariable:searchVariables){
+        personSearchVariablePanelList = new LinkedList<PersonSearchVariablePanel>();
+        for (PersonSearchVariable searchVariable : searchVariables) {
             PersonSearchVariablePanel psvp = new PersonSearchVariablePanel();
             addPersonSearchVariablePanel(psvp);
             psvp.setPersonSearchVariable(searchVariable);
         }
-        thresholdTextField.setText(searcher.getThreshold()+"");
+        thresholdTextField.setText(searcher.getThreshold() + "");
+        setVariableListEnabled(false);
     }
-    
+
     /**
      * 
      * @return
      */
-    public DefaultPersonSearch getSearcher(){
+    public DefaultPersonSearch getSearcher() {
         return buildSearcher();
     }
-    
-    private DefaultPersonSearch buildSearcher(){
-        DefaultPersonSearch newPersonSearch = new DefaultPersonSearch(variablesInDB);
-        Component[] components = variablesListPanel.getComponents();
-        PersonSearchVariable[] variables = new PersonSearchVariable[components.length];
-        int i = 0;
-        for(Component component:components){
-            PersonSearchVariablePanel psvp = (PersonSearchVariablePanel) component;
-            variables[i]=psvp.getPersonSearchVariable();
-            i++;
+
+    private DefaultPersonSearch buildSearcher() {
+        DefaultPersonSearch newPersonSearch = null;
+        if (!defaultSettingsToggleButton.isSelected()) {
+            newPersonSearch = new DefaultPersonSearch(variablesInDB);
+            Component[] components = variablesListPanel.getComponents();
+            PersonSearchVariable[] variables = new PersonSearchVariable[components.length];
+            int i = 0;
+            for (Component component : components) {
+                PersonSearchVariablePanel psvp = (PersonSearchVariablePanel) component;
+                variables[i] = psvp.getPersonSearchVariable();
+                i++;
+            }
+            newPersonSearch.setSearchVariables(variables);
+            float threshold = 70;
+            try {
+                threshold = Float.parseFloat(thresholdTextField.getText());
+            } catch (NumberFormatException nfe) {
+            }
+            newPersonSearch.setThreshold(threshold);
         }
-        newPersonSearch.setSearchVariables(variables);
-        float threshold = 70;
-        try {
-            threshold = Float.parseFloat(thresholdTextField.getText());
-        } catch (NumberFormatException nfe){
-            
-        }
-        newPersonSearch.setThreshold(threshold);
         return newPersonSearch;
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -92,23 +100,20 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        addVariableButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         variablesListPanel = new javax.swing.JPanel();
         thresholdTextField = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        minumumMatchLabel = new javax.swing.JLabel();
+        percentLabel = new javax.swing.JLabel();
+        defaultSettingsToggleButton = new javax.swing.JToggleButton();
 
         setName("Form"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(PersonSearchVariablesPanel.class, this);
-        jButton1.setAction(actionMap.get("addVariableAction")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
-
-        jButton2.setAction(actionMap.get("revertToDefaultAction")); // NOI18N
-        jButton2.setName("jButton2"); // NOI18N
+        addVariableButton.setAction(actionMap.get("addVariableAction")); // NOI18N
+        addVariableButton.setName("addVariableButton"); // NOI18N
 
         jPanel1.setName("jPanel1"); // NOI18N
 
@@ -131,13 +136,18 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PersonSearchVariablesPanel.class);
         thresholdTextField.setText(resourceMap.getString("thresholdTextField.text")); // NOI18N
+        thresholdTextField.setEnabled(false);
         thresholdTextField.setName("thresholdTextField"); // NOI18N
 
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
+        minumumMatchLabel.setText(resourceMap.getString("minumumMatchLabel.text")); // NOI18N
+        minumumMatchLabel.setName("minumumMatchLabel"); // NOI18N
 
-        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
-        jLabel2.setName("jLabel2"); // NOI18N
+        percentLabel.setText(resourceMap.getString("percentLabel.text")); // NOI18N
+        percentLabel.setName("percentLabel"); // NOI18N
+
+        defaultSettingsToggleButton.setAction(actionMap.get("toggleDefaultSettingsAction")); // NOI18N
+        defaultSettingsToggleButton.setSelected(true);
+        defaultSettingsToggleButton.setName("defaultSettingsToggleButton"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -148,17 +158,17 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(minumumMatchLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton2)
+                                .addComponent(defaultSettingsToggleButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))
+                                .addComponent(addVariableButton))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel2)))))
+                                .addComponent(percentLabel)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -168,13 +178,13 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
+                    .addComponent(minumumMatchLabel)
+                    .addComponent(percentLabel)
                     .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(addVariableButton)
+                    .addComponent(defaultSettingsToggleButton))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -187,42 +197,53 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
         PersonSearchVariablePanel psvp = new PersonSearchVariablePanel();
         addPersonSearchVariablePanel(psvp);
     }
-    
-    private void addPersonSearchVariablePanel(PersonSearchVariablePanel psvp){
+
+    private void addPersonSearchVariablePanel(PersonSearchVariablePanel psvp) {
         psvp.setActionListener(this);
         psvp.setDatabaseVariables(variablesInDB);
         variablesListPanel.add(psvp);
+        personSearchVariablePanelList.add(psvp);
         psvp.setVisible(true);
         variablesListPanel.revalidate();
         variablesListPanel.repaint();
     }
-
-    /**
-     * 
-     */
-    @Action
-    public void revertToDefaultAction() {
-
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton addVariableButton;
+    private javax.swing.JToggleButton defaultSettingsToggleButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel minumumMatchLabel;
+    private javax.swing.JLabel percentLabel;
     private javax.swing.JTextField thresholdTextField;
     private javax.swing.JPanel variablesListPanel;
     // End of variables declaration//GEN-END:variables
 
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if ("remove".equalsIgnoreCase(command)){
-            variablesListPanel.remove((Component) e.getSource());       
+        if ("remove".equalsIgnoreCase(command)) {
+            variablesListPanel.remove((Component) e.getSource());
+            personSearchVariablePanelList.remove(e.getSource());
             variablesListPanel.revalidate();
             variablesListPanel.repaint();
         }
     }
 
+    @Action
+    public void toggleDefaultSettingsAction() {
+        if (defaultSettingsToggleButton.isSelected()) {
+            jPanel1.setEnabled(false);
+            thresholdTextField.setEnabled(false);
+            setVariableListEnabled(false);
+        } else {
+            jPanel1.setEnabled(true);
+            thresholdTextField.setEnabled(true);
+            setVariableListEnabled(true);
+        }
+    }
+
+    private void setVariableListEnabled(boolean b) {
+        for (PersonSearchVariablePanel panel : personSearchVariablePanelList) {
+            panel.setActive(b);
+        }
+    }
 }
