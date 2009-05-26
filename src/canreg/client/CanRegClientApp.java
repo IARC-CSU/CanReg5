@@ -346,9 +346,10 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
-    public String getSystemName(){
+    public String getSystemName() {
         return systemName;
     }
+
     /**
      * Get list of users logged in to the CanReg server
      * @return List of users logged in
@@ -600,6 +601,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         return server.getRecord(recordID, tableName);
     }
 
+
+
     /**
      * 
      * @param databaseRecord
@@ -825,7 +828,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
-    public Map<Integer, Float> performDuplicateSearch(Patient patient, PersonSearcher searcher) throws SecurityException, RemoteException {
+    public Map<String, Float> performDuplicateSearch(Patient patient, PersonSearcher searcher) throws SecurityException, RemoteException {
         return server.performPersonSearch(patient, searcher);
     }
 
@@ -857,24 +860,33 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
-    public Map<Integer, Map<Float, Integer>> performGlobalDuplicateSearch(PersonSearcher searcher) throws SecurityException, RemoteException {
-        return server.performGlobalPersonSearch(searcher);
+    public String initiateGlobalDuplicateSearch(PersonSearcher searcher, String rangeStart, String rangeEnd) throws SecurityException, RemoteException {
+        return server.initiateGlobalPersonSearch(searcher, rangeStart, rangeEnd);
+    }
+
+    public Map<String, Map<String, Float>> nextStepGlobalPersonSearch(String idString) throws SecurityException, RemoteException, Exception {
+        return server.nextStepGlobalPersonSearch(idString);
+    }
+
+    public void interuptGlobalPersonSearch(String idString) throws SecurityException, RemoteException {
+        server.interuptGlobalPersonSearch(idString);
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getCanRegVersionString() {
         return canRegSystemVersionString;
     }
 
-    public Vector<User> listUsers() throws SecurityException, RemoteException{
+    public Vector<User> listUsers() throws SecurityException, RemoteException {
         return server.listUsers();
     }
+
     /**
      * Main method launching the application.
-     * @param args 
+     * @param args
      */
     public static void main(String[] args) {
         init();
