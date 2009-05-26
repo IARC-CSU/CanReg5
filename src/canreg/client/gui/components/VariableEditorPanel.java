@@ -53,13 +53,17 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
     protected java.awt.Color VARIABLE_RARE_COLOR = java.awt.Color.YELLOW;
     protected java.awt.Color VARIABLE_OK_COLOR = java.awt.SystemColor.text;
     private Dictionary dictionary;
-    String initialValue;
+    String initialValue = null;
     private boolean mandatory;
     private boolean hasChanged;
+    private ActionListener listener;
+    public static String CHANGED_STRING = "Changed";
 
     /** Creates new form VariableEditorPanel */
-    public VariableEditorPanel() {
+    public VariableEditorPanel(ActionListener listener) {
         initComponents();
+
+        this.listener = listener;
         hasChanged = false;
 
         codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -131,6 +135,11 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
                 break;
         }
         codeTextField.setToolTipText(resultCode.toString());
+    }
+
+    public void setSaved() {
+        initialValue = getValue().toString();
+        hasChanged = false;
     }
 
     /** This method is called from within the constructor to
@@ -343,8 +352,10 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
      * 
      * @param value
      */
-    public void setValue(String value) {
-        initialValue = value;
+    public synchronized void setValue(String value) {
+        if (initialValue == null) {
+            initialValue = value;
+        }
         codeTextField.setText(value);
         try {
             lookUpAndSetDescription();
@@ -385,7 +396,7 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
      * 
      * @return
      */
-    public Object getValue() {
+    public synchronized Object getValue() {
         Object valueObject = null;
         String valueString = codeTextField.getText();
         if (databaseListElement.getVariableType().equalsIgnoreCase("Number") ||
@@ -483,17 +494,29 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
     }
 
     protected void componentFocusLost(FocusEvent evt) {
-        if (!getValue().toString().equals(initialValue)){
-            hasChanged = true;
-        }
+       // if (!getValue().toString().equals(initialValue)) {
+       //     hasChanged = true;
+       // }
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equalsIgnoreCase("Max length reached")) {
+        if (e.getActionCommand().equalsIgnoreCase(MaxLengthDocument.MAX_LENGTH_ACTION_STRING)) {
             try {
                 lookUpAndSetDescription();
             } catch (NullPointerException ne) {
                 descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
+            }
+            updateFilledInStatusColor();
+        } else if (e.getActionCommand().equalsIgnoreCase(MaxLengthDocument.CHANGED_ACTION_STRING)) {
+            try {
+                lookUpAndSetDescription();
+                String currentValue = getValue().toString();
+                if (initialValue == null || !currentValue.equals(initialValue)) {
+                    hasChanged = true;
+                    listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
+                }
+            } catch (NullPointerException ne) {
+                // descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
             }
             updateFilledInStatusColor();
         }

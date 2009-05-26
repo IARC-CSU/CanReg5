@@ -5,6 +5,7 @@ import canreg.common.DateHelper;
 import canreg.common.Globals;
 import canreg.common.GregorianCalendarCanReg;
 import com.toedter.calendar.JDateChooser;
+import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +20,10 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
     private com.toedter.calendar.JDateChooser dateChooser;
     private JTextField dateField;
 
+    public DateVariableEditorPanel(ActionListener listener) {
+        super(listener);
+    }
+    
     /**
      * 
      * @param databaseListElement
