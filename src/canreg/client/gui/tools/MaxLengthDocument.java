@@ -19,6 +19,9 @@ public class MaxLengthDocument extends PlainDocument {
     private final int maxLength;
     private ActionListener actionListener;
 
+    public static String CHANGED_ACTION_STRING = "Changed";
+    public static String MAX_LENGTH_ACTION_STRING = "Max length reached";
+
     /**
      * Default constructor.
      *
@@ -47,13 +50,15 @@ public class MaxLengthDocument extends PlainDocument {
     public void insertString(final int offset, final String str,
             final AttributeSet attr) throws BadLocationException {
 
+        actionListener.actionPerformed(new ActionEvent(this, 0, CHANGED_ACTION_STRING));
+
         if (getLength() + str.length() > maxLength) {
             Toolkit.getDefaultToolkit().beep();
             return;
         }
         super.insertString(offset, str, attr);
         if (getLength() == maxLength&&actionListener!=null) {
-            actionListener.actionPerformed(new ActionEvent(this, 0, "Max length reached"));
+            actionListener.actionPerformed(new ActionEvent(this, 0, MAX_LENGTH_ACTION_STRING));
         }
     }
 }
