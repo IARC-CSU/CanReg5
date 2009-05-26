@@ -4,11 +4,14 @@ import canreg.server.database.User;
 import canreg.server.management.UserManagerNew;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
+import canreg.common.DatabaseIndexesListElement;
+import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.Globals.UserRightLevels;
 import canreg.common.PersonSearchVariable;
 import canreg.common.Tools;
 import canreg.common.qualitycontrol.DefaultPersonSearch;
+import canreg.common.qualitycontrol.GlobalPersonSearchHandler;
 import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.server.database.CanRegDAO;
 import canreg.server.database.DatabaseRecord;
@@ -33,6 +36,7 @@ import javax.security.auth.Subject;
 import org.apache.derby.drda.NetworkServerControl;
 import java.net.InetAddress;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
@@ -53,6 +57,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private PersonSearcher personSearcher;
     private Properties appInfoProperties;
     private UserManagerNew userManager;
+    private Map<String, GlobalPersonSearchHandler> activePersonSearchers;
+    private String patientRecordIDvariableName;
+    private GlobalToolBox serverToolbox;
 
     /**
      * 
@@ -103,10 +110,14 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         personSearcher.setSearchVariables(searchVariables);
         personSearcher.setThreshold(Tools.getPersonSearchMinimumMatch(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
 
+        activePersonSearchers = new LinkedHashMap<String, GlobalPersonSearchHandler>();
 
         // Step four: start the user manager
         userManager = new UserManagerNew(db);
         userManager.writePasswordsToFile();
+        // Step five: set up some variables
+        serverToolbox = new GlobalToolBox(getDatabseDescription());
+        patientRecordIDvariableName = serverToolbox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
     }
 
     // Initialize the database connection
@@ -214,8 +225,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.lang.SecurityException
      */
     public void setUserPassword(String username, String password) throws RemoteException, SecurityException {
-        for (User user:listUsers()){
-            if (user.getUserName().equalsIgnoreCase(username)){
+        for (User user : listUsers()) {
+            if (user.getUserName().equalsIgnoreCase(username)) {
                 user.setPassword(password.toCharArray());
                 saveUser(user);
             }
@@ -554,52 +565,96 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public Map<Integer, Map<Float, Integer>> performGlobalPersonSearch(PersonSearcher searcher) throws RemoteException, SecurityException {
-        Map<Integer, Map<Float, Integer>> patientIDScorePatientIDMap = new TreeMap<Integer, Map<Float, Integer>>();
-        DatabaseFilter filter = new DatabaseFilter();
-        filter.setQueryType(DatabaseFilter.QueryType.PERSON_SEARCH);
+    public synchronized String initiateGlobalPersonSearch(PersonSearcher searcher, String rangeStart, String rangeEnd) throws RemoteException, SecurityException {
         DistributedTableDescription dataDescription;
-        String resultSetID;
+        GlobalPersonSearchHandler gpsh = new GlobalPersonSearchHandler();
+        String resultSetID = null;
+
         try {
-            dataDescription = db.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.PATIENT_TABLE_NAME);
             if (searcher == null) {
-                // listener.actionPerformed(new ActionEvent(this, 0, "range " + dataDescription.getRowCount()));
-                // searcher = personSearcher;
+                searcher = personSearcher;
             }
-            float threshold = searcher.getThreshold();
+
+            DatabaseFilter filter = new DatabaseFilter();
+            filter.setQueryType(DatabaseFilter.QueryType.PERSON_SEARCH);
+
+            dataDescription = getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+            gpsh.setAllPatientRecordIDs(retrieveRows(dataDescription.getResultSetID(), 0, dataDescription.getRowCount()));
+            releaseResultSet(dataDescription.getResultSetID());
+            DatabaseIndexesListElement dbile = new DatabaseIndexesListElement(null);
+            dbile.setDatabaseTableName(Globals.PATIENT_TABLE_NAME);
+            dbile.setMainVariable(serverToolbox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
+            if (rangeStart != null && rangeStart.trim().length() > 0) {
+                filter.setRangeStart("'" + rangeStart + "'");
+            }
+            if (rangeEnd != null && rangeEnd.trim().length() > 0) {
+                filter.setRangeEnd("'" + rangeEnd + "'");
+            }
+            filter.setRangeDatabaseIndexedListElement(dbile);
+
+            dataDescription = getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
             resultSetID = dataDescription.getResultSetID();
-            Patient patientA;
-            Patient patientB;
-            for (int row = 0; row < dataDescription.getRowCount(); row++) {
-                Object[][] rowData = db.retrieveRows(resultSetID, row, dataDescription.getRowCount());
-                for (Object[] r : rowData) {
-                    int patientIDA = (Integer) r[0];
-                    Map<Float, Integer> patientIDScoreMap = new TreeMap<Float, Integer>();
-                    patientA = (Patient) getPatient(patientIDA);
-                    for (Object[] r2 : rowData) {
-                        int patientIDB = (Integer) r2[0];
-                        if (patientIDB != patientIDA) {
-                            patientB = (Patient) getPatient(patientIDB);
-                            float score = searcher.compare(patientA, patientB);
-                            if (score > threshold) {
-                                patientIDScoreMap.put(score, patientIDB);
-                                debugOut("Found " + patientIDA + " " + score + " " + patientIDB);
-                            }
-                        }
-                    }
-                    if (patientIDScoreMap.size() > 0) {
-                        patientIDScorePatientIDMap.put(patientIDA, patientIDScoreMap);
-                    }
-                }
-            }
+            gpsh.setDistributedTableDescription(dataDescription);
+            gpsh.setPersonSearcher(searcher);
+            gpsh.setPosition(0);
+            gpsh.setPatientRecordIDsWithinRange(retrieveRows(resultSetID, 0, dataDescription.getRowCount()));
             releaseResultSet(resultSetID);
+
+            activePersonSearchers.put(resultSetID, gpsh);
+        // releaseResultSet(resultSetID);
         } catch (SQLException ex) {
             Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return resultSetID;
+    }
 
+    public synchronized Map<String, Map<String, Float>> nextStepGlobalPersonSearch(String idString) throws SecurityException, RemoteException, Exception {
+        Map<String, Map<String, Float>> patientIDScorePatientIDMap = new TreeMap<String, Map<String, Float>>();
+        GlobalPersonSearchHandler globalPersonSearchHandler = activePersonSearchers.get(idString);
+        if (globalPersonSearchHandler != null) {
+            PersonSearcher searcher = globalPersonSearchHandler.getPersonSearcher();
+
+            int startRow = globalPersonSearchHandler.getPosition();
+            int endRow = startRow + Globals.GLOBAL_PERSON_SEARCH_STEP_SIZE;
+            globalPersonSearchHandler.setPosition(endRow);
+
+            if (startRow >= globalPersonSearchHandler.getDistributedTableDescription().getRowCount()) {
+                releasePersonSearcher(idString);
+                patientIDScorePatientIDMap = null;
+            } else {
+                // Object[][] rowData = retrieveRows(idString, startRow, endRow);
+                Object[][] rowData = globalPersonSearchHandler.getPatientRecordIDsWithinRange();
+                for (int row = startRow; row < endRow && row < rowData.length; row++) {
+                    int patientIDA = (Integer) rowData[row][0];
+                    Patient patientA = (Patient) getPatient(patientIDA);
+                    // Map<String, Float> patientIDScoreMap = performPersonSearch(patientA, searcher, globalPersonSearchHandler.getDistributedTableDescription());
+                    Map<String, Float> patientIDScoreMap = performPersonSearch(patientA, searcher, globalPersonSearchHandler.getAllPatientRecordIDs());
+                    if (patientIDScoreMap.size() > 0) {
+                        patientIDScorePatientIDMap.put((String) patientA.getVariable(patientRecordIDvariableName), patientIDScoreMap);
+                    }
+                }
+            }
+        } else {
+            patientIDScorePatientIDMap = null;
+        }
         return patientIDScorePatientIDMap;
+    }
+
+    private synchronized void releasePersonSearcher(String idString) {
+        try {
+            releaseResultSet(idString);
+            activePersonSearchers.remove(idString);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public synchronized void interuptGlobalPersonSearch(String idString) {
+        releasePersonSearcher(idString);
     }
 
     /**
@@ -610,12 +665,32 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public Map<Integer, Float> performPersonSearch(Patient patient, PersonSearcher searcher) throws RemoteException, SecurityException {
+    public synchronized Map<String, Float> performPersonSearch(Patient patient, PersonSearcher searcher) throws RemoteException, SecurityException {
         DatabaseFilter filter = new DatabaseFilter();
-        Map<Integer, Float> patientIDScoreMap = new TreeMap<Integer, Float>();
         filter.setQueryType(DatabaseFilter.QueryType.PERSON_SEARCH);
         DistributedTableDescription dataDescription;
-        String resultSetID;
+        Map<String, Float> patientIDScoreMap = null;
+        if (searcher == null) {
+            searcher = personSearcher;
+        }
+        try {
+            dataDescription = db.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.PATIENT_TABLE_NAME);
+            Object[][] rowData = retrieveRows(dataDescription.getResultSetID(), 0, dataDescription.getRowCount() - 1);
+            patientIDScoreMap = performPersonSearch(patient, searcher, rowData);
+            releaseResultSet(dataDescription.getResultSetID());
+        } catch (SQLException ex) {
+            Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return patientIDScoreMap;
+    }
+
+    private Map<String, Float> performPersonSearch(Patient patient, PersonSearcher searcher, Object[][] rowData) throws RemoteException, SecurityException {
+        Map<String, Float> patientIDScoreMap = new TreeMap<String, Float>();
+
+        Patient patientB;
+
         Object patientIDAObject = patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
 
         int patientIDA;
@@ -625,57 +700,46 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             patientIDA = -1;
         }
 
+        float threshold = searcher.getThreshold();
         try {
-            dataDescription = db.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.PATIENT_TABLE_NAME);
-            resultSetID = dataDescription.getResultSetID();
-            Patient patientB;
-            if (searcher == null) {
-                searcher = personSearcher;
-            }
-            float threshold = searcher.getThreshold();
-            for (int row = 0; row < dataDescription.getRowCount(); row++) {
-                Object[][] rowData = db.retrieveRows(resultSetID, row, dataDescription.getRowCount());
-                for (Object[] r : rowData) {
-                    int patientIDB = (Integer) r[0];
-                    if (patientIDB != patientIDA) {
-                        patientB = (Patient) getPatient(patientIDB);
-                        float score = personSearcher.compare(patient, patientB);
-                        if (score > threshold) {
-                            patientIDScoreMap.put(patientIDB, score);
-                            debugOut("Found patient id: " + patientIDB + ", score: " + score + "%");
-                        } else {
-                            // debugOut("Not found " + patientIDB + " " + score);
+            for (int row = 0; row < rowData.length; row++) {
+                Object[] r = rowData[row];
+                int patientIDB = (Integer) r[0];
+                if (patientIDB != patientIDA) {
+                    patientB = (Patient) getPatient(patientIDB);
+                    float score = searcher.compare(patient, patientB);
+                    if (score > threshold) {
+                        patientIDScoreMap.put((String) patientB.getVariable(patientRecordIDvariableName), score);
+                    // debugOut("Found patient id: " + patientB.getVariable(patientRecordIDvariableName) + ", score: " + score + "%");
+                    } else {
+                        // debugOut("Not found " + patientB.getVariable(patientRecordIDvariableName) + " " + score);
                         }
-                    }
                 }
             }
-            releaseResultSet(resultSetID);
-        } catch (SQLException ex) {
-            Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
-            Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return patientIDScoreMap;
     }
 
-    public boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException {
+    public synchronized boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException {
         boolean success = false;
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
             success = db.deleteTumourRecord(id);
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             success = db.deletePatientRecord(id);
-        } else if (tableName.equalsIgnoreCase(Globals.USERS_TABLE_NAME)){
+        } else if (tableName.equalsIgnoreCase(Globals.USERS_TABLE_NAME)) {
             success = db.deleteRecord(id, Globals.USERS_TABLE_NAME);
             userManager.writePasswordsToFile();
         }
         return success;
     }
 
-    public boolean deletePopulationDataset(int populationDatasetID) throws RemoteException, SecurityException {
+    public synchronized boolean deletePopulationDataset(int populationDatasetID) throws RemoteException, SecurityException {
         return db.deletePopulationDataSet(populationDatasetID);
     }
 
-    public int saveUser(User user) throws RemoteException, SecurityException {
+    public synchronized int saveUser(User user) throws RemoteException, SecurityException {
         int id = db.saveUser(user);
         userManager.writePasswordsToFile();
         return id;

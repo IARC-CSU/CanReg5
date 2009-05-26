@@ -240,14 +240,14 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return principal.getUserRightLevel();
     }
 
-    public Map<Integer, Float> performPersonSearch(Patient patient, PersonSearcher searcher) throws RemoteException, SecurityException {
+    public Map<String, Float> performPersonSearch(Patient patient, PersonSearcher searcher) throws RemoteException, SecurityException {
         checkPermission("performPersonSearch");
         return theServer.performPersonSearch(patient, searcher);
     }
 
-    public Map<Integer, Map<Float, Integer>> performGlobalPersonSearch(PersonSearcher searcher) throws RemoteException, SecurityException {
+    public String initiateGlobalPersonSearch(PersonSearcher searcher, String rangeStart, String rangeEnd) throws RemoteException, SecurityException {
         checkPermission("performGlobalPersonSearch");
-        return theServer.performGlobalPersonSearch(searcher);
+        return theServer.initiateGlobalPersonSearch(searcher, rangeStart, rangeEnd);
     }
 
     public boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException {
@@ -268,5 +268,15 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public int saveUser(User user) throws RemoteException, SecurityException {
         checkPermission("saveUser");
         return theServer.saveUser(user);
+    }
+
+    public Map<String, Map<String, Float>> nextStepGlobalPersonSearch(String idString) throws SecurityException, RemoteException, Exception {
+        checkPermission("nextStepGlobalPersonSearch"+idString);
+        return theServer.nextStepGlobalPersonSearch(idString);
+    }
+
+    public void interuptGlobalPersonSearch(String idString)  throws RemoteException, SecurityException {
+        checkPermission("interuptGlobalPersonSearch:"+idString);
+        theServer.interuptGlobalPersonSearch(idString);
     }
 }
