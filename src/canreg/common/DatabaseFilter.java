@@ -9,7 +9,6 @@ import java.util.Set;
  * @author ervikm
  */
 public class DatabaseFilter implements Serializable {
-    
 
     /**
      * 
@@ -32,7 +31,10 @@ public class DatabaseFilter implements Serializable {
     private Set<DatabaseVariablesListElement> databaseVariables;
     private QueryType queryType;
     private String sortByVariable;
-    
+    private DatabaseIndexesListElement rangeDatabaseIndexedListElement;
+    private String rangeStart;
+    private String rangeEnd;
+
     /**
      * 
      * @return
@@ -45,7 +47,7 @@ public class DatabaseFilter implements Serializable {
      * 
      * @return
      */
-    public String  getSortByVariable() {
+    public String getSortByVariable() {
         return sortByVariable;
     }
 
@@ -56,18 +58,18 @@ public class DatabaseFilter implements Serializable {
     public void setDatabaseVariables(Set<DatabaseVariablesListElement> databaseVariables) {
         this.databaseVariables = databaseVariables;
     }
-    
+
     /**
      * 
      * @param databaseVariable
      */
-    public void addDatabaseVariable(DatabaseVariablesListElement databaseVariable){
-        if (databaseVariables==null){
+    public void addDatabaseVariable(DatabaseVariablesListElement databaseVariable) {
+        if (databaseVariables == null) {
             databaseVariables = new LinkedHashSet<DatabaseVariablesListElement>();
         }
         databaseVariables.add(databaseVariable);
     }
-    
+
     /**
      * 
      * @return
@@ -98,6 +100,58 @@ public class DatabaseFilter implements Serializable {
      */
     public void setQueryType(QueryType queryType) {
         this.queryType = queryType;
+    }
+
+    public void setRange(Object[] range) {
+        if (range != null && range.length==3) {
+            setRangeDatabaseIndexedListElement((DatabaseIndexesListElement) range[0]);
+            setRangeStart((String) range[1]);
+            setRangeEnd((String) range[2]);
+        } else {
+            // TODO: Add an exception
+        }
+    }
+
+    /**
+     * @return the rangeDatabaseIndexedListElement
+     */
+    public DatabaseIndexesListElement getRangeDatabaseIndexedListElement() {
+        return rangeDatabaseIndexedListElement;
+    }
+
+    /**
+     * @param rangeDatabaseIndexedListElement the rangeDatabaseIndexedListElement to set
+     */
+    public void setRangeDatabaseIndexedListElement(DatabaseIndexesListElement rangeDatabaseIndexedListElement) {
+        this.rangeDatabaseIndexedListElement = rangeDatabaseIndexedListElement;
+    }
+
+    /**
+     * @return the rangeStart
+     */
+    public String getRangeStart() {
+        return rangeStart;
+    }
+
+    /**
+     * @param rangeStart the rangeStart to set
+     */
+    public void setRangeStart(String rangeStart) {
+        this.rangeStart = rangeStart;
+    }
+
+    /**
+     * @return the rangeEnd
+     */
+    public String getRangeEnd() {
+        return rangeEnd;
+    }
+
+    /**
+     * @param rangeEnd the rangeEnd to set
+     */
+    public void setRangeEnd(String rangeEnd) {
+        this.rangeEnd = rangeEnd;
     }
 
     /**
