@@ -148,6 +148,8 @@ public class Globals {
     public static String LOGFILE_PATTERN = "%h/canreg5client.log";
     public static String LOG_LEVEL = "FINEST";
     public static String DEFAULT_BACK_UP_EVERY = "7";
+    public static int GLOBAL_PERSON_SEARCH_STEP_SIZE = 1;
+    public static String CANREG_HELP_FILE_NAME = "CanReg5-functionality.html";
 
     /**
      * 

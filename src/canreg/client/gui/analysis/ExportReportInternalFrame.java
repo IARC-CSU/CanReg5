@@ -406,6 +406,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
             filter.setSortByVariable(rangeFilterPanel.getSortByVariable().trim());
 
+            filter.setRange(rangeFilterPanel.getRange());
+
             tableDataSource = null;
         }
 

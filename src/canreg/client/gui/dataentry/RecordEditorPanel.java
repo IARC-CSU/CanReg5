@@ -46,7 +46,7 @@ import org.w3c.dom.Document;
  *
  * @author  ervikm
  */
-public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, PropertyChangeListener {
+public class RecordEditorPanel extends javax.swing.JPanel implements ActionListener, Cloneable, PropertyChangeListener {
 
     private DatabaseRecord databaseRecord;
     private Document doc;
@@ -66,6 +66,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     private DictionaryEntry[] recStatusDictWithoutConfirmArray;
     private ResultCode resultCode = null;
     private DatabaseVariablesListElement patientIDVariableListElement;
+    private DatabaseVariablesListElement patientRecordIDVariableListElement;
     private DatabaseVariablesListElement obsoleteFlagVariableListElement;
 
     boolean areAllVariablesPresent() {
@@ -122,7 +123,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
      * Set the resultcode of individual variables.
      *
      */
-    public void setResultCode(String databaseVariableName, ResultCode resultCode) {
+    public void setResultCodeOfVariable(String databaseVariableName, ResultCode resultCode) {
         VariableEditorPanel panel = variableEditorPanels.get(databaseVariableName);
         panel.setResultCode(resultCode);
     }
@@ -163,7 +164,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
                     recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
                 }
             }
-            databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recStatus);
+        // databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recStatus);
         }
     }
 
@@ -184,14 +185,30 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
         }
     }
 
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equalsIgnoreCase("Changed")) {
+
+            changesDone();
+            actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
+        }
+    }
+
+    private void changesDone() {
+        setSaveNeeded(true);
+        setChecksResultCode(ResultCode.NotDone);
+    }
+
     private enum panelTypes {
 
         PATIENT, TUMOUR
     }
 
     /** Creates new form RecordEditorPanel */
-    public RecordEditorPanel() {
+    public RecordEditorPanel(ActionListener listener) {
         initComponents();
+
+        this.actionListener = listener;
+
         globalToolBox =
                 CanRegClientApp.getApplication().getGlobalToolBox();
         saveButton.setEnabled(true);
@@ -229,6 +246,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PersonSearch.toString());
             patientIDVariableListElement =
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
+            patientRecordIDVariableListElement =
+                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString());
             obsoleteFlagVariableListElement =
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString());
         } else if (databaseRecord.getClass().isInstance(new Tumour())) {
@@ -271,57 +290,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             tableName = Globals.TUMOUR_TABLE_NAME;
             personSearchPanel.setVisible(false);
         }
-        if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
-            recStatusDictMap = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
 
-            Collection<DictionaryEntry> recStatusDictCollection = recStatusDictMap.values();
-            recStatusDictWithConfirmArray =
-                    recStatusDictCollection.toArray(new DictionaryEntry[0]);
-
-            Vector<DictionaryEntry> recStatusDictWithoutConfirmVector = new Vector<DictionaryEntry>();
-            for (DictionaryEntry entry : recStatusDictCollection) {
-                if (!entry.getCode().equalsIgnoreCase("1")) {
-                    recStatusDictWithoutConfirmVector.add(entry);
-                }
-            }
-            recStatusDictWithoutConfirmArray = recStatusDictWithoutConfirmVector.toArray(new DictionaryEntry[0]);
-        }
-
-        /*
-         * Set the obsolete status
-         */
-        Object obsoleteStatus = databaseRecord.getVariable(obsoleteFlagVariableListElement.getDatabaseVariableName());
-        if (obsoleteStatus != null && (Integer) obsoleteStatus == 1) {
-            obsoleteToggleButton.setSelected(true);
-        } else {
-            obsoleteToggleButton.setSelected(false);
-        }
-
-        /*
-         * Set the check status
-         */
-        if (checkVariableListElement != null) {
-            Object checkStatus = databaseRecord.getVariable(checkVariableListElement.getDatabaseVariableName());
-            if (checkStatus != null) {
-                String checkStatusString = (String) checkStatus;
-                resultCode = CheckResult.toResultCode(checkStatusString);
-                setChecksResultCode(resultCode);
-            }
-        }
-        /*
-         * Set the record status.
-         */
-        if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
-
-            recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithConfirmArray));
-            Object recStatus = databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
-            if (recStatus != null) {
-                recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
-            }
-
-        } else {
-            recordStatusPanel.setVisible(false);
-        }
 
         Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new TreeMap<Integer, VariableEditorGroupPanel>();
 
@@ -338,9 +307,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             String variableType = currentVariable.getVariableType();
 
             if ("date".equalsIgnoreCase(variableType)) {
-                vep = new DateVariableEditorPanel();
+                vep = new DateVariableEditorPanel(this);
             } else {
-                vep = new VariableEditorPanel();
+                vep = new VariableEditorPanel(this);
             }
 
             vep.setDatabaseVariablesListElement(currentVariable);
@@ -388,6 +357,61 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
             JPanel panel = groupIDtoPanelMap.get(groupID);
             dataPanel.add(panel);
             panel.setVisible(true);
+        }
+
+        if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
+            recStatusDictMap = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
+
+            Collection<DictionaryEntry> recStatusDictCollection = recStatusDictMap.values();
+            recStatusDictWithConfirmArray =
+                    recStatusDictCollection.toArray(new DictionaryEntry[0]);
+
+            Vector<DictionaryEntry> recStatusDictWithoutConfirmVector = new Vector<DictionaryEntry>();
+            for (DictionaryEntry entry : recStatusDictCollection) {
+                if (!entry.getCode().equalsIgnoreCase("1")) {
+                    recStatusDictWithoutConfirmVector.add(entry);
+                }
+            }
+            recStatusDictWithoutConfirmArray = recStatusDictWithoutConfirmVector.toArray(new DictionaryEntry[0]);
+        }
+
+        /*
+         * Set the obsolete status
+         */
+        Object obsoleteStatus = databaseRecord.getVariable(obsoleteFlagVariableListElement.getDatabaseVariableName());
+        if (obsoleteStatus != null && (Integer) obsoleteStatus == 1) {
+            obsoleteToggleButton.setSelected(true);
+        } else {
+            obsoleteToggleButton.setSelected(false);
+        }
+
+        /*
+         * Set the record status.
+         */
+        if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
+
+            recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithConfirmArray));
+            Object recStatus = databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
+            if (recStatus != null) {
+                recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
+            }
+
+        } else {
+            recordStatusPanel.setVisible(false);
+        }
+
+        setSaveNeeded(false);
+
+        /*
+         * Set the check status
+         */
+        if (checkVariableListElement != null) {
+            Object checkStatus = databaseRecord.getVariable(checkVariableListElement.getDatabaseVariableName());
+            if (checkStatus != null) {
+                String checkStatusString = (String) checkStatus;
+                resultCode = CheckResult.toResultCode(checkStatusString);
+                setChecksResultCode(resultCode);
+            }
         }
 
         dataPanel.revalidate();
@@ -682,6 +706,11 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     public void saveRecord() {
         buildDatabaseRecord();
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.SAVE));
+        Iterator<VariableEditorPanel> iterator = variableEditorPanels.values().iterator();
+        while (iterator.hasNext()) {
+            VariableEditorPanel vep = iterator.next();
+            vep.setSaved();
+        }
     }
 
     private void buildDatabaseRecord() {
@@ -713,22 +742,20 @@ public class RecordEditorPanel extends javax.swing.JPanel implements Cloneable, 
     public void runPersonSearch() {
         try {
             buildDatabaseRecord();
-            Map<Integer, Float> map =
+            Map<String, Float> map =
                     canreg.client.CanRegClientApp.getApplication().performDuplicateSearch((Patient) databaseRecord, null);
             //remove patients with the same patientID -- already mapped
-            String patientID = databaseRecord.getVariable(patientIDVariableListElement.getDatabaseVariableName()).toString();
+            String patientRecordID = databaseRecord.getVariable(patientIDVariableListElement.getDatabaseVariableName()).toString();
 
             String records = "";
-            for (Integer i : map.keySet()) {
+            for (String otherPatientRecordID : map.keySet()) {
                 // records += i + ": " + map.get(i) + "\n";
-                DatabaseRecord patientRecord = canreg.client.CanRegClientApp.getApplication().getRecord(i, Globals.PATIENT_TABLE_NAME);
-                String otherPatientID = patientRecord.getVariable(patientIDVariableListElement.getDatabaseVariableName()).toString();
-                if (databaseRecord.equals(patientRecord)) {
+                if (patientRecordID.equals(otherPatientRecordID)) {
                     // do nothing
-                } else if (patientID.equals(otherPatientID)) {
-                    records += "Patient id: " + otherPatientID + ", score: " + map.get(i) + "% (Already matched.)\n";
+//                } else if (patientRecordID.equals(otherPatientRecordID)) {
+//                   records += "Patient id: " + otherPatientRecordID + ", score: " + map.get(otherPatientRecordID) + "% (Already matched.)\n";
                 } else {
-                    records += "Patient id: " + otherPatientID + ", score: " + map.get(i) + "%\n";
+                    records += "Patient id: " + otherPatientRecordID + ", score: " + map.get(otherPatientRecordID) + "%\n";
                 }
             }
             if (records.length() > 0) {

@@ -40,7 +40,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
      * 
      * @return
      */
-    public PersonSearchVariable[] getPersonSearchVariables() {
+    public synchronized PersonSearchVariable[] getPersonSearchVariables() {
         PersonSearchVariable[] psvs = new PersonSearchVariable[variableNames.length];
         for (int i = 0; i < variableNames.length; i++) {
             psvs[i] = new PersonSearchVariable();
@@ -54,7 +54,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
      * 
      * @param personSearchVariables
      */
-    public void setSearchVariables(PersonSearchVariable[] personSearchVariables) {
+    public synchronized void setSearchVariables(PersonSearchVariable[] personSearchVariables) {
         int i = 0;
         String[] tempVariableNames = new String[personSearchVariables.length];
         float[] tempVariableWeights = new float[personSearchVariables.length];
@@ -71,7 +71,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
      * @param variableNames
      * @param variableWeigths
      */
-    public void setWeights(String[] variableNames, float[] variableWeigths) {
+    public synchronized void setWeights(String[] variableNames, float[] variableWeigths) {
         this.variableNames = variableNames;
         this.variableWeights = variableWeigths;
 

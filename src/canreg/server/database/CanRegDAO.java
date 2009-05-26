@@ -7,6 +7,7 @@ package canreg.server.database;
 import cachingtableapi.DistributedTableDataSource;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
+import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
@@ -369,14 +370,24 @@ public class CanRegDAO {
         // Is this a person search query?
         if (DatabaseFilter.QueryType.PERSON_SEARCH.equals(filter.getQueryType())) {
             String query = "";
-            query = "SELECT COUNT(*) FROM APP.PATIENT";
+            String rangePart = "";
+
+            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
+                rangePart = QueryGenerator.buildRangePart(filter);
+                if (rangePart.length() > 0) {
+                    rangePart = " WHERE " + rangePart;
+                }
+            }
+
+            query = "SELECT COUNT(*) FROM APP.PATIENT" + rangePart;
+            System.out.print(query);
             ResultSet countRowSet = statement.executeQuery(query);
             if (countRowSet.next()) {
                 rowCount = countRowSet.getInt(1);
             }
             countRowSet = null;
-            query = "SELECT " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " FROM APP.PATIENT";
-            System.out.print(query);
+
+            query = "SELECT " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " FROM APP.PATIENT" + rangePart;
             result = statement.executeQuery(query);
         } // Or a Frequency by year query?
         else if (DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR.equals(filter.getQueryType())) {

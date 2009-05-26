@@ -78,32 +78,33 @@ public class QueryGenerator {
     static String buildRangePart(DatabaseFilter filter) {
         String filterString = "";
         DatabaseIndexesListElement rangeDBile = filter.getRangeDatabaseIndexedListElement();
-        String tableName = rangeDBile.getDatabaseTableName();
-        String tableRecordIDVariableName = "";
+        if (rangeDBile != null) {
+            String tableName = rangeDBile.getDatabaseTableName();
+            String tableRecordIDVariableName = "";
 
-        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
-            tableRecordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
-        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)){
-            tableRecordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
-        }
+            if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+                tableRecordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
+            } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+                tableRecordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
+            }
 
-        filterString += "APP." + tableName + "." + tableRecordIDVariableName +
-                " IN ( SELECT " + tableRecordIDVariableName +
-                " FROM APP." + tableName +
-                " WHERE ";
-        if (filter.getRangeStart() != null && filter.getRangeStart().length() > 0) {
-            filterString += filter.getRangeDatabaseIndexedListElement().getMainVariable() +
-                    " >= " + filter.getRangeStart();
+            filterString += "APP." + tableName + "." + tableRecordIDVariableName +
+                    " IN ( SELECT " + tableRecordIDVariableName +
+                    " FROM APP." + tableName +
+                    " WHERE ";
+            if (filter.getRangeStart() != null && filter.getRangeStart().length() > 0) {
+                filterString += filter.getRangeDatabaseIndexedListElement().getMainVariable() +
+                        " >= " + filter.getRangeStart();
+            }
+            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) && (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
+                filterString += " AND ";
+            }
+            if (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0) {
+                filterString += filter.getRangeDatabaseIndexedListElement().getMainVariable() +
+                        " <= " + filter.getRangeEnd();
+            }
+            filterString += ")";
         }
-        if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) && (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-            filterString += " AND ";
-        }
-        if (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0) {
-            filterString += filter.getRangeDatabaseIndexedListElement().getMainVariable() +
-                    " <= " + filter.getRangeEnd();
-        }
-        filterString += ")";
-
         return filterString;
 
     }

@@ -234,10 +234,23 @@ public class Tools {
     public static DatabaseIndexesListElement[] getIndexesListElements(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "index");
         DatabaseIndexesListElement[] indexes = new DatabaseIndexesListElement[nl.getLength()];
+        TreeMap<String,LinkedList<String>> patientIndexMap = buildIndexMap(Globals.PATIENT_TABLE_NAME, doc, namespace);
+        TreeMap<String,LinkedList<String>> tumourIndexMap = buildIndexMap(Globals.TUMOUR_TABLE_NAME, doc, namespace);
+
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
-            indexes[i] = new DatabaseIndexesListElement(
-                    e.getElementsByTagName(namespace + "name").item(0).getTextContent());
+            String indexName = e.getElementsByTagName(namespace + "name").item(0).getTextContent();
+            DatabaseIndexesListElement index = new DatabaseIndexesListElement(indexName);
+            String tableName = e.getElementsByTagName(namespace + "table").item(0).getTextContent();
+            index.setDatabaseTableName(tableName);
+            LinkedList<String> variablesInIndex = null;
+            if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)){
+                variablesInIndex = patientIndexMap.get(indexName);
+            } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
+                variablesInIndex = tumourIndexMap.get(indexName);
+            }
+            index.setVariablesInIndex(variablesInIndex);
+            indexes[i] = index;
         }
         return indexes;
     }

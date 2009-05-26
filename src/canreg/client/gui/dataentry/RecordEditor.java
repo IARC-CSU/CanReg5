@@ -32,7 +32,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -46,6 +45,7 @@ import org.w3c.dom.Document;
  * @author  ervikm
  */
 public class RecordEditor extends javax.swing.JInternalFrame implements ActionListener {
+
     public static final String CHANGED = "changed";
     public static final String CHECKS = "checks";
     public static final String DELETE = "delete";
@@ -54,7 +54,6 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     public static final String OBSOLETE = "obsolete";
     public static final String CHANGE_PATIENT_RECORD = "changePatientRecord";
     public static final String CALC_AGE = "calcAge";
-
     private Document doc;
     private Map<Integer, Dictionary> dictionary;
     private LinkedList<DatabaseRecord> patientRecords;
@@ -85,11 +84,11 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 int option = JOptionPane.NO_OPTION;
                 // Go through all panels and ask if any changes has been done
                 boolean changesDone = false;
-                for(Component component:patientTabbedPane.getComponents()) {
+                for (Component component : patientTabbedPane.getComponents()) {
                     RecordEditorPanel panel = (RecordEditorPanel) component;
                     changesDone = changesDone || panel.isSaveNeeded();
                 }
-                for(Component component:tumourTabbedPane.getComponents()) {
+                for (Component component : tumourTabbedPane.getComponents()) {
                     RecordEditorPanel panel = (RecordEditorPanel) component;
                     changesDone = changesDone || panel.isSaveNeeded();
                 }
@@ -126,6 +125,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         if (regno != null) {
             patientRecordsMap.put(regno, recordEditorPanel);
         }
+    }
+
+    private void changesDone() {
+        changesDone = true;
     }
 
     private void setActiveRecord(RecordEditorPanel rep) {
@@ -178,8 +181,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
      * @param dbr
      */
     public void addRecord(DatabaseRecord dbr) {
-        RecordEditorPanel rePanel = new RecordEditorPanel();
-        rePanel.setActionListener(this);
+        RecordEditorPanel rePanel = new RecordEditorPanel(this);
         rePanel.setDictionary(dictionary);
         rePanel.setDocument(doc);
         rePanel.setRecord(dbr);
@@ -509,9 +511,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
+
         if (source instanceof RecordEditorPanel) {
             if (e.getActionCommand().equalsIgnoreCase(CHANGED)) {
-                changesDone = true;
+                changesDone();
             } else if (e.getActionCommand().equalsIgnoreCase(DELETE)) {
                 int option = JOptionPane.NO_OPTION;
                 option = JOptionPane.showConfirmDialog(null, "Permanently delete record?");
@@ -607,19 +610,33 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                         Logger.getLogger(RecordEditor.class.getName()).log(Level.INFO, result.toString());
                     }
 
+                    if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing) {
+                        // If no errors were found we generate ICD10 code
+                        ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
+                        if (conversionResult != null) {
+                            if (conversionResult[0].getResultCode() != ConversionResult.ResultCode.Invalid) {
+                                editChecksInternalFrame.setICD10TextFieldText(conversionResult[0].getValue() + "");
+                                DatabaseVariablesListElement ICD10databaseVariablesElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ICD10.toString());
+                                if (ICD10databaseVariablesElement != null) {
+                                    tumour.setVariable(ICD10databaseVariablesElement.getDatabaseVariableName(), conversionResult[0].getValue());
+                                }
+                            }
+                        }
+                    }
+
+                    tumourRecordEditorPanel.refreshDatabaseRecord(tumour);
+
                     if (worstResultCodeFound == CheckResult.ResultCode.OK) {
                         message += "Cross-check conclusion: Valid";
                     } else {
                         // set the various variable panels to respective warnings
-
-
                         for (Globals.StandardVariableNames standardVariableName : mapOfVariablesAndWorstResultCodes.keySet()) {
                             DatabaseVariablesListElement dbvle = globalToolBox.translateStandardVariableNameToDatabaseListElement(standardVariableName.toString());
 
                             if (dbvle.getDatabaseTableName().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-                                tumourRecordEditorPanel.setResultCode(dbvle.getDatabaseVariableName(), mapOfVariablesAndWorstResultCodes.get(standardVariableName));
+                                tumourRecordEditorPanel.setResultCodeOfVariable(dbvle.getDatabaseVariableName(), mapOfVariablesAndWorstResultCodes.get(standardVariableName));
                             } else if (dbvle.getDatabaseTableName().equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-                                patientRecordEditorPanel.setResultCode(dbvle.getDatabaseVariableName(), mapOfVariablesAndWorstResultCodes.get(standardVariableName));
+                                patientRecordEditorPanel.setResultCodeOfVariable(dbvle.getDatabaseVariableName(), mapOfVariablesAndWorstResultCodes.get(standardVariableName));
                             }
                         }
                     }
@@ -628,16 +645,6 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
                 editChecksInternalFrame.setCrossChecksTextAreaText(message);
                 editChecksInternalFrame.setResultTextFieldText(worstResultCodeFound.toString());
-
-                if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing) {
-                    // If no errors were found we generate ICD10 code
-                    ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
-                    if (conversionResult != null) {
-                        if (conversionResult[0].getResultCode() != ConversionResult.ResultCode.Invalid) {
-                            editChecksInternalFrame.setICD10TextFieldText(conversionResult[0].getValue() + "");
-                        }
-                    }
-                }
 
                 CanRegClientView.showAndCenterInternalFrame(desktopPane, editChecksInternalFrame);
             } else if (e.getActionCommand().equalsIgnoreCase(SAVE)) {
@@ -743,7 +750,6 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     patientDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
                 } else {
                     // get all the tumour records
-
                 }
             }
         }
