@@ -338,7 +338,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             userRightLevelComboBox.setModel(userLevelsModel);
             usersList.setSelectedIndex(0);
         } else {
-             tabbedPane.setEnabledAt(tabbedPane.indexOfComponent(userManagerPanel), false);
+            tabbedPane.setEnabledAt(tabbedPane.indexOfComponent(userManagerPanel), false);
         }
     }
 
@@ -455,7 +455,6 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
     }
 
     private void refreshLockedRecordsList() {
-        
     }
 
     @Action
@@ -466,6 +465,16 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public void updateUserAction() {
         User user = (User) usersList.getSelectedValue();
+        boolean okToChange;
+
+        if (user.getUserRightLevel() == Globals.UserRightLevels.SUPERVISOR && (Globals.UserRightLevels) userRightLevelComboBox.getSelectedItem()!= Globals.UserRightLevels.SUPERVISOR) {
+            okToChange = canRemoveSupervisor(user);
+            if (!okToChange) {
+                JOptionPane.showInternalMessageDialog(this, "Not allowed to change user level of the last supervisor user.");
+                return;
+            }
+        }
+
         int index = usersList.getSelectedIndex();
         user.setUserRightLevel((Globals.UserRightLevels) userRightLevelComboBox.getSelectedItem());
         user.setEmail(emailTextField.getText());
@@ -506,8 +515,15 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public void deleteUserAction() {
         User user = (User) usersList.getSelectedValue();
+        boolean okToDelete = true;
+        if (user.getUserRightLevel() == Globals.UserRightLevels.SUPERVISOR) {
+            okToDelete = canRemoveSupervisor(user);
+            if (!okToDelete) {
+                JOptionPane.showInternalMessageDialog(this, "Not allowed to delete the last supervisor user.");
+            }
+        }
         int id = user.getID();
-        if (id > 0) {
+        if (okToDelete && id > 0) {
             try {
                 canreg.client.CanRegClientApp.getApplication().deleteRecord(id, "USERS");
             } catch (SecurityException ex) {
@@ -517,5 +533,19 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             }
         }
         refreshUsersList();
+    }
+
+    private boolean canRemoveSupervisor(User user) {
+        boolean ok = true;
+        int numberOfSupervisors = 0;
+        for (User tempUser : users) {
+            if (tempUser.getUserRightLevel() == Globals.UserRightLevels.SUPERVISOR) {
+                numberOfSupervisors++;
+            }
+        }
+        if (numberOfSupervisors == 1) {
+            ok = false;
+        }
+        return ok;
     }
 }
