@@ -886,7 +886,7 @@ public class CanRegClientView extends FrameView {
     @Action
     public void showCanRegHelpFile() {
         File file = new File("doc");
-        BareBonesBrowserLaunch.openURL("file:" + file.getAbsolutePath() + "/CanReg5-functionality.htm");
+        BareBonesBrowserLaunch.openURL("file:" + file.getAbsolutePath() + Globals.FILE_SEPARATOR + Globals.CANREG_HELP_FILE_NAME);
     }
 
     /**
