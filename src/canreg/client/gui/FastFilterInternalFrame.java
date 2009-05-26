@@ -94,6 +94,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         variableComboBox.setName("variableComboBox"); // NOI18N
 
         operationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        operationComboBox.setToolTipText(resourceMap.getString("operationComboBox.toolTipText")); // NOI18N
         operationComboBox.setName("operationComboBox"); // NOI18N
 
         valueTextField.setText(resourceMap.getString("valueTextField.text")); // NOI18N
@@ -182,7 +183,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         );
         filterPanelLayout.setVerticalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
         );
 
         cancelButton.setAction(actionMap.get("cancelAction")); // NOI18N
@@ -298,7 +299,7 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
     private javax.swing.JLabel variableLabel;
     // End of variables declaration//GEN-END:variables
     private void initValues() {
-        String[] operators = {">", ">=", "=", "<=", "<", "LIKE" };
+        String[] operators = {"=", "<>",">", "<", ">=", "<=", "BETWEEN", "LIKE", "IN" };
         operationComboBox.setModel(new DefaultComboBoxModel(operators));
         operationComboBox.setSelectedIndex(2);
         // Get the system description
