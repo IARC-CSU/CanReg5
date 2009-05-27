@@ -251,6 +251,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         saveAllButton = new javax.swing.JButton();
         printButton = new javax.swing.JButton();
         showObsoleteRecordsCheckBox = new javax.swing.JCheckBox();
+        jButton1 = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -298,6 +299,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         showObsoleteRecordsCheckBox.setText(resourceMap.getString("showObsoleteRecordsCheckBox.text")); // NOI18N
         showObsoleteRecordsCheckBox.setName("showObsoleteRecordsCheckBox"); // NOI18N
 
+        jButton1.setAction(actionMap.get("changePatientID")); // NOI18N
+        jButton1.setName("jButton1"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -306,9 +310,11 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 .addComponent(addTumourRecordButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addpatientRecordButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(6, 6, 6)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(showObsoleteRecordsCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addComponent(printButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveAllButton)
@@ -321,7 +327,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 .addComponent(addpatientRecordButton)
                 .addComponent(saveAllButton)
                 .addComponent(printButton)
-                .addComponent(showObsoleteRecordsCheckBox))
+                .addComponent(showObsoleteRecordsCheckBox)
+                .addComponent(jButton1))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -341,7 +348,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 603, Short.MAX_VALUE)
+                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -499,6 +506,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addTumourRecordButton;
     private javax.swing.JButton addpatientRecordButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTabbedPane patientTabbedPane;
     private javax.swing.JButton printButton;
@@ -819,5 +827,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     @Action
     public void toggleShowObsoleteRecords() {
         refreshShowObsolete();
+    }
+
+    @Action
+    public void changePatientID() {
+        
     }
 }
