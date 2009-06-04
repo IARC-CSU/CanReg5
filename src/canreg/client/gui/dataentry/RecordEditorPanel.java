@@ -14,6 +14,7 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DatabaseVariablesListElementPositionSorter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.Tools;
 import canreg.common.qualitycontrol.CheckResult;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
 import canreg.server.database.DatabaseRecord;
@@ -30,8 +31,8 @@ import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -279,7 +280,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         dataPanel.removeAll();
 
         variableEditorPanels =
-                new TreeMap();
+                new LinkedHashMap();
 
         if (panelType == panelTypes.PATIENT) {
             tableName = Globals.PATIENT_TABLE_NAME;
@@ -292,7 +293,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         }
 
 
-        Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new TreeMap<Integer, VariableEditorGroupPanel>();
+        Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();
 
         variablesInTable =
                 canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
@@ -351,12 +352,14 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         }
 // Iterate trough groups
 
-        Iterator<Integer> iterator = groupIDtoPanelMap.keySet().iterator();
-        while (iterator.hasNext()) {
-            Integer groupID = iterator.next();
+        // Iterator<Integer> iterator = groupIDtoPanelMap.keySet().iterator();
+        for (DatabaseGroupsListElement groupListElement : Tools.getGroupsListElements(doc, Globals.NAMESPACE)) {
+            int groupID = groupListElement.getGroupIndex();
             JPanel panel = groupIDtoPanelMap.get(groupID);
-            dataPanel.add(panel);
-            panel.setVisible(true);
+            if (panel != null) {
+                dataPanel.add(panel);
+                panel.setVisible(true);
+            }
         }
 
         if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
