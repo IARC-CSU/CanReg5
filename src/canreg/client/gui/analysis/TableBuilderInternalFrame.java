@@ -14,7 +14,8 @@ import cachingtableapi.DistributedTableDescription;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.LocalSettings;
-import canreg.client.analysis.AgeSpecificFinalTableBuilder;
+import canreg.client.analysis.AgeSpecificCasesPerHundredThousandTableBuilder;
+import canreg.client.analysis.AgeSpecificCasesTableBuilder;
 import canreg.client.analysis.ConfigFields;
 import canreg.client.analysis.ConfigFieldsReader;
 import canreg.client.analysis.PopulationPyramidTableBuilder;
@@ -111,6 +112,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         midYearTextField = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         numberOfYearsTextField = new javax.swing.JTextField();
+        warningLabel = new javax.swing.JLabel();
         populationDatasetChooserPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -203,8 +205,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(previewLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE))
+                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -213,6 +215,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         rangePanel.setName("rangePanel"); // NOI18N
 
         startYearChooser.setName("startYearChooser"); // NOI18N
+        startYearChooser.setStartYear(-292278994);
         startYearChooser.setValue(1999);
         startYearChooser.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
@@ -226,7 +229,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         endYearLabel.setText(resourceMap.getString("endYearLabel.text")); // NOI18N
         endYearLabel.setName("endYearLabel"); // NOI18N
 
+        endYearChooser.setDayChooser(null);
         endYearChooser.setName("endYearChooser"); // NOI18N
+        endYearChooser.setStartYear(-292278994);
         endYearChooser.setValue(2001);
         endYearChooser.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
@@ -246,23 +251,30 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         numberOfYearsTextField.setEditable(false);
         numberOfYearsTextField.setName("numberOfYearsTextField"); // NOI18N
 
+        warningLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        warningLabel.setText(resourceMap.getString("warningLabel.text")); // NOI18N
+        warningLabel.setName("warningLabel"); // NOI18N
+
         javax.swing.GroupLayout rangePanelLayout = new javax.swing.GroupLayout(rangePanel);
         rangePanel.setLayout(rangePanelLayout);
         rangePanelLayout.setHorizontalGroup(
             rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(rangePanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rangePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addComponent(endYearLabel)
-                    .addComponent(startYearLabel)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 201, Short.MAX_VALUE)
-                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(startYearChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(endYearChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(numberOfYearsTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-                    .addComponent(midYearTextField, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(warningLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
+                    .addGroup(rangePanelLayout.createSequentialGroup()
+                        .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(endYearLabel)
+                            .addComponent(startYearLabel)
+                            .addComponent(jLabel7))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 201, Short.MAX_VALUE)
+                        .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(startYearChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(endYearChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(numberOfYearsTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                            .addComponent(midYearTextField, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
         rangePanelLayout.setVerticalGroup(
@@ -284,7 +296,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(numberOfYearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(236, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(warningLabel)
+                .addContainerGap(224, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("rangePanel.TabConstraints.tabTitle"), rangePanel); // NOI18N
@@ -318,7 +332,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -338,14 +352,14 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(filterPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(96, Short.MAX_VALUE))
+                .addContainerGap(176, Short.MAX_VALUE))
         );
         filterPanelLayout.setVerticalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(filterPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(82, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("filterPanel.TabConstraints.tabTitle"), filterPanel); // NOI18N
@@ -358,6 +372,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         jButton1.setName("jButton1"); // NOI18N
 
         jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
+        jButton2.setEnabled(false);
         jButton2.setName("jButton2"); // NOI18N
 
         javax.swing.GroupLayout writeOutPanelLayout = new javax.swing.GroupLayout(writeOutPanel);
@@ -378,7 +393,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
-                .addContainerGap(287, Short.MAX_VALUE))
+                .addContainerGap(295, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("writeOutPanel.TabConstraints.tabTitle"), writeOutPanel); // NOI18N
@@ -396,7 +411,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -424,6 +439,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private void startYearChooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_startYearChooserPropertyChange
         if (startYearChooser.getYear() > endYearChooser.getYear()) {
             endYearChooser.setYear(startYearChooser.getYear());
+            warningLabel.setText("Start cannot be before end - moving end.");
+        } else if (startYearChooser.getYear() <= endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE) {
+            endYearChooser.setYear(startYearChooser.getYear() + Globals.MAX_POPULATION_DATASETS_IN_TABLE);
+            warningLabel.setText("Max span allowed is " + Globals.MAX_POPULATION_DATASETS_IN_TABLE + " - moving end.");
         }
         updateRangeFields();
     }//GEN-LAST:event_startYearChooserPropertyChange
@@ -431,6 +450,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private void endYearChooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_endYearChooserPropertyChange
         if (startYearChooser.getYear() > endYearChooser.getYear()) {
             startYearChooser.setYear(endYearChooser.getYear());
+            warningLabel.setText("End cannot be before start - moving start.");
+        } else if (startYearChooser.getYear() <= endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE) {
+            startYearChooser.setYear(endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE);
+            warningLabel.setText("Max span allowed is " + Globals.MAX_POPULATION_DATASETS_IN_TABLE + " - moving start.");
         }
         updateRangeFields();
     }//GEN-LAST:event_endYearChooserPropertyChange
@@ -486,6 +509,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JPanel tableTypePanel;
     private javax.swing.JScrollPane tableTypeScrollPane;
     private javax.swing.JLabel typeLabel;
+    private javax.swing.JLabel warningLabel;
     private javax.swing.JPanel writeOutPanel;
     // End of variables declaration//GEN-END:variables
 
@@ -610,7 +634,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "No table type selected.", "No table type selected.", JOptionPane.ERROR_MESSAGE);
             return;
         } else if (tble.getEngineName().equalsIgnoreCase("incidencerates")) {
-            tableBuilder = new AgeSpecificFinalTableBuilder();
+            tableBuilder = new AgeSpecificCasesPerHundredThousandTableBuilder();
+        } else if (tble.getEngineName().equalsIgnoreCase("numberofcases")) {
+            tableBuilder = new AgeSpecificCasesTableBuilder();
         } else if (tble.getEngineName().equalsIgnoreCase("populationpyramids")) {
             tableBuilder = new PopulationPyramidTableBuilder();
         }
@@ -622,95 +648,100 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Table type not yet implemented.", "Table type not yet implemented.", JOptionPane.ERROR_MESSAGE);
             return;
         } else {
-            String fileName = null;
-            // Choose file name;
-            int returnVal = chooser.showSaveDialog(this);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                try {
-                    localSettings.setProperty("tables_path", chooser.getSelectedFile().getCanonicalPath());
-                    fileName = chooser.getSelectedFile().getAbsolutePath();
-                } catch (IOException ex) {
-                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } else {
-                // cancelled
-                return;
-            }
 
             int startYear = startYearChooser.getValue();
             int endYear = endYearChooser.getValue();
             PopulationDataset[] populations = getSelectedPopulations();
             PopulationDataset[] standardPopulations = new PopulationDataset[populations.length];
-            int i = 0;
-            String populationFilterString = "";
-            for (PopulationDataset pop : populations) {
-                int stdPopID = pop.getWorldPopulationID();
-                standardPopulations[i++] = populationDatasetsMap.get(stdPopID);
-                if (populationFilterString.trim().length() == 0) {
-                    populationFilterString = pop.getFilter();
-                } else if (!populationFilterString.equalsIgnoreCase(pop.getFilter())) {
-                    // population filters not matching on all the pds...
-                    filterError = true;
+
+            if (tableBuilder.areThesePopulationDatasetsOK(populations)) {
+                String fileName = null;
+                // Choose file name;
+                int returnVal = chooser.showSaveDialog(this);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        localSettings.setProperty("tables_path", chooser.getSelectedFile().getCanonicalPath());
+                        fileName = chooser.getSelectedFile().getAbsolutePath();
+                    } catch (IOException ex) {
+                        Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    // cancelled
+                    return;
                 }
-            }
-
-            Globals.StandardVariableNames[] variablesNeeded = tableBuilder.getVariablesNeeded();
-            if (variablesNeeded != null) {
-                for (Globals.StandardVariableNames standardVariableName : variablesNeeded) {
-                    variables.add(canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(standardVariableName.toString()));
-                }
-            }
-            DatabaseFilter filter = new DatabaseFilter();
-            String tableName = "both";
-            String filterString = rangeFilterPanel.getFilter().trim();
-
-            if (filterString.length() != 0) {
-                filterString += " AND ";
-            }
-
-            if (populationFilterString.length() != 0) {
-                filterString += populationFilterString + " AND ";
-            }
-
-            DatabaseVariablesListElement incidenceDate = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.IncidenceDate.toString());
-            filterString += incidenceDate.getDatabaseVariableName() + " >= " + startYear * 10000 + " AND " + incidenceDate.getDatabaseVariableName() + " < " + (endYear + 1) * 10000;
-            filter.setFilterString(filterString);
-
-            System.out.println(filterString);
-
-            filter.setQueryType(DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR);
-            filter.setDatabaseVariables(variables);
-            DistributedTableDataSourceClient tableDataSource;
-            Object[][] incidenceData = null;
-            try {
-                tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
-                tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
-                if (tableDatadescription.getRowCount() > 0) {
-                    incidenceData = tableDataSource.retrieveRows(0, tableDatadescription.getRowCount());
-                }
-                String heading = canreg.client.CanRegClientApp.getApplication().getSystemName() + " (" + startYear;
-                if (endYear != startYear) {
-                    heading += "-" + endYear;
-                }
-                heading += ")";
-                LinkedList<String> filesGenerated = tableBuilder.buildTable(heading, fileName, startYear, endYear, incidenceData, populations, standardPopulations, tble.getConfigFields(), tble.getEngineParameters());
-                JOptionPane.showMessageDialog(this, "Tables built.", "Tables built.", JOptionPane.INFORMATION_MESSAGE);
-
-                // Opening the resulting files...
-                for (String resultFileName : filesGenerated) {
-                    canreg.common.Tools.openFile(resultFileName);
+                
+                int i = 0;
+                String populationFilterString = "";
+                for (PopulationDataset pop : populations) {
+                    int stdPopID = pop.getWorldPopulationID();
+                    standardPopulations[i++] = populationDatasetsMap.get(stdPopID);
+                    if (populationFilterString.trim().length() == 0) {
+                        populationFilterString = pop.getFilter();
+                    } else if (!populationFilterString.equalsIgnoreCase(pop.getFilter())) {
+                        // population filters not matching on all the pds...
+                        filterError = true;
+                    }
                 }
 
-            } catch (SQLException ex) {
-                Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
-                Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
-                Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (Exception ex) {
-                Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                Globals.StandardVariableNames[] variablesNeeded = tableBuilder.getVariablesNeeded();
+                if (variablesNeeded != null) {
+                    for (Globals.StandardVariableNames standardVariableName : variablesNeeded) {
+                        variables.add(canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(standardVariableName.toString()));
+                    }
+                }
+                DatabaseFilter filter = new DatabaseFilter();
+                String tableName = "both";
+                String filterString = rangeFilterPanel.getFilter().trim();
 
+                if (filterString.length() != 0) {
+                    filterString += " AND ";
+                }
+
+                if (populationFilterString.length() != 0) {
+                    filterString += populationFilterString + " AND ";
+                }
+
+                DatabaseVariablesListElement incidenceDate = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.IncidenceDate.toString());
+                filterString += incidenceDate.getDatabaseVariableName() + " >= " + startYear * 10000 + " AND " + incidenceDate.getDatabaseVariableName() + " < " + (endYear + 1) * 10000;
+                filter.setFilterString(filterString);
+
+                System.out.println(filterString);
+
+                filter.setQueryType(DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR);
+                filter.setDatabaseVariables(variables);
+                DistributedTableDataSourceClient tableDataSource;
+                Object[][] incidenceData = null;
+                try {
+                    tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
+                    tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
+                    if (tableDatadescription.getRowCount() > 0) {
+                        incidenceData = tableDataSource.retrieveRows(0, tableDatadescription.getRowCount());
+                    }
+                    String heading = canreg.client.CanRegClientApp.getApplication().getSystemName() + " (" + startYear;
+                    if (endYear != startYear) {
+                        heading += "-" + endYear;
+                    }
+                    heading += ")";
+                    LinkedList<String> filesGenerated = tableBuilder.buildTable(heading, fileName, startYear, endYear, incidenceData, populations, standardPopulations, tble.getConfigFields(), tble.getEngineParameters());
+                    JOptionPane.showMessageDialog(this, "Tables built.", "Tables built.", JOptionPane.INFORMATION_MESSAGE);
+
+                    // Opening the resulting files...
+                    for (String resultFileName : filesGenerated) {
+                        canreg.common.Tools.openFile(resultFileName);
+                    }
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SecurityException ex) {
+                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Population set not compatible.", "No tables built.", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 }
