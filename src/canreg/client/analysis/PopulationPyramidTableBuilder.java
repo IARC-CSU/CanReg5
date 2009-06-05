@@ -318,4 +318,13 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
         }
         return generatedFiles;
     }
+
+    @Override
+    public boolean areThesePopulationDatasetsOK(PopulationDataset[] sets) {
+        boolean OK = true;
+        for (PopulationDataset pds : sets) {
+            OK = OK && pds.getAgeGroupStructure().getSizeOfGroups() == 5;
+        }
+        return OK;
+    }
 }

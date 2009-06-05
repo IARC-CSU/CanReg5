@@ -9,6 +9,7 @@ import java.text.NumberFormat;
 import java.io.File;
 import java.io.PrintStream;
 import java.io.FileWriter;
+import java.util.Date;
 
 /**
 
@@ -23,7 +24,7 @@ import java.io.FileWriter;
  * @author Morten Johannes Ervik
  * @version 1.0
  */
-public class AgeSpecificFinalTableBuilder extends TableBuilder {
+public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder {
 
     private static Globals.StandardVariableNames[] variablesNeeded = {
         Globals.StandardVariableNames.Sex,
@@ -54,9 +55,9 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
 
         LinkedList<String> generatedFiles = new LinkedList<String>();
 
-        String footerString = "CanReg5";
+        String footerString = "Table built " + new Date() + " by CanReg5-beta.";
 
-        String notesString = "Notes?";
+        String notesString = "";
 
         double tableFontSize = 7.5;
         String font = "Times";
@@ -170,20 +171,20 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
         populationArray = new double[numberOfSexes][numberOfAgeGroups];
         foundAgeGroups = new boolean[numberOfAgeGroups];
 
-        for (PopulationDataset population:populations){
+        for (PopulationDataset population : populations) {
             population.addPopulationDataToArrayForTableBuilder(populationArray, foundAgeGroups, new AgeGroupStructure(5, 85, 1));
         }
 
         standardPopulationArray = new double[numberOfSexes][numberOfAgeGroups];
 
-        for (PopulationDataset stdPopulation:standardPopulations){
+        for (PopulationDataset stdPopulation : standardPopulations) {
             stdPopulation.addPopulationDataToArrayForTableBuilder(standardPopulationArray, null, new AgeGroupStructure(5, 85, 1));
         }
 
         // standardize population array
-        for (int sexNumber = 0; sexNumber < numberOfSexes; sexNumber++){
-            for (int ageGroupNumber = 0; ageGroupNumber<numberOfAgeGroups; ageGroupNumber++){
-                standardPopulationArray[sexNumber][ageGroupNumber]=(standardPopulationArray[sexNumber][ageGroupNumber]/standardPopulationArray[sexNumber][numberOfAgeGroups-1])*100000;
+        for (int sexNumber = 0; sexNumber < numberOfSexes; sexNumber++) {
+            for (int ageGroupNumber = 0; ageGroupNumber < numberOfAgeGroups; ageGroupNumber++) {
+                standardPopulationArray[sexNumber][ageGroupNumber] = (standardPopulationArray[sexNumber][ageGroupNumber] / standardPopulationArray[sexNumber][numberOfAgeGroups - 1]) * 100000;
             }
         }
 
@@ -207,7 +208,7 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
         String basisString;
         String casesString;
 
-        int sex, icdNumber, year, icdIndex, yearIndex, ageGroup, basis, cases;
+        int sex, icdNumber, year, icdIndex, yearIndex, ageGroup, ageInt, basis, cases;
 
         for (Object[] line : incidenceData) {
 
@@ -286,12 +287,16 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
             year = Integer.parseInt(yearString);
             yearIndex = year - years[0];
             ageString = line[AGE_COLUMN].toString();
+            ageInt = Integer.parseInt(ageString);
 
-            ageGroup = populations[yearIndex].getAgeGroupIndex(Integer.parseInt(ageString));
-
-            // Adjust age group
-            if (populations[yearIndex].getAgeGroupStructure().getSizeOfFirstGroup()!=1){
-                ageGroup+=1;
+            if (ageInt == unknownAgeInt) {
+                ageGroup = unknownAgeGroupIndex;
+            } else {
+                ageGroup = populations[yearIndex].getAgeGroupIndex(ageInt);
+                // Adjust age group
+                if (populations[yearIndex].getAgeGroupStructure().getSizeOfFirstGroup() != 1) {
+                    ageGroup += 1;
+                }
             }
 
             // Extract cases
@@ -310,40 +315,40 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
                 if (sex <= numberOfSexes && icdIndex >= 0 &&
                         icdIndex <= cancerGroupsLocal.length) {
 
-                    casesArray[icdIndex][sex - 1][ageGroup]+=cases;
+                    casesArray[icdIndex][sex - 1][ageGroup] += cases;
 
                     //
                     if (basis == 00) {
-                        DCO[sex - 1][icdIndex]+=cases;
+                        DCO[sex - 1][icdIndex] += cases;
                     } else if (basis >= 10 && basis <= 19) {
-                        MV[sex - 1][icdIndex]+=cases;
+                        MV[sex - 1][icdIndex] += cases;
                     }
                 } else {
                     if (otherCancerGroupsIndex >= 0) {
                         casesArray[otherCancerGroupsIndex][sex -
-                                1][ageGroup]+=cases;
+                                1][ageGroup] += cases;
                     }
                 }
                 if (allCancerGroupsIndex >= 0) {
-                    casesArray[allCancerGroupsIndex][sex - 1][ageGroup]+=cases;
+                    casesArray[allCancerGroupsIndex][sex - 1][ageGroup] += cases;
                     if (basis == 0) {
-                        DCO[sex - 1][allCancerGroupsIndex]+=cases;
+                        DCO[sex - 1][allCancerGroupsIndex] += cases;
                     } else if (basis >= 10 && basis <= 19) {
-                        MV[sex - 1][allCancerGroupsIndex]+=cases;
+                        MV[sex - 1][allCancerGroupsIndex] += cases;
                     }
                 }
                 if (allCancerGroupsButSkinIndex >= 0 &&
                         skinCancerGroupIndex >= 0 &&
                         icdIndex != skinCancerGroupIndex) {
                     casesArray[allCancerGroupsButSkinIndex][sex -
-                            1][ageGroup]+=cases;
+                            1][ageGroup] += cases;
                     if (basis == 0) {
-                        DCO[sex - 1][allCancerGroupsButSkinIndex]+=cases;
+                        DCO[sex - 1][allCancerGroupsButSkinIndex] += cases;
                     } else if (basis >= 10 && basis <= 19) {
-                        MV[sex - 1][allCancerGroupsButSkinIndex]+=cases;
+                        MV[sex - 1][allCancerGroupsButSkinIndex] += cases;
                     }
                 }
-                records+=cases;
+                records += cases;
                 if (records % recordsPerFeedback == 0) {
                     System.out.println("Processing record number: " + records);
                 }
@@ -1070,5 +1075,14 @@ public class AgeSpecificFinalTableBuilder extends TableBuilder {
      */
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
+    }
+
+    @Override
+    public boolean areThesePopulationDatasetsOK(PopulationDataset[] sets) {
+        boolean OK = true;
+        for (PopulationDataset pds : sets) {
+            OK = OK && pds.getAgeGroupStructure().getSizeOfGroups() == 5;
+        }
+        return OK;
     }
 }
