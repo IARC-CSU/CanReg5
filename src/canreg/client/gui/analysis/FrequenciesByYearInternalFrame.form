@@ -35,8 +35,8 @@
                       <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jButton1" pref="269" max="32767" attributes="0"/>
-                          <Component id="variablesChooserPanel" alignment="0" pref="269" max="32767" attributes="0"/>
+                          <Component id="jButton1" pref="349" max="32767" attributes="0"/>
+                          <Component id="variablesChooserPanel" alignment="0" pref="349" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -58,7 +58,7 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="resultPanel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="19" max="32767" attributes="0"/>
+              <EmptySpace pref="23" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

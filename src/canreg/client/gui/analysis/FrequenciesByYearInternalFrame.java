@@ -184,6 +184,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             super(app);
             tableName = rangeFilterPanel.getSelectedTable();
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
+            filter.setRange(rangeFilterPanel.getRange());
             filter.setQueryType(DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR);
             chosenVariables = variablesChooserPanel.getSelectedVariables();
             filter.setDatabaseVariables(chosenVariables);

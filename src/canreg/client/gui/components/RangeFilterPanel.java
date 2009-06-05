@@ -108,6 +108,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
      */
     public void setTableChooserVisible(boolean visible) {
         tableChooserPanel.setVisible(visible);
+        tableChooserComboBox.setSelectedItem("Both");
     }
 
     /**
