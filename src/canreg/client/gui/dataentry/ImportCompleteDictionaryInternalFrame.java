@@ -195,10 +195,10 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 // TODO add your handling code here:
 }//GEN-LAST:event_browseButtonActionPerformed
 
-/**
- * 
- */
-@Action
+    /**
+     *
+     */
+    @Action
     public void browseAction() {
         int returnVal = chooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -224,7 +224,7 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             String text = new String();
             String line = br.readLine();
 
-            while (line != null && i<Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW) {
+            while (line != null && i < Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW) {
                 text += line + "\n";
                 line = br.readLine();
                 i++;
@@ -255,10 +255,12 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         this.dispose();
         return new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
     }
-    
+
     private class ImportActionTask extends org.jdesktop.application.Task<Object, Void> {
+
         boolean cr4dictionary;
         String fileName;
+
         ImportActionTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
@@ -270,6 +272,7 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             cr4dictionary = cr4dictionaryCheckBox.isSelected();
             fileName = fileNameTextField.getText().trim();
         }
+
         @Override
         protected Object doInBackground() {
             // Your Task's code here.  This method runs
@@ -307,7 +310,7 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
                     // read next line;
                     line = br.readLine();
-                    
+
                     // read untill blank line
                     while (line != null && line.trim().length() > 0) {
                         if (cr4dictionary) {
@@ -320,7 +323,6 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     if (dictionaryString.trim().length() > 0) {
                         try {
                             canreg.client.dataentry.DictionaryHelper.replaceDictionary(dictionaryID, dictionaryString, CanRegClientApp.getApplication());
-                            CanRegClientApp.getApplication().refreshDictionary();
                             dictionaryString = new String();
                         } catch (RemoteException ex) {
                             Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -333,7 +335,9 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                         line = br.readLine();
                     }
                 }
-                
+
+                CanRegClientApp.getApplication().refreshDictionary();
+
             } catch (FileNotFoundException fileNotFoundException) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not preview file: \'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, fileNotFoundException);
@@ -341,7 +345,7 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 try {
-                    br.close();                 
+                    br.close();
 
                 } catch (IOException ex) {
                     Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
@@ -349,19 +353,19 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             }
             return null;  // return your result
         }
-        @Override protected void succeeded(Object result) {
+
+        @Override
+        protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
-           if (result == null) {
-                    File file = new File(fileName);    
-                    localSettings.setProperty("dictionary_import_path", file.getParent());
-                    localSettings.writeSettings();
+            if (result == null) {
+                File file = new File(fileName);
+                localSettings.setProperty("dictionary_import_path", file.getParent());
+                localSettings.writeSettings();
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully imported dictionaries from file.", "Dictionary successfully imported.", JOptionPane.INFORMATION_MESSAGE);
-           }
+            }
         }
     }
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
     private javax.swing.JPanel chooseFilePanel;
@@ -375,5 +379,4 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private javax.swing.JScrollPane previewScrollPane;
     private javax.swing.JTextArea previewTextArea;
     // End of variables declaration//GEN-END:variables
-
 }

@@ -210,13 +210,13 @@ public class DictionaryHelper {
      */
     public static void replaceDictionary(int dictionaryID, String str, CanRegClientApp app) throws RemoteException {
         Vector<DictionaryEntry> dictionaryEntries = parseDictionaryText(dictionaryID, str);
-        Map<String, String> dictionaryEntriesMap = new LinkedHashMap<String, String>();
+        // Map<String, String> dictionaryEntriesMap = new LinkedHashMap<String, String>();
 
         boolean removed = clearDictionary(dictionaryID, app);
 
         for (DictionaryEntry entry : dictionaryEntries) {
             app.saveDictionaryEntry(entry);
-            dictionaryEntriesMap.put(entry.getCode(), entry.getDescription());
+            // dictionaryEntriesMap.put(entry.getCode(), entry.getDescription());
         }
     }
 

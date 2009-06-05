@@ -199,6 +199,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JPanel oneFieldPanel;
     private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
+
     private void initValues() {
         doc = CanRegClientApp.getApplication().getDatabseDescription();
         // variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
@@ -234,21 +235,21 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
 
                 localSettings.setProperty("dictionary_import_path", file.getParent());
                 localSettings.writeSettings();
-                
+
                 bw = new BufferedWriter(new FileWriter(file));
-                
-                for (DatabaseDictionaryListElement dbdle:dictionariesInDB){
-                    bw.write("#"+dbdle.getDictionaryID()+"\t----"+dbdle.getName()+"\n");
+
+                for (DatabaseDictionaryListElement dbdle : dictionariesInDB) {
+                    bw.write("#" + dbdle.getDictionaryID() + "\t----" + dbdle.getName() + "\n");
                     chooseDictionaryComboBox.setSelectedItem(dbdle);
                     refreshSelectedDictionaryAction();
-                    bw.write(editorTextArea.getText()+"\n");
+                    bw.write(editorTextArea.getText() + "\n");
                 }
                 bw.flush();
                 bw.close();
             } catch (IOException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-            } finally{
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully wrote the dictionaries to: "+fileName, "Dictionaries successfully written to file.", JOptionPane.INFORMATION_MESSAGE);
+            } finally {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully wrote the dictionaries to: " + fileName, "Dictionaries successfully written to file.", JOptionPane.INFORMATION_MESSAGE);
             }
         }
         chooseDictionaryComboBox.setSelectedIndex(selectedDbdle);
@@ -297,17 +298,17 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
             dictionaryString = editorTextArea.getText().trim();
             dbdle = (DatabaseDictionaryListElement) chooseDictionaryComboBox.getSelectedItem();
             errors = canreg.client.dataentry.DictionaryHelper.testDictionary(dbdle, dictionaryString);
-            if (errors.size()==0){
+            if (errors.size() == 0) {
                 testOK = true;
             } else {
                 testOK = false;
                 String errorString = new String();
-                Iterator<Integer> iterator =  errors.keySet().iterator();
-                while (iterator.hasNext()){
+                Iterator<Integer> iterator = errors.keySet().iterator();
+                while (iterator.hasNext()) {
                     Integer line = iterator.next();
-                    errorString += errors.get(line)+"\n";
+                    errorString += errors.get(line) + "\n";
                 }
-                JOptionPane.showInternalMessageDialog(rootPane, errorString,"Error",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showInternalMessageDialog(rootPane, errorString, "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -317,11 +318,10 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
             // on a background thread, so don't reference
             // the Swing GUI from here.
 
-            if (testOK&&dictionaryString.trim().length() > 0) {
+            if (testOK && dictionaryString.trim().length() > 0) {
                 int dictionaryID = dbdle.getDictionaryID();
                 try {
                     canreg.client.dataentry.DictionaryHelper.replaceDictionary(dictionaryID, dictionaryString, CanRegClientApp.getApplication());
-                    CanRegClientApp.getApplication().refreshDictionary();
                 } catch (RemoteException ex) {
                     Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -337,7 +337,16 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
             // the result computed by doInBackground().
             if (result == null) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully updated dictionary: " + dbdle.getName() + ".", "Dictionary successfully updated.", JOptionPane.INFORMATION_MESSAGE);
+                try {
+                    CanRegClientApp.getApplication().refreshDictionary();
+                } catch (SecurityException ex) {
+                    Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+            dictionaryString = null;
+            dbdle = null;
         }
     }
 
@@ -351,7 +360,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         String str = "";
         if (dic != null) {
             // Map sortedMap = new TreeMap(map);
-            Map<String,DictionaryEntry> map = dic.getDictionaryEntries();
+            Map<String, DictionaryEntry> map = dic.getDictionaryEntries();
             Iterator<Entry<String, DictionaryEntry>> iterator = map.entrySet().iterator();
 
             while (iterator.hasNext()) {
