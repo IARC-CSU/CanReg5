@@ -300,6 +300,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         showObsoleteRecordsCheckBox.setName("showObsoleteRecordsCheckBox"); // NOI18N
 
         jButton1.setAction(actionMap.get("changePatientID")); // NOI18N
+        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -314,7 +315,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(showObsoleteRecordsCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addComponent(printButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveAllButton)
@@ -339,7 +340,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(recordSplitPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE))
+                    .addComponent(recordSplitPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 719, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -348,7 +349,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -800,6 +801,24 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         return tumourDatabaseRecord;
     }
 
+    private DatabaseRecord associatePatientRecordToPatientID(DatabaseRecord patientDatabaseRecord, String patientID) {
+        patientDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName(),
+                patientID);
+        return patientDatabaseRecord;
+    }
+
+    private DatabaseRecord associateTumourRecordToPatientID(DatabaseRecord tumourDatabaseRecord, String patientID) {
+        tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName(),
+                patientID);
+        tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName(),
+                patientID);
+        tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString()).getDatabaseVariableName(),
+                Globals.RECORD_STATUS_PENDING_CODE);
+        tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUnduplicationStatus.toString()).getDatabaseVariableName(),
+                Globals.UNDUPLICATION_NOT_DONE_CODE);
+        return tumourDatabaseRecord;
+    }
+
     private void refreshShowObsolete() {
         boolean showObsolete = showObsoleteRecordsCheckBox.isSelected();
         for (Component comp : patientTabbedPane.getComponents()) {
@@ -831,6 +850,39 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
     @Action
     public void changePatientID() {
-        
+        String requestedPatientID = JOptionPane.showInputDialog(null, "Please enter Patient ID:", "Change to which PatientID?", JOptionPane.QUESTION_MESSAGE);
+        if (requestedPatientID != null) {
+            /*try {
+            patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecordByID(requestedPatientID)
+            } catch (SQLException ex) {
+            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {
+            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+             */ try {
+                for (DatabaseRecord patient : patientRecords) {
+                    patient = associatePatientRecordToPatientID(patient, requestedPatientID);
+                    saveRecord(patient);
+                }
+                for (DatabaseRecord tumour : tumourRecords) {
+                    tumour = associateTumourRecordToPatientID(tumour, requestedPatientID);
+                    saveRecord(tumour);
+                }
+                JOptionPane.showInternalMessageDialog(this, "Record moved.");
+            } catch (SecurityException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showInternalMessageDialog(this, "No such patient ID.", "Failed", JOptionPane.WARNING_MESSAGE);
+        }
+
     }
 }

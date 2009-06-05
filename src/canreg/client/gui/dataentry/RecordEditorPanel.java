@@ -292,7 +292,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             personSearchPanel.setVisible(false);
         }
 
-
         Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();
 
         variablesInTable =
