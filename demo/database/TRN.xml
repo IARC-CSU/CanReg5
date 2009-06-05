@@ -158,12 +158,12 @@
       <ns3:name>Patient</ns3:name>
     </ns3:group>
     <ns3:group>
-      <ns3:group_id>2</ns3:group_id>
-      <ns3:name>Hospital</ns3:name>
-    </ns3:group>
-    <ns3:group>
       <ns3:group_id>3</ns3:group_id>
       <ns3:name>Tumour</ns3:name>
+    </ns3:group>
+    <ns3:group>
+      <ns3:group_id>2</ns3:group_id>
+      <ns3:name>Hospital</ns3:name>
     </ns3:group>
     <ns3:group>
       <ns3:group_id>4</ns3:group_id>

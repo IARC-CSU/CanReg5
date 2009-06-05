@@ -150,6 +150,9 @@ public class Globals {
     public static String DEFAULT_BACK_UP_EVERY = "7";
     public static int GLOBAL_PERSON_SEARCH_STEP_SIZE = 1;
     public static String CANREG_HELP_FILE_NAME = "CanReg5-functionality.html";
+    public static String RECORD_STATUS_PENDING_CODE = "0";
+    public static int UNDUPLICATION_NOT_DONE_CODE = 0;
+    public static int MAX_POPULATION_DATASETS_IN_TABLE = 50;
 
     /**
      * 
@@ -188,8 +191,8 @@ public class Globals {
         new AgeGroupStructure(5, 85),
         new AgeGroupStructure(5, 75),
         new AgeGroupStructure(5, 65),
-        new AgeGroupStructure(5, 75, 15),
-        new AgeGroupStructure(5, 65, 15),
+        new AgeGroupStructure(10, 75, 15),
+        new AgeGroupStructure(10, 65, 15),
         new AgeGroupStructure(5, 15, 1, 15)
     };
     /**

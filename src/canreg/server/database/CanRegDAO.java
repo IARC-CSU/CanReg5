@@ -94,6 +94,9 @@ public class CanRegDAO {
         Statement queryStatement = null;
         ResultSet results = null;
 
+        // rebuild dictionary map
+        dictionaryMap = buildDictionaryMap(doc);
+
         try {
             queryStatement = dbConnection.createStatement();
             results = queryStatement.executeQuery(strGetDictionaryEntries);

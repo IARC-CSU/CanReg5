@@ -30,6 +30,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     private boolean worldPopulationBool = false;
     private int worldPopulationID = 0;
     private LinkedList<PopulationDatasetsEntry> ageGroups;
+    private int UNKNOWN_AGE_GROUP_CODE = 99;
 
     /**
      * Creates a new instance of PopulationDatasetsEntry
@@ -39,7 +40,9 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
         ageGroups = new LinkedList<PopulationDatasetsEntry>();
     }
 
-
+    public void addUnkownAgeGroup(int sex, int count) {
+        ageGroups.add(new PopulationDatasetsEntry(UNKNOWN_AGE_GROUP_CODE, sex, count));
+    }
 
     /**
      * 

@@ -13,6 +13,8 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
     static String AGE_GROUP_KEY = "AGE_GROUP";
     static String COUNT_KEY = "COUNT";
     static String SEX_KEY = "SEX";
+    static int SEX_CODE_MALE = 1;
+    static int SEX_CODE_FEMALE = 2;
 
     private int ageGroup;
     private int count;

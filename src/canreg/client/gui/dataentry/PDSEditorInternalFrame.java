@@ -62,6 +62,10 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
             sourceTextField.setText(pds.getSource());
             descriptionTextArea.setText(pds.getDescription());
             ageGroupStructureComboBox.setSelectedItem(pds.getAgeGroupStructure());
+            if (ageGroupStructureComboBox.getSelectedItem() == null && pds.getAgeGroupStructure() != null) {
+                ageGroupStructureComboBox.addItem(pds.getAgeGroupStructure());
+                ageGroupStructureComboBox.setSelectedItem(pds.getAgeGroupStructure());
+            }
             dateTextField.setText("" + pds.getDate());
             refreshPopulationDataSetTable();
             lockedToggleButton.setSelected(true);
@@ -451,10 +455,10 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
     // TODO add your handling code here:
 }//GEN-LAST:event_lockedToggleButtonActionPerformed
 
-/**
- * 
- */
-@Action
+    /**
+     *
+     */
+    @Action
     public void filterWizardAction() {
 
         if (filterWizardInternalFrame.getParent() == null) {
@@ -474,20 +478,20 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
             filterWizardInternalFrame.setVisible(true);
         }
     }
-    
+
     /**
      * 
      */
     public void initValues() {
         // Get the system description
         doc = CanRegClientApp.getApplication().getDatabseDescription();
-        
+
         // variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
 
         filterWizardInternalFrame = new FastFilterInternalFrame();
         filterWizardInternalFrame.setTableName("Both");
         filterWizardInternalFrame.setActionListener(this);
-        
+
         ageGroupStructureComboBox.setModel(new javax.swing.DefaultComboBoxModel(Globals.defaultAgeGroupStructures));
         dateTextField = (JTextField) dateChooser.getDateEditor().getUiComponent();
         dateChooser.setDateFormatString(Globals.DATE_FORMAT_STRING);
@@ -510,14 +514,14 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
         lockedToggleButton.setSelected(true);
         lockTheFields();
         buildPDSfromTable();
-        try {if (pds.getPopulationDatasetID()<0){
-            CanRegClientApp.getApplication().saveNewPopulationDataset(pds);
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully saved population dataset: " + pds.getPopulationDatasetName() + ".", "Population dataset successfully saved.", JOptionPane.INFORMATION_MESSAGE);        
-        }
-        else {
-            Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.INFO, "Already saved... Updating.");
+        try {
+            if (pds.getPopulationDatasetID() < 0) {
+                CanRegClientApp.getApplication().saveNewPopulationDataset(pds);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully saved population dataset: " + pds.getPopulationDatasetName() + ".", "Population dataset successfully saved.", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.INFO, "Already saved... Updating.");
             // CanRegClientApp.getApplication().editRecord(pds);
-        }
+            }
         } catch (SecurityException ex) {
             Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
@@ -525,25 +529,25 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
         }
     }
 
-    private void buildPDSfromTable(){
-        if (pds==null){
+    private void buildPDSfromTable() {
+        if (pds == null) {
             pds = new PopulationDataset();
         } else {
             pds.flushAgeGroups();
         }
         pds.setPopulationDatasetName(nameTextField.getText().trim());
         pds.setSource(sourceTextField.getText().trim());
-        pds.setFilter(filterTextField.getText().trim());        
+        pds.setFilter(filterTextField.getText().trim());
         pds.setDescription(descriptionTextArea.getText().trim());
         pds.setAgeGroupStructure((AgeGroupStructure) ageGroupStructureComboBox.getSelectedItem());
         pds.setDate(Integer.parseInt(dateTextField.getText()));
         pds.setWorldPopulationBool(false);
         PopulationDataset wpds = (PopulationDataset) standardPopulationComboBox.getSelectedItem();
         pds.setWorldPopulationID(wpds.getWorldPopulationID());
-        
+
         int numberOfAgeGroups = pds.getAgeGroupStructure().getNumberOfAgeGroups();
 
-        if (populationDataSetTable.isEditing()){
+        if (populationDataSetTable.isEditing()) {
             populationDataSetTable.getCellEditor().stopCellEditing();
         }
 
@@ -557,11 +561,11 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Missing value in the pds...");
                 }
                 pds.addAgeGroup(new PopulationDatasetsEntry(ageGroup, sex, count));
-                System.out.println(sex+" - "+ageGroup + ": "+ count);
+                System.out.println(sex + " - " + ageGroup + ": " + count);
             }
         }
     }
-    
+
     /**
      * 
      */
@@ -593,10 +597,9 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
      */
     @Action
     public void otherAction() {
-        
     }
-    
-    private void lockTheFields(){
+
+    private void lockTheFields() {
         ageGroupStructureComboBox.setFocusable(!lockedToggleButton.isSelected());
         dateTextField.setFocusable(!lockedToggleButton.isSelected());
         detailsPanel.setFocusable(!lockedToggleButton.isSelected());
@@ -617,7 +620,7 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
     @Action
     public void deletePopulationDataSetAction() {
         int result = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you really want to delete this population dataset: " + pds.getPopulationDatasetName() + ".", "Do you really want to delete this population dataset.", JOptionPane.YES_NO_OPTION);
-        if (result == JOptionPane.YES_OPTION){
+        if (result == JOptionPane.YES_OPTION) {
             try {
                 CanRegClientApp.getApplication().deletePopulationDataset(pds.getPopulationDatasetID());
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully saved population dataset: " + pds.getPopulationDatasetName() + ".", "Population dataset successfully saved.", JOptionPane.INFORMATION_MESSAGE);
@@ -630,7 +633,6 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
             }
         }
     }
-        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox ageGroupStructureComboBox;
     private javax.swing.JLabel ageGroupStructureLabel;
@@ -660,7 +662,4 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JComboBox standardPopulationComboBox;
     private javax.swing.JLabel standardPopulationLabel;
     // End of variables declaration//GEN-END:variables
-
-    
-    
 }

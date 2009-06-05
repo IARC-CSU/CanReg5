@@ -14,6 +14,7 @@ import canreg.client.gui.analysis.FrequenciesByYearInternalFrame;
 import canreg.client.gui.analysis.TableBuilderInternalFrame;
 import canreg.client.gui.dataentry.PDSChooserInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
+import canreg.client.gui.management.CanReg4PDSImporterInternalFrame;
 import canreg.client.gui.management.RestoreInternalFrame;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.management.CanReg4SystemConverterInternalFrame;
@@ -222,6 +223,7 @@ public class CanRegClientView extends FrameView {
         optionsMenuItem = new javax.swing.JMenuItem();
         toolsMenu = new javax.swing.JMenu();
         convertCR4SystDefMenuItem = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         canReg5HelpMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
@@ -473,6 +475,11 @@ public class CanRegClientView extends FrameView {
         convertCR4SystDefMenuItem.setAction(actionMap.get("convertCanReg4SystemAction")); // NOI18N
         convertCR4SystDefMenuItem.setName("convertCR4SystDefMenuItem"); // NOI18N
         toolsMenu.add(convertCR4SystDefMenuItem);
+
+        jMenuItem2.setAction(actionMap.get("loadCanReg4PDS")); // NOI18N
+        jMenuItem2.setText(resourceMap.getString("jMenuItem2.text")); // NOI18N
+        jMenuItem2.setName("jMenuItem2"); // NOI18N
+        toolsMenu.add(jMenuItem2);
 
         menuBar.add(toolsMenu);
 
@@ -1121,7 +1128,20 @@ public class CanRegClientView extends FrameView {
         JInternalFrame internalFrame = new UserManagerInternalFrame();
         showAndCenterInternalFrame(desktopPane, internalFrame);
     }
-    
+
+    @Action
+    public void loadCanReg4PDS() {
+        CanReg4PDSImporterInternalFrame internalFrame;
+        try {
+            internalFrame = new CanReg4PDSImporterInternalFrame(desktopPane, CanRegClientApp.getApplication().getPopulationDatasets());
+            internalFrame.setDesktopPane(desktopPane);
+            showAndCenterInternalFrame(desktopPane, internalFrame);
+        } catch (SecurityException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;
@@ -1149,6 +1169,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem18;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;

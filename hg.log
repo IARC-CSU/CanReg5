@@ -1,5 +1,90 @@
-changeset:   171:6787d9683760
+changeset:   188:e7ba2bbc2329
 tag:         tip
+user:        ervikm@X60112
+date:        Tue May 26 14:34:03 2009 +0200
+summary:     Minor changes, documentation updated, trn-dictionary improved, TRN.xml improved.
+
+changeset:   187:4ad0a5184c61
+user:        ervikm@X60112
+date:        Tue May 26 14:32:41 2009 +0200
+summary:     CanRegServer: person search related changes.
+
+changeset:   186:7c79c82017ba
+user:        ervikm@X60112
+date:        Tue May 26 14:31:36 2009 +0200
+summary:     DatabaseFilter: Range implemented.
+
+changeset:   185:f32860ab2e33
+user:        ervikm@X60112
+date:        Tue May 26 14:31:04 2009 +0200
+summary:     MaxLengthDocument: Fires "changed" events.
+
+changeset:   184:4df63bf42e1f
+user:        ervikm@X60112
+date:        Tue May 26 14:29:44 2009 +0200
+summary:     BrowseInternalFrame: Tidied GUI.
+
+changeset:   183:8e6744605233
+user:        ervikm@X60112
+date:        Tue May 26 14:28:51 2009 +0200
+summary:     EditorPanels: Implemented proper change listeners.
+
+changeset:   182:ef402a214411
+user:        ervikm@X60112
+date:        Tue May 26 14:27:36 2009 +0200
+summary:     PersonSearchGUI: Global person search implemented
+
+changeset:   181:f1c88b96cbbf
+user:        ervikm@X60112
+date:        Tue May 26 14:26:53 2009 +0200
+summary:     FastFilterInternalFrame: added operators IN and BETWEEN.
+
+changeset:   180:6a2dafe5df9b
+user:        ervikm@X60112
+date:        Tue May 26 14:26:05 2009 +0200
+summary:     CanRegClientApp: More dynamic help file naming, etc
+
+changeset:   179:52d00ee546ec
+user:        ervikm@X60112
+date:        Tue May 26 14:24:59 2009 +0200
+summary:     CanRegClientApp: added support for global person search, more dynamic help file naming.
+
+changeset:   178:c4d11c2d75f6
+user:        ervikm@X60112
+date:        Mon May 25 18:19:30 2009 +0200
+summary:     RangeFilter: added range functionality for queries.
+
+changeset:   177:9527e626cda5
+user:        ervikm@X60112
+date:        Mon May 25 15:54:46 2009 +0200
+summary:     CanRegDAO: added range functionality for queries.
+
+changeset:   176:69d9d95540f8
+user:        ervikm@X60112
+date:        Mon May 25 15:54:16 2009 +0200
+summary:     QueryGenerator: added functionality to build the range part of a filter with a subquery.
+
+changeset:   175:f384c30f18fb
+user:        ervikm@X60112
+date:        Wed May 13 10:36:47 2009 +0200
+summary:     4.99.6
+
+changeset:   174:88a239bbfab9
+user:        ervikm@X60112
+date:        Mon May 11 15:35:29 2009 +0200
+summary:     Changed default coding schemes for various languages during import of old data to fix bug found by the Jordanian cancer registry on arabic letters.
+
+changeset:   173:0b5b9b2792f6
+user:        ervikm@X60112
+date:        Mon May 11 10:43:32 2009 +0200
+summary:     Fixed a bug in the way the server adresses were handled on machines with multiple network interfaces.
+
+changeset:   172:45068776c35a
+user:        ervikm@X60112
+date:        Fri May 08 14:49:16 2009 +0200
+summary:     Release 4.99.5 For real!
+
+changeset:   171:6787d9683760
 user:        ervikm@X60112
 date:        Thu May 07 18:08:25 2009 +0200
 summary:     User manager implementation almost done. Migrator function implemented for situations where we need to change database structure between versions of CanReg. Better handling of the menus available for the different users. The loginmodule updated. Passwords and user levels now stored in the database.

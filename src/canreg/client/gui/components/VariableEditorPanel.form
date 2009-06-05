@@ -21,16 +21,16 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="variableNameLabel" max="32767" attributes="0"/>
-              <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
-              <Component id="splitPane1" min="-2" pref="406" max="-2" attributes="0"/>
+              <Component id="variableNameLabel" pref="81" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="splitPane1" min="-2" pref="426" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="103" groupAlignment="1" attributes="0">
+          <Group type="103" groupAlignment="0" attributes="0">
               <Component id="variableNameLabel" alignment="1" min="-2" max="-2" attributes="0"/>
               <Component id="splitPane1" alignment="1" min="-2" max="-2" attributes="0"/>
           </Group>
@@ -40,6 +40,7 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="variableNameLabel">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" resourceKey="variableNameLabel.text"/>
         <Property name="name" type="java.lang.String" value="variableNameLabel" noResource="true"/>
       </Properties>
