@@ -1,5 +1,60 @@
-changeset:   188:e7ba2bbc2329
+changeset:   199:186803aba672
 tag:         tip
+user:        ervikm@X60112
+date:        Fri Jun 05 14:32:17 2009 +0200
+summary:     Various bug fixes.
+
+changeset:   198:3675c37e089a
+user:        ervikm@X60112
+date:        Fri Jun 05 14:30:49 2009 +0200
+summary:     PDSImporter: added functionality to import PDS from CanReg4.
+
+changeset:   197:544d2e626b68
+user:        ervikm@X60112
+date:        Fri Jun 05 14:29:50 2009 +0200
+summary:     Record Editor: added functionality to merge patients.
+
+changeset:   196:8f46f18b920e
+user:        ervikm@X60112
+date:        Fri Jun 05 14:29:06 2009 +0200
+summary:     Fixed memory "leak" occuring when editing/importing dictionaries.
+
+changeset:   195:dc41dd029099
+user:        ervikm@X60112
+date:        Fri Jun 05 14:27:58 2009 +0200
+summary:     TableBuilder: max number of population data sets added, functionality to spot compatible population data sets implemented
+
+changeset:   194:e68a7e03eb89
+user:        ervikm@X60112
+date:        Fri Jun 05 14:26:21 2009 +0200
+summary:     PDSHelper: added import function for CanReg4 PDS
+
+changeset:   193:10733d467538
+user:        ervikm@X60112
+date:        Fri Jun 05 14:25:32 2009 +0200
+summary:     Tables: age specific tables split in number of cases and rates, functionality to see if a population dataset is compatible with a table added.
+
+changeset:   192:d8da2fc56835
+user:        ervikm@X60112
+date:        Fri Jun 05 13:53:36 2009 +0200
+summary:     QualityIndicators started.
+
+changeset:   191:2dde5a75b140
+user:        ervikm@X60112
+date:        Thu Jun 04 09:38:51 2009 +0200
+summary:     RecordEditorPanel: Order of groups now follow the order in the XML file.
+
+changeset:   190:b70d08b18779
+user:        ervikm@X60112
+date:        Wed May 27 11:53:03 2009 +0200
+summary:     RecordEditor: tidied the GUI.
+
+changeset:   189:9d815dd39453
+user:        ervikm@X60112
+date:        Tue May 26 17:46:29 2009 +0200
+summary:     Usermanager: obligatory with one supervisor account.
+
+changeset:   188:e7ba2bbc2329
 user:        ervikm@X60112
 date:        Tue May 26 14:34:03 2009 +0200
 summary:     Minor changes, documentation updated, trn-dictionary improved, TRN.xml improved.
