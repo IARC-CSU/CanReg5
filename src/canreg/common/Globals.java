@@ -409,4 +409,7 @@ public class Globals {
          */
         TumourUnduplicationStatus
     }
+    public static String FILL_IN_STATUS_MANDATORY_STRING = "Mandatory";
+    public static String FILL_IN_STATUS_AUTOMATIC_STRING = "Automatic";
+    public static String FILL_IN_STATUS_OPTIONAL_STRING = "Optional";
 }

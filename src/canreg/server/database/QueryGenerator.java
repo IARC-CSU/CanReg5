@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package canreg.server.database;
 
 import canreg.common.DatabaseFilter;
@@ -486,10 +482,13 @@ public class QueryGenerator {
         //Get the variable type
         String variableType = element.getElementsByTagName("ns3:variable_type").item(0).getTextContent();
 
-        if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText")) {
+        if (variableType.equalsIgnoreCase("Alpha") || 
+                variableType.equalsIgnoreCase("AsianText") ||
+                variableType.equalsIgnoreCase("TextArea")) {
             queryLine += " VARCHAR(";
             queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent() + ") ";
-        } else if (variableType.equalsIgnoreCase("Number") || variableType.equalsIgnoreCase("Date")) {
+        } else if (variableType.equalsIgnoreCase("Number") ||
+                variableType.equalsIgnoreCase("Date")) {
             queryLine += " INTEGER";
         // queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent()+") ";
         } else if (variableType.equalsIgnoreCase("Dict")) {

@@ -7,6 +7,7 @@ package canreg.client.gui.dataentry;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.components.DateVariableEditorPanel;
+import canreg.client.gui.components.TextFieldVariableEditorPanel;
 import canreg.client.gui.components.VariableEditorGroupPanel;
 import canreg.client.gui.components.VariableEditorPanel;
 import canreg.common.DatabaseGroupsListElement;
@@ -306,8 +307,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
             String variableType = currentVariable.getVariableType();
 
-            if ("date".equalsIgnoreCase(variableType)) {
+            if ("Date".equalsIgnoreCase(variableType)) {
                 vep = new DateVariableEditorPanel(this);
+            } if ("TextArea".equalsIgnoreCase(variableType)) {
+                vep = new TextFieldVariableEditorPanel(this);
             } else {
                 vep = new VariableEditorPanel(this);
             }

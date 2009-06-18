@@ -892,6 +892,10 @@
       <ns3:variable_name>FamN</ns3:variable_name>
       <ns3:weigth>25</ns3:weigth>
     </ns3:search_variable>
+        <ns3:search_variable>
+      <ns3:variable_name>Nationality</ns3:variable_name>
+      <ns3:weigth>22</ns3:weigth>
+    </ns3:search_variable>
     <ns3:search_variable>
       <ns3:variable_name>FirstN</ns3:variable_name>
       <ns3:weigth>20</ns3:weigth>

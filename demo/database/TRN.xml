@@ -188,7 +188,7 @@
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>TumourID</ns3:standard_variable_name>
     </ns3:variable>
-    <ns3:variable>
+    <ns3:variable> 
       <ns3:variable_id>1</ns3:variable_id>
       <ns3:full_name>Record status</ns3:full_name>
       <ns3:short_name>RecS</ns3:short_name>
