@@ -402,18 +402,13 @@ public class CanRegDAO {
 
             // Add the range part
             if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-                if (filterString.isEmpty()) {
-                    filterString = " WHERE " + filterString;
-                } else {
-                    filterString += " AND ";
-                }
-                filterString += QueryGenerator.buildRangePart(filter);
+                filterString += " AND ";
+                String rangeFilterString = QueryGenerator.buildRangePart(filter);
+                filterString += rangeFilterString;
             }
-
             variables = filter.getDatabaseVariables();
             String variablesList = "";
             if (variables.size() > 0) {
-
                 for (DatabaseVariablesListElement variable : variables) {
                     if (variable != null) {
                         variablesList += ", " + variable.getDatabaseVariableName();

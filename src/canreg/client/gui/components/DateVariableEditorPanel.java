@@ -42,10 +42,10 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         codeTextField = dateField;
 
         String fillInStatus = databaseListElement.getFillInStatus();
-        if (fillInStatus.equalsIgnoreCase("Automatic")) {
+        if (fillInStatus.equalsIgnoreCase(Globals.FILL_IN_STATUS_AUTOMATIC_STRING)) {
             dateField.setFocusable(false);
             dateField.setEditable(false);
-        } else if (fillInStatus.equalsIgnoreCase("Mandatory")) {
+        } else if (fillInStatus.equalsIgnoreCase(Globals.FILL_IN_STATUS_MANDATORY_STRING)) {
             dateField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
         }
         setMaximumLength(databaseListElement.getVariableLength());
@@ -72,7 +72,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
     public void setValue(String value) {
         initialValue = value;
         if (value.trim().length() == 0) {
-            if (databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory")) {
+            if (databaseListElement.getFillInStatus().equalsIgnoreCase(Globals.FILL_IN_STATUS_MANDATORY_STRING)) {
                 codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
             }
             codeTextField.setText(value);

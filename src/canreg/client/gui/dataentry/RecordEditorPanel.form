@@ -64,13 +64,17 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="mpPanel" alignment="0" min="-2" pref="78" max="-2" attributes="1"/>
-              <Component id="personSearchPanel" alignment="0" min="-2" pref="78" max="-2" attributes="1"/>
-              <Component id="checksPanel" alignment="0" min="-2" pref="78" max="-2" attributes="1"/>
-              <Component id="recordStatusPanel" alignment="0" min="-2" max="-2" attributes="1"/>
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="recordStatusPanel1" min="-2" max="-2" attributes="1"/>
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="mpPanel" alignment="0" min="-2" pref="78" max="-2" attributes="1"/>
+                      <Component id="personSearchPanel" alignment="0" min="-2" pref="78" max="-2" attributes="1"/>
+                      <Component id="checksPanel" alignment="0" min="-2" pref="78" max="-2" attributes="1"/>
+                      <Component id="recordStatusPanel" alignment="0" min="-2" max="-2" attributes="1"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="recordStatusPanel1" min="-2" max="-2" attributes="1"/>
+                      </Group>
+                  </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
