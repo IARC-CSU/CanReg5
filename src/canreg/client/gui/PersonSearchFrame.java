@@ -72,13 +72,13 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         patientIDTumourTablelookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName();
         tumourIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
 
-        resultTableModel = new DefaultTableModel(new String[]{"Patient A Record ID", "Patient B Record ID", "Match %", "Already matched"}, 0) {
+        resultTableModel = new DefaultTableModel(new String[]{"Patient A Record ID", "Patient B Record ID", "Match %"}, 0) {
 
             Class[] types = new Class[]{
-                java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.String.class, java.lang.Float.class
             };
             boolean[] canEdit = new boolean[]{
-                false, false, false, false
+                false, false, false
             };
 
             @Override
@@ -447,7 +447,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                             Map<String, Float> map = result.get(patientA);
                             matchesFound += map.size();
                             for (String patientB : map.keySet()) {
-                                resultTableModel.addRow(new Object[]{patientA, patientB, map.get(patientB), false});
+                                resultTableModel.addRow(new Object[]{patientA, patientB, map.get(patientB)});
                             }
                         }
                         matchesFoundTextField.setText(matchesFound + "");

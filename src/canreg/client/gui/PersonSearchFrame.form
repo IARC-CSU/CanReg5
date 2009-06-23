@@ -40,7 +40,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="416" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="420" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -194,7 +194,6 @@
                   <action class="canreg.client.gui.PersonSearchFrame" id="interruptDuplicateSearchAction" methodName="interruptDuplicateSearchAction"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="interruptButton.text"/>
-                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="interruptButton" noResource="true"/>
               </Properties>
             </Component>
@@ -252,7 +251,7 @@
                               <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="matchesFoundTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="142" max="32767" attributes="0"/>
+                          <EmptySpace pref="146" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -318,7 +317,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="personSearchVariablesPanel1" alignment="1" pref="388" max="32767" attributes="0"/>
+                  <Component id="personSearchVariablesPanel1" alignment="1" pref="392" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -356,7 +355,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="resultScrollPane" pref="366" max="32767" attributes="0"/>
+                      <Component id="resultScrollPane" pref="370" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
