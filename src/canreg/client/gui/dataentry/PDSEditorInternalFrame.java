@@ -272,19 +272,19 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detailsPanelLayout.createSequentialGroup()
-                        .addComponent(standardPopulationComboBox, 0, 204, Short.MAX_VALUE)
+                        .addComponent(standardPopulationComboBox, 0, 174, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editStandardPopulationButton))
-                    .addComponent(dateChooser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
-                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
-                    .addComponent(sourceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
+                    .addComponent(dateChooser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                    .addComponent(sourceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
                     .addGroup(detailsPanelLayout.createSequentialGroup()
-                        .addComponent(filterTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                        .addComponent(filterTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(filterWizardButton))
-                    .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
                     .addGroup(detailsPanelLayout.createSequentialGroup()
-                        .addComponent(ageGroupStructureComboBox, 0, 194, Short.MAX_VALUE)
+                        .addComponent(ageGroupStructureComboBox, 0, 164, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(otherAgeGroupStructureButton)))
                 .addContainerGap())
@@ -322,7 +322,7 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
                     .addComponent(editStandardPopulationButton)
                     .addComponent(standardPopulationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(standardPopulationLabel))
-                .addContainerGap(129, Short.MAX_VALUE))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("detailsPanel.TabConstraints.tabTitle"), detailsPanel); // NOI18N
@@ -334,36 +334,36 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
 
         populationDataSetTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null},
-                {null, new Integer(0), new Integer(0), null}
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)},
+                {null, new Integer(0), new Integer(0)}
             },
             new String [] {
-                "Age group", "Male", "Female", "Age Group"
+                "Age group", "Male", "Female"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true, false
+                false, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -376,22 +376,22 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
         });
         populationDataSetTable.setCellSelectionEnabled(true);
         populationDataSetTable.setName("populationDataSetTable"); // NOI18N
+        populationDataSetTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(populationDataSetTable);
         populationDataSetTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         populationDataSetTable.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("populationDataSetTable.columnModel.title0")); // NOI18N
         populationDataSetTable.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("populationDataSetTable.columnModel.title1")); // NOI18N
         populationDataSetTable.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("populationDataSetTable.columnModel.title2")); // NOI18N
-        populationDataSetTable.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("populationDataSetTable.columnModel.title3")); // NOI18N
 
         javax.swing.GroupLayout dataSetPanelLayout = new javax.swing.GroupLayout(dataSetPanel);
         dataSetPanel.setLayout(dataSetPanelLayout);
         dataSetPanelLayout.setHorizontalGroup(
             dataSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
         );
         dataSetPanelLayout.setVerticalGroup(
             dataSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(resourceMap.getString("dataSetPanel.TabConstraints.tabTitle"), dataSetPanel); // NOI18N
@@ -418,11 +418,11 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(deleteButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 148, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
                 .addComponent(lockedToggleButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cancelButton)
@@ -433,7 +433,7 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)

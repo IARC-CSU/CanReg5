@@ -36,15 +36,12 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="removeButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="variablesComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="weightTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
+          <Group type="103" groupAlignment="3" attributes="0">
+              <Component id="removeButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="variablesComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="weightTextField" alignment="3" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

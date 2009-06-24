@@ -36,7 +36,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variableChooserPanel" pref="235" max="32767" attributes="0"/>
+                      <Component id="variableChooserPanel" pref="162" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="settingsPanel" min="-2" max="-2" attributes="1"/>
                   </Group>
@@ -326,12 +326,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="944" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="791" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="307" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="51" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>

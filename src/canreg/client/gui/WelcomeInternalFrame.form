@@ -48,33 +48,33 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="logoButton" alignment="2" min="-2" pref="298" max="-2" attributes="1"/>
-                      <Component id="versionLabel" alignment="0" pref="313" max="32767" attributes="0"/>
-                      <Component id="aboutScrollPane" alignment="2" pref="313" max="32767" attributes="1"/>
+                      <Component id="versionLabel" alignment="0" pref="321" max="32767" attributes="0"/>
+                      <Component id="aboutScrollPane" alignment="2" pref="321" max="32767" attributes="2"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="buttonPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Component id="buttonPanel" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="buttonPanel" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="logoButton" min="-2" pref="274" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="aboutScrollPane" pref="253" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="aboutScrollPane" pref="138" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="14" max="-2" attributes="1"/>
                           <Component id="versionLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -109,6 +109,7 @@
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="font" type="java.awt.Font" resourceKey="aboutEditorPane.font"/>
                 <Property name="text" type="java.lang.String" resourceKey="aboutEditorPane.text"/>
+                <Property name="caretPosition" type="int" value="1"/>
                 <Property name="focusCycleRoot" type="boolean" value="false"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="aboutEditorPane" noResource="true"/>
@@ -133,8 +134,8 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="loginButton" alignment="0" pref="291" max="32767" attributes="0"/>
-                          <Component id="restoreBackupButton" alignment="0" pref="291" max="32767" attributes="0"/>
+                          <Component id="loginButton" alignment="0" pref="232" max="32767" attributes="0"/>
+                          <Component id="restoreBackupButton" alignment="0" pref="232" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -144,9 +145,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="loginButton" pref="259" max="32767" attributes="0"/>
+                      <Component id="loginButton" pref="206" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="restoreBackupButton" pref="260" max="32767" attributes="0"/>
+                      <Component id="restoreBackupButton" pref="206" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

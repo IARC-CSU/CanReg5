@@ -145,9 +145,11 @@ public class VariablesPanel extends javax.swing.JPanel {
 
         buttonGroup.add(personalizedRadioButton);
         personalizedRadioButton.setText(resourceMap.getString("personalizedRadioButton.text")); // NOI18N
+        personalizedRadioButton.setEnabled(false);
         personalizedRadioButton.setName("personalizedRadioButton"); // NOI18N
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "<New>" }));
+        jComboBox1.setEnabled(false);
         jComboBox1.setName("jComboBox1"); // NOI18N
 
         javax.swing.GroupLayout variablesPanelLayout = new javax.swing.GroupLayout(variablesPanel);

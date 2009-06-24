@@ -27,11 +27,11 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jTabbedPane1" alignment="0" pref="430" max="32767" attributes="0"/>
+          <Component id="jTabbedPane1" alignment="0" pref="400" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="deleteButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="148" max="32767" attributes="0"/>
+              <EmptySpace pref="118" max="32767" attributes="0"/>
               <Component id="lockedToggleButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
@@ -94,21 +94,21 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="standardPopulationComboBox" pref="204" max="32767" attributes="0"/>
+                              <Component id="standardPopulationComboBox" pref="174" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="editStandardPopulationButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="dateChooser" alignment="1" pref="261" max="32767" attributes="0"/>
-                          <Component id="descriptionScrollPane" alignment="0" pref="261" max="32767" attributes="0"/>
-                          <Component id="sourceTextField" alignment="1" pref="261" max="32767" attributes="0"/>
+                          <Component id="dateChooser" alignment="1" pref="231" max="32767" attributes="0"/>
+                          <Component id="descriptionScrollPane" alignment="0" pref="231" max="32767" attributes="0"/>
+                          <Component id="sourceTextField" alignment="1" pref="231" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="filterTextField" pref="162" max="32767" attributes="0"/>
+                              <Component id="filterTextField" pref="132" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="filterWizardButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="nameTextField" alignment="0" pref="261" max="32767" attributes="1"/>
+                          <Component id="nameTextField" alignment="0" pref="231" max="32767" attributes="1"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="ageGroupStructureComboBox" pref="194" max="32767" attributes="0"/>
+                              <Component id="ageGroupStructureComboBox" pref="164" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="otherAgeGroupStructureButton" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -331,7 +331,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="409" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="379" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -354,7 +354,7 @@
                 <Component class="javax.swing.JTable" name="populationDataSetTable">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="4" rowCount="20">
+                      <Table columnCount="3" rowCount="20">
                         <Column editable="false" title="Age group" type="java.lang.String"/>
                         <Column editable="true" title="Male" type="java.lang.Integer">
                           <Data value="0"/>
@@ -400,7 +400,6 @@
                           <Data value="0"/>
                           <Data value="0"/>
                         </Column>
-                        <Column editable="false" title="Age Group" type="java.lang.String"/>
                       </Table>
                     </Property>
                     <Property name="cellSelectionEnabled" type="boolean" value="true"/>
@@ -421,16 +420,11 @@
                           <Editor/>
                           <Renderer/>
                         </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title resourceKey="populationDataSetTable.columnModel.title3"/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
                       </TableColumnModel>
                     </Property>
                     <Property name="name" type="java.lang.String" value="populationDataSetTable" noResource="true"/>
                     <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                      <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                     </Property>
                   </Properties>
                 </Component>
