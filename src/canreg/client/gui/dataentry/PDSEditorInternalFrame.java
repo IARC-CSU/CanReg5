@@ -519,8 +519,12 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
                 CanRegClientApp.getApplication().saveNewPopulationDataset(pds);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully saved population dataset: " + pds.getPopulationDatasetName() + ".", "Population dataset successfully saved.", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.INFO, "Already saved... Updating.");
-                // TODO! CanRegClientApp.getApplication().editRecord(pds);
+                try {
+                    CanRegClientApp.getApplication().deletePopulationDataset(pds.getPopulationDatasetID());
+                } catch (SQLException ex) {
+                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                CanRegClientApp.getApplication().saveNewPopulationDataset(pds);
             }
         } catch (SecurityException ex) {
             Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);

@@ -625,6 +625,8 @@ public class CanRegClientApp extends SingleFrameApplication {
             recordNumber = server.saveTumour((Tumour) databaseRecord);
         } else if (databaseRecord instanceof NameSexRecord) {
             recordNumber = server.saveNameSexRecord((NameSexRecord) databaseRecord);
+        } else if (databaseRecord instanceof PopulationDataset) {
+            // recordNumber = server.savePopulationDataset((PopulationDataset) databaseRecord);
         }
         return recordNumber;
     }
