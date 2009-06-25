@@ -1,5 +1,48 @@
-changeset:   199:186803aba672
+changeset:   207:a6ea33451352
 tag:         tip
+user:        ervikm@X60112
+date:        Thu Jun 25 16:02:54 2009 +0200
+summary:     Population Data Set Editor: fixed the bug that did not allow a PDS to be updated (eg the filter).
+
+changeset:   206:46dbcb640e60
+user:        ervikm@X60112
+date:        Wed Jun 24 11:12:05 2009 +0200
+summary:     Fixed the layout of most windows to fit better on smaller screens.
+
+changeset:   205:b3f0156962d8
+user:        ervikm@X60112
+date:        Tue Jun 23 16:47:35 2009 +0200
+summary:     Global Person Search: removed "allready matched" column...
+
+changeset:   204:042efb6a133c
+user:        ervikm@X60112
+date:        Tue Jun 23 16:46:46 2009 +0200
+summary:     Frequencies/export variables selection box relook
+
+changeset:   203:e8d5331fc53b
+parent:      200:081506d3587c
+parent:      202:4d25e1de3a45
+user:        ervikm@X60112
+date:        Tue Jun 23 16:08:16 2009 +0200
+summary:     Frequencies/export variables selection box scrolls faster, variables closer
+
+changeset:   202:4d25e1de3a45
+user:        ervikm@X70245.iarc.lan
+date:        Thu Jun 18 09:20:04 2009 +0100
+summary:     TextFields added as option in record editor, Istanbul edits
+
+changeset:   201:c2bb304aa94e
+parent:      199:186803aba672
+user:        ervikm@X70245.iarc.lan
+date:        Fri Jun 05 16:20:08 2009 +0100
+summary:     Range now works properly when making frequency by year tables as well.
+
+changeset:   200:081506d3587c
+user:        ervikm@X60112
+date:        Thu Jun 18 10:28:08 2009 +0200
+summary:     Various bug fixes.
+
+changeset:   199:186803aba672
 user:        ervikm@X60112
 date:        Fri Jun 05 14:32:17 2009 +0200
 summary:     Various bug fixes.

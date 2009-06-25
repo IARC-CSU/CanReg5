@@ -26,27 +26,42 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="521" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="tabbedPane" alignment="0" pref="521" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="backButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="nextButton" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="386" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="401" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="backButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JTabbedPane" name="jTabbedPane1">
+    <Container class="javax.swing.JTabbedPane" name="tabbedPane">
       <Properties>
-        <Property name="name" type="java.lang.String" value="jTabbedPane1" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="tabbedPane" noResource="true"/>
       </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
@@ -101,8 +116,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="previewImageLabel" pref="230" max="32767" attributes="0"/>
-                          <Component id="descriptionScrollPane" alignment="0" pref="230" max="32767" attributes="0"/>
+                          <Component id="previewImageLabel" pref="245" max="32767" attributes="0"/>
+                          <Component id="descriptionScrollPane" alignment="0" pref="245" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -239,7 +254,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="warningLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="224" max="32767" attributes="0"/>
+                      <EmptySpace pref="253" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -344,7 +359,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="316" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="331" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -404,7 +419,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="176" max="32767" attributes="0"/>
+                      <EmptySpace pref="165" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -413,7 +428,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="82" max="32767" attributes="0"/>
+                      <EmptySpace pref="97" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -441,9 +456,14 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="headerOfTableLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="headerOfTableTextField" pref="409" max="32767" attributes="0"/>
+                          </Group>
                           <Component id="jButton2" alignment="0" pref="496" max="32767" attributes="0"/>
                           <Component id="jButton1" alignment="0" pref="496" max="32767" attributes="0"/>
                       </Group>
@@ -455,10 +475,15 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="headerOfTableLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="headerOfTableTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButton2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="295" max="32767" attributes="0"/>
+                      <EmptySpace pref="284" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -480,9 +505,45 @@
                 <Property name="name" type="java.lang.String" value="jButton2" noResource="true"/>
               </Properties>
             </Component>
+            <Component class="javax.swing.JLabel" name="headerOfTableLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="headerOfTableLabel.text"/>
+                <Property name="name" type="java.lang.String" value="headerOfTableLabel" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="headerOfTableTextField">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="headerOfTableTextField.text"/>
+                <Property name="name" type="java.lang.String" value="headerOfTableTextField" noResource="true"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="backButton">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="jumpToPreviousTabAction" methodName="jumpToPreviousTabAction"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="backButton" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="cancelButton">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="cancelAction" methodName="cancelAction"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="cancelButton" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="nextButton">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="jumpToNextTabAction" methodName="jumpToNextTabAction"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="nextButton" noResource="true"/>
+      </Properties>
+    </Component>
   </SubComponents>
 </Form>

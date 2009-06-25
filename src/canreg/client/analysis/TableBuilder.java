@@ -129,7 +129,7 @@ public abstract class TableBuilder {
 
     public abstract StandardVariableNames[] getVariablesNeeded();
 
-    public abstract LinkedList<String> buildTable(String registryLabel,
+    public abstract LinkedList<String> buildTable(String tableHeader,
             String reportFileName,
             int startYear,
             int endYear,
@@ -137,7 +137,7 @@ public abstract class TableBuilder {
             PopulationDataset[] populations,
             PopulationDataset[] standardPopulations,
             LinkedList<ConfigFields> configList,
-            String[] engineParameters);
+            String[] engineParameters) throws NotCompatibleDataException;
 
     // Added 30.07.2007
     public boolean showMIIllDefSite(String registryNumber) {
@@ -157,7 +157,13 @@ public abstract class TableBuilder {
         return !found;
     }
 
-    public boolean areThesePopulationDatasetsOK(PopulationDataset[] sets){
+    public boolean areThesePopulationDatasetsOK(PopulationDataset[] sets) {
+        String filterString = sets[0].getFilter().replaceAll(" ", "");
+        for (PopulationDataset population : sets) {
+            if (!filterString.equalsIgnoreCase(population.getFilter().replaceAll(" ", ""))) {
+                return false;
+            }
+        }
         return true;
     }
 

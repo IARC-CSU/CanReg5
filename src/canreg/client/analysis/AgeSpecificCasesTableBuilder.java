@@ -42,6 +42,7 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
     private static int BASIS_DIAGNOSIS_COLUMN = 6;
     private static int CASES_COLUMN = 7;
     private double[][] standardPopulationArray;
+    private String populationString;
 
     public LinkedList<String> buildTable(String registryLabel,
             String reportFileName,
@@ -51,13 +52,16 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
             PopulationDataset[] populations,
             PopulationDataset[] standardPopulations,
             LinkedList<ConfigFields> configList,
-            String[] engineParameters) {
+            String[] engineParameters) throws NotCompatibleDataException {
 
         LinkedList<String> generatedFiles = new LinkedList<String>();
 
         String footerString = "Table built " + new Date() + " by CanReg5-beta.";
 
         String notesString = "";
+
+        if (populations[0].getFilter().length()>0)
+            notesString = "Filter used:" + populations[0].getFilter();
 
         double tableFontSize = 7.5;
         String font = "Times";
@@ -171,8 +175,24 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
         populationArray = new double[numberOfSexes][numberOfAgeGroups];
         foundAgeGroups = new boolean[numberOfAgeGroups];
 
-        for (PopulationDataset population : populations) {
-            population.addPopulationDataToArrayForTableBuilder(populationArray, foundAgeGroups, new AgeGroupStructure(5, 85, 1));
+        if (areThesePopulationDatasetsOK(populations)) {
+            for (PopulationDataset population : populations) {
+                population.addPopulationDataToArrayForTableBuilder(populationArray, foundAgeGroups, new AgeGroupStructure(5, 85, 1));
+            }
+        } else {
+            throw new NotCompatibleDataException();
+        }
+
+        populationString = populations[0].getPopulationDatasetName();
+
+        int lastCommaPlace = populationString.lastIndexOf(",");
+
+        if (lastCommaPlace != -1) {
+            populationString = populationString.substring(0, lastCommaPlace);
+        }
+
+        if (populations[0].getFilter().length() > 0) {
+            notesString = "Filter used:" + populations[0].getFilter();
         }
 
         standardPopulationArray = new double[numberOfSexes][numberOfAgeGroups];
@@ -669,7 +689,7 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
                 fw.write("Mainfont SF\n");
                 fw.write("0 535 MT (" + registryLabel + ") CS\n");
                 fw.write("Titlefont SF\n");
-                //fw.write("0 525 MT (" + tableLabel[sex + 1] + ") CS\n");
+                fw.write("0 525 MT (" + populationString + ") CS\n");
                 fw.write("0 513 MT (" + tableLabel[0] + " - " + sexLabel[sexNumber] + ") CS\n");
 //                                                                                              draw the grey frame
                 fw.write("0.85 SG 27 510 translate\n");
@@ -1079,7 +1099,7 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
 
     @Override
     public boolean areThesePopulationDatasetsOK(PopulationDataset[] sets) {
-        boolean OK = true;
+        boolean OK = super.areThesePopulationDatasetsOK(sets);
         for (PopulationDataset pds: sets){
             OK = OK && pds.getAgeGroupStructure().getSizeOfGroups() == 5;
         }

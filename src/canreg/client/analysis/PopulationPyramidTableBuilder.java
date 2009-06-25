@@ -34,7 +34,7 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
     }
 
     @Override
-    public LinkedList<String> buildTable(String registryLabel, String reportFileName, int startYear, int endYear, Object[][] incidenceData, PopulationDataset[] populations, PopulationDataset[] standardPopulations, LinkedList<ConfigFields> configList, String[] engineParameters) {
+    public LinkedList<String> buildTable(String registryLabel, String reportFileName, int startYear, int endYear, Object[][] incidenceData, PopulationDataset[] populations, PopulationDataset[] standardPopulations, LinkedList<ConfigFields> configList, String[] engineParameters) throws NotCompatibleDataException {
 
         LinkedList<String> generatedFiles = new LinkedList<String>();
 
@@ -115,7 +115,7 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
 
             fw.write("0 780 MT (" + registryLabel + ") CS\n");
             fw.write("Titlefont SF\n");
-            // fw.write("0 760 MT (" + tableLabel[1] + ") CS\n");
+            fw.write("0 760 MT (" + populations[0].getPopulationDatasetName() + ") CS\n");
             fw.write("0 750 MT (" + tableLabel[0] + ") CS\n");
             fw.write("/col 20 def\n");
 
@@ -281,9 +281,16 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
                     " MT (" + sexLabel[0] + "                            " +
                     sexLabel[1] + ") CS\n");
 
+            String filterString;
+
+            if (populations[0].getFilter().length()>0){
+                filterString = "Filter associated with this dataset: " + populations[0].getFilter();
+            } else {
+                filterString = "No filter associated with this dataset.";
+            }
+
             fw.write("0 " + (baseline - 30) +
-                    " MT ( Population data provided for " + numberOfYears +
-                    " year(s).) CS\n");
+                    " MT ( " + filterString + " ) CS\n");
 
             fw.write("0 setlinewidth\n");
 

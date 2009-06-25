@@ -50,7 +50,7 @@ public class QualityIndicatorsTableBuilder extends TableBuilder {
             PopulationDataset[] populations,
             PopulationDataset[] standardPopulations,
             LinkedList<ConfigFields> configList,
-            String[] engineParameters) {
+            String[] engineParameters)  throws NotCompatibleDataException  {
         
 
         LinkedList<String> generatedFiles = new LinkedList<String>();

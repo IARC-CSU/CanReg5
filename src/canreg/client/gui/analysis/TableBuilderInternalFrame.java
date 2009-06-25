@@ -18,6 +18,7 @@ import canreg.client.analysis.AgeSpecificCasesPerHundredThousandTableBuilder;
 import canreg.client.analysis.AgeSpecificCasesTableBuilder;
 import canreg.client.analysis.ConfigFields;
 import canreg.client.analysis.ConfigFieldsReader;
+import canreg.client.analysis.NotCompatibleDataException;
 import canreg.client.analysis.PopulationPyramidTableBuilder;
 import canreg.client.analysis.TableBuilder;
 import canreg.client.analysis.TableBuilderListElement;
@@ -45,6 +46,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.jdesktop.application.Action;
 
 /**
@@ -73,6 +76,70 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         } else {
             chooser = new JFileChooser(path);
         }
+
+        // Add a listener for changing the active tab
+        ChangeListener tabbedPaneChangeListener = new ChangeListener() {
+
+            public void stateChanged(ChangeEvent e) {
+                // initializeVariableMappingTab();
+                changeTab(tabbedPane.getSelectedIndex());
+            }
+        };
+        // And add the listener to the tabbedPane
+
+        tabbedPane.addChangeListener(tabbedPaneChangeListener);
+        changeTab(0);
+    }
+
+    private String generateHeadingString() {
+        String heading;
+        int startYear = startYearChooser.getValue();
+        int endYear = endYearChooser.getValue();
+        heading = canreg.client.CanRegClientApp.getApplication().getSystemName() + " (" + startYear;
+        if (endYear != startYear) {
+            heading += "-" + endYear;
+        }
+        heading += ")";
+        return heading;
+    }
+
+    protected void changeTab(int tabNumber) {
+        tabbedPane.setSelectedIndex(tabNumber);
+        nextButton.setEnabled(tabNumber < tabbedPane.getTabCount() - 1);
+        backButton.setEnabled(tabNumber > 0);
+        headerOfTableTextField.setText(generateHeadingString());
+    }
+
+    /**
+     *
+     */
+    @Action
+    public void jumpToPreviousTabAction() {
+        int tabNumber = tabbedPane.getSelectedIndex();
+        if (tabNumber >= 1) {
+            tabbedPane.setSelectedIndex(--tabNumber);
+            changeTab(tabNumber);
+        }
+    }
+
+    /**
+     *
+     */
+    @Action
+    public void jumpToNextTabAction() {
+        int tabNumber = tabbedPane.getSelectedIndex();
+        if (tabNumber < tabbedPane.getTabCount()) {
+            tabbedPane.setSelectedIndex(++tabNumber);
+            changeTab(tabNumber);
+        }
+    }
+
+    /**
+     *
+     */
+    @Action
+    public void cancelAction() {
+        this.dispose();
     }
 
     private PopulationDataset[] getSelectedPopulations() {
@@ -81,6 +148,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         for (LabelAndComboBoxJPanel panel : populationDatasetChooserPanels) {
             populations[i++] = (PopulationDataset) panel.getComboBoxSelectedItem();
         }
+
         return populations;
     }
 
@@ -93,7 +161,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabbedPane = new javax.swing.JTabbedPane();
         tableTypePanel = new javax.swing.JPanel();
         tableTypeScrollPane = new javax.swing.JScrollPane();
         tableTypeList = new javax.swing.JList();
@@ -122,6 +190,11 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         writeOutPanel = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        headerOfTableLabel = new javax.swing.JLabel();
+        headerOfTableTextField = new javax.swing.JTextField();
+        backButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        nextButton = new javax.swing.JButton();
 
         setClosable(true);
         setResizable(true);
@@ -134,7 +207,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             e1.printStackTrace();
         }
 
-        jTabbedPane1.setName("jTabbedPane1"); // NOI18N
+        tabbedPane.setName("tabbedPane"); // NOI18N
 
         tableTypePanel.setName("tableTypePanel"); // NOI18N
 
@@ -205,12 +278,12 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(previewLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
-                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))
+                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("tableTypePanel.TabConstraints.tabTitle"), tableTypePanel); // NOI18N
+        tabbedPane.addTab(resourceMap.getString("tableTypePanel.TabConstraints.tabTitle"), tableTypePanel); // NOI18N
 
         rangePanel.setName("rangePanel"); // NOI18N
 
@@ -298,10 +371,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(numberOfYearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(warningLabel)
-                .addContainerGap(224, Short.MAX_VALUE))
+                .addContainerGap(253, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("rangePanel.TabConstraints.tabTitle"), rangePanel); // NOI18N
+        tabbedPane.addTab(resourceMap.getString("rangePanel.TabConstraints.tabTitle"), rangePanel); // NOI18N
 
         populationDatasetChooserPanel.setName("populationDatasetChooserPanel"); // NOI18N
 
@@ -332,11 +405,11 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("populationDatasetChooserPanel.TabConstraints.tabTitle"), populationDatasetChooserPanel); // NOI18N
+        tabbedPane.addTab(resourceMap.getString("populationDatasetChooserPanel.TabConstraints.tabTitle"), populationDatasetChooserPanel); // NOI18N
 
         filterPanel.setEnabled(false);
         filterPanel.setFocusable(false);
@@ -352,17 +425,17 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(filterPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(176, Short.MAX_VALUE))
+                .addContainerGap(165, Short.MAX_VALUE))
         );
         filterPanelLayout.setVerticalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(filterPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(82, Short.MAX_VALUE))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("filterPanel.TabConstraints.tabTitle"), filterPanel); // NOI18N
+        tabbedPane.addTab(resourceMap.getString("filterPanel.TabConstraints.tabTitle"), filterPanel); // NOI18N
 
         writeOutPanel.setName("writeOutPanel"); // NOI18N
 
@@ -375,43 +448,78 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         jButton2.setEnabled(false);
         jButton2.setName("jButton2"); // NOI18N
 
+        headerOfTableLabel.setText(resourceMap.getString("headerOfTableLabel.text")); // NOI18N
+        headerOfTableLabel.setName("headerOfTableLabel"); // NOI18N
+
+        headerOfTableTextField.setText(resourceMap.getString("headerOfTableTextField.text")); // NOI18N
+        headerOfTableTextField.setName("headerOfTableTextField"); // NOI18N
+
         javax.swing.GroupLayout writeOutPanelLayout = new javax.swing.GroupLayout(writeOutPanel);
         writeOutPanel.setLayout(writeOutPanelLayout);
         writeOutPanelLayout.setHorizontalGroup(
             writeOutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, writeOutPanelLayout.createSequentialGroup()
+            .addGroup(writeOutPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(writeOutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE))
+                .addGroup(writeOutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(writeOutPanelLayout.createSequentialGroup()
+                        .addComponent(headerOfTableLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(headerOfTableTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE))
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE))
                 .addContainerGap())
         );
         writeOutPanelLayout.setVerticalGroup(
             writeOutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(writeOutPanelLayout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(writeOutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(headerOfTableLabel)
+                    .addComponent(headerOfTableTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
-                .addContainerGap(295, Short.MAX_VALUE))
+                .addContainerGap(284, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("writeOutPanel.TabConstraints.tabTitle"), writeOutPanel); // NOI18N
+        tabbedPane.addTab(resourceMap.getString("writeOutPanel.TabConstraints.tabTitle"), writeOutPanel); // NOI18N
+
+        backButton.setAction(actionMap.get("jumpToPreviousTabAction")); // NOI18N
+        backButton.setName("backButton"); // NOI18N
+
+        cancelButton.setAction(actionMap.get("cancelAction")); // NOI18N
+        cancelButton.setName("cancelButton"); // NOI18N
+
+        nextButton.setAction(actionMap.get("jumpToNextTabAction")); // NOI18N
+        nextButton.setName("nextButton"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(backButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nextButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nextButton)
+                    .addComponent(cancelButton)
+                    .addComponent(backButton))
                 .addContainerGap())
         );
 
@@ -482,20 +590,24 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     // tableTypePanel.repaint();
     }//GEN-LAST:event_tableTypeListValueChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton backButton;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JLabel descriptionLabel;
     private javax.swing.JScrollPane descriptionScrollPane;
     private javax.swing.JTextPane descriptionTextPane;
     private com.toedter.calendar.JYearChooser endYearChooser;
     private javax.swing.JLabel endYearLabel;
     private javax.swing.JPanel filterPanel;
+    private javax.swing.JLabel headerOfTableLabel;
+    private javax.swing.JTextField headerOfTableTextField;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField midYearTextField;
+    private javax.swing.JButton nextButton;
     private javax.swing.JTextField numberOfYearsTextField;
     private javax.swing.JPanel populationDatasetChooserPanel;
     private javax.swing.JPanel populationDatasetChoosersPanel;
@@ -505,6 +617,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JPanel rangePanel;
     private com.toedter.calendar.JYearChooser startYearChooser;
     private javax.swing.JLabel startYearLabel;
+    private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JList tableTypeList;
     private javax.swing.JPanel tableTypePanel;
     private javax.swing.JScrollPane tableTypeScrollPane;
@@ -620,8 +733,6 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             }
             tableTypeList.setModel(listModel);
         }
-
-
     }
 
     @Action
@@ -648,7 +759,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Table type not yet implemented.", "Table type not yet implemented.", JOptionPane.ERROR_MESSAGE);
             return;
         } else {
-
+            String heading = headerOfTableTextField.getText();
             int startYear = startYearChooser.getValue();
             int endYear = endYearChooser.getValue();
             PopulationDataset[] populations = getSelectedPopulations();
@@ -669,7 +780,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     // cancelled
                     return;
                 }
-                
+
                 int i = 0;
                 String populationFilterString = "";
                 for (PopulationDataset pop : populations) {
@@ -717,11 +828,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     if (tableDatadescription.getRowCount() > 0) {
                         incidenceData = tableDataSource.retrieveRows(0, tableDatadescription.getRowCount());
                     }
-                    String heading = canreg.client.CanRegClientApp.getApplication().getSystemName() + " (" + startYear;
-                    if (endYear != startYear) {
-                        heading += "-" + endYear;
-                    }
-                    heading += ")";
+
                     LinkedList<String> filesGenerated = tableBuilder.buildTable(heading, fileName, startYear, endYear, incidenceData, populations, standardPopulations, tble.getConfigFields(), tble.getEngineParameters());
                     JOptionPane.showMessageDialog(this, "Tables built.", "Tables built.", JOptionPane.INFORMATION_MESSAGE);
 
@@ -736,7 +843,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SecurityException ex) {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (Exception ex) {
+                } catch (NotCompatibleDataException ex) {
+                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }catch (Exception ex) {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {

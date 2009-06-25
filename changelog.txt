@@ -1,14 +1,64 @@
 Changelog
+4.99.9 Build 668
+- Population Data Set Editor: fixed the bug that did not allow a PDS to be updated (eg the filter).
 
+- Fixed the layout of most windows to fit better on smaller screens.
+
+- Global Person Search: removed "already matched" column...
+
+- Frequencies/export variables selection box re-look
+
+- Frequencies/export variables selection box scrolls faster, variables closer
+
+- TextFields added as option in record editor
+
+- Range now works properly when making frequency by year tables as well.
+
+- Various bug fixes.
+
+4.99.8 Build 661
+- Added functionality to import Population data sets from CanReg4.
+
+- Added functionality to merge patients.
+
+- Fixed memory "leak" occurring when editing/importing dictionaries.
+
+- TableBuilder: max number of population data sets added
+
+- Tables: age specific tables split in number of cases and rates, functionality to see if a population dataset is compatible with a table added.
+
+- RecordEditorPanel: Order of groups now follow the order in the XML file.
+
+- RecordEditor: tidied the GUI.
+
+- Usermanager: obligatory with one supervisor account.
+
+- Minor changes, documentation updated, trn-dictionary improved, TRN.xml improved.
+
+- CanRegServer: person search related changes.
+
+- DatabaseFilter: Range implemented.
+
+- MaxLengthDocument: Fires "changed" events.
+
+- Various bug fixes.
+
+4.99.7 Build 656
+- Global person search implemented.
+
+- Range filtering implemented.
+
+- FastFilterInternalFrame: added operators IN and BETWEEN.
+
+- Minor changes, documentation updated, trn-dictionary improved, TRN.xml improved.
 4.99.6 Build 648
 - Fixed a bug in the way the server addresses were handled on machines with multiple network interfaces.
 
 - Changed default coding schemes for various languages during import of old data to fix bug found by the Jordanian cancer registry on Arabic letters not imported properly.
-
 4.99.5 Build 645
 - User manager implemented. 
 
-- Migrator function implemented for situations where we need to change database structure between versions of CanReg. 
+- Migrator function implemented for situations where we need to change database structure between releases of CanReg5.
 
 - Better handling of the menus available for the different users. 
 
