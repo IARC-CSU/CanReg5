@@ -91,7 +91,14 @@ public class DistributedTableModel extends AbstractTableModel implements TableMo
 	 * @see javax.swing.table.TableModel#getValueAt(int, int)
 	 */
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		return tableClientCache.retrieveRowFromCache(rowIndex)[columnIndex];
+        Object value = null;
+        if (tableClientCache!=null){
+            Object[] row = tableClientCache.retrieveRowFromCache(rowIndex);
+            if (row!=null && row.length>columnIndex){
+                value = row[columnIndex];
+            }
+        }
+		return value;
 	}
 
 

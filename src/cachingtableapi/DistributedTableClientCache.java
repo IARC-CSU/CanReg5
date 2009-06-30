@@ -94,7 +94,7 @@ public class DistributedTableClientCache implements Serializable {
      *@param rowIndex The row index in the table that is to be retrieved.
      * @return 
      */
-    public Object[] retrieveRowFromCache(int rowIndex) {
+    public synchronized Object[] retrieveRowFromCache(int rowIndex) {
         ensureRowCached(rowIndex);
         return (Object[]) dataMap.get(rowCacheIndexMap.get(rowIndex));
     }
