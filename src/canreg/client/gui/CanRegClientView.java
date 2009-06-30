@@ -177,13 +177,13 @@ public class CanRegClientView extends FrameView {
         mainPanel = new javax.swing.JPanel();
         toolBar = new javax.swing.JToolBar();
         browseEditButton = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        createNewRecordButton = new javax.swing.JButton();
+        jSeparator14 = new javax.swing.JToolBar.Separator();
+        tableBuilderButton = new javax.swing.JButton();
         jSeparator13 = new javax.swing.JToolBar.Separator();
         optionsButton = new javax.swing.JButton();
-        jSeparator14 = new javax.swing.JToolBar.Separator();
-        jButton1 = new javax.swing.JButton();
         jSeparator15 = new javax.swing.JToolBar.Separator();
-        jButton3 = new javax.swing.JButton();
+        helpButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         desktopPane = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
@@ -258,12 +258,22 @@ public class CanRegClientView extends FrameView {
         browseEditButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(browseEditButton);
 
-        jButton2.setAction(actionMap.get("createNewRecordSetAction")); // NOI18N
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setName("jButton2"); // NOI18N
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(jButton2);
+        createNewRecordButton.setAction(actionMap.get("createNewRecordSetAction")); // NOI18N
+        createNewRecordButton.setFocusable(false);
+        createNewRecordButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        createNewRecordButton.setName("createNewRecordButton"); // NOI18N
+        createNewRecordButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(createNewRecordButton);
+
+        jSeparator14.setName("jSeparator14"); // NOI18N
+        toolBar.add(jSeparator14);
+
+        tableBuilderButton.setAction(actionMap.get("showTableBuilder")); // NOI18N
+        tableBuilderButton.setFocusable(false);
+        tableBuilderButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        tableBuilderButton.setName("tableBuilderButton"); // NOI18N
+        tableBuilderButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(tableBuilderButton);
 
         jSeparator13.setName("jSeparator13"); // NOI18N
         toolBar.add(jSeparator13);
@@ -275,25 +285,15 @@ public class CanRegClientView extends FrameView {
         optionsButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(optionsButton);
 
-        jSeparator14.setName("jSeparator14"); // NOI18N
-        toolBar.add(jSeparator14);
-
-        jButton1.setAction(actionMap.get("showTableBuilder")); // NOI18N
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setName("jButton1"); // NOI18N
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(jButton1);
-
         jSeparator15.setName("jSeparator15"); // NOI18N
         toolBar.add(jSeparator15);
 
-        jButton3.setAction(actionMap.get("showCanRegHelpFile")); // NOI18N
-        jButton3.setFocusable(false);
-        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton3.setName("jButton3"); // NOI18N
-        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(jButton3);
+        helpButton.setAction(actionMap.get("showCanRegHelpFile")); // NOI18N
+        helpButton.setFocusable(false);
+        helpButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        helpButton.setName("helpButton"); // NOI18N
+        helpButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(helpButton);
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
@@ -822,6 +822,9 @@ public class CanRegClientView extends FrameView {
         //toolbar buttons        
         // a bit too drastic : toolBar.setVisible(loggedIn);
         browseEditButton.setEnabled(analysis);
+        createNewRecordButton.setEnabled(dataEntry);
+        tableBuilderButton.setEnabled(analysis);
+
         // startDatabaseServerButton.setEnabled(management);
         //Menus
         editDictionaryMenuItem.setEnabled(management);
@@ -1150,6 +1153,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem browseEditMenuItem;
     private javax.swing.JMenuItem canReg5HelpMenuItem;
     private javax.swing.JMenuItem convertCR4SystDefMenuItem;
+    private javax.swing.JButton createNewRecordButton;
     private javax.swing.JMenu dataEntryMenu;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenuItem duplicateSearchMenuItem;
@@ -1157,14 +1161,12 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem encrWebsiteMenuItem;
     private javax.swing.JMenuItem exportDataReportsMenuItem;
     private javax.swing.JMenuItem frequenciesMenuItem;
+    private javax.swing.JButton helpButton;
     private javax.swing.JMenuItem iacrWebsiteMenuItem;
     private javax.swing.JMenuItem icdo3DocumentationWebsiteMenuItem;
     private javax.swing.JMenuItem icdo3ManualMenuItem;
     private javax.swing.JMenuItem importDataMenuItem;
     private javax.swing.JMenuItem incidenceTablesMenuItem;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
@@ -1200,6 +1202,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JButton tableBuilderButton;
     private javax.swing.JToolBar toolBar;
     private javax.swing.JMenu toolsMenu;
     private javax.swing.JLabel userLevelLabel;
