@@ -23,7 +23,6 @@ import java.util.logging.Logger;
  *
  * @author ervikm
  */
-
 public class SystemDefinitionConverter {
 
     private String canReg4FileName;
@@ -74,6 +73,7 @@ public class SystemDefinitionConverter {
     private String[] mpCopyValues = {"Must", "Prob", "Intr", "Othr"};
     private TreeMap<String, String> variableToTableMap;
     private int recordIDlength;
+    private String morphologyVariableName;
 
     /**
      * @param args 
@@ -260,12 +260,12 @@ public class SystemDefinitionConverter {
                             element.appendChild(createElement(namespace + "category_X_pos", "" + readNumber(2)));
                             element.appendChild(createElement(namespace + "category_Y_pos", "" + readNumber(2)));
                         } else {
-                             debugOut("Invalid dict type...");
+                            debugOut("Invalid dict type...");
                         }
                         element.appendChild(createElement(namespace + "dictionary_X_pos", "" + readNumber(2)));
                         element.appendChild(createElement(namespace + "dictionary_Y_pos", "" + readNumber(2)));
                     } else {
-                         debugOut("Invalid variable description...");
+                        debugOut("Invalid variable description...");
                     }
                     // Place variable in the right table
                     int groupID = Integer.parseInt(groupIDString);
@@ -285,7 +285,7 @@ public class SystemDefinitionConverter {
                 // We build the doc for this later.
 
                 int numberOfIndexes = readNumber(2);
-                 debugOut("Number of Indexes: "+numberOfIndexes);
+                debugOut("Number of Indexes: " + numberOfIndexes);
 
                 TreeMap<String, LinkedList<String>> indexMap = new TreeMap<String, LinkedList<String>>();
                 // first scan
@@ -332,7 +332,7 @@ public class SystemDefinitionConverter {
                 // Create the Standard variable part
                 //
                 int numberOfStandardVarbs = readNumber(2);
-                 debugOut("Number of Standard variables:"+numberOfStandardVarbs);
+                debugOut("Number of Standard variables:" + numberOfStandardVarbs);
                 for (int i = 0; i < numberOfStandardVarbs; i++) {
                     int variableIndex = readNumber(2);
                     if (variableIndex > -1) {
@@ -340,11 +340,13 @@ public class SystemDefinitionConverter {
                         //  debugOut(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
                         variableElement.appendChild(createElement(namespace + "standard_variable_name", standardVariablesCR4[i]));
                         // Grab some information
-                        if (variableIndex == 0){
+                        if (i == 0) {
                             String recordIDlengthString = variableElement.getElementsByTagName(namespace + "variable_length").item(0).getTextContent();
-                            if (recordIDlengthString!=null){
+                            if (recordIDlengthString != null) {
                                 recordIDlength = Integer.parseInt(recordIDlengthString);
                             }
+                        } else if (i == 6) {
+                            morphologyVariableName = variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent();
                         }
                     }
                 }
@@ -424,7 +426,7 @@ public class SystemDefinitionConverter {
                             createVariable(variableNumber++, variableName, variableName, variableName,
                             -1, "Automatic", "Othr", "Number", -1, -1, Globals.PATIENT_TABLE_NAME, variableName));
 
-                     /*
+                    /*
                      * Check status Patient table
                      */
                     variableName = Globals.StandardVariableNames.PatientCheckStatus.toString();
@@ -501,7 +503,8 @@ public class SystemDefinitionConverter {
                 codingElement.appendChild(createElement(namespace + "date_format", "" + dataStream.readByte()));
                 codingElement.appendChild(createElement(namespace + "date_separator", readBytes(1)));
                 settingsElement.appendChild(createElement(namespace + "fast_safe_mode", "" + dataStream.readByte()));
-                codingElement.appendChild(createElement(namespace + "morphology_length", readBytes(1)));
+                int morphologyLength = Integer.parseInt(readBytes(1));
+                codingElement.appendChild(createElement(namespace + "morphology_length", "" + morphologyLength));
                 settingsElement.appendChild(createElement(namespace + "mult_prim_rules", "" + dataStream.readByte()));
                 settingsElement.appendChild(createElement(namespace + "special_registry", "" + dataStream.readByte()));
                 settingsElement.appendChild(createElement(namespace + "password_rules", "" + dataStream.readByte()));
@@ -509,6 +512,15 @@ public class SystemDefinitionConverter {
                 codingElement.appendChild(createElement(namespace + "registration_number_type", "" + dataStream.readByte()));
                 codingElement.appendChild(createElement(namespace + "mult_prim_code_length", readBytes(1)));
                 codingElement.appendChild(createElement(namespace + "basis_diag_codes", "" + dataStream.readByte()));
+
+                //add metavariables
+                if (morphologyLength == 5) {
+                    String variableName = Globals.StandardVariableNames.Behaviour.toString();
+                    String formula = "SUBSTRING(" + morphologyVariableName + ",5,1)";
+                    variablesParentElement.appendChild(
+                            createMetaVariable(variableNumber++, variableName, formula, variableName,
+                            -1, "Automatic", "Othr", "Meta", -1, -1, Globals.TUMOUR_TABLE_NAME, variableName, formula));
+                }
 
             } catch (EOFException e) {
                 // Nothing to do
@@ -603,10 +615,17 @@ public class SystemDefinitionConverter {
         return value;
     }
 
+    private Element createMetaVariable(int variableId, String fullName, String shortName,
+            String englishName, int groupID, String fillInStatus, String multiplePrimaryCopy,
+            String variableType, int variableLength, int useDictionary, String table, String standardVariableName, String formula) {
+        Element element = createVariable(variableId, fullName, shortName, englishName, groupID, fillInStatus, multiplePrimaryCopy, variableType, variableLength, useDictionary, table, standardVariableName);
+        element.appendChild(createElement(namespace + "variable_formula", "" + formula));
+        return element;
+    }
+
     private Element createVariable(int variableId, String fullName, String shortName,
             String englishName, int groupID, String fillInStatus, String multiplePrimaryCopy,
             String variableType, int variableLength, int useDictionary, String table, String standardVariableName) {
-
 
         Element element = doc.createElement(namespace + "variable");
 
@@ -642,7 +661,7 @@ public class SystemDefinitionConverter {
         return childElement;
     }
 
-    private Element changeValueOfChild(Element element, String childName, String newValue){
+    private Element changeValueOfChild(Element element, String childName, String newValue) {
         Element childElement = (Element) element.getElementsByTagName(childName).item(0);
         childElement.setTextContent(newValue);
         return element;

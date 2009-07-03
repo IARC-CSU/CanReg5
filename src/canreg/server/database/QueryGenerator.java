@@ -60,10 +60,12 @@ public class QueryGenerator {
 
             // Create line
             String tableNameDB = element.getElementsByTagName(namespace + "table").item(0).getTextContent();
-
-            if (tableNameDB.equalsIgnoreCase(tableName)) {
-                query += ", ";
-                query += createVariable(element, doc);
+            String variableType = element.getElementsByTagName(namespace + "variable_type").item(0).getTextContent();
+            if (!"Meta".equalsIgnoreCase(variableType)) {
+                if (tableNameDB.equalsIgnoreCase(tableName)) {
+                    query += ", ";
+                    query += createVariable(element, doc);
+                }
             }
         }
 
@@ -386,16 +388,18 @@ public class QueryGenerator {
 
             // Create line
             String tableNameDB = element.getElementsByTagName(namespace + "table").item(0).getTextContent();
-
-            if (tableNameDB.equalsIgnoreCase(tableName)) {
-                if (first) {
-                    first = false;
-                } else {
-                    variableNamesPart += ", ";
-                    valuesPart += ", ";
+            String variableType = element.getElementsByTagName(namespace + "variable_type").item(0).getTextContent();
+            if (!"Meta".equalsIgnoreCase(variableType)) {
+                if (tableNameDB.equalsIgnoreCase(tableName)) {
+                    if (first) {
+                        first = false;
+                    } else {
+                        variableNamesPart += ", ";
+                        valuesPart += ", ";
+                    }
+                    variableNamesPart += "\"" + element.getElementsByTagName(namespace + "short_name").item(0).getTextContent().toUpperCase() + "\"";
+                    valuesPart += "?";
                 }
-                variableNamesPart += "\"" + element.getElementsByTagName(namespace + "short_name").item(0).getTextContent().toUpperCase() + "\"";
-                valuesPart += "?";
             }
         }
         variableNamesPart += ") ";
@@ -458,14 +462,16 @@ public class QueryGenerator {
 
             // Create line
             String tableNameDB = element.getElementsByTagName(namespace + "table").item(0).getTextContent();
-
-            if (tableNameDB.equalsIgnoreCase(tableName)) {
-                if (first) {
-                    first = false;
-                } else {
-                    variableNamesPart += "\n, ";
+            String variableType = element.getElementsByTagName(namespace + "variable_type").item(0).getTextContent();
+            if (!"Meta".equalsIgnoreCase(variableType)) {
+                if (tableNameDB.equalsIgnoreCase(tableName)) {
+                    if (first) {
+                        first = false;
+                    } else {
+                        variableNamesPart += "\n, ";
+                    }
+                    variableNamesPart += "\"" + element.getElementsByTagName(namespace + "short_name").item(0).getTextContent().toUpperCase() + "\" = ?";
                 }
-                variableNamesPart += "\"" + element.getElementsByTagName(namespace + "short_name").item(0).getTextContent().toUpperCase() + "\" = ?";
             }
         }
         variableNamesPart += "\nWHERE " + recordIDVariableName + " = ? ";
@@ -482,7 +488,7 @@ public class QueryGenerator {
         //Get the variable type
         String variableType = element.getElementsByTagName("ns3:variable_type").item(0).getTextContent();
 
-        if (variableType.equalsIgnoreCase("Alpha") || 
+        if (variableType.equalsIgnoreCase("Alpha") ||
                 variableType.equalsIgnoreCase("AsianText") ||
                 variableType.equalsIgnoreCase("TextArea")) {
             queryLine += " VARCHAR(";

@@ -134,10 +134,13 @@ public class Tools {
      */
     public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
-        DatabaseVariablesListElement[] variables = new DatabaseVariablesListElement[nl.getLength()];
+        // DatabaseVariablesListElement[] variables = new DatabaseVariablesListElement[nl.getLength()];
+        LinkedList<DatabaseVariablesListElement> variablesList = new LinkedList<DatabaseVariablesListElement>();
+
+        // build a list of database variables
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
-            variables[i] = new DatabaseVariablesListElement(
+            DatabaseVariablesListElement variable = new DatabaseVariablesListElement(
                     e.getElementsByTagName(namespace + "table").item(0).getTextContent(),
                     Integer.parseInt(e.getElementsByTagName(namespace + "variable_id").item(0).getTextContent()),
                     e.getElementsByTagName(namespace + "short_name").item(0).getTextContent(),
@@ -145,61 +148,71 @@ public class Tools {
             if (e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent().equalsIgnoreCase("Dict")) {
                 String dictionaryName = e.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
                 int id = canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, dictionaryName);
-                variables[i].setDictionaryID(id);
+                variable.setDictionaryID(id);
                 boolean compound = canreg.client.dataentry.DictionaryHelper.isCompoundDictionarybyName(doc, dictionaryName);
-                variables[i].setDictionaryCompound(compound);
-                variables[i].setUseDictionary(dictionaryName);
+                variable.setDictionaryCompound(compound);
+                variable.setUseDictionary(dictionaryName);
             }
 
-            variables[i].setEnglishName(e.getElementsByTagName(namespace + "english_name").item(0).getTextContent());
+            variable.setEnglishName(e.getElementsByTagName(namespace + "english_name").item(0).getTextContent());
 
             NodeList groupNameNodeList = e.getElementsByTagName(namespace + "group_id");
             if (groupNameNodeList != null && groupNameNodeList.getLength() > 0) {
-                variables[i].setGroupID(Integer.parseInt(groupNameNodeList.item(0).getTextContent()));
+                variable.setGroupID(Integer.parseInt(groupNameNodeList.item(0).getTextContent()));
             }
 
-            variables[i].setFullName(e.getElementsByTagName(namespace + "full_name").item(0).getTextContent());
+            variable.setFullName(e.getElementsByTagName(namespace + "full_name").item(0).getTextContent());
 
             NodeList xPosNodeList = e.getElementsByTagName(namespace + "variable_X_pos");
             if (xPosNodeList != null && xPosNodeList.getLength() > 0) {
-                variables[i].setXPos(Integer.decode(xPosNodeList.item(0).getTextContent()));
+                variable.setXPos(Integer.decode(xPosNodeList.item(0).getTextContent()));
             }
             NodeList yPosNodeList = e.getElementsByTagName(namespace + "variable_Y_pos");
             if (yPosNodeList != null && yPosNodeList.getLength() > 0) {
-                variables[i].setYPos(Integer.decode(yPosNodeList.item(0).getTextContent()));
+                variable.setYPos(Integer.decode(yPosNodeList.item(0).getTextContent()));
             }
             NodeList variableLengthNodeList = e.getElementsByTagName(namespace + "variable_length");
             if (variableLengthNodeList != null && variableLengthNodeList.getLength() > 0) {
-                variables[i].setVariableLength(Integer.decode(variableLengthNodeList.item(0).getTextContent()));
+                variable.setVariableLength(Integer.decode(variableLengthNodeList.item(0).getTextContent()));
             } else if (e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent().equalsIgnoreCase("dict")) {
                 String dictionaryName = e.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
-                NodeList dictnl = doc.getElementsByTagName("ns3:dictionary");
+                NodeList dictnl = doc.getElementsByTagName(namespace + "dictionary");
                 boolean found = false;
                 int j = 0;
                 Element dictionaryElement = null;
                 while (!found && j < dictnl.getLength()) {
                     dictionaryElement = (Element) dictnl.item(j++);
-                    found = dictionaryElement.getElementsByTagName("ns3:name").item(0).getTextContent().equalsIgnoreCase(dictionaryName);
+                    found = dictionaryElement.getElementsByTagName(namespace + "name").item(0).getTextContent().equalsIgnoreCase(dictionaryName);
                 }
                 if (found) {
-                    variables[i].setVariableLength(Integer.decode(dictionaryElement.getElementsByTagName("ns3:full_dictionary_code_length").item(0).getTextContent()));
+                    variable.setVariableLength(Integer.decode(dictionaryElement.getElementsByTagName("ns3:full_dictionary_code_length").item(0).getTextContent()));
                 }
             }
             NodeList fillInStatusNodeList = e.getElementsByTagName(namespace + "fill_in_status");
             if (fillInStatusNodeList != null && fillInStatusNodeList.getLength() > 0) {
-                variables[i].setFillInStatus(fillInStatusNodeList.item(0).getTextContent());
+                variable.setFillInStatus(fillInStatusNodeList.item(0).getTextContent());
             }
             NodeList standardVariableNameNodeList = e.getElementsByTagName(namespace + "standard_variable_name");
             if (standardVariableNameNodeList != null && standardVariableNameNodeList.getLength() > 0) {
-                variables[i].setStandardVariableName(standardVariableNameNodeList.item(0).getTextContent());
+                variable.setStandardVariableName(standardVariableNameNodeList.item(0).getTextContent());
             }
 
-        // TODO
-        // Accommodate unknown codes
+            // TODO
+            // Accommodate unknown codes
 
+
+            // Add variable to the list.
+            variablesList.add(variable);
         }
+        // add the metavariables
+        // variablesList = addMetaVariables(doc, namespace, variablesList);
+
+        DatabaseVariablesListElement[] variables = new DatabaseVariablesListElement[0];
+        variables = variablesList.toArray(variables);
         return variables;
     }
+
+
 
     /**
      * 
@@ -234,8 +247,8 @@ public class Tools {
     public static DatabaseIndexesListElement[] getIndexesListElements(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "index");
         DatabaseIndexesListElement[] indexes = new DatabaseIndexesListElement[nl.getLength()];
-        TreeMap<String,LinkedList<String>> patientIndexMap = buildIndexMap(Globals.PATIENT_TABLE_NAME, doc, namespace);
-        TreeMap<String,LinkedList<String>> tumourIndexMap = buildIndexMap(Globals.TUMOUR_TABLE_NAME, doc, namespace);
+        TreeMap<String, LinkedList<String>> patientIndexMap = buildIndexMap(Globals.PATIENT_TABLE_NAME, doc, namespace);
+        TreeMap<String, LinkedList<String>> tumourIndexMap = buildIndexMap(Globals.TUMOUR_TABLE_NAME, doc, namespace);
 
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
@@ -244,9 +257,9 @@ public class Tools {
             String tableName = e.getElementsByTagName(namespace + "table").item(0).getTextContent();
             index.setDatabaseTableName(tableName);
             LinkedList<String> variablesInIndex = null;
-            if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)){
+            if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
                 variablesInIndex = patientIndexMap.get(indexName);
-            } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)){
+            } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
                 variablesInIndex = tumourIndexMap.get(indexName);
             }
             index.setVariablesInIndex(variablesInIndex);

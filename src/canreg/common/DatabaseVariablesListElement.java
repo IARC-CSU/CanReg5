@@ -8,6 +8,7 @@ import java.io.Serializable;
  */
 public class DatabaseVariablesListElement implements Serializable {
     // Table in the database for the variable
+
     private String table;
     // ID of the variable in the database
     private int variableID;
@@ -21,23 +22,18 @@ public class DatabaseVariablesListElement implements Serializable {
     private int dictionaryID = -1;
     // Dictionary Compund?
     private boolean dictionaryCompound = false;
-
     private String fullName;
     private String englishName;
     // private String groupName;
     private String standardVariableName;
-    
     private int xPos;
     private int yPos;
-    
     private int variableLength;
-    
     private String fillInStatus;
-    
     private int groupID;
-    
     private Object unknownCode;
-    
+    private String variableFormula = null;
+
     /**
      * 
      * @param databaseTableName
@@ -342,15 +338,15 @@ public class DatabaseVariablesListElement implements Serializable {
     public void setStandardVariableName(String standardVariableName) {
         this.standardVariableName = standardVariableName;
     }
-    
+
     /**
      * 
      * @param string
      * @return
      */
-    public String getSQLqueryFormat(String string){
-        if (getVariableType().equalsIgnoreCase("Dict")||getVariableType().equalsIgnoreCase("Alpha")){
-            string = "'"+string+"'";
+    public String getSQLqueryFormat(String string) {
+        if (getVariableType().equalsIgnoreCase("Dict") || getVariableType().equalsIgnoreCase("Alpha")) {
+            string = "'" + string + "'";
         }
         return string;
     }
@@ -383,6 +379,36 @@ public class DatabaseVariablesListElement implements Serializable {
      */
     public void setDictionaryCompound(boolean dictionaryCompound) {
         this.dictionaryCompound = dictionaryCompound;
+    }
+
+    /**
+     * @return the metaVariable
+     */
+    public boolean isMetaVariable() {
+        return variableType.equalsIgnoreCase("Meta");
+    }
+
+    /**
+     * @param metaVariable the metaVariable to set
+     */
+    public void setMetaVariable(boolean metaVariable) {
+        if (metaVariable) {
+            this.variableType = "Meta";
+        }
+    }
+
+    /**
+     * @return the metaVariableFormula
+     */
+    public String getMetaVariableFormula() {
+        return variableFormula;
+    }
+
+    /**
+     * @param metaVariableFormula the metaVariableFormula to set
+     */
+    public void setMetaVariableFormula(String metaVariableFormula) {
+        this.variableFormula = metaVariableFormula;
     }
 }
 

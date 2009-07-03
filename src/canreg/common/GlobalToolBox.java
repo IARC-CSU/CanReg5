@@ -96,12 +96,15 @@ public class GlobalToolBox {
     
     private static Map<String, DatabaseVariablesListElement> buildVariablesMap(DatabaseVariablesListElement[] listelements){
         Map map = new LinkedHashMap();
+        // First build the real variables
         for (DatabaseVariablesListElement dvle:listelements){
             String standardVariableName = dvle.getStandardVariableName();
             if (standardVariableName!=null){
                 map.put(standardVariableName, dvle);
             }
         }
+        // Then build meta variables - i.e. behaviour as fifth digit in morphology
+
         return map;
     }
     

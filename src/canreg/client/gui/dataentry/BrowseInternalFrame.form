@@ -58,7 +58,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="buttonsPanel" min="0" pref="265" max="32767" attributes="1"/>
+                  <Component id="buttonsPanel" min="0" pref="267" max="32767" attributes="1"/>
                   <Component id="rangeFilterPanel" min="-2" pref="265" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="variablesPanel" min="-2" max="-2" attributes="0"/>
@@ -200,7 +200,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="163" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="165" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
