@@ -59,14 +59,11 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         initOtherComponents();
 
         addInternalFrameListener(new InternalFrameAdapter() {
-
             @Override
             public void internalFrameClosing(InternalFrameEvent e) {
                 close();
             }
         });
-
-
     }
 
     public void close() {
