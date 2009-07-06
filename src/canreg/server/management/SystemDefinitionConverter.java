@@ -516,9 +516,9 @@ public class SystemDefinitionConverter {
                 //add metavariables
                 if (morphologyLength == 5) {
                     String variableName = Globals.StandardVariableNames.Behaviour.toString();
-                    String formula = "SUBSTRING(" + morphologyVariableName + ",5,1)";
+                    String formula = "SUBSTR(" + morphologyVariableName + ",5,1)";
                     variablesParentElement.appendChild(
-                            createMetaVariable(variableNumber++, variableName, formula, variableName,
+                            createMetaVariable(variableNumber++, variableName, variableName, variableName,
                             -1, "Automatic", "Othr", "Meta", -1, -1, Globals.TUMOUR_TABLE_NAME, variableName, formula));
                 }
 
