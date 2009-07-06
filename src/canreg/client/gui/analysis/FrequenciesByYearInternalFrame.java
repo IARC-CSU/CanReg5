@@ -8,6 +8,7 @@ package canreg.client.gui.analysis;
 import cachingtableapi.DistributedTableDescription;
 import cachingtableapi.DistributedTableModel;
 import canreg.client.DistributedTableDataSourceClient;
+import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
@@ -25,6 +26,8 @@ import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import org.jdesktop.application.Action;
@@ -45,6 +48,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     private String tableName = null;
     private DistributedTableDescription tableDatadescriptionPopUp;
     private static int MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK = 20;
+    private TableInternalFrame tableInternalFrame;
 
     /** Creates new form FrequenciesByYearInternalFrame
      * @param dtp 
@@ -53,6 +57,21 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         this.dtp = dtp;
         initComponents();
         initOtherComponents();
+
+        addInternalFrameListener(new InternalFrameAdapter() {
+
+            @Override
+            public void internalFrameClosing(InternalFrameEvent e) {
+                close();
+            }
+        });
+
+
+    }
+
+    public void close() {
+        tableInternalFrame.dispose();
+        this.dispose();
     }
 
     /** This method is called from within the constructor to
@@ -70,8 +89,10 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         resultPanel = new javax.swing.JPanel();
         resultScrollPane = new javax.swing.JScrollPane();
         resultTable = new javax.swing.JTable();
+        popOutTableButton = new javax.swing.JButton();
 
         setClosable(true);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
@@ -111,12 +132,15 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
+            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 558, Short.MAX_VALUE)
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
         );
+
+        popOutTableButton.setAction(actionMap.get("popOutTableAction")); // NOI18N
+        popOutTableButton.setName("popOutTableButton"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -130,7 +154,10 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                         .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(popOutTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
                             .addComponent(variablesChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))))
                 .addContainerGap())
         );
@@ -143,7 +170,9 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(variablesChooserPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(popOutTableButton))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(resultPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -156,12 +185,14 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton popOutTableButton;
     private canreg.client.gui.components.RangeFilterPanel rangeFilterPanel;
     private javax.swing.JPanel resultPanel;
     private javax.swing.JScrollPane resultScrollPane;
     private javax.swing.JTable resultTable;
     private canreg.client.gui.components.VariablesChooserPanel variablesChooserPanel;
     // End of variables declaration//GEN-END:variables
+
     /**
      * 
      * @return
@@ -251,6 +282,8 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         rangeFilterPanel.setSortByVariableShown(false);
         // resultScrollPane.setVisible(false);
         variablesChooserPanel.initPanel();
+        tableInternalFrame = new TableInternalFrame();
+
         resultTable.addMouseListener(new java.awt.event.MouseAdapter() {
 
             @Override
@@ -358,7 +391,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     @Action
     public void printTableAction() {
         try {
-            if (!resultTable.print(JTable.PrintMode.NORMAL, 
+            if (!resultTable.print(JTable.PrintMode.NORMAL,
                     new MessageFormat("CanReg Frequencies by Year - " + rangeFilterPanel.getFilter()),
                     null)) {
                 System.err.println("User cancelled printing");
@@ -366,6 +399,13 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         } catch (java.awt.print.PrinterException e) {
             System.err.format("Cannot print %s%n", e.getMessage());
         }
+    }
 
+    @Action
+    public void popOutTableAction() {
+        resultScrollPane.setVisible(false);
+        resultScrollPane = tableInternalFrame.setResultTable(resultTable);
+        CanRegClientView.showAndCenterInternalFrame(dtp, tableInternalFrame);
+        popOutTableButton.setEnabled(false);
     }
 }
