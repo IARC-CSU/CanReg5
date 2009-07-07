@@ -416,7 +416,7 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.PatientUpdateDate.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Number", -1, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                            -1, "Automatic", "Othr", "Date", -1, -1, Globals.PATIENT_TABLE_NAME, variableName));
 
                     /*
                      * Record status Patient table
