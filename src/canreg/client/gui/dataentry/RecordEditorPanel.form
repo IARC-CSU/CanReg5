@@ -20,15 +20,15 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="systemPanel" alignment="0" max="32767" attributes="1"/>
-          <Component id="jScrollPane1" alignment="0" pref="735" max="32767" attributes="0"/>
+          <Component id="jScrollPane1" alignment="1" pref="735" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="systemPanel" min="-2" max="-2" attributes="0"/>
+              <Component id="systemPanel" min="-2" pref="77" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="428" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="470" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -36,13 +36,6 @@
   <SubComponents>
     <Container class="javax.swing.JPanel" name="systemPanel">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="System">
-              <Property name="titleX" resourceKey="systemPanel.border.title"/>
-            </TitledBorder>
-          </Border>
-        </Property>
         <Property name="name" type="java.lang.String" value="systemPanel" noResource="true"/>
       </Properties>
 
@@ -57,7 +50,7 @@
                   <Component id="mpPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="recordStatusPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="22" max="32767" attributes="0"/>
                   <Component id="recordStatusPanel1" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>

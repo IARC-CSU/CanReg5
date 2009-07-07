@@ -199,7 +199,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 }
             }
             Object patientObsoleteStatus = dbr.getVariable(patientObsoleteVariableName);
-            if (patientObsoleteStatus != null && patientObsoleteStatus.equals(1)) {
+            if (patientObsoleteStatus != null && patientObsoleteStatus.equals(Globals.OBSOLETE_VALUE)) {
                 regnoString += " (obsolete)";
             }
             patientTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
@@ -225,7 +225,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 }
             }
             Object tumourObsoleteStatus = dbr.getVariable(tumourObsoleteVariableName);
-            if (tumourObsoleteStatus != null && tumourObsoleteStatus.equals(1)) {
+            if (tumourObsoleteStatus != null && tumourObsoleteStatus.equals(Globals.OBSOLETE_VALUE)) {
                 regnoString += " (obsolete)";
             }
             tumourTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
@@ -316,7 +316,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(showObsoleteRecordsCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 3, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addComponent(printButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveAllButton)
@@ -337,18 +337,19 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(10, 10, 10)
+                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
                 .addContainerGap())
-            .addComponent(recordSplitPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 741, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
+                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -392,7 +393,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         DatabaseVariablesListElement[] variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
         for (DatabaseVariablesListElement dbvle : variablesInTable) {
             String type = dbvle.getVariableType();
-            if (type.equalsIgnoreCase("date") || type.equalsIgnoreCase("number")) {
+            if (type.equalsIgnoreCase("Number")) {
                 dbr.setVariable(dbvle.getDatabaseVariableName(), -1);
             } else {
                 dbr.setVariable(dbvle.getDatabaseVariableName(), "");
@@ -823,8 +824,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         for (Component comp : patientTabbedPane.getComponents()) {
             RecordEditorPanel rep = (RecordEditorPanel) comp;
             DatabaseRecord dbr = rep.getDatabaseRecord();
-            int obsoleteFlag = (Integer) dbr.getVariable(patientObsoleteVariableName);
-            if (!showObsolete && obsoleteFlag == 1) {
+            String obsoleteFlag = (String) dbr.getVariable(patientObsoleteVariableName);
+            if (!showObsolete && obsoleteFlag.equals(Globals.OBSOLETE_VALUE)) {
                 patientTabbedPane.setEnabledAt(patientTabbedPane.indexOfComponent(rep), false);
             } else {
                 patientTabbedPane.setEnabledAt(patientTabbedPane.indexOfComponent(rep), true);
@@ -833,8 +834,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         for (Component comp : tumourTabbedPane.getComponents()) {
             RecordEditorPanel rep = (RecordEditorPanel) comp;
             DatabaseRecord dbr = rep.getDatabaseRecord();
-            int obsoleteFlag = (Integer) dbr.getVariable(tumourObsoleteVariableName);
-            if (!showObsolete && obsoleteFlag == 1) {
+            String obsoleteFlag = (String) dbr.getVariable(tumourObsoleteVariableName);
+            if (!showObsolete && obsoleteFlag.equals(Globals.OBSOLETE_VALUE)) {
                 tumourTabbedPane.setEnabledAt(tumourTabbedPane.indexOfComponent(rep), false);
             } else {
                 tumourTabbedPane.setEnabledAt(tumourTabbedPane.indexOfComponent(rep), true);

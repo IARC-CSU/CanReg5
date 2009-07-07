@@ -132,10 +132,11 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
     void setChecksResultCode(ResultCode resultCode) {
         this.resultCode = resultCode;
-        Object recStatus = null;
+        String recStatus = null;
         boolean canBeConfirmed = false;
         if (resultCode == null || resultCode == ResultCode.NotDone) {
             checksLabel.setText("Not done");
+            canBeConfirmed = false;
         } else {
             checksLabel.setText("Done: " + resultCode.toString());
             if (resultCode == ResultCode.OK || resultCode == ResultCode.Query) {
@@ -151,17 +152,15 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             if (hasChanged) {
                 recStatus = "0";
             } else {
-                recStatus = databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
+                recStatus = (String) databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
             }
             if (canBeConfirmed) {
                 recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithConfirmArray));
-
                 if (recStatus != null) {
                     recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
                 }
             } else {
                 recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithoutConfirmArray));
-
                 if (recStatus != null) {
                     recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
                 }
@@ -176,11 +175,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             if (dbvle != null) {
                 boolean obsolete = obsoleteToggleButton.isSelected();
                 if (obsolete) {
-                    databaseRecord.setVariable(dbvle.getDatabaseVariableName(), 1);
+                    databaseRecord.setVariable(dbvle.getDatabaseVariableName(), Globals.OBSOLETE_VALUE);
                 } else {
-                    databaseRecord.setVariable(dbvle.getDatabaseVariableName(), 0);
+                    databaseRecord.setVariable(dbvle.getDatabaseVariableName(), Globals.NOT_OBSOLETE_VALUE);
                 }
-
             }
         } else {
             obsoleteToggleButton.setSelected(!obsoleteToggleButton.isSelected());
@@ -309,7 +307,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
             if ("Date".equalsIgnoreCase(variableType)) {
                 vep = new DateVariableEditorPanel(this);
-            } if ("TextArea".equalsIgnoreCase(variableType)) {
+            } else if ("TextArea".equalsIgnoreCase(variableType)) {
                 vep = new TextFieldVariableEditorPanel(this);
             } else {
                 vep = new VariableEditorPanel(this);
@@ -317,10 +315,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
             vep.setDatabaseVariablesListElement(currentVariable);
 
-            int id = currentVariable.getDictionaryID();
+            int dictionaryID = currentVariable.getDictionaryID();
 
-            if (id >= 0) {
-                Dictionary dic = dictionary.get(id);
+            if (dictionaryID >= 0) {
+                Dictionary dic = dictionary.get(dictionaryID);
 
                 if (dic != null) {
                     vep.setDictionary(dic);
@@ -383,8 +381,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         /*
          * Set the obsolete status
          */
-        Object obsoleteStatus = databaseRecord.getVariable(obsoleteFlagVariableListElement.getDatabaseVariableName());
-        if (obsoleteStatus != null && (Integer) obsoleteStatus == 1) {
+        String obsoleteStatus = (String) databaseRecord.getVariable(obsoleteFlagVariableListElement.getDatabaseVariableName());
+        if (obsoleteStatus != null && obsoleteStatus.equalsIgnoreCase(Globals.OBSOLETE_VALUE)) {
             obsoleteToggleButton.setSelected(true);
         } else {
             obsoleteToggleButton.setSelected(false);
@@ -394,9 +392,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
          * Set the record status.
          */
         if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
-
             recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithConfirmArray));
-            Object recStatus = databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
+            String recStatus = (String) databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
             if (recStatus != null) {
                 recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
             }
@@ -472,10 +469,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
         setName("Form"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RecordEditorPanel.class);
-        systemPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("systemPanel.border.title"))); // NOI18N
         systemPanel.setName("systemPanel"); // NOI18N
 
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RecordEditorPanel.class);
         checksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("checksPanel.border.title"))); // NOI18N
         checksPanel.setName("checksPanel"); // NOI18N
 
@@ -635,18 +631,20 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                 .addComponent(mpPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(recordStatusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(recordStatusPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         systemPanelLayout.setVerticalGroup(
             systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mpPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(personSearchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(checksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(recordStatusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(systemPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(recordStatusPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(mpPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(personSearchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(checksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(recordStatusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(systemPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(recordStatusPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -661,14 +659,14 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(systemPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 735, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 735, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(systemPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(systemPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE))
         );
 
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
@@ -732,9 +730,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             }
         }
         if (obsoleteToggleButton.isSelected()) {
-            databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), 1);
+            databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.OBSOLETE_VALUE);
         } else {
-            databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), 0);
+            databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.NOT_OBSOLETE_VALUE);
         }
     }
 
