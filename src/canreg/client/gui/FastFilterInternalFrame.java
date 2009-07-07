@@ -480,7 +480,6 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
             } else {
                 possibleValuesMap = null;
             }
-
         } else {
             possibleValuesMap = null;
         }
