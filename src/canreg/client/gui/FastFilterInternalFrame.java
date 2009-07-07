@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -35,6 +36,8 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
     private Map<String, DictionaryEntry> possibleValuesMap;
     private ActionListener actionListener;
     private int maxLength;
+    private boolean dictionaryPopUp = true;
+    private boolean currentSelectionAdded = false;
 
     /** Creates new form FastFilterInternalFrame */
     public FastFilterInternalFrame() {
@@ -55,12 +58,14 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         instructionLabel2 = new javax.swing.JLabel();
         variableComboBox = new javax.swing.JComboBox();
         operationComboBox = new javax.swing.JComboBox();
-        valueTextField = new javax.swing.JTextField();
         logicalOperatorComboBox = new javax.swing.JComboBox();
         variableLabel = new javax.swing.JLabel();
         operationLabel = new javax.swing.JLabel();
         valueLabel = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
+        valuesSplitPane = new javax.swing.JSplitPane();
+        valueTextField = new javax.swing.JTextField();
+        valueTextField2 = new javax.swing.JTextField();
         filterPanel = new javax.swing.JPanel();
         scrollPane = new javax.swing.JScrollPane();
         textPane = new javax.swing.JTextPane();
@@ -94,17 +99,8 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         variableComboBox.setName("variableComboBox"); // NOI18N
 
         operationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        operationComboBox.setToolTipText(resourceMap.getString("operationComboBox.toolTipText")); // NOI18N
+        operationComboBox.setAction(actionMap.get("operatorSelected")); // NOI18N
         operationComboBox.setName("operationComboBox"); // NOI18N
-
-        valueTextField.setText(resourceMap.getString("valueTextField.text")); // NOI18N
-        valueTextField.setAction(actionMap.get("addAction")); // NOI18N
-        valueTextField.setName("valueTextField"); // NOI18N
-        valueTextField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                mouseClickHandler(evt);
-            }
-        });
 
         logicalOperatorComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         logicalOperatorComboBox.setName("logicalOperatorComboBox"); // NOI18N
@@ -122,6 +118,28 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
         jButton3.setName("jButton3"); // NOI18N
 
+        valuesSplitPane.setResizeWeight(0.5);
+        valuesSplitPane.setName("valuesSplitPane"); // NOI18N
+
+        valueTextField.setText(resourceMap.getString("valueTextField.text")); // NOI18N
+        valueTextField.setAction(actionMap.get("addAction")); // NOI18N
+        valueTextField.setName("valueTextField"); // NOI18N
+        valueTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mouseClickHandler(evt);
+            }
+        });
+        valuesSplitPane.setLeftComponent(valueTextField);
+
+        valueTextField2.setAction(actionMap.get("addAction")); // NOI18N
+        valueTextField2.setName("valueTextField2"); // NOI18N
+        valueTextField2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                valueTextField2mouseClickHandler(evt);
+            }
+        });
+        valuesSplitPane.setRightComponent(valueTextField2);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -130,17 +148,17 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
             .addComponent(instructionLabel2)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(variableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(variableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(variableLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(operationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(operationLabel))
+                    .addComponent(operationLabel)
+                    .addComponent(operationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(valuesSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(valueTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(logicalOperatorComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton3))
@@ -149,22 +167,26 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(instructionLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(instructionLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(variableLabel)
-                    .addComponent(operationLabel)
-                    .addComponent(valueLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(variableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(operationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3)
-                    .addComponent(logicalOperatorComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(valueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(instructionLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(instructionLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(variableLabel)
+                            .addComponent(valueLabel)
+                            .addComponent(operationLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(variableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton3)
+                            .addComponent(logicalOperatorComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(operationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(valuesSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         filterPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("filterPanel.border.title"))); // NOI18N
@@ -179,11 +201,11 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         filterPanel.setLayout(filterPanelLayout);
         filterPanelLayout.setHorizontalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)
         );
         filterPanelLayout.setVerticalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
         );
 
         cancelButton.setAction(actionMap.get("cancelAction")); // NOI18N
@@ -226,7 +248,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
 
 private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseClickHandler
     DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
-    if (dbvle.getVariableType().equalsIgnoreCase("dict")) {
+    if (dictionaryPopUp && dbvle.getVariableType().equalsIgnoreCase("dict")) {
         if (possibleValuesMap == null) {
             JOptionPane.showInternalMessageDialog(this, "Empty dictionary.", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
@@ -241,7 +263,7 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
             while (it.hasNext()) {
                 tempentry = possibleValuesMap.get(it.next());
 
-                allValuesVector.add (tempentry);
+                allValuesVector.add(tempentry);
 
                 if (dictionary.isCompoundDictionary()) {
                     if (tempentry.getCode().length() < maxLength) {
@@ -273,13 +295,19 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
                     }
                 }
                 // setValue(value);
-                valueTextField.setText(value);
+                JTextField field = (JTextField) evt.getSource();
+                field.setText(value);
             }
         }
     } else {
         // Do nothing
     }
+    currentSelectionAdded = false;
 }//GEN-LAST:event_mouseClickHandler
+
+private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_valueTextField2mouseClickHandler
+    this.mouseClickHandler(evt);
+}//GEN-LAST:event_valueTextField2mouseClickHandler
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JPanel filterPanel;
@@ -295,13 +323,16 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
     private javax.swing.JTextPane textPane;
     private javax.swing.JLabel valueLabel;
     private javax.swing.JTextField valueTextField;
+    private javax.swing.JTextField valueTextField2;
+    private javax.swing.JSplitPane valuesSplitPane;
     private javax.swing.JComboBox variableComboBox;
     private javax.swing.JLabel variableLabel;
     // End of variables declaration//GEN-END:variables
+
     private void initValues() {
-        String[] operators = {"=", "<>",">", "<", ">=", "<=", "BETWEEN", "LIKE", "IN" };
+        String[] operators = {"=", "<>", ">", "<", ">=", "<=", "BETWEEN", "LIKE", "IN"};
         operationComboBox.setModel(new DefaultComboBoxModel(operators));
-        operationComboBox.setSelectedIndex(2);
+        operationComboBox.setSelectedIndex(0);
         // Get the system description
         doc = canreg.client.CanRegClientApp.getApplication().getDatabseDescription();
         refreshVariableList();
@@ -349,12 +380,12 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         this.tableName = tableName;
         refreshVariableList();
     }
-    
+
     /**
      * 
      * @param al
      */
-    public void setActionListener(ActionListener al){
+    public void setActionListener(ActionListener al) {
         this.actionListener = al;
     }
 
@@ -371,6 +402,9 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
      */
     @Action
     public void okAction() {
+        if (!currentSelectionAdded) {
+            addAction();
+        }
         actionListener.actionPerformed(new ActionEvent(this, 0, textPane.getText().trim()));
         this.setVisible(false);
     }
@@ -390,13 +424,26 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         newFilterPart +=
                 " ";
         DatabaseVariablesListElement dvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
-        if (!dvle.getVariableType().equalsIgnoreCase("Number")&&!dvle.getVariableType().equalsIgnoreCase("Date")) {
+        if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
             newFilterPart += "'";
         }
 
         newFilterPart += valueTextField.getText();
-        if (!dvle.getVariableType().equalsIgnoreCase("Number")&&!dvle.getVariableType().equalsIgnoreCase("Date")) {
+        if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
             newFilterPart += "'";
+        }
+
+        if (operationComboBox.getSelectedItem().toString().equalsIgnoreCase("BETWEEN")) {
+            newFilterPart += " AND ";
+
+            if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
+                newFilterPart += "'";
+            }
+
+            newFilterPart += valueTextField2.getText();
+            if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
+                newFilterPart += "'";
+            }
         }
 
         newFilterPart += " ";
@@ -406,6 +453,7 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
                 " ";
         textPane.setText(textPane.getText() + newFilterPart);
         logicalOperatorComboBox.setSelectedIndex(0);
+        currentSelectionAdded = true;
     }
 
     /**
@@ -414,8 +462,9 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
     @Action
     public void varibleChosenAction() {
         valueTextField.setText("");
+        valueTextField2.setText("");
         updatePossibleValues();
-
+        currentSelectionAdded = false;
     }
 
     @SuppressWarnings("empty-statement")
@@ -435,5 +484,24 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         } else {
             possibleValuesMap = null;
         }
+    }
+
+    @Action
+    public void operatorSelected() {
+        String operator = operationComboBox.getSelectedItem().toString();
+        if ("BETWEEN".equalsIgnoreCase(operator)) {
+            valueTextField2.setVisible(true);
+            valuesSplitPane.setDividerLocation(0.5);
+            dictionaryPopUp = true;
+        } else if ("LIKE".equalsIgnoreCase(operator)) {
+            valueTextField2.setVisible(false);
+            valuesSplitPane.setDividerLocation(1);
+            dictionaryPopUp = false;
+        } else {
+            valueTextField2.setVisible(false);
+            valuesSplitPane.setDividerLocation(1);
+            dictionaryPopUp = true;
+        }
+        currentSelectionAdded = false;
     }
 }
