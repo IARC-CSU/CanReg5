@@ -10,7 +10,6 @@ import cachingtableapi.DistributedTableModel;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.gui.CanRegClientView;
-import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import java.awt.MenuItem;
@@ -231,15 +230,15 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                     CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
                 }
                 tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
                 if (tableDatadescription != null) {
                     tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
-                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                    Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
                 }
                 if (tableDataSource != null) {
                     tableDataModel = new DistributedTableModel(tableDataSource);
                     // tableDataModel = new PagingTableModel(tableDataSource);
-                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                    Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
                     // setProgress(2, 0, 4);
                 }
                 resultTable.setColumnSelectionAllowed(false);
@@ -248,19 +247,19 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                 setMessage("Finished");
 
             } catch (SQLException ex) {
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showInternalMessageDialog(rootPane, "Not a valid filter.", "Error", JOptionPane.ERROR_MESSAGE);
                 return "Not valid";
             } catch (RemoteException ex) {
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 return "Remote exception";
             } catch (SecurityException ex) {
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 return "Security exception";
             } catch (InterruptedException ignore) {
                 return "Ignore";
             } catch (Exception ex) {
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 return "Not OK";
             }
             return "OK";
