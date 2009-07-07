@@ -275,9 +275,9 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         navigationPanel.setTable(resultTable);
         rangeFilterPanel.setActionListener(this);
         variablesPanel.setDatabaseVariables(CanRegClientApp.getApplication().getGlobalToolBox().getVariables());
-    // Task task = refresh();
-    // task.run();
-    // rangeFilterPanel.setRecordsTotal(tableDataModel.getRowCount());
+        // Task task = refresh();
+        // task.run();
+        // rangeFilterPanel.setRecordsTotal(tableDataModel.getRowCount());
     }
 
 private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_browserClosed
@@ -368,16 +368,16 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
                 }
                 tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
-
-                tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
-
-                tableDataModel = new DistributedTableModel(tableDataSource);
-                // tableDataModel = new PagingTableModel(tableDataSource);
-
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
-                // setProgress(2, 0, 4);
-
+                if (tableDatadescription != null) {
+                    tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
+                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                }
+                if (tableDataSource != null) {
+                    tableDataModel = new DistributedTableModel(tableDataSource);
+                    // tableDataModel = new PagingTableModel(tableDataSource);
+                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                    // setProgress(2, 0, 4);
+                }
                 setMessage("Starting a new transaction...");
                 rangeFilterPanel.setRecordsShown(tableDataModel.getRowCount());
 
@@ -402,11 +402,15 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
                 return "Not valid";
             } catch (RemoteException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                return "Remote exception";
             } catch (SecurityException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                return "Security exception";
             } catch (InterruptedException ignore) {
+                return "Ignore";
             } catch (Exception ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                return "Not OK";
             }
             return "OK";
         }
@@ -416,11 +420,15 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             boolean theResult = result.equals("OK");
-            resultTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            TableColumnAdjuster tca = new TableColumnAdjuster(resultTable);
-            tca.setColumnDataIncluded(false);
-            tca.setOnlyAdjustLarger(false);
-            tca.adjustColumns();
+            if (theResult) {
+                resultTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                TableColumnAdjuster tca = new TableColumnAdjuster(resultTable);
+                tca.setColumnDataIncluded(false);
+                tca.setOnlyAdjustLarger(false);
+                tca.adjustColumns();               
+            } else {
+                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, result);
+            }
             resultPanel.setVisible(theResult);
         }
     }
@@ -472,10 +480,10 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
     /**
      * 
      * @param idString
-
+    
     public void editPatientID(String idString){
     String tableName = Globals.PATIENT_TABLE_NAME;
-
+    
     RecordEditor recordEditor = new RecordEditor(dtp);
     recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
     recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
@@ -485,7 +493,7 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
     DistributedTableDescription distributedTableDescription;
     Object[][] rows;
     DatabaseRecord[] tumourRecords;
-
+    
     try {
     distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
     int numberOfRecords = distributedTableDescription.getRowCount();
@@ -514,7 +522,7 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
     else {
     JOptionPane.showMessageDialog(rootPane, "Record not found", "Error", JOptionPane.ERROR_MESSAGE);
     }
-
+    
     } catch (SQLException ex) {
     Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
     } catch (RemoteException ex) {
