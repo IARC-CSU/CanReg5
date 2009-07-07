@@ -79,7 +79,7 @@ public class Import {
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
                     if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
-                        if (rel.getVariableType().equalsIgnoreCase("Number") || rel.getVariableType().equalsIgnoreCase("Date")) {
+                        if (rel.getVariableType().equalsIgnoreCase("Number")) {
                             if (lineElements[rel.getFileColumnNumber()].length() > 0) {
                                 patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
                             }
@@ -95,7 +95,7 @@ public class Import {
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
                     if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
-                        if (rel.getVariableType().equalsIgnoreCase("Number") || rel.getVariableType().equalsIgnoreCase("Date")) {
+                        if (rel.getVariableType().equalsIgnoreCase("Number")) {
                             if (lineElements[rel.getFileColumnNumber()].length() > 0) {
                                 tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
                             }
@@ -133,8 +133,8 @@ public class Import {
                     tumour.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
 
                     // Set the deprecated flag to 0 - no obsolete records from CR4
-                    tumour.setVariable(io.getObsoleteTumourFlagVariableName(), 0);
-                    patient.setVariable(io.getObsoletePatientFlagVariableName(), 0);
+                    tumour.setVariable(io.getObsoleteTumourFlagVariableName(), "0");
+                    patient.setVariable(io.getObsoletePatientFlagVariableName(), "0");
                 }
 
                 patientDatabaseRecordID = server.savePatient(patient);

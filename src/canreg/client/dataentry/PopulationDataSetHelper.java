@@ -67,10 +67,9 @@ public class PopulationDataSetHelper {
         line = bufferedReader.readLine();
         pds.setFilter(line);
 
-        // Read the date
+        // Read and set the date
         line = bufferedReader.readLine();
-        int date = Integer.parseInt(line);
-        pds.setDate(date);
+        pds.setDate(line);
 
         // Third line is the source
         line = bufferedReader.readLine();
