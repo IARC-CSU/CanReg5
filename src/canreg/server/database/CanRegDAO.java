@@ -7,7 +7,6 @@ package canreg.server.database;
 import cachingtableapi.DistributedTableDataSource;
 import cachingtableapi.DistributedTableDescription;
 import canreg.common.DatabaseFilter;
-import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
@@ -302,8 +301,8 @@ public class CanRegDAO {
                 String filter = results.getString(4);
                 populationDataset.setFilter(filter);
 
-                Integer date = results.getInt(5);
-                populationDataset.setDate(date);
+                String dateString = results.getString(5);
+                populationDataset.setDate(dateString);
 
                 String source = results.getString(6);
                 populationDataset.setSource(source);
@@ -415,17 +414,18 @@ public class CanRegDAO {
                     }
                 }
 
-            // variablesList = variablesList.substring(0, variablesList.length() - 2);
+                // variablesList = variablesList.substring(0, variablesList.length() - 2);
 
             }
             String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
             String patientIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
+            String IncidenceDateVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.IncidenceDate.toString()).getDatabaseVariableName();
 
-            query = "SELECT INCID/10000 as \"YEAR\" " + variablesList + ", COUNT(*) as Cases " +
+            query = "SELECT SUBSTR("+IncidenceDateVariableName+",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases " +
                     "FROM APP.TUMOUR, APP.PATIENT " +
                     "WHERE APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " " + filterString + " " +
-                    "GROUP BY INCID/10000 " + variablesList + " " +
-                    "ORDER BY INCID/10000 " + variablesList;
+                    "GROUP BY SUBSTR("+IncidenceDateVariableName+",1,4) " + variablesList + " " +
+                    "ORDER BY SUBSTR("+IncidenceDateVariableName+",1,4) " + variablesList;
             System.out.print(query);
             result = statement.executeQuery(query);
 
@@ -751,8 +751,8 @@ public class CanRegDAO {
             bRestored = true;
         } catch (SQLException e) {
             e.printStackTrace();
-        //((DonMan) parent).signalError("Error during RESTORE: ", e,
-        //       "in: DonDao.restore", false);
+            //((DonMan) parent).signalError("Error during RESTORE: ", e,
+            //       "in: DonDao.restore", false);
         }
         dbProperties.remove("restoreFrom");
         connect(); // Reconnect.
@@ -898,21 +898,31 @@ public class CanRegDAO {
                 recordVariableNumber++;
                 String variableType = element.getElementsByTagName(Globals.NAMESPACE + "variable_type").item(0).getTextContent();
                 Object obj = record.getVariable(element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent());
-                if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict")) {
+                if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict") || variableType.equalsIgnoreCase("Date")) {
                     if (obj != null) {
-                        String strObj = (String) obj;
-                        if (strObj.length() > 0) {
-                            stmtSaveNewRecord.setString(recordVariableNumber, strObj);
-                        } else {
-                            stmtSaveNewRecord.setString(recordVariableNumber, "");
+                        try {
+                            String strObj = (String) obj;
+                            if (strObj.length() > 0) {
+                                stmtSaveNewRecord.setString(recordVariableNumber, strObj);
+                            } else {
+                                stmtSaveNewRecord.setString(recordVariableNumber, "");
+                            }
+                        } catch (java.lang.ClassCastException cce) {
+                            System.out.println("String " + variableType + " " + obj);
+                            throw cce;
                         }
                     } else {
                         stmtSaveNewRecord.setString(recordVariableNumber, "");
                     }
-                } else if (variableType.equalsIgnoreCase("Number") || variableType.equalsIgnoreCase("Date")) {
+                } else if (variableType.equalsIgnoreCase("Number")) {
                     if (obj != null) {
-                        Integer intObj = (Integer) obj;
-                        stmtSaveNewRecord.setInt(recordVariableNumber, intObj.intValue());
+                        try {
+                            Integer intObj = (Integer) obj;
+                            stmtSaveNewRecord.setInt(recordVariableNumber, intObj.intValue());
+                        } catch (java.lang.ClassCastException cce) {
+                            System.out.println("Number " + variableType + " " + obj);
+                            throw cce;
+                        }
                     } else {
                         stmtSaveNewRecord.setInt(recordVariableNumber, -1);
                     }
@@ -1051,7 +1061,7 @@ public class CanRegDAO {
             stmtSaveNewPopoulationDataset.setInt(1, populationDataSet.getPopulationDatasetID());
             stmtSaveNewPopoulationDataset.setString(2, populationDataSet.getPopulationDatasetName());
             stmtSaveNewPopoulationDataset.setString(3, populationDataSet.getFilter());
-            stmtSaveNewPopoulationDataset.setInt(4, populationDataSet.getDate());
+            stmtSaveNewPopoulationDataset.setString(4, populationDataSet.getDate());
             stmtSaveNewPopoulationDataset.setString(5, populationDataSet.getSource());
             stmtSaveNewPopoulationDataset.setString(6, populationDataSet.getAgeGroupStructure().getConstructor());
             stmtSaveNewPopoulationDataset.setString(7, populationDataSet.getDescription());
@@ -1282,21 +1292,31 @@ public class CanRegDAO {
                     patientVariableNumber++;
                     String variableType = element.getElementsByTagName(Globals.NAMESPACE + "variable_type").item(0).getTextContent();
                     Object obj = record.getVariable(element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent());
-                    if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict")) {
+                    if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict") || variableType.equalsIgnoreCase("Date")) {
                         if (obj != null) {
-                            String strObj = (String) obj;
-                            if (strObj.length() > 0) {
-                                stmtEditRecord.setString(patientVariableNumber, strObj);
-                            } else {
-                                stmtEditRecord.setString(patientVariableNumber, "");
+                            try {
+                                String strObj = (String) obj;
+                                if (strObj.length() > 0) {
+                                    stmtEditRecord.setString(patientVariableNumber, strObj);
+                                } else {
+                                    stmtEditRecord.setString(patientVariableNumber, "");
+                                }
+                            } catch (java.lang.ClassCastException cce) {
+                                System.out.println("String " + variableType + " " + obj);
+                                throw cce;
                             }
                         } else {
                             stmtEditRecord.setString(patientVariableNumber, "");
                         }
-                    } else if (variableType.equalsIgnoreCase("Number") || variableType.equalsIgnoreCase("Date")) {
+                    } else if (variableType.equalsIgnoreCase("Number")) {
                         if (obj != null) {
-                            Integer intObj = (Integer) obj;
-                            stmtEditRecord.setInt(patientVariableNumber, intObj.intValue());
+                            try {
+                                Integer intObj = (Integer) obj;
+                                stmtEditRecord.setInt(patientVariableNumber, intObj.intValue());
+                            } catch (java.lang.ClassCastException cce) {
+                                System.out.println("Number " + variableType + " " + obj);
+                                throw cce;
+                            }
                         } else {
                             stmtEditRecord.setInt(patientVariableNumber, -1);
                         }
@@ -1668,7 +1688,6 @@ public class CanRegDAO {
     private static final String strDeletePopulationDatasetEntries =
             "DELETE FROM APP.PDSET " +
             "WHERE PDS_ID = ?";
-
     // The Dynamic ones
     private String strSavePatient;
     private String strSaveTumour;

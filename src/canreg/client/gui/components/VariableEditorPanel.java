@@ -400,8 +400,7 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
     public synchronized Object getValue() {
         Object valueObject = null;
         String valueString = codeTextField.getText();
-        if (databaseListElement.getVariableType().equalsIgnoreCase("Number") ||
-                databaseListElement.getVariableType().equalsIgnoreCase("Date")) {
+        if (databaseListElement.getVariableType().equalsIgnoreCase("Number")) {
             if (valueString.trim().length() > 0) {
                 try {
                     valueObject = Integer.parseInt(valueString.trim());

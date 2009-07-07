@@ -366,11 +366,11 @@ public class SystemDefinitionConverter {
                     String variableName = Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Number", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                            -1, "Automatic", "Othr", "Alpha", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName));
                     variableName = Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Number", 1, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                            -1, "Automatic", "Othr", "Alpha", 1, -1, Globals.PATIENT_TABLE_NAME, variableName));
                     /**
                      * PatientID
                      */
@@ -416,7 +416,7 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.PatientUpdateDate.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Date", -1, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                            -1, "Automatic", "Othr", "Date", 8, -1, Globals.PATIENT_TABLE_NAME, variableName));
 
                     /*
                      * Record status Patient table
@@ -424,7 +424,7 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.PatientRecordStatus.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Number", -1, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                            -1, "Automatic", "Othr", "Alpha", 1, -1, Globals.PATIENT_TABLE_NAME, variableName));
 
                     /*
                      * Check status Patient table
@@ -432,7 +432,7 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.PatientCheckStatus.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Number", -1, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                            -1, "Automatic", "Othr", "Alpha", 1, -1, Globals.PATIENT_TABLE_NAME, variableName));
 
                     /*
                      * Unduplication status Tumour table
@@ -440,7 +440,7 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.TumourUnduplicationStatus.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Number", -1, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                            -1, "Automatic", "Othr", "Alpha", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName));
                 }
 
                 // Build the indexes
@@ -519,7 +519,7 @@ public class SystemDefinitionConverter {
                     String formula = "SUBSTR(" + morphologyVariableName + ",5,1)";
                     variablesParentElement.appendChild(
                             createMetaVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Meta", -1, -1, Globals.TUMOUR_TABLE_NAME, variableName, formula));
+                            -1, "Automatic", "Othr", "Meta", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName, formula));
                 }
 
             } catch (EOFException e) {

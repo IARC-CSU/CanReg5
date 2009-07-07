@@ -616,11 +616,11 @@ public class CanRegClientApp extends SingleFrameApplication {
     public int saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException, SQLException {
         int recordNumber = -1;
         if (databaseRecord instanceof Patient) {
-            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName(), Integer.parseInt(dateFormat.format(new Date())));
+            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
             databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdatedBy.toString()).getDatabaseVariableName(), username);
             recordNumber = server.savePatient((Patient) databaseRecord);
         } else if (databaseRecord instanceof Tumour) {
-            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString()).getDatabaseVariableName(), Integer.parseInt(dateFormat.format(new Date())));
+            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
             databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdatedBy.toString()).getDatabaseVariableName(), username);
             recordNumber = server.saveTumour((Tumour) databaseRecord);
         } else if (databaseRecord instanceof NameSexRecord) {
@@ -639,11 +639,11 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     public void editRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException {
         if (databaseRecord instanceof Patient) {
-            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName(), Integer.parseInt(dateFormat.format(new Date())));
+            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
             databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdatedBy.toString()).getDatabaseVariableName(), username);
             server.editPatient((Patient) databaseRecord);
         } else if (databaseRecord instanceof Tumour) {
-            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString()).getDatabaseVariableName(), Integer.parseInt(dateFormat.format(new Date())));
+            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
             databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdatedBy.toString()).getDatabaseVariableName(), username);
             server.editTumour((Tumour) databaseRecord);
         }

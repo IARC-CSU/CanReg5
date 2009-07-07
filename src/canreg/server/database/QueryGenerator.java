@@ -241,7 +241,7 @@ public class QueryGenerator {
                 "PDS_ID INT not null unique," +
                 "PDS_NAME VARCHAR(40)," +
                 "FILTER VARCHAR(255)," +
-                "DATE INT," +
+                "DATE VARCHAR(8)," +
                 "SOURCE VARCHAR(255)," +
                 "AGE_GROUP_STRUCTURE VARCHAR(40), " +
                 "DESCRIPTION VARCHAR(255), " +
@@ -495,7 +495,7 @@ public class QueryGenerator {
             queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent() + ") ";
         } else if (variableType.equalsIgnoreCase("Number") ||
                 variableType.equalsIgnoreCase("Date")) {
-            queryLine += " INTEGER";
+            queryLine += " VARCHAR(8)";
         // queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent()+") ";
         } else if (variableType.equalsIgnoreCase("Dict")) {
             queryLine += " VARCHAR(";

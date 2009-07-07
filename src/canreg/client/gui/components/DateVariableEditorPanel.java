@@ -111,14 +111,14 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
     public Object getValue() {
         Object valueObject = null;
         String valueString = dateField.getText().trim();
-
+        String valueObjectString = "";
         if (valueString.length() > 0) {
             try {
                 String dateFormatString = dateChooser.getDateFormatString();
                 // valueObject = Integer.parseInt(valueString.trim());
                 GregorianCalendarCanReg tempCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg(valueString, dateFormatString);
-                String valueObjectString = DateHelper.parseGregorianCalendarCanRegToDateString(tempCalendar, Globals.DATE_FORMAT_STRING);
-                valueObject = Integer.parseInt(valueObjectString.trim());
+                valueObjectString = DateHelper.parseGregorianCalendarCanRegToDateString(tempCalendar, Globals.DATE_FORMAT_STRING);
+                // valueObject = Integer.parseInt(valueObjectString.trim());
             } catch (ParseException ex) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException ex) {
@@ -126,6 +126,6 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             }
         }
 
-        return valueObject;
+        return valueObjectString;
     }
 }

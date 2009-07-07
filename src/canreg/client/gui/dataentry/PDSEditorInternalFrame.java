@@ -66,7 +66,7 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
                 ageGroupStructureComboBox.addItem(pds.getAgeGroupStructure());
                 ageGroupStructureComboBox.setSelectedItem(pds.getAgeGroupStructure());
             }
-            dateTextField.setText("" + pds.getDate());
+            dateTextField.setText(pds.getDate());
             refreshPopulationDataSetTable();
             lockedToggleButton.setSelected(true);
             if (pds.isWorldPopulationBool()) {
@@ -544,7 +544,7 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
         pds.setFilter(filterTextField.getText().trim());
         pds.setDescription(descriptionTextArea.getText().trim());
         pds.setAgeGroupStructure((AgeGroupStructure) ageGroupStructureComboBox.getSelectedItem());
-        pds.setDate(Integer.parseInt(dateTextField.getText()));
+        pds.setDate(dateTextField.getText());
         pds.setWorldPopulationBool(false);
         PopulationDataset wpds = (PopulationDataset) standardPopulationComboBox.getSelectedItem();
         pds.setWorldPopulationID(wpds.getWorldPopulationID());

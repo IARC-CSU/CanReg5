@@ -23,7 +23,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     private int populationDatasetID = -1;
     private String populationDatasetName = null;
     private String filter = null;
-    private int date = 0;
+    private String date = "";
     private String source = "";
     private AgeGroupStructure ageGroupStructure = new AgeGroupStructure(5, 85);
     private String description = "";
@@ -108,7 +108,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      * 
      * @return
      */
-    public int getDate() {
+    public String getDate() {
         return date;
     }
 
@@ -116,7 +116,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      * 
      * @param date
      */
-    public void setDate(int date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
