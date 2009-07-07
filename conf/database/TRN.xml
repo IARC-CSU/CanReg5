@@ -738,7 +738,7 @@
       <ns3:group_id>-1</ns3:group_id>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
-      <ns3:variable_type>Number</ns3:variable_type>
+      <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>1</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>ObsoleteFlagTumourTable</ns3:standard_variable_name>
@@ -751,7 +751,7 @@
       <ns3:group_id>-1</ns3:group_id>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
-      <ns3:variable_type>Number</ns3:variable_type>
+      <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>1</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>ObsoleteFlagPatientTable</ns3:standard_variable_name>
@@ -842,7 +842,7 @@
       <ns3:group_id>-1</ns3:group_id>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
-      <ns3:variable_type>Number</ns3:variable_type>
+      <ns3:variable_type>Date</ns3:variable_type>
       <ns3:variable_length>-1</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>PatientUpdateDate</ns3:standard_variable_name>

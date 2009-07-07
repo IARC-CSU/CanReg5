@@ -113,6 +113,7 @@ public class Globals {
      */
     public static String TUMOUR_TABLE_NAME = "Tumour";
     public static String PATIENT_TABLE_NAME = "Patient";
+    public static String SOURCE_TABLE_NAME = "Source";
     public static String USERS_TABLE_NAME = "USERS";
 
     /**
@@ -153,7 +154,8 @@ public class Globals {
     public static String RECORD_STATUS_PENDING_CODE = "0";
     public static int UNDUPLICATION_NOT_DONE_CODE = 0;
     public static int MAX_POPULATION_DATASETS_IN_TABLE = 50;
-
+    public static String OBSOLETE_VALUE = "1";
+    public static String NOT_OBSOLETE_VALUE = "0";
     /**
      * 
      */
