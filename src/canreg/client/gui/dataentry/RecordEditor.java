@@ -202,7 +202,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             if (patientObsoleteStatus != null && patientObsoleteStatus.equals(Globals.OBSOLETE_VALUE)) {
                 regnoString += " (obsolete)";
             }
-            patientTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
+            // patientTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
+            patientTabbedPane.addTab(dbr.toString() + " record "+ (patientTabbedPane.getTabCount()+1), rePanel);
             if (!titleSet) {
                 Object patno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
                 String patnoString = "n/a";
@@ -228,7 +229,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             if (tumourObsoleteStatus != null && tumourObsoleteStatus.equals(Globals.OBSOLETE_VALUE)) {
                 regnoString += " (obsolete)";
             }
-            tumourTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
+            // tumourTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
+            tumourTabbedPane.addTab(dbr.toString() + " record " + (tumourTabbedPane.getTabCount()+1), rePanel);
         }
         refreshShowObsolete();
     }
