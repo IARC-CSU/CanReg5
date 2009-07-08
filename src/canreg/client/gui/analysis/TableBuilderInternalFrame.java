@@ -813,7 +813,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 }
 
                 DatabaseVariablesListElement incidenceDate = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.IncidenceDate.toString());
-                filterString += incidenceDate.getDatabaseVariableName() + " >= " + startYear * 10000 + " AND " + incidenceDate.getDatabaseVariableName() + " < " + (endYear + 1) * 10000;
+                filterString += incidenceDate.getDatabaseVariableName() + " >= '" + startYear * 10000 + "' AND " + incidenceDate.getDatabaseVariableName() + " < '" + (endYear + 1) * 10000 + "'";
                 filter.setFilterString(filterString);
 
                 System.out.println(filterString);
