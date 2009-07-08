@@ -1,5 +1,75 @@
-changeset:   210:c84e080a9b7c
+changeset:   224:a1d86e4f5de1
 tag:         tip
+user:        ervikm@X60112
+date:        Tue Jul 07 17:37:29 2009 +0200
+summary:     Tidied some code. Nothing functional.
+
+changeset:   223:779ff4b9ce3e
+user:        ervikm@X60112
+date:        Tue Jul 07 17:36:46 2009 +0200
+summary:     ReleaseCandidate for 4.99.9
+
+changeset:   222:78e577dc08ee
+user:        ervikm@X60112
+date:        Tue Jul 07 17:35:44 2009 +0200
+summary:     Date-related fixes.
+
+changeset:   221:9eaf9978f95a
+user:        ervikm@X60112
+date:        Tue Jul 07 17:34:56 2009 +0200
+summary:     Fixed the freezebug when faulty filter in freqs by year. Started the fix on exp/rep tool.
+
+changeset:   220:b01484ee516a
+user:        ervikm@X60112
+date:        Tue Jul 07 17:33:56 2009 +0200
+summary:     Improved the FastFilterInternalFrame to deal better with keywords BETWEEN and LIKE.
+
+changeset:   219:a35e4c24edf0
+user:        ervikm@X60112
+date:        Tue Jul 07 17:32:54 2009 +0200
+summary:     Tidied the Record Editor.
+
+changeset:   218:6ee10e717909
+user:        ervikm@X60112
+date:        Tue Jul 07 17:32:27 2009 +0200
+summary:     Changed the way certain variables are stored in the database. For example dates are now VARCHARs.
+
+changeset:   217:ce1682e54dbf
+user:        ervikm@X60112
+date:        Tue Jul 07 17:23:41 2009 +0200
+summary:     BUGFIX: FrequenciesByYear, Fixed a bug where the program froze when the filter was not accepted.
+
+changeset:   216:c04762d2bff3
+user:        ervikm@X60112
+date:        Tue Jul 07 17:13:44 2009 +0200
+summary:     BUGFIX: BrowseInternalFrame, Fixed a bug where the program froze when the filter was not accepted.
+
+changeset:   215:5ab7b17ea0bc
+user:        ervikm@X60112
+date:        Tue Jul 07 11:55:23 2009 +0200
+summary:     BUGFIX: SystemDefinitionConverter, Update-date set to date instead of Number.
+
+changeset:   214:ce47207baf16
+user:        ervikm@X60112
+date:        Mon Jul 06 14:42:48 2009 +0200
+summary:     FrequenciesByYear: Pop-out table now has a title.
+
+changeset:   213:1cd1cf41ffc0
+user:        ervikm@X60112
+date:        Mon Jul 06 11:17:37 2009 +0200
+summary:     FrequenciesByYear: Table can now be popped out to a separate window.
+
+changeset:   212:c3d147e2b43c
+user:        ervikm@X60112
+date:        Mon Jul 06 10:25:56 2009 +0200
+summary:     SystemDefinitionConverter: Fixed a typo in the meta variable handler.
+
+changeset:   211:1666488f5264
+user:        ervikm@X60112
+date:        Fri Jul 03 16:59:13 2009 +0200
+summary:     Started a system of meta-variables to take care of registries using different coding schemes, like 5 digit morphology...
+
+changeset:   210:c84e080a9b7c
 user:        ervikm@X60112
 date:        Tue Jun 30 16:54:52 2009 +0200
 summary:     Distributed table returns null if a row is for some reason missing.
