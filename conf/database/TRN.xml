@@ -158,12 +158,12 @@
       <ns3:name>Patient</ns3:name>
     </ns3:group>
     <ns3:group>
-      <ns3:group_id>2</ns3:group_id>
-      <ns3:name>Hospital</ns3:name>
-    </ns3:group>
-    <ns3:group>
       <ns3:group_id>3</ns3:group_id>
       <ns3:name>Tumour</ns3:name>
+    </ns3:group>
+    <ns3:group>
+      <ns3:group_id>2</ns3:group_id>
+      <ns3:name>Hospital</ns3:name>
     </ns3:group>
     <ns3:group>
       <ns3:group_id>4</ns3:group_id>
@@ -394,7 +394,7 @@
       <ns3:category_Y_pos>129</ns3:category_Y_pos>
       <ns3:dictionary_X_pos>200</ns3:dictionary_X_pos>
       <ns3:dictionary_Y_pos>129</ns3:dictionary_Y_pos>
-      <ns3:table>Patient</ns3:table>
+      <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>AddressCode</ns3:standard_variable_name>
     </ns3:variable>
     <ns3:variable>
@@ -415,7 +415,7 @@
       <ns3:category_Y_pos>0</ns3:category_Y_pos>
       <ns3:dictionary_X_pos>361</ns3:dictionary_X_pos>
       <ns3:dictionary_Y_pos>173</ns3:dictionary_Y_pos>
-      <ns3:table>Patient</ns3:table>
+      <ns3:table>Tumour</ns3:table>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>13</ns3:variable_id>
@@ -629,7 +629,7 @@
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>24</ns3:variable_id>
-      <ns3:full_name>Path lab nﾺ</ns3:full_name>
+      <ns3:full_name>Path lab no.</ns3:full_name>
       <ns3:short_name>LabNo</ns3:short_name>
       <ns3:english_name>-24-</ns3:english_name>
       <ns3:group_id>2</ns3:group_id>
@@ -645,7 +645,7 @@
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>25</ns3:variable_id>
-      <ns3:full_name>Case nﾺ</ns3:full_name>
+      <ns3:full_name>Case no.</ns3:full_name>
       <ns3:short_name>CasNo</ns3:short_name>
       <ns3:english_name>-25-</ns3:english_name>
       <ns3:group_id>2</ns3:group_id>
@@ -843,7 +843,7 @@
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
       <ns3:variable_type>Date</ns3:variable_type>
-      <ns3:variable_length>-1</ns3:variable_length>
+      <ns3:variable_length>8</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>PatientUpdateDate</ns3:standard_variable_name>
     </ns3:variable>
@@ -855,8 +855,8 @@
       <ns3:group_id>-1</ns3:group_id>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
-      <ns3:variable_type>Number</ns3:variable_type>
-      <ns3:variable_length>-1</ns3:variable_length>
+      <ns3:variable_type>Alpha</ns3:variable_type>
+      <ns3:variable_length>1</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>PatientRecordStatus</ns3:standard_variable_name>
     </ns3:variable>
@@ -868,8 +868,8 @@
       <ns3:group_id>-1</ns3:group_id>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
-      <ns3:variable_type>Number</ns3:variable_type>
-      <ns3:variable_length>-1</ns3:variable_length>
+      <ns3:variable_type>Alpha</ns3:variable_type>
+      <ns3:variable_length>1</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>PatientCheckStatus</ns3:standard_variable_name>
     </ns3:variable>
@@ -881,8 +881,8 @@
       <ns3:group_id>-1</ns3:group_id>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
-      <ns3:variable_type>Number</ns3:variable_type>
-      <ns3:variable_length>-1</ns3:variable_length>
+      <ns3:variable_type>Alpha</ns3:variable_type>
+      <ns3:variable_length>1</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>TumourUnduplicationStatus</ns3:standard_variable_name>
     </ns3:variable>
@@ -891,10 +891,6 @@
     <ns3:search_variable>
       <ns3:variable_name>FamN</ns3:variable_name>
       <ns3:weigth>25</ns3:weigth>
-    </ns3:search_variable>
-        <ns3:search_variable>
-      <ns3:variable_name>Nationality</ns3:variable_name>
-      <ns3:weigth>22</ns3:weigth>
     </ns3:search_variable>
     <ns3:search_variable>
       <ns3:variable_name>FirstN</ns3:variable_name>

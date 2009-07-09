@@ -1,5 +1,20 @@
-changeset:   224:a1d86e4f5de1
+changeset:   227:1f438e021067
 tag:         tip
+user:        ervikm@X60112
+date:        Wed Jul 08 14:48:46 2009 +0200
+summary:     Version 4.99.9
+
+changeset:   226:f796136472b5
+user:        ervikm@X60112
+date:        Wed Jul 08 14:22:18 2009 +0200
+summary:     TableBuilder: Fixed a bug related to the way dates are now stored.
+
+changeset:   225:adfbb0f08502
+user:        ervikm@X60112
+date:        Wed Jul 08 14:20:48 2009 +0200
+summary:     RecordEditor: Hid the tumour record number and patient record number.
+
+changeset:   224:a1d86e4f5de1
 user:        ervikm@X60112
 date:        Tue Jul 07 17:37:29 2009 +0200
 summary:     Tidied some code. Nothing functional.

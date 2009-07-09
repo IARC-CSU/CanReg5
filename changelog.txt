@@ -1,16 +1,47 @@
 Changelog
-4.99.9 Build 668
+4.99.9 Build 680
+
+- RecordEditor: Hid the tumour record number and patient record number.
+
+- Improved the FastFilterInternalFrame to deal better with keywords BETWEEN and LIKE.
+
+- Tidied the Record Editor.
+
+- Date-related fixes.
+
+- Changed the way certain variables are stored in the database.
+
+- FrequenciesByYear, Fixed a bug where the program froze when the filter was not accepted.
+
+- BrowseInternalFrame, Fixed a bug where the program froze when the filter was not accepted.
+
+- SystemDefinitionConverter, Update-date set to date instead of Number.
+
+- FrequenciesByYear: Table can now be popped out to a separate window.
+
+- Started a system of meta-variables to take care of registries using different coding schemes, like 5 digit morphology...
+
+- Distributed table returns null if a row is for some reason missing.
+
+- Tidied some code.
+
+- Disabled table builder icon when not logged in.
+
+- Distributed table returns null if a row is for some reason missing.
+
+- Tablebuilder: Filter shows up in report. Possibility to change name of table.
+
 - Population Data Set Editor: fixed the bug that did not allow a PDS to be updated (eg the filter).
 
 - Fixed the layout of most windows to fit better on smaller screens.
 
-- Global Person Search: removed "already matched" column...
+- Global Person Search: removed "already matched" column.
 
 - Frequencies/export variables selection box re-look
 
 - Frequencies/export variables selection box scrolls faster, variables closer
 
-- TextFields added as option in record editor
+- TextFields (fields spanning multiple lines) added as option in record editor
 
 - Range now works properly when making frequency by year tables as well.
 
