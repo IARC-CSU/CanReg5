@@ -896,13 +896,12 @@ public class ImportView extends javax.swing.JInternalFrame {
             // numberOfRecordsTextField.setText(""+(canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath())-1));
             FileInputStream fis = new FileInputStream(inFile);
             br = new BufferedReader(new InputStreamReader(fis, (Charset) charsetsComboBox.getSelectedItem()));
-            // Read the entire file into the preview area... 
-            // Change this to just a part of the file?
+            // Read the parts of the file into the preview area...
             int i = 0;
 
             String line = br.readLine();
             String headers = new String();
-            String dataText = new String();
+            // String dataText = new String();
             Vector<Vector<String>> data = new Vector<Vector<String>>();
 
             while (i < Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW && line != null) {
@@ -912,7 +911,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                     String[] lineData = line.split(getSeparator() + "");
                     Vector vec = new Vector(Arrays.asList(lineData));
                     data.add(vec);
-                    dataText += line + "\n";
+                    // dataText += line + "\n";
                 }
                 line = br.readLine();
                 i++;
