@@ -3,6 +3,7 @@ package canreg.server;
 import canreg.server.database.User;
 import canreg.server.management.UserManagerNew;
 import cachingtableapi.DistributedTableDescription;
+import cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.GlobalToolBox;
@@ -471,8 +472,15 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.lang.SecurityException
      * @throws java.lang.Exception
      */
-    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, Exception {
-        return db.retrieveRows(resultSetID, from, to);
+    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException {
+        Object[][] rows = null;
+        try {
+            rows = db.retrieveRows(resultSetID, from, to);
+        } catch (DistributedTableDescriptionException ex) {
+            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RemoteException("Retrieve rows failed: "+ ex.getMessage());
+        } 
+        return rows;
     }
 
     /**

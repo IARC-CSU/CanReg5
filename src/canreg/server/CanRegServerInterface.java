@@ -2,6 +2,7 @@ package canreg.server;
 
 import canreg.server.database.User;
 import cachingtableapi.DistributedTableDescription;
+import cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals.UserRightLevels;
 import canreg.common.qualitycontrol.PersonSearcher;
@@ -306,7 +307,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.lang.SecurityException
      * @throws java.lang.Exception
      */
-    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, Exception;
+    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException;
 
     /**
      * Release result set to avoid unessesary server load

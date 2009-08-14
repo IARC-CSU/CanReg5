@@ -6,6 +6,7 @@ package canreg.server.database;
  */
 import cachingtableapi.DistributedTableDataSource;
 import cachingtableapi.DistributedTableDescription;
+import cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
@@ -19,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Connection;
+import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -361,7 +363,8 @@ public class CanRegDAO {
      * @throws java.sql.SQLException
      * @throws java.lang.Exception
      */
-    public synchronized DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(DatabaseFilter filter, String tableName) throws SQLException, Exception {
+    public synchronized DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(DatabaseFilter filter, String tableName)
+            throws SQLException, UnknownTableException, DistributedTableDescriptionException {
         // distributedDataSources.remove(theUser);
         ResultSet result;
         Statement statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -390,7 +393,12 @@ public class CanRegDAO {
             countRowSet = null;
 
             query = "SELECT " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " FROM APP.PATIENT" + rangePart;
-            result = statement.executeQuery(query);
+            try {
+                result = statement.executeQuery(query);
+            } catch (java.sql.SQLSyntaxErrorException ex) {
+                throw ex;
+            }
+
         } // Or a Frequency by year query?
         else if (DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR.equals(filter.getQueryType())) {
             String filterString = filter.getFilterString();
@@ -421,13 +429,18 @@ public class CanRegDAO {
             String patientIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
             String IncidenceDateVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.IncidenceDate.toString()).getDatabaseVariableName();
 
-            query = "SELECT SUBSTR("+IncidenceDateVariableName+",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases " +
+            query = "SELECT SUBSTR(" + IncidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases " +
                     "FROM APP.TUMOUR, APP.PATIENT " +
                     "WHERE APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " " + filterString + " " +
-                    "GROUP BY SUBSTR("+IncidenceDateVariableName+",1,4) " + variablesList + " " +
-                    "ORDER BY SUBSTR("+IncidenceDateVariableName+",1,4) " + variablesList;
+                    "GROUP BY SUBSTR(" + IncidenceDateVariableName + ",1,4) " + variablesList + " " +
+                    "ORDER BY SUBSTR(" + IncidenceDateVariableName + ",1,4) " + variablesList;
             System.out.print(query);
-            result = statement.executeQuery(query);
+            try {
+                result = statement.executeQuery(query);
+            } catch (java.sql.SQLSyntaxErrorException ex) {
+                throw ex;
+            }
+
 
         } // Or a "regular" query from the tumour table
         else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
@@ -447,15 +460,24 @@ public class CanRegDAO {
             }
 
             debugOut(strCountTumours + filterString);
-            ResultSet countRowSet = statement.executeQuery(strCountTumours + filterString);
+            ResultSet countRowSet;
+            try {
+                countRowSet = statement.executeQuery(strCountTumours + filterString);
+                System.out.println("Hepp");
+            } catch (java.sql.SQLException ex) {
+                throw ex;
+            }
             if (countRowSet.next()) {
                 rowCount = countRowSet.getInt(1);
             }
             if (filter.getSortByVariable() != null) {
                 filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
             }
-
-            result = statement.executeQuery(strGetTumours + filterString);
+            try {
+                result = statement.executeQuery(strGetTumours + filterString);
+            } catch (java.sql.SQLSyntaxErrorException ex) {
+                throw ex;
+            }
         } // Or a "regular" query from the patient table
         else if (tableName.equalsIgnoreCase("patient")) {
             String filterString = filter.getFilterString();
@@ -472,15 +494,24 @@ public class CanRegDAO {
                 filterString += QueryGenerator.buildRangePart(filter);
             }
             debugOut(strCountPatients + filterString);
-            ResultSet countRowSet = statement.executeQuery(strCountPatients + filterString);
-            if (countRowSet.next()) {
+            ResultSet countRowSet;
+            try {
+                countRowSet = statement.executeQuery(strCountPatients + filterString);
+            } catch (java.sql.SQLSyntaxErrorException ex) {
+                throw ex;
+            }
+
+            if (countRowSet != null && countRowSet.next()) {
                 rowCount = countRowSet.getInt(1);
             }
             if (filter.getSortByVariable() != null) {
                 filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
             }
-
-            result = statement.executeQuery(strGetPatients + filterString);
+            try {
+                result = statement.executeQuery(strGetPatients + filterString);
+            } catch (java.sql.SQLSyntaxErrorException ex) {
+                throw ex;
+            }
         } // Or a "regular" query from a join of both tables
         else if (tableName.equalsIgnoreCase("both")) {
             String filterString = filter.getFilterString();
@@ -497,21 +528,32 @@ public class CanRegDAO {
 
             debugOut(strCountPatientsAndTumours + filterString);
 
-            ResultSet countRowSet = statement.executeQuery(strCountPatientsAndTumours + filterString);
+
+            ResultSet countRowSet;
+            try {
+                countRowSet = statement.executeQuery(strCountPatientsAndTumours + filterString);
+            } catch (java.sql.SQLSyntaxErrorException ex) {
+                throw ex;
+            }
+
             // Count the rows...
             if (countRowSet.next()) {
                 rowCount = countRowSet.getInt(1);
             }
             // feed it to the garbage dump
-            countRowSet = null;
+            countRowSet = null; 
             if (filter.getSortByVariable() != null) {
                 filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
             }
-
-            result = statement.executeQuery(strGetPatientsAndTumours + filterString);
+            try {
+                result = statement.executeQuery(strGetPatientsAndTumours + filterString);
+            } catch (java.sql.SQLSyntaxErrorException ex) {
+                throw ex;
+            }
+            
         } // Or an unknown query...
         else {
-            throw new Exception("Unknown table name.");
+            throw new UnknownTableException("Unknown table name.");
         }
 
 
@@ -586,7 +628,7 @@ public class CanRegDAO {
      * @return
      * @throws java.lang.Exception
      */
-    public synchronized Object[][] retrieveRows(String resultSetID, int from, int to) throws Exception {
+    public synchronized Object[][] retrieveRows(String resultSetID, int from, int to) throws DistributedTableDescriptionException {
         DistributedTableDataSource ts = distributedDataSources.get(resultSetID);
         if (ts != null) {
             return ts.retrieveRows(from, to);

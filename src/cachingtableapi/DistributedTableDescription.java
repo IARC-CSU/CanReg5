@@ -21,9 +21,9 @@ public class DistributedTableDescription implements Serializable {
          * @param rowCount
          * @throws Exception 
          */
-	public DistributedTableDescription(String[] columnNames, Class[] columnClasses, int rowCount) throws Exception {
+	public DistributedTableDescription(String[] columnNames, Class[] columnClasses, int rowCount) throws DistributedTableDescriptionException {
 		if(columnNames == null || columnClasses == null || columnNames.length != columnClasses.length) {
-			throw new Exception("Either the columnNames array or the columnClasses array is null or the lengths of the arrays are not equal.");	
+			throw new DistributedTableDescriptionException("Either the columnNames array or the columnClasses array is null or the lengths of the arrays are not equal.");
 		}
 		this.columnNames = columnNames;
 		this.columnClasses = columnClasses;	

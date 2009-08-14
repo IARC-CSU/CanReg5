@@ -2,6 +2,10 @@ package canreg.client;
 
 import cachingtableapi.DistributedTableDataSource;
 import cachingtableapi.DistributedTableDescription;
+import cachingtableapi.DistributedTableDescriptionException;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,7 +27,7 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
 	}
     
     
-    public DistributedTableDescription getTableDescription() throws Exception {
+    public DistributedTableDescription getTableDescription() throws DistributedTableDescriptionException {
         return distributedTableDescription;
     }
 
@@ -35,23 +39,30 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
         this.distributedTableDescription = distributedTableDescription;
     }
     
-    public Object[][] retrieveRows(int from, int to) throws Exception {
-        return CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), from, to);
+    public Object[][] retrieveRows(int from, int to) throws DistributedTableDescriptionException {
+        Object[][] rows;
+        try {
+            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), from, to);
+        } catch (RemoteException ex) {
+            Logger.getLogger(DistributedTableDataSourceClient.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DistributedTableDescriptionException(ex.getMessage());
+        }
+        return rows;
     }
 
-    public int[] sort(int sortColumn, boolean ascending, int[] selectedRows) throws Exception {
+    public int[] sort(int sortColumn, boolean ascending, int[] selectedRows) throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void setSelectedRowsAndColumns(int[] selectedRows, int[] selectedColumns) throws Exception {
+    public void setSelectedRowsAndColumns(int[] selectedRows, int[] selectedColumns) throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public int[] getSelectedRows() throws Exception {
+    public int[] getSelectedRows() throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public int[] getSelectedColumns() throws Exception {
+    public int[] getSelectedColumns() throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -217,35 +217,15 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             filter.setQueryType(DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR);
             chosenVariables = variablesChooserPanel.getSelectedVariables();
             filter.setDatabaseVariables(chosenVariables);
+
         }
 
         @Override
         protected Object doInBackground() {
             try {
-                setProgress(0, 0, 4);
-                setMessage("Initiating query...");
-                setProgress(1, 0, 4);
 
-                if (tableDatadescription != null) {
-                    CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
-                }
                 tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
-                if (tableDatadescription != null) {
-                    tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
-                    Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
-                }
-                if (tableDataSource != null) {
-                    tableDataModel = new DistributedTableModel(tableDataSource);
-                    // tableDataModel = new PagingTableModel(tableDataSource);
-                    Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
-                    // setProgress(2, 0, 4);
-                }
-                resultTable.setColumnSelectionAllowed(false);
-
-                setProgress(4, 0, 4);
-                setMessage("Finished");
-
             } catch (SQLException ex) {
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showInternalMessageDialog(rootPane, "Not a valid filter.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -271,12 +251,38 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             // the result computed by doInBackground().
             boolean theResult = result.equals("OK");
             if (theResult) {
-                resultScrollPane.setVisible(theResult);
+
+                if (tableDatadescription != null) {
+                    try {
+                        tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
+                        Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                    } catch (Exception ex) {
+                        Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (tableDataSource != null) {
+                    try {
+                        tableDataModel = new DistributedTableModel(tableDataSource);
+                        // tableDataModel = new PagingTableModel(tableDataSource);
+                        Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                        // setProgress(2, 0, 4);
+                    } catch (Exception ex) {
+                        Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    // setProgress(2, 0, 4);
+                }
+                resultTable.setColumnSelectionAllowed(false);
+
+                setProgress(4, 0, 4);
+                setMessage("Finished");
+
+                resultScrollPane.setVisible(true);
                 resultScrollPane.revalidate();
                 resultScrollPane.repaint();
                 resultPanel.revalidate();
                 resultPanel.repaint();
-                // resultPanel.setVisible(theResult);
+                resultPanel.setVisible(true);
+                resultTable.setVisible(true);
                 tableColumnModel = resultTable.getColumnModel();
             }
         }

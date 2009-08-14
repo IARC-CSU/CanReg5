@@ -2,6 +2,7 @@ package canreg.server;
 
 import canreg.server.database.User;
 import cachingtableapi.DistributedTableDescription;
+import cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals.UserRightLevels;
 import canreg.common.qualitycontrol.PersonSearcher;
@@ -185,7 +186,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         theServer.editTumour(tumour);
     }
 
-    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, Exception {
+    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException{
         checkPermission("retrieveRows:" + resultSetID);
         return theServer.retrieveRows(resultSetID, from, to);
     }

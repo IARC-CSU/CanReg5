@@ -6,6 +6,7 @@ package canreg.server.database;
 
 import cachingtableapi.DistributedTableDataSource;
 import cachingtableapi.DistributedTableDescription;
+import cachingtableapi.DistributedTableDescriptionException;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -34,10 +35,10 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
      * @throws java.sql.SQLException
      * @throws java.lang.Exception
      */
-    public DistributedTableDataSourceResultSetImpl(ResultSet resultSet) throws SQLException, Exception {
+    public DistributedTableDataSourceResultSetImpl(ResultSet resultSet) throws SQLException, DistributedTableDescriptionException {
         super();
         this.resultSet = resultSet;
-        
+
         // To get the number of rows - skip to the last and then get ID before skipping back...
         resultSet.last();                 // Jump to last row
         rowCount = resultSet.getRow();    // get the row count
@@ -60,7 +61,7 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
      * @throws java.sql.SQLException
      * @throws java.lang.Exception
      */
-    public DistributedTableDataSourceResultSetImpl(int rowCount, ResultSet resultSet) throws SQLException, Exception {
+    public DistributedTableDataSourceResultSetImpl(int rowCount, ResultSet resultSet) throws SQLException, DistributedTableDescriptionException {
         super();
         this.resultSet = resultSet;
         this.rowCount = rowCount;
@@ -73,28 +74,36 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         distributedTableDescription = new DistributedTableDescription(columnNames, columnClasses, rowCount);
     }
 
-    public DistributedTableDescription getTableDescription() throws Exception {
+    public DistributedTableDescription getTableDescription() throws DistributedTableDescriptionException {
         return distributedTableDescription;
     }
 
-    public Object[][] retrieveRows(int from, int to) throws Exception {
+    public Object[][] retrieveRows(int from, int to) throws DistributedTableDescriptionException {
         LinkedList<Object[]> rows = new LinkedList<Object[]>();
-        int pos = resultSet.getRow();
-        resultSet.relative(from - pos);
-        boolean hasMore = resultSet.next();
-       
-        while (hasMore && rows.size()<(to-from+1)) {
-            Object[] row = new Object[columnCount];
-            for (int i = 0; i < columnCount; i++) {
-                row[i] = resultSet.getObject(i + 1);
+        
+        try {
+            int pos;
+            pos = resultSet.getRow();
+
+            resultSet.relative(from - pos);
+            boolean hasMore = resultSet.next();
+
+            while (hasMore && rows.size() < (to - from + 1)) {
+                Object[] row = new Object[columnCount];
+                for (int i = 0; i < columnCount; i++) {
+                    row[i] = resultSet.getObject(i + 1);
+                }
+                rows.add(row);
+                hasMore = resultSet.next();
+                if (!hasMore) {
+                    // set pointer to last so that we can keep using resultset
+                    resultSet.last();
+                    Logger.getLogger(DistributedTableDataSourceResultSetImpl.class.getName()).log(Level.INFO, "last record reached");
+                }
             }
-            rows.add(row);
-            hasMore = resultSet.next();
-            if (!hasMore){
-                // set pointer to last so that we can keep using resultset
-                resultSet.last();
-                Logger.getLogger(DistributedTableDataSourceResultSetImpl.class.getName()).log(Level.INFO, "last record reached");
-            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DistributedTableDataSourceResultSetImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DistributedTableDescriptionException(ex.getMessage());
         }
         Object[][] rowsArray = new Object[rows.size()][columnCount];
 
@@ -105,19 +114,19 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         return rowsArray;
     }
 
-    public int[] sort(int sortColumn, boolean ascending, int[] selectedRows) throws Exception {
+    public int[] sort(int sortColumn, boolean ascending, int[] selectedRows) throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void setSelectedRowsAndColumns(int[] selectedRows, int[] selectedColumns) throws Exception {
+    public void setSelectedRowsAndColumns(int[] selectedRows, int[] selectedColumns) throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public int[] getSelectedRows() throws Exception {
+    public int[] getSelectedRows() throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public int[] getSelectedColumns() throws Exception {
+    public int[] getSelectedColumns() throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -4,6 +4,7 @@
 package canreg.client;
 
 import cachingtableapi.DistributedTableDescription;
+import cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.dataentry.ImportOptions;
@@ -798,7 +799,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.lang.SecurityException
      * @throws java.lang.Exception
      */
-    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, Exception {
+    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, DistributedTableDescriptionException {
         return server.retrieveRows(resultSetID, from, to);
     }
 
