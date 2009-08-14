@@ -393,6 +393,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
         String tableName = null;
         DatabaseFilter filter = new DatabaseFilter();
+        DistributedTableDescription newTableDatadescription = null;
 
         RefreshTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
@@ -400,89 +401,113 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             // to RefreshTask fields, here.
             super(app);
             tableName = rangeFilterPanel.getSelectedTable();
-            filter.setFilterString(rangeFilterPanel.getFilter().trim());
             variablesToShow = variableChooserPanel.getSelectedVariableNames(tableName);
 
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
             filter.setSortByVariable(rangeFilterPanel.getSortByVariable().trim());
-
             filter.setRange(rangeFilterPanel.getRange());
-
-            tableDataSource = null;
+            // setProgress(0, 0, 4);
+            setMessage("Initiating query...");
+            // setProgress(1, 0, 4);
+            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
         }
 
         @Override
         protected Object doInBackground() {
+            String result = "OK";
             try {
-                //setProgress(0, 0, 4);
-                setMessage("Initiating query...");
-                //setProgress(1, 0, 4);
-
-                // release old resultSet
-                if (tableDatadescription != null) {
-                    CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
-                }
-                tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
-                if (tableDatadescription != null) {
-                    tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
-                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
-                }
-                if (tableDataSource != null) {
-                    tableDataModel = new DistributedTableModel(tableDataSource);
-                    // tableDataModel = new PagingTableModel(tableDataSource);
-                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
-                    // setProgress(2, 0, 4);
-                }
-
-                setMessage("Starting a new transaction...");
-                rangeFilterPanel.setRecordsShown(tableDataModel.getRowCount());
-
-                //setProgress(3, 0, 4);
-
-                setMessage("Fetching data...");
-                resultTable.setModel(tableDataModel);
-                resultTable.setColumnSelectionAllowed(false);
-
-                tableColumnModel = new XTableColumnModel();
-                resultTable.setColumnModel(tableColumnModel);
-                resultTable.createDefaultColumnsFromModel();
-                updateVariablesShown();
-
-                //setProgress(4, 0, 4);
-                setMessage("Finished");
-
+                newTableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
             } catch (SQLException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showInternalMessageDialog(rootPane, "Not a valid filter.", "Error", JOptionPane.ERROR_MESSAGE);
-                return "Not valid";
+                result = "Not valid";
             } catch (RemoteException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                return "Remote exception";
+                result = "Remote exception";
             } catch (SecurityException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                return "Security exception";
+                result = "Security exception";
             } catch (InterruptedException ignore) {
-                return "Ignore";
+                result = "Ignore";
             } catch (Exception ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                return "Not OK";
+                result = "Not OK";
             }
-            return "OK";
+            return result;
         }
 
         @Override
         protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
-            boolean theResult = result.equals("OK");
-            // resultTable.setAutoResizeMode (JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-            resultTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            TableColumnAdjuster tca = new TableColumnAdjuster(resultTable);
-            tca.setColumnDataIncluded(false);
-            tca.setOnlyAdjustLarger(false);
-            tca.adjustColumns();
-            resultPanel.setVisible(theResult);
+
+            // boolean theResult = ;
+            if (result.equals("OK")) {
+
+                // release old resultSet
+                if (tableDatadescription != null) {
+                    try {
+                        CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
+                        tableDataSource = null;
+                    } catch (SecurityException securityException) {
+                    } catch (RemoteException remoteException) {
+                    }
+                }
+
+                tableDatadescription = newTableDatadescription;
+
+                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+
+                if (tableDatadescription != null) {
+                    try {
+                        tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
+                    } catch (Exception ex) {
+                        Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                }
+
+                if (tableDataSource != null) {
+                    try {
+                        tableDataModel = new DistributedTableModel(tableDataSource);
+                    } catch (Exception ex) {
+                        Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    // tableDataModel = new PagingTableModel(tableDataSource);
+                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                    // setProgress(2, 0, 4);
+                }
+
+                setMessage("Starting a new transaction...");
+
+                rangeFilterPanel.setRecordsShown(tableDataModel.getRowCount());
+
+                // setProgress(3, 0, 4);
+
+                setMessage("Fetching data...");
+                resultTable.setColumnSelectionAllowed(false);
+                resultTable.setModel(tableDataModel);
+                tableColumnModel = new XTableColumnModel();
+                resultTable.setColumnModel(tableColumnModel);
+                resultTable.createDefaultColumnsFromModel();
+                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+
+                // setProgress(4, 0, 4);
+                setMessage("Finished");
+
+                updateVariablesShown();
+
+                resultTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                TableColumnAdjuster tca = new TableColumnAdjuster(resultTable);
+                tca.setColumnDataIncluded(false);
+                tca.setOnlyAdjustLarger(false);
+                tca.adjustColumns();
+                resultPanel.setVisible(true);
+            } else if (result.equals("Not valid")) {
+                JOptionPane.showInternalMessageDialog(rootPane, "Not a valid filter.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, result);
+            }
+
         }
     }
 
