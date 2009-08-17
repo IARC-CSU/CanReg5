@@ -493,8 +493,10 @@ public class QueryGenerator {
                 variableType.equalsIgnoreCase("TextArea")) {
             queryLine += " VARCHAR(";
             queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent() + ") ";
-        } else if (variableType.equalsIgnoreCase("Number") ||
-                variableType.equalsIgnoreCase("Date")) {
+        } else if (variableType.equalsIgnoreCase("Number")) {
+            queryLine += " INTEGER";
+        // queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent()+") ";
+        } else if (variableType.equalsIgnoreCase("Date")) {
             queryLine += " VARCHAR(8)";
         // queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent()+") ";
         } else if (variableType.equalsIgnoreCase("Dict")) {
