@@ -7,7 +7,6 @@ package canreg.client.gui.analysis;
 
 import cachingtableapi.DistributedTableDescription;
 import cachingtableapi.DistributedTableModel;
-import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.gui.CanRegClientView;
 import canreg.common.DatabaseFilter;
@@ -264,6 +263,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                     try {
                         tableDataModel = new DistributedTableModel(tableDataSource);
                         // tableDataModel = new PagingTableModel(tableDataSource);
+                        resultTable.setModel(tableDataModel);
                         Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
                         // setProgress(2, 0, 4);
                     } catch (Exception ex) {
@@ -275,6 +275,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
 
                 setProgress(4, 0, 4);
                 setMessage("Finished");
+                resultTable.setVisible(true);
 
                 resultScrollPane.setVisible(true);
                 resultScrollPane.revalidate();
@@ -282,7 +283,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                 resultPanel.revalidate();
                 resultPanel.repaint();
                 resultPanel.setVisible(true);
-                resultTable.setVisible(true);
+
                 tableColumnModel = resultTable.getColumnModel();
             }
         }
@@ -293,7 +294,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         rangeFilterPanel.setTableChooserVisible(false);
         rangeFilterPanel.setRecordPanelvisible(false);
         rangeFilterPanel.setSortByVariableShown(false);
-        // resultScrollPane.setVisible(false);
+        resultScrollPane.setVisible(false);
         variablesChooserPanel.initPanel();
         tableInternalFrame = new TableInternalFrame();
 
