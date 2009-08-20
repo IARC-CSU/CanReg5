@@ -449,7 +449,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                         CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
                         tableDataSource = null;
                     } catch (SecurityException securityException) {
+                        // TODO: Add handler
                     } catch (RemoteException remoteException) {
+                        // TODO: Add handler
                     }
                 }
 

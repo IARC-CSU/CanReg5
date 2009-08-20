@@ -20,7 +20,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Connection;
-import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -463,7 +462,6 @@ public class CanRegDAO {
             ResultSet countRowSet;
             try {
                 countRowSet = statement.executeQuery(strCountTumours + filterString);
-                System.out.println("Hepp");
             } catch (java.sql.SQLException ex) {
                 throw ex;
             }
@@ -1751,4 +1749,3 @@ public class CanRegDAO {
     private GlobalToolBox globalToolBox;
     private static boolean debug = true;
 }
-

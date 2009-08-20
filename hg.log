@@ -1,5 +1,50 @@
-changeset:   227:1f438e021067
+changeset:   236:bbecaa594763
 tag:         tip
+user:        ervikm@X60112
+date:        Tue Aug 18 11:31:53 2009 +0200
+summary:     Updated the abaout page.
+
+changeset:   235:494c8adec584
+user:        ervikm@X60112
+date:        Tue Aug 18 11:00:51 2009 +0200
+summary:     FrequenciesByYear: Fixed a bug where the table did not show up. Printing now works as well.
+
+changeset:   234:a82da4c7f8af
+user:        ervikm@X60112
+date:        Mon Aug 17 17:09:27 2009 +0200
+summary:     Querygenerator: fixed  a bug where numbers where stored as VARCHAR instead of INTEGER in the database.
+
+changeset:   233:967a18972476
+user:        ervikm@X60112
+date:        Fri Aug 14 17:17:02 2009 +0200
+summary:     Various: fixed bug that froze the GUI if an unvalid filter was used.
+
+changeset:   232:4f5004b2dc0e
+user:        ervikm@X60112
+date:        Fri Aug 14 15:46:55 2009 +0200
+summary:     Browse and ExportReport: fixed bug that froze the GUI if an unvalid filter was used.
+
+changeset:   231:d77cb11b1df1
+user:        ervikm@X60112
+date:        Wed Aug 12 14:58:05 2009 +0200
+summary:     TableBuilder: Disabled the filter tab.
+
+changeset:   230:87b5a5015546
+user:        ervikm@X60112
+date:        Wed Aug 12 11:27:46 2009 +0200
+summary:     Import preview is now shown in a table.
+
+changeset:   229:f0da48da2579
+user:        ervikm@X60112
+date:        Wed Aug 12 11:23:39 2009 +0200
+summary:     Import preview is now shown in a table.
+
+changeset:   228:b18669f18ef6
+user:        ervikm@X60112
+date:        Thu Jul 09 16:02:47 2009 +0200
+summary:     Code tidying.
+
+changeset:   227:1f438e021067
 user:        ervikm@X60112
 date:        Wed Jul 08 14:48:46 2009 +0200
 summary:     Version 4.99.9
