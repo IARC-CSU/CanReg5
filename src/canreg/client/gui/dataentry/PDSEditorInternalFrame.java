@@ -8,6 +8,7 @@ package canreg.client.gui.dataentry;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.FastFilterInternalFrame;
+import canreg.client.gui.tools.ExcelAdapter;
 import canreg.common.Globals;
 import canreg.server.database.AgeGroupStructure;
 import canreg.server.database.PopulationDataset;
@@ -23,6 +24,7 @@ import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -94,36 +96,19 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
     private void refreshPopulationDataSetTable() {
         AgeGroupStructure ags = (AgeGroupStructure) ageGroupStructureComboBox.getSelectedItem();
         String[] ageGroupNames = ags.getAgeGroupNames();
-        PopulationDatasetsEntry[] ageGroups;
-        Object[][] pdsTableData = new Object[ageGroupNames.length][4];
+        String[][] ageGroupLabels = new String[ageGroupNames.length][];
+
         for (int i = 0; i < ageGroupNames.length; i++) {
-            pdsTableData[i][0] = ageGroupNames[i];
-            pdsTableData[i][1] = new Integer(0);
-            pdsTableData[i][2] = new Integer(0);
-            pdsTableData[i][3] = ageGroupNames[i];
-        }
-        if (pds != null) {
-            ageGroups = pds.getAgeGroups();
-            for (PopulationDatasetsEntry pdse : ageGroups) {
-                if (pdse.getAgeGroup() < pdsTableData.length && pdse.getSex() <= 2) {
-                    pdsTableData[pdse.getAgeGroup()][pdse.getSex()] = pdse.getCount();
-                } else {
-                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Outside skope: " + pdse.getAgeGroup() + " " + pdse.getSex());
-                }
-            }
+            ageGroupLabels[i] = new String[]{ageGroupNames[i]};
         }
 
-        populationDataSetTable.setModel(new javax.swing.table.DefaultTableModel(
-                pdsTableData,
-                new String[]{
-                    "Age group", "Male", "Female", "Age Group"
-                }) {
+        ageGroupLabelsTable.setModel(new DefaultTableModel(ageGroupLabels, new String[]{"Age Group"}) {
 
             Class[] types = new Class[]{
-                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+                java.lang.String.class
             };
             boolean[] canEdit = new boolean[]{
-                false, true, true, false
+                false
             };
 
             @Override
@@ -137,6 +122,50 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
             }
         });
 
+        PopulationDatasetsEntry[] ageGroups;
+        Object[][] pdsTableData = new Object[ageGroupNames.length][2];
+
+        for (int i = 0; i < ageGroupNames.length; i++) {
+            // pdsTableData[i][0] = ageGroupNames[i];
+            pdsTableData[i][0] = new Integer(0);
+            pdsTableData[i][0] = new Integer(0);
+            /// pdsTableData[i][3] = ageGroupNames[i];
+        }
+
+        if (pds != null) {
+            ageGroups = pds.getAgeGroups();
+            for (PopulationDatasetsEntry pdse : ageGroups) {
+                if (pdse.getAgeGroup() < pdsTableData.length && pdse.getSex() <= 2) {
+                    pdsTableData[pdse.getAgeGroup()][pdse.getSex() - 1] = pdse.getCount();
+                } else {
+                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Outside skope: " + pdse.getAgeGroup() + " " + pdse.getSex());
+                }
+            }
+        }
+
+        pdsTable.setModel(new javax.swing.table.DefaultTableModel(
+                pdsTableData,
+                new String[]{
+                    "Male", "Female"
+                }) {
+
+            Class[] types = new Class[]{
+                java.lang.Integer.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean[]{
+                true, true
+            };
+
+            @Override
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
     }
 
     /** This method is called from within the constructor to
@@ -170,7 +199,9 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
         otherAgeGroupStructureButton = new javax.swing.JButton();
         dataSetPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        populationDataSetTable = new javax.swing.JTable();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        ageGroupLabelsTable = new javax.swing.JTable();
+        pdsTable = new javax.swing.JTable();
         saveButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         lockedToggleButton = new javax.swing.JToggleButton();
@@ -272,19 +303,19 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detailsPanelLayout.createSequentialGroup()
-                        .addComponent(standardPopulationComboBox, 0, 174, Short.MAX_VALUE)
+                        .addComponent(standardPopulationComboBox, 0, 144, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editStandardPopulationButton))
-                    .addComponent(dateChooser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
-                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
-                    .addComponent(sourceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                    .addComponent(dateChooser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                    .addComponent(sourceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                     .addGroup(detailsPanelLayout.createSequentialGroup()
-                        .addComponent(filterTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                        .addComponent(filterTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(filterWizardButton))
-                    .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                     .addGroup(detailsPanelLayout.createSequentialGroup()
-                        .addComponent(ageGroupStructureComboBox, 0, 164, Short.MAX_VALUE)
+                        .addComponent(ageGroupStructureComboBox, 0, 134, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(otherAgeGroupStructureButton)))
                 .addContainerGap())
@@ -322,7 +353,7 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
                     .addComponent(editStandardPopulationButton)
                     .addComponent(standardPopulationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(standardPopulationLabel))
-                .addContainerGap(137, Short.MAX_VALUE))
+                .addContainerGap(112, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("detailsPanel.TabConstraints.tabTitle"), detailsPanel); // NOI18N
@@ -332,38 +363,41 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        populationDataSetTable.setModel(new javax.swing.table.DefaultTableModel(
+        jSplitPane1.setDividerLocation(60);
+        jSplitPane1.setName("jSplitPane1"); // NOI18N
+
+        ageGroupLabelsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)},
-                {null, new Integer(0), new Integer(0)}
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null}
             },
             new String [] {
-                "Age group", "Male", "Female"
+                "Age group"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class
+                java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true
+                false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -374,24 +408,67 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
                 return canEdit [columnIndex];
             }
         });
-        populationDataSetTable.setCellSelectionEnabled(true);
-        populationDataSetTable.setName("populationDataSetTable"); // NOI18N
-        populationDataSetTable.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(populationDataSetTable);
-        populationDataSetTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        populationDataSetTable.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("populationDataSetTable.columnModel.title0")); // NOI18N
-        populationDataSetTable.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("populationDataSetTable.columnModel.title1")); // NOI18N
-        populationDataSetTable.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("populationDataSetTable.columnModel.title2")); // NOI18N
+        ageGroupLabelsTable.setCellSelectionEnabled(true);
+        ageGroupLabelsTable.setName("ageGroupLabelsTable"); // NOI18N
+        ageGroupLabelsTable.getTableHeader().setReorderingAllowed(false);
+        jSplitPane1.setLeftComponent(ageGroupLabelsTable);
+        ageGroupLabelsTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        ageGroupLabelsTable.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title0")); // NOI18N
+
+        pdsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)}
+            },
+            new String [] {
+                "Male", "Female"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        pdsTable.setName("pdsTable"); // NOI18N
+        pdsTable.getTableHeader().setReorderingAllowed(false);
+        jSplitPane1.setRightComponent(pdsTable);
+        pdsTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        pdsTable.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title1")); // NOI18N
+        pdsTable.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title2")); // NOI18N
+        ExcelAdapter myAd = new ExcelAdapter(pdsTable);
+
+        jScrollPane1.setViewportView(jSplitPane1);
 
         javax.swing.GroupLayout dataSetPanelLayout = new javax.swing.GroupLayout(dataSetPanel);
         dataSetPanel.setLayout(dataSetPanelLayout);
         dataSetPanelLayout.setHorizontalGroup(
             dataSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
         );
         dataSetPanelLayout.setVerticalGroup(
             dataSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(resourceMap.getString("dataSetPanel.TabConstraints.tabTitle"), dataSetPanel); // NOI18N
@@ -418,11 +495,11 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(deleteButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
                 .addComponent(lockedToggleButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cancelButton)
@@ -433,7 +510,7 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
@@ -551,21 +628,21 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
 
         int numberOfAgeGroups = pds.getAgeGroupStructure().getNumberOfAgeGroups();
 
-        if (populationDataSetTable.isEditing()) {
-            populationDataSetTable.getCellEditor().stopCellEditing();
+        if (pdsTable.isEditing()) {
+            pdsTable.getCellEditor().stopCellEditing();
         }
 
         for (int ageGroup = 0; ageGroup < numberOfAgeGroups; ageGroup++) {
-            for (int sex = 1; sex <= 2; sex++) {
+            for (int sex = 0; sex <= 1; sex++) {
                 Integer count;
                 try {
-                    count = (Integer) populationDataSetTable.getValueAt(ageGroup, sex);
+                    count = (Integer) pdsTable.getValueAt(ageGroup, sex);
                 } catch (java.lang.NullPointerException npe) {
                     count = new Integer(0);
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Missing value in the pds...");
                 }
-                pds.addAgeGroup(new PopulationDatasetsEntry(ageGroup, sex, count));
-                System.out.println(sex + " - " + ageGroup + ": " + count);
+                pds.addAgeGroup(new PopulationDatasetsEntry(ageGroup, sex + 1, count));
+                System.out.println((sex + 1) + " - " + ageGroup + ": " + count);
             }
         }
     }
@@ -613,7 +690,7 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
         ageGroupStructureComboBox.setFocusable(!lockedToggleButton.isSelected());
         editStandardPopulationButton.setFocusable(!lockedToggleButton.isSelected());
         nameTextField.setFocusable(!lockedToggleButton.isSelected());
-        populationDataSetTable.setFocusable(!lockedToggleButton.isSelected());
+        pdsTable.setFocusable(!lockedToggleButton.isSelected());
         saveButton.setFocusable(!lockedToggleButton.isSelected());
         sourceTextField.setFocusable(!lockedToggleButton.isSelected());
         standardPopulationComboBox.setFocusable(!lockedToggleButton.isSelected());
@@ -638,6 +715,7 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable ageGroupLabelsTable;
     private javax.swing.JComboBox ageGroupStructureComboBox;
     private javax.swing.JLabel ageGroupStructureLabel;
     private javax.swing.JButton cancelButton;
@@ -654,12 +732,13 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JTextField filterTextField;
     private javax.swing.JButton filterWizardButton;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToggleButton lockedToggleButton;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JButton otherAgeGroupStructureButton;
-    private javax.swing.JTable populationDataSetTable;
+    private javax.swing.JTable pdsTable;
     private javax.swing.JButton saveButton;
     private javax.swing.JLabel sourceLabel;
     private javax.swing.JTextField sourceTextField;

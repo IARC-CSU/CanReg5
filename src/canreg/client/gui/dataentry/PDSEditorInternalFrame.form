@@ -27,11 +27,11 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jTabbedPane1" alignment="0" pref="400" max="32767" attributes="0"/>
+          <Component id="jTabbedPane1" alignment="0" pref="370" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="deleteButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="118" max="32767" attributes="0"/>
+              <EmptySpace pref="88" max="32767" attributes="0"/>
               <Component id="lockedToggleButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
@@ -44,7 +44,7 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="jTabbedPane1" pref="439" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="406" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -94,21 +94,21 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="standardPopulationComboBox" pref="174" max="32767" attributes="0"/>
+                              <Component id="standardPopulationComboBox" pref="144" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="editStandardPopulationButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="dateChooser" alignment="1" pref="231" max="32767" attributes="0"/>
-                          <Component id="descriptionScrollPane" alignment="0" pref="231" max="32767" attributes="0"/>
-                          <Component id="sourceTextField" alignment="1" pref="231" max="32767" attributes="0"/>
+                          <Component id="dateChooser" alignment="1" pref="201" max="32767" attributes="0"/>
+                          <Component id="descriptionScrollPane" alignment="0" pref="201" max="32767" attributes="0"/>
+                          <Component id="sourceTextField" alignment="1" pref="201" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="filterTextField" pref="132" max="32767" attributes="0"/>
+                              <Component id="filterTextField" pref="102" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="filterWizardButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="nameTextField" alignment="0" pref="231" max="32767" attributes="1"/>
+                          <Component id="nameTextField" alignment="0" pref="201" max="32767" attributes="1"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="ageGroupStructureComboBox" pref="164" max="32767" attributes="0"/>
+                              <Component id="ageGroupStructureComboBox" pref="134" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="otherAgeGroupStructureButton" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -157,7 +157,7 @@
                           <Component id="standardPopulationComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="standardPopulationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="145" max="32767" attributes="0"/>
+                      <EmptySpace pref="112" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -331,12 +331,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="379" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="349" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="381" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="348" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -351,83 +351,119 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="populationDataSetTable">
+                <Container class="javax.swing.JSplitPane" name="jSplitPane1">
                   <Properties>
-                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="3" rowCount="20">
-                        <Column editable="false" title="Age group" type="java.lang.String"/>
-                        <Column editable="true" title="Male" type="java.lang.Integer">
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                        </Column>
-                        <Column editable="true" title="Female" type="java.lang.Integer">
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                          <Data value="0"/>
-                        </Column>
-                      </Table>
-                    </Property>
-                    <Property name="cellSelectionEnabled" type="boolean" value="true"/>
-                    <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
-                      <TableColumnModel selectionModel="2">
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title resourceKey="populationDataSetTable.columnModel.title0"/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title resourceKey="populationDataSetTable.columnModel.title1"/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title resourceKey="populationDataSetTable.columnModel.title2"/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                      </TableColumnModel>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="populationDataSetTable" noResource="true"/>
-                    <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                      <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
-                    </Property>
+                    <Property name="dividerLocation" type="int" value="60"/>
+                    <Property name="name" type="java.lang.String" value="jSplitPane1" noResource="true"/>
                   </Properties>
-                </Component>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
+                  <SubComponents>
+                    <Component class="javax.swing.JTable" name="ageGroupLabelsTable">
+                      <Properties>
+                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                          <Table columnCount="1" rowCount="20">
+                            <Column editable="false" title="Age group" type="java.lang.String"/>
+                          </Table>
+                        </Property>
+                        <Property name="cellSelectionEnabled" type="boolean" value="true"/>
+                        <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                          <TableColumnModel selectionModel="2">
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="pdsTable.columnModel.title0"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                          </TableColumnModel>
+                        </Property>
+                        <Property name="name" type="java.lang.String" value="ageGroupLabelsTable" noResource="true"/>
+                        <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                          <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
+                        </Property>
+                      </Properties>
+                      <Constraints>
+                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
+                          <JSplitPaneConstraints position="left"/>
+                        </Constraint>
+                      </Constraints>
+                    </Component>
+                    <Component class="javax.swing.JTable" name="pdsTable">
+                      <Properties>
+                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                          <Table columnCount="2" rowCount="20">
+                            <Column editable="true" title="Male" type="java.lang.Integer">
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                            </Column>
+                            <Column editable="true" title="Female" type="java.lang.Integer">
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                            </Column>
+                          </Table>
+                        </Property>
+                        <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor" postCode="ExcelAdapter myAd = new ExcelAdapter(pdsTable);">
+                          <TableColumnModel selectionModel="2">
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="pdsTable.columnModel.title1"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="pdsTable.columnModel.title2"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                          </TableColumnModel>
+                        </Property>
+                        <Property name="name" type="java.lang.String" value="pdsTable" noResource="true"/>
+                        <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                          <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
+                        </Property>
+                      </Properties>
+                      <Constraints>
+                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
+                          <JSplitPaneConstraints position="right"/>
+                        </Constraint>
+                      </Constraints>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
           </SubComponents>

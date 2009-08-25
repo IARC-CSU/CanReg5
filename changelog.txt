@@ -1,6 +1,22 @@
 Changelog
-4.99.9 Build 680
 
+4.99.10 Build 688
+- FrequenciesByYear: Fixed a bug where the table did not show up. 
+
+- FrequenciesByYear: Printing now works.
+
+- Querygenerator: fixed a bug where numbers where stored as VARCHAR instead of INTEGER in the database.
+
+- Browse, ExportReport, FrequenciesByYear: fixed bug that froze the GUI if an invalid filter was used.
+
+- TableBuilder: Disabled the filter tab.
+
+- Import preview is now shown in a table.
+
+- Updated the about page.
+
+
+4.99.9 Build 680
 - RecordEditor: Hid the tumour record number and patient record number.
 
 - Improved the FastFilterInternalFrame to deal better with keywords BETWEEN and LIKE.
