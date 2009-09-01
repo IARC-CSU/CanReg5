@@ -87,8 +87,17 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     }
 
     void refreshDatabaseRecord(DatabaseRecord record) {
-        this.databaseRecord = record;
+        setRecord(record);
+        setSaveNeeded(false);
+
+        // get record status and check status
+
         buildPanel();
+
+        // set record status and check status
+
+        refreshCheckStatus(record);
+        refreshRecordStatus(record);
     }
 
     void setActionListener(ActionListener listener) {
@@ -100,7 +109,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
      * @return
      */
     public boolean isSaveNeeded() {
-        hasChanged = false;
+        // hasChanged = false;
 
         for (DatabaseVariablesListElement databaseVariablesListElement : variablesInTable) {
             VariableEditorPanel panel = variableEditorPanels.get(databaseVariablesListElement.getDatabaseVariableName());
@@ -165,7 +174,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                     recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
                 }
             }
-        // databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recStatus);
+            databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recStatus);
+            databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), CheckResult.toDatabaseVariable(resultCode));
         }
     }
 
@@ -187,15 +197,60 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equalsIgnoreCase("Changed")) {
-
-            changesDone();
-            actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
+            if (e.getSource().equals(saveButton)) {
+                // do nothing...
+            } else {
+                changesDone();
+                actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
+            }
         }
     }
 
     private void changesDone() {
         setSaveNeeded(true);
         setChecksResultCode(ResultCode.NotDone);
+    }
+
+    private void refreshRecordStatus(DatabaseRecord record) {
+        /*
+         * Set the record status.
+         */
+        if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
+            recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithConfirmArray));
+            String recStatus = (String) record.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
+            if (recStatus != null) {
+                recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
+            }
+        } else {
+            recordStatusPanel.setVisible(false);
+        }
+    }
+
+    private void refreshCheckStatus(DatabaseRecord record) {
+        /*
+         * Set the check status
+         */
+        if (checkVariableListElement != null) {
+            Object checkStatus = record.getVariable(checkVariableListElement.getDatabaseVariableName());
+            if (checkStatus != null) {
+                String checkStatusString = (String) checkStatus;
+                resultCode = CheckResult.toResultCode(checkStatusString);
+                setSaveNeeded(false);
+                setChecksResultCode(resultCode);
+            }
+        }
+    }
+
+    private void refreshObsoleteStatus(DatabaseRecord record) {
+        /*
+         * Set the obsolete status
+         */
+        String obsoleteStatus = (String) record.getVariable(obsoleteFlagVariableListElement.getDatabaseVariableName());
+        if (obsoleteStatus != null && obsoleteStatus.equalsIgnoreCase(Globals.OBSOLETE_VALUE)) {
+            obsoleteToggleButton.setSelected(true);
+        } else {
+            obsoleteToggleButton.setSelected(false);
+        }
     }
 
     private enum panelTypes {
@@ -213,7 +268,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                 CanRegClientApp.getApplication().getGlobalToolBox();
         saveButton.setEnabled(true);
         // setChecksResultCode(resultCode);
+        // Remove this for now?
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
+
     }
 
     /**
@@ -236,8 +293,14 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
      *
      * @param dbr
      */
-    public void setRecord(DatabaseRecord dbr) {
+    public void setRecordAndBuildPanel(DatabaseRecord dbr) {
+        setRecord(dbr);
+        buildPanel();
+    }
+
+    private void setRecord(DatabaseRecord dbr) {
         this.databaseRecord = dbr;
+        setSaveNeeded(false);
         if (databaseRecord.getClass().isInstance(new Patient())) {
             panelType = panelTypes.PATIENT;
             recordStatusVariableListElement =
@@ -260,9 +323,43 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString());
             checkVariableListElement =
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.CheckStatus.toString());
-
         }
-        buildPanel();
+
+        /*
+         * Build the record status map.
+         */
+
+        if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
+            recStatusDictMap = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
+
+            Collection<DictionaryEntry> recStatusDictCollection = recStatusDictMap.values();
+            recStatusDictWithConfirmArray =
+                    recStatusDictCollection.toArray(new DictionaryEntry[0]);
+
+            Vector<DictionaryEntry> recStatusDictWithoutConfirmVector = new Vector<DictionaryEntry>();
+            for (DictionaryEntry entry : recStatusDictCollection) {
+                // "1" is the code for confirmed... TODO: change to dynamic code...
+                if (!entry.getCode().equalsIgnoreCase("1")) {
+                    recStatusDictWithoutConfirmVector.add(entry);
+                }
+            }
+            recStatusDictWithoutConfirmArray = recStatusDictWithoutConfirmVector.toArray(new DictionaryEntry[0]);
+        }
+
+        String tableName = null;
+
+        if (panelType == panelTypes.PATIENT) {
+            tableName = Globals.PATIENT_TABLE_NAME;
+            mpPanel.setVisible(false);
+            changePatientRecordButton.setVisible(false);
+            checksPanel.setVisible(false);
+        } else if (panelType == panelTypes.TUMOUR) {
+            tableName = Globals.TUMOUR_TABLE_NAME;
+            personSearchPanel.setVisible(false);
+        }
+        variablesInTable =
+                canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
+        Arrays.sort(variablesInTable, new DatabaseVariablesListElementPositionSorter());
     }
 
     /**
@@ -275,27 +372,18 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     }
 
     private void buildPanel() {
-        String tableName = null;
         dataPanel.removeAll();
 
+        if (variableEditorPanels != null) {
+            for (VariableEditorPanel vep : variableEditorPanels.values()) {
+                vep.removeListener();
+            }
+        }
         variableEditorPanels =
                 new LinkedHashMap();
 
-        if (panelType == panelTypes.PATIENT) {
-            tableName = Globals.PATIENT_TABLE_NAME;
-            mpPanel.setVisible(false);
-            changePatientRecordButton.setVisible(false);
-            checksPanel.setVisible(false);
-        } else if (panelType == panelTypes.TUMOUR) {
-            tableName = Globals.TUMOUR_TABLE_NAME;
-            personSearchPanel.setVisible(false);
-        }
-
         Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();
 
-        variablesInTable =
-                canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
-        Arrays.sort(variablesInTable, new DatabaseVariablesListElementPositionSorter());
         Map<String, DictionaryEntry> possibleValues;
 
         for (int i = 0; i <
@@ -331,7 +419,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             String variableName = currentVariable.getDatabaseVariableName();
             Object variableValue = databaseRecord.getVariable(variableName);
             if (variableValue != null) {
-                vep.setValue(variableValue.toString());
+                vep.setInitialValue(variableValue.toString());
             }
 
             Integer groupID = currentVariable.getGroupID();
@@ -347,10 +435,12 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                 panel.add(vep);
             }
 
-// vep.setPropertyChangeListener(this);
+
+            // vep.setPropertyChangeListener(this);
             variableEditorPanels.put(currentVariable.getDatabaseVariableName(), vep);
         }
-// Iterate trough groups
+
+        // Iterate trough groups
 
         // Iterator<Integer> iterator = groupIDtoPanelMap.keySet().iterator();
         for (DatabaseGroupsListElement groupListElement : Tools.getGroupsListElements(doc, Globals.NAMESPACE)) {
@@ -362,59 +452,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             }
         }
 
-        if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
-            recStatusDictMap = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
-
-            Collection<DictionaryEntry> recStatusDictCollection = recStatusDictMap.values();
-            recStatusDictWithConfirmArray =
-                    recStatusDictCollection.toArray(new DictionaryEntry[0]);
-
-            Vector<DictionaryEntry> recStatusDictWithoutConfirmVector = new Vector<DictionaryEntry>();
-            for (DictionaryEntry entry : recStatusDictCollection) {
-                if (!entry.getCode().equalsIgnoreCase("1")) {
-                    recStatusDictWithoutConfirmVector.add(entry);
-                }
-            }
-            recStatusDictWithoutConfirmArray = recStatusDictWithoutConfirmVector.toArray(new DictionaryEntry[0]);
-        }
-
-        /*
-         * Set the obsolete status
-         */
-        String obsoleteStatus = (String) databaseRecord.getVariable(obsoleteFlagVariableListElement.getDatabaseVariableName());
-        if (obsoleteStatus != null && obsoleteStatus.equalsIgnoreCase(Globals.OBSOLETE_VALUE)) {
-            obsoleteToggleButton.setSelected(true);
-        } else {
-            obsoleteToggleButton.setSelected(false);
-        }
-
-        /*
-         * Set the record status.
-         */
-        if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
-            recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithConfirmArray));
-            String recStatus = (String) databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
-            if (recStatus != null) {
-                recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
-            }
-
-        } else {
-            recordStatusPanel.setVisible(false);
-        }
-
-        setSaveNeeded(false);
-
-        /*
-         * Set the check status
-         */
-        if (checkVariableListElement != null) {
-            Object checkStatus = databaseRecord.getVariable(checkVariableListElement.getDatabaseVariableName());
-            if (checkStatus != null) {
-                String checkStatusString = (String) checkStatus;
-                resultCode = CheckResult.toResultCode(checkStatusString);
-                setChecksResultCode(resultCode);
-            }
-        }
+        refreshObsoleteStatus(databaseRecord);
+        refreshRecordStatus(databaseRecord);
+        refreshCheckStatus(databaseRecord);
 
         dataPanel.revalidate();
         dataPanel.repaint();
@@ -431,8 +471,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         } /** Called when a field's "value" property changes. */
         else if ("value".equals(propName)) {
             setSaveNeeded(true);
+           //Temporarily disabled
             actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
-        // saveButton.setEnabled(saveNeeded);
+            // saveButton.setEnabled(saveNeeded);
         } else {
             // Do nothing.
         }

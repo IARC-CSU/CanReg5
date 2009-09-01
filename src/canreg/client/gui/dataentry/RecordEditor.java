@@ -184,7 +184,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         RecordEditorPanel rePanel = new RecordEditorPanel(this);
         rePanel.setDictionary(dictionary);
         rePanel.setDocument(doc);
-        rePanel.setRecord(dbr);
+        rePanel.setRecordAndBuildPanel(dbr);
         rePanel.repaint();
         if (dbr instanceof Patient) {
             patientRecords.add(dbr);
@@ -670,7 +670,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 try {
                     DatabaseRecord dbr = saveRecord(databaseRecord);
                     recordEditorPanel.refreshDatabaseRecord(dbr);
-                    refreshTitles(recordEditorPanel, dbr);
+                    // refreshTitles(recordEditorPanel, dbr);
                     if (dbr instanceof Patient) {
                         addToPatientMap(recordEditorPanel, dbr);
                     }

@@ -539,7 +539,7 @@ public class CanRegDAO {
                 rowCount = countRowSet.getInt(1);
             }
             // feed it to the garbage dump
-            countRowSet = null; 
+            countRowSet = null;
             if (filter.getSortByVariable() != null) {
                 filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
             }
@@ -548,7 +548,7 @@ public class CanRegDAO {
             } catch (java.sql.SQLSyntaxErrorException ex) {
                 throw ex;
             }
-            
+
         } // Or an unknown query...
         else {
             throw new UnknownTableException("Unknown table name.");
@@ -938,6 +938,11 @@ public class CanRegDAO {
                 recordVariableNumber++;
                 String variableType = element.getElementsByTagName(Globals.NAMESPACE + "variable_type").item(0).getTextContent();
                 Object obj = record.getVariable(element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent());
+
+                System.out.println(
+                        element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
+                        ": " + obj.toString());
+
                 if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict") || variableType.equalsIgnoreCase("Date")) {
                     if (obj != null) {
                         try {
@@ -975,7 +980,6 @@ public class CanRegDAO {
         if (results.next()) {
             id = results.getInt(1);
         }
-
 
         return id;
     }
@@ -1318,7 +1322,7 @@ public class CanRegDAO {
 
             NodeList variables = variablesElement.getElementsByTagName(Globals.NAMESPACE + "variable");
 
-            int patientVariableNumber = 0;
+            int variableNumber = 0;
 
             // Go through all the variable definitions
             for (int i = 0; i < variables.getLength(); i++) {
@@ -1329,36 +1333,43 @@ public class CanRegDAO {
                 String tableNameDB = element.getElementsByTagName(Globals.NAMESPACE + "table").item(0).getTextContent();
 
                 if (tableNameDB.equalsIgnoreCase(tableName)) {
-                    patientVariableNumber++;
+                    variableNumber++;
                     String variableType = element.getElementsByTagName(Globals.NAMESPACE + "variable_type").item(0).getTextContent();
                     Object obj = record.getVariable(element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent());
+
                     if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict") || variableType.equalsIgnoreCase("Date")) {
                         if (obj != null) {
                             try {
                                 String strObj = (String) obj;
                                 if (strObj.length() > 0) {
-                                    stmtEditRecord.setString(patientVariableNumber, strObj);
+                                    stmtEditRecord.setString(variableNumber, strObj);
                                 } else {
-                                    stmtEditRecord.setString(patientVariableNumber, "");
+                                    stmtEditRecord.setString(variableNumber, "");
                                 }
+                                System.out.println(
+                                        element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
+                                        ": " + strObj);
                             } catch (java.lang.ClassCastException cce) {
                                 System.out.println("String " + variableType + " " + obj);
                                 throw cce;
                             }
                         } else {
-                            stmtEditRecord.setString(patientVariableNumber, "");
+                            stmtEditRecord.setString(variableNumber, "");
                         }
                     } else if (variableType.equalsIgnoreCase("Number")) {
                         if (obj != null) {
                             try {
                                 Integer intObj = (Integer) obj;
-                                stmtEditRecord.setInt(patientVariableNumber, intObj.intValue());
+                                stmtEditRecord.setInt(variableNumber, intObj.intValue());
+                                System.out.println(
+                                        element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
+                                        ": " + obj.toString());
                             } catch (java.lang.ClassCastException cce) {
                                 System.out.println("Number " + variableType + " " + obj);
                                 throw cce;
                             }
                         } else {
-                            stmtEditRecord.setInt(patientVariableNumber, -1);
+                            stmtEditRecord.setInt(variableNumber, -1);
                         }
                     }
                 }
@@ -1371,7 +1382,7 @@ public class CanRegDAO {
                 idString = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
             }
             int idInt = (Integer) record.getVariable(idString);
-            stmtEditRecord.setInt(patientVariableNumber + 1, idInt);
+            stmtEditRecord.setInt(variableNumber + 1, idInt);
 
             int rowCount = stmtEditRecord.executeUpdate();
 

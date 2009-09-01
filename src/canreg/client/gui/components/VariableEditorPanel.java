@@ -53,31 +53,17 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
     protected java.awt.Color VARIABLE_RARE_COLOR = java.awt.Color.YELLOW;
     protected java.awt.Color VARIABLE_OK_COLOR = java.awt.SystemColor.text;
     private Dictionary dictionary;
-    String initialValue = null;
+    Object initialValue = null;
     private boolean mandatory;
-    private boolean hasChanged;
-    private ActionListener listener;
+    private boolean hasChanged = false;
+    protected ActionListener listener;
     public static String CHANGED_STRING = "Changed";
 
     /** Creates new form VariableEditorPanel */
     public VariableEditorPanel(ActionListener listener) {
         initComponents();
-
         this.listener = listener;
         hasChanged = false;
-
-        codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
-
-            @Override
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                componentFocusGained(evt);
-            }
-
-            @Override
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                componentFocusLost(evt);
-            }
-        });
     }
 
     /**
@@ -138,7 +124,7 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
     }
 
     public void setSaved() {
-        initialValue = getValue().toString();
+        initialValue = getValue();
         hasChanged = false;
     }
 
@@ -349,14 +335,19 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         variableNameLabel.setText(variableName);
     }
 
+    public synchronized void setInitialValue(String value) {
+        ActionListener tempListener = listener;
+        listener = null;
+        setValue(value);
+        initialValue = getValue();
+        listener = tempListener;
+    }
+
     /**
      * 
      * @param value
      */
     public synchronized void setValue(String value) {
-        if (initialValue == null) {
-            initialValue = value;
-        }
         codeTextField.setText(value);
         try {
             lookUpAndSetDescription();
@@ -370,7 +361,7 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         if (codeTextField.getText().trim().length() > 0) {
             if (possibleValuesMap != null) {
                 try {
-                    if (dictionary.isCompoundDictionary() && codeTextField.getText().length()>= dictionary.getCodeLength()) {
+                    if (dictionary.isCompoundDictionary() && codeTextField.getText().length() >= dictionary.getCodeLength()) {
                         categoryTextField.setText(possibleValuesMap.get(
                                 codeTextField.getText().substring(0, dictionary.getCodeLength())).getDescription());
                     }
@@ -441,6 +432,19 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         setMaximumLength(databaseListElement.getVariableLength());
 
         mandatory = databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory");
+
+        codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                componentFocusGained(evt);
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                componentFocusLost(evt);
+            }
+        });
     }
 
     /**
@@ -494,9 +498,13 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
     }
 
     protected void componentFocusLost(FocusEvent evt) {
-       // if (!getValue().toString().equals(initialValue)) {
-       //     hasChanged = true;
-       // }
+        // if (!getValue().toString().equals(initialValue)) {
+        //     hasChanged = true;
+        // }
+    }
+
+    public void removeListener() {
+        listener = null;
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -510,8 +518,8 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         } else if (e.getActionCommand().equalsIgnoreCase(MaxLengthDocument.CHANGED_ACTION_STRING)) {
             try {
                 lookUpAndSetDescription();
-                String currentValue = getValue().toString();
-                if (initialValue == null || !currentValue.equals(initialValue)) {
+                Object currentValue = getValue();
+                if (listener != null && ((currentValue != null && !currentValue.equals(initialValue)) || (initialValue != null && !initialValue.equals(currentValue)))) {
                     hasChanged = true;
                     listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
                 }

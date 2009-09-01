@@ -1,5 +1,13 @@
 Changelog
 
+4.99.11 Build 690
+- PopulationDataSetEditor: cut and paste from general spreadsheets now work. 
+
+- Made some more views more compact to fit better smaller screens.
+
+- Updated the about page.
+
+
 4.99.10 Build 688
 - FrequenciesByYear: Fixed a bug where the table did not show up. 
 

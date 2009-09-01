@@ -636,10 +636,14 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
             for (int sex = 0; sex <= 1; sex++) {
                 Integer count;
                 try {
-                    count = (Integer) pdsTable.getValueAt(ageGroup, sex);
+
+                    count = Integer.parseInt(pdsTable.getValueAt(ageGroup, sex).toString());
                 } catch (java.lang.NullPointerException npe) {
                     count = new Integer(0);
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Missing value in the pds...");
+                } catch (java.lang.NumberFormatException nfe){
+                    count = new Integer(0);                    
+                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Error in the pds...");
                 }
                 pds.addAgeGroup(new PopulationDatasetsEntry(ageGroup, sex + 1, count));
                 System.out.println((sex + 1) + " - " + ageGroup + ": " + count);

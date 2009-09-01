@@ -23,7 +23,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
     public DateVariableEditorPanel(ActionListener listener) {
         super(listener);
     }
-    
+
     /**
      * 
      * @param databaseListElement
@@ -70,7 +70,6 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
      */
     @Override
     public void setValue(String value) {
-        initialValue = value;
         if (value.trim().length() == 0) {
             if (databaseListElement.getFillInStatus().equalsIgnoreCase(Globals.FILL_IN_STATUS_MANDATORY_STRING)) {
                 codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
@@ -101,6 +100,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, stringIndexOutOfBoundsException);
             }
         }
+
     }
 
     /**

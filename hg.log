@@ -1,5 +1,30 @@
-changeset:   236:bbecaa594763
+changeset:   241:5d48b75f6779
 tag:         tip
+user:        ervikm@X60112
+date:        Tue Aug 25 10:46:44 2009 +0200
+summary:     PopulationDataSetEditor: cut and paste from general spreadsheets now work.
+
+changeset:   240:87b5e868182e
+user:        ervikm@X60112
+date:        Fri Aug 21 15:12:50 2009 +0200
+summary:     TableBuilder: Made the view more compact to better fit smaller screens.
+
+changeset:   239:b3a504b436bd
+user:        ervikm@X60112
+date:        Fri Aug 21 15:07:33 2009 +0200
+summary:     ImportView: Made the import view more compact to better fit smaller screens.
+
+changeset:   238:8637d4119352
+user:        ervikm@X60112
+date:        Thu Aug 20 17:19:38 2009 +0200
+summary:     4.99.10
+
+changeset:   237:542a9d44d77c
+user:        ervikm@X60112
+date:        Tue Aug 18 16:56:21 2009 +0200
+summary:     FrequenciesByYear, Fixed a bug where the program froze when the filter was not accepted.
+
+changeset:   236:bbecaa594763
 user:        ervikm@X60112
 date:        Tue Aug 18 11:31:53 2009 +0200
 summary:     Updated the abaout page.
