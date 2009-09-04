@@ -414,4 +414,6 @@ public class Globals {
     public static String FILL_IN_STATUS_MANDATORY_STRING = "Mandatory";
     public static String FILL_IN_STATUS_AUTOMATIC_STRING = "Automatic";
     public static String FILL_IN_STATUS_OPTIONAL_STRING = "Optional";
+
+    public static int PDS_DATABASE_NAME_LENGTH = 100;
 }
