@@ -89,7 +89,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                 if (date.isUnknownMonth()) {
                     dateString = DateHelper.setMonth(dateString, dateFormatString, "99");
                 }
-                dateField.setText(dateString);
+                codeTextField.setText(dateString);
             } catch (ParseException ex) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NumberFormatException numberFormatException) {
@@ -109,8 +109,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
      */
     @Override
     public Object getValue() {
-        Object valueObject = null;
-        String valueString = dateField.getText().trim();
+        String valueString = codeTextField.getText().trim();
         String valueObjectString = "";
         if (valueString.length() > 0) {
             try {
