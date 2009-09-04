@@ -138,7 +138,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="searchButton" alignment="0" pref="71" max="32767" attributes="1"/>
-                  <Component id="jLabel2" alignment="0" pref="71" max="32767" attributes="0"/>
+                  <Component id="searchLabel" alignment="0" pref="71" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -146,7 +146,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="searchButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                      <Component id="searchLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -162,11 +162,11 @@
                 <Property name="name" type="java.lang.String" value="searchButton" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel2">
+            <Component class="javax.swing.JLabel" name="searchLabel">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel2.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel2" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="searchLabel.text"/>
+                <Property name="name" type="java.lang.String" value="searchLabel" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -187,7 +187,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="mpButton" alignment="0" pref="73" max="32767" attributes="0"/>
-                  <Component id="jLabel3" alignment="0" pref="73" max="32767" attributes="0"/>
+                  <Component id="mpLabel" alignment="0" pref="73" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -195,7 +195,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="mpButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <Component id="mpLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -211,11 +211,11 @@
                 <Property name="name" type="java.lang.String" value="mpButton" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel3">
+            <Component class="javax.swing.JLabel" name="mpLabel">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel3.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel3" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="mpLabel.text"/>
+                <Property name="name" type="java.lang.String" value="mpLabel" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>

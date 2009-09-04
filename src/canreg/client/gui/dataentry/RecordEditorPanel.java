@@ -139,7 +139,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         panel.setResultCode(resultCode);
     }
 
-    void setChecksResultCode(ResultCode resultCode) {
+    public void setChecksResultCode(ResultCode resultCode) {
         this.resultCode = resultCode;
         String recStatus = null;
         boolean canBeConfirmed = false;
@@ -271,6 +271,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         // Remove this for now?
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
 
+        // TODO: update the label of person search and MP search
+        // for now - hide this untill it is used...
+        searchLabel.setVisible(false);
+        mpLabel.setVisible(false);
     }
 
     /**
@@ -294,6 +298,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
      * @param dbr
      */
     public void setRecordAndBuildPanel(DatabaseRecord dbr) {
+        setChecksResultCode(ResultCode.NotDone);
         setRecord(dbr);
         buildPanel();
     }
@@ -494,10 +499,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         checksLabel = new javax.swing.JLabel();
         personSearchPanel = new javax.swing.JPanel();
         searchButton = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        searchLabel = new javax.swing.JLabel();
         mpPanel = new javax.swing.JPanel();
         mpButton = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        mpLabel = new javax.swing.JLabel();
         recordStatusPanel = new javax.swing.JPanel();
         recordStatusComboBox = new javax.swing.JComboBox();
         recordStatusPanel1 = new javax.swing.JPanel();
@@ -548,23 +553,23 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         searchButton.setToolTipText(resourceMap.getString("searchButton.toolTipText")); // NOI18N
         searchButton.setName("searchButton"); // NOI18N
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
-        jLabel2.setName("jLabel2"); // NOI18N
+        searchLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        searchLabel.setText(resourceMap.getString("searchLabel.text")); // NOI18N
+        searchLabel.setName("searchLabel"); // NOI18N
 
         javax.swing.GroupLayout personSearchPanelLayout = new javax.swing.GroupLayout(personSearchPanel);
         personSearchPanel.setLayout(personSearchPanelLayout);
         personSearchPanelLayout.setHorizontalGroup(
             personSearchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(searchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+            .addComponent(searchLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
         );
         personSearchPanelLayout.setVerticalGroup(
             personSearchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(personSearchPanelLayout.createSequentialGroup()
                 .addComponent(searchButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2))
+                .addComponent(searchLabel))
         );
 
         mpPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("mpPanel.border.title"))); // NOI18N
@@ -575,23 +580,23 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         mpButton.setToolTipText(resourceMap.getString("mpButton.toolTipText")); // NOI18N
         mpButton.setName("mpButton"); // NOI18N
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
-        jLabel3.setName("jLabel3"); // NOI18N
+        mpLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        mpLabel.setText(resourceMap.getString("mpLabel.text")); // NOI18N
+        mpLabel.setName("mpLabel"); // NOI18N
 
         javax.swing.GroupLayout mpPanelLayout = new javax.swing.GroupLayout(mpPanel);
         mpPanel.setLayout(mpPanelLayout);
         mpPanelLayout.setHorizontalGroup(
             mpPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(mpButton, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
-            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+            .addComponent(mpLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
         );
         mpPanelLayout.setVerticalGroup(
             mpPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mpPanelLayout.createSequentialGroup()
                 .addComponent(mpButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3))
+                .addComponent(mpLabel))
         );
 
         recordStatusPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("recordStatusPanel.border.title"))); // NOI18N
@@ -719,10 +724,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     private javax.swing.JPanel checksPanel;
     private javax.swing.JPanel dataPanel;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton mpButton;
+    private javax.swing.JLabel mpLabel;
     private javax.swing.JPanel mpPanel;
     private javax.swing.JToggleButton obsoleteToggleButton;
     private javax.swing.JPanel personSearchPanel;
@@ -731,6 +735,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     private javax.swing.JPanel recordStatusPanel1;
     private javax.swing.JButton saveButton;
     private javax.swing.JButton searchButton;
+    private javax.swing.JLabel searchLabel;
     private javax.swing.JPanel systemPanel;
     // End of variables declaration//GEN-END:variables
 

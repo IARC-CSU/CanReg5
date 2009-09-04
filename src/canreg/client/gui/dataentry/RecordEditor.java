@@ -203,7 +203,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 regnoString += " (obsolete)";
             }
             // patientTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
-            patientTabbedPane.addTab(dbr.toString() + " record "+ (patientTabbedPane.getTabCount()+1), rePanel);
+            patientTabbedPane.addTab(dbr.toString() + " record " + (patientTabbedPane.getTabCount() + 1), rePanel);
             if (!titleSet) {
                 Object patno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
                 String patnoString = "n/a";
@@ -230,7 +230,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 regnoString += " (obsolete)";
             }
             // tumourTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
-            tumourTabbedPane.addTab(dbr.toString() + " record " + (tumourTabbedPane.getTabCount()+1), rePanel);
+            tumourTabbedPane.addTab(dbr.toString() + " record " + (tumourTabbedPane.getTabCount() + 1), rePanel);
         }
         refreshShowObsolete();
     }
@@ -351,7 +351,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
+                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -521,7 +521,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-
+        DatabaseRecord tumourRecord;
 
         if (source instanceof RecordEditorPanel) {
             if (e.getActionCommand().equalsIgnoreCase(CHANGED)) {
@@ -659,27 +659,33 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
                 CanRegClientView.showAndCenterInternalFrame(desktopPane, editChecksInternalFrame);
             } else if (e.getActionCommand().equalsIgnoreCase(SAVE)) {
+                boolean OK = true;
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
                 DatabaseRecord databaseRecord = recordEditorPanel.getDatabaseRecord();
                 if (databaseRecord instanceof Tumour) {
                     // set the patient id to the active patient number
                     RecordEditorPanel patientRecordEditorPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
                     DatabaseRecord patientDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
-                    associateTumourRecordToPatientRecord(databaseRecord, patientDatabaseRecord);
-                }
-                try {
-                    DatabaseRecord dbr = saveRecord(databaseRecord);
-                    recordEditorPanel.refreshDatabaseRecord(dbr);
-                    // refreshTitles(recordEditorPanel, dbr);
-                    if (dbr instanceof Patient) {
-                        addToPatientMap(recordEditorPanel, dbr);
+                    OK = associateTumourRecordToPatientRecord(databaseRecord, patientDatabaseRecord);
+                    if (!OK) {
+                        JOptionPane.showInternalMessageDialog(this, "Please save patient record first.", "Failed", JOptionPane.WARNING_MESSAGE);
                     }
-                } catch (SecurityException ex) {
-                    Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (RemoteException ex) {
-                    Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {
-                    Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if (OK) {
+                    try {
+                        DatabaseRecord dbr = saveRecord(databaseRecord);
+                        recordEditorPanel.refreshDatabaseRecord(dbr);
+                        // refreshTitles(recordEditorPanel, dbr);
+                        if (dbr instanceof Patient) {
+                            addToPatientMap(recordEditorPanel, dbr);
+                        }
+                    } catch (SecurityException ex) {
+                        Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             } else if (e.getActionCommand().equalsIgnoreCase(CHANGE_PATIENT_RECORD)) {
                 RecordEditorPanel tumourRecordEditorPanel = (RecordEditorPanel) source;
@@ -706,19 +712,23 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     }
 
                     if (patientDatabaseRecord != null) {
-                        associateTumourRecordToPatientRecord(tumourDatabaseRecord, patientDatabaseRecord);
-                        try {
-                            saveRecord(tumourDatabaseRecord);
-                            tumourTabbedPane.remove(tumourRecordEditorPanel);
-                            JOptionPane.showInternalMessageDialog(this, "Record moved.");
-                        } catch (SecurityException ex) {
-                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (RemoteException ex) {
-                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (SQLException ex) {
-                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        boolean OK = associateTumourRecordToPatientRecord(tumourDatabaseRecord, patientDatabaseRecord);
+                        if (OK) {
+                            try {
+                                saveRecord(tumourDatabaseRecord);
+                                tumourTabbedPane.remove(tumourRecordEditorPanel);
+                                JOptionPane.showInternalMessageDialog(this, "Record moved.");
+                            } catch (SecurityException ex) {
+                                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (RemoteException ex) {
+                                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (SQLException ex) {
+                                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            tumourRecordEditorPanel.refreshDatabaseRecord(tumourDatabaseRecord);
+                        } else {
+                            JOptionPane.showInternalMessageDialog(this, "Please save patient record first.", "Failed", JOptionPane.WARNING_MESSAGE);
                         }
-                        tumourRecordEditorPanel.refreshDatabaseRecord(tumourDatabaseRecord);
                     } else {
                         JOptionPane.showInternalMessageDialog(this, "No such patient record.", "Failed", JOptionPane.WARNING_MESSAGE);
                     }
@@ -739,16 +749,19 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 String morphologyA = (String) databaseRecordA.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Morphology.toString()).getDatabaseVariableName());
 
                 MultiplePrimaryTesterInterface multiplePrimaryTester = new DefaultMultiplePrimaryTester();
-
-                for (Component tumourPanelComponent : tumourTabbedPane.getComponents()) {
-                    RecordEditorPanel tumourPanel = (RecordEditorPanel) tumourPanelComponent;
-                    if (!source.equals(tumourPanel)) {
-                        DatabaseRecord dbr = tumourPanel.getDatabaseRecord();
-                        String topographyB = (String) dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Topography.toString()).getDatabaseVariableName());
-                        String morphologyB = (String) dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Morphology.toString()).getDatabaseVariableName());
-                        int result = multiplePrimaryTester.multiplePrimaryTest(topographyA, morphologyA, topographyB, morphologyB);
-                        JOptionPane.showInternalMessageDialog(this, "Result: " + multiplePrimaryTester.mptCodes[result], "Result", JOptionPane.WARNING_MESSAGE);
+                if (tumourTabbedPane.getComponents().length > 1) {
+                    for (Component tumourPanelComponent : tumourTabbedPane.getComponents()) {
+                        RecordEditorPanel tumourPanel = (RecordEditorPanel) tumourPanelComponent;
+                        if (!source.equals(tumourPanel)) {
+                            DatabaseRecord dbr = tumourPanel.getDatabaseRecord();
+                            String topographyB = (String) dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Topography.toString()).getDatabaseVariableName());
+                            String morphologyB = (String) dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Morphology.toString()).getDatabaseVariableName());
+                            int result = multiplePrimaryTester.multiplePrimaryTest(topographyA, morphologyA, topographyB, morphologyB);
+                            JOptionPane.showInternalMessageDialog(this, "Result: " + multiplePrimaryTester.mptCodes[result], "Result", JOptionPane.WARNING_MESSAGE);
+                        }
                     }
+                } else {
+                    JOptionPane.showInternalMessageDialog(this, "Only one tumour.", "Result", JOptionPane.PLAIN_MESSAGE);
                 }
             } else if (e.getActionCommand().equalsIgnoreCase(CALC_AGE)) {
                 // this should be called at any time any of the fields birth date or incidence date gets changed
@@ -795,12 +808,18 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         return databaseRecord;
     }
 
-    private DatabaseRecord associateTumourRecordToPatientRecord(DatabaseRecord tumourDatabaseRecord, DatabaseRecord patientDatabaseRecord) {
-        tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName(),
-                patientDatabaseRecord.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName()));
-        tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName(),
-                patientDatabaseRecord.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName()));
-        return tumourDatabaseRecord;
+    private boolean associateTumourRecordToPatientRecord(DatabaseRecord tumourDatabaseRecord, DatabaseRecord patientDatabaseRecord) {
+        boolean success;
+        if (patientDatabaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) != null) {
+            Object patientID = patientDatabaseRecord.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
+            tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName(), patientID);
+            tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName(),
+                    patientDatabaseRecord.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName()));
+            success = true;
+        } else {
+            success = false;
+        }
+        return success;
     }
 
     private DatabaseRecord associatePatientRecordToPatientID(DatabaseRecord patientDatabaseRecord, String patientID) {

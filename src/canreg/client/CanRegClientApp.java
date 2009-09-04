@@ -289,7 +289,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             sysName = loginServer.getSystemName();
         } catch (Exception e) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, null, e);
-        // System.exit(0);
+            // System.exit(0);
         }
         return sysName;
     }
@@ -439,7 +439,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 } else {
                     UIManager.setLookAndFeel(localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY));
                 }
-            // Locale.setDefault(localSettings.getLocale());
+                // Locale.setDefault(localSettings.getLocale());
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
             } catch (InstantiationException ex) {
@@ -522,8 +522,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         Globals.UserRightLevels level = Globals.UserRightLevels.NOT_LOGGED_IN;
         try {
             level = server.getUserRightLevel();
-        // For now all users are supervisors
-        // return Globals.UserRightLevels.SUPERVISOR;
+            // For now all users are supervisors
+            // return Globals.UserRightLevels.SUPERVISOR;
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {
@@ -606,8 +606,6 @@ public class CanRegClientApp extends SingleFrameApplication {
         return server.getRecord(recordID, tableName);
     }
 
-
-
     /**
      * 
      * @param databaseRecord
@@ -616,18 +614,22 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     public int saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException, SQLException {
         int recordNumber = -1;
-        if (databaseRecord instanceof Patient) {
-            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
-            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdatedBy.toString()).getDatabaseVariableName(), username);
-            recordNumber = server.savePatient((Patient) databaseRecord);
-        } else if (databaseRecord instanceof Tumour) {
-            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
-            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdatedBy.toString()).getDatabaseVariableName(), username);
-            recordNumber = server.saveTumour((Tumour) databaseRecord);
-        } else if (databaseRecord instanceof NameSexRecord) {
-            recordNumber = server.saveNameSexRecord((NameSexRecord) databaseRecord);
-        } else if (databaseRecord instanceof PopulationDataset) {
-            // recordNumber = server.savePopulationDataset((PopulationDataset) databaseRecord);
+        if (databaseRecord != null) {
+            if (databaseRecord instanceof Patient) {
+                databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
+                databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdatedBy.toString()).getDatabaseVariableName(), username);
+                recordNumber = server.savePatient((Patient) databaseRecord);
+            } else if (databaseRecord instanceof Tumour) {
+                databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
+                databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdatedBy.toString()).getDatabaseVariableName(), username);
+                recordNumber = server.saveTumour((Tumour) databaseRecord);
+            } else if (databaseRecord instanceof NameSexRecord) {
+                recordNumber = server.saveNameSexRecord((NameSexRecord) databaseRecord);
+            } else if (databaseRecord instanceof PopulationDataset) {
+                // recordNumber = server.savePopulationDataset((PopulationDataset) databaseRecord);
+            }
+        } else {
+            debugOut("Trying to save null databaseRecord.");
         }
         return recordNumber;
     }
