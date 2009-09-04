@@ -44,7 +44,7 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="jTabbedPane1" pref="406" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="410" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -157,7 +157,7 @@
                           <Component id="standardPopulationComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="standardPopulationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="112" max="32767" attributes="0"/>
+                      <EmptySpace pref="116" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -254,6 +254,9 @@
             <Component class="javax.swing.JTextField" name="nameTextField">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="nameTextField.text"/>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="resourceMap.getString(&quot;nameTextField.toolTipText&quot;)+Globals.PDS_DATABASE_NAME_LENGTH" type="code"/>
+                </Property>
                 <Property name="name" type="java.lang.String" value="nameTextField" noResource="true"/>
               </Properties>
             </Component>
@@ -336,7 +339,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="348" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="352" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
