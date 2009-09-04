@@ -939,9 +939,9 @@ public class CanRegDAO {
                 String variableType = element.getElementsByTagName(Globals.NAMESPACE + "variable_type").item(0).getTextContent();
                 Object obj = record.getVariable(element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent());
 
-                System.out.println(
-                        element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
-                        ": " + obj.toString());
+                // System.out.println(
+                //         element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
+                //         ": " + obj.toString());
 
                 if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict") || variableType.equalsIgnoreCase("Date")) {
                     if (obj != null) {
@@ -1103,7 +1103,7 @@ public class CanRegDAO {
             stmtSaveNewPopoulationDataset.clearParameters();
 
             stmtSaveNewPopoulationDataset.setInt(1, populationDataSet.getPopulationDatasetID());
-            stmtSaveNewPopoulationDataset.setString(2, populationDataSet.getPopulationDatasetName());
+            stmtSaveNewPopoulationDataset.setString(2, populationDataSet.getPopulationDatasetName().substring(0,Math.min(Globals.PDS_DATABASE_NAME_LENGTH,populationDataSet.getPopulationDatasetName().length())));
             stmtSaveNewPopoulationDataset.setString(3, populationDataSet.getFilter());
             stmtSaveNewPopoulationDataset.setString(4, populationDataSet.getDate());
             stmtSaveNewPopoulationDataset.setString(5, populationDataSet.getSource());
