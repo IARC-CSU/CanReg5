@@ -239,7 +239,7 @@ public class QueryGenerator {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".PDSETS (" +
                 "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
                 "PDS_ID INT not null unique," +
-                "PDS_NAME VARCHAR(40)," +
+                "PDS_NAME VARCHAR("+Globals.PDS_DATABASE_NAME_LENGTH+")," +
                 "FILTER VARCHAR(255)," +
                 "DATE VARCHAR(8)," +
                 "SOURCE VARCHAR(255)," +
