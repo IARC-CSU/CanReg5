@@ -1,5 +1,55 @@
-changeset:   241:5d48b75f6779
+changeset:   251:0112b7e741ea
 tag:         tip
+user:        ervikm@X60112
+date:        Fri Sep 04 14:28:18 2009 +0200
+summary:     Fixed a bug where records were put pending after save.
+
+changeset:   250:da60f8fe7c3b
+user:        ervikm@X60112
+date:        Fri Sep 04 14:27:12 2009 +0200
+summary:     canreg.common.Globals: dynamic size of name of population data set implemented.
+
+changeset:   249:f7a300a96e1e
+user:        ervikm@X60112
+date:        Fri Sep 04 14:26:49 2009 +0200
+summary:     CanRegDAO: dynamic size of name of population data set implemented.
+
+changeset:   248:8d60928f0793
+user:        ervikm@X60112
+date:        Fri Sep 04 14:26:24 2009 +0200
+summary:     QueryGenerator: dynamic size of name of population data set implemented.
+
+changeset:   247:bfd7898afb77
+user:        ervikm@X60112
+date:        Fri Sep 04 14:25:09 2009 +0200
+summary:     DateVariableEditor: use codeTextField instead of dateTextField
+
+changeset:   246:7b5172324f06
+user:        ervikm@X60112
+date:        Fri Sep 04 14:24:26 2009 +0200
+summary:     BrowseInternalFrame: cosmetic changes
+
+changeset:   245:d26466929504
+user:        ervikm@X60112
+date:        Fri Sep 04 12:24:25 2009 +0200
+summary:     PDSEditorInternalFrame: Fixed a bug where the population dataset would not be saved if the name was longer than 40 characters. Now it cuts it at 100.
+
+changeset:   244:406fba49f3f8
+user:        ervikm@X60112
+date:        Tue Sep 01 11:58:08 2009 +0200
+summary:     Killed a bug where records where set to pending while saving. Improved the "Do you really want to close this record" dialog box to appear only when the user has done actual changes to a record.
+
+changeset:   243:252d0e5d6db2
+user:        ervikm@X60112
+date:        Wed Aug 26 09:24:08 2009 +0200
+summary:     Removed debugging messages from ExcelAdapter.
+
+changeset:   242:3476e76a3ca4
+user:        ervikm@X60112
+date:        Tue Aug 25 12:00:53 2009 +0200
+summary:     Updated about page.
+
+changeset:   241:5d48b75f6779
 user:        ervikm@X60112
 date:        Tue Aug 25 10:46:44 2009 +0200
 summary:     PopulationDataSetEditor: cut and paste from general spreadsheets now work.

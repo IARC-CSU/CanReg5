@@ -1,11 +1,19 @@
 Changelog
 
-4.99.11 Build 690
-- PopulationDataSetEditor: cut and paste from general spreadsheets now work. 
+4.99.11 Build 703
+
+- Eliminated a bug where records where set to pending while saving. 
+
+- Improved the "Do you really want to close this record" dialog box to appear only when the user has done actual changes to a record.
+
+- PopulationDataSetEditor: cut and paste from general spreadsheets now work.
+
+- PDSEditorInternalFrame: Fixed a bug where the population dataset would not be saved if the name was longer than 40 characters. Now it cuts it at 100.
 
 - Made some more views more compact to fit better smaller screens.
 
 - Updated the about page.
+
 
 
 4.99.10 Build 688
