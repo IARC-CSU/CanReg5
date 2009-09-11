@@ -40,6 +40,7 @@
                   <action class="canreg.client.gui.CanRegClientView" id="browseEditAction" methodName="browseEditAction"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="browseEditButton.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="browseEditButton.toolTipText"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="name" type="java.lang.String" value="browseEditButton" noResource="true"/>
@@ -51,6 +52,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="createNewRecordSetAction" methodName="createNewRecordSetAction"/>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="createNewRecordButton.toolTipText"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="name" type="java.lang.String" value="createNewRecordButton" noResource="true"/>
@@ -67,6 +69,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="showTableBuilder" methodName="showTableBuilder"/>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="tableBuilderButton.toolTipText"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="name" type="java.lang.String" value="tableBuilderButton" noResource="true"/>
@@ -83,6 +86,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="showOptionFrame" methodName="showOptionFrame"/>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="optionsButton.toolTipText"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="name" type="java.lang.String" value="optionsButton" noResource="true"/>
@@ -99,6 +103,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="showCanRegHelpFile" methodName="showCanRegHelpFile"/>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="helpButton.toolTipText"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="name" type="java.lang.String" value="helpButton" noResource="true"/>
@@ -154,6 +159,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="showLoginFrame" methodName="showLoginFrame"/>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="logInMenuItem.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="logInMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
@@ -162,6 +168,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="logOutaction" methodName="logOutaction"/>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="logOutMenuItem.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="logOutMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
@@ -182,6 +189,7 @@
                       <action class="canreg.client.gui.CanRegClientView" id="browseEditAction" methodName="browseEditAction"/>
                     </Property>
                     <Property name="text" type="java.lang.String" resourceKey="browseMenuItem.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="browseMenuItem.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="browseMenuItem" noResource="true"/>
                   </Properties>
                 </MenuItem>
@@ -191,6 +199,7 @@
                       <action class="canreg.client.gui.CanRegClientView" id="editDictionaryAction" methodName="editDictionaryAction"/>
                     </Property>
                     <Property name="text" type="java.lang.String" resourceKey="dictionaryMenuItem.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="dictionaryMenuItem.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="dictionaryMenuItem" noResource="true"/>
                   </Properties>
                 </MenuItem>
@@ -199,6 +208,7 @@
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.gui.CanRegClientView" id="editPopulationDataSets" methodName="editPopulationDataSets"/>
                     </Property>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="jMenuItem1.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="jMenuItem1" noResource="true"/>
                   </Properties>
                 </MenuItem>
@@ -207,6 +217,7 @@
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.gui.CanRegClientView" id="importData" methodName="importData"/>
                     </Property>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="importMenuItem.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="importMenuItem" noResource="true"/>
                   </Properties>
                 </MenuItem>
@@ -223,6 +234,7 @@
                   <action class="canreg.client.gui.CanRegClientView" id="viewWorkFiles" methodName="viewWorkFiles"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="viewWorkFilesMenuItem.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="viewWorkFilesMenuItem.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="viewWorkFilesMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
@@ -267,6 +279,7 @@
                   <action class="canreg.client.gui.CanRegClientView" id="showTableBuilder" methodName="showTableBuilder"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="incidenceTablesMenuItem.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="incidenceTablesMenuItem.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="incidenceTablesMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
@@ -407,6 +420,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="showOptionFrame" methodName="showOptionFrame"/>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="optionsMenuItem.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="optionsMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>

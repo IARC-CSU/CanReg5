@@ -44,7 +44,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="246" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="250" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -112,7 +112,7 @@
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="79" max="32767" attributes="0"/>
+                      <EmptySpace pref="83" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -269,7 +269,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="automaticBackupPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="109" max="32767" attributes="0"/>
+                      <EmptySpace pref="113" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -341,6 +341,7 @@
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" resourceKey="automaticbackupCheckBox.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="automaticbackupCheckBox.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="automaticbackupCheckBox" noResource="true"/>
                   </Properties>
                 </Component>
@@ -413,7 +414,7 @@
                       <Component id="versionPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lookAndFeelPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="34" max="32767" attributes="0"/>
+                      <EmptySpace pref="38" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -488,6 +489,7 @@
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="text" type="java.lang.String" resourceKey="versionInstalledTextField.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="versionInstalledTextField.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="versionInstalledTextField" noResource="true"/>
                   </Properties>
                 </Component>
@@ -501,6 +503,7 @@
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="text" type="java.lang.String" resourceKey="latestVersionTextField.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="latestVersionTextField.toolTipText"/>
                     <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="latestVersionTextField" noResource="true"/>
                   </Properties>
@@ -511,6 +514,7 @@
                       <action class="canreg.client.gui.OptionsFrame" id="downloadLatestVersionAction" methodName="downloadLatestVersionAction"/>
                     </Property>
                     <Property name="foreground" type="java.awt.Color" resourceKey="downloadLatestButton.foreground"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="downloadLatestButton.toolTipText"/>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="null"/>
                     </Property>
@@ -525,6 +529,7 @@
                       <action class="canreg.client.gui.OptionsFrame" id="checkLatestVersionAction" methodName="checkLatestVersionAction"/>
                     </Property>
                     <Property name="text" type="java.lang.String" resourceKey="checkButton.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="checkButton.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="checkButton" noResource="true"/>
                   </Properties>
                 </Component>

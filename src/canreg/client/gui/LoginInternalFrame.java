@@ -126,6 +126,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
+        canRegSystemComboBox.setToolTipText(resourceMap.getString("canRegSystemComboBox.toolTipText")); // NOI18N
         canRegSystemComboBox.setAction(actionMap.get("serverComboboxChanged")); // NOI18N
         canRegSystemComboBox.setName("canRegSystemComboBox"); // NOI18N
 
@@ -133,6 +134,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         usernameLabel.setName("usernameLabel"); // NOI18N
 
         usernameTextField.setText(resourceMap.getString("usernameTextField.text")); // NOI18N
+        usernameTextField.setToolTipText(resourceMap.getString("usernameTextField.toolTipText")); // NOI18N
         usernameTextField.setName("usernameTextField"); // NOI18N
         usernameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -144,6 +146,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         passwordLabel.setName("passwordLabel"); // NOI18N
 
         passwordField.setText(resourceMap.getString("passwordField.text")); // NOI18N
+        passwordField.setToolTipText(resourceMap.getString("passwordField.toolTipText")); // NOI18N
         passwordField.setName("passwordField"); // NOI18N
         passwordField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -192,7 +195,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(passwordLabel)
                     .addComponent(rememberPasswordCheckBox)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addContainerGap(117, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("systemPanel.TabConstraints.tabTitle"), systemPanel); // NOI18N
@@ -336,7 +339,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(launchServerButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(advancedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("settingsPanel.TabConstraints.tabTitle"), settingsPanel); // NOI18N
@@ -349,9 +352,9 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(feedbackLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                        .addGap(109, 109, 109)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(feedbackLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(loginButton)))
@@ -361,7 +364,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(loginButton)

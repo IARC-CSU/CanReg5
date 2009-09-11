@@ -154,6 +154,7 @@
                 <StringItem index="3" value="Item 4"/>
               </StringArray>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="variableComboBox.toolTipText"/>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.FastFilterInternalFrame" id="varibleChosenAction" methodName="varibleChosenAction"/>
             </Property>
@@ -170,6 +171,7 @@
                 <StringItem index="3" value="Item 4"/>
               </StringArray>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="operationComboBox.toolTipText"/>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.FastFilterInternalFrame" id="operatorSelected" methodName="operatorSelected"/>
             </Property>
@@ -281,7 +283,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="scrollPane" alignment="0" pref="124" max="32767" attributes="0"/>
+              <Component id="scrollPane" alignment="0" pref="128" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>

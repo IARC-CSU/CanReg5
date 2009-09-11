@@ -202,7 +202,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addContainerGap(83, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("generalPanel.TabConstraints.tabTitle"), generalPanel); // NOI18N
@@ -214,6 +214,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
 
         automaticbackupCheckBox.setSelected(true);
         automaticbackupCheckBox.setText(resourceMap.getString("automaticbackupCheckBox.text")); // NOI18N
+        automaticbackupCheckBox.setToolTipText(resourceMap.getString("automaticbackupCheckBox.toolTipText")); // NOI18N
         automaticbackupCheckBox.setName("automaticbackupCheckBox"); // NOI18N
 
         everyLabel.setText(resourceMap.getString("everyLabel.text")); // NOI18N
@@ -287,7 +288,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(systemPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(automaticBackupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addContainerGap(113, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("systemPanel.TabConstraints.tabTitle"), systemPanel); // NOI18N
@@ -302,6 +303,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
 
         versionInstalledTextField.setEditable(false);
         versionInstalledTextField.setText(resourceMap.getString("versionInstalledTextField.text")); // NOI18N
+        versionInstalledTextField.setToolTipText(resourceMap.getString("versionInstalledTextField.toolTipText")); // NOI18N
         versionInstalledTextField.setName("versionInstalledTextField"); // NOI18N
 
         latestVersionLabel.setText(resourceMap.getString("latestVersionLabel.text")); // NOI18N
@@ -309,11 +311,13 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
 
         latestVersionTextField.setEditable(false);
         latestVersionTextField.setText(resourceMap.getString("latestVersionTextField.text")); // NOI18N
+        latestVersionTextField.setToolTipText(resourceMap.getString("latestVersionTextField.toolTipText")); // NOI18N
         latestVersionTextField.setEnabled(false);
         latestVersionTextField.setName("latestVersionTextField"); // NOI18N
 
         downloadLatestButton.setAction(actionMap.get("downloadLatestVersionAction")); // NOI18N
         downloadLatestButton.setForeground(resourceMap.getColor("downloadLatestButton.foreground")); // NOI18N
+        downloadLatestButton.setToolTipText(resourceMap.getString("downloadLatestButton.toolTipText")); // NOI18N
         downloadLatestButton.setBorder(null);
         downloadLatestButton.setBorderPainted(false);
         downloadLatestButton.setContentAreaFilled(false);
@@ -321,6 +325,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
 
         checkButton.setAction(actionMap.get("checkLatestVersionAction")); // NOI18N
         checkButton.setText(resourceMap.getString("checkButton.text")); // NOI18N
+        checkButton.setToolTipText(resourceMap.getString("checkButton.toolTipText")); // NOI18N
         checkButton.setName("checkButton"); // NOI18N
 
         javax.swing.GroupLayout versionPanelLayout = new javax.swing.GroupLayout(versionPanel);
@@ -403,7 +408,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addComponent(versionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lookAndFeelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("advancedPanel.TabConstraints.tabTitle"), advancedPanel); // NOI18N
@@ -426,7 +431,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)

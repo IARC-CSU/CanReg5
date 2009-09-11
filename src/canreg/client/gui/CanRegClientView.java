@@ -252,6 +252,7 @@ public class CanRegClientView extends FrameView {
         browseEditButton.setAction(actionMap.get("browseEditAction")); // NOI18N
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(CanRegClientView.class);
         browseEditButton.setText(resourceMap.getString("browseEditButton.text")); // NOI18N
+        browseEditButton.setToolTipText(resourceMap.getString("browseEditButton.toolTipText")); // NOI18N
         browseEditButton.setFocusable(false);
         browseEditButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         browseEditButton.setName("browseEditButton"); // NOI18N
@@ -259,6 +260,7 @@ public class CanRegClientView extends FrameView {
         toolBar.add(browseEditButton);
 
         createNewRecordButton.setAction(actionMap.get("createNewRecordSetAction")); // NOI18N
+        createNewRecordButton.setToolTipText(resourceMap.getString("createNewRecordButton.toolTipText")); // NOI18N
         createNewRecordButton.setFocusable(false);
         createNewRecordButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         createNewRecordButton.setName("createNewRecordButton"); // NOI18N
@@ -269,6 +271,7 @@ public class CanRegClientView extends FrameView {
         toolBar.add(jSeparator14);
 
         tableBuilderButton.setAction(actionMap.get("showTableBuilder")); // NOI18N
+        tableBuilderButton.setToolTipText(resourceMap.getString("tableBuilderButton.toolTipText")); // NOI18N
         tableBuilderButton.setFocusable(false);
         tableBuilderButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         tableBuilderButton.setName("tableBuilderButton"); // NOI18N
@@ -279,6 +282,7 @@ public class CanRegClientView extends FrameView {
         toolBar.add(jSeparator13);
 
         optionsButton.setAction(actionMap.get("showOptionFrame")); // NOI18N
+        optionsButton.setToolTipText(resourceMap.getString("optionsButton.toolTipText")); // NOI18N
         optionsButton.setFocusable(false);
         optionsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         optionsButton.setName("optionsButton"); // NOI18N
@@ -289,6 +293,7 @@ public class CanRegClientView extends FrameView {
         toolBar.add(jSeparator15);
 
         helpButton.setAction(actionMap.get("showCanRegHelpFile")); // NOI18N
+        helpButton.setToolTipText(resourceMap.getString("helpButton.toolTipText")); // NOI18N
         helpButton.setFocusable(false);
         helpButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         helpButton.setName("helpButton"); // NOI18N
@@ -324,10 +329,12 @@ public class CanRegClientView extends FrameView {
         fileMenu.setName("fileMenu"); // NOI18N
 
         logInMenuItem.setAction(actionMap.get("showLoginFrame")); // NOI18N
+        logInMenuItem.setToolTipText(resourceMap.getString("logInMenuItem.toolTipText")); // NOI18N
         logInMenuItem.setName("logInMenuItem"); // NOI18N
         fileMenu.add(logInMenuItem);
 
         logOutMenuItem.setAction(actionMap.get("logOutaction")); // NOI18N
+        logOutMenuItem.setToolTipText(resourceMap.getString("logOutMenuItem.toolTipText")); // NOI18N
         logOutMenuItem.setName("logOutMenuItem"); // NOI18N
         fileMenu.add(logOutMenuItem);
 
@@ -339,19 +346,23 @@ public class CanRegClientView extends FrameView {
 
         browseEditMenuItem.setAction(actionMap.get("browseEditAction")); // NOI18N
         browseEditMenuItem.setText(resourceMap.getString("browseMenuItem.text")); // NOI18N
+        browseEditMenuItem.setToolTipText(resourceMap.getString("browseMenuItem.toolTipText")); // NOI18N
         browseEditMenuItem.setName("browseMenuItem"); // NOI18N
         dataEntryMenu.add(browseEditMenuItem);
 
         editDictionaryMenuItem.setAction(actionMap.get("editDictionaryAction")); // NOI18N
         editDictionaryMenuItem.setText(resourceMap.getString("dictionaryMenuItem.text")); // NOI18N
+        editDictionaryMenuItem.setToolTipText(resourceMap.getString("dictionaryMenuItem.toolTipText")); // NOI18N
         editDictionaryMenuItem.setName("dictionaryMenuItem"); // NOI18N
         dataEntryMenu.add(editDictionaryMenuItem);
 
         jMenuItem1.setAction(actionMap.get("editPopulationDataSets")); // NOI18N
+        jMenuItem1.setToolTipText(resourceMap.getString("jMenuItem1.toolTipText")); // NOI18N
         jMenuItem1.setName("jMenuItem1"); // NOI18N
         dataEntryMenu.add(jMenuItem1);
 
         importDataMenuItem.setAction(actionMap.get("importData")); // NOI18N
+        importDataMenuItem.setToolTipText(resourceMap.getString("importMenuItem.toolTipText")); // NOI18N
         importDataMenuItem.setName("importMenuItem"); // NOI18N
         dataEntryMenu.add(importDataMenuItem);
 
@@ -362,6 +373,7 @@ public class CanRegClientView extends FrameView {
 
         viewWorkFilesMenuItem.setAction(actionMap.get("viewWorkFiles")); // NOI18N
         viewWorkFilesMenuItem.setText(resourceMap.getString("viewWorkFilesMenuItem.text")); // NOI18N
+        viewWorkFilesMenuItem.setToolTipText(resourceMap.getString("viewWorkFilesMenuItem.toolTipText")); // NOI18N
         viewWorkFilesMenuItem.setName("viewWorkFilesMenuItem"); // NOI18N
         fileMenu.add(viewWorkFilesMenuItem);
 
@@ -385,6 +397,7 @@ public class CanRegClientView extends FrameView {
 
         incidenceTablesMenuItem.setAction(actionMap.get("showTableBuilder")); // NOI18N
         incidenceTablesMenuItem.setText(resourceMap.getString("incidenceTablesMenuItem.text")); // NOI18N
+        incidenceTablesMenuItem.setToolTipText(resourceMap.getString("incidenceTablesMenuItem.toolTipText")); // NOI18N
         incidenceTablesMenuItem.setName("incidenceTablesMenuItem"); // NOI18N
         analysisMenu.add(incidenceTablesMenuItem);
 
@@ -464,6 +477,7 @@ public class CanRegClientView extends FrameView {
         managementMenu.add(jSeparator5);
 
         optionsMenuItem.setAction(actionMap.get("showOptionFrame")); // NOI18N
+        optionsMenuItem.setToolTipText(resourceMap.getString("optionsMenuItem.toolTipText")); // NOI18N
         optionsMenuItem.setName("optionsMenuItem"); // NOI18N
         managementMenu.add(optionsMenuItem);
 

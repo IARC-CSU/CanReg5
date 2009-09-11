@@ -94,11 +94,13 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         instructionLabel2.setName("instructionLabel2"); // NOI18N
 
         variableComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        variableComboBox.setToolTipText(resourceMap.getString("variableComboBox.toolTipText")); // NOI18N
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(FastFilterInternalFrame.class, this);
         variableComboBox.setAction(actionMap.get("varibleChosenAction")); // NOI18N
         variableComboBox.setName("variableComboBox"); // NOI18N
 
         operationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        operationComboBox.setToolTipText(resourceMap.getString("operationComboBox.toolTipText")); // NOI18N
         operationComboBox.setAction(actionMap.get("operatorSelected")); // NOI18N
         operationComboBox.setName("operationComboBox"); // NOI18N
 
@@ -205,7 +207,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         );
         filterPanelLayout.setVerticalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
         );
 
         cancelButton.setAction(actionMap.get("cancelAction")); // NOI18N
