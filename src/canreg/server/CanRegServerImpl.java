@@ -386,6 +386,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.lang.SecurityException
      */
     public String restoreFromBackup(String path) throws RemoteException, SecurityException {
+        // TODO: Add functionality to log off automatically after successful restore...
         return db.restoreFromBackup(path);
     }
 
