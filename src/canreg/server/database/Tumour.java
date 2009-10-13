@@ -5,6 +5,7 @@
 package canreg.server.database;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  *
@@ -15,8 +16,19 @@ public class Tumour extends DatabaseRecord implements Serializable {
     /**
      * Creates a new instance of Tumour
      */
+
+     Set<Source> sources;
+
      public Tumour(){
         super();
+     }
+
+     public Set<Source> getSources(){
+        return sources;
+     }
+
+     public void setSources(Set<Source> sources){
+        this.sources = sources;
      }
      
      @Override

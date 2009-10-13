@@ -186,6 +186,10 @@ public class Globals {
      * 
      */
     static public String TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME = "TRID";
+        /**
+     *
+     */
+    static public String SOURCE_TABLE_RECORD_ID_VARIABLE_NAME = "SRID";
     /**
      * 
      */
@@ -409,7 +413,15 @@ public class Globals {
         /**
          *
          */
-        TumourUnduplicationStatus
+        TumourUnduplicationStatus,
+        /**
+         * The ID of the tumour record in the source table
+         */
+        TumourIDSourceTable,
+        /**
+         * The ID of the source record
+         */
+        SourceRecordID
     }
     public static String FILL_IN_STATUS_MANDATORY_STRING = "Mandatory";
     public static String FILL_IN_STATUS_AUTOMATIC_STRING = "Automatic";

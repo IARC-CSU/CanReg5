@@ -2,6 +2,7 @@ package canreg.server.database;
 
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseIndexesListElement;
+import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import java.util.LinkedList;
@@ -34,6 +35,8 @@ public class QueryGenerator {
             recordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             recordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+            recordIDVariableName = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
         }
 
         // Common for all tables
@@ -239,7 +242,7 @@ public class QueryGenerator {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".PDSETS (" +
                 "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
                 "PDS_ID INT not null unique," +
-                "PDS_NAME VARCHAR("+Globals.PDS_DATABASE_NAME_LENGTH+")," +
+                "PDS_NAME VARCHAR(" + Globals.PDS_DATABASE_NAME_LENGTH + ")," +
                 "FILTER VARCHAR(255)," +
                 "DATE VARCHAR(8)," +
                 "SOURCE VARCHAR(255)," +
@@ -333,6 +336,15 @@ public class QueryGenerator {
         return strSaveRecord(doc, "tumour");
     }
 
+    /**
+     *
+     * @param doc
+     * @return
+     */
+    public static final String strSaveSource(Document doc) {
+        return strSaveRecord(doc, "source");
+    }
+
     static String[] strCreatePatientTablePrimaryKey(String databaseVariableName) {
         LinkedList<String> commands = new LinkedList<String>();
         // drop the current primary key
@@ -356,8 +368,8 @@ public class QueryGenerator {
         String patientRecordIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
         return "SELECT * FROM APP.TUMOUR, APP.PATIENT " +
                 "WHERE APP.TUMOUR." + patientRecordIDVariableNameTumourTable + "= APP.PATIENT." + patientRecordIDVariableNamePatientTable;
-    //return "SELECT * FROM APP.TUMOUR LEFT OUTER JOIN APP.PATIENT ON " +
-    //    "APP.TUMOUR."+patientRecordIDVariableNameTumourTable +" = APP.PATIENT."+patientRecordIDVariableNamePatientTable;
+        //return "SELECT * FROM APP.TUMOUR LEFT OUTER JOIN APP.PATIENT ON " +
+        //    "APP.TUMOUR."+patientRecordIDVariableNameTumourTable +" = APP.PATIENT."+patientRecordIDVariableNamePatientTable;
     }
 
     static String strCountPatientsAndTumours(GlobalToolBox globalToolBox) {
@@ -365,8 +377,8 @@ public class QueryGenerator {
         String patientRecordIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
         return "SELECT COUNT(*) FROM APP.TUMOUR, APP.PATIENT " +
                 "WHERE APP.TUMOUR." + patientRecordIDVariableNameTumourTable + "= APP.PATIENT." + patientRecordIDVariableNamePatientTable;
-    //return "SELECT COUNT(*) FROM APP.TUMOUR LEFT OUTER JOIN APP.PATIENT ON " +
-    //    "APP.TUMOUR."+patientRecordIDVariableNameTumourTable +" = APP.PATIENT."+patientRecordIDVariableNamePatientTable;
+        //return "SELECT COUNT(*) FROM APP.TUMOUR LEFT OUTER JOIN APP.PATIENT ON " +
+        //    "APP.TUMOUR."+patientRecordIDVariableNameTumourTable +" = APP.PATIENT."+patientRecordIDVariableNamePatientTable;
     }
 
     private static final String strSaveRecord(Document doc, String tableName) {
@@ -416,6 +428,10 @@ public class QueryGenerator {
         return strEditRecord(doc, "tumour");
     }
 
+    static String strEditSource(Document doc) {
+        return strEditRecord(doc, "source");
+    }
+
     static String strGetHighestPatientID(GlobalToolBox globalToolBox) {
         String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
         return "SELECT max(\"" + patientIDVariableNamePatientTable.toUpperCase() + "\") FROM APP.PATIENT";
@@ -431,6 +447,16 @@ public class QueryGenerator {
         return "SELECT max(\"" + patientRecordIDVariableNamePatientTable.toUpperCase() + "\") FROM APP.PATIENT";
     }
 
+    static String strGetHighestSourceRecordID(GlobalToolBox globalToolBox) {
+        String returnString = "";
+        DatabaseVariablesListElement le = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString());
+        if (le != null) {
+            String sourceRecordIDVariableName = le.getDatabaseVariableName();
+            returnString = "SELECT max(\"" + sourceRecordIDVariableName.toUpperCase() + "\") FROM APP.SOURCE";
+        }
+        return returnString;
+    }
+
     /* We don't use tumour record ID...
     static String strGetHighestTumourRecordID(GlobalToolBox globalToolBox){
     String tumourRecordIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordID.toString()).getDatabaseVariableName();
@@ -444,6 +470,8 @@ public class QueryGenerator {
             recordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             recordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+            recordIDVariableName = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
         }
 
         String variableNamesPart = "UPDATE " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase();
@@ -495,10 +523,10 @@ public class QueryGenerator {
             queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent() + ") ";
         } else if (variableType.equalsIgnoreCase("Number")) {
             queryLine += " INTEGER";
-        // queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent()+") ";
+            // queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent()+") ";
         } else if (variableType.equalsIgnoreCase("Date")) {
             queryLine += " VARCHAR(8)";
-        // queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent()+") ";
+            // queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent()+") ";
         } else if (variableType.equalsIgnoreCase("Dict")) {
             queryLine += " VARCHAR(";
             String dictionaryName = element.getElementsByTagName("ns3:use_dictionary").item(0).getTextContent();

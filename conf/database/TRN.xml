@@ -604,7 +604,7 @@
       <ns3:category_Y_pos>0</ns3:category_Y_pos>
       <ns3:dictionary_X_pos>140</ns3:dictionary_X_pos>
       <ns3:dictionary_Y_pos>25</ns3:dictionary_Y_pos>
-      <ns3:table>Tumour</ns3:table>
+      <ns3:table>Source</ns3:table>
       <ns3:standard_variable_name>Source1</ns3:standard_variable_name>
     </ns3:variable>
     <ns3:variable>
@@ -625,7 +625,7 @@
       <ns3:category_Y_pos>0</ns3:category_Y_pos>
       <ns3:dictionary_X_pos>140</ns3:dictionary_X_pos>
       <ns3:dictionary_Y_pos>58</ns3:dictionary_Y_pos>
-      <ns3:table>Tumour</ns3:table>
+      <ns3:table>Source</ns3:table>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>24</ns3:variable_id>
@@ -641,7 +641,7 @@
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>8</ns3:variable_length>
-      <ns3:table>Tumour</ns3:table>
+      <ns3:table>Source</ns3:table>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>25</ns3:variable_id>
@@ -657,7 +657,7 @@
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>6</ns3:variable_length>
-      <ns3:table>Tumour</ns3:table>
+      <ns3:table>Source</ns3:table>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>26</ns3:variable_id>
@@ -885,6 +885,32 @@
       <ns3:variable_length>1</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>TumourUnduplicationStatus</ns3:standard_variable_name>
+    </ns3:variable>
+    <ns3:variable>
+      <ns3:variable_id>42</ns3:variable_id>
+      <ns3:full_name>TumourIDSourceTable</ns3:full_name>
+      <ns3:short_name>TumourIDSourceTable</ns3:short_name>
+      <ns3:english_name>TumourIDSourceTable</ns3:english_name>
+      <ns3:group_id>-1</ns3:group_id>
+      <ns3:fill_in_status>Automatic</ns3:fill_in_status>
+      <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
+      <ns3:variable_type>Alpha</ns3:variable_type>
+      <ns3:variable_length>8</ns3:variable_length>
+      <ns3:table>Source</ns3:table>
+      <ns3:standard_variable_name>TumourIDSourceTable</ns3:standard_variable_name>
+    </ns3:variable>
+        <ns3:variable>
+          <ns3:variable_id>42</ns3:variable_id>
+          <ns3:full_name>SourceRecordID</ns3:full_name>
+          <ns3:short_name>SourceRecordID</ns3:short_name>
+          <ns3:english_name>SourceRecordID</ns3:english_name>
+          <ns3:group_id>-1</ns3:group_id>
+          <ns3:fill_in_status>Automatic</ns3:fill_in_status>
+          <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
+          <ns3:variable_type>Alpha</ns3:variable_type>
+          <ns3:variable_length>14</ns3:variable_length>
+          <ns3:table>Source</ns3:table>
+          <ns3:standard_variable_name>SourceRecordID</ns3:standard_variable_name>
     </ns3:variable>
   </ns3:variables>
   <ns3:search_variables>

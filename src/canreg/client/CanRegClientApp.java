@@ -119,9 +119,12 @@ public class CanRegClientApp extends SingleFrameApplication {
         if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
             databaseRecordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
-        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+        } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
             recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordID.toString()).getDatabaseVariableName();
             databaseRecordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+            recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName();
+            databaseRecordIDVariableName = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
         }
 
         DatabaseFilter filter = new DatabaseFilter();
@@ -560,7 +563,10 @@ public class CanRegClientApp extends SingleFrameApplication {
     public String restoreBackup(String path) throws SecurityException, RemoteException {
         String message = server.restoreFromBackup(path);
         // Refresh the dictionary
-        refreshDictionary();
+        // refreshDictionary();
+
+        //Log out...
+        logOut();
         return message;
     }
 

@@ -21,7 +21,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
@@ -57,8 +59,10 @@ public class CanRegDAO {
         // Prepare the SQL strings
         strSavePatient = QueryGenerator.strSavePatient(doc);
         strSaveTumour = QueryGenerator.strSaveTumour(doc);
+        strSaveSource = QueryGenerator.strSaveSource(doc);
         strEditPatient = QueryGenerator.strEditPatient(doc);
         strEditTumour = QueryGenerator.strEditTumour(doc);
+        strEditSource = QueryGenerator.strEditSource(doc);
         strSaveDictionary = QueryGenerator.strSaveDictionary();
         strSaveDictionaryEntry = QueryGenerator.strSaveDictionaryEntry();
         strSavePopoulationDataset = QueryGenerator.strSavePopoulationDataset();
@@ -69,6 +73,7 @@ public class CanRegDAO {
         strGetHighestPatientID = QueryGenerator.strGetHighestPatientID(globalToolBox);
         strGetHighestTumourID = QueryGenerator.strGetHighestTumourID(globalToolBox);
         strGetHighestPatientRecordID = QueryGenerator.strGetHighestPatientRecordID(globalToolBox);
+        strGetHighestSourceRecordID = QueryGenerator.strGetHighestSourceRecordID(globalToolBox);
         strEditUser = QueryGenerator.strEditUser();
         strSaveUser = QueryGenerator.strSaveUser();
         /* We don't use tumour record ID...
@@ -477,7 +482,7 @@ public class CanRegDAO {
                 throw ex;
             }
         } // Or a "regular" query from the patient table
-        else if (tableName.equalsIgnoreCase("patient")) {
+        else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             String filterString = filter.getFilterString();
             if (!filterString.isEmpty()) {
                 filterString = " WHERE (" + filterString + " )";
@@ -549,7 +554,42 @@ public class CanRegDAO {
                 throw ex;
             }
 
-        } // Or an unknown query...
+        } // Or a "regular" query from the tumour table
+        else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+            String filterString = filter.getFilterString();
+            if (!filterString.isEmpty()) {
+                filterString = " WHERE " + filterString;
+            }
+
+            // Add the range part
+            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
+                if (filterString.isEmpty()) {
+                    filterString = " WHERE " + filterString;
+                } else {
+                    filterString += " AND ";
+                }
+                filterString += QueryGenerator.buildRangePart(filter);
+            }
+
+            debugOut(strCountSources + filterString);
+            ResultSet countRowSet;
+            try {
+                countRowSet = statement.executeQuery(strCountSources + filterString);
+            } catch (java.sql.SQLException ex) {
+                throw ex;
+            }
+            if (countRowSet.next()) {
+                rowCount = countRowSet.getInt(1);
+            }
+            if (filter.getSortByVariable() != null) {
+                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
+            }
+            try {
+                result = statement.executeQuery(strGetSources + filterString);
+            } catch (java.sql.SQLSyntaxErrorException ex) {
+                throw ex;
+            }
+        }// Or an unknown query...
         else {
             throw new UnknownTableException("Unknown table name.");
         }
@@ -598,6 +638,8 @@ public class CanRegDAO {
             return getPatient(recordID);
         } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
             return getTumour(recordID);
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+            return getSource(recordID);
         } else {
             return null;
         }
@@ -686,12 +728,12 @@ public class CanRegDAO {
             statement = dbConnection.createStatement();
 
             // Dynamic creation of tables
-            statement.execute(QueryGenerator.strCreateVariableTable("Tumour", doc));
-            statement.execute(QueryGenerator.strCreateVariableTable("Patient", doc));
+            statement.execute(QueryGenerator.strCreateVariableTable(Globals.TUMOUR_TABLE_NAME, doc));
+            statement.execute(QueryGenerator.strCreateVariableTable(Globals.PATIENT_TABLE_NAME, doc));
+            statement.execute(QueryGenerator.strCreateVariableTable(Globals.SOURCE_TABLE_NAME, doc));
             // Dictionaries part
             statement.execute(QueryGenerator.strCreateDictionaryTable(doc));
             statement.execute(QueryGenerator.strCreateTablesOfDictionaries(doc));
-
 
             // Population dataset part
             statement.execute(QueryGenerator.strCreatePopulationDatasetTable());
@@ -795,7 +837,7 @@ public class CanRegDAO {
             //       "in: DonDao.restore", false);
         }
         dbProperties.remove("restoreFrom");
-        connect(); // Reconnect.
+        // connect(); // Do not reconnect as this would be a potential security problem...
         if (bRestored) {
             try {
                 // install the xml
@@ -822,8 +864,10 @@ public class CanRegDAO {
             //Prepare the SQL statements
             stmtSaveNewPatient = dbConnection.prepareStatement(strSavePatient, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewTumour = dbConnection.prepareStatement(strSaveTumour, Statement.RETURN_GENERATED_KEYS);
+            stmtSaveNewSource = dbConnection.prepareStatement(strSaveSource, Statement.RETURN_GENERATED_KEYS);
             stmtEditPatient = dbConnection.prepareStatement(strEditPatient, Statement.RETURN_GENERATED_KEYS);
             stmtEditTumour = dbConnection.prepareStatement(strEditTumour, Statement.RETURN_GENERATED_KEYS);
+            stmtEditSource = dbConnection.prepareStatement(strEditSource, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewDictionary = dbConnection.prepareStatement(strSaveDictionary, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewDictionaryEntry = dbConnection.prepareStatement(strSaveDictionaryEntry, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewPopoulationDataset = dbConnection.prepareStatement(strSavePopoulationDataset, Statement.RETURN_GENERATED_KEYS);
@@ -838,19 +882,24 @@ public class CanRegDAO {
             //stmtUpdateExistingPatient = dbConnection.prepareStatement(strUpdatePatient);
             stmtGetPatient = dbConnection.prepareStatement(strGetPatient);
             stmtGetPatients = dbConnection.prepareStatement(strGetPatients);
+            stmtGetSources = dbConnection.prepareStatement(strGetSources);
             stmtGetPatientsAndTumours = dbConnection.prepareStatement(strGetPatientsAndTumours);
 
             stmtGetHighestPatientID = dbConnection.prepareStatement(strGetHighestPatientID);
             stmtGetHighestTumourID = dbConnection.prepareStatement(strGetHighestTumourID);
             stmtGetHighestPatientRecordID = dbConnection.prepareStatement(strGetHighestPatientRecordID);
+            stmtGetHighestSourceRecordID = dbConnection.prepareStatement(strGetHighestSourceRecordID);
             /* We don't use tumour record ID...
             stmtGetHighestTumourRecordID = dbConnection.prepareStatement(strGetHighestTumourRecordID);
              */
             stmtGetTumour = dbConnection.prepareStatement(strGetTumour);
             stmtGetTumours = dbConnection.prepareStatement(strGetTumours);
 
+            stmtGetSource = dbConnection.prepareStatement(strGetSource);
+
             stmtDeleteTumourRecord = dbConnection.prepareStatement(strDeleteTumourRecord);
             stmtDeletePatientRecord = dbConnection.prepareStatement(strDeletePatientRecord);
+            stmtDeleteSourceRecord = dbConnection.prepareStatement(strDeleteSourceRecord);
 
             stmtGetDictionary = dbConnection.prepareStatement(strGetDictionary);
             // stmtGetDictionaries = dbConnection.prepareStatement(strGetDictionaries);
@@ -1012,9 +1061,38 @@ public class CanRegDAO {
         String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         Object tumourID = tumour.getVariable(tumourIDVariableName);
         if (tumourID == null || tumourID.toString().trim().length() == 0) {
-            tumour.setVariable(tumourIDVariableName, getNextTumourID());
+            tumourID = getNextTumourID();
+            tumour.setVariable(tumourIDVariableName, tumourID);
         }
-        return saveRecord("Tumour", tumour, stmtSaveNewTumour);
+
+
+        Set<Source> sources = tumour.getSources();
+        // delete old sources
+        try {
+            deleteSources(tumourID);
+        } catch (DistributedTableDescriptionException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknownTableException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // save each of the source records
+        saveSources(tumourID, sources);
+
+        return saveRecord(Globals.TUMOUR_TABLE_NAME, tumour, stmtSaveNewTumour);
+    }
+
+    /**
+     *
+     * @param tumour
+     * @return
+     */
+    private synchronized int saveSource(Source source) throws SQLException {
+        String sourceIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName();
+        Object sourceID = source.getVariable(sourceIDVariableName);
+        if (sourceID == null || sourceID.toString().trim().length() == 0) {
+            source.setVariable(sourceIDVariableName, getNextSourceID());
+        }
+        return saveRecord(Globals.SOURCE_TABLE_NAME, source, stmtSaveNewSource);
     }
 
     /**
@@ -1103,7 +1181,7 @@ public class CanRegDAO {
             stmtSaveNewPopoulationDataset.clearParameters();
 
             stmtSaveNewPopoulationDataset.setInt(1, populationDataSet.getPopulationDatasetID());
-            stmtSaveNewPopoulationDataset.setString(2, populationDataSet.getPopulationDatasetName().substring(0,Math.min(Globals.PDS_DATABASE_NAME_LENGTH,populationDataSet.getPopulationDatasetName().length())));
+            stmtSaveNewPopoulationDataset.setString(2, populationDataSet.getPopulationDatasetName().substring(0, Math.min(Globals.PDS_DATABASE_NAME_LENGTH, populationDataSet.getPopulationDatasetName().length())));
             stmtSaveNewPopoulationDataset.setString(3, populationDataSet.getFilter());
             stmtSaveNewPopoulationDataset.setString(4, populationDataSet.getDate());
             stmtSaveNewPopoulationDataset.setString(5, populationDataSet.getSource());
@@ -1251,6 +1329,19 @@ public class CanRegDAO {
         return success;
     }
 
+        public synchronized boolean deleteSourceRecord(int sourceRecordID) {
+        boolean success = false;
+        try {
+            stmtDeleteSourceRecord.clearParameters();
+            stmtDeleteSourceRecord.setInt(1, sourceRecordID);
+            stmtDeleteSourceRecord.executeUpdate();
+            success = true;
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return success;
+    }
+
     public synchronized boolean deleteRecord(int recordID, String tableName) {
         boolean success = false;
         String idString = "ID";
@@ -1300,6 +1391,15 @@ public class CanRegDAO {
      */
     public synchronized boolean editTumour(Tumour tumour) {
         return editRecord("Tumour", tumour, stmtEditTumour);
+    }
+
+    /**
+     *
+     * @param tumour
+     * @return
+     */
+    public synchronized boolean editSource(Source source) {
+        return editRecord("Source", source, stmtEditSource);
     }
 
     /**
@@ -1380,11 +1480,31 @@ public class CanRegDAO {
                 idString = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
             } else if (record instanceof Tumour) {
                 idString = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
+            } else if (record instanceof Source) {
+                idString = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
             }
             int idInt = (Integer) record.getVariable(idString);
             stmtEditRecord.setInt(variableNumber + 1, idInt);
 
             int rowCount = stmtEditRecord.executeUpdate();
+
+            // If this is a tumour we save the sources...
+            if (record instanceof Tumour) {
+                Tumour tumour = (Tumour) record;
+                String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+                Object tumourID = tumour.getVariable(tumourIDVariableName);
+                Set<Source> sources = tumour.getSources();
+                // delete old sources
+                try {
+                    deleteSources(tumourID);
+                } catch (DistributedTableDescriptionException ex) {
+                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (UnknownTableException ex) {
+                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                // save each of the source records
+                saveSources(tumourID, sources);
+            }
 
             bEdited = true;
 
@@ -1548,6 +1668,53 @@ public class CanRegDAO {
                     }
                 }
             }
+
+            // get the source information
+            String recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+            Object tumourID = record.getVariable(recordIDVariableName);
+
+            Set<Source> sources = null;
+            try {
+                sources = getSourcesByTumourID(tumourID);
+            } catch (DistributedTableDescriptionException ex) {
+                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnknownTableException ex) {
+                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            record.setSources(sources);
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return record;
+    }
+
+    /**
+     *
+     * @param recordID
+     * @return
+     */
+    public synchronized Source getSource(int recordID) {
+        Source record = null;
+        ResultSetMetaData metadata;
+        try {
+            stmtGetSource.clearParameters();
+            stmtGetSource.setInt(1, recordID);
+            ResultSet result = stmtGetSource.executeQuery();
+            metadata = result.getMetaData();
+            int numberOfColumns = metadata.getColumnCount();
+            if (result.next()) {
+                record = new Source();
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
+                        record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
+                    } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
+                        record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                    }
+                }
+            }
+
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
@@ -1607,6 +1774,24 @@ public class CanRegDAO {
         return patientRecordID;
     }
 
+    public synchronized String getNextSourceID() {
+        String sourceID = null;
+        try {
+            ResultSet result = stmtGetHighestSourceRecordID.executeQuery();
+            result.next();
+            String highestSourceID = result.getString(1);
+            if (highestSourceID != null) {
+                sourceID = canreg.common.Tools.increment(highestSourceID);
+            } else {
+                // TODO replace with today's year and 00..001
+                sourceID = "1";
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sourceID;
+    }
+
     public synchronized String getNextTumourRecordID() {
         String tumourRecordID = null;
         try {
@@ -1636,6 +1821,43 @@ public class CanRegDAO {
         }
     }
 
+    private Set<Source> getSourcesByTumourID(Object tumourID) throws SQLException, DistributedTableDescriptionException, UnknownTableException {
+        String recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
+
+        DatabaseFilter filter = new DatabaseFilter();
+        filter.setFilterString(recordIDVariableName + " = '" + tumourID + "' ");
+        DistributedTableDescription distributedTableDescription;
+        Object[][] rows;
+
+        distributedTableDescription = getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.SOURCE_TABLE_NAME);
+        int numberOfRecords = distributedTableDescription.getRowCount();
+
+        rows = retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
+        releaseResultSet(distributedTableDescription.getResultSetID());
+
+        Set<Source> sources = Collections.synchronizedSet(new LinkedHashSet<Source>());
+
+        String[] columnNames = distributedTableDescription.getColumnNames();
+        int ids[] = new int[numberOfRecords];
+        boolean found = false;
+        int idColumnNumber = 0;
+
+        while (!found && idColumnNumber < columnNames.length) {
+            found = columnNames[idColumnNumber++].equalsIgnoreCase(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+        }
+        if (found) {
+            idColumnNumber--;
+            Source source = null;
+            for (Object[] row : rows) {
+                int id = (Integer) row[idColumnNumber];
+                source = (Source) getRecord(id, Globals.SOURCE_TABLE_NAME);
+                sources.add(source);
+            }
+        }
+
+        return sources;
+    }
+
     /**
      * Simple console trace to system.out for debug purposes only.
      *
@@ -1657,8 +1879,10 @@ public class CanRegDAO {
     private boolean tableOfPopulationDataSets = true;
     private PreparedStatement stmtSaveNewPatient;
     private PreparedStatement stmtSaveNewTumour;
+    private PreparedStatement stmtSaveNewSource;
     private PreparedStatement stmtEditPatient;
     private PreparedStatement stmtEditTumour;
+    private PreparedStatement stmtEditSource;
     private PreparedStatement stmtSaveNewDictionary;
     private PreparedStatement stmtSaveNewDictionaryEntry;
     private PreparedStatement stmtSaveNewPopoulationDatasetsEntry;
@@ -1669,7 +1893,9 @@ public class CanRegDAO {
     private PreparedStatement stmtUpdateExistingPatient;
     private PreparedStatement stmtGetPatient;
     private PreparedStatement stmtGetTumour;
+    private PreparedStatement stmtGetSource;
     private PreparedStatement stmtGetPatients;
+    private PreparedStatement stmtGetSources;
     private PreparedStatement stmtGetTumours;
     private PreparedStatement stmtGetPatientsAndTumours;
     private PreparedStatement stmtGetRecord;
@@ -1681,12 +1907,14 @@ public class CanRegDAO {
     private PreparedStatement stmtClearNameSexTable;
     private PreparedStatement stmtDeletePatientRecord;
     private PreparedStatement stmtDeleteTumourRecord;
+    private PreparedStatement stmtDeleteSourceRecord;
     private PreparedStatement stmtDeletePopoulationDataset;
     private PreparedStatement stmtDeletePopoulationDatasetEntries;
     private PreparedStatement stmtGetHighestPatientID;
     private PreparedStatement stmtGetHighestPatientRecordID;
     private PreparedStatement stmtGetHighestTumourID;
     private PreparedStatement stmtGetHighestTumourRecordID;
+    private PreparedStatement stmtGetHighestSourceRecordID;
     private String ns = Globals.NAMESPACE;
     private static final String strGetPatient =
             "SELECT * FROM APP.PATIENT " +
@@ -1697,11 +1925,18 @@ public class CanRegDAO {
             "SELECT * FROM APP.USERS";
     private String strCountPatients =
             "SELECT COUNT(*) FROM APP.PATIENT";
+    private String strCountSources =
+            "SELECT COUNT(*) FROM APP.SOURCE";
+    private String strGetSources =
+            "SELECT * FROM APP.SOURCE";
     private String strGetPatientsAndTumours;
     private String strCountPatientsAndTumours;
     private static final String strGetTumour =
             "SELECT * FROM APP.TUMOUR " +
             "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+    private static final String strGetSource =
+            "SELECT * FROM APP.Source " +
+            "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private String strGetTumours =
             "SELECT * FROM APP.TUMOUR";
     private String strCountTumours =
@@ -1725,6 +1960,9 @@ public class CanRegDAO {
     private static final String strDeletePatientRecord =
             "DELETE FROM APP.PATIENT " +
             "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+    private static final String strDeleteSourceRecord =
+            "DELETE FROM APP.SOURCE " +
+            "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private static final String strDeleteTumourRecord =
             "DELETE FROM APP.TUMOUR " +
             "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
@@ -1742,8 +1980,10 @@ public class CanRegDAO {
     // The Dynamic ones
     private String strSavePatient;
     private String strSaveTumour;
+    private String strSaveSource;
     private String strEditPatient;
     private String strEditTumour;
+    private String strEditSource;
     private String strSaveDictionary;
     private String strSaveDictionaryEntry;
     private String strSavePopoulationDataset;
@@ -1752,6 +1992,7 @@ public class CanRegDAO {
     private String strGetHighestPatientID;
     private String strGetHighestTumourID;
     private String strGetHighestPatientRecordID;
+    private String strGetHighestSourceRecordID;
     private String strEditUser;
     private String strSaveUser;
     /* We don't use tumour record ID...
@@ -1759,4 +2000,26 @@ public class CanRegDAO {
      */
     private GlobalToolBox globalToolBox;
     private static boolean debug = true;
+
+    private void saveSources(Object tumourID, Set<Source> sources) throws SQLException {
+        if (sources != null) {
+            String tumourIDSourceTableVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
+            for (Source source : sources) {
+                source.setVariable(tumourIDSourceTableVariableName, tumourID);
+                saveSource(source);
+            }
+        }
+    }
+
+    private void deleteSources(Object tumourID) throws SQLException, DistributedTableDescriptionException, UnknownTableException {
+        Set<Source> sources = getSourcesByTumourID(tumourID);
+        if (sources != null) {
+            for (Source source : sources) {
+                if (source != null) {
+                    int recordID = (Integer) source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+                    deleteSourceRecord(recordID);
+                }
+            }
+        }
+    }
 }

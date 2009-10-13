@@ -22,6 +22,7 @@ import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
 import canreg.server.database.Patient;
+import canreg.server.database.Source;
 import canreg.server.database.Tumour;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
@@ -70,6 +71,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     private DatabaseVariablesListElement patientIDVariableListElement;
     private DatabaseVariablesListElement patientRecordIDVariableListElement;
     private DatabaseVariablesListElement obsoleteFlagVariableListElement;
+    private SourcesPanel sourcesPanel;
 
     boolean areAllVariablesPresent() {
         boolean allPresent = true;
@@ -255,7 +257,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
     private enum panelTypes {
 
-        PATIENT, TUMOUR
+        PATIENT, TUMOUR, SOURCE
     }
 
     /** Creates new form RecordEditorPanel */
@@ -328,6 +330,12 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString());
             checkVariableListElement =
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.CheckStatus.toString());
+        } else if (databaseRecord.getClass().isInstance(new Source())) {
+            panelType = panelTypes.SOURCE;
+            recordStatusVariableListElement = null;
+            unduplicationVariableListElement = null;
+            obsoleteFlagVariableListElement = null;
+            checkVariableListElement = null;
         }
 
         /*
@@ -361,6 +369,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         } else if (panelType == panelTypes.TUMOUR) {
             tableName = Globals.TUMOUR_TABLE_NAME;
             personSearchPanel.setVisible(false);
+        } else if (panelType == panelTypes.SOURCE) {
+            tableName = Globals.SOURCE_TABLE_NAME;
+            systemPanel.setVisible(false);
         }
         variablesInTable =
                 canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
@@ -457,10 +468,22 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             }
         }
 
-        refreshObsoleteStatus(databaseRecord);
-        refreshRecordStatus(databaseRecord);
-        refreshCheckStatus(databaseRecord);
+        // If this is the tumour part we add the source table
+        if (panelType == panelTypes.TUMOUR) {
+            sourcesPanel = new SourcesPanel(this);
+            sourcesPanel.setDictionary(dictionary);
+            sourcesPanel.setDoc(doc);
+            sourcesPanel.setVisible(true);
+            Tumour tumour = (Tumour) databaseRecord;
+            sourcesPanel.setSources(tumour.getSources());
+            dataPanel.add(sourcesPanel);
+        }
 
+        if (panelType != panelTypes.SOURCE) {
+            refreshObsoleteStatus(databaseRecord);
+            refreshRecordStatus(databaseRecord);
+            refreshCheckStatus(databaseRecord);
+        }
         dataPanel.revalidate();
         dataPanel.repaint();
     }
@@ -476,7 +499,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         } /** Called when a field's "value" property changes. */
         else if ("value".equals(propName)) {
             setSaveNeeded(true);
-           //Temporarily disabled
+            //Temporarily disabled
             actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
             // saveButton.setEnabled(saveNeeded);
         } else {
@@ -766,19 +789,29 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             VariableEditorPanel vep = iterator.next();
             databaseRecord.setVariable(vep.getKey(), vep.getValue());
         }
-        if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
-            DictionaryEntry recordStatusValue = (DictionaryEntry) recordStatusComboBox.getSelectedItem();
-            if (recordStatusValue != null) {
-                databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusValue.getCode());
-            } else {
-                // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
-                Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
+
+        if (panelType == panelTypes.TUMOUR){
+            Tumour tumour = (Tumour) databaseRecord;
+            tumour.setSources(sourcesPanel.getSources());
+        }
+
+        if (recordStatusVariableListElement != null) {
+            if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
+                DictionaryEntry recordStatusValue = (DictionaryEntry) recordStatusComboBox.getSelectedItem();
+                if (recordStatusValue != null) {
+                    databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusValue.getCode());
+                } else {
+                    // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
+                    Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
+                }
             }
         }
-        if (obsoleteToggleButton.isSelected()) {
-            databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.OBSOLETE_VALUE);
-        } else {
-            databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.NOT_OBSOLETE_VALUE);
+        if (obsoleteFlagVariableListElement != null) {
+            if (obsoleteToggleButton.isSelected()) {
+                databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.OBSOLETE_VALUE);
+            } else {
+                databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.NOT_OBSOLETE_VALUE);
+            }
         }
     }
 

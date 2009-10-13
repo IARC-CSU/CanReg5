@@ -19,6 +19,7 @@ import canreg.common.qualitycontrol.MultiplePrimaryTesterInterface;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Dictionary;
 import canreg.server.database.Patient;
+import canreg.server.database.Source;
 import canreg.server.database.Tumour;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
