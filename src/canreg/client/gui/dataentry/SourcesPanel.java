@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -32,6 +34,15 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
     public SourcesPanel(ActionListener listener) {
         initComponents();
         this.listener = listener;
+
+        // Add a listener for changing the active tab
+        ChangeListener tabbedPaneChangeListener = new ChangeListener() {
+
+            public void stateChanged(ChangeEvent e) {
+                setScrollPaneSize();
+            }
+        };
+        sourcesTabbedPane.addChangeListener(tabbedPaneChangeListener);
     }
 
     /** This method is called from within the constructor to
@@ -49,6 +60,7 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(SourcesPanel.class);
         setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("Form.border.title"))); // NOI18N
+        setMinimumSize(new java.awt.Dimension(430, 149));
         setName("Form"); // NOI18N
 
         sourcesTabbedPane.setName("sourcesTabbedPane"); // NOI18N
@@ -65,14 +77,11 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sourcesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(addButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removeButton)))
-                .addContainerGap())
+                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(removeButton)
+                .addContainerGap(191, Short.MAX_VALUE))
+            .addComponent(sourcesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -81,7 +90,7 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
                     .addComponent(addButton)
                     .addComponent(removeButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourcesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))
+                .addComponent(sourcesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -95,6 +104,7 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
         sources.add(newSource);
         sourcesTabbedPane.add(newPanel);
         refreshTitles();
+        setScrollPaneSize();
     }
 
     @Action
@@ -112,6 +122,7 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
         this.sources = sources;
         buildTabs();
         refreshTitles();
+        setScrollPaneSize();
     }
 
     private void buildTabs() {
@@ -178,5 +189,14 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
      */
     public void setDoc(Document doc) {
         this.doc = doc;
+    }
+
+    private void setScrollPaneSize() {
+        if (sources != null) {
+            RecordEditorPanel rep = (RecordEditorPanel) sourcesTabbedPane.getSelectedComponent();
+            if (rep != null) {
+                rep.maximizeSize();
+            }
+        }
     }
 }

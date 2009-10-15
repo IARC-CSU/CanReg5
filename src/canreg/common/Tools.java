@@ -212,8 +212,6 @@ public class Tools {
         return variables;
     }
 
-
-
     /**
      * 
      * @param doc
@@ -327,7 +325,7 @@ public class Tools {
             dictionaries[i].setFullDictionaryCategoryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_description_length").item(0).getTextContent()));
 
 
-        // TODO -- capture more info...
+            // TODO -- capture more info...
         }
         return dictionaries;
     }
@@ -483,14 +481,18 @@ public class Tools {
 
     public static String increment(String ID) {
         String IDplusOne = null;
-        char lastChar = ID.charAt(ID.length() - 1);
-        String theRest = ID.substring(0, ID.length() - 1);
-        if (lastChar == '9') {
-            lastChar = '0';
-            IDplusOne = increment(theRest) + lastChar;
+        if (ID.length() == 0) {
+            IDplusOne = "1";
         } else {
-            lastChar += 1;
-            IDplusOne = theRest + lastChar;
+            char lastChar = ID.charAt(ID.length() - 1);
+            String theRest = ID.substring(0, ID.length() - 1);
+            if (lastChar == '9') {
+                lastChar = '0';
+                IDplusOne = increment(theRest) + lastChar;
+            } else {
+                lastChar += 1;
+                IDplusOne = theRest + lastChar;
+            }
         }
         return IDplusOne;
     }
@@ -533,7 +535,7 @@ public class Tools {
         File dir1 = new File(".");
         try {
             System.out.println("Current dir : " + dir1.getCanonicalPath());
-        //System.out.println ("Parent  dir : " + dir2.getCanonicalPath());
+            //System.out.println ("Parent  dir : " + dir2.getCanonicalPath());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -47,7 +47,7 @@ public class EditDatabaseVariableJPanel extends javax.swing.JPanel {
 
         setName("Form"); // NOI18N
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tumour", "Patient" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Patient", "Tumour", "Source" }));
         jComboBox1.setName("jComboBox1"); // NOI18N
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(EditDatabaseVariableJPanel.class);
