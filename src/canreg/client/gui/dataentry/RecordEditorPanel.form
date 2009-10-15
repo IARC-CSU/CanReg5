@@ -20,7 +20,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="systemPanel" alignment="0" max="32767" attributes="1"/>
-          <Component id="jScrollPane1" alignment="1" pref="735" max="32767" attributes="0"/>
+          <Component id="dataScrollPane" alignment="1" pref="849" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -28,7 +28,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="systemPanel" min="-2" pref="77" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="470" max="32767" attributes="0"/>
+              <Component id="dataScrollPane" pref="470" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -50,25 +50,25 @@
                   <Component id="mpPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="recordStatusPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="22" max="32767" attributes="0"/>
-                  <Component id="recordStatusPanel1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="updatedByPanel" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="controlPanel" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="mpPanel" alignment="0" min="-2" pref="78" max="-2" attributes="1"/>
-                      <Component id="personSearchPanel" alignment="0" min="-2" pref="78" max="-2" attributes="1"/>
-                      <Component id="checksPanel" alignment="0" min="-2" pref="78" max="-2" attributes="1"/>
-                      <Component id="recordStatusPanel" alignment="0" min="-2" max="-2" attributes="1"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="recordStatusPanel1" min="-2" max="-2" attributes="1"/>
-                      </Group>
+              <Group type="102" alignment="1" attributes="0">
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="recordStatusPanel" alignment="0" max="32767" attributes="1"/>
+                      <Component id="mpPanel" alignment="0" pref="83" max="32767" attributes="1"/>
+                      <Component id="personSearchPanel" alignment="0" pref="83" max="32767" attributes="1"/>
+                      <Component id="checksPanel" alignment="0" min="-2" max="-2" attributes="1"/>
+                      <Component id="updatedByPanel" alignment="0" min="-2" max="-2" attributes="1"/>
+                      <Component id="controlPanel" alignment="1" max="32767" attributes="1"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -236,7 +236,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="recordStatusComboBox" max="32767" attributes="0"/>
+                      <Component id="recordStatusComboBox" pref="67" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -245,7 +245,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="recordStatusComboBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="28" max="32767" attributes="0"/>
+                      <EmptySpace pref="33" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -266,24 +266,24 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="recordStatusPanel1">
+        <Container class="javax.swing.JPanel" name="controlPanel">
           <Properties>
-            <Property name="name" type="java.lang.String" value="recordStatusPanel1" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="controlPanel" noResource="true"/>
           </Properties>
 
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="obsoleteToggleButton" min="-2" pref="163" max="-2" attributes="1"/>
-                          <Component id="jButton1" alignment="1" min="-2" pref="163" max="-2" attributes="1"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jButton1" min="-2" pref="163" max="-2" attributes="1"/>
+                          <Component id="obsoleteToggleButton" alignment="0" min="-2" pref="163" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="saveButton" max="32767" attributes="1"/>
-                          <Component id="changePatientRecordButton" alignment="1" max="32767" attributes="1"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="saveButton" pref="161" max="32767" attributes="1"/>
+                          <Component id="changePatientRecordButton" min="-2" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -291,16 +291,18 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="obsoleteToggleButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="changePatientRecordButton" alignment="3" min="-2" max="-2" attributes="1"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="1"/>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -344,14 +346,73 @@
             </Component>
           </SubComponents>
         </Container>
+        <Container class="javax.swing.JPanel" name="updatedByPanel">
+          <Properties>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                <TitledBorder title="Updated">
+                  <Property name="titleX" resourceKey="updatedByPanel.border.title"/>
+                </TitledBorder>
+              </Border>
+            </Property>
+            <Property name="name" type="java.lang.String" value="updatedByPanel" noResource="true"/>
+          </Properties>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="byLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="userLabel" pref="75" max="32767" attributes="0"/>
+                  </Group>
+                  <Component id="dateLabel" alignment="0" pref="97" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="byLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="userLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="dateLabel" min="-2" pref="14" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="byLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="byLabel.text"/>
+                <Property name="name" type="java.lang.String" value="byLabel" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="userLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="userLabel.text"/>
+                <Property name="name" type="java.lang.String" value="userLabel" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="dateLabel">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="2"/>
+                <Property name="text" type="java.lang.String" resourceKey="dateLabel.text"/>
+                <Property name="name" type="java.lang.String" value="dateLabel" noResource="true"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+    <Container class="javax.swing.JScrollPane" name="dataScrollPane">
       <Properties>
-        <Property name="name" type="java.lang.String" value="jScrollPane1" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="dataScrollPane" noResource="true"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);"/>
+        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="dataScrollPane.getVerticalScrollBar().setUnitIncrement(16);"/>
       </AuxValues>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
