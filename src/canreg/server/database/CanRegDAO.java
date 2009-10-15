@@ -14,6 +14,7 @@ import canreg.common.Globals;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.rmi.RemoteException;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -856,7 +857,7 @@ public class CanRegDAO {
      * 
      * @return 
      */
-    public boolean connect() {
+    public boolean connect() throws RemoteException {
         String dbUrl = getDatabaseUrl();
         try {
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
@@ -925,6 +926,8 @@ public class CanRegDAO {
             debugOut("SQLerror... ");
             ex.printStackTrace();
             isConnected = false;
+            // CanRegDAO now throws database mismatch exceptions if the database structure doesn't match the prepared queries.
+            throw new RemoteException("Database desciption mismatch...");
         }
         return isConnected;
     }
