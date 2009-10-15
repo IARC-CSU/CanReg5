@@ -4,6 +4,7 @@
  */
 package canreg.client.dataentry;
 
+import canreg.common.Globals;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
 import java.io.BufferedReader;
@@ -12,9 +13,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdesktop.application.Task;
@@ -104,6 +108,24 @@ public class Import {
                         }
                     }
                 }
+
+                // Build source part
+                Set<Source> sources  = Collections.synchronizedSet(new LinkedHashSet<Source>());
+                Source source = new Source();
+                for (int i = 0; i < map.size(); i++) {
+                    Relation rel = map.get(i);
+                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+                        if (rel.getVariableType().equalsIgnoreCase("Number")) {
+                            if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                            }
+                        } else {
+                            source.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
+                        }
+                    }
+                }
+                sources.add(source);
+                tumour.setSources(sources);
 
                 // debugOut(tumour.toString());
                 // add patient to the database

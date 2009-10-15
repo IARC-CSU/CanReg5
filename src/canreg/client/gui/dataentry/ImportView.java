@@ -69,7 +69,6 @@ public class ImportView extends javax.swing.JInternalFrame {
 
     /** Creates new form ImportView */
     public ImportView() {
-
         initComponents();
         previewPanel.setVisible(false);
 
