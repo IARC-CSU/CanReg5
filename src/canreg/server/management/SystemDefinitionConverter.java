@@ -272,18 +272,32 @@ public class SystemDefinitionConverter {
                     Element groupElement = (Element) doc.getElementsByTagName(namespace + "group").item(groupID);
                     String groupName = groupElement.getElementsByTagName(namespace + "name").item(0).getTextContent();
 
-                    if ((groupName.equalsIgnoreCase("patient") || groupName.equalsIgnoreCase("follow up") || nameInDatabase.equalsIgnoreCase("PerS")) && !(nameInDatabase.equalsIgnoreCase("age"))) {
-                        element.appendChild(createElement(namespace + "table", Globals.PATIENT_TABLE_NAME));
-                        variableToTableMap.put(nameInDatabase, Globals.PATIENT_TABLE_NAME);
-                    } else {
-                        element.appendChild(createElement(namespace + "table", Globals.TUMOUR_TABLE_NAME));
-                        variableToTableMap.put(nameInDatabase, Globals.TUMOUR_TABLE_NAME);
+                    // Decide on the group
+
+                    // Default set to tumour
+                    String tableName = Globals.TUMOUR_TABLE_NAME;
+
+                    if (groupName.equalsIgnoreCase("Patient")) {
+                        if (nameInDatabase.equalsIgnoreCase("PerS") ||
+                                (nameInDatabase.equalsIgnoreCase("age")) ||
+                                (nameInDatabase.toLowerCase().startsWith("addr"))||
+                                (nameInDatabase.toLowerCase().startsWith("occu"))) {
+                            tableName = Globals.TUMOUR_TABLE_NAME;
+                        } else {
+                            tableName = Globals.PATIENT_TABLE_NAME;
+                        }
+                    } else if (groupName.equalsIgnoreCase("follow up")) {
+                        tableName = Globals.PATIENT_TABLE_NAME;
+                    } else if (groupName.equalsIgnoreCase("Source") ||
+                            groupName.equalsIgnoreCase("Hospital")) {
+                        tableName = Globals.SOURCE_TABLE_NAME;
                     }
+                    element.appendChild(createElement(namespace + "table", tableName));
+                    variableToTableMap.put(nameInDatabase, tableName);
                 }
 
                 // Read the indexes part
                 // We build the doc for this later.
-
                 int numberOfIndexes = readNumber(2);
                 debugOut("Number of Indexes: " + numberOfIndexes);
 
@@ -441,6 +455,23 @@ public class SystemDefinitionConverter {
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
                             -1, "Automatic", "Othr", "Alpha", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+
+                    /**
+                     * Pointer to Tumour from Source
+                     */
+                    variableName = Globals.StandardVariableNames.TumourIDSourceTable.toString();
+                    variablesParentElement.appendChild(
+                            createVariable(variableNumber++, variableName, variableName, variableName,
+                            -1, "Automatic", "Othr", "Alpha", recordIDlength, -1, Globals.SOURCE_TABLE_NAME, variableName));
+
+                    /**
+                     * Pointer to Tumour from Source
+                     */
+                    variableName = Globals.StandardVariableNames.SourceRecordID.toString();
+                    variablesParentElement.appendChild(
+                            createVariable(variableNumber++, variableName, variableName, variableName,
+                            -1, "Automatic", "Othr", "Alpha", recordIDlength, -1, Globals.SOURCE_TABLE_NAME, variableName));
+
                 }
 
                 // Build the indexes
@@ -644,7 +675,7 @@ public class SystemDefinitionConverter {
             element.appendChild(createElement(namespace + "variable_length", "8"));
         } else if (variableType.equalsIgnoreCase(variableTypeValues[3])) {
             element.appendChild(createElement(namespace + "use_dictionary", "" + useDictionary));
-        // (0 Simple, 1 Compound)
+            // (0 Simple, 1 Compound)
         } else {
             debugOut("Invalid variable description...");
         }
