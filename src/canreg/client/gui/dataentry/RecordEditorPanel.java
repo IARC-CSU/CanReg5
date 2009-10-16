@@ -283,8 +283,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             if (updatedByString != null && updatedBy.length() > 0) {
                 updatedBy = updatedByString;
             }
-            userLabel.setText(updatedBy);
         }
+        userLabel.setText(updatedBy);
         /*
          * Set the update date
          */
@@ -331,7 +331,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     }
 
     private enum panelTypes {
-
         PATIENT, TUMOUR, SOURCE
     }
 

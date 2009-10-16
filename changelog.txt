@@ -1,5 +1,27 @@
 Changelog
 
+4.99.13 Build 717
+
+- Source table implemented.
+
+- Sources now imported.
+
+- CanRegDAO now throws database mismatch exceptions if the database structure doesn't match the prepared queries.
+
+- Record editor now shows last update date and user.
+
+- System Definition Converter taking into account source table, better system to put the variables in the right tables.
+
+- Bugfixes.
+
+
+4.99.12 Build 707
+
+- PDSEditorInternalFrame: Improved GUI
+
+- Minor changes.
+
+
 4.99.11 Build 703
 
 - Eliminated a bug where records where set to pending while saving. 
