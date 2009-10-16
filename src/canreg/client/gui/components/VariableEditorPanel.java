@@ -137,6 +137,7 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSplitPane1 = new javax.swing.JSplitPane();
         variableNameLabel = new javax.swing.JLabel();
         splitPane1 = new javax.swing.JSplitPane();
         splitPane2 = new javax.swing.JSplitPane();
@@ -146,11 +147,16 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
 
         setName("Form"); // NOI18N
 
+        jSplitPane1.setDividerLocation(150);
+        jSplitPane1.setName("jSplitPane1"); // NOI18N
+
         variableNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(VariableEditorPanel.class);
         variableNameLabel.setText(resourceMap.getString("variableNameLabel.text")); // NOI18N
         variableNameLabel.setName("variableNameLabel"); // NOI18N
+        jSplitPane1.setLeftComponent(variableNameLabel);
 
+        splitPane1.setDividerLocation(150);
         splitPane1.setResizeWeight(0.5);
         splitPane1.setFocusable(false);
         splitPane1.setName("splitPane1"); // NOI18N
@@ -202,22 +208,17 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
         });
         splitPane1.setLeftComponent(codeTextField);
 
+        jSplitPane1.setRightComponent(splitPane1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(variableNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(splitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(splitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(variableNameLabel, javax.swing.GroupLayout.Alignment.TRAILING))
+            .addComponent(jSplitPane1)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -322,6 +323,7 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
     protected javax.swing.JTextField categoryTextField;
     protected javax.swing.JTextField codeTextField;
     protected javax.swing.JTextField descriptionTextField;
+    private javax.swing.JSplitPane jSplitPane1;
     protected javax.swing.JSplitPane splitPane1;
     protected javax.swing.JSplitPane splitPane2;
     private javax.swing.JLabel variableNameLabel;

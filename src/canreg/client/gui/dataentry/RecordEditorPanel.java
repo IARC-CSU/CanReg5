@@ -15,6 +15,7 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DatabaseVariablesListElementPositionSorter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.GregorianCalendarCanReg;
 import canreg.common.Tools;
 import canreg.common.qualitycontrol.CheckResult;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
@@ -30,8 +31,13 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -74,6 +80,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     private DatabaseVariablesListElement updatedByVariableListElement;
     private DatabaseVariablesListElement updateDateVariableListElement;
     private SourcesPanel sourcesPanel;
+    private final SimpleDateFormat dateFormat;
 
     boolean areAllVariablesPresent() {
         boolean allPresent = true;
@@ -266,29 +273,61 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     }
 
     private void refreshUpdatedBy(DatabaseRecord record) {
+        String updatedBy = "unknown";
+        String updateDateToolTip = "unknown";
         /*
          * Set the updatedBy
          */
         if (updatedByVariableListElement != null) {
-            String updatedBy = (String) record.getVariable(updatedByVariableListElement.getDatabaseVariableName());
-            if (updatedBy != null && updatedBy.length() > 0) {
-                userLabel.setText(updatedBy);
-            } else {
-                userLabel.setText("Unknown");
+            String updatedByString = (String) record.getVariable(updatedByVariableListElement.getDatabaseVariableName());
+            if (updatedByString != null && updatedBy.length() > 0) {
+                updatedBy = updatedByString;
             }
+            userLabel.setText(updatedBy);
         }
         /*
          * Set the update date
          */
         if (updateDateVariableListElement != null) {
             String updateDate = (String) record.getVariable(updateDateVariableListElement.getDatabaseVariableName());
+            String updateDateString = "";
             if (updateDate != null && updateDate.length() > 0) {
-                dateLabel.setText(updateDate);
-            } else {
-                dateLabel.setText("");
+                Date date;
+                try {
+                    date = dateFormat.parse(updateDate);
+                } catch (ParseException ex) {
+                    date = null;
+                    Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.INFO, null, ex);
+                }
+                if (date != null) {
+                    Calendar todayCal = new GregorianCalendarCanReg();
+                    Calendar recordCal = new GregorianCalendarCanReg();
+                    recordCal.setTime(date);
+                    if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR) &&
+                            todayCal.get(Calendar.DAY_OF_YEAR) == recordCal.get(Calendar.DAY_OF_YEAR)) {
+                        updateDateString = "Today";
+                        updateDateToolTip = DateFormat.getDateInstance().format(date);
+                    } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR) &&
+                            todayCal.get(Calendar.DAY_OF_YEAR) - recordCal.get(Calendar.DAY_OF_YEAR) == 1) {
+                        updateDateString = "Yesterday";
+                        updateDateToolTip = DateFormat.getDateInstance().format(date);
+                    } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR) &&
+                            todayCal.get(Calendar.WEEK_OF_YEAR) == recordCal.get(Calendar.WEEK_OF_YEAR)) {
+                        updateDateString = "This week";
+                        updateDateToolTip = DateFormat.getDateInstance().format(date);
+                    } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR) &&
+                            todayCal.get(Calendar.WEEK_OF_YEAR) - recordCal.get(Calendar.WEEK_OF_YEAR) == 1) {
+                        updateDateString = "Last week";
+                        updateDateToolTip = DateFormat.getDateInstance().format(date);
+                    } else {
+                        updateDateString = DateFormat.getDateInstance().format(date);
+                        updateDateToolTip = DateFormat.getDateInstance().format(date);
+                    }
+                }
             }
+            dateLabel.setText(updateDateString);
         }
-
+        updatedByPanel.setToolTipText("Record updated by "+ updatedBy + ", " +updateDateToolTip);
     }
 
     private enum panelTypes {
@@ -313,6 +352,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         // for now - hide this untill it is used...
         searchLabel.setVisible(false);
         mpLabel.setVisible(false);
+
+        dateFormat = new SimpleDateFormat("yyyyMMdd");
     }
 
     /**
