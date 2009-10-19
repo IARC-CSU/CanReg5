@@ -102,7 +102,7 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
             ageGroupLabels[i] = new String[]{ageGroupNames[i]};
         }
 
-        ageGroupLabelsTable.setModel(new DefaultTableModel(ageGroupLabels, new String[]{"Age Group"}) {
+        ageGroupLabelsTable.setModel(new DefaultTableModel(ageGroupLabels, new String[]{java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("AGE_GROUP")}) {
 
             Class[] types = new Class[]{
                 java.lang.String.class
@@ -138,7 +138,7 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
                 if (pdse.getAgeGroup() < pdsTableData.length && pdse.getSex() <= 2) {
                     pdsTableData[pdse.getAgeGroup()][pdse.getSex() - 1] = pdse.getCount();
                 } else {
-                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Outside skope: " + pdse.getAgeGroup() + " " + pdse.getSex());
+                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("OUTSIDE_SKOPE:_") + pdse.getAgeGroup() + " " + pdse.getSex());
                 }
             }
         }
@@ -146,7 +146,7 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
         pdsTable.setModel(new javax.swing.table.DefaultTableModel(
                 pdsTableData,
                 new String[]{
-                    "Male", "Female"
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("MALE"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("FEMALE")
                 }) {
 
             Class[] types = new Class[]{
