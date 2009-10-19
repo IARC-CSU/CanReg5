@@ -3,7 +3,7 @@
  *
  * Created on 21 October 2008, 14:02
  */
-package canreg.client.gui;
+package canreg.client.gui.management;
 
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;

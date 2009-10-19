@@ -96,6 +96,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         setResizable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(FrequenciesByYearInternalFrame.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
+        setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
 
         rangeFilterPanel.setName("rangeFilterPanel"); // NOI18N
@@ -134,7 +135,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
         );
 
         popOutTableButton.setAction(actionMap.get("popOutTableAction")); // NOI18N

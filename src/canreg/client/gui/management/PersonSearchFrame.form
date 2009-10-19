@@ -40,7 +40,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="285" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="289" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -111,7 +111,6 @@
                     </TitledBorder>
                   </Border>
                 </Property>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="jPanel4.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="jPanel4" noResource="true"/>
               </Properties>
 
@@ -155,8 +154,6 @@
               <SubComponents>
                 <Component class="javax.swing.JTextField" name="rangeStartTextField">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="rangeStartTextField.text"/>
-                    <Property name="toolTipText" type="java.lang.String" resourceKey="rangeStartTextField.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="rangeStartTextField" noResource="true"/>
                   </Properties>
                 </Component>
@@ -191,7 +188,7 @@
             <Component class="javax.swing.JButton" name="interruptButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.PersonSearchFrame" id="interruptDuplicateSearchAction" methodName="interruptDuplicateSearchAction"/>
+                  <action class="canreg.client.gui.management.PersonSearchFrame" id="interruptDuplicateSearchAction" methodName="interruptDuplicateSearchAction"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="interruptButton.text"/>
                 <Property name="name" type="java.lang.String" value="interruptButton" noResource="true"/>
@@ -251,7 +248,7 @@
                               <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="matchesFoundTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="15" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -317,12 +314,12 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="personSearchVariablesPanel1" alignment="1" pref="257" max="32767" attributes="0"/>
+                  <Component id="personSearchVariablesPanel1" alignment="1" pref="261" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="canreg.client.gui.PersonSearchVariablesPanel" name="personSearchVariablesPanel1">
+            <Component class="canreg.client.gui.management.PersonSearchVariablesPanel" name="personSearchVariablesPanel1">
               <Properties>
                 <Property name="name" type="java.lang.String" value="personSearchVariablesPanel1" noResource="true"/>
               </Properties>
@@ -336,7 +333,7 @@
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Results">
-                <Property name="tabTitle" type="java.lang.String" resourceKey="resultPanel.TabConstraints.tabTitle"/>
+                <Property name="tabTitle" type="java.lang.String" value="Results"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -355,7 +352,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="resultScrollPane" pref="235" max="32767" attributes="0"/>
+                      <Component id="resultScrollPane" pref="239" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

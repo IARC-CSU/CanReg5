@@ -4,7 +4,7 @@
  * Created on 04 April 2008, 09:32
  */
 
-package canreg.client.gui;
+package canreg.client.gui.tools;
 
 import org.jdesktop.application.Action;
 

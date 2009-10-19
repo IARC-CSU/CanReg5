@@ -43,14 +43,12 @@ public abstract class TableBuilder {
         "Asia",
         "Europe",
         "Oceania"};
-
     // childCancerReference[sex][age][l/u]
     static double[][][] childCancerReference = {{{12.3, 24.7}, {8.5, 15.6},
             {8.5, 15.0}
         }, {{9.7, 21.4}, {6.9, 12.0}, {6.8, 13.6}
         }
     };
-
     // Deafault number of Age groups = 0 year group + 85/5 + '85+' + unknown age + total = 21
     int numberOfAgeGroups = 21;
     int allAgeGroupsIndex = 20;
@@ -118,7 +116,6 @@ public abstract class TableBuilder {
             "ci5-viii-population.dct";
     String v8MortalityDataDescriptionFilename = libPath +
             "ci5-viii-mortality.dct";
-
     // foundAgeGroups always corresponds to "our" age group numbering
     boolean[] foundAgeGroups = new boolean[numberOfAgeGroups];
     String ageLabel[] = {"0", "1-", "5-", "10-", "15-", "20-", "25-", "30-",
@@ -158,11 +155,16 @@ public abstract class TableBuilder {
     }
 
     public boolean areThesePopulationDatasetsOK(PopulationDataset[] sets) {
-        String filterString = sets[0].getFilter().replaceAll(" ", "");
-        for (PopulationDataset population : sets) {
-            if (!filterString.equalsIgnoreCase(population.getFilter().replaceAll(" ", ""))) {
-                return false;
+        if (sets.length > 0 && sets[0] != null) {
+
+            String filterString = sets[0].getFilter().replaceAll(" ", "");
+            for (PopulationDataset population : sets) {
+                if (!filterString.equalsIgnoreCase(population.getFilter().replaceAll(" ", ""))) {
+                    return false;
+                }
             }
+        } else {
+            return false;
         }
         return true;
     }
@@ -556,12 +558,12 @@ public abstract class TableBuilder {
                 }
                 // Read next line
                 line = readLine(dataFile);
-            /*
-            if (allAgeGroupsIndex > 0) {
-            populationArray[yearIndex][sex][allAgeGroupsIndex] +=
-            population;
-            }
-             */
+                /*
+                if (allAgeGroupsIndex > 0) {
+                populationArray[yearIndex][sex][allAgeGroupsIndex] +=
+                population;
+                }
+                 */
             }
             dataFile.close();
 
@@ -1460,7 +1462,6 @@ public abstract class TableBuilder {
         return !(Z >= (-microscopicallyVerifiedTestTreshold) &&
                 Z <= (microscopicallyVerifiedTestTreshold));
     }
-
 
     //MB-tests
     public double calculateASRMB(double cases, double zurpop, double worldp) {

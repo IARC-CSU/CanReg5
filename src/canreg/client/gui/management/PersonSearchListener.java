@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package canreg.client.gui;
+package canreg.client.gui.management;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

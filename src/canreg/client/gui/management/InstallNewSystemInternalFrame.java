@@ -3,14 +3,14 @@
  *
  * Created on 01 July 2008, 16:59
  */
-package canreg.client.gui;
+package canreg.client.gui.management;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.common.Globals;
 import canreg.server.management.SystemDescription;
 import java.io.File;
-import java.io.FileFilter;
+// import java.io.FileFilter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,7 +97,7 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(jButton1)
                     .addComponent(jLabel1)
                     .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(jButton3))

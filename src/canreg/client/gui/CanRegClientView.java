@@ -3,6 +3,10 @@
  */
 package canreg.client.gui;
 
+import canreg.client.gui.management.InstallNewSystemInternalFrame;
+import canreg.client.gui.tools.StandardDialog;
+import canreg.client.gui.management.OptionsFrame;
+import canreg.client.gui.management.PersonSearchFrame;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.client.gui.management.FirstNameSexInternalFrame;
 import canreg.client.gui.management.BackUpInternalFrame;

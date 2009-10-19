@@ -5,6 +5,7 @@
  */
 package canreg.client.gui;
 
+import canreg.client.gui.tools.WaitFrame;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.ServerDescription;

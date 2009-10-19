@@ -3,8 +3,9 @@
  *
  * Created on 28 February 2008, 10:16
  */
-package canreg.client.gui;
+package canreg.client.gui.management;
 
+import canreg.client.gui.*;
 import cachingtableapi.DistributedTableDescription;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
@@ -63,7 +64,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     private String tumourIDlookupVariable;
 
     /** Creates new form PersonSearchFrame */
-    PersonSearchFrame(JDesktopPane desktopPane) {
+    public PersonSearchFrame(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
 
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
@@ -157,7 +158,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         matchesFoundTextField = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        personSearchVariablesPanel1 = new canreg.client.gui.PersonSearchVariablesPanel();
+        personSearchVariablesPanel1 = new canreg.client.gui.management.PersonSearchVariablesPanel();
         resultPanel = new javax.swing.JPanel();
         resultScrollPane = new javax.swing.JScrollPane();
         resultTable = new javax.swing.JTable();
@@ -181,11 +182,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         jPanel1.setName("jPanel1"); // NOI18N
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel4.border.title"))); // NOI18N
-        jPanel4.setToolTipText(resourceMap.getString("jPanel4.toolTipText")); // NOI18N
         jPanel4.setName("jPanel4"); // NOI18N
 
-        rangeStartTextField.setText(resourceMap.getString("rangeStartTextField.text")); // NOI18N
-        rangeStartTextField.setToolTipText(resourceMap.getString("rangeStartTextField.toolTipText")); // NOI18N
         rangeStartTextField.setName("rangeStartTextField"); // NOI18N
 
         jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
@@ -289,7 +287,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(matchesFoundTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -335,7 +333,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(personSearchVariablesPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
+            .addComponent(personSearchVariablesPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
@@ -363,11 +361,11 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(resultPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("resultPanel.TabConstraints.tabTitle"), resultPanel); // NOI18N
+        jTabbedPane1.addTab("Results", resultPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -382,7 +380,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -493,7 +491,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField matchesFoundTextField;
     private javax.swing.JButton performButton;
-    private canreg.client.gui.PersonSearchVariablesPanel personSearchVariablesPanel1;
+    private canreg.client.gui.management.PersonSearchVariablesPanel personSearchVariablesPanel1;
     private javax.swing.JTextField rangeEndTextField;
     private javax.swing.JTextField rangeStartTextField;
     private javax.swing.JTextField recordsInRangeField;

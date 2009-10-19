@@ -94,6 +94,7 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
         setResizable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(EditDatabaseVariableInternalFrame.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
+        setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(EditDatabaseVariableInternalFrame.class, this);
@@ -133,7 +134,7 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
                     .addComponent(variablesLabel)
                     .addComponent(tableLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE))
         );
 
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N

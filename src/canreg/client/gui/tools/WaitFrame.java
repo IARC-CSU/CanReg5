@@ -4,7 +4,7 @@
  * Created on 14 April 2008, 15:33
  */
 
-package canreg.client.gui;
+package canreg.client.gui.tools;
 
 /**
  *
@@ -63,7 +63,7 @@ public class WaitFrame extends javax.swing.JInternalFrame {
                 .addComponent(label)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pack();
