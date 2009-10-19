@@ -391,7 +391,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         if (serverNames != null) {
             canRegSystemComboBox.setModel(new javax.swing.DefaultComboBoxModel(localSettings.getServerDescriptions().toArray()));
             String lastServerIDString = localSettings.getProperty(LocalSettings.LAST_SERVER_ID_KEY);
-            if (lastServerIDString != null && lastServerIDString.trim().length()>0) {
+            if (lastServerIDString != null && lastServerIDString.trim().length() > 0) {
                 ServerDescription sd = localSettings.getServerDescription(Integer.parseInt(lastServerIDString));
                 if (sd != null) {
                     canRegSystemComboBox.setSelectedItem(sd);
@@ -467,8 +467,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
 
         try {
             saveDefaultValues();
-            String canRegSystemName = CanRegClientApp.getApplication().login
-                    (serverObjectString, username, password);
+            String canRegSystemName = CanRegClientApp.getApplication().login(serverObjectString, username, password);
             if (canRegSystemName != null) {
                 fv.getFrame().setTitle("CanReg5 - " + canRegSystemName);
                 this.dispose();
@@ -477,12 +476,20 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                 if (LocalSettings.TRUE_PROPERTY.equalsIgnoreCase(localSettings.getProperty(LocalSettings.AUTO_BACKUP_KEY))) {
                     String maxDiffString = localSettings.getProperty(LocalSettings.BACKUP_EVERY_KEY);
                     Date date = CanRegClientApp.getApplication().getDateOfLastBackUp();
-                    if (date != null && maxDiffString != null) {
-                        int maxDiff = Integer.parseInt(maxDiffString);
-                        Date todaysDate = new Date();
-                        int diff = (int) ((todaysDate.getTime() - date.getTime()) / (1000L * 60L * 60L * 24L));
-                        if (diff >= maxDiff) {
-                            int showInternalConfirmDialog = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Last backup was performed " + diff + " day(s) ago.\nPerform backup now?", "Back up?", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    if (maxDiffString != null) {
+                        if (date != null) {
+                            int maxDiff = Integer.parseInt(maxDiffString);
+                            Date todaysDate = new Date();
+                            int diff = (int) ((todaysDate.getTime() - date.getTime()) / (1000L * 60L * 60L * 24L));
+                            if (diff >= maxDiff) {
+                                int showInternalConfirmDialog = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Last backup was performed " + diff + " day(s) ago.\nPerform backup now?", "Back up?", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                                if (showInternalConfirmDialog == JOptionPane.YES_OPTION) {
+                                    Task backupTask = new PerformBackUpActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+                                    backupTask.execute();
+                                }
+                            }
+                        } else {
+                            int showInternalConfirmDialog = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "You have never backed up your database.\nPerform backup now?", "Back up?", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
                             if (showInternalConfirmDialog == JOptionPane.YES_OPTION) {
                                 Task backupTask = new PerformBackUpActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
                                 backupTask.execute();
@@ -563,6 +570,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel usernameLabel;
     private javax.swing.JTextField usernameTextField;
     // End of variables declaration//GEN-END:variables
+
     /**
      * Simple console trace to system.out for debug purposes only.&Ltp>
      *
@@ -614,7 +622,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                 }
             } catch (AlreadyBoundException ex) {
                 result = "running";
-            // Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                // Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
             // Return your result... 
             return result;
