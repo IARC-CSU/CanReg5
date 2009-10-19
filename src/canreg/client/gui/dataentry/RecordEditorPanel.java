@@ -156,10 +156,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         String recStatus = null;
         boolean canBeConfirmed = false;
         if (resultCode == null || resultCode == ResultCode.NotDone) {
-            checksLabel.setText("Not done");
+            checksLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("NOT_DONE"));
             canBeConfirmed = false;
         } else {
-            checksLabel.setText("Done: " + resultCode.toString());
+            checksLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("DONE:_") + resultCode.toString());
             if (resultCode == ResultCode.OK || resultCode == ResultCode.Query) {
                 canBeConfirmed = true;
             } else if (resultCode == resultCode.Rare) {
@@ -273,14 +273,14 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     }
 
     private void refreshUpdatedBy(DatabaseRecord record) {
-        String updatedBy = "unknown";
-        String updateDateToolTip = "unknown";
+        String updatedBy = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("UNKNOWN_BY");
+        String updateDateToolTip = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("UNKNOWN_DATE");
         /*
          * Set the updatedBy
          */
         if (updatedByVariableListElement != null) {
             String updatedByString = (String) record.getVariable(updatedByVariableListElement.getDatabaseVariableName());
-            if (updatedByString != null && updatedBy.length() > 0) {
+            if (updatedByString != null && updatedByString.trim().length() > 0) {
                 updatedBy = updatedByString;
             }
         }
@@ -305,19 +305,19 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                     recordCal.setTime(date);
                     if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR) &&
                             todayCal.get(Calendar.DAY_OF_YEAR) == recordCal.get(Calendar.DAY_OF_YEAR)) {
-                        updateDateString = "Today";
+                        updateDateString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("TODAY");
                         updateDateToolTip = DateFormat.getDateInstance().format(date);
                     } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR) &&
                             todayCal.get(Calendar.DAY_OF_YEAR) - recordCal.get(Calendar.DAY_OF_YEAR) == 1) {
-                        updateDateString = "Yesterday";
+                        updateDateString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("YESTERDAY");
                         updateDateToolTip = DateFormat.getDateInstance().format(date);
                     } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR) &&
                             todayCal.get(Calendar.WEEK_OF_YEAR) == recordCal.get(Calendar.WEEK_OF_YEAR)) {
-                        updateDateString = "This week";
+                        updateDateString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("THIS_WEEK");
                         updateDateToolTip = DateFormat.getDateInstance().format(date);
                     } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR) &&
                             todayCal.get(Calendar.WEEK_OF_YEAR) - recordCal.get(Calendar.WEEK_OF_YEAR) == 1) {
-                        updateDateString = "Last week";
+                        updateDateString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("LAST_WEEK");
                         updateDateToolTip = DateFormat.getDateInstance().format(date);
                     } else {
                         updateDateString = DateFormat.getDateInstance().format(date);
@@ -327,7 +327,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             }
             dateLabel.setText(updateDateString);
         }
-        updatedByPanel.setToolTipText("Record updated by "+ updatedBy + ", " +updateDateToolTip);
+        updatedByPanel.setToolTipText(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("RECORD_UPDATED_BY_")+ updatedBy + ", " +updateDateToolTip);
     }
 
     private enum panelTypes {
