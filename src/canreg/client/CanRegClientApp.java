@@ -101,8 +101,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         return (Patient) getRecordByID(requestedPatientRecordID, Globals.PATIENT_TABLE_NAME);
     }
 
-    public Patient getPatientRecordByID(String requestedPatientID) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public Patient getPatientRecordByID(String requestedPatientID) throws SQLException, RemoteException, SecurityException, Exception {
+        return (Patient) getRecordByID(requestedPatientID, Globals.PATIENT_TABLE_NAME);
     }
 
     public Tumour getTumourRecord(String requestedPatientRecordID) throws SQLException, RemoteException, SecurityException, Exception {

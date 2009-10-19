@@ -2,15 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package canreg.server.database;
+
+import java.util.Set;
 
 /**
  *
  * @author ervikm
  */
 public class Tools {
-    
+
     // Ref: http://db.apache.org/derby/docs/10.1/ref/rrefkeywords29722.html    
     private static String[] reservedWordsSQL = {"ADD",
         "ALL",
@@ -220,18 +221,51 @@ public class Tools {
         "XMLSERIALIZE",
         "YEAR"
     };
-    
+
     /**
      * 
      * @param word
      * @return
      */
-    static public boolean isReservedWord(String word){
+    static public boolean isReservedWord(String word) {
         boolean found = false;
         int i = 0;
-        while (!found && i < reservedWordsSQL.length){
+        while (!found && i < reservedWordsSQL.length) {
             found = word.equalsIgnoreCase(reservedWordsSQL[i++]);
         }
         return found;
+    }
+
+    static public boolean newRecordContainsNewInfo(DatabaseRecord newRecord, DatabaseRecord oldRecord, Set<String> variablesToSkip) {
+        boolean noNewInfo = true;
+        // First check if the records are the same class
+        if (newRecord.getClass().isInstance(oldRecord)) {
+            String[] variableNames = newRecord.getVariableNames();
+
+            int pos = 0;
+
+            Object value1;
+            Object value2;
+
+            while (noNewInfo && pos < variableNames.length) {
+                if (variablesToSkip.contains(variableNames[pos])) {
+                    // skip this variable
+                } else {
+                    // compare
+                    value1 = newRecord.getVariable(variableNames[pos]);
+                    value2 = oldRecord.getVariable(variableNames[pos]);
+                    if (value1==null || value2==null){
+                        noNewInfo = (value1==value2);
+                    }
+                    else if (!value1.equals(value2)) {
+                        noNewInfo = false;
+                    }
+                }
+                pos++;
+            }
+        } else {
+            noNewInfo = false;
+        }
+        return !noNewInfo;
     }
 }

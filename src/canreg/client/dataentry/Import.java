@@ -4,6 +4,7 @@
  */
 package canreg.client.dataentry;
 
+import canreg.client.CanRegClientApp;
 import canreg.common.Globals;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,6 +21,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdesktop.application.Task;
@@ -47,7 +50,9 @@ public class Import {
      */
     public static boolean importFile(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException {
         boolean success = false;
-
+        Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
+        noNeedToLookAtPatientVariables.add(io.getPatientIDVariableName());
+        noNeedToLookAtPatientVariables.add(io.getPatientRecordIDVariableName());
         HashMap mpCodes = new HashMap();
         int numberOfLinesRead = 0;
         BufferedReader bufferedReader = null;
@@ -74,6 +79,7 @@ public class Import {
             }
             while (line != null && (numberOfLinesRead < linesToRead)) {
                 // We allow for null tasks...
+                boolean needToSavePatientAgain = true;
                 if (task != null) {
                     task.firePropertyChange("progress", (numberOfLinesRead - 1) * 100 / linesToRead, (numberOfLinesRead) * 100 / linesToRead);
                 }
@@ -110,7 +116,7 @@ public class Import {
                 }
 
                 // Build source part
-                Set<Source> sources  = Collections.synchronizedSet(new LinkedHashSet<Source>());
+                Set<Source> sources = Collections.synchronizedSet(new LinkedHashSet<Source>());
                 Source source = new Source();
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
@@ -138,17 +144,32 @@ public class Import {
                     // Set the patientID the same as the tumourID initially
                     Object patientID = tumour.getVariable(io.getTumourIDVariablename());
                     Object patientRecordID = patientID;
-
-                    // And store the record ID
-                    patient.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
-
                     // If this is a multiple primary tumour...
+
                     String mpCodeString = (String) tumour.getVariable(io.getMultiplePrimaryVariableName());
                     if (mpCodeString != null && mpCodeString.length() > 0) {
                         patientID = lookUpPatientID(mpCodeString, patientID, mpCodes);
+                        Patient oldPatient = null;
+                        try {
+                            oldPatient = CanRegClientApp.getApplication().getPatientRecordByID((String) patientID);
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
+                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        if (!Tools.newRecordContainsNewInfo(patient, oldPatient, noNeedToLookAtPatientVariables)) {
+                            needToSavePatientAgain = false;
+                            patient = oldPatient;
+                            patientRecordID = patientID;
+                        }
                     }
                     //
                     patient.setVariable(io.getPatientIDVariableName(), patientID);
+                    // And store the record ID
+
+                    patient.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
 
                     // Set the patient ID number on the tumour
                     tumour.setVariable(io.getPatientIDTumourTableVariableName(), patientID);
@@ -158,8 +179,9 @@ public class Import {
                     tumour.setVariable(io.getObsoleteTumourFlagVariableName(), "0");
                     patient.setVariable(io.getObsoletePatientFlagVariableName(), "0");
                 }
-
-                patientDatabaseRecordID = server.savePatient(patient);
+                if (needToSavePatientAgain) {
+                    patientDatabaseRecordID = server.savePatient(patient);
+                }
                 tumourDatabaseIDNumber = server.saveTumour(tumour);
 
                 //Read next line of data
@@ -173,20 +195,19 @@ public class Import {
             }
             success = true;
         } catch (IOException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE,  "Error in line: "+(numberOfLinesRead+1+1)+". ", ex);
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
             success = false;
         } catch (NumberFormatException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE,  "Error in line: "+(numberOfLinesRead+1+1)+". ", ex);
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
             success = false;
         } catch (InterruptedException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.INFO,  "Interupted on line: "+(numberOfLinesRead+1)+". ", ex);
+            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Interupted on line: " + (numberOfLinesRead + 1) + ". ", ex);
             success = true;
-        } catch (IndexOutOfBoundsException ex){
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: "+(numberOfLinesRead+1+1)+". ",
-                     ex);
+        } catch (IndexOutOfBoundsException ex) {
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ",
+                    ex);
             success = false;
-        }
-        finally {
+        } finally {
             if (bufferedReader != null) {
                 try {
                     bufferedReader.close();
