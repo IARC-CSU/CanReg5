@@ -13,6 +13,8 @@ import canreg.server.management.SystemDefinitionConverter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.SortedMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
@@ -45,9 +47,16 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
         // Filter only the DEF-files.
         FileNameExtensionFilter filter = new FileNameExtensionFilter("CanReg4 System Definition File", "DEF");
         chooser.addChoosableFileFilter(filter);
+
+        // get the available charsets
+        SortedMap<String, Charset> charsets = Charset.availableCharsets();
+        charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(charsets.values().toArray()));
+        // set the default mapping
+        charsetsComboBox.setSelectedItem(Charset.forName(Globals.CHARSET_ENGLISH));
+        // initializeVariableMappingTab();
     }
 
-    public void setDesktopPane(JDesktopPane dtp){
+    public void setDesktopPane(JDesktopPane dtp) {
         this.dtp = dtp;
     }
 
@@ -71,6 +80,8 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
         nameLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         codeField = new javax.swing.JTextField();
+        charsetsComboBox = new javax.swing.JComboBox();
+        fileEncodingLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setMaximizable(true);
@@ -119,6 +130,12 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
         codeField.setText(resourceMap.getString("codeField.text")); // NOI18N
         codeField.setName("codeField"); // NOI18N
 
+        charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        charsetsComboBox.setName("charsetsComboBox"); // NOI18N
+
+        fileEncodingLabel.setText(resourceMap.getString("fileEncodingLabel.text")); // NOI18N
+        fileEncodingLabel.setName("fileEncodingLabel"); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -130,22 +147,26 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(browseButton))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(nameLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)))
+                                .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(fileEncodingLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(fileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                                    .addComponent(charsetsComboBox, 0, 213, Short.MAX_VALUE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(codeField, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(convertButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel2)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(codeField, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(convertButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(browseButton)))
                     .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
@@ -156,7 +177,11 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(browseButton)
+                    .addComponent(browseButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fileEncodingLabel)
+                    .addComponent(charsetsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(convertButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -165,7 +190,7 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
                     .addComponent(codeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addContainerGap())
@@ -184,7 +209,7 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
             try {
                 //set the file name
                 fileNameTextField.setText(chooser.getSelectedFile().getCanonicalPath());
-            // changeFile();
+                // changeFile();
             } catch (IOException ex) {
                 Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -208,13 +233,13 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
         try {
             sdc.setNameField(nameTextField);
             sdc.setCodeField(codeField);
+            sdc.setFileEncoding((Charset) charsetsComboBox.getSelectedItem());
             sdc.convert(fileNameTextField.getText());
 
-            int addServer = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully created the CanReg5 system description: \'" + 
-                    Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + 
-                    codeField.getText() + "\'.\n" + 
-                    "Do you want to add it to your favourite servers?"
-                    , "Success", JOptionPane.YES_NO_OPTION);
+            int addServer = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully created the CanReg5 system description: \'" +
+                    Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR +
+                    codeField.getText() + "\'.\n" +
+                    "Do you want to add it to your favourite servers?", "Success", JOptionPane.YES_NO_OPTION);
 
             if (addServer == JOptionPane.YES_OPTION) {
                 LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -227,26 +252,25 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
             try {
                 edvif.loadSystemDefinition(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + codeField.getText() + ".xml");
                 edvif.setDesktopPane(dtp);
-                CanRegClientView.showAndCenterInternalFrame(dtp,edvif);
+                CanRegClientView.showAndCenterInternalFrame(dtp, edvif);
             } catch (SAXException ex) {
                 Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             this.dispose();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not open file: \'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
+    private javax.swing.JComboBox charsetsComboBox;
     private javax.swing.JTextField codeField;
     private javax.swing.JButton convertButton;
+    private javax.swing.JLabel fileEncodingLabel;
     private javax.swing.JTextField fileNameTextField;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

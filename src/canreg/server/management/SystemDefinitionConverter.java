@@ -1,6 +1,8 @@
 package canreg.server.management;
 
 import canreg.common.Globals;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
 import java.util.Set;
 import javax.swing.JTextField;
 import javax.xml.parsers.ParserConfigurationException;
@@ -14,6 +16,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharsetDecoder;
 import java.util.LinkedList;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -74,16 +79,22 @@ public class SystemDefinitionConverter {
     private TreeMap<String, String> variableToTableMap;
     private int recordIDlength;
     private String morphologyVariableName;
+    private Charset charset = null;
+    private CharsetDecoder charsetDecoder = null;
 
     /**
      * @param args 
      */
     public static void main(String[] args) {
         if (args.length < 1) {
-            System.out.println("Usage:\nSystemDefinitionConverter <CanReg4 system definition file>");
+            System.out.println("Usage:\nSystemDefinitionConverter <CanReg4 system definition file> [Charset name]");
         } else {
             try {
                 SystemDefinitionConverter sdc = new SystemDefinitionConverter();
+                if (args.length == 2) {
+                    Charset cs = Charset.forName(args[1]);
+                    sdc.setFileEncoding(cs);
+                }
                 sdc.convert(args[0]);
             } catch (FileNotFoundException ex) {
                 System.out.println(args[0] + " not found. " + ex);
@@ -227,6 +238,10 @@ public class SystemDefinitionConverter {
                         System.out.println("Warning: " + nameInDatabase.toUpperCase() + " is a reserverd word.");
                         System.out.println("Please revise the XML file manually before building CanReg5 database...");
                     }
+
+                    // replace .s with _s
+                    nameInDatabase = nameInDatabase.replace('.', '_');
+
                     element.appendChild(createElement(namespace + "short_name", nameInDatabase));
 
                     element.appendChild(createElement(namespace + "english_name", readText()));
@@ -280,7 +295,7 @@ public class SystemDefinitionConverter {
                     if (groupName.equalsIgnoreCase("Patient")) {
                         if (nameInDatabase.equalsIgnoreCase("PerS") ||
                                 (nameInDatabase.equalsIgnoreCase("age")) ||
-                                (nameInDatabase.toLowerCase().startsWith("addr"))||
+                                (nameInDatabase.toLowerCase().startsWith("addr")) ||
                                 (nameInDatabase.toLowerCase().startsWith("occu"))) {
                             tableName = Globals.TUMOUR_TABLE_NAME;
                         } else {
@@ -709,13 +724,22 @@ public class SystemDefinitionConverter {
 
     private String readText() throws IOException {
         String temp = "";
-        int b = dataStream.readByte();
+        byte b = dataStream.readByte();
+        byte[] bytes;
+        LinkedList<Byte> charList = new LinkedList<Byte>();
 
         while (b != 0) {
             // debugOut(""+b);
             temp += (char) b;
-            b = (char) dataStream.readByte();
+            charList.add(b);
+            b = dataStream.readByte();
         }
+        bytes = new byte[charList.size()];
+        int i = 0;
+        for (Byte o : charList) {
+            bytes[i++] = o;
+        }
+        temp = translateCharset(bytes, charsetDecoder);
         return temp;
     }
 
@@ -773,5 +797,28 @@ public class SystemDefinitionConverter {
         if (debug) {
             Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.INFO, msg);
         }
+    }
+
+    public void setFileEncoding(Charset charset) {
+        this.charset = charset;
+        if (charset != null) {
+            charsetDecoder = charset.newDecoder();
+        }
+    }
+
+    private static String translateCharset(byte[] bytes, CharsetDecoder decoder) {
+        String translatedString = new String(bytes);
+        if (decoder != null) {
+            // create a byte buffer
+            ByteBuffer bytebuf = ByteBuffer.wrap(bytes);
+            // System.out.println(new String(bytebuf.array()));
+            try {
+                CharBuffer chabuf = decoder.decode(bytebuf);
+                translatedString = chabuf.toString();
+            } catch (CharacterCodingException ex) {
+                Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return translatedString;
     }
 }
