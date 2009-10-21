@@ -252,7 +252,7 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
      */
     @Action
     public Task importAction() {
-        this.dispose();
+        // this.dispose();
         return new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
     }
 
