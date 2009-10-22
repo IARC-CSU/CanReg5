@@ -14,15 +14,13 @@ public class CheckAgeTopographyMorphology implements CheckInterface {
      * 
      */
     public Checker.CheckNames checkName = Checker.CheckNames.AgeTopographyMorphology;
-    
     /**
      * 
      */
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames[]{
         Globals.StandardVariableNames.Age,
         Globals.StandardVariableNames.Topography,
-        Globals.StandardVariableNames.Morphology,
-    };
+        Globals.StandardVariableNames.Morphology,};
 
     /**
      * 
@@ -38,7 +36,7 @@ public class CheckAgeTopographyMorphology implements CheckInterface {
      * @return
      */
     public CheckResult performCheck(Map<Globals.StandardVariableNames, Object> variables) {
-        
+
         CheckResult result = new CheckResult();
         result.setCheckName(checkName.toString());
 
@@ -59,6 +57,18 @@ public class CheckAgeTopographyMorphology implements CheckInterface {
             topographyNumber = Integer.parseInt(topographyCode);
             result.addVariableInvolved(Globals.StandardVariableNames.Morphology);
             morphologyCode = variables.get(Globals.StandardVariableNames.Morphology).toString();
+
+            // see to that morphology has 4 digits
+            if (morphologyCode.length() < 4) {
+                result.setMessage(morphologyCode);
+                result.setResultCode(CheckResult.ResultCode.Invalid);
+                // System.out.println("not a valid morph code? " + morphologyCode);
+                return result;
+            }
+
+            // look at the first four digits only
+            morphologyCode = morphologyCode.substring(0, 4);
+
             morphologyNumber = Integer.parseInt(morphologyCode);
         } catch (NumberFormatException numberFormatException) {
             result.setResultCode(CheckResult.ResultCode.Invalid);
@@ -70,40 +80,39 @@ public class CheckAgeTopographyMorphology implements CheckInterface {
             return result;
         }
 
-    	int topographyGroup = topographyNumber/10;
-    	boolean ok = true;
+        int topographyGroup = topographyNumber / 10;
+        boolean ok = true;
 
-    	if (ageNumber < 40 && topographyGroup==61 && (morphologyNumber/10)==814)
-    		ok = false;
+        if (ageNumber < 40 && topographyGroup == 61 && (morphologyNumber / 10) == 814) {
+            ok = false;
+        }
 
-    	if (ageNumber < 20 && topographyGroup==17 && morphologyNumber < 9590)
-    		ok = false;
+        if (ageNumber < 20 && topographyGroup == 17 && morphologyNumber < 9590) {
+            ok = false;
+        }
 
-    	if (ageNumber < 20
-    	 && (topographyGroup==33 || topographyGroup==34 || topographyGroup==18)
-    	 && (morphologyNumber/10 != 824))
-    		ok = false;
+        if (ageNumber < 20 && (topographyGroup == 33 || topographyGroup == 34 || topographyGroup == 18) && (morphologyNumber / 10 != 824)) {
+            ok = false;
+        }
 
-    	if (ageNumber > 5 && (morphologyNumber==9510 || morphologyNumber==9512)
-    	 && (topographyGroup==69))
-    		ok = false;
+        if (ageNumber > 5 && (morphologyNumber == 9510 || morphologyNumber == 9512) && (topographyGroup == 69)) {
+            ok = false;
+        }
 
-    	if ((ageNumber < 15 || ageNumber > 45) && topographyGroup==58 && morphologyNumber==9100)
-    		ok = false;
+        if ((ageNumber < 15 || ageNumber > 45) && topographyGroup == 58 && morphologyNumber == 9100) {
+            ok = false;
+        }
 
-    	if (ok)
-    	{
-    		result.setMessage("");
-                result.setResultCode(CheckResult.ResultCode.OK);
-                return result;
-    	}
-    	else
-    	{
-    		result.setMessage(ageCode+", "+topographyCode+", "+ morphologyCode);
-                result.setResultCode(CheckResult.ResultCode.Rare);
-                return result;
-    	}
-        
+        if (ok) {
+            result.setMessage("");
+            result.setResultCode(CheckResult.ResultCode.OK);
+            return result;
+        } else {
+            result.setMessage(ageCode + ", " + topographyCode + ", " + morphologyCode);
+            result.setResultCode(CheckResult.ResultCode.Rare);
+            return result;
+        }
+
 
     }
 

@@ -20,8 +20,7 @@ public class CheckAgeMorphology implements CheckInterface {
      */
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames[]{
         Globals.StandardVariableNames.Age,
-        Globals.StandardVariableNames.Morphology,
-    };
+        Globals.StandardVariableNames.Morphology,};
 
     /**
      * 
@@ -43,7 +42,7 @@ public class CheckAgeMorphology implements CheckInterface {
 
         String ageCode = null;
         int ageNumber = 0;
-        
+
         String morphologyCode = null;
         int morphologyNumber = 0;
 
@@ -55,6 +54,18 @@ public class CheckAgeMorphology implements CheckInterface {
             ageNumber = Integer.parseInt(ageCode);
             result.addVariableInvolved(Globals.StandardVariableNames.Morphology);
             morphologyCode = variables.get(Globals.StandardVariableNames.Morphology).toString();
+
+            // see to that morphology has 4 digits
+            if (morphologyCode.length() < 4) {
+                result.setMessage(morphologyCode);
+                result.setResultCode(CheckResult.ResultCode.Invalid);
+                // System.out.println("not a valid morph code? " + morphologyCode);
+                return result;
+            }
+
+            // look at the first four digits only
+            morphologyCode = morphologyCode.substring(0, 4);
+
             morphologyNumber = Integer.parseInt(morphologyCode);
         } catch (NumberFormatException numberFormatException) {
             result.setResultCode(CheckResult.ResultCode.Invalid);

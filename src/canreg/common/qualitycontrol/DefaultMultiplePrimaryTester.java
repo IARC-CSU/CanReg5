@@ -18,6 +18,10 @@ public class DefaultMultiplePrimaryTester implements MultiplePrimaryTesterInterf
         //    get morph group numbers, test whether same || different etc
         //    if result is still undecided, will have to perform topog test
 
+        // See to that morph has max 4 digits
+        morphologyOrig = morphologyOrig.substring(0,Math.min(4,morphologyOrig.length()));
+        morphologySim = morphologySim.substring(0,Math.min(4,morphologySim.length()));
+
         morphGroupOrig = getHistologyGroup(morphologyOrig);
         morphGroupSim = getHistologyGroup(morphologySim);
 

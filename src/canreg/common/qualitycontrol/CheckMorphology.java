@@ -21,15 +21,12 @@ public class CheckMorphology implements CheckInterface {
      * 
      */
     public static Checker.CheckNames checkName = Checker.CheckNames.Morphology;
-    
     /**
      * 
      */
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames[]{
-        Globals.StandardVariableNames.Morphology,
-    };
-    
-    Map<String,String> morphologicalFamiliesMap;
+        Globals.StandardVariableNames.Morphology,};
+    Map<String, String> morphologicalFamiliesMap;
     private int codeLength = 4;
     private String lookUpFileResource = "/canreg/common/resources/lookup/MorphFam.txt";
 
@@ -72,11 +69,23 @@ public class CheckMorphology implements CheckInterface {
         try {
             result.addVariableInvolved(Globals.StandardVariableNames.Morphology);
             morphologyCode = variables.get(Globals.StandardVariableNames.Morphology).toString();
+
         } catch (NullPointerException nullPointerException) {
             result.setResultCode(CheckResult.ResultCode.Missing);
             result.setMessage("Missing variable(s) needed.");
             return result;
         }
+
+        // see to that morphology has 4 digits
+        if (morphologyCode.length() < 4) {
+            result.setMessage(morphologyCode);
+            result.setResultCode(CheckResult.ResultCode.Invalid);
+            // System.out.println("not a valid morph code? " + morphologyCode);
+            return result;
+        }
+
+        // look at the first four digits only
+        morphologyCode = morphologyCode.substring(0, 4);
 
         String morphologyFamilyString = morphologicalFamiliesMap.get(morphologyCode);
 

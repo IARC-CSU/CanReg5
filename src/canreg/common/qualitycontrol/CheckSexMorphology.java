@@ -37,11 +37,10 @@ public class CheckSexMorphology implements CheckInterface {
      * 
      */
     public static int femaleCode = 2;
-    
-    Map<String,String> morphologicalFamiliesMap;
+    Map<String, String> morphologicalFamiliesMap;
     private int codeLength = 4;
     private String lookUpFileResource = "/canreg/common/resources/lookup/MorphFam.txt";
-    
+
     /**
      * 
      * @return
@@ -53,7 +52,7 @@ public class CheckSexMorphology implements CheckInterface {
     /**
      * 
      */
-    public CheckSexMorphology(){
+    public CheckSexMorphology() {
         InputStream resourceStream = this.getClass().getResourceAsStream(lookUpFileResource);
         try {
             morphologicalFamiliesMap = LookUpLoader.load(resourceStream, codeLength);
@@ -63,9 +62,9 @@ public class CheckSexMorphology implements CheckInterface {
             Logger.getLogger(CheckSexMorphology.class.getName()).log(Level.SEVERE, null, ex);
         } catch (URISyntaxException ex) {
             Logger.getLogger(CheckSexMorphology.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
     }
-    
+
     /**
      * 
      * @param variables
@@ -90,6 +89,18 @@ public class CheckSexMorphology implements CheckInterface {
             sexNumber = Integer.parseInt(sexCode);
             result.addVariableInvolved(Globals.StandardVariableNames.Morphology);
             morphologyCode = variables.get(Globals.StandardVariableNames.Morphology).toString();
+
+            // see to that morphology has 4 digits
+            if (morphologyCode.length() < 4) {
+                result.setMessage(morphologyCode);
+                result.setResultCode(CheckResult.ResultCode.Invalid);
+                // System.out.println("not a valid morph code? " + morphologyCode);
+                return result;
+            }
+
+            // look at the first four digits only
+            morphologyCode = morphologyCode.substring(0, 4);
+
             morphologyNumber = Integer.parseInt(morphologyCode);
             result.addVariableInvolved(Globals.StandardVariableNames.Behaviour);
             behaviourCode = variables.get(Globals.StandardVariableNames.Behaviour).toString();
@@ -116,12 +127,12 @@ public class CheckSexMorphology implements CheckInterface {
         morphologyNumber==9000 || morphologyNumber==9013 || morphologyNumber==9014 ||
         morphologyNumber==9015 || morphologyNumber==9090 || morphologyNumber==9091) )
          */
-                
+
         int morphologyFamily = 0;
-        
+
         String morphologyFamilyString = morphologicalFamiliesMap.get(morphologyCode);
-        
-        if (morphologyFamilyString==null){
+
+        if (morphologyFamilyString == null) {
             Logger.getLogger(CheckSexMorphology.class.getName()).log(Level.WARNING, "not a valid morph code? " + morphologyCode);
         } else {
             try {
