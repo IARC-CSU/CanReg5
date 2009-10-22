@@ -90,7 +90,7 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
                     .addComponent(addButton)
                     .addComponent(removeButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourcesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
+                .addComponent(sourcesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
