@@ -91,9 +91,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         tabbedPane.addChangeListener(tabbedPaneChangeListener);
         changeTab(0);
 
-        // disable filter tab
-        Component filterTab = tabbedPane.getComponents()[3];
-        tabbedPane.setEnabledAt(tabbedPane.indexOfComponent(filterTab), false);
+        // remove filter tab
+        // Component filterTab = tabbedPane.getComponents()[3];
+        tabbedPane.remove(3);
     }
 
     private String generateHeadingString() {
