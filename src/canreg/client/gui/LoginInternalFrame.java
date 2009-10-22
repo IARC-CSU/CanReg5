@@ -471,7 +471,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             if (canRegSystemName != null) {
                 fv.getFrame().setTitle("CanReg5 - " + canRegSystemName);
                 this.dispose();
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully logged in to " + canRegSystemName + " as " + username + ".", "Logged in", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SUCCESSFULLY_LOGGED_IN_TO_") +" "+ canRegSystemName + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("_AS_") +" "+ username + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("LOGGED_IN"), JOptionPane.INFORMATION_MESSAGE);
                 // test backup
                 if (LocalSettings.TRUE_PROPERTY.equalsIgnoreCase(localSettings.getProperty(LocalSettings.AUTO_BACKUP_KEY))) {
                     String maxDiffString = localSettings.getProperty(LocalSettings.BACKUP_EVERY_KEY);
@@ -601,9 +601,9 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             // to LaunchCanRegServerActionTask fields, here.
             super(app);
             // launchServerButton.setEnabled(false);
-            feedbackLabel.setText("Launching server...");
+            feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("LAUNCHING_SERVER..."));
             waitFrame = new WaitFrame();
-            waitFrame.setLabel("Launching server...");
+            waitFrame.setLabel(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("LAUNCHING_SERVER..."));
             waitFrame.setIndeterminate(true);
             desktopPane.add(waitFrame, javax.swing.JLayeredPane.POPUP_LAYER);
             waitFrame.setVisible(true);
@@ -633,19 +633,19 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             waitFrame.dispose();
             String resultString = (String) resultObject;
             if (resultString.equalsIgnoreCase("running")) {
-                feedbackLabel.setText("Server already running.");
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Server already running.", "Message", JOptionPane.INFORMATION_MESSAGE);
+                feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SERVER_ALREADY_RUNNING."));
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SERVER_ALREADY_RUNNING."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
             } else if (resultString.equalsIgnoreCase("stopped")) {
-                feedbackLabel.setText("Server failed to start.");
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Server failed to start.", "Message", JOptionPane.ERROR_MESSAGE);
+                feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SERVER_FAILED_TO_START."));
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SERVER_FAILED_TO_START."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("MESSAGE"), JOptionPane.ERROR_MESSAGE);
             } else if (resultString != null) {
-                feedbackLabel.setText("Server started.");
+                feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SERVER_STARTED."));
                 CanRegClientApp.getApplication().setCanregServerRunningInThisThread(true);
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Server started.", "Message", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SERVER_STARTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
                 launchServerButton.setEnabled(false);
             } else {
-                feedbackLabel.setText("Server failed to start.");
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Server failed to start.", "Error", JOptionPane.ERROR_MESSAGE);
+                feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SERVER_FAILED_TO_START."));
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SERVER_FAILED_TO_START."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -660,9 +660,9 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             // to LaunchCanRegServerActionTask fields, here.
             super(app);
             // launchServerButton.setEnabled(false);
-            feedbackLabel.setText("Performing backup...");
+            feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("PERFORMING_BACKUP..."));
             waitFrame = new WaitFrame();
-            waitFrame.setLabel("Performing backup...");
+            waitFrame.setLabel(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("PERFORMING_BACKUP..."));
             waitFrame.setIndeterminate(true);
             desktopPane.add(waitFrame, javax.swing.JLayeredPane.POPUP_LAYER);
             waitFrame.setVisible(true);
@@ -684,8 +684,8 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             waitFrame.dispose();
             String resultString = (String) resultObject;
             if (resultString != null) {
-                feedbackLabel.setText("Backup performed.");
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "System backed up to " + resultString + ".", "Backup performed.", JOptionPane.INFORMATION_MESSAGE);
+                feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("BACKUP_PERFORMED."));
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SYSTEM_BACKED_UP_TO_") + resultString + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("BACKUP_PERFORMED."), JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
