@@ -428,4 +428,8 @@ public class Globals {
     public static String FILL_IN_STATUS_OPTIONAL_STRING = "Optional";
 
     public static int PDS_DATABASE_NAME_LENGTH = 100;
+
+    public static int ADDITIONAL_DIGITS_FOR_TUMOUR_RECORD = 2;
+
+    public static int ADDITIONAL_DIGITS_FOR_SOURCE_RECORD = 2;
 }

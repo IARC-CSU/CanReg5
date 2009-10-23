@@ -40,7 +40,7 @@ public class SystemDefinitionConverter {
     private String registryName;
     private String registryCode;
     private String[] standardVariablesCR4 = {
-        Globals.StandardVariableNames.TumourID.toString(),
+        Globals.StandardVariableNames.PatientID.toString(),
         Globals.StandardVariableNames.IncidenceDate.toString(),
         Globals.StandardVariableNames.BirthDate.toString(),
         Globals.StandardVariableNames.Age.toString(),
@@ -301,10 +301,11 @@ public class SystemDefinitionConverter {
                         } else {
                             tableName = Globals.PATIENT_TABLE_NAME;
                         }
-                    } else if (groupName.equalsIgnoreCase("follow up")) {
+                    } else if (groupName.toLowerCase().startsWith("follow") ||
+                            groupName.toLowerCase().startsWith("suiv")) {
                         tableName = Globals.PATIENT_TABLE_NAME;
-                    } else if (groupName.equalsIgnoreCase("Source") ||
-                            groupName.equalsIgnoreCase("Hospital")) {
+                    } else if (groupName.toLowerCase().startsWith("source") ||
+                            groupName.toLowerCase().startsWith("hosp")) {
                         tableName = Globals.SOURCE_TABLE_NAME;
                     }
                     element.appendChild(createElement(namespace + "table", tableName));
@@ -403,10 +404,10 @@ public class SystemDefinitionConverter {
                     /**
                      * PatientID
                      */
-                    variableName = Globals.StandardVariableNames.PatientID.toString();
+                    variableName = Globals.StandardVariableNames.TumourID.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", recordIDlength, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                            -1, "Automatic", "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_RECORD, -1, Globals.TUMOUR_TABLE_NAME, variableName));
                     /**
                      * PatientRecordID
                      */
@@ -477,7 +478,9 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.TumourIDSourceTable.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", recordIDlength, -1, Globals.SOURCE_TABLE_NAME, variableName));
+                            -1, "Automatic", "Othr", "Alpha", 
+                            recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_RECORD, -1,
+                            Globals.SOURCE_TABLE_NAME, variableName));
 
                     /**
                      * Pointer to Tumour from Source
@@ -485,8 +488,9 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.SourceRecordID.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", recordIDlength, -1, Globals.SOURCE_TABLE_NAME, variableName));
-
+                            -1, "Automatic", "Othr", "Alpha", 
+                            recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_RECORD + Globals.ADDITIONAL_DIGITS_FOR_SOURCE_RECORD, -1,
+                            Globals.SOURCE_TABLE_NAME, variableName));
                 }
 
                 // Build the indexes
@@ -559,7 +563,7 @@ public class SystemDefinitionConverter {
                 codingElement.appendChild(createElement(namespace + "mult_prim_code_length", readBytes(1)));
                 codingElement.appendChild(createElement(namespace + "basis_diag_codes", "" + dataStream.readByte()));
 
-                //add metavariables
+                /* add metavariables
                 if (morphologyLength == 5) {
                     String variableName = Globals.StandardVariableNames.Behaviour.toString();
                     String formula = "SUBSTR(" + morphologyVariableName + ",5,1)";
@@ -567,6 +571,7 @@ public class SystemDefinitionConverter {
                             createMetaVariable(variableNumber++, variableName, variableName, variableName,
                             -1, "Automatic", "Othr", "Meta", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName, formula));
                 }
+                */
 
             } catch (EOFException e) {
                 // Nothing to do
