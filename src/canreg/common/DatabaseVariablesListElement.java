@@ -31,7 +31,7 @@ public class DatabaseVariablesListElement implements Serializable {
     private int variableLength;
     private String fillInStatus;
     private int groupID;
-    private Object unknownCode;
+    private Object unknownCode = null;
     private String variableFormula = null;
 
     /**

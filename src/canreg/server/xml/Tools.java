@@ -1,14 +1,15 @@
 package canreg.server.xml;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.transform.OutputKeys;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
+// import javax.xml.transform.stream.StreamResult;
+// import javax.xml.transform.Result;
+// import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -32,15 +33,17 @@ public class Tools {
      * @param doc
      * @return
      */
-    public static String getTextContent(String[] trail, Document doc){
-        if (trail.length<1) return null;
-        
-        Element nl = (Element) doc.getElementsByTagName(trail[0]).item(0);
-        
-        for (int i = 1; i<trail.length; i++){
-             nl = (Element) nl.getElementsByTagName(trail[i]).item(0);
+    public static String getTextContent(String[] trail, Document doc) {
+        if (trail.length < 1) {
+            return null;
         }
-        
+
+        Element nl = (Element) doc.getElementsByTagName(trail[0]).item(0);
+
+        for (int i = 1; i < trail.length; i++) {
+            nl = (Element) nl.getElementsByTagName(trail[i]).item(0);
+        }
+
         return nl.getTextContent();
     }
 
@@ -65,14 +68,15 @@ public class Tools {
      */
     public static void writeXmlFile(Document doc, String filename) {
         //XMLOutputFactory xmlOutputFactory;
-        TransformerFactory  tfactory = TransformerFactory.newInstance();
+        TransformerFactory tfactory = TransformerFactory.newInstance();
         // TransformerHandler transformHandler;
         Transformer serializer;
-
+        StreamResult result = null;
+        File file;
         try {
             // Prepare the output file
-            File file = new File(filename);
-            Result result = new StreamResult(file);
+            file = new File(filename);
+            result = new StreamResult(file);
 
             serializer = tfactory.newTransformer();
 
@@ -84,11 +88,24 @@ public class Tools {
         } catch (TransformerConfigurationException e) {
             // this is fatal, just dump the stack and throw a runtime exception
             e.printStackTrace();
-            throw new RuntimeException(e);
+            // throw new RuntimeException(e);
         } catch (TransformerException e) {
             // this is fatal, just dump the stack and throw a runtime exception
             e.printStackTrace();
-            throw new RuntimeException(e);
+            // throw new RuntimeException(e);
+        } catch (NullPointerException npe) {
+            // this is fatal, just dump the stack and throw a runtime exception
+            npe.printStackTrace();
+            // throw new RuntimeException(npe);
+        } finally {
+            try {
+                if (result != null && result.getWriter() != null ) {
+                    result.getWriter().flush();
+                    result.getWriter().close();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

@@ -464,7 +464,7 @@ public class CanRegDAO {
                 filterString += QueryGenerator.buildRangePart(filter);
             }
 
-            debugOut(strCountTumours + filterString);
+            // debugOut(strCountTumours + filterString);
             ResultSet countRowSet;
             try {
                 countRowSet = statement.executeQuery(strCountTumours + filterString);
@@ -497,7 +497,7 @@ public class CanRegDAO {
                 }
                 filterString += QueryGenerator.buildRangePart(filter);
             }
-            debugOut(strCountPatients + filterString);
+            // debugOut(strCountPatients + filterString);
             ResultSet countRowSet;
             try {
                 countRowSet = statement.executeQuery(strCountPatients + filterString);
@@ -530,7 +530,7 @@ public class CanRegDAO {
                 filterString += QueryGenerator.buildRangePart(filter);
             }
 
-            debugOut(strCountPatientsAndTumours + filterString);
+            // debugOut(strCountPatientsAndTumours + filterString);
 
 
             ResultSet countRowSet;
@@ -572,7 +572,7 @@ public class CanRegDAO {
                 filterString += QueryGenerator.buildRangePart(filter);
             }
 
-            debugOut(strCountSources + filterString);
+            // debugOut(strCountSources + filterString);
             ResultSet countRowSet;
             try {
                 countRowSet = statement.executeQuery(strCountSources + filterString);
@@ -1148,9 +1148,14 @@ public class CanRegDAO {
 
             //Make sure that we have valid length
             String description = dictionaryEntry.getDescription();
-            if (dict.getFullDictionaryDescriptionLength() < description.length()) {
-                description = description.substring(0, dict.getFullDictionaryDescriptionLength());
+            if (dict != null) {
+                if (dict.getFullDictionaryDescriptionLength() < description.length()) {
+                    description = description.substring(0, dict.getFullDictionaryDescriptionLength());
+                }
+            } else {
+                return id;
             }
+
             stmtSaveNewDictionaryEntry.setString(3, description);
 
             int rowCount = stmtSaveNewDictionaryEntry.executeUpdate();
@@ -1332,7 +1337,7 @@ public class CanRegDAO {
         return success;
     }
 
-        public synchronized boolean deleteSourceRecord(int sourceRecordID) {
+    public synchronized boolean deleteSourceRecord(int sourceRecordID) {
         boolean success = false;
         try {
             stmtDeleteSourceRecord.clearParameters();

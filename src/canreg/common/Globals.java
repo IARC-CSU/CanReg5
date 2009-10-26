@@ -429,7 +429,11 @@ public class Globals {
 
     public static int PDS_DATABASE_NAME_LENGTH = 100;
 
-    public static int ADDITIONAL_DIGITS_FOR_TUMOUR_RECORD = 2;
+    public static int ADDITIONAL_DIGITS_FOR_PATIENT_RECORD = 2;
 
-    public static int ADDITIONAL_DIGITS_FOR_SOURCE_RECORD = 2;
+    public static int ADDITIONAL_DIGITS_FOR_TUMOUR_ID = 2;
+
+    public static int ADDITIONAL_DIGITS_FOR_SOURCE_ID = 2;
+
+    public static int MAX_USERNAME_LENGHT = 16;
 }
