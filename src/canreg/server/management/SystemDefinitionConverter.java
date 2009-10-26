@@ -30,6 +30,98 @@ import java.util.logging.Logger;
  */
 public class SystemDefinitionConverter {
 
+        /*
+
+    CanReg4
+
+    System Definition File Format
+
+    General
+    3 chars			Registry Code
+    1 char			Region
+    (1-Africa, 2-Americas, 3-EastMed, 4-Europe, 5-SEAsia, 6-West Pacific)
+    Text (3 parts)		Registry Name
+    1 char			Working Language (Translatable messages, screen labels, help boxes etc)
+    (E English, F French, S Spanish, I Italian, P Portuguese, T Turkish,
+    G Greek, R Romanian, A Arabic, C Chinese, H Thai etc)
+
+    Dictionaries
+    Num			Number of Dictionaries
+    For each dictionary….
+    Text			Dict Name
+    1 char			Font (Latin, Asian)
+    1 char			Type (Simple, Compound)
+    Num			Category Code length
+    Num			Category Description length
+    Num			Full dict Code length
+    Num			Full dict Desc length
+
+    Variable Groups
+    Num			Number of Groups
+    For each group….
+    Text			Group Name
+    Num			Group Order (order to be displayed in Data Entry Form)
+    Num			Group Height (Pixels)
+
+    Variables
+    Num			Number of Variables
+    For each variable….
+    Text			Full Variable Name
+    Text			Short Varb Name
+    Text			English Varb Name
+    1 char			In which Group
+    Num,Num		Variable Name screen position X, Y pixels
+    Num,Num		Data screen position X, Y
+    1 char			Fill-in status (0 Optional, 1 Mandatory, 2 Automatic)
+    1 char			Mult Prim Copy  (0 Must Same, 1 Prob Same, 2 Interest, 3 Other)
+    1 char			Varb Type  (0 number, 1 alpha, 2 date, 3 dict, 4 asian text)
+    Num			Varb Length
+    Num			Use Dictionary number
+    Num,Num		Category screen pos X, Y
+    Num,Num		Dictionary screen pos X, Y
+
+
+
+    Indexes
+    Num			Number of Indexes
+    For each index….
+    Text			Index Name
+    Num,Num,Num	Sort Variable 1,2,3,
+
+    Person Search
+    Num			Number of Search Varbs
+    For each search variable….
+    Num			Variable number
+    Num			Weighting (1-25)
+    Num			Minimum Match %
+
+    Standard Registry Variables
+    Num			Number of Standard Registry Variables
+    For each Standard Registry Variable….
+    Num			Variable Position
+    (-1 Not Used,  0 Registration No,  1 Incid Date,  2 Birth Date,  3 Age,  4 Sex,
+    5 Topog,  6 Morph,  7 Behav,  8 Basis Diag,  9 ICD10,  10 Mult Prim Code,
+    11 Check Status,  12 Person Search,  13 Record Status,
+    14 First Name,  15 Surname,  16 Update date,  17 Date Last Contact,
+    18 Grade,  19 ICCCcode,  20 Address,  21 MP Sequence,  22 MP Total,
+    23 Stage,  24-29 Source1-Source6,  30)
+
+    Miscellaneous
+    3 chars			Male code, Female, Unknown sex
+    1 char			Date Format  (0 Europe,  1 USA,  2 Buddhist,  3 Chinese)
+    1 char			Date Separator
+    1 char			Fast/Safe Mode
+    1 char			Morphology Length  (4 digits / 5 digits)
+    1 char			Mult. Prim. Rules  (0-IARC; 1-Local)
+    1 char			Special Registry  (0-Norm; 1-MECC; 2-HospReg)
+    1 char			Password  (0-Norm; 1-Min length & numeric; 2-Periodic change)
+    1 char			Data Entry Language (Required for Names, Address etc)
+    1 char			Registry Number Type (Numeric, Alphanumeric)
+    1 char			Mult. Prim. Code Length (3, or 4 if > 500k cases)
+    1 char			Basis Diag. Codes  (0-IARC; 1-Local)
+
+     */
+
     private String canReg4FileName;
     private static boolean debug = true;
     private String namespace = "ns3:";
@@ -165,7 +257,48 @@ public class SystemDefinitionConverter {
                 }
                 generalParentElement.appendChild(createElement(namespace + "registry_name", registryName));
                 // Read the working language
-                generalParentElement.appendChild(createElement(namespace + "working_language", readBytes(1)));
+                char workingLanguageCode = readBytes(1).charAt(0);
+
+                // generalParentElement.appendChild(createElement(namespace + "working_language", readBytes(1)));
+
+                String workingLanguage = "en"; // default working language
+                switch (workingLanguageCode) {
+                    // reference: http://ftp.ics.uci.edu/pub/ietf/http/related/iso639.txt
+                    case 'E':
+                        workingLanguage = "en";
+                        break;
+                    case 'F':
+                        workingLanguage = "fr";
+                        break;
+                    case 'S':
+                        workingLanguage = "es";
+                        break;
+                    case 'I':
+                        workingLanguage = "it";
+                        break;
+                    case 'P':
+                        workingLanguage = "pt";
+                        break;
+                    case 'T':
+                        workingLanguage = "tr";
+                        break;
+                    case 'G':
+                        workingLanguage = "el";
+                        break;
+                    case 'R':
+                        workingLanguage = "ro";
+                        break;
+                    case 'A':
+                        workingLanguage = "ar";
+                        break;
+                    case 'C':
+                        workingLanguage = "zh";
+                        break;
+                    case 'H':
+                        workingLanguage = "th";
+                        break;
+                }
+                generalParentElement.appendChild(createElement(namespace + "working_language", workingLanguage));
 
                 // Create the Dictionary part
                 //
@@ -243,8 +376,8 @@ public class SystemDefinitionConverter {
                     nameInDatabase = nameInDatabase.replace('.', '_');
 
                     element.appendChild(createElement(namespace + "short_name", nameInDatabase));
-
-                    element.appendChild(createElement(namespace + "english_name", readText()));
+                    String englishName = readText();
+                    element.appendChild(createElement(namespace + "english_name", englishName));
 
                     String groupIDString = "" + dataStream.readByte();
                     element.appendChild(createElement(namespace + "group_id", "" + groupIDString));
@@ -293,10 +426,9 @@ public class SystemDefinitionConverter {
                     String tableName = Globals.TUMOUR_TABLE_NAME;
 
                     if (groupName.equalsIgnoreCase("Patient")) {
-                        if (nameInDatabase.equalsIgnoreCase("PerS") ||
-                                (nameInDatabase.equalsIgnoreCase("age")) ||
-                                (nameInDatabase.toLowerCase().startsWith("addr")) ||
-                                (nameInDatabase.toLowerCase().startsWith("occu"))) {
+                        if ((englishName.equalsIgnoreCase("age")) ||
+                                (englishName.toLowerCase().startsWith("addr")) ||
+                                (englishName.toLowerCase().startsWith("occu"))) {
                             tableName = Globals.TUMOUR_TABLE_NAME;
                         } else {
                             tableName = Globals.PATIENT_TABLE_NAME;
@@ -307,6 +439,14 @@ public class SystemDefinitionConverter {
                     } else if (groupName.toLowerCase().startsWith("source") ||
                             groupName.toLowerCase().startsWith("hosp")) {
                         tableName = Globals.SOURCE_TABLE_NAME;
+                    } else if (groupName.toLowerCase().startsWith("new control panel")) {
+                        if ((englishName.equalsIgnoreCase("Reg.No.")) ||
+                                (englishName.toLowerCase().startsWith("addr")) ||
+                                (englishName.toLowerCase().startsWith("occu"))) {
+                            tableName = Globals.PATIENT_TABLE_NAME;
+                        } else {
+                            tableName = Globals.TUMOUR_TABLE_NAME;
+                        }
                     }
                     element.appendChild(createElement(namespace + "table", tableName));
                     variableToTableMap.put(nameInDatabase, tableName);
@@ -407,14 +547,14 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.TumourID.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_RECORD, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                            -1, "Automatic", "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_ID, -1, Globals.TUMOUR_TABLE_NAME, variableName));
                     /**
                      * PatientRecordID
                      */
                     variableName = Globals.StandardVariableNames.PatientRecordID.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", recordIDlength, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                            -1, "Automatic", "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD, -1, Globals.PATIENT_TABLE_NAME, variableName));
 
                     /**
                      * Pointer to Patient from Tumour
@@ -426,7 +566,7 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.PatientRecordIDTumourTable.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", recordIDlength, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                            -1, "Automatic", "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD, -1, Globals.TUMOUR_TABLE_NAME, variableName));
 
                     /**
                      * "Updated by" fields
@@ -478,9 +618,7 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.TumourIDSourceTable.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", 
-                            recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_RECORD, -1,
-                            Globals.SOURCE_TABLE_NAME, variableName));
+                            -1, "Automatic", "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_ID, -1, Globals.SOURCE_TABLE_NAME, variableName));
 
                     /**
                      * Pointer to Tumour from Source
@@ -488,9 +626,7 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.SourceRecordID.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", 
-                            recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_RECORD + Globals.ADDITIONAL_DIGITS_FOR_SOURCE_RECORD, -1,
-                            Globals.SOURCE_TABLE_NAME, variableName));
+                            -1, "Automatic", "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_ID + Globals.ADDITIONAL_DIGITS_FOR_SOURCE_ID, -1, Globals.SOURCE_TABLE_NAME, variableName));
                 }
 
                 // Build the indexes
@@ -506,11 +642,11 @@ public class SystemDefinitionConverter {
                 tempIndexList.add(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString());
                 indexMap.put(Globals.StandardVariableNames.PatientIDTumourTable.toString(), tempIndexList);
 
-                // Patient ID in patient table index
+                // Tumour ID in tumour table index
                 tempIndexList = new LinkedList<String>();
-                tempIndexList.add(Globals.StandardVariableNames.PatientID.toString());
-                tempIndexList.add(Globals.StandardVariableNames.PatientRecordID.toString());
-                indexMap.put(Globals.StandardVariableNames.PatientID.toString(), tempIndexList);
+                tempIndexList.add(Globals.StandardVariableNames.TumourID.toString());
+                // tempIndexList.add(Globals.StandardVariableNames.TumourRecordID.toString());
+                indexMap.put(Globals.StandardVariableNames.TumourID.toString(), tempIndexList);
 
                 // Split the indexes that needs to be split
                 indexMap = splitIndexMapInTumourAndPatient(indexMap, variableToTableMap);
@@ -563,7 +699,8 @@ public class SystemDefinitionConverter {
                 codingElement.appendChild(createElement(namespace + "mult_prim_code_length", readBytes(1)));
                 codingElement.appendChild(createElement(namespace + "basis_diag_codes", "" + dataStream.readByte()));
 
-                /* add metavariables
+                /*
+                //add metavariables
                 if (morphologyLength == 5) {
                     String variableName = Globals.StandardVariableNames.Behaviour.toString();
                     String formula = "SUBSTR(" + morphologyVariableName + ",5,1)";
@@ -578,7 +715,6 @@ public class SystemDefinitionConverter {
             } catch (IOException e) {
                 // Nothing to do
             } finally {
-
                 File file = new File(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER); // Check to see it the canreg system folder exists
                 if (!file.exists()) {
                     file.mkdirs(); // create it if necessary
