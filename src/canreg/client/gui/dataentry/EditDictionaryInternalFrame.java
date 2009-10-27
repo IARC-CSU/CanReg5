@@ -240,9 +240,19 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
 
                 for (DatabaseDictionaryListElement dbdle : dictionariesInDB) {
                     bw.write("#" + dbdle.getDictionaryID() + "\t----" + dbdle.getName() + "\n");
-                    chooseDictionaryComboBox.setSelectedItem(dbdle);
-                    refreshSelectedDictionaryAction();
-                    bw.write(editorTextArea.getText() + "\n");
+                    // chooseDictionaryComboBox.setSelectedItem(dbdle);
+                    // refreshSelectedDictionaryAction();
+                    Dictionary dic = CanRegClientApp.getApplication().getDictionary().get(dbdle.getDictionaryID());
+                    if (dic != null) {
+                        // Map sortedMap = new TreeMap(map);
+                        Map<String, DictionaryEntry> map = dic.getDictionaryEntries();
+                        Iterator<Entry<String, DictionaryEntry>> iterator = map.entrySet().iterator();
+                        while (iterator.hasNext()) {
+                            DictionaryEntry entry = iterator.next().getValue();
+                            bw.write (entry.getCode() + "\t" + entry.getDescription() + "\n");
+                        }
+                    }
+                    bw.write("\n");
                 }
                 bw.flush();
                 bw.close();
@@ -362,10 +372,17 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
             // Map sortedMap = new TreeMap(map);
             Map<String, DictionaryEntry> map = dic.getDictionaryEntries();
             Iterator<Entry<String, DictionaryEntry>> iterator = map.entrySet().iterator();
-
-            while (iterator.hasNext()) {
+            int numberOfLinesShown = 0;
+            while (iterator.hasNext() && numberOfLinesShown < Globals.MAX_DICTIONARY_DISPLAY_SIZE) {
                 DictionaryEntry entry = iterator.next().getValue();
                 str += entry.getCode() + "\t" + entry.getDescription() + "\n";
+                numberOfLinesShown++;
+            }
+            if (map.size() > Globals.MAX_DICTIONARY_DISPLAY_SIZE) {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Dictionary " + dbdle.getName() + " is too large.\nOnly the first " + Globals.MAX_DICTIONARY_DISPLAY_SIZE + " entries are displayed here.\nTo edit this dictionary please import it from file.", "Dictionary too large.", JOptionPane.WARNING_MESSAGE);
+                updateButton.setEnabled(false);
+            } else {
+                updateButton.setEnabled(true);
             }
         }
         editorTextArea.setText(str);
