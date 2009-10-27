@@ -30,7 +30,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.TransferHandler;
+// import javax.swing.TransferHandler;
 import javax.swing.table.TableColumn;
 import org.jdesktop.application.Task;
 import org.jdesktop.application.Action;

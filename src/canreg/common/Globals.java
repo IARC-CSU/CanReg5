@@ -156,7 +156,7 @@ public class Globals {
     public static int MAX_POPULATION_DATASETS_IN_TABLE = 50;
     public static String OBSOLETE_VALUE = "1";
     public static String NOT_OBSOLETE_VALUE = "0";
-    public static int MAX_DICTIONARY_DISPLAY_SIZE = 1000;
+    public static int MAX_DICTIONARY_DISPLAY_SIZE = 2000;
     /**
      * 
      */

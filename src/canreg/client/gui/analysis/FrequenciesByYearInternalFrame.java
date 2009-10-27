@@ -288,7 +288,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                         // setProgress(2, 0, 4);
                         resultTable.setColumnSelectionAllowed(false);
                         setProgress(4, 0, 4);
-                        setMessage("Finished");
+                        setMessage(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("FINISHED"));
                         resultTable.setVisible(true);
                         resultScrollPane.setVisible(true);
                         resultScrollPane.revalidate();
@@ -302,7 +302,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                 }
 
             } else if (result.equals("Not valid")) {
-                JOptionPane.showInternalMessageDialog(rootPane, "Not a valid filter.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showInternalMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("NOT_A_VALID_FILTER."), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else {
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, result);
             }
@@ -361,7 +361,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         rowNumber = target.convertRowIndexToModel(rowNumber);
 
         JPopupMenu jpm = new JPopupMenu();
-        jpm.add("Show in browser");
+        jpm.add(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("SHOW_IN_BROWSER"));
         TableModel tableModel = target.getModel();
         // resultTable.get
         // jpm.add("Column " + rowNumber +" " + tableColumnModel.getColumn(tableColumnModel.getColumnIndexAtX(evt.getX())).getHeaderValue());
@@ -416,7 +416,6 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             Task refreshTask = refresh();
             refreshTask.execute();
         }
-
     }
 
     /**
@@ -426,7 +425,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     public void printTableAction() {
         try {
             if (!resultTable.print(JTable.PrintMode.NORMAL,
-                    new MessageFormat("CanReg Frequencies by Year - " + rangeFilterPanel.getFilter()),
+                    new MessageFormat(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("CANREG_FREQUENCIES_BY_YEAR") + " - " + rangeFilterPanel.getFilter()),
                     null)) {
                 System.err.println("User cancelled printing");
             }

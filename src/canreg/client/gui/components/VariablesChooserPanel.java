@@ -93,8 +93,17 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
         panelList = (LinkedList<VariablesExportDetailsPanel>) new LinkedList();
         // Remove all variable mappings
         panel.removeAll();
-        variablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE);
-
+        DatabaseVariablesListElement[] patientVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
+        DatabaseVariablesListElement[] tumourVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
+        variablesInDB = new DatabaseVariablesListElement[patientVariablesInDB.length + tumourVariablesInDB.length];
+        
+        for (int position=0;position<patientVariablesInDB.length;position++){
+            variablesInDB[position]=patientVariablesInDB[position];
+        }
+        for (int position=0;position<tumourVariablesInDB.length;position++){
+            variablesInDB[position+patientVariablesInDB.length] = tumourVariablesInDB[position];
+        }
+        
         // Add the panels
         for (DatabaseVariablesListElement variable : variablesInDB) {
             VariablesExportDetailsPanel ved = new VariablesExportDetailsPanel();
