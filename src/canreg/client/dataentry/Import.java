@@ -51,8 +51,8 @@ public class Import {
     public static boolean importFile(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException {
         boolean success = false;
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
-        noNeedToLookAtPatientVariables.add(io.getPatientIDVariableName());
-        noNeedToLookAtPatientVariables.add(io.getPatientRecordIDVariableName());
+        noNeedToLookAtPatientVariables.add(io.getPatientIDVariableName().toLowerCase());
+        noNeedToLookAtPatientVariables.add(io.getPatientRecordIDVariableName().toLowerCase());
         HashMap mpCodes = new HashMap();
         int numberOfLinesRead = 0;
         BufferedReader bufferedReader = null;
@@ -142,16 +142,22 @@ public class Import {
                     patient.setVariable(io.getPatientUpdateDateVariableName(), updateDate);
 
                     // Set the patientID the same as the tumourID initially
-                    Object patientID = tumour.getVariable(io.getTumourIDVariablename());
-                    Object patientRecordID = patientID;
-                    // If this is a multiple primary tumour...
+                    Object patientID = patient.getVariable(io.getPatientIDVariableName());
+                    Object tumourSequence = tumour.getVariable(io.getTumourSequenceVariableName());
+                    String tumourSequenceString = tumourSequence + "";
+                    while (tumourSequenceString.length() < Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD) {
+                        tumourSequenceString = "0" + tumourSequenceString;
+                    }
+                    Object patientRecordID = patientID + "" + tumourSequenceString;
 
+                    // If this is a multiple primary tumour...
                     String mpCodeString = (String) tumour.getVariable(io.getMultiplePrimaryVariableName());
                     if (mpCodeString != null && mpCodeString.length() > 0) {
                         patientID = lookUpPatientID(mpCodeString, patientID, mpCodes);
-                        Patient oldPatient = null;
+                        patientRecordID = patientID + "" + tumourSequenceString;
+                        Patient[] oldPatients = null;
                         try {
-                            oldPatient = CanRegClientApp.getApplication().getPatientRecordByID((String) patientID);
+                            oldPatients = CanRegClientApp.getApplication().getPatientRecordsByID((String) patientID);
                         } catch (RemoteException ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (SecurityException ex) {
@@ -159,14 +165,19 @@ public class Import {
                         } catch (Exception ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        if (!Tools.newRecordContainsNewInfo(patient, oldPatient, noNeedToLookAtPatientVariables)) {
-                            needToSavePatientAgain = false;
-                            patient = oldPatient;
-                            patientRecordID = patientID;
+                        for (Patient oldPatient : oldPatients) {
+                            if (!Tools.newRecordContainsNewInfo(patient, oldPatient, noNeedToLookAtPatientVariables)) {
+                                needToSavePatientAgain = false;
+                                patient = oldPatient;
+                                patientRecordID = oldPatient.getVariable(io.getPatientRecordIDVariableName());
+                            }
                         }
                     }
+
+                    Object tumourID = patientRecordID + "" + tumourSequenceString;
                     //
                     patient.setVariable(io.getPatientIDVariableName(), patientID);
+                    tumour.setVariable(io.getTumourIDVariablename(), tumourID);
                     // And store the record ID
 
                     patient.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);

@@ -53,6 +53,8 @@ public class ImportOptions {
     private String obsoleteTumourFlagVariableName;
     private String obsoletePatientFlagVariableName;
 
+    private String tumourSequenceVariableName;
+
     private Charset fileCharset;
 
     /**
@@ -349,5 +351,19 @@ public class ImportOptions {
      */
     public void setFileCharset(Charset fileCharset) {
         this.fileCharset = fileCharset;
+    }
+
+    /**
+     * @return the tumourSequenceVariableName
+     */
+    public String getTumourSequenceVariableName() {
+        return tumourSequenceVariableName;
+    }
+
+    /**
+     * @param tumourSequenceVariableName the tumourSequenceVariableName to set
+     */
+    public void setTumourSequenceVariableName(String tumourSequenceVariableName) {
+        this.tumourSequenceVariableName = tumourSequenceVariableName;
     }
 }
