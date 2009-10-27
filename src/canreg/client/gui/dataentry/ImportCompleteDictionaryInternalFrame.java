@@ -7,13 +7,20 @@ package canreg.client.gui.dataentry;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
+import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.rmi.RemoteException;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -30,11 +37,13 @@ public class ImportCompleteDictionaryInternalFrame extends javax.swing.JInternal
     private LocalSettings localSettings;
     private String path;
     private JFileChooser chooser;
+    private GlobalToolBox globalToolBox;
 
     /** Creates new form ImportCompleteDictionaryInternalFrame */
     public ImportCompleteDictionaryInternalFrame() {
         initComponents();
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
         path = localSettings.getProperty("dictionary_import_path");
 
         if (path == null) {
@@ -42,6 +51,12 @@ public class ImportCompleteDictionaryInternalFrame extends javax.swing.JInternal
         } else {
             chooser = new JFileChooser(path);
         }
+
+        // get the available charsets
+        SortedMap<String, Charset> charsets = Charset.availableCharsets();
+        charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(charsets.values().toArray()));
+        // set the default mapping
+        charsetsComboBox.setSelectedItem(Charset.defaultCharset());
     }
 
     /** This method is called from within the constructor to
@@ -64,6 +79,8 @@ public class ImportCompleteDictionaryInternalFrame extends javax.swing.JInternal
         jLabel3 = new javax.swing.JLabel();
         cr4dictionaryCheckBox = new javax.swing.JCheckBox();
         importButton = new javax.swing.JButton();
+        charsetsComboBox = new javax.swing.JComboBox();
+        fileEncodingLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setMaximizable(true);
@@ -114,7 +131,7 @@ public class ImportCompleteDictionaryInternalFrame extends javax.swing.JInternal
         );
         previewPanelLayout.setVerticalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(previewScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+            .addComponent(previewScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
         );
 
         previewButton.setAction(actionMap.get("previewAction")); // NOI18N
@@ -123,12 +140,19 @@ public class ImportCompleteDictionaryInternalFrame extends javax.swing.JInternal
         jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
         jLabel3.setName("jLabel3"); // NOI18N
 
+        cr4dictionaryCheckBox.setAction(actionMap.get("canreg4FormatTicked")); // NOI18N
         cr4dictionaryCheckBox.setText(resourceMap.getString("cr4dictionaryCheckBox.text")); // NOI18N
         cr4dictionaryCheckBox.setToolTipText(resourceMap.getString("cr4dictionaryCheckBox.toolTipText")); // NOI18N
         cr4dictionaryCheckBox.setName("cr4dictionaryCheckBox"); // NOI18N
 
         importButton.setAction(actionMap.get("importAction")); // NOI18N
         importButton.setName("importButton"); // NOI18N
+
+        charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        charsetsComboBox.setName("charsetsComboBox"); // NOI18N
+
+        fileEncodingLabel.setText(resourceMap.getString("fileEncodingLabel.text")); // NOI18N
+        fileEncodingLabel.setName("fileEncodingLabel"); // NOI18N
 
         javax.swing.GroupLayout chooseFilePanelLayout = new javax.swing.GroupLayout(chooseFilePanel);
         chooseFilePanel.setLayout(chooseFilePanelLayout);
@@ -141,7 +165,12 @@ public class ImportCompleteDictionaryInternalFrame extends javax.swing.JInternal
                     .addComponent(jLabel1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chooseFilePanelLayout.createSequentialGroup()
                         .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(cr4dictionaryCheckBox, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, chooseFilePanelLayout.createSequentialGroup()
+                                .addComponent(cr4dictionaryCheckBox)
+                                .addGap(43, 43, 43)
+                                .addComponent(fileEncodingLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(charsetsComboBox, 0, 150, Short.MAX_VALUE))
                             .addGroup(chooseFilePanelLayout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -167,7 +196,10 @@ public class ImportCompleteDictionaryInternalFrame extends javax.swing.JInternal
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cr4dictionaryCheckBox)
-                    .addComponent(previewButton))
+                    .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(previewButton)
+                        .addComponent(fileEncodingLabel)
+                        .addComponent(charsetsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -279,9 +311,11 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             // on a background thread, so don't reference
             // the Swing GUI from here.
             BufferedReader br = null;
-
+            Map<Integer, Map<Integer, String>> allErrors = new TreeMap<Integer, Map<Integer, String>>();
             try {
-                br = new BufferedReader(new FileReader(fileName));
+                FileInputStream fis = new FileInputStream(fileName);
+                InputStreamReader isr = new InputStreamReader(fis, (Charset) charsetsComboBox.getSelectedItem());
+                br = new BufferedReader(isr);
                 String dictionaryString = new String();
                 String line = br.readLine();
                 int dictionaryID = -1;
@@ -322,7 +356,13 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
                     if (dictionaryString.trim().length() > 0) {
                         try {
-                            canreg.client.dataentry.DictionaryHelper.replaceDictionary(dictionaryID, dictionaryString, CanRegClientApp.getApplication());
+                            Map<Integer, String> errors = canreg.client.dataentry.DictionaryHelper.testDictionary(null, dictionaryString);
+                            if (errors.size() > 0) {
+                                allErrors.put(dictionaryID, errors);
+                                Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.WARNING, errors.size() + " errors in dictionary: " + dictionaryID, new Exception());
+                            } else {
+                                canreg.client.dataentry.DictionaryHelper.replaceDictionary(dictionaryID, dictionaryString, CanRegClientApp.getApplication());
+                            }
                             dictionaryString = new String();
                         } catch (RemoteException ex) {
                             Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -340,9 +380,12 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
             } catch (FileNotFoundException fileNotFoundException) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not preview file: \'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, fileNotFoundException);
+                Logger.getLogger(ImportView.class.getName()).log(Level.WARNING, null, fileNotFoundException);
             } catch (IOException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NumberFormatException nfe) {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Something wrong with the dictionary: \'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
+                Logger.getLogger(ImportView.class.getName()).log(Level.WARNING, null, nfe);
             } finally {
                 try {
                     br.close();
@@ -351,25 +394,39 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            return null;  // return your result
+            return allErrors;  // return your result
         }
 
         @Override
         protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
-            if (result == null) {
-                File file = new File(fileName);
-                localSettings.setProperty("dictionary_import_path", file.getParent());
-                localSettings.writeSettings();
+            Map<Integer, Map<Integer, String>> allErrors = (Map<Integer, Map<Integer, String>>) result;
+            File file = new File(fileName);
+            localSettings.setProperty("dictionary_import_path", file.getParent());
+            localSettings.writeSettings();
+            if (allErrors.size() == 0) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully imported dictionaries from file.", "Dictionary successfully imported.", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), allErrors.size() + " dictionaries were not imported due to duplicate codes.", "Dictionary not successfully imported.", JOptionPane.WARNING_MESSAGE);
             }
+        }
+    }
+
+    @Action
+    public void canreg4FormatTicked() {
+        if (cr4dictionaryCheckBox.isSelected()){
+            charsetsComboBox.setSelectedItem(globalToolBox.getStandardCharset());
+        } else {
+            charsetsComboBox.setSelectedItem(Charset.defaultCharset());
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
+    private javax.swing.JComboBox charsetsComboBox;
     private javax.swing.JPanel chooseFilePanel;
     private javax.swing.JCheckBox cr4dictionaryCheckBox;
+    private javax.swing.JLabel fileEncodingLabel;
     private javax.swing.JTextField fileNameTextField;
     private javax.swing.JButton importButton;
     private javax.swing.JLabel jLabel1;
