@@ -7,6 +7,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.net.*;
 import java.io.*;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -341,10 +343,28 @@ public class Tools {
         DatabaseGroupsListElement[] indexes = new DatabaseGroupsListElement[nl.getLength()];
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
+            int position = -1;
+            int id = -1;
+            try {
+                id = Integer.parseInt(e.getElementsByTagName(namespace + "group_id").item(0).getTextContent());
+                position = Integer.parseInt(e.getElementsByTagName(namespace + "group_pos").item(0).getTextContent());
+            } catch (NullPointerException npe) {
+                throw (npe);
+            } catch (NumberFormatException nfe) {
+                throw (nfe);
+            }
             indexes[i] = new DatabaseGroupsListElement(
                     e.getElementsByTagName(namespace + "name").item(0).getTextContent(),
-                    Integer.parseInt(e.getElementsByTagName(namespace + "group_id").item(0).getTextContent()));
+                    id,
+                    position);
         }
+        Arrays.sort(indexes, new Comparator() {
+            public int compare(Object o1, Object o2) {
+                DatabaseGroupsListElement group1 = (DatabaseGroupsListElement) o1;
+                DatabaseGroupsListElement group2 = (DatabaseGroupsListElement) o2;
+                return group1.getGroupPosition() - group2.getGroupPosition();
+            }
+        });
         return indexes;
     }
 

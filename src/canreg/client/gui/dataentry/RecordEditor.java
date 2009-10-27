@@ -55,6 +55,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     public static final String OBSOLETE = "obsolete";
     public static final String CHANGE_PATIENT_RECORD = "changePatientRecord";
     public static final String CALC_AGE = "calcAge";
+    public static final String AUTO_FILL = "autoFill";
     private Document doc;
     private Map<Integer, Dictionary> dictionary;
     private LinkedList<DatabaseRecord> patientRecords;
@@ -66,6 +67,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private boolean titleSet = false;
     String tumourObsoleteVariableName = null;
     String patientObsoleteVariableName = null;
+    AutoFillHelper autoFillHelper;
 
     /** Creates new form RecordEditor
      * @param desktopPane 
@@ -77,6 +79,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         patientRecords = new LinkedList<DatabaseRecord>();
         tumourRecords = new LinkedList<DatabaseRecord>();
         patientRecordsMap = new TreeMap<Object, RecordEditorPanel>();
+        autoFillHelper = new AutoFillHelper();
 
         addInternalFrameListener(new InternalFrameAdapter() {
 
@@ -129,6 +132,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     }
 
     private void changesDone() {
+
         changesDone = true;
     }
 
@@ -150,6 +154,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     public void setGlobalToolBox(GlobalToolBox globalToolBox) {
         this.globalToolBox = globalToolBox;
         this.doc = globalToolBox.getDocument();
+        autoFillHelper.setGlobalToolBox(globalToolBox);
 
         patientObsoleteVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString()).getDatabaseVariableName();
         tumourObsoleteVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString()).getDatabaseVariableName();
@@ -776,6 +781,19 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 } else {
                     // get all the tumour records
                 }
+            } else if (e.getActionCommand().equalsIgnoreCase(AUTO_FILL)) {
+                RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
+                LinkedList<DatabaseVariablesListElement> autoFillList = recordEditorPanel.getAutoFillList();
+                DatabaseRecord sourceOfActionDatabaseRecord = recordEditorPanel.getDatabaseRecord();
+                DatabaseRecord otherDatabaseRecord = null;
+                if (sourceOfActionDatabaseRecord instanceof Tumour) {
+                    RecordEditorPanel patientRecordEditorPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
+                    otherDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
+                } else if (sourceOfActionDatabaseRecord instanceof Patient) {
+                    RecordEditorPanel tumourRecordEditorPanel = (RecordEditorPanel) tumourTabbedPane.getSelectedComponent();
+                    otherDatabaseRecord = tumourRecordEditorPanel.getDatabaseRecord();
+                }
+                autoFillHelper.autoFill(autoFillList, sourceOfActionDatabaseRecord, otherDatabaseRecord, recordEditorPanel);
             }
         }
     }

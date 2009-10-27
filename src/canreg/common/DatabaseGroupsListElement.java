@@ -9,9 +9,10 @@ public class DatabaseGroupsListElement {
     private int groupIndex;
     private int groupPosition;
 
-    DatabaseGroupsListElement(String groupName, int index) {
+    DatabaseGroupsListElement(String groupName, int index, int position) {
         this.groupName = groupName;
         this.groupIndex = index;
+        this.groupPosition = position;
     }
 
     /**

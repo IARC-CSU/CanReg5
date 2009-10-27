@@ -40,6 +40,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -81,6 +82,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     private DatabaseVariablesListElement updateDateVariableListElement;
     private SourcesPanel sourcesPanel;
     private final SimpleDateFormat dateFormat;
+    private LinkedList<DatabaseVariablesListElement> autoFillList;
 
     boolean areAllVariablesPresent() {
         boolean allPresent = true;
@@ -353,6 +355,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         mpLabel.setVisible(false);
 
         dateFormat = new SimpleDateFormat("yyyyMMdd");
+
+        autoFillList = new LinkedList<DatabaseVariablesListElement>();
     }
 
     /**
@@ -384,6 +388,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     private void setRecord(DatabaseRecord dbr) {
         this.databaseRecord = dbr;
         setSaveNeeded(false);
+        groupListElements = Tools.getGroupsListElements(doc, Globals.NAMESPACE);
         if (databaseRecord.getClass().isInstance(new Patient())) {
             panelType = panelTypes.PATIENT;
             recordStatusVariableListElement =
@@ -524,6 +529,11 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                 vep.setInitialValue(variableValue.toString());
             }
 
+            String variableFillStatus = currentVariable.getFillInStatus();
+            if ("Automatic".equalsIgnoreCase(variableFillStatus)){
+                autoFillList.add(currentVariable);
+            }
+
             Integer groupID = currentVariable.getGroupID();
             //Skip 0 and -1 - System groups
             if (groupID > 0) {
@@ -537,7 +547,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                 panel.add(vep);
             }
 
-
             // vep.setPropertyChangeListener(this);
             variableEditorPanels.put(currentVariable.getDatabaseVariableName(), vep);
         }
@@ -545,7 +554,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         // Iterate trough groups
 
         // Iterator<Integer> iterator = groupIDtoPanelMap.keySet().iterator();
-        for (DatabaseGroupsListElement groupListElement : Tools.getGroupsListElements(doc, Globals.NAMESPACE)) {
+        for (DatabaseGroupsListElement groupListElement : groupListElements) {
             int groupID = groupListElement.getGroupIndex();
             JPanel panel = groupIDtoPanelMap.get(groupID);
             if (panel != null) {
@@ -948,6 +957,15 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
     }
 
+    public LinkedList<DatabaseVariablesListElement> getAutoFillList(){
+        return autoFillList;
+    }
+
+    public void setVariable(DatabaseVariablesListElement variable, String value){
+        VariableEditorPanel vep = variableEditorPanels.get(variable.getDatabaseVariableName());
+        vep.setValue(value);
+    }
+
     /**
      * 
      */
@@ -989,6 +1007,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
      */
     @Action
     public void runChecksAction() {
+        autoFill();
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHECKS));
     }
 
@@ -1015,5 +1034,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     @Action
     public void calculateAge() {
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CALC_AGE));
+    }
+
+    @Action
+    public void autoFill() {
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.AUTO_FILL));
     }
 }
