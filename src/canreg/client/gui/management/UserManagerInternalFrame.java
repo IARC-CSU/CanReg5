@@ -367,6 +367,16 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
     public void addUserAction() {
         User user = new User();
         String userName = JOptionPane.showInputDialog("User name:");
+        if (userName == null) {
+            return;
+        }
+        while (userName.length() > Globals.MAX_USERNAME_LENGHT) {
+            JOptionPane.showInternalMessageDialog(rootPane, "User name too long. (Max " + Globals.MAX_USERNAME_LENGHT + " characters long.)", "User name too long.", JOptionPane.ERROR_MESSAGE);
+            userName = JOptionPane.showInputDialog("User name:");
+            if (userName == null) {
+                return;
+            }
+        }
         user.setUserName(userName);
         user.setRealName("");
         user.setEmail("");
@@ -387,7 +397,6 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         }
         refreshUsersList();
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton changePasswordButton;
     private javax.swing.JPasswordField confirmNewPasswordField;
@@ -453,7 +462,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
                 Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    // set password...
+        // set password...
     }
 
     private void refreshLockedRecordsList() {
@@ -469,7 +478,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         User user = (User) usersList.getSelectedValue();
         boolean okToChange;
 
-        if (user.getUserRightLevel() == Globals.UserRightLevels.SUPERVISOR && (Globals.UserRightLevels) userRightLevelComboBox.getSelectedItem()!= Globals.UserRightLevels.SUPERVISOR) {
+        if (user.getUserRightLevel() == Globals.UserRightLevels.SUPERVISOR && (Globals.UserRightLevels) userRightLevelComboBox.getSelectedItem() != Globals.UserRightLevels.SUPERVISOR) {
             okToChange = canRemoveSupervisor(user);
             if (!okToChange) {
                 JOptionPane.showInternalMessageDialog(this, "Not allowed to change user level of the last supervisor user.");
