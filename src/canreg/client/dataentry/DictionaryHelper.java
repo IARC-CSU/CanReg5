@@ -138,7 +138,7 @@ public class DictionaryHelper {
      * @return
      * @throws java.rmi.RemoteException
      */
-    public static boolean clearDictionary(int dictionaryID, CanRegClientApp app) throws RemoteException {
+    private static boolean clearDictionary(int dictionaryID, CanRegClientApp app) throws RemoteException {
         return app.deleteDictionaryEntries(dictionaryID);
     }
 
@@ -175,25 +175,36 @@ public class DictionaryHelper {
      * @return
      */
     public static Map<Integer, String> testDictionary(DatabaseDictionaryListElement dictionary, String str) {
-        return testDictionary(dictionary, parseDictionaryText(dictionary.getDictionaryID(), str));
+        if (dictionary != null) {
+            return testDictionary(dictionary, parseDictionaryText(dictionary.getDictionaryID(), str));
+        } else {
+            return testDictionary(dictionary, parseDictionaryText(-1, str));
+        }
     }
 
     private static Map<Integer, String> testDictionary(DatabaseDictionaryListElement dictionary, Vector<DictionaryEntry> contents) {
         Map<Integer, String> errors = new LinkedHashMap<Integer, String>();
         Set<String> codes = new LinkedHashSet();
-        int codeLength = dictionary.getCodeLength();
-        int fullCodeLength = dictionary.getFullDictionaryCodeLength();
-        if (!"Compound".equalsIgnoreCase(dictionary.getType())) {
-            codeLength = -1;
+        int codeLength = 0;
+        int fullCodeLength = 0;
+        if (dictionary != null) {
+            codeLength = dictionary.getCodeLength();
+            fullCodeLength = dictionary.getFullDictionaryCodeLength();
+            if (!"Compound".equalsIgnoreCase(dictionary.getType())) {
+                codeLength = -1;
+            }
         }
         int i = 1;
         for (DictionaryEntry de : contents) {
-            // first check length of code
+            // first check length of code if we have a dictionary
             String code = de.getCode();
-            if (code.length() != codeLength && code.length() != fullCodeLength) {
-                errors.put(i, "Line " + i + " - Wrong length: " + code);
-            } // Then we check if it is a duplicate
-            else if (!codes.add(code)) {
+            if (dictionary != null) {
+                if (code.length() != codeLength && code.length() != fullCodeLength) {
+                    errors.put(i, "Line " + i + " - Wrong length: " + code);
+                }
+            }
+            // Then we check if it is a duplicate
+            if (!codes.add(code)) {
                 errors.put(i, "Line " + i + " - Duplicate code: " + code);
             }
             i++;
