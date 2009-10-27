@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class SystemDefinitionConverter {
 
-        /*
+    /*
 
     CanReg4
 
@@ -121,7 +121,6 @@ public class SystemDefinitionConverter {
     1 char			Basis Diag. Codes  (0-IARC; 1-Local)
 
      */
-
     private String canReg4FileName;
     private static boolean debug = true;
     private String namespace = "ns3:";
@@ -169,7 +168,9 @@ public class SystemDefinitionConverter {
     private String[] variableTypeValues = {"Number", "Alpha", "Date", "Dict", "AsianText"};
     private String[] mpCopyValues = {"Must", "Prob", "Intr", "Othr"};
     private TreeMap<String, String> variableToTableMap;
+    private TreeMap<String, Integer> standardVariableToIndexMap;
     private int recordIDlength;
+    private int bahaviourIndex = -1;
     private String morphologyVariableName;
     private Charset charset = null;
     private CharsetDecoder charsetDecoder = null;
@@ -206,6 +207,7 @@ public class SystemDefinitionConverter {
         this.canReg4FileName = canReg4FileName;
 
         variableToTableMap = new TreeMap<String, String>();
+        standardVariableToIndexMap = new TreeMap<String, Integer>();
 
         try {
 
@@ -335,7 +337,9 @@ public class SystemDefinitionConverter {
                 root.appendChild(groupsParentElement);
 
                 int numberOfGroups = readNumber(2);
+
                 debugOut("Number of Groups: " + numberOfGroups);
+                int[] groupOrder = new int[numberOfGroups];
 
                 for (int i = 0; i < numberOfGroups; i++) {
                     element = doc.createElement(namespace + "group");
@@ -344,9 +348,17 @@ public class SystemDefinitionConverter {
                     element.appendChild(createElement(namespace + "name", readText()));
                     //skip unused variables
                     // Group order
-                    readNumber(2);
+                    int order = readNumber(2);
+                    groupOrder[i]=order;
                     //Group height
                     readNumber(2);
+                }
+
+                // group order
+                for (int i = 0; i < numberOfGroups; i++){
+                    int groupIndex = groupOrder[i];
+                    Element variableElement = (Element) doc.getElementsByTagName(namespace + "group").item(groupIndex);
+                    variableElement.appendChild(createElement(namespace + "group_pos", "" + i));
                 }
 
                 // Create the Variables part
@@ -509,6 +521,7 @@ public class SystemDefinitionConverter {
                         Element variableElement = (Element) doc.getElementsByTagName(namespace + "variable").item(variableIndex);
                         //  debugOut(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
                         variableElement.appendChild(createElement(namespace + "standard_variable_name", standardVariablesCR4[i]));
+                        standardVariableToIndexMap.put(standardVariablesCR4[i], variableIndex);
                         // Grab some information
                         if (i == 0) {
                             String recordIDlengthString = variableElement.getElementsByTagName(namespace + "variable_length").item(0).getTextContent();
@@ -702,13 +715,23 @@ public class SystemDefinitionConverter {
                 /*
                 //add metavariables
                 if (morphologyLength == 5) {
-                    String variableName = Globals.StandardVariableNames.Behaviour.toString();
-                    String formula = "SUBSTR(" + morphologyVariableName + ",5,1)";
-                    variablesParentElement.appendChild(
-                            createMetaVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Meta", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName, formula));
+                String variableName = Globals.StandardVariableNames.Behaviour.toString();
+                String formula = "SUBSTR(" + morphologyVariableName + ",5,1)";
+                variablesParentElement.appendChild(
+                createMetaVariable(variableNumber++, variableName, variableName, variableName,
+                -1, "Automatic", "Othr", "Meta", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName, formula));
                 }
-                */
+                 */
+
+                // If we have 5 digit morpho we generate behaviour automatically
+                if (morphologyLength == 5) {
+                    int variableIndex = standardVariableToIndexMap.get(Globals.StandardVariableNames.Behaviour.toString());
+                    Element variableElement = (Element) doc.getElementsByTagName(namespace + "variable").item(variableIndex);
+                    //  debugOut(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
+                    Element oldElement = (Element) variableElement.getElementsByTagName(namespace + "fill_in_status").item(0);
+                    variableElement.replaceChild(createElement(namespace + "fill_in_status", "Automatic"), oldElement);
+                }
+                // TODO put the groups in the right order...
 
             } catch (EOFException e) {
                 // Nothing to do
