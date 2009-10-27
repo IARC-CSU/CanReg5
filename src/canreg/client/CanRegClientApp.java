@@ -907,4 +907,45 @@ public class CanRegClientApp extends SingleFrameApplication {
         init();
         launch(CanRegClientApp.class, args);
     }
+
+    public Patient[] getPatientRecordsByID(String recordID) throws SQLException, RemoteException, SecurityException, Exception {
+        Patient[] records = null;
+
+        String databaseRecordIDVariableName = null;
+        String tableName = Globals.PATIENT_TABLE_NAME;
+        String patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
+        databaseRecordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
+
+        DatabaseFilter filter = new DatabaseFilter();
+        filter.setFilterString(patientIDVariableName + " = '" + recordID + "' ");
+        DistributedTableDescription distributedTableDescription;
+        Object[][] rows;
+        DatabaseRecord record = null;
+
+        distributedTableDescription = getDistributedTableDescription(filter, tableName);
+
+        int numberOfRecords = distributedTableDescription.getRowCount();
+        records = new Patient[numberOfRecords];
+
+        rows = retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
+        releaseResultSet(distributedTableDescription.getResultSetID());
+        if (rows.length > 0) {
+            String[] columnNames = distributedTableDescription.getColumnNames();
+            int ids[] = new int[numberOfRecords];
+            boolean found = false;
+            int idColumnNumber = 0;
+
+            while (!found && idColumnNumber < columnNames.length) {
+                found = columnNames[idColumnNumber++].equalsIgnoreCase(databaseRecordIDVariableName);
+            }
+            if (found) {
+                idColumnNumber--;
+                for (int recordNo = 0; recordNo < numberOfRecords; recordNo++) {
+                    int id = (Integer) rows[recordNo][idColumnNumber];
+                    records[recordNo] = (Patient) getRecord(id, Globals.PATIENT_TABLE_NAME);
+                }
+            }
+        }
+        return records;
+    }
 }
