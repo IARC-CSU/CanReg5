@@ -22,6 +22,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.Statement;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -1738,8 +1739,15 @@ public class CanRegDAO {
             if (highestPatientID != null) {
                 patientID = canreg.common.Tools.increment(highestPatientID);
             } else {
-                // TODO replace with today's year and 00..001
-                patientID = "1";
+                int year = Calendar.getInstance().get(Calendar.YEAR);
+                patientID = year +"";
+                int patientIDlength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getVariableLength();
+                while (patientID.length()<patientIDlength-1) {
+                    patientID += "0";
+                }
+                if (patientID.length()==patientIDlength-1){
+                    patientID += "1";
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
