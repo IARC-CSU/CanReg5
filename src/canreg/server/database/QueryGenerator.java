@@ -438,13 +438,15 @@ public class QueryGenerator {
     }
 
     static String strGetHighestTumourID(GlobalToolBox globalToolBox) {
-        String tumourIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
-        return "SELECT max(\"" + tumourIDVariableNamePatientTable.toUpperCase() + "\") FROM APP.TUMOUR";
+        String tumourIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+        String patientRecordIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
+        return "SELECT max(\"" + tumourIDVariableNameTumourTable.toUpperCase() + "\") FROM APP.TUMOUR WHERE "+patientRecordIDVariableNameTumourTable.toUpperCase()+" = ?";
     }
 
     static String strGetHighestPatientRecordID(GlobalToolBox globalToolBox) {
         String patientRecordIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
-        return "SELECT max(\"" + patientRecordIDVariableNamePatientTable.toUpperCase() + "\") FROM APP.PATIENT";
+        String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
+        return "SELECT max(\"" + patientRecordIDVariableNamePatientTable.toUpperCase() + "\") FROM APP.PATIENT WHERE "+patientIDVariableNamePatientTable.toUpperCase()+" = ?";
     }
 
     static String strGetHighestSourceRecordID(GlobalToolBox globalToolBox) {
@@ -452,7 +454,8 @@ public class QueryGenerator {
         DatabaseVariablesListElement le = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString());
         if (le != null) {
             String sourceRecordIDVariableName = le.getDatabaseVariableName();
-            returnString = "SELECT max(\"" + sourceRecordIDVariableName.toUpperCase() + "\") FROM APP.SOURCE";
+            String tumourIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
+            returnString = "SELECT max(\"" + sourceRecordIDVariableName.toUpperCase() + "\") FROM APP.SOURCE WHERE "+tumourIDVariableNameSourceTable.toUpperCase()+" = ?";
         }
         return returnString;
     }

@@ -922,7 +922,7 @@ public class CanRegDAO {
 
 
             debugOut("Cocuou from the database connection...");
-            debugOut("Next tumour ID = " + getNextTumourID());
+            debugOut("Next patient ID = " + getNextPatientID());
         } catch (SQLException ex) {
             debugOut("SQLerror... ");
             ex.printStackTrace();
@@ -999,14 +999,14 @@ public class CanRegDAO {
                 if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict") || variableType.equalsIgnoreCase("Date")) {
                     if (obj != null) {
                         try {
-                            String strObj = (String) obj;
+                            String strObj = obj.toString();
                             if (strObj.length() > 0) {
                                 stmtSaveNewRecord.setString(recordVariableNumber, strObj);
                             } else {
                                 stmtSaveNewRecord.setString(recordVariableNumber, "");
                             }
                         } catch (java.lang.ClassCastException cce) {
-                            System.out.println("String " + variableType + " " + obj);
+                            System.out.println("Cast to String Error. Type:" + variableType + ", Value: " + obj + ", Variable Number: " + recordVariableNumber);
                             throw cce;
                         }
                     } else {
@@ -1043,15 +1043,19 @@ public class CanRegDAO {
      * @return
      */
     public synchronized int savePatient(Patient patient) throws SQLException {
-        String patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
-        Object patientID = patient.getVariable(patientIDVariableName);
+        DatabaseVariablesListElement patientIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
+        DatabaseVariablesListElement patientRecordIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString());
+        String patientID = (String) patient.getVariable(patientIDVariable.getDatabaseVariableName());
+        String patientRecordID = (String) patient.getVariable(patientRecordIDVariable.getDatabaseVariableName());
         if (patientID == null || patientID.toString().trim().length() == 0) {
-            patient.setVariable(patientIDVariableName, getNextPatientID());
-        }
-        String patientRecordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
-        Object patientRecordID = patient.getVariable(patientRecordIDVariableName);
-        if (patientRecordID == null || patientRecordID.toString().trim().length() == 0) {
-            patient.setVariable(patientRecordIDVariableName, getNextPatientRecordID());
+            patientID = getNextPatientID();
+            patient.setVariable(patientIDVariable.getDatabaseVariableName(), patientID);
+            patientRecordID = getNextPatientRecordID(patientID);
+            patient.setVariable(patientRecordIDVariable.getDatabaseVariableName(), patientRecordID);
+        } else if (patientRecordID == null || patientRecordID.toString().trim().length() == 0) {
+            patientRecordID = getNextPatientRecordID(patientID);
+            patient.setVariable(patientRecordIDVariable.getDatabaseVariableName(), patientRecordID);
+            patient.setVariable(patientRecordIDVariable.getDatabaseVariableName(), getNextPatientRecordID(patientID));
         }
         return saveRecord("Patient", patient, stmtSaveNewPatient);
     }
@@ -1065,11 +1069,11 @@ public class CanRegDAO {
         String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         Object tumourID = tumour.getVariable(tumourIDVariableName);
         if (tumourID == null || tumourID.toString().trim().length() == 0) {
-            tumourID = getNextTumourID();
+            String patientRecordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
+            String patientRecordID = (String) tumour.getVariable(patientRecordIDVariableName);
+            tumourID = getNextTumourID(patientRecordID);
             tumour.setVariable(tumourIDVariableName, tumourID);
         }
-
-
         Set<Source> sources = tumour.getSources();
         // delete old sources
         try {
@@ -1094,7 +1098,10 @@ public class CanRegDAO {
         String sourceIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName();
         Object sourceID = source.getVariable(sourceIDVariableName);
         if (sourceID == null || sourceID.toString().trim().length() == 0) {
-            source.setVariable(sourceIDVariableName, getNextSourceID());
+            String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
+            String tumourID = (String) source.getVariable(tumourIDVariableName);
+            sourceID = getNextSourceID(tumourID);
+            source.setVariable(sourceIDVariableName, sourceID);
         }
         return saveRecord(Globals.SOURCE_TABLE_NAME, source, stmtSaveNewSource);
     }
@@ -1449,7 +1456,7 @@ public class CanRegDAO {
                     if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict") || variableType.equalsIgnoreCase("Date")) {
                         if (obj != null) {
                             try {
-                                String strObj = (String) obj;
+                                String strObj = obj.toString();
                                 if (strObj.length() > 0) {
                                     stmtEditRecord.setString(variableNumber, strObj);
                                 } else {
@@ -1459,7 +1466,7 @@ public class CanRegDAO {
                                         element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
                                         ": " + strObj);
                             } catch (java.lang.ClassCastException cce) {
-                                System.out.println("String " + variableType + " " + obj);
+                                System.out.println("Cast to String Error. Type:" + variableType + ", Value: " + obj + ", Variable Number: " + variableNumber);
                                 throw cce;
                             }
                         } else {
@@ -1740,12 +1747,12 @@ public class CanRegDAO {
                 patientID = canreg.common.Tools.increment(highestPatientID);
             } else {
                 int year = Calendar.getInstance().get(Calendar.YEAR);
-                patientID = year +"";
+                patientID = year + "";
                 int patientIDlength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getVariableLength();
-                while (patientID.length()<patientIDlength-1) {
+                while (patientID.length() < patientIDlength - 1) {
                     patientID += "0";
                 }
-                if (patientID.length()==patientIDlength-1){
+                if (patientID.length() == patientIDlength - 1) {
                     patientID += "1";
                 }
             }
@@ -1755,17 +1762,25 @@ public class CanRegDAO {
         return patientID;
     }
 
-    public synchronized String getNextTumourID() {
+    public synchronized String getNextTumourID(String patientRecordID) {
         String tumourID = null;
         try {
+            stmtGetHighestTumourID.clearParameters();
+            stmtGetHighestTumourID.setString(1, patientRecordID);
             ResultSet result = stmtGetHighestTumourID.executeQuery();
             result.next();
             String highestTumourID = result.getString(1);
             if (highestTumourID != null) {
                 tumourID = canreg.common.Tools.increment(highestTumourID);
             } else {
-                // TODO replace with today's year and 00..001
-                tumourID = "1";
+                tumourID = patientRecordID;
+                int tumourIDlength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getVariableLength();
+                while (tumourID.length() < tumourIDlength - 1) {
+                    tumourID += "0";
+                }
+                if (tumourID.length() == tumourIDlength - 1) {
+                    tumourID += "1";
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -1773,16 +1788,25 @@ public class CanRegDAO {
         return tumourID;
     }
 
-    public synchronized String getNextPatientRecordID() {
+    public synchronized String getNextPatientRecordID(String patientID) {
         String patientRecordID = null;
         try {
+            stmtGetHighestPatientRecordID.clearParameters();
+            stmtGetHighestPatientRecordID.setString(1, patientID);
             ResultSet result = stmtGetHighestPatientRecordID.executeQuery();
             result.next();
             String highestPatientRecordID = result.getString(1);
             if (highestPatientRecordID != null) {
                 patientRecordID = canreg.common.Tools.increment(highestPatientRecordID);
             } else {
-                patientRecordID = "1";
+                patientRecordID = patientID;
+                int patientRecordIDlength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getVariableLength();
+                while (patientRecordID.length() < patientRecordIDlength - 1) {
+                    patientRecordID += "0";
+                }
+                if (patientRecordID.length() == patientRecordIDlength - 1) {
+                    patientRecordID += "1";
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -1790,17 +1814,25 @@ public class CanRegDAO {
         return patientRecordID;
     }
 
-    public synchronized String getNextSourceID() {
+    public synchronized String getNextSourceID(String tumourRecordID) {
         String sourceID = null;
         try {
+            stmtGetHighestSourceRecordID.clearParameters();
+            stmtGetHighestSourceRecordID.setString(1, tumourRecordID);
             ResultSet result = stmtGetHighestSourceRecordID.executeQuery();
             result.next();
             String highestSourceID = result.getString(1);
             if (highestSourceID != null) {
                 sourceID = canreg.common.Tools.increment(highestSourceID);
             } else {
-                // TODO replace with today's year and 00..001
-                sourceID = "1";
+                sourceID = tumourRecordID;
+                int sourceIDlength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()).getVariableLength();
+                while (sourceID.length() < sourceIDlength - 1) {
+                    sourceID += "0";
+                }
+                if (sourceID.length() == sourceIDlength - 1) {
+                    sourceID += "1";
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
