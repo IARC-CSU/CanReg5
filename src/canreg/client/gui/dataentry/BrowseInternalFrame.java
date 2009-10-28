@@ -130,6 +130,11 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
 
         patientNumberTextField.setText(resourceMap.getString("patientNumberTextField.text")); // NOI18N
         patientNumberTextField.setName("patientNumberTextField"); // NOI18N
+        patientNumberTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                editPatientIDKeyTyped(evt);
+            }
+        });
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(BrowseInternalFrame.class, this);
         editPatientNumberButton.setAction(actionMap.get("editPatientID")); // NOI18N
@@ -137,6 +142,11 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         editPatientNumberButton.setName("editPatientNumberButton"); // NOI18N
 
         tumourNumberTextField.setName("tumourNumberTextField"); // NOI18N
+        tumourNumberTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                editTumourRecordKeyTyped(evt);
+            }
+        });
 
         editTumourNumberButton.setAction(actionMap.get("editTumourID")); // NOI18N
         editTumourNumberButton.setText(resourceMap.getString("editTumourNumberButton.text")); // NOI18N
@@ -175,7 +185,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
                 .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(editTumourNumberButton)
                     .addComponent(tumourNumberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(155, Short.MAX_VALUE))
+                .addContainerGap(157, Short.MAX_VALUE))
         );
 
         rangeFilterPanel.setName("rangeFilterPanel"); // NOI18N
@@ -194,7 +204,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 228, Short.MAX_VALUE)
+            .addGap(0, 230, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -292,6 +302,18 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
         }
     }
 }//GEN-LAST:event_browserClosed
+
+private void editPatientIDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_editPatientIDKeyTyped
+    if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_ENTER) {
+        editPatientID();
+    }
+}//GEN-LAST:event_editPatientIDKeyTyped
+
+private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_editTumourRecordKeyTyped
+    if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_ENTER) {
+        editTumourID();
+    }
+}//GEN-LAST:event_editTumourRecordKeyTyped
 
     private void rowClicked(java.awt.event.MouseEvent evt) {
         String referenceTable;
@@ -450,7 +472,7 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
                 tca.adjustColumns();
                 resultPanel.setVisible(true);
             } else if (result.equals("Not valid")) {
-                JOptionPane.showInternalMessageDialog(rootPane, "Not a valid filter.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showInternalMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NOT_A_VALID_FILTER."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, result);
             }
@@ -582,13 +604,18 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
 
             if (numberOfRecords == 0) {
                 /*
-                If we don't get any records with that ID - we create one.
+                If we don't get any records with that ID - we propose to create one.
                  */
-                record = new Patient();
-                record.setVariable(patientIDlookupVariable, idString);
-                CanRegClientApp.getApplication().saveRecord(record);
-                distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
-                numberOfRecords = distributedTableDescription.getRowCount();
+                int answer = JOptionPane.showInternalConfirmDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NO_PATIENT_WITH_THAT_ID_FOUND,_DO_YOU_WANT_TO_CREATE_ONE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("PATIENT_ID_NOT_FOUND"), JOptionPane.YES_NO_OPTION);
+                if (answer == JOptionPane.YES_OPTION) {
+                    record = new Patient();
+                    record.setVariable(patientIDlookupVariable, idString);
+                    CanRegClientApp.getApplication().saveRecord(record);
+                    distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+                    numberOfRecords = distributedTableDescription.getRowCount();
+                } else {
+                    return;
+                }
             }
 
             rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
@@ -633,7 +660,7 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
                 }
                 CanRegClientView.showAndCenterInternalFrame(dtp, recordEditor);
             } else {
-                JOptionPane.showMessageDialog(rootPane, "Record not found", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD_NOT_FOUND"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             }
         } catch (SQLException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -675,7 +702,7 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
             DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
             int numberOfRecords = distributedTableDescription.getRowCount();
             if (numberOfRecords == 0) {
-                JOptionPane.showMessageDialog(rootPane, "Tumour record not found...", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("TUMOUR_RECORD_NOT_FOUND..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else {
                 rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
                 CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
@@ -694,7 +721,7 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
                         editPatientID((String) record.getVariable(patientIDTumourTablelookupVariable));
                     }
                 } else {
-                    JOptionPane.showMessageDialog(rootPane, "Variable not found...", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("VARIABLE_NOT_FOUND..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
                 }
             }
         } catch (SQLException ex) {
