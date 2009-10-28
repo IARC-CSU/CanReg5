@@ -56,6 +56,8 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
     private String patientIDlookupVariable;
     private String patientIDTumourTablelookupVariable;
     private String tumourIDlookupVariable;
+    int patientIDLength;
+    int tumourIDLength;
 
     /** Creates new form BrowseInternalFrame
      * @param dtp 
@@ -66,6 +68,8 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         patientIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
         patientIDTumourTablelookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName();
         tumourIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+        patientIDLength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getVariableLength();
+        tumourIDLength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getVariableLength();
         initComponents();
         initOtherComponents();
         initValues();
@@ -521,7 +525,12 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
      */
     @Action
     public void editPatientID() {
-        editPatientID(patientNumberTextField.getText().trim());
+        String idString = patientNumberTextField.getText().trim();
+        if (idString.trim().length() != patientIDLength) {
+            JOptionPane.showMessageDialog(rootPane, "Patient ID should be " + patientIDLength + " characters long.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        editPatientID(idString);
     }
 
     /**
@@ -678,7 +687,12 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
      */
     @Action
     public void editTumourID() {
-        editTumourID(tumourNumberTextField.getText().trim());
+        String idString = tumourNumberTextField.getText().trim();
+        if (idString.length() != tumourIDLength) {
+            JOptionPane.showMessageDialog(rootPane, "Tumour ID should be " + tumourIDLength + " characters long.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        editTumourID(idString);
     }
 
     /**
