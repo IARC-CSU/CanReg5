@@ -65,9 +65,15 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private JDesktopPane desktopPane;
     private GlobalToolBox globalToolBox;
     private boolean titleSet = false;
-    String tumourObsoleteVariableName = null;
-    String patientObsoleteVariableName = null;
+    private String tumourObsoleteVariableName = null;
+    private String patientObsoleteVariableName = null;
+    private String tumourSequenceVariableName = null;
+    private String tumourSequenceTotalVariableName = null;
     AutoFillHelper autoFillHelper;
+    private String tumourIDVariableName = null;
+    private String patientIDVariableName = null;
+    private String patientRecordIDVariableName = null;
+    private String patientRecordIDTumourTableVariableName = null;
 
     /** Creates new form RecordEditor
      * @param desktopPane 
@@ -158,6 +164,12 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
         patientObsoleteVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString()).getDatabaseVariableName();
         tumourObsoleteVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString()).getDatabaseVariableName();
+        tumourSequenceVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimSeq.toString()).getDatabaseVariableName();
+        tumourSequenceTotalVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimTot.toString()).getDatabaseVariableName();
+
+        tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+        patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
+        patientRecordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
 
     }
 
@@ -672,9 +684,28 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     // set the patient id to the active patient number
                     RecordEditorPanel patientRecordEditorPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
                     DatabaseRecord patientDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
+                    updateTumourSequences();
                     OK = associateTumourRecordToPatientRecord(databaseRecord, patientDatabaseRecord);
                     if (!OK) {
                         JOptionPane.showInternalMessageDialog(this, "Please save patient record first.", "Failed", JOptionPane.WARNING_MESSAGE);
+                    }
+                } else if (databaseRecord instanceof Patient) {
+                    // see if the patient has been given ID already by looking at other patient records
+                    String patientID = null;
+                    for (DatabaseRecord patient : patientRecords) {
+                        Object tempPatientID = patient.getVariable(patientIDVariableName);
+                        if (patientID == null && tempPatientID != null) {
+                            patientID = (String) tempPatientID;
+                            if (patientID.trim().length() == 0) {
+                                patientID = null;
+                            }
+                        }
+                    }
+                    if (patientID == null) {
+                        databaseRecord.setVariable(patientIDVariableName, null);
+                        databaseRecord.setVariable(patientRecordIDVariableName, null);
+                    } else {
+                        databaseRecord.setVariable(patientIDVariableName, patientID);
                     }
                 }
                 if (OK) {
@@ -924,5 +955,31 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             JOptionPane.showInternalMessageDialog(this, "No such patient ID.", "Failed", JOptionPane.WARNING_MESSAGE);
         }
 
+    }
+
+    private void updateTumourSequences() {
+        // first do the counting
+        int totalTumours = 0;
+        for (int i = 0; i < tumourTabbedPane.getComponentCount(); i++) {
+            RecordEditorPanel rep = (RecordEditorPanel) tumourTabbedPane.getComponentAt(i);
+            Tumour tumour = (Tumour) rep.getDatabaseRecord();
+            boolean obsolete = tumour.getVariable(tumourObsoleteVariableName).toString().equalsIgnoreCase(Globals.OBSOLETE_VALUE);
+            if (!obsolete) {
+                totalTumours++;
+            }
+        }
+        int tumourSequence = 0;
+        for (int i = 0; i < tumourTabbedPane.getComponentCount(); i++) {
+            RecordEditorPanel rep = (RecordEditorPanel) tumourTabbedPane.getComponentAt(i);
+            Tumour tumour = (Tumour) rep.getDatabaseRecord();
+            boolean obsolete = tumour.getVariable(tumourObsoleteVariableName).toString().equalsIgnoreCase(Globals.OBSOLETE_VALUE);
+            if (!obsolete) {
+                tumourSequence++;
+                tumour.setVariable(tumourSequenceVariableName, tumourSequence + "");
+            } else {
+                tumour.setVariable(tumourSequenceVariableName, "-");
+            }
+            tumour.setVariable(tumourSequenceTotalVariableName, totalTumours + "");
+        }
     }
 }
