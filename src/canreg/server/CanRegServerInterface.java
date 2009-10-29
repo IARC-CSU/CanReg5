@@ -13,7 +13,9 @@ import canreg.server.database.DictionaryEntry;
 import canreg.server.database.NameSexRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
+import canreg.server.database.RecordLockedException;
 import canreg.server.database.Tumour;
+import canreg.server.database.UnknownTableException;
 import java.net.InetAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -40,7 +42,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.lang.SecurityException
      */
     public void editPatient(Patient patient)
-            throws RemoteException, SecurityException;
+            throws RemoteException, SecurityException, RecordLockedException;
 
     /**
      * 
@@ -49,7 +51,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.lang.SecurityException
      */
     public void editTumour(Tumour tumour)
-            throws RemoteException, SecurityException;
+            throws RemoteException, SecurityException, RecordLockedException;
 
     /**
      * 
@@ -114,8 +116,8 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public DatabaseRecord getRecord(int recordID, String tableName)
-            throws RemoteException, SecurityException;
+    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock)
+            throws RemoteException, SecurityException, RecordLockedException ;
 
     // administrative tools
     /**
@@ -146,7 +148,7 @@ public interface CanRegServerInterface extends Remote {
             throws RemoteException, SecurityException;
 
     public boolean deleteRecord(int id, String tableName)
-            throws RemoteException, SecurityException;
+            throws RemoteException, SecurityException, RecordLockedException;
 
     /**
      * 
@@ -202,16 +204,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public int savePatient(Patient patient) throws RemoteException, SecurityException, SQLException;
-
-    /**
-     * 
-     * @param patientID
-     * @return
-     * @throws java.rmi.RemoteException
-     * @throws java.lang.SecurityException
-     */
-    public DatabaseRecord getPatient(int patientID) throws RemoteException, SecurityException;
+    public int savePatient(Patient patient) throws RemoteException, SecurityException, SQLException, RecordLockedException;
 
     /**
      * 
@@ -220,7 +213,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public int saveTumour(Tumour tumour) throws RemoteException, SecurityException, SQLException;
+    public int saveTumour(Tumour tumour) throws RemoteException, SecurityException, SQLException, RecordLockedException;
 
     /**
      * Store a dictionary entry on the server
@@ -295,7 +288,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.lang.SecurityException
      * @throws java.lang.Exception
      */
-    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, Exception;
+    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, UnknownTableException, DistributedTableDescriptionException ;
 
     /**
      * Retrieve rows from a resultset
@@ -318,6 +311,8 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.lang.SecurityException
      */
     public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException;
+
+    public void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException;
 
     /**
      * Get the population datasets

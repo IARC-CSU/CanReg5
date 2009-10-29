@@ -7,6 +7,7 @@ package canreg.client.gui.management;
 
 import canreg.client.CanRegClientApp;
 import canreg.server.database.NameSexRecord;
+import canreg.server.database.RecordLockedException;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -184,7 +185,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
             }
         }
         
-        @Override protected Object doInBackground() throws SecurityException, RemoteException, IOException, SQLException {
+        @Override protected Object doInBackground() throws SecurityException, RemoteException, IOException, SQLException, RecordLockedException {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.

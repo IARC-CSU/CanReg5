@@ -1,29 +1,51 @@
 Changelog
-
-4.99.13 Build 717
-
+4.99.13 Build 742
 - Source table implemented.
 
 - Sources now imported.
 
+- General GUI improvements: Groups are now sorted, more strings are internationalised.
+
+- BrowseInternalFrame now asks you to confirm before creating a new record, enter works to load patient or tumour, now enforces new record IDs to have the correct length, some internationalization done.
+
+- AutofillHelper started and fills in age and behaviour when set to Automatic.
+
 - CanRegDAO now throws database mismatch exceptions if the database structure doesn't match the prepared queries.
 
-- Record editor now shows last update date and user.
+- Record editor now shows last update date and user. Improved the layout, internationalized some strings.
 
-- System Definition Converter taking into account source table, better system to put the variables in the right tables.
+- System Definition Converter taking into account source table, better system to put the variables in the right tables, takes into other character sets.
+
+- Login: added message to perform backup if this never has been performed.
+
+- Import: MP patients that are 100% identical as a record already in the database are no longer imported.
+
+- Dictionary Editor: Import Complete dictionary no longer closes the internal window during import. Only dispays the 5000 first codes in each dictionary for performance issues. Export function improved.
+
+- Dictinary importer now checks for duplicate codes, possibility to set characterset of file to import, other improvements.
+
+- TableBuilder: Removed filter tab.
+
+- EditChecks: works now with longer than 4 digits morphology codes.
+
+- SystemDefinitionConverter: If morph code is 5 digits, behaviour should be generated automatically, groups now have a position.
+
+- UserManager now lets the user know if the username is longer than allowed lenght. (16 digits.)
+
+- CanRegClientApp: API extended with a method to get patient records by ID.
+
+- DictionaryHelper: improved stability of Test Dictionary.
+
+- CanRegDAO: first Patient ID is now set to YYYY00...01
 
 - Bugfixes.
 
-
 4.99.12 Build 707
-
 - PDSEditorInternalFrame: Improved GUI
 
 - Minor changes.
 
-
 4.99.11 Build 703
-
 - Eliminated a bug where records where set to pending while saving. 
 
 - Improved the "Do you really want to close this record" dialog box to appear only when the user has done actual changes to a record.
@@ -35,8 +57,6 @@ Changelog
 - Made some more views more compact to fit better smaller screens.
 
 - Updated the about page.
-
-
 
 4.99.10 Build 688
 - FrequenciesByYear: Fixed a bug where the table did not show up. 
@@ -52,7 +72,6 @@ Changelog
 - Import preview is now shown in a table.
 
 - Updated the about page.
-
 
 4.99.9 Build 680
 - RecordEditor: Hid the tumour record number and patient record number.
@@ -100,7 +119,6 @@ Changelog
 - Range now works properly when making frequency by year tables as well.
 
 - Various bug fixes.
-
 4.99.8 Build 661
 - Added functionality to import Population data sets from CanReg4.
 

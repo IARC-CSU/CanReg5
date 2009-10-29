@@ -13,6 +13,7 @@ package canreg.client.gui.management;
 import canreg.common.Globals;
 import canreg.common.PasswordService;
 import canreg.exceptions.SystemUnavailableException;
+import canreg.server.database.RecordLockedException;
 import canreg.server.database.User;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -537,6 +538,8 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         if (okToDelete && id > 0) {
             try {
                 canreg.client.CanRegClientApp.getApplication().deleteRecord(id, "USERS");
+            } catch (RecordLockedException ex) {
+                Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
                 Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {

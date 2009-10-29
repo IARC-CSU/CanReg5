@@ -13,7 +13,9 @@ import canreg.server.database.DictionaryEntry;
 import canreg.server.database.NameSexRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
+import canreg.server.database.RecordLockedException;
 import canreg.server.database.Tumour;
+import canreg.server.database.UnknownTableException;
 import canreg.server.security.ValidateMethodCall;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
@@ -112,12 +114,12 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return theServer.getDatabseConnection();
     }
 
-    public int savePatient(Patient patient) throws RemoteException, SecurityException, SQLException {
+    public int savePatient(Patient patient) throws RemoteException, SecurityException, SQLException, RecordLockedException {
         checkPermission("savePatient");
         return theServer.savePatient(patient);
     }
 
-    public int saveTumour(Tumour tumour) throws RemoteException, SecurityException, SQLException {
+    public int saveTumour(Tumour tumour) throws RemoteException, SecurityException, SQLException, RecordLockedException {
         checkPermission("saveTumour");
         return theServer.saveTumour(tumour);
     }
@@ -157,7 +159,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return theServer.getIPAddress();
     }
 
-    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, Exception {
+    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, UnknownTableException, DistributedTableDescriptionException {
         checkPermission("getDistributedTableDescription");
         return theServer.getDistributedTableDescription(filter, tableName);
     }
@@ -166,27 +168,22 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         throw new UnsupportedOperationException("Not supported."); // This should not be implemented!
     }
 
-    public DatabaseRecord getPatient(int patientID) throws RemoteException, SecurityException {
-        checkPermission("getPatient");
-        return theServer.getPatient(patientID);
-    }
-
-    public DatabaseRecord getRecord(int recordID, String tableName) throws RemoteException, SecurityException {
+    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock) throws RemoteException, SecurityException, RecordLockedException {
         checkPermission("get:" + tableName);
-        return theServer.getRecord(recordID, tableName);
+        return theServer.getRecord(recordID, tableName, lock);
     }
 
-    public void editPatient(Patient patient) throws RemoteException, SecurityException {
+    public void editPatient(Patient patient) throws RemoteException, SecurityException, RecordLockedException {
         checkPermission("editPatient");
         theServer.editPatient(patient);
     }
 
-    public void editTumour(Tumour tumour) throws RemoteException, SecurityException {
+    public void editTumour(Tumour tumour) throws RemoteException, SecurityException, RecordLockedException {
         checkPermission("editTumour");
         theServer.editTumour(tumour);
     }
 
-    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException{
+    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException {
         checkPermission("retrieveRows:" + resultSetID);
         return theServer.retrieveRows(resultSetID, from, to);
     }
@@ -251,7 +248,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return theServer.initiateGlobalPersonSearch(searcher, rangeStart, rangeEnd);
     }
 
-    public boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException {
+    public boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException, RecordLockedException {
         checkPermission("deleteRecord: " + tableName);
         return theServer.deleteRecord(id, tableName);
     }
@@ -272,12 +269,17 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     public Map<String, Map<String, Float>> nextStepGlobalPersonSearch(String idString) throws SecurityException, RemoteException, Exception {
-        checkPermission("nextStepGlobalPersonSearch"+idString);
+        checkPermission("nextStepGlobalPersonSearch" + idString);
         return theServer.nextStepGlobalPersonSearch(idString);
     }
 
-    public void interuptGlobalPersonSearch(String idString)  throws RemoteException, SecurityException {
-        checkPermission("interuptGlobalPersonSearch:"+idString);
+    public void interuptGlobalPersonSearch(String idString) throws RemoteException, SecurityException {
+        checkPermission("interuptGlobalPersonSearch:" + idString);
         theServer.interuptGlobalPersonSearch(idString);
+    }
+
+    public void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException {
+        checkPermission("releaseRecord: " + tableName +"-"+ recordID);
+        theServer.releaseRecord(recordID, tableName);
     }
 }

@@ -19,6 +19,7 @@ import canreg.common.qualitycontrol.MultiplePrimaryTesterInterface;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Dictionary;
 import canreg.server.database.Patient;
+import canreg.server.database.RecordLockedException;
 import canreg.server.database.Source;
 import canreg.server.database.Tumour;
 import java.awt.Component;
@@ -105,9 +106,11 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 if (changesDone) { // TODO: Implement "If changes has been made" check...
                     option = JOptionPane.showConfirmDialog(null, "Really close?\nChanges made will be lost.");
                     if (option == JOptionPane.YES_OPTION) {
+                        releaseRecords();
                         close();
                     }
                 } else {
+                    releaseRecords();
                     close();
                 }
             }
@@ -454,6 +457,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             try {
                 DatabaseRecord dbr = saveRecord(rep.getDatabaseRecord());
                 rep.refreshDatabaseRecord(dbr);
+            } catch (RecordLockedException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
@@ -572,6 +577,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     if (id > 0) {
                         try {
                             success = canreg.client.CanRegClientApp.getApplication().deleteRecord(id, tableName);
+                        } catch (RecordLockedException ex) {
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (SecurityException ex) {
                             Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (RemoteException ex) {
@@ -716,12 +723,14 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                         if (dbr instanceof Patient) {
                             addToPatientMap(recordEditorPanel, dbr);
                         }
+                    } catch (RecordLockedException ex) {
+                        Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (SecurityException ex) {
-                        Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (RemoteException ex) {
-                        Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (SQLException ex) {
-                        Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             } else if (e.getActionCommand().equalsIgnoreCase(CHANGE_PATIENT_RECORD)) {
@@ -736,7 +745,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                         patientDatabaseRecord = (Patient) patientRecordEditorPanel.getDatabaseRecord();
                     } else {
                         try {
-                            patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecord(requestedPatientRecordID);
+                            patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecord(requestedPatientRecordID, false);
                         } catch (SQLException ex) {
                             Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (RemoteException ex) {
@@ -755,6 +764,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                                 saveRecord(tumourDatabaseRecord);
                                 tumourTabbedPane.remove(tumourRecordEditorPanel);
                                 JOptionPane.showInternalMessageDialog(this, "Record moved.");
+                            } catch (RecordLockedException ex) {
+                                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (SecurityException ex) {
                                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (RemoteException ex) {
@@ -829,29 +840,33 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         }
     }
 
-    private DatabaseRecord saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException, SQLException {
+    private DatabaseRecord saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException, SQLException, RecordLockedException {
         // id is the internal database id
         if (databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) == null &&
                 databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) == null) {
             int id = canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord);
             if (databaseRecord instanceof Patient) {
                 // databaseRecord.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, id);
-                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME);
+                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME, true);
             } else if (databaseRecord instanceof Tumour) {
                 // databaseRecord.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, id);
-                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME);
+                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME, true);
             }
             JOptionPane.showInternalMessageDialog(this, "New record saved.");
         } else {
-            canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord);
-            // TODO: Retrieve updated data if not data can be lost. Get the patient/tumour?
             int id = -1;
             if (databaseRecord instanceof Patient) {
                 id = (Integer) databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
-                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME);
+                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME);
+                canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord);
+                id = (Integer) databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME, true);
             } else if (databaseRecord instanceof Tumour) {
                 id = (Integer) databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
-                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME);
+                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME);
+                canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord);
+                id = (Integer) databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME, true);
             }
             JOptionPane.showInternalMessageDialog(this, "Record saved.");
         }
@@ -950,11 +965,50 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RecordLockedException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             JOptionPane.showInternalMessageDialog(this, "No such patient ID.", "Failed", JOptionPane.WARNING_MESSAGE);
         }
 
+    }
+
+    private void releaseRecords() {
+        // Release all patient records held
+        for (DatabaseRecord record : patientRecords) {
+            try {
+                int id = (Integer) record.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME);
+            } catch (RemoteException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        // Release all tumour records held
+        for (DatabaseRecord record : tumourRecords) {
+            Tumour tumour = (Tumour) record;
+            // Release all sources
+            for (Source source : tumour.getSources()) {
+                try {
+                    int id = (Integer) source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+                    canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.SOURCE_TABLE_NAME);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SecurityException ex) {
+                    Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            try {
+                int id = (Integer) tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME);
+            } catch (RemoteException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     private void updateTumourSequences() {

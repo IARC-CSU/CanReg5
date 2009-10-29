@@ -6,6 +6,7 @@
 package canreg.client.gui.dataentry;
 
 import cachingtableapi.DistributedTableDescription;
+import cachingtableapi.DistributedTableDescriptionException;
 import cachingtableapi.DistributedTableModel;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
@@ -17,7 +18,9 @@ import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Patient;
+import canreg.server.database.RecordLockedException;
 import canreg.server.database.Tumour;
+import canreg.server.database.UnknownTableException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
@@ -399,8 +402,8 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             } catch (SecurityException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Security exception";
-            } catch (InterruptedException ignore) {
-                result = "Ignore";
+            // } catch (InterruptedException ignore) {
+            //    result = "Ignore";
             } catch (Exception ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Not OK";
@@ -648,10 +651,10 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 // Get all the tumour records for all the patient records...
                 for (int j = 0; j < numberOfRecords; j++) {
                     ids[j] = (Integer) rows[j][idColumnNumber];
-                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME);
+                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME, true);
                     recordEditor.addRecord(record);
 
-                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString);
+                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true);
                     for (DatabaseRecord rec : tumourRecords) {
                         // store them in a set, so we don't show them several times
                         set.add(rec);
@@ -731,20 +734,25 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                     idColumnNumber--;
                     for (int j = 0; j < numberOfRecords; j++) {
                         ids[j] = (Integer) rows[j][idColumnNumber];
-                        record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.TUMOUR_TABLE_NAME);
+                        record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.TUMOUR_TABLE_NAME, false);
                         editPatientID((String) record.getVariable(patientIDTumourTablelookupVariable));
                     }
                 } else {
                     JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("VARIABLE_NOT_FOUND..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
                 }
             }
+        } catch (UnknownTableException ex) {
+            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DistributedTableDescriptionException ex) {
+            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RecordLockedException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Record is already being edited...", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

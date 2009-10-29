@@ -236,8 +236,8 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             } catch (SecurityException ex) {
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Security exception";
-            } catch (InterruptedException ignore) {
-                result = "Ignore";
+            // } catch (InterruptedException ignore) {
+            //    result = "Ignore";
             } catch (Exception ex) {
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Not OK";

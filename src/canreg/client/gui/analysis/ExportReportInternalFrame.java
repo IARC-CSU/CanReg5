@@ -426,8 +426,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             } catch (SecurityException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Security exception";
-            } catch (InterruptedException ignore) {
-                result = "Ignore";
+            // } catch (InterruptedException ignore) {
+            //     result = "Ignore";
             } catch (Exception ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Not OK";

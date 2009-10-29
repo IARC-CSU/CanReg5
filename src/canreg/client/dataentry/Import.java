@@ -48,7 +48,7 @@ public class Import {
      * @param io
      * @return
      */
-    public static boolean importFile(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException {
+    public static boolean importFile(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
         boolean success = false;
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
         noNeedToLookAtPatientVariables.add(io.getPatientIDVariableName().toLowerCase());
@@ -157,7 +157,7 @@ public class Import {
                         patientRecordID = patientID + "" + tumourSequenceString;
                         Patient[] oldPatients = null;
                         try {
-                            oldPatients = CanRegClientApp.getApplication().getPatientRecordsByID((String) patientID);
+                            oldPatients = CanRegClientApp.getApplication().getPatientRecordsByID((String) patientID, false);
                         } catch (RemoteException ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (SecurityException ex) {

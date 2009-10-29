@@ -13,6 +13,7 @@ import canreg.client.dataentry.ImportOptions;
 import canreg.client.dataentry.Relation;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.server.database.RecordLockedException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
@@ -732,6 +733,10 @@ public class ImportView extends javax.swing.JInternalFrame {
             try {
                 // Calls the client app import action with the file parameters provided,
                 success = CanRegClientApp.getApplication().importFile(this, doc, buildMap(), inFile, buildImportOptions());
+            } catch (SecurityException ex) {
+                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RecordLockedException ex) {
+                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
@@ -917,7 +922,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 }
                 line = br.readLine();
                 i++;
-                numberOfRecordsShownTextField.setText(i+"");
+                numberOfRecordsShownTextField.setText(i + "");
             }
 
             // previewTextArea.setText(headers + "\n" + dataText);

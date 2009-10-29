@@ -1046,10 +1046,10 @@ public class CanRegClientView extends FrameView {
         DatabaseRecord[] tumourRecords;
         try {
             int patientID = 1;
-            patientRecord = CanRegClientApp.getApplication().getRecord(patientID, "patient");
+            patientRecord = CanRegClientApp.getApplication().getRecord(patientID, "patient", true);
 
             internalFrame.addRecord(patientRecord);
-            tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "");
+            tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", true);
             for (DatabaseRecord rec : tumourRecords) {
                 internalFrame.addRecord(rec);
             }

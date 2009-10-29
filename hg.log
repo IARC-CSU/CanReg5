@@ -1,5 +1,170 @@
-changeset:   261:f32c585566f3
+changeset:   294:506708279230
 tag:         tip
+user:        ervikm@X60112
+date:        Wed Oct 28 17:17:02 2009 +0100
+summary:     CanRegDAO, QueryGenerator now has more consistent ID numbering.
+
+changeset:   293:3d05f259db52
+user:        ervikm@X60112
+date:        Wed Oct 28 17:15:57 2009 +0100
+summary:     RecordEditor now sports sequence numbers and has more sturdy ID handling.
+
+changeset:   292:2468b8af08ed
+user:        ervikm@X60112
+date:        Wed Oct 28 17:15:09 2009 +0100
+summary:     RecordEditorPanel now sports sequence numbers.
+
+changeset:   291:094946bf36cf
+user:        ervikm@X60112
+date:        Wed Oct 28 16:37:57 2009 +0100
+summary:     BrowseInternalFrame now enforces new record IDs to have the correct lenght.
+
+changeset:   290:39fc7716b404
+user:        ervikm@X60112
+date:        Wed Oct 28 14:45:34 2009 +0100
+summary:     BrowseInternalFrame now asks you to confirm before creating a new record, enter works to load patient or tumour, some internationalization done.
+
+changeset:   289:d04dbaf17423
+user:        ervikm@X60112
+date:        Wed Oct 28 11:29:12 2009 +0100
+summary:     CanRegDAO: first Patient ID is now YYYY00...01
+
+changeset:   288:ce836f818bd8
+user:        ervikm@X60112
+date:        Tue Oct 27 17:09:32 2009 +0100
+summary:     Various fixes and internationalization efforts.
+
+changeset:   287:8e34b848bda2
+user:        ervikm@X60112
+date:        Tue Oct 27 16:54:58 2009 +0100
+summary:     DictionaryHelper: improved stability of Test Dictionary...
+
+changeset:   286:12d1eb5cba2e
+user:        ervikm@X60112
+date:        Tue Oct 27 16:54:25 2009 +0100
+summary:     CanRegClientApp: API extended with a method to get patient records by ID.
+
+changeset:   285:a2b55d308db1
+user:        ervikm@X60112
+date:        Tue Oct 27 16:53:26 2009 +0100
+summary:     Import takes into account the new record IDs etc...
+
+changeset:   284:dcf0bf487416
+user:        ervikm@X60112
+date:        Tue Oct 27 16:45:56 2009 +0100
+summary:     Dictinary importer now checks for duplicate codes, possibility to set characterset of file to import, other improvements
+
+changeset:   283:97ce94ac1811
+user:        ervikm@X60112
+date:        Tue Oct 27 16:44:48 2009 +0100
+summary:     Dictinary editor now only dispays the 5000 first codes in each dictionary. Export function improved.
+
+changeset:   282:64e4d96e1686
+user:        ervikm@X60112
+date:        Tue Oct 27 14:44:42 2009 +0100
+summary:     UserManager now lets the user know if the username is longer than allowed lenght.
+
+changeset:   281:f99dd83eebe4
+user:        ervikm@X60112
+date:        Tue Oct 27 11:46:05 2009 +0100
+summary:     AutofillHelper started.
+
+changeset:   280:78a896936287
+user:        ervikm@X60112
+date:        Tue Oct 27 11:45:19 2009 +0100
+summary:     GUI etc: Groups now has a position.
+
+changeset:   279:c98cf944a6dc
+user:        ervikm@X60112
+date:        Tue Oct 27 11:43:40 2009 +0100
+summary:     SystemDefinitionConverter: If morph code is 5 digits, behaviour should be generated automatically, groups now has a position.
+
+changeset:   278:4e844f225639
+user:        ervikm@X60112
+date:        Mon Oct 26 17:41:50 2009 +0100
+summary:     Serverside fixes.
+
+changeset:   277:4741c3093d5e
+user:        ervikm@X60112
+date:        Mon Oct 26 17:39:10 2009 +0100
+summary:     SystemDefinitionConverter now adds 2 digits to the patientRecordID, 4  digits to the tumourID and 6 digits to the sourceID. RecordID is stored in patient table.
+
+changeset:   276:fd5e1b2655c0
+user:        ervikm@X60112
+date:        Fri Oct 23 16:47:32 2009 +0200
+summary:     SystemDefinitionConverter now adds 2  digits to the tumourID and 4 digits to the sourceID.
+
+changeset:   275:d8e309c28a14
+user:        ervikm@X60112
+date:        Thu Oct 22 15:08:40 2009 +0200
+summary:     EditChecks: works now with longer than 4 digits morphology codes.
+
+changeset:   274:14dfb3c0e6eb
+user:        ervikm@X60112
+date:        Thu Oct 22 15:07:34 2009 +0200
+summary:     SourcePanel: Default height larger.
+
+changeset:   273:22d8b820bf98
+user:        ervikm@X60112
+date:        Thu Oct 22 15:05:46 2009 +0200
+summary:     TableBuilder: Removed filter tab.
+
+changeset:   272:89697410f3e4
+user:        ervikm@X60112
+date:        Thu Oct 22 15:05:02 2009 +0200
+summary:     Internationalization...
+
+changeset:   271:7448a0297eef
+user:        ervikm@X60112
+date:        Wed Oct 21 18:39:17 2009 +0200
+summary:     Import Complete dictionary no longer closes the internal window during import...
+
+changeset:   270:ac8e71c208e5
+user:        ervikm@X60112
+date:        Wed Oct 21 15:07:47 2009 +0200
+summary:     Systemdefinition converter now takes into other character sets.
+
+changeset:   269:7a85db38ad13
+user:        ervikm@X60112
+date:        Mon Oct 19 18:20:16 2009 +0200
+summary:     Import: MP patients that are 100% identical as a record already in the database are no longer imported...
+
+changeset:   268:857ec7fc2155
+user:        ervikm@X60112
+date:        Mon Oct 19 14:56:43 2009 +0200
+summary:     Login: added message to perform backup if this never has been performed.
+
+changeset:   267:b2b445327c6d
+user:        ervikm@X60112
+date:        Mon Oct 19 14:45:42 2009 +0200
+summary:     Some refactoring done, internationalization and frameIcons added.
+
+changeset:   266:49dbcde1cf1b
+user:        ervikm@X60112
+date:        Mon Oct 19 12:01:41 2009 +0200
+summary:     Variabla Editor: fixed a GUI bug.
+
+changeset:   265:5e15ad40c3ed
+user:        ervikm@X60112
+date:        Mon Oct 19 12:01:00 2009 +0200
+summary:     Record Editor: Internationalized some strings.
+
+changeset:   264:586ae814da4d
+user:        ervikm@X60112
+date:        Mon Oct 19 12:00:35 2009 +0200
+summary:     PDSEditor: Internationalized some strings.
+
+changeset:   263:3884fe4d9e29
+user:        ervikm@X60112
+date:        Fri Oct 16 17:33:58 2009 +0200
+summary:     Added updated by etc in the Record Editor. Improved the layout.
+
+changeset:   262:518020bdfea9
+user:        ervikm@X60112
+date:        Fri Oct 16 14:54:01 2009 +0200
+summary:     Added updated by etc in the Record Editor. Improved the layout.
+
+changeset:   261:f32c585566f3
 user:        ervikm@X60112
 date:        Thu Oct 15 17:18:12 2009 +0200
 summary:     Bugfixes. Version 4.99.13 started.

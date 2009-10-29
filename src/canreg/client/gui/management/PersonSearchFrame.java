@@ -564,7 +564,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             TableModel model = target.getModel();
             Patient patient;
             try {
-                patient = CanRegClientApp.getApplication().getPatientRecord("" + model.getValueAt(rowNumber, columnNumber));
+                patient = CanRegClientApp.getApplication().getPatientRecord("" + model.getValueAt(rowNumber, columnNumber), true);
                 editPatientID(patient.getVariable(patientIDlookupVariable).toString());
             } catch (SQLException ex) {
                 Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -628,10 +628,10 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 // Get all the tumour records for all the patient records...
                 for (int j = 0; j < numberOfRecords; j++) {
                     ids[j] = (Integer) rows[j][idColumnNumber];
-                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME);
+                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME, true);
                     recordEditor.addRecord(record);
 
-                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString);
+                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true);
                     for (DatabaseRecord rec : tumourRecords) {
                         // store them in a set, so we don't show them several times
                         set.add(rec);
