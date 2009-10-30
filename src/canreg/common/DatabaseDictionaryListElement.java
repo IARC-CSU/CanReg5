@@ -14,6 +14,7 @@ public class DatabaseDictionaryListElement {
     private int categoryDescriptionLength;
     private int fullDictionaryCodeLength;
     private int fullDictionaryCategoryDescriptionLength;
+    private boolean locked = false;
 
     /**
      * 
@@ -155,5 +156,19 @@ public class DatabaseDictionaryListElement {
     @Override
     public String toString() {
         return name;
+    }
+
+    /**
+     * @return the locked
+     */
+    public boolean isLocked() {
+        return locked;
+    }
+
+    /**
+     * @param locked the locked to set
+     */
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 }

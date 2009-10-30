@@ -325,6 +325,13 @@ public class Tools {
             dictionaries[i].setCategoryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "category_description_length").item(0).getTextContent()));
             dictionaries[i].setFullDictionaryCodeLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_code_length").item(0).getTextContent()));
             dictionaries[i].setFullDictionaryCategoryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_description_length").item(0).getTextContent()));
+            // lock part
+            NodeList elem = e.getElementsByTagName(namespace + "locked");
+            if (elem!=null && elem.getLength()>0){
+                dictionaries[i].setLocked("true".equalsIgnoreCase(elem.item(0).getTextContent()));
+            } else {
+                dictionaries[i].setLocked(false);
+            }
 
 
             // TODO -- capture more info...
@@ -611,4 +618,5 @@ public class Tools {
 
         return standardEncoding;
     }
+
 }
