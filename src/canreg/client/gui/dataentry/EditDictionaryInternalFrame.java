@@ -257,7 +257,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                         Iterator<Entry<String, DictionaryEntry>> iterator = map.entrySet().iterator();
                         while (iterator.hasNext()) {
                             DictionaryEntry entry = iterator.next().getValue();
-                            bw.write (entry.getCode() + "\t" + entry.getDescription() + "\n");
+                            bw.write(entry.getCode() + "\t" + entry.getDescription() + "\n");
                         }
                     }
                     bw.write("\n");
@@ -388,11 +388,10 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
             }
             if (map.size() > Globals.MAX_DICTIONARY_DISPLAY_SIZE) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Dictionary " + dbdle.getName() + " is too large.\nOnly the first " + Globals.MAX_DICTIONARY_DISPLAY_SIZE + " entries are displayed here.\nTo edit this dictionary please import it from file.", "Dictionary too large.", JOptionPane.WARNING_MESSAGE);
+                editorTextArea.setEditable(false);
+                messageLabel.setVisible(true);
                 updateButton.setEnabled(false);
-            } else {
-                updateButton.setEnabled(true);
-            }
-            if (dbdle.isLocked()){
+            } else if (dbdle.isLocked()) {
                 updateButton.setEnabled(false);
                 editorTextArea.setEditable(false);
                 messageLabel.setVisible(true);
