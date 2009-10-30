@@ -1,5 +1,35 @@
-changeset:   294:506708279230
+changeset:   300:bf5835936c87
 tag:         tip
+user:        ervikm@X60112
+date:        Fri Oct 30 16:49:43 2009 +0100
+summary:     Globals: standardisation of data entry language codes.
+
+changeset:   299:7070cafd6a67
+user:        ervikm@X60112
+date:        Fri Oct 30 16:48:41 2009 +0100
+summary:     RecordEditor: records are now properly released after closing the record editor frame.
+
+changeset:   298:d6e24eae3d3e
+user:        ervikm@X60112
+date:        Fri Oct 30 16:47:39 2009 +0100
+summary:     canreg.common: Locking of dictionaries now implemented
+
+changeset:   297:5c7fa0f73af9
+user:        ervikm@X60112
+date:        Fri Oct 30 16:46:52 2009 +0100
+summary:     EditDictionary: Locking of dictionaries now implemented
+
+changeset:   296:274c3cf193e1
+user:        ervikm@X60112
+date:        Fri Oct 30 16:46:15 2009 +0100
+summary:     SystemDefinitionConverter: Dictionaries of topography and morphology are now by default locked.
+
+changeset:   295:bcf103542ccd
+user:        ervikm@X60112
+date:        Thu Oct 29 17:51:55 2009 +0100
+summary:     Proper record locking now implemented.
+
+changeset:   294:506708279230
 user:        ervikm@X60112
 date:        Wed Oct 28 17:17:02 2009 +0100
 summary:     CanRegDAO, QueryGenerator now has more consistent ID numbering.

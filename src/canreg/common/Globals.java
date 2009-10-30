@@ -115,7 +115,6 @@ public class Globals {
     public static String PATIENT_TABLE_NAME = "Patient";
     public static String SOURCE_TABLE_NAME = "Source";
     public static String USERS_TABLE_NAME = "USERS";
-
     /**
      * 
      */
@@ -158,6 +157,7 @@ public class Globals {
     public static String OBSOLETE_VALUE = "1";
     public static String NOT_OBSOLETE_VALUE = "0";
     public static int MAX_DICTIONARY_DISPLAY_SIZE = 2000;
+
     /**
      * 
      */
@@ -188,7 +188,7 @@ public class Globals {
      * 
      */
     static public String TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME = "TRID";
-        /**
+    /**
      *
      */
     static public String SOURCE_TABLE_RECORD_ID_VARIABLE_NAME = "SRID";
@@ -428,14 +428,11 @@ public class Globals {
     public static String FILL_IN_STATUS_MANDATORY_STRING = "Mandatory";
     public static String FILL_IN_STATUS_AUTOMATIC_STRING = "Automatic";
     public static String FILL_IN_STATUS_OPTIONAL_STRING = "Optional";
+    public static String FILL_IN_STATUS_SYSTEM_STRING = "System";
 
     public static int PDS_DATABASE_NAME_LENGTH = 100;
-
     public static int ADDITIONAL_DIGITS_FOR_PATIENT_RECORD = 2;
-
     public static int ADDITIONAL_DIGITS_FOR_TUMOUR_ID = 2;
-
     public static int ADDITIONAL_DIGITS_FOR_SOURCE_ID = 2;
-
     public static int MAX_USERNAME_LENGHT = 16;
 }
