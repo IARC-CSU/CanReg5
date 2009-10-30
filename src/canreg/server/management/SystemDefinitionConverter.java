@@ -1,6 +1,8 @@
 package canreg.server.management;
 
+import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.Globals;
+import canreg.common.Tools;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.util.Set;
@@ -208,6 +210,7 @@ public class SystemDefinitionConverter {
 
         variableToTableMap = new TreeMap<String, String>();
         standardVariableToIndexMap = new TreeMap<String, Integer>();
+        DatabaseDictionaryListElement[] dictionaryListElements;
 
         try {
 
@@ -262,44 +265,8 @@ public class SystemDefinitionConverter {
                 char workingLanguageCode = readBytes(1).charAt(0);
 
                 // generalParentElement.appendChild(createElement(namespace + "working_language", readBytes(1)));
+                String workingLanguage = translateLanguageCode(workingLanguageCode);
 
-                String workingLanguage = "en"; // default working language
-                switch (workingLanguageCode) {
-                    // reference: http://ftp.ics.uci.edu/pub/ietf/http/related/iso639.txt
-                    case 'E':
-                        workingLanguage = "en";
-                        break;
-                    case 'F':
-                        workingLanguage = "fr";
-                        break;
-                    case 'S':
-                        workingLanguage = "es";
-                        break;
-                    case 'I':
-                        workingLanguage = "it";
-                        break;
-                    case 'P':
-                        workingLanguage = "pt";
-                        break;
-                    case 'T':
-                        workingLanguage = "tr";
-                        break;
-                    case 'G':
-                        workingLanguage = "el";
-                        break;
-                    case 'R':
-                        workingLanguage = "ro";
-                        break;
-                    case 'A':
-                        workingLanguage = "ar";
-                        break;
-                    case 'C':
-                        workingLanguage = "zh";
-                        break;
-                    case 'H':
-                        workingLanguage = "th";
-                        break;
-                }
                 generalParentElement.appendChild(createElement(namespace + "working_language", workingLanguage));
 
                 // Create the Dictionary part
@@ -349,13 +316,13 @@ public class SystemDefinitionConverter {
                     //skip unused variables
                     // Group order
                     int order = readNumber(2);
-                    groupOrder[i]=order;
+                    groupOrder[i] = order;
                     //Group height
                     readNumber(2);
                 }
 
                 // group order
-                for (int i = 0; i < numberOfGroups; i++){
+                for (int i = 0; i < numberOfGroups; i++) {
                     int groupIndex = groupOrder[i];
                     Element variableElement = (Element) doc.getElementsByTagName(namespace + "group").item(groupIndex);
                     variableElement.appendChild(createElement(namespace + "group_pos", "" + i));
@@ -515,6 +482,7 @@ public class SystemDefinitionConverter {
                 //
                 int numberOfStandardVarbs = readNumber(2);
                 debugOut("Number of Standard variables:" + numberOfStandardVarbs);
+                dictionaryListElements = Tools.getDictionaryListElements(doc, namespace);
                 for (int i = 0; i < numberOfStandardVarbs; i++) {
                     int variableIndex = readNumber(2);
                     if (variableIndex > -1) {
@@ -523,13 +491,29 @@ public class SystemDefinitionConverter {
                         variableElement.appendChild(createElement(namespace + "standard_variable_name", standardVariablesCR4[i]));
                         standardVariableToIndexMap.put(standardVariablesCR4[i], variableIndex);
                         // Grab some information
+                        // Registration number
                         if (i == 0) {
                             String recordIDlengthString = variableElement.getElementsByTagName(namespace + "variable_length").item(0).getTextContent();
                             if (recordIDlengthString != null) {
                                 recordIDlength = Integer.parseInt(recordIDlengthString);
                             }
-                        } else if (i == 6) {
+                        } // Morphology
+                        else if (i == 6) {
                             morphologyVariableName = variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent();
+                            String morphologyDictionaryName = variableElement.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
+                            DatabaseDictionaryListElement dbdle = findDictionaryListElementByName(morphologyDictionaryName, dictionaryListElements);
+                            int dictionaryID = dbdle.getDictionaryID();
+                            Element dictionaryElement = (Element) doc.getElementsByTagName(namespace + "dictionary").item(dictionaryID);
+                            //  debugOut(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
+                            dictionaryElement.appendChild(createElement(namespace + "locked", "true"));
+                        } // Topography
+                        else if (i == 5) {
+                            String topographyDictionaryName = variableElement.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
+                            DatabaseDictionaryListElement dbdle = findDictionaryListElementByName(topographyDictionaryName, dictionaryListElements);
+                            int dictionaryID = dbdle.getDictionaryID();
+                            Element dictionaryElement = (Element) doc.getElementsByTagName(namespace + "dictionary").item(dictionaryID);
+                            //  debugOut(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
+                            dictionaryElement.appendChild(createElement(namespace + "locked", "true"));
                         }
                     }
                 }
@@ -707,7 +691,8 @@ public class SystemDefinitionConverter {
                 settingsElement.appendChild(createElement(namespace + "mult_prim_rules", "" + dataStream.readByte()));
                 settingsElement.appendChild(createElement(namespace + "special_registry", "" + dataStream.readByte()));
                 settingsElement.appendChild(createElement(namespace + "password_rules", "" + dataStream.readByte()));
-                settingsElement.appendChild(createElement(namespace + "data_entry_language", readBytes(1)));
+                char dataEntryLanguageCode = readBytes(1).charAt(0);
+                settingsElement.appendChild(createElement(namespace + "data_entry_language", translateLanguageCode(dataEntryLanguageCode)));
                 codingElement.appendChild(createElement(namespace + "registration_number_type", "" + dataStream.readByte()));
                 codingElement.appendChild(createElement(namespace + "mult_prim_code_length", readBytes(1)));
                 codingElement.appendChild(createElement(namespace + "basis_diag_codes", "" + dataStream.readByte()));
@@ -984,5 +969,69 @@ public class SystemDefinitionConverter {
             }
         }
         return translatedString;
+    }
+
+    private String translateLanguageCode(char workingLanguageCode) {
+        String workingLanguage = Globals.DATAENTRY_LANGUAGE_ENGLISH; // default working language
+        switch (workingLanguageCode) {
+            // reference: http://ftp.ics.uci.edu/pub/ietf/http/related/iso639.txt
+            case 'E':
+                workingLanguage = Globals.DATAENTRY_LANGUAGE_ENGLISH;
+                break;
+            case 'F':
+                workingLanguage = Globals.DATAENTRY_LANGUAGE_FRENCH;
+                break;
+            case 'S':
+                workingLanguage = Globals.DATAENTRY_LANGUAGE_SPANISH;
+                break;
+            case 'I':
+                workingLanguage = Globals.DATAENTRY_LANGUAGE_ITALIAN;
+                break;
+            case 'P':
+                workingLanguage = Globals.DATAENTRY_LANGUAGE_PORTUGUESE;
+                break;
+            case 'T':
+                workingLanguage = Globals.DATAENTRY_LANGUAGE_TURKISH;
+                break;
+            case 'G':
+                workingLanguage = Globals.DATAENTRY_LANGUAGE_GREEK;
+                break;
+            case 'R':
+                workingLanguage = Globals.DATAENTRY_LANGUAGE_ROMANIAN;
+                break;
+            case 'A':
+                workingLanguage = Globals.DATAENTRY_LANGUAGE_ARABIC;
+                break;
+            case 'C':
+                workingLanguage = Globals.DATAENTRY_LANGUAGE_CHINESE;
+                break;
+            case 'H':
+                workingLanguage = Globals.DATAENTRY_LANGUAGE_THAI;
+                break;
+            case 'K':
+                workingLanguage = Globals.DATAENTRY_LANGUAGE_KOREAN;
+                break;
+            case 'Z':
+                workingLanguage = Globals.DATAENTRY_LANGUAGE_FARSI;
+                break;
+            case 'U':
+                workingLanguage = Globals.DATAENTRY_LANGUAGE_RUSSIAN;
+                break;
+        }
+        return workingLanguage;
+    }
+
+    private static DatabaseDictionaryListElement findDictionaryListElementByName(String dictionaryName, DatabaseDictionaryListElement[] dictionaryListElements) {
+        DatabaseDictionaryListElement dictionaryListElement = null;
+        boolean found = false;
+        int i = 0;
+        while (!found && i < dictionaryListElements.length) {
+            dictionaryListElement = dictionaryListElements[i++];
+            found = dictionaryListElement.getName().equalsIgnoreCase(dictionaryName);
+        }
+        if (!found) {
+            dictionaryListElement = null;
+        }
+        return dictionaryListElement;
     }
 }
