@@ -255,6 +255,8 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
     }// </editor-fold>//GEN-END:initComponents
 
     private void initOtherComponents() {
+        editTableRecordButton.setVisible(false);
+        createNextButton.setVisible(false);
 
         resultScrollPane = canreg.common.LazyViewport.createLazyScrollPaneFor(resultTable);
 
