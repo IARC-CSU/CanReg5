@@ -251,7 +251,9 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         // show the contents of the file
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new FileReader(fileNameTextField.getText().trim()));
+            FileInputStream fis = new FileInputStream(fileNameTextField.getText().trim());
+            InputStreamReader isr = new InputStreamReader(fis, (Charset) charsetsComboBox.getSelectedItem());
+            br = new BufferedReader(isr);
             int i = 0;
             String text = new String();
             String line = br.readLine();
@@ -415,7 +417,7 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
     @Action
     public void canreg4FormatTicked() {
-        if (cr4dictionaryCheckBox.isSelected()){
+        if (cr4dictionaryCheckBox.isSelected()) {
             charsetsComboBox.setSelectedItem(globalToolBox.getStandardCharset());
         } else {
             charsetsComboBox.setSelectedItem(Charset.defaultCharset());
