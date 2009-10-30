@@ -77,6 +77,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         displayScrollPane = new javax.swing.JScrollPane();
         editorTextArea = new javax.swing.JTextArea();
         updateButton = new javax.swing.JButton();
+        messageLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setMaximizable(true);
@@ -140,6 +141,9 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         updateButton.setText(resourceMap.getString("updateButton.text")); // NOI18N
         updateButton.setName("updateButton"); // NOI18N
 
+        messageLabel.setText(resourceMap.getString("messageLabel.text")); // NOI18N
+        messageLabel.setName("messageLabel"); // NOI18N
+
         javax.swing.GroupLayout oneFieldPanelLayout = new javax.swing.GroupLayout(oneFieldPanel);
         oneFieldPanel.setLayout(oneFieldPanelLayout);
         oneFieldPanelLayout.setHorizontalGroup(
@@ -149,7 +153,8 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chooseDictionaryComboBox, 0, 444, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, oneFieldPanelLayout.createSequentialGroup()
-                .addContainerGap(437, Short.MAX_VALUE)
+                .addComponent(messageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(updateButton))
             .addComponent(displayScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
         );
@@ -160,9 +165,11 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(displayEditLabel)
                     .addComponent(chooseDictionaryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(displayScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                .addComponent(displayScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(updateButton))
+                .addGroup(oneFieldPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(updateButton)
+                    .addComponent(messageLabel)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -196,6 +203,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JTextArea editorTextArea;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JLabel messageLabel;
     private javax.swing.JPanel oneFieldPanel;
     private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
@@ -384,7 +392,17 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
             } else {
                 updateButton.setEnabled(true);
             }
+            if (dbdle.isLocked()){
+                updateButton.setEnabled(false);
+                editorTextArea.setEditable(false);
+                messageLabel.setVisible(true);
+            } else {
+                updateButton.setEnabled(true);
+                editorTextArea.setEditable(true);
+                messageLabel.setVisible(false);
+            }
         }
         editorTextArea.setText(str);
+        editorTextArea.setCaretPosition(0);
     }
 }

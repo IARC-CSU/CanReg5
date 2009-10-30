@@ -121,7 +121,8 @@
                   <Component id="chooseDictionaryComboBox" pref="444" max="32767" attributes="0"/>
               </Group>
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="437" max="32767" attributes="0"/>
+                  <Component id="messageLabel" pref="427" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="updateButton" min="-2" max="-2" attributes="0"/>
               </Group>
               <Component id="displayScrollPane" alignment="0" pref="504" max="32767" attributes="0"/>
@@ -137,7 +138,10 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="displayScrollPane" pref="406" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="updateButton" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="updateButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="messageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
           </Group>
         </DimensionLayout>
@@ -190,6 +194,12 @@
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="updateButton.text"/>
             <Property name="name" type="java.lang.String" value="updateButton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="messageLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="messageLabel.text"/>
+            <Property name="name" type="java.lang.String" value="messageLabel" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
