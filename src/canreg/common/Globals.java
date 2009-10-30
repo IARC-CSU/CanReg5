@@ -120,19 +120,20 @@ public class Globals {
      * 
      */
     public static String DATE_FORMAT_STRING = "yyyyMMdd";
-    public static String DATAENTRY_LANGUAGE_ENGLISH = "E";
-    public static String DATAENTRY_LANGUAGE_FRENCH = "F";
-    public static String DATAENTRY_LANGUAGE_SPANISH = "S";
-    public static String DATAENTRY_LANGUAGE_ITALIAN = "I";
-    public static String DATAENTRY_LANGUAGE_TURKISH = "T";
-    public static String DATAENTRY_LANGUAGE_ROMANIAN = "R";
-    public static String DATAENTRY_LANGUAGE_PORTUGUESE = "P";
-    public static String DATAENTRY_LANGUAGE_CHINESE = "C";
-    public static String DATAENTRY_LANGUAGE_THAI = "H";
-    public static String DATAENTRY_LANGUAGE_KOREAN = "K";
-    public static String DATAENTRY_LANGUAGE_ARABIC = "A";
-    public static String DATAENTRY_LANGUAGE_FARSI = "Z";
-    public static String DATAENTRY_LANGUAGE_RUSSIAN = "U";
+    public static String DATAENTRY_LANGUAGE_ENGLISH = "en";
+    public static String DATAENTRY_LANGUAGE_FRENCH = "fr";
+    public static String DATAENTRY_LANGUAGE_SPANISH = "es";
+    public static String DATAENTRY_LANGUAGE_ITALIAN = "it";
+    public static String DATAENTRY_LANGUAGE_TURKISH = "tr";
+    public static String DATAENTRY_LANGUAGE_ROMANIAN = "ro";
+    public static String DATAENTRY_LANGUAGE_PORTUGUESE = "pt";
+    public static String DATAENTRY_LANGUAGE_CHINESE = "zh";
+    public static String DATAENTRY_LANGUAGE_THAI = "th";
+    public static String DATAENTRY_LANGUAGE_KOREAN = "ko";
+    public static String DATAENTRY_LANGUAGE_ARABIC = "ar";
+    public static String DATAENTRY_LANGUAGE_FARSI = "fa";
+    public static String DATAENTRY_LANGUAGE_RUSSIAN = "ru";
+    public static String DATAENTRY_LANGUAGE_GREEK = "el";
     public static String CHARSET_ENGLISH = "windows-1252";
     public static String CHARSET_FRENCH = "windows-1252";
     public static String CHARSET_SPANISH = "windows-1252";
