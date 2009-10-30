@@ -80,7 +80,7 @@
                   <EmptySpace min="-2" pref="217" max="-2" attributes="0"/>
                   <Component id="tableLabel" min="-2" max="-2" attributes="0"/>
               </Group>
-              <Component id="jScrollPane1" alignment="0" pref="369" max="32767" attributes="0"/>
+              <Component id="variablesScrollPane" alignment="0" pref="369" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -91,7 +91,7 @@
                       <Component id="tableLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="207" max="32767" attributes="0"/>
+                  <Component id="variablesScrollPane" pref="211" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -109,9 +109,9 @@
             <Property name="name" type="java.lang.String" value="tableLabel" noResource="true"/>
           </Properties>
         </Component>
-        <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+        <Container class="javax.swing.JScrollPane" name="variablesScrollPane">
           <Properties>
-            <Property name="name" type="java.lang.String" value="jScrollPane1" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="variablesScrollPane" noResource="true"/>
           </Properties>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>

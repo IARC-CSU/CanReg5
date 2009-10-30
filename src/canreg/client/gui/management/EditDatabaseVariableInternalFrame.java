@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.swing.JDesktopPane;
-import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -43,6 +42,7 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
     /** Creates new form EditDatabaseVariableInternalFrame */
     public EditDatabaseVariableInternalFrame() {
         initComponents();
+        variablesScrollPane.getVerticalScrollBar().setUnitIncrement(16);
     }
 
     public void setDesktopPane(JDesktopPane dtp) {
@@ -85,7 +85,7 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
         variablesAndTablesPanel = new javax.swing.JPanel();
         variablesLabel = new javax.swing.JLabel();
         tableLabel = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        variablesScrollPane = new javax.swing.JScrollPane();
         variablesAndTableEditorsPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
 
@@ -111,11 +111,11 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
         tableLabel.setText(resourceMap.getString("tableLabel.text")); // NOI18N
         tableLabel.setName("tableLabel"); // NOI18N
 
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
+        variablesScrollPane.setName("variablesScrollPane"); // NOI18N
 
         variablesAndTableEditorsPanel.setName("variablesAndTableEditorsPanel"); // NOI18N
         variablesAndTableEditorsPanel.setLayout(new java.awt.GridLayout(0, 1));
-        jScrollPane1.setViewportView(variablesAndTableEditorsPanel);
+        variablesScrollPane.setViewportView(variablesAndTableEditorsPanel);
 
         javax.swing.GroupLayout variablesAndTablesPanelLayout = new javax.swing.GroupLayout(variablesAndTablesPanel);
         variablesAndTablesPanel.setLayout(variablesAndTablesPanelLayout);
@@ -125,7 +125,7 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
                 .addComponent(variablesLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
                 .addGap(217, 217, 217)
                 .addComponent(tableLabel))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
+            .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
         );
         variablesAndTablesPanelLayout.setVerticalGroup(
             variablesAndTablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -134,7 +134,7 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
                     .addComponent(variablesLabel)
                     .addComponent(tableLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE))
+                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
         );
 
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
@@ -242,11 +242,11 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton saveButton;
     private javax.swing.JLabel tableLabel;
     private javax.swing.JPanel variablesAndTableEditorsPanel;
     private javax.swing.JPanel variablesAndTablesPanel;
     private javax.swing.JLabel variablesLabel;
+    private javax.swing.JScrollPane variablesScrollPane;
     // End of variables declaration//GEN-END:variables
 }
