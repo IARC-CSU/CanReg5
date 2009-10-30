@@ -27,8 +27,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,9 +61,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     public static final String AUTO_FILL = "autoFill";
     private Document doc;
     private Map<Integer, Dictionary> dictionary;
-    private LinkedList<DatabaseRecord> patientRecords;
+    private Set<DatabaseRecord> patientRecords;
     private TreeMap<Object, RecordEditorPanel> patientRecordsMap;
-    private LinkedList<DatabaseRecord> tumourRecords;
+    private Set<DatabaseRecord> tumourRecords;
     private boolean changesDone = false;
     private JDesktopPane desktopPane;
     private GlobalToolBox globalToolBox;
@@ -83,8 +85,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         this.desktopPane = desktopPane;
 
         initComponents();
-        patientRecords = new LinkedList<DatabaseRecord>();
-        tumourRecords = new LinkedList<DatabaseRecord>();
+        patientRecords = new LinkedHashSet<DatabaseRecord>();
+        tumourRecords = new LinkedHashSet<DatabaseRecord>();
         patientRecordsMap = new TreeMap<Object, RecordEditorPanel>();
         autoFillHelper = new AutoFillHelper();
 
@@ -130,6 +132,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         // And add the listener to the tabbedPane
         patientTabbedPane.addChangeListener(tabbedPaneChangeListener);
         tumourTabbedPane.addChangeListener(tabbedPaneChangeListener);
+
+        //remove the save all button for now
+        saveAllButton.setVisible(false);
 
     }
 
@@ -340,9 +345,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(showObsoleteRecordsCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addComponent(printButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveAllButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(printButton)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -350,10 +355,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(addpatientRecordButton)
                 .addComponent(saveAllButton)
-                .addComponent(printButton)
                 .addComponent(showObsoleteRecordsCheckBox)
                 .addComponent(jButton1)
-                .addComponent(addTumourRecordButton))
+                .addComponent(addTumourRecordButton)
+                .addComponent(printButton))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -364,15 +369,14 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
+                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -842,15 +846,20 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
     private DatabaseRecord saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException, SQLException, RecordLockedException {
         // id is the internal database id
+        DatabaseRecord newDatabaseRecord = null;
         if (databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) == null &&
                 databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) == null) {
             int id = canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord);
             if (databaseRecord instanceof Patient) {
                 // databaseRecord.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, id);
-                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME, true);
+                newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME, true);
+                patientRecords.remove(databaseRecord);
+                patientRecords.add(newDatabaseRecord);
             } else if (databaseRecord instanceof Tumour) {
                 // databaseRecord.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, id);
-                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME, true);
+                newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME, true);
+                tumourRecords.remove(databaseRecord);
+                tumourRecords.add(newDatabaseRecord);
             }
             JOptionPane.showInternalMessageDialog(this, "New record saved.");
         } else {
@@ -860,17 +869,21 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME);
                 canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord);
                 id = (Integer) databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
-                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME, true);
+                newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME, true);
+                patientRecords.remove(databaseRecord);
+                patientRecords.add(newDatabaseRecord);
             } else if (databaseRecord instanceof Tumour) {
                 id = (Integer) databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
                 canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME);
                 canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord);
                 id = (Integer) databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
-                databaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME, true);
+                newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME, true);
+                tumourRecords.remove(databaseRecord);
+                tumourRecords.add(newDatabaseRecord);
             }
             JOptionPane.showInternalMessageDialog(this, "Record saved.");
         }
-        return databaseRecord;
+        return newDatabaseRecord;
     }
 
     private boolean associateTumourRecordToPatientRecord(DatabaseRecord tumourDatabaseRecord, DatabaseRecord patientDatabaseRecord) {
@@ -978,22 +991,29 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         // Release all patient records held
         for (DatabaseRecord record : patientRecords) {
             try {
-                int id = (Integer) record.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
-                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME);
+                Object idObj = record.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                if (idObj != null) {
+                    int id = (Integer) idObj;
+                    canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME);
+                }
             } catch (RemoteException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        patientRecords.clear();
         // Release all tumour records held
         for (DatabaseRecord record : tumourRecords) {
             Tumour tumour = (Tumour) record;
             // Release all sources
             for (Source source : tumour.getSources()) {
                 try {
-                    int id = (Integer) source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
-                    canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.SOURCE_TABLE_NAME);
+                    Object idObj = source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+                    if (idObj != null) {
+                        int id = (Integer) idObj;
+                        canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.SOURCE_TABLE_NAME);
+                    }
                 } catch (RemoteException ex) {
                     Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SecurityException ex) {
@@ -1001,14 +1021,18 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 }
             }
             try {
-                int id = (Integer) tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
-                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME);
+                Object idObj = tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+                if (idObj != null) {
+                    int id = (Integer) idObj;
+                    canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME);
+                }
             } catch (RemoteException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        tumourRecords.clear();
     }
 
     private void updateTumourSequences() {
