@@ -166,15 +166,20 @@ public class SystemDefinitionConverter {
     };
     private String[] dictionaryFontTypeValues = {"Latin", "Asian"};
     private String[] dictionaryTypeValues = {"Simple", "Compound"};
-    private String[] fillInStatusValues = {"Optional", "Mandatory", "Automatic", "System"};
+    private String[] fillInStatusValues = {
+        Globals.FILL_IN_STATUS_OPTIONAL_STRING,
+        Globals.FILL_IN_STATUS_MANDATORY_STRING,
+        Globals.FILL_IN_STATUS_AUTOMATIC_STRING,
+        Globals.FILL_IN_STATUS_SYSTEM_STRING
+    };
     private String[] variableTypeValues = {"Number", "Alpha", "Date", "Dict", "AsianText"};
     private String[] mpCopyValues = {"Must", "Prob", "Intr", "Othr"};
     private TreeMap<String, String> variableToTableMap;
     private TreeMap<String, Integer> standardVariableToIndexMap;
     private int recordIDlength;
-    private int bahaviourIndex = -1;
-    private String morphologyVariableName;
-    private Charset charset = null;
+    // private int bahaviourIndex = -1;
+    // private String morphologyVariableName;
+    // private Charset charset = null;
     private CharsetDecoder charsetDecoder = null;
 
     /**
@@ -497,22 +502,12 @@ public class SystemDefinitionConverter {
                             if (recordIDlengthString != null) {
                                 recordIDlength = Integer.parseInt(recordIDlengthString);
                             }
-                        } // Morphology
-                        else if (i == 6) {
-                            morphologyVariableName = variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent();
-                            String morphologyDictionaryName = variableElement.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
-                            DatabaseDictionaryListElement dbdle = findDictionaryListElementByName(morphologyDictionaryName, dictionaryListElements);
+                        } // Topography (5), Morphology (6), Behaviour (7)
+                        else if (i == 5 || i == 6 || i == 7) {
+                            String dictionaryName = variableElement.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
+                            DatabaseDictionaryListElement dbdle = findDictionaryListElementByName(dictionaryName, dictionaryListElements);
                             int dictionaryID = dbdle.getDictionaryID();
                             Element dictionaryElement = (Element) doc.getElementsByTagName(namespace + "dictionary").item(dictionaryID);
-                            //  debugOut(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
-                            dictionaryElement.appendChild(createElement(namespace + "locked", "true"));
-                        } // Topography
-                        else if (i == 5) {
-                            String topographyDictionaryName = variableElement.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
-                            DatabaseDictionaryListElement dbdle = findDictionaryListElementByName(topographyDictionaryName, dictionaryListElements);
-                            int dictionaryID = dbdle.getDictionaryID();
-                            Element dictionaryElement = (Element) doc.getElementsByTagName(namespace + "dictionary").item(dictionaryID);
-                            //  debugOut(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
                             dictionaryElement.appendChild(createElement(namespace + "locked", "true"));
                         }
                     }
@@ -533,25 +528,25 @@ public class SystemDefinitionConverter {
                     String variableName = Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                            -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Alpha", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName));
                     variableName = Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", 1, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                            -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Alpha", 1, -1, Globals.PATIENT_TABLE_NAME, variableName));
                     /**
                      * PatientID
                      */
                     variableName = Globals.StandardVariableNames.TumourID.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_ID, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                            -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_ID, -1, Globals.TUMOUR_TABLE_NAME, variableName));
                     /**
                      * PatientRecordID
                      */
                     variableName = Globals.StandardVariableNames.PatientRecordID.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                            -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD, -1, Globals.PATIENT_TABLE_NAME, variableName));
 
                     /**
                      * Pointer to Patient from Tumour
@@ -559,11 +554,11 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.PatientIDTumourTable.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", recordIDlength, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                            -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Alpha", recordIDlength, -1, Globals.TUMOUR_TABLE_NAME, variableName));
                     variableName = Globals.StandardVariableNames.PatientRecordIDTumourTable.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                            -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD, -1, Globals.TUMOUR_TABLE_NAME, variableName));
 
                     /**
                      * "Updated by" fields
@@ -571,11 +566,11 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.PatientUpdatedBy.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", 16, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                            -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Alpha", 16, -1, Globals.PATIENT_TABLE_NAME, variableName));
                     variableName = Globals.StandardVariableNames.TumourUpdatedBy.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", 16, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                            -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Alpha", 16, -1, Globals.TUMOUR_TABLE_NAME, variableName));
 
                     /**
                      * Update dates
@@ -583,7 +578,7 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.PatientUpdateDate.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Date", 8, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                            -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Date", 8, -1, Globals.PATIENT_TABLE_NAME, variableName));
 
                     /*
                      * Record status Patient table
@@ -591,7 +586,7 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.PatientRecordStatus.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", 1, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                            -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Alpha", 1, -1, Globals.PATIENT_TABLE_NAME, variableName));
 
                     /*
                      * Check status Patient table
@@ -599,7 +594,7 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.PatientCheckStatus.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", 1, -1, Globals.PATIENT_TABLE_NAME, variableName));
+                            -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Alpha", 1, -1, Globals.PATIENT_TABLE_NAME, variableName));
 
                     /*
                      * Unduplication status Tumour table
@@ -607,7 +602,7 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.TumourUnduplicationStatus.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName));
+                            -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Alpha", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName));
 
                     /**
                      * Pointer to Tumour from Source
@@ -615,7 +610,7 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.TumourIDSourceTable.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_ID, -1, Globals.SOURCE_TABLE_NAME, variableName));
+                            -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_ID, -1, Globals.SOURCE_TABLE_NAME, variableName));
 
                     /**
                      * Pointer to Tumour from Source
@@ -623,7 +618,7 @@ public class SystemDefinitionConverter {
                     variableName = Globals.StandardVariableNames.SourceRecordID.toString();
                     variablesParentElement.appendChild(
                             createVariable(variableNumber++, variableName, variableName, variableName,
-                            -1, "Automatic", "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_ID + Globals.ADDITIONAL_DIGITS_FOR_SOURCE_ID, -1, Globals.SOURCE_TABLE_NAME, variableName));
+                            -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Alpha", recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_ID + Globals.ADDITIONAL_DIGITS_FOR_SOURCE_ID, -1, Globals.SOURCE_TABLE_NAME, variableName));
                 }
 
                 // Build the indexes
@@ -704,7 +699,7 @@ public class SystemDefinitionConverter {
                 String formula = "SUBSTR(" + morphologyVariableName + ",5,1)";
                 variablesParentElement.appendChild(
                 createMetaVariable(variableNumber++, variableName, variableName, variableName,
-                -1, "Automatic", "Othr", "Meta", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName, formula));
+                -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", "Meta", 1, -1, Globals.TUMOUR_TABLE_NAME, variableName, formula));
                 }
                  */
 
@@ -714,7 +709,7 @@ public class SystemDefinitionConverter {
                     Element variableElement = (Element) doc.getElementsByTagName(namespace + "variable").item(variableIndex);
                     //  debugOut(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
                     Element oldElement = (Element) variableElement.getElementsByTagName(namespace + "fill_in_status").item(0);
-                    variableElement.replaceChild(createElement(namespace + "fill_in_status", "Automatic"), oldElement);
+                    variableElement.replaceChild(createElement(namespace + "fill_in_status", Globals.FILL_IN_STATUS_AUTOMATIC_STRING), oldElement);
                 }
                 // TODO put the groups in the right order...
 
@@ -949,7 +944,7 @@ public class SystemDefinitionConverter {
     }
 
     public void setFileEncoding(Charset charset) {
-        this.charset = charset;
+        // this.charset = charset;
         if (charset != null) {
             charsetDecoder = charset.newDecoder();
         }
