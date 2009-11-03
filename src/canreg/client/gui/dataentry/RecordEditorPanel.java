@@ -423,8 +423,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             panelType = panelTypes.TUMOUR;
             recordStatusVariableListElement =
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
-            unduplicationVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PersonSearch.toString());
             obsoleteFlagVariableListElement =
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString());
             checkVariableListElement =
@@ -1070,9 +1068,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                 }
             }
             if (records.length() > 0) {
-                JOptionPane.showInternalMessageDialog(this, "Duplicates found:\n" + records);
+                JOptionPane.showInternalMessageDialog(this, "Potential duplicates found:\n" + records);
             } else {
-                JOptionPane.showInternalMessageDialog(this, "No duplicates found.");
+                JOptionPane.showInternalMessageDialog(this, "No potential duplicates found.");
             }
 
         } catch (SecurityException ex) {
