@@ -1,5 +1,35 @@
-changeset:   300:bf5835936c87
+changeset:   306:af00e6774091
 tag:         tip
+user:        ervikm@X60112
+date:        Fri Oct 30 18:41:59 2009 +0100
+summary:     General: code cleaned.
+
+changeset:   305:60d25d28e93a
+user:        ervikm@X60112
+date:        Fri Oct 30 18:41:19 2009 +0100
+summary:     SystemDefinitionConverter: Dictionary of behaviour is now by default locked, code cleaned.
+
+changeset:   304:0bc235736d48
+user:        ervikm@X60112
+date:        Fri Oct 30 18:39:54 2009 +0100
+summary:     EditDatabaseVariableInternalFrame: improved scrollspeed, code cleaned
+
+changeset:   303:bc31f2d9e7d4
+user:        ervikm@X60112
+date:        Fri Oct 30 18:38:20 2009 +0100
+summary:     EditDictionary: Locking of dictionaries now implemented... and fixed a bug in.
+
+changeset:   302:fbbae24bab78
+user:        ervikm@X60112
+date:        Fri Oct 30 18:37:40 2009 +0100
+summary:     BrowseInternalFrame: hid "Edit Table Record" and "Create Next" buttons.
+
+changeset:   301:cc84a387b3c6
+user:        ervikm@X60112
+date:        Fri Oct 30 18:23:06 2009 +0100
+summary:     ImportCompleteDictionary: preview also takes into account the characterset for the file encoding...
+
+changeset:   300:bf5835936c87
 user:        ervikm@X60112
 date:        Fri Oct 30 16:49:43 2009 +0100
 summary:     Globals: standardisation of data entry language codes.

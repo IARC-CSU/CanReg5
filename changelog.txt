@@ -1,8 +1,12 @@
 Changelog
-4.99.13 Build 742
+4.99.13 Build 749
 - Source table implemented.
 
 - Sources now imported.
+
+- Proper record locking now implemented.
+
+- Dictionary locking implemented.
 
 - General GUI improvements: Groups are now sorted, more strings are internationalised.
 
@@ -14,7 +18,7 @@ Changelog
 
 - Record editor now shows last update date and user. Improved the layout, internationalized some strings.
 
-- System Definition Converter taking into account source table, better system to put the variables in the right tables, takes into other character sets.
+- System Definition Converter taking into account source table, better system to put the variables in the right tables, takes into other character sets, standard naming of data entry languages, dictionaries of topography and morphology are flagged as locked by default.
 
 - Login: added message to perform backup if this never has been performed.
 
