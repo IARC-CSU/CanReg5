@@ -580,6 +580,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     }
                     if (id > 0) {
                         try {
+                            canreg.client.CanRegClientApp.getApplication().releaseRecord(id, tableName);
                             success = canreg.client.CanRegClientApp.getApplication().deleteRecord(id, tableName);
                         } catch (RecordLockedException ex) {
                             Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
