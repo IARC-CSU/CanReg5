@@ -426,6 +426,7 @@ public class SystemDefinitionConverter {
                     } else if (groupName.toLowerCase().startsWith("new control panel")) {
                         if ((englishName.equalsIgnoreCase("Reg.No.")) ||
                                 (englishName.toLowerCase().startsWith("addr")) ||
+                                (englishName.toLowerCase().startsWith("per")) ||
                                 (englishName.toLowerCase().startsWith("occu"))) {
                             tableName = Globals.PATIENT_TABLE_NAME;
                         } else {
