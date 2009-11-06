@@ -1015,7 +1015,7 @@ public class CanRegDAO {
                                 stmtSaveNewRecord.setString(recordVariableNumber, "");
                             }
                         } catch (java.lang.ClassCastException cce) {
-                            System.out.println("Cast to String Error. Type:" + variableType + ", Value: " + obj + ", Variable Number: " + recordVariableNumber);
+                            debugOut("Cast to String Error. Type:" + variableType + ", Value: " + obj + ", Variable Number: " + recordVariableNumber);
                             throw cce;
                         }
                     } else {
@@ -1027,7 +1027,7 @@ public class CanRegDAO {
                             Integer intObj = (Integer) obj;
                             stmtSaveNewRecord.setInt(recordVariableNumber, intObj.intValue());
                         } catch (java.lang.ClassCastException cce) {
-                            System.out.println("Number " + variableType + " " + obj);
+                            debugOut("Number " + variableType + " " + obj);
                             throw cce;
                         }
                     } else {
@@ -1489,7 +1489,7 @@ public class CanRegDAO {
                                 //        element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
                                 //        ": " + strObj);
                             } catch (java.lang.ClassCastException cce) {
-                                System.out.println("Cast to String Error. Type:" + variableType + ", Value: " + obj + ", Variable Number: " + variableNumber);
+                                debugOut("Cast to String Error. Type:" + variableType + ", Value: " + obj + ", Variable Number: " + variableNumber);
                                 throw cce;
                             }
                         } else {
@@ -1504,7 +1504,7 @@ public class CanRegDAO {
                                 //        element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
                                 //        ": " + obj.toString());
                             } catch (java.lang.ClassCastException cce) {
-                                System.out.println("Number " + variableType + " " + obj);
+                                debugOut("Number " + variableType + " " + obj);
                                 throw cce;
                             }
                         } else {

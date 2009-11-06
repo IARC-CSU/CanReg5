@@ -112,6 +112,7 @@ public interface CanRegServerInterface extends Remote {
      * Returns a database record with the given details
      * @param recordID the database record id
      * @param tableName the table to get the record from
+     * @param lock lock the record? true/false
      * @return a DatabaseRecord
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
