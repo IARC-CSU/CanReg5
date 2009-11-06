@@ -70,7 +70,7 @@ public class Import {
             // Skip first line
             line = bufferedReader.readLine();
             // patientNumber
-            int patientDatabaseRecordID = 0;
+            int patientDatabaseRecordID = -1;
             int tumourDatabaseIDNumber = 0;
 
             int linesToRead = io.getMaxLines();
@@ -135,6 +135,14 @@ public class Import {
 
                 // debugOut(tumour.toString());
                 // add patient to the database
+                Object patientID = patient.getVariable(io.getPatientIDVariableName());
+
+                if (patientID == null) {
+                    // save the record to get the new patientID;
+                    patientDatabaseRecordID = server.savePatient(patient);
+                    patient = (Patient) server.getRecord(patientDatabaseRecordID, Globals.PATIENT_TABLE_NAME, false);
+                    patientID = patient.getVariable(io.getPatientIDVariableName());
+                }
 
                 if (io.isDataFromPreviousCanReg()) {
                     // set update date for the patient the same as for the tumour
@@ -142,7 +150,7 @@ public class Import {
                     patient.setVariable(io.getPatientUpdateDateVariableName(), updateDate);
 
                     // Set the patientID the same as the tumourID initially
-                    Object patientID = patient.getVariable(io.getPatientIDVariableName());
+
                     Object tumourSequence = tumour.getVariable(io.getTumourSequenceVariableName());
                     String tumourSequenceString = tumourSequence + "";
                     while (tumourSequenceString.length() < Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD) {
@@ -191,8 +199,13 @@ public class Import {
                     patient.setVariable(io.getObsoletePatientFlagVariableName(), "0");
                 }
                 if (needToSavePatientAgain) {
-                    patientDatabaseRecordID = server.savePatient(patient);
+                    if (patientDatabaseRecordID > 0) {
+                        server.editPatient(patient);
+                    } else {
+                        patientDatabaseRecordID = server.savePatient(patient);
+                    }
                 }
+                
                 tumourDatabaseIDNumber = server.saveTumour(tumour);
 
                 //Read next line of data
