@@ -1485,9 +1485,9 @@ public class CanRegDAO {
                                 } else {
                                     stmtEditRecord.setString(variableNumber, "");
                                 }
-                                System.out.println(
-                                        element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
-                                        ": " + strObj);
+                                // System.out.println(
+                                //        element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
+                                //        ": " + strObj);
                             } catch (java.lang.ClassCastException cce) {
                                 System.out.println("Cast to String Error. Type:" + variableType + ", Value: " + obj + ", Variable Number: " + variableNumber);
                                 throw cce;
@@ -1500,9 +1500,9 @@ public class CanRegDAO {
                             try {
                                 Integer intObj = (Integer) obj;
                                 stmtEditRecord.setInt(variableNumber, intObj.intValue());
-                                System.out.println(
-                                        element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
-                                        ": " + obj.toString());
+                                // System.out.println(
+                                //        element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
+                                //        ": " + obj.toString());
                             } catch (java.lang.ClassCastException cce) {
                                 System.out.println("Number " + variableType + " " + obj);
                                 throw cce;
