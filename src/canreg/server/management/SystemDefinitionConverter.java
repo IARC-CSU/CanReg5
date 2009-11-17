@@ -358,6 +358,8 @@ public class SystemDefinitionConverter {
 
                     // replace .s with _s
                     nameInDatabase = nameInDatabase.replace('.', '_');
+                    // replace blanks with _s
+                    nameInDatabase = nameInDatabase.replace(' ', '_');
 
                     element.appendChild(createElement(namespace + "short_name", nameInDatabase));
                     String englishName = readText();
