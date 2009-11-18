@@ -68,6 +68,7 @@
     <Component class="javax.swing.JCheckBox" name="dataCheckBox">
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="dataCheckBox.text"/>
+        <Property name="toolTipText" type="java.lang.String" resourceKey="dataCheckBox.toolTipText"/>
         <Property name="name" type="java.lang.String" value="dataCheckBox" noResource="true"/>
       </Properties>
     </Component>

@@ -92,6 +92,7 @@ public class VariablesExportDetailsPanel extends javax.swing.JPanel {
         variableNameLabel.setName("variableNameLabel"); // NOI18N
 
         dataCheckBox.setText(resourceMap.getString("dataCheckBox.text")); // NOI18N
+        dataCheckBox.setToolTipText(resourceMap.getString("dataCheckBox.toolTipText")); // NOI18N
         dataCheckBox.setName("dataCheckBox"); // NOI18N
 
         dictionaryCategoryCheckBox.setText(resourceMap.getString("dictionaryCategoryCheckBox.text")); // NOI18N
