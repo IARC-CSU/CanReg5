@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,12 +50,14 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     private DistributedTableDescription tableDatadescriptionPopUp;
     private static int MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK = 20;
     private TableInternalFrame tableInternalFrame;
+    private final Map<Integer, canreg.server.database.Dictionary> dictionary;
 
     /** Creates new form FrequenciesByYearInternalFrame
      * @param dtp 
      */
     public FrequenciesByYearInternalFrame(JDesktopPane dtp) {
         this.dtp = dtp;
+        dictionary = CanRegClientApp.getApplication().getDictionary();
         initComponents();
         initOtherComponents();
 
@@ -236,8 +239,8 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             } catch (SecurityException ex) {
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Security exception";
-            // } catch (InterruptedException ignore) {
-            //    result = "Ignore";
+                // } catch (InterruptedException ignore) {
+                //    result = "Ignore";
             } catch (Exception ex) {
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Not OK";
@@ -315,7 +318,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         rangeFilterPanel.setRecordPanelvisible(false);
         rangeFilterPanel.setSortByVariableShown(false);
         resultScrollPane.setVisible(false);
-        variablesChooserPanel.initPanel();
+        variablesChooserPanel.initPanel(dictionary);
         tableInternalFrame = new TableInternalFrame();
 
         resultTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -367,7 +370,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         // jpm.add("Column " + rowNumber +" " + tableColumnModel.getColumn(tableColumnModel.getColumnIndexAtX(evt.getX())).getHeaderValue());
         int year = Integer.parseInt((String) tableModel.getValueAt(rowNumber, 0));
 
-        String filterString = "INCID >= '" + year * 10000 + "' AND INCID <'" + (year + 1) * 10000+"'";
+        String filterString = "INCID >= '" + year * 10000 + "' AND INCID <'" + (year + 1) * 10000 + "'";
 
         for (DatabaseVariablesListElement dvle : chosenVariables) {
             int columnNumber = tableColumnModel.getColumnIndex(dvle.getDatabaseVariableName().toUpperCase());

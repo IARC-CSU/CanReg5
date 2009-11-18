@@ -6,6 +6,7 @@
 package canreg.client.gui.components;
 
 import canreg.common.DatabaseVariablesListElement;
+import canreg.server.database.Dictionary;
 
 /**
  *
@@ -14,6 +15,7 @@ import canreg.common.DatabaseVariablesListElement;
 public class VariablesExportDetailsPanel extends javax.swing.JPanel {
 
     private DatabaseVariablesListElement variable;
+    private Dictionary dictionary;
 
     /** Creates new form VariablesExportDetailsPanel */
     public VariablesExportDetailsPanel() {
@@ -65,7 +67,7 @@ public class VariablesExportDetailsPanel extends javax.swing.JPanel {
         return new boolean[]{dataCheckBox.isSelected(), dictionaryCategoryCheckBox.isSelected(), dictionaryDescriptionCheckBox.isSelected()};
     }
 
-    DatabaseVariablesListElement getVariable() {
+    public DatabaseVariablesListElement getVariable() {
         return variable;
     }
 
@@ -144,4 +146,21 @@ public class VariablesExportDetailsPanel extends javax.swing.JPanel {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel variableNameLabel;
     // End of variables declaration//GEN-END:variables
+
+    void setDictionary(Dictionary dictionary) {
+        this.dictionary = dictionary;
+        if (dictionary != null){
+            if (dictionary.isCompoundDictionary()){
+                 dictionaryCategoryCheckBox.setEnabled(true);
+            }
+            dictionaryDescriptionCheckBox.setEnabled(true);
+        }
+    }
+
+    /**
+     * @return the dictionary
+     */
+    public Dictionary getDictionary() {
+        return dictionary;
+    }
 }

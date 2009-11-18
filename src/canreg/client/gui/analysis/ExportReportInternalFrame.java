@@ -10,9 +10,12 @@ import cachingtableapi.DistributedTableModel;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.LocalSettings;
+import canreg.client.gui.components.VariablesExportDetailsPanel;
 import canreg.client.gui.tools.TableColumnAdjuster;
 import canreg.client.gui.tools.XTableColumnModel;
 import canreg.common.DatabaseFilter;
+import canreg.common.DatabaseVariablesListElement;
+import canreg.server.database.Dictionary;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -23,6 +26,8 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
@@ -47,12 +52,12 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private DistributedTableModel tableDataModel;
     private JScrollPane resultScrollPane;
     private JTable resultTable = new JTable();
-    ;
     private JFileChooser chooser;
     private String path;
     private LocalSettings localSettings;
     private LinkedList<String> variablesToShow;
     private XTableColumnModel tableColumnModel;
+    private final Map<Integer, Dictionary> dictionary;
 
     /** Creates new form ExportFrame
      * @param dtp is a pointer to the current desktop pane.
@@ -61,6 +66,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         initComponents();
         this.dtp = dtp;
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        dictionary = CanRegClientApp.getApplication().getDictionary();
         initOtherComponents();
         initValues();
     }
@@ -325,6 +331,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private javax.swing.JLabel variableNamesLabel;
     private javax.swing.JButton writeFileButton;
     // End of variables declaration//GEN-END:variables
+
     /**
      * 
      * @return
@@ -334,7 +341,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     }
 
     private void initValues() {
-        variableChooserPanel.initPanel();
+        variableChooserPanel.initPanel(dictionary);
         rangeFilterPanel.setDeskTopPane(dtp);
         rangeFilterPanel.setActionListener(this);
     }
@@ -426,8 +433,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             } catch (SecurityException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Security exception";
-            // } catch (InterruptedException ignore) {
-            //     result = "Ignore";
+                // } catch (InterruptedException ignore) {
+                //     result = "Ignore";
             } catch (Exception ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Not OK";
@@ -576,19 +583,27 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             super(app);
             writeFileButton.setEnabled(false);
             // refresh the table if necessary
-            if (!resultPanel.isVisible()){
+            if (!resultPanel.isVisible()) {
                 Task refresher = refresh();
                 refresher.execute();
-                while(!refresher.isDone()){
+                while (!refresher.isDone()) {
                     // wait 
                 }
             }
-            
+
             // Lock the table
             resultPanel.setVisible(false);
             rangeFilterPanel.setRefreshButtonEnabled(false);
-            
-            
+
+            Map<String, boolean[]> variablesToExport = new TreeMap<String, boolean[]>();
+
+            // build the map of column names and checked variables boxes
+            for (int column = 0; column < resultTable.getColumnCount(); column++) {
+                String columnName = resultTable.getColumnName(column).toUpperCase();
+                VariablesExportDetailsPanel vedp = variableChooserPanel.getVariablesExportDetailsPanelByName(columnName);
+                variablesToExport.put(columnName, vedp.getCheckboxes());
+            }
+
             if (fileFormatComboBox.getSelectedIndex() == 1) {
                 separatingString = ",";
             } else {
@@ -614,25 +629,59 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
             // Here we do indeed reference the jtable. However as long as the user does not move the columns it should be ok...
             // TODO: reference the data source instead of the resultTable!
-            
+
             String line = "";
+            VariablesExportDetailsPanel dvle;
+            Object value;
 
             try {
                 for (int column = 0; column < columnCount; column++) {
-                    line += resultTable.getColumnName(column);
+                    dvle = variableChooserPanel.getVariablesExportDetailsPanelByName(resultTable.getColumnName(column));
+                    boolean[] bools = dvle.getCheckboxes();
+                    // the raw name
+                    if (bools[0]) {
+                        line += resultTable.getColumnName(column) + separatingString;
+                    }
+                    // the category
+                    if (bools[1]) {
+                        line += resultTable.getColumnName(column) + " (cat)" + separatingString;
+                    }
+                    // the description
+                    if (bools[2]) {
+                        line += resultTable.getColumnName(column) + " (desc)" + separatingString;
+                    }
                     boolean last = (column == columnCount - 1);
-                    if (!last) {
-                        line += separatingString;
+                    if (last) {
+                        line = line.substring(0, line.length() - separatingString.length());
                     }
                 }
                 bw.write(line + "\n");
                 line = "";
                 for (int row = 0; row < rowCount; row++) {
                     for (int column = 0; column < columnCount; column++) {
-                        line += resultTable.getValueAt(row, column);
+                        dvle = variableChooserPanel.getVariablesExportDetailsPanelByName(resultTable.getColumnName(column));
+                        value = resultTable.getValueAt(row, column);
+                        boolean[] bools = dvle.getCheckboxes();
+                        // the raw code
+                        if (bools[0]) {
+                            line += value + separatingString;
+                        }
+                        // the category
+                        if (bools[1]) {
+                            String code = (String) value;
+                            int categoryLength = dvle.getDictionary().getCodeLength();
+                            String category = dvle.getDictionary().getDictionaryEntries().get(code.substring(0, categoryLength)).getDescription();
+                            line += category + separatingString;
+                        }
+                        // the description
+                        if (bools[2]) {
+                            String code = (String) value;
+                            String description = dvle.getDictionary().getDictionaryEntries().get(code).getDescription();
+                            line += description + separatingString;
+                        }
                         boolean last = (column == columnCount - 1);
-                        if (!last) {
-                            line += separatingString;
+                        if (last) {
+                            line = line.substring(0, line.length() - separatingString.length());
                         }
                     }
                     setProgress(100 * row / rowCount);
@@ -652,7 +701,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 // the result computed by doInBackground().
                 bw.flush();
                 bw.close();
-                
+
                 rangeFilterPanel.setRefreshButtonEnabled(true);
                 resultPanel.setVisible(true);
                 writeFileButton.setEnabled(true);
