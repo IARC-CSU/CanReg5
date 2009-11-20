@@ -14,7 +14,9 @@ import canreg.client.gui.components.VariablesExportDetailsPanel;
 import canreg.client.gui.tools.TableColumnAdjuster;
 import canreg.client.gui.tools.XTableColumnModel;
 import canreg.common.DatabaseFilter;
-import canreg.common.DatabaseVariablesListElement;
+import canreg.common.DateHelper;
+import canreg.common.Globals;
+import canreg.common.GregorianCalendarCanReg;
 import canreg.server.database.Dictionary;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +26,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.Map;
@@ -58,6 +65,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private LinkedList<String> variablesToShow;
     private XTableColumnModel tableColumnModel;
     private final Map<Integer, Dictionary> dictionary;
+    private int VARIABLE_NAME_ENGLISH_INDEX = 1;
+    private int VARIABLE_NAME_SHORT_INDEX = 0;
+    private int VARIABLE_NAME_FULL_INDEX = 2;
+    private int VARIABLE_NAME_STANDARD_INDEX = 3;
 
     /** Creates new form ExportFrame
      * @param dtp is a pointer to the current desktop pane.
@@ -99,6 +110,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         fileFormatComboBox = new javax.swing.JComboBox();
         formatDateCheckBox = new javax.swing.JCheckBox();
         correctUnknownCheckBox = new javax.swing.JCheckBox();
+        dateFormatComboBox = new javax.swing.JComboBox();
         exportPanel = new javax.swing.JPanel();
         writeFileButton = new javax.swing.JButton();
         resultPanel = new javax.swing.JPanel();
@@ -156,12 +168,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         headingCheckBox.setEnabled(false);
         headingCheckBox.setName("headingCheckBox"); // NOI18N
 
-        variableNamesComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Short", "English", "User" }));
-        variableNamesComboBox.setEnabled(false);
+        variableNamesComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Short", "English", "Full", "Standard" }));
         variableNamesComboBox.setName("variableNamesComboBox"); // NOI18N
 
         variableNamesLabel.setText(resourceMap.getString("variableNamesLabel.text")); // NOI18N
-        variableNamesLabel.setEnabled(false);
         variableNamesLabel.setName("variableNamesLabel"); // NOI18N
 
         fileFormatLabel.setText(resourceMap.getString("fileFormatLabel.text")); // NOI18N
@@ -170,15 +180,22 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         fileFormatComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tab Separated Values", "Comma Separated" }));
         fileFormatComboBox.setName("fileFormatComboBox"); // NOI18N
 
-        formatDateCheckBox.setSelected(true);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ExportReportInternalFrame.class, this);
+        formatDateCheckBox.setAction(actionMap.get("formatDateCheckBoxChanged")); // NOI18N
         formatDateCheckBox.setText(resourceMap.getString("formatDateCheckBox.text")); // NOI18N
-        formatDateCheckBox.setEnabled(false);
+        formatDateCheckBox.setToolTipText(resourceMap.getString("formatDateCheckBox.toolTipText")); // NOI18N
         formatDateCheckBox.setName("formatDateCheckBox"); // NOI18N
 
-        correctUnknownCheckBox.setSelected(true);
         correctUnknownCheckBox.setText(resourceMap.getString("correctUnknownCheckBox.text")); // NOI18N
+        correctUnknownCheckBox.setToolTipText(resourceMap.getString("correctUnknownCheckBox.toolTipText")); // NOI18N
         correctUnknownCheckBox.setEnabled(false);
         correctUnknownCheckBox.setName("correctUnknownCheckBox"); // NOI18N
+
+        dateFormatComboBox.setEditable(true);
+        dateFormatComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "dd/mm/yyyy", "mm/dd/yyyy", "mm/dd/yy", "yyyy/mm/dd" }));
+        dateFormatComboBox.setToolTipText(resourceMap.getString("dateFormatComboBox.toolTipText")); // NOI18N
+        dateFormatComboBox.setEnabled(false);
+        dateFormatComboBox.setName("dateFormatComboBox"); // NOI18N
 
         javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
         optionsPanel.setLayout(optionsPanelLayout);
@@ -194,10 +211,13 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     .addGroup(optionsPanelLayout.createSequentialGroup()
                         .addComponent(fileFormatLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(fileFormatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(formatDateCheckBox)
+                        .addComponent(fileFormatComboBox, 0, 206, Short.MAX_VALUE))
+                    .addGroup(optionsPanelLayout.createSequentialGroup()
+                        .addComponent(formatDateCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dateFormatComboBox, 0, 184, Short.MAX_VALUE))
                     .addComponent(correctUnknownCheckBox))
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addContainerGap())
         );
         optionsPanelLayout.setVerticalGroup(
             optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,7 +232,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     .addComponent(fileFormatLabel)
                     .addComponent(fileFormatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(formatDateCheckBox)
+                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(formatDateCheckBox)
+                    .addComponent(dateFormatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(correctUnknownCheckBox))
         );
@@ -220,7 +242,6 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         exportPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("exportPanel.border.title"))); // NOI18N
         exportPanel.setName("exportPanel"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ExportReportInternalFrame.class, this);
         writeFileButton.setAction(actionMap.get("writeFileAction")); // NOI18N
         writeFileButton.setName("writeFileButton"); // NOI18N
 
@@ -267,11 +288,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 791, Short.MAX_VALUE)
+            .addGap(0, 802, Short.MAX_VALUE)
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 51, Short.MAX_VALUE)
+            .addGap(0, 58, Short.MAX_VALUE)
         );
 
         variableChooserPanel.setName("variableChooserPanel"); // NOI18N
@@ -289,7 +310,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(variableChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                        .addComponent(variableChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -314,6 +335,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox correctUnknownCheckBox;
+    private javax.swing.JComboBox dateFormatComboBox;
     private javax.swing.JPanel exportPanel;
     private javax.swing.JComboBox fileFormatComboBox;
     private javax.swing.JLabel fileFormatLabel;
@@ -575,6 +597,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         int rowCount;
         int columnCount;
         private String separatingString;
+        private boolean formatDate = false;
+        private boolean correctUnknown = false;
 
         WriteFileActionTask(String fileName, org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
@@ -590,6 +614,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     // wait 
                 }
             }
+
+            formatDate = formatDateCheckBox.isSelected();
+            correctUnknown = correctUnknownCheckBox.isSelected() && formatDate;
 
             // Lock the table
             resultPanel.setVisible(false);
@@ -633,22 +660,41 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             String line = "";
             VariablesExportDetailsPanel dvle;
             Object value;
+            GregorianCalendarCanReg gregorianCanRegCalendar;
 
             try {
                 for (int column = 0; column < columnCount; column++) {
                     dvle = variableChooserPanel.getVariablesExportDetailsPanelByName(resultTable.getColumnName(column));
                     boolean[] bools = dvle.getCheckboxes();
+                    String columnName = resultTable.getColumnName(column);
+                    //
+                    if (variableNamesComboBox.getSelectedIndex() == VARIABLE_NAME_ENGLISH_INDEX) {
+                        columnName = dvle.getVariable().getEnglishName();
+                    } else if (variableNamesComboBox.getSelectedIndex() == VARIABLE_NAME_FULL_INDEX) {
+                        columnName = dvle.getVariable().getFullName();
+                    } else if (variableNamesComboBox.getSelectedIndex() == VARIABLE_NAME_STANDARD_INDEX) {
+                        String standardName = dvle.getVariable().getStandardVariableName();
+                        if (standardName != null) {
+                            columnName = standardName;
+                        } else {
+                            // add a star
+                            columnName += "*";
+                        }
+                    } else if (variableNamesComboBox.getSelectedIndex() == VARIABLE_NAME_SHORT_INDEX) {
+                        // do nothing
+                    }
+
                     // the raw name
                     if (bools[0]) {
-                        line += resultTable.getColumnName(column) + separatingString;
+                        line += columnName + separatingString;
                     }
                     // the category
                     if (bools[1]) {
-                        line += resultTable.getColumnName(column) + " (cat)" + separatingString;
+                        line += columnName + " (cat)" + separatingString;
                     }
                     // the description
                     if (bools[2]) {
-                        line += resultTable.getColumnName(column) + " (desc)" + separatingString;
+                        line += columnName + " (desc)" + separatingString;
                     }
                     boolean last = (column == columnCount - 1);
                     if (last) {
@@ -664,6 +710,29 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                         boolean[] bools = dvle.getCheckboxes();
                         // the raw code
                         if (bools[0]) {
+                            // Should we format the date?
+                            if (formatDate && dvle.getVariable().getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)) {
+                                try {
+                                    gregorianCanRegCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg((String) value, Globals.DATE_FORMAT_STRING);
+                                    if (correctUnknown) {
+                                        if (gregorianCanRegCalendar.isUnknownMonth()) {
+                                            // Set month to July
+                                            gregorianCanRegCalendar.set(Calendar.MONTH, 7 - 1);
+                                            gregorianCanRegCalendar.setUnkownMonth(false);
+                                            // And day to first
+                                            gregorianCanRegCalendar.set(Calendar.DAY_OF_MONTH, 1);
+                                            gregorianCanRegCalendar.setUnknownDay(false);
+                                        } else if (gregorianCanRegCalendar.isUnknownDay()) {
+                                            // Set day to mid-month
+                                            gregorianCanRegCalendar.set(Calendar.DAY_OF_MONTH, 15);
+                                            gregorianCanRegCalendar.setUnknownDay(false);
+                                        }
+                                    }
+                                    value = DateHelper.parseGregorianCalendarCanRegToDateString(gregorianCanRegCalendar, (String) dateFormatComboBox.getSelectedItem());
+                                } catch (ParseException ex) {
+                                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
                             line += value + separatingString;
                         }
                         // the category
@@ -713,5 +782,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             }
 
         }
+    }
+
+    @Action
+    public void formatDateCheckBoxChanged() {
+        correctUnknownCheckBox.setEnabled(formatDateCheckBox.isSelected());
+        dateFormatComboBox.setEnabled(formatDateCheckBox.isSelected());
     }
 }

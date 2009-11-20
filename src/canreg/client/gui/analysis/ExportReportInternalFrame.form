@@ -36,7 +36,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variableChooserPanel" pref="162" max="32767" attributes="0"/>
+                      <Component id="variableChooserPanel" pref="142" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="settingsPanel" min="-2" max="-2" attributes="1"/>
                   </Group>
@@ -180,12 +180,16 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="fileFormatLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="fileFormatComboBox" min="-2" max="-2" attributes="0"/>
+                              <Component id="fileFormatComboBox" pref="206" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="formatDateCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="formatDateCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="dateFormatComboBox" pref="184" max="32767" attributes="0"/>
+                          </Group>
                           <Component id="correctUnknownCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="66" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -204,7 +208,10 @@
                           <Component id="fileFormatComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="formatDateCheckBox" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="formatDateCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="dateFormatComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="correctUnknownCheckBox" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -222,20 +229,19 @@
             <Component class="javax.swing.JComboBox" name="variableNamesComboBox">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="3">
+                  <StringArray count="4">
                     <StringItem index="0" value="Short"/>
                     <StringItem index="1" value="English"/>
-                    <StringItem index="2" value="User"/>
+                    <StringItem index="2" value="Full"/>
+                    <StringItem index="3" value="Standard"/>
                   </StringArray>
                 </Property>
-                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="variableNamesComboBox" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="variableNamesLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="variableNamesLabel.text"/>
-                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="variableNamesLabel" noResource="true"/>
               </Properties>
             </Component>
@@ -258,18 +264,36 @@
             </Component>
             <Component class="javax.swing.JCheckBox" name="formatDateCheckBox">
               <Properties>
-                <Property name="selected" type="boolean" value="true"/>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.analysis.ExportReportInternalFrame" id="formatDateCheckBoxChanged" methodName="formatDateCheckBoxChanged"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="formatDateCheckBox.text"/>
-                <Property name="enabled" type="boolean" value="false"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="formatDateCheckBox.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="formatDateCheckBox" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="correctUnknownCheckBox">
               <Properties>
-                <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" resourceKey="correctUnknownCheckBox.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="correctUnknownCheckBox.toolTipText"/>
                 <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="correctUnknownCheckBox" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="dateFormatComboBox">
+              <Properties>
+                <Property name="editable" type="boolean" value="true"/>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="4">
+                    <StringItem index="0" value="dd/mm/yyyy"/>
+                    <StringItem index="1" value="mm/dd/yyyy"/>
+                    <StringItem index="2" value="mm/dd/yy"/>
+                    <StringItem index="3" value="yyyy/mm/dd"/>
+                  </StringArray>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="dateFormatComboBox.toolTipText"/>
+                <Property name="enabled" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="dateFormatComboBox" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -331,7 +355,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="59" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="58" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
