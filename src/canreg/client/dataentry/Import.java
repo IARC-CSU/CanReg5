@@ -70,8 +70,6 @@ public class Import {
             // Skip first line
             line = bufferedReader.readLine();
             // patientNumber
-            int patientDatabaseRecordID = -1;
-            int tumourDatabaseIDNumber = 0;
 
             int linesToRead = io.getMaxLines();
             if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
@@ -80,6 +78,8 @@ public class Import {
             while (line != null && (numberOfLinesRead < linesToRead)) {
                 // We allow for null tasks...
                 boolean needToSavePatientAgain = true;
+                int patientDatabaseRecordID = -1;
+
                 if (task != null) {
                     task.firePropertyChange("progress", (numberOfLinesRead - 1) * 100 / linesToRead, (numberOfLinesRead) * 100 / linesToRead);
                 }
@@ -206,7 +206,7 @@ public class Import {
                     }
                 }
                 
-                tumourDatabaseIDNumber = server.saveTumour(tumour);
+                int tumourDatabaseIDNumber = server.saveTumour(tumour);
 
                 //Read next line of data
                 line = bufferedReader.readLine();
