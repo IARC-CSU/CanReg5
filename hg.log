@@ -1,5 +1,75 @@
-changeset:   306:af00e6774091
+changeset:   320:dcd4036b1c4f
 tag:         tip
+user:        ervikm@X60112
+date:        Fri Nov 20 16:21:59 2009 +0100
+summary:     ExportExportReport now let's you output long variable names, format dates and correct unknown dates.
+
+changeset:   319:8dcfd1b9165a
+user:        ervikm@X60112
+date:        Fri Nov 20 16:20:57 2009 +0100
+summary:     Updated the xsd of the system XML.
+
+changeset:   318:6e28fb532c9a
+user:        ervikm@X60112
+date:        Fri Nov 20 16:20:20 2009 +0100
+summary:     Names of variable types no longer hard coded.
+
+changeset:   317:6f227fb0a819
+user:        ervikm@X60112
+date:        Fri Nov 20 16:02:21 2009 +0100
+summary:     DateHelper: Dates are now transformed "backwards" so that a two digit year contains the last two digits...
+
+changeset:   316:9d6085da29c6
+user:        ervikm@X60112
+date:        Wed Nov 18 17:26:34 2009 +0100
+summary:     ExportReport now let's you export category and description of dictionary elements - updated GUI.
+
+changeset:   315:937db59fc716
+user:        ervikm@X60112
+date:        Wed Nov 18 17:00:01 2009 +0100
+summary:     ExportReport now let's you export category and description of dictionary elements.
+
+changeset:   314:15038cba70e7
+user:        ervikm@X60112
+date:        Tue Nov 17 17:46:24 2009 +0100
+summary:     SystemDefinitionConverter strips blanks from database variable names.
+
+changeset:   313:fb9e8d9cf8f8
+user:        ervikm@X60112
+date:        Fri Nov 06 15:45:25 2009 +0100
+summary:     4.99.14 started.
+
+changeset:   312:37ebb54ca6e1
+user:        ervikm@X60112
+date:        Fri Nov 06 15:20:56 2009 +0100
+summary:     Removed some debug messages.
+
+changeset:   311:ca825b5b1e77
+user:        ervikm@X60112
+date:        Fri Nov 06 15:20:27 2009 +0100
+summary:     Import function now generates record IDs if none are specified.
+
+changeset:   310:b4b368c3378d
+user:        ervikm@X60112
+date:        Tue Nov 03 15:03:08 2009 +0100
+summary:     Open Beta RC 3 (4.99.13)
+
+changeset:   309:ed6c2cd585a6
+user:        ervikm@X60112
+date:        Tue Nov 03 15:02:27 2009 +0100
+summary:     SystemDefinitionConverter now puts PersonSearch variable in the patient table.
+
+changeset:   308:cab45852a5d8
+user:        ervikm@X60112
+date:        Tue Nov 03 14:23:47 2009 +0100
+summary:     Open Beta RC 2 (4.99.13)
+
+changeset:   307:c8ee1d18feff
+user:        ervikm@X60112
+date:        Tue Nov 03 14:22:47 2009 +0100
+summary:     RecordEditor now release record before deleting it.
+
+changeset:   306:af00e6774091
 user:        ervikm@X60112
 date:        Fri Oct 30 18:41:59 2009 +0100
 summary:     General: code cleaned.
