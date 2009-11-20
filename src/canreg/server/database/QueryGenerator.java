@@ -519,18 +519,18 @@ public class QueryGenerator {
         //Get the variable type
         String variableType = element.getElementsByTagName("ns3:variable_type").item(0).getTextContent();
 
-        if (variableType.equalsIgnoreCase("Alpha") ||
-                variableType.equalsIgnoreCase("AsianText") ||
-                variableType.equalsIgnoreCase("TextArea")) {
+        if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) ||
+                variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) ||
+                variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
             queryLine += " VARCHAR(";
             queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent() + ") ";
-        } else if (variableType.equalsIgnoreCase("Number")) {
+        } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
             queryLine += " INTEGER";
             // queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent()+") ";
-        } else if (variableType.equalsIgnoreCase("Date")) {
+        } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)) {
             queryLine += " VARCHAR(8)";
             // queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent()+") ";
-        } else if (variableType.equalsIgnoreCase("Dict")) {
+        } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME)) {
             queryLine += " VARCHAR(";
             String dictionaryName = element.getElementsByTagName("ns3:use_dictionary").item(0).getTextContent();
             NodeList nl = doc.getElementsByTagName("ns3:dictionary");

@@ -435,4 +435,11 @@ public class Globals {
     public static int ADDITIONAL_DIGITS_FOR_TUMOUR_ID = 2;
     public static int ADDITIONAL_DIGITS_FOR_SOURCE_ID = 2;
     public static int MAX_USERNAME_LENGHT = 16;
+
+    public static String VARIABLE_TYPE_DATE_NAME = "Date";
+    public static String VARIABLE_TYPE_ALPHA_NAME = "Alpha";
+    public static String VARIABLE_TYPE_NUMBER_NAME = "Number";
+    public static String VARIABLE_TYPE_DICTIONARY_NAME = "Dict";
+    public static String VARIABLE_TYPE_ASIAN_TEXT_NAME = "AsianText";
+    public static String VARIABLE_TYPE_TEXT_AREA_NAME = "TextArea";
 }

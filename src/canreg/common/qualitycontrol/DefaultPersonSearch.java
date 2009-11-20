@@ -1,6 +1,7 @@
 package canreg.common.qualitycontrol;
 
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.Globals;
 import canreg.common.PersonSearchVariable;
 import canreg.server.database.Patient;
 import java.io.Serializable;
@@ -169,14 +170,16 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                     similarity = missing;
                 } else if (patient2data.equals(unknownCode)) {
                     similarity = missing;
-                } else if (varibleType.equalsIgnoreCase("Dict")) {
+                } else if (varibleType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME)) {
                     similarity = CompareCodes(patient1data, patient2data);
-                } else if (varibleType.equalsIgnoreCase("Alpha")) {
+                } else if (varibleType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME)) {
                     similarity = CompareText(patient1data, patient2data);
-                } else if (varibleType.equalsIgnoreCase("Date")) {
+                } else if (varibleType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)) {
                     similarity = CompareDate(patient1data, patient2data);
-                } else if (varibleType.equalsIgnoreCase("Number")) {
+                } else if (varibleType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
                     similarity = CompareNumber(patient1data, patient2data);
+                } else {
+                    similarity = CompareText(patient1data, patient2data);
                 }
 
                 float score;

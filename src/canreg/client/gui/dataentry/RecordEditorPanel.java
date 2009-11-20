@@ -516,9 +516,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
             String variableType = currentVariable.getVariableType();
 
-            if ("Date".equalsIgnoreCase(variableType)) {
+            if (Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)) {
                 vep = new DateVariableEditorPanel(this);
-            } else if ("TextArea".equalsIgnoreCase(variableType)) {
+            } else if (Globals.VARIABLE_TYPE_TEXT_AREA_NAME.equalsIgnoreCase(variableType)) {
                 vep = new TextFieldVariableEditorPanel(this);
             } else {
                 vep = new VariableEditorPanel(this);
@@ -546,7 +546,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             }
 
             String variableFillStatus = currentVariable.getFillInStatus();
-            if ("Automatic".equalsIgnoreCase(variableFillStatus)) {
+            if (Globals.FILL_IN_STATUS_AUTOMATIC_STRING.equalsIgnoreCase(variableFillStatus)) {
                 autoFillList.add(currentVariable);
             }
 

@@ -1005,7 +1005,7 @@ public class CanRegDAO {
                 //         element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
                 //         ": " + obj.toString());
 
-                if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict") || variableType.equalsIgnoreCase("Date")) {
+                if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
                     if (obj != null) {
                         try {
                             String strObj = obj.toString();
@@ -1021,7 +1021,7 @@ public class CanRegDAO {
                     } else {
                         stmtSaveNewRecord.setString(recordVariableNumber, "");
                     }
-                } else if (variableType.equalsIgnoreCase("Number")) {
+                } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
                     if (obj != null) {
                         try {
                             Integer intObj = (Integer) obj;
@@ -1476,7 +1476,7 @@ public class CanRegDAO {
                     String variableType = element.getElementsByTagName(Globals.NAMESPACE + "variable_type").item(0).getTextContent();
                     Object obj = record.getVariable(element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent());
 
-                    if (variableType.equalsIgnoreCase("Alpha") || variableType.equalsIgnoreCase("AsianText") || variableType.equalsIgnoreCase("Dict") || variableType.equalsIgnoreCase("Date")) {
+                    if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
                         if (obj != null) {
                             try {
                                 String strObj = obj.toString();
@@ -1495,7 +1495,7 @@ public class CanRegDAO {
                         } else {
                             stmtEditRecord.setString(variableNumber, "");
                         }
-                    } else if (variableType.equalsIgnoreCase("Number")) {
+                    } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
                         if (obj != null) {
                             try {
                                 Integer intObj = (Integer) obj;
@@ -1660,7 +1660,7 @@ public class CanRegDAO {
         ResultSetMetaData metadata;
         if (isRecordLocked(recordID, Globals.PATIENT_TABLE_NAME)) {
             throw new RecordLockedException();
-        } else  if (lock) {
+        } else if (lock) {
             lockRecord(recordID, Globals.PATIENT_TABLE_NAME);
         }
         try {
@@ -1700,7 +1700,7 @@ public class CanRegDAO {
         ResultSetMetaData metadata;
         if (isRecordLocked(recordID, Globals.TUMOUR_TABLE_NAME)) {
             throw new RecordLockedException();
-        } else  if (lock) {
+        } else if (lock) {
             lockRecord(recordID, Globals.TUMOUR_TABLE_NAME);
         }
         try {
