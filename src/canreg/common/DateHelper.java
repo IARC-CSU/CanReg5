@@ -32,13 +32,13 @@ public class DateHelper {
         } else {
             dayString = "99";
         }
-        if (dayString.trim().length() > 0) {
+        if (monthString.trim().length() > 0) {
             month = Integer.parseInt(monthString);
         } else {
             monthString = "99";
 
         }
-        if (dayString.trim().length() > 0) {
+        if (yearString.trim().length() > 0) {
             year = Integer.parseInt(yearString);
 
         } else {
@@ -158,13 +158,13 @@ public class DateHelper {
         filter = filter.toLowerCase();
         int placeInReplacementString = 0;
         for (int i = 0; i < string.length() && i < filter.length(); i++) {
-            if (filter.charAt(i) == lookFor) {
-                newString += replacementString.charAt(placeInReplacementString++);
+            if (filter.charAt(filter.length() - 1 - i) == lookFor) {
+                newString = replacementString.charAt(replacementString.length() - 1 - placeInReplacementString++)  + newString;
                 if (placeInReplacementString >= replacementString.length()) {
                     placeInReplacementString = 0;
                 }
             } else {
-                newString += string.charAt(i);
+                newString = string.charAt(string.length() - 1 - i) + newString;
             }
         }
         return newString;
