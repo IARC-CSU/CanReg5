@@ -26,7 +26,7 @@
             <xsd:element name="registry_name" type="xsd:string"/>
             <xsd:element name="working_language" type="xsd:string"/>
         </xsd:sequence>
-    </xsd:complexType> 
+    </xsd:complexType>
     
     <xsd:complexType name="Dictionary">
         <xsd:sequence>
@@ -39,9 +39,9 @@
             <xsd:element name="full_dictionary_code_length" type="xsd:int"/>
             <xsd:element name="full_dictionary_description_length" type="xsd:int"/>
         </xsd:sequence>
-    </xsd:complexType>      
+    </xsd:complexType>
     
-    <xsd:complexType name="Dictionaries">    
+    <xsd:complexType name="Dictionaries">
         <xsd:sequence>
             <xsd:element name="dictionary" type="cr5:Dictionary" maxOccurs="unbounded" minOccurs="0"></xsd:element>
         </xsd:sequence>
@@ -54,7 +54,7 @@
         </xsd:sequence>
     </xsd:complexType>
     
-    <xsd:complexType name="Groups">    
+    <xsd:complexType name="Groups">
         <xsd:sequence>
             <xsd:element name="group" type="cr5:Group" maxOccurs="unbounded"></xsd:element>
         </xsd:sequence>
@@ -80,11 +80,11 @@
             <xsd:element name="category_X_pos" type="xsd:int" minOccurs="0"/>
             <xsd:element name="category_Y_pos" type="xsd:int" minOccurs="0"/>
             <xsd:element name="dictionary_X_pos" type="xsd:int" minOccurs="0"/>
-            <xsd:element name="dictionary_Y_pos" type="xsd:int" minOccurs="0"/>            
+            <xsd:element name="dictionary_Y_pos" type="xsd:int" minOccurs="0"/>
             <xsd:element name="table" default="Tumour" type="cr5:tables"/>
             <xsd:element name="standard_variable_name" type="cr5:standardVariableName" minOccurs="0"/>
         </xsd:sequence>
-    </xsd:complexType> 
+    </xsd:complexType>
     
     <xsd:complexType name="Variables">
         <xsd:sequence>
@@ -102,7 +102,7 @@
         </xsd:sequence>
     </xsd:complexType>
     
-    <xsd:complexType name="Indexes">    
+    <xsd:complexType name="Indexes">
         <xsd:sequence>
             <xsd:element name="index" type="cr5:Index" maxOccurs="unbounded"></xsd:element>
         </xsd:sequence>
@@ -133,7 +133,7 @@
             <xsd:element name="coding" type="cr5:Coding"/>
             <xsd:element name="settings" type="cr5:Settings"/>
         </xsd:sequence>
-    </xsd:complexType> 
+    </xsd:complexType>
     
     <xsd:complexType name="Coding">
         <xsd:sequence>
@@ -147,7 +147,7 @@
             <xsd:element name="mult_prim_code_length" type="xsd:int" minOccurs="0"/>
             <xsd:element name="basis_diag_codes" type="xsd:int" minOccurs="0"/>
         </xsd:sequence>
-    </xsd:complexType> 
+    </xsd:complexType>
     
     <xsd:complexType name="Settings">
         <xsd:sequence>
@@ -157,7 +157,7 @@
             <xsd:element name="password_rules" type="xsd:string"/>
             <xsd:element name="data_entry_language" type="xsd:string"/>
         </xsd:sequence>
-    </xsd:complexType> 
+    </xsd:complexType>
     
     <xsd:simpleType name="fillInValue">
         <xsd:list>
@@ -181,6 +181,7 @@
                     <xsd:enumeration value="Date"/>
                     <xsd:enumeration value="Number"/>
                     <xsd:enumeration value="AsianText"/>
+                    <xsd:enumeration value="TextArea"/>
                 </xsd:restriction>
             </xsd:simpleType>
         </xsd:list>
@@ -237,6 +238,7 @@
                 <xsd:restriction base="xsd:string">
                     <xsd:enumeration value="Patient"/>
                     <xsd:enumeration value="Tumour"/>
+                    <xsd:enumeration value="Source"/>
                 </xsd:restriction>
             </xsd:simpleType>
         </xsd:list>
