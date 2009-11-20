@@ -154,7 +154,8 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
         LinkedList<String> variables = new LinkedList<String>();
         DatabaseVariablesListElement element = null;
         for (VariablesExportDetailsPanel ved : panelMap.values()) {
-            if (ved.getCheckboxes()[0]) {
+            boolean[] checkBoxes = ved.getCheckboxes();
+            if (checkBoxes[0]||checkBoxes[1]||checkBoxes[2]) {
                 element = ved.getVariable();
                 if ("both".equalsIgnoreCase(tableName) || element.getDatabaseTableName().equalsIgnoreCase(tableName)) {
                     variables.add(element.getDatabaseVariableName().toUpperCase());
