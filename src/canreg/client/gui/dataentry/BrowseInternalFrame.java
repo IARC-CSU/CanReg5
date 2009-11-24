@@ -16,11 +16,14 @@ import canreg.client.gui.tools.XTableColumnModel;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.Tools;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.RecordLockedException;
 import canreg.server.database.Tumour;
 import canreg.server.database.UnknownTableException;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
@@ -36,6 +39,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import org.jdesktop.application.Action;
@@ -52,7 +56,23 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
     private DistributedTableDataSourceClient tableDataSource;
     private TableModel tableDataModel;
     private JScrollPane resultScrollPane;
-    private JTable resultTable = new JTable();
+    String sortByVariableName;
+    private JTable resultTable = new JTable() {
+
+        @Override
+        public Component prepareRenderer(TableCellRenderer renderer,
+                int row, int column) {
+            Component c = super.prepareRenderer(renderer, row, column);
+            if (isHighlighted(column)) {
+                c.setBackground(Color.yellow);
+            } else if (isCellSelected(row, column)) {
+                c.setBackground(getSelectionBackground());
+            } else {
+                c.setBackground(getBackground());
+            }
+            return c;
+        }
+    };
     private XTableColumnModel tableColumnModel;
     private LinkedList<String> variablesToShow;
     private GlobalToolBox globalToolBox;
@@ -61,6 +81,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
     private String tumourIDlookupVariable;
     int patientIDLength;
     int tumourIDLength;
+    private int highlightedColumnNumber = 0;
 
     /** Creates new form BrowseInternalFrame
      * @param dtp 
@@ -254,6 +275,15 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private boolean isHighlighted(int columnNumber) {
+        TableColumn column = tableColumnModel.getColumn(columnNumber);
+        if (sortByVariableName.toUpperCase().equals(column.getHeaderValue())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void initOtherComponents() {
         editTableRecordButton.setVisible(false);
         createNextButton.setVisible(false);
@@ -313,9 +343,9 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
 }//GEN-LAST:event_browserClosed
 
 private void editPatientIDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_editPatientIDKeyTyped
-    if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_ENTER) {
-        editPatientID();
-    }
+        if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_ENTER) {
+            editPatientID();
+        }
 }//GEN-LAST:event_editPatientIDKeyTyped
 
 private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_editTumourRecordKeyTyped
@@ -384,6 +414,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
             filter.setSortByVariable(rangeFilterPanel.getSortByVariable().trim());
             filter.setRange(rangeFilterPanel.getRange());
+            sortByVariableName = rangeFilterPanel.getSortByVariable();
             // setProgress(0, 0, 4);
             setMessage("Initiating query...");
             // setProgress(1, 0, 4);
@@ -404,8 +435,8 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             } catch (SecurityException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Security exception";
-            // } catch (InterruptedException ignore) {
-            //    result = "Ignore";
+                // } catch (InterruptedException ignore) {
+                //    result = "Ignore";
             } catch (Exception ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Not OK";
@@ -432,6 +463,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 }
 
                 tableDatadescription = newTableDatadescription;
+                highlightedColumnNumber = Tools.findInArray(tableDatadescription.getColumnNames(), sortByVariableName.toUpperCase());
 
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
 

@@ -271,7 +271,6 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         tableChooserPanel.setName("tableChooserPanel"); // NOI18N
 
         tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tumour", "Patient", "Both" }));
-        tableChooserComboBox.setAction(actionMap.get("setTableName")); // NOI18N
         tableChooserComboBox.setName("tableChooserComboBox"); // NOI18N
         tableChooserComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -293,7 +292,6 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         sortByChooserPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("sortByChooserPanel.border.title"))); // NOI18N
         sortByChooserPanel.setName("sortByChooserPanel"); // NOI18N
 
-        sortByChooserComboBox.setAction(actionMap.get("setTableName")); // NOI18N
         sortByChooserComboBox.setName("sortByChooserComboBox"); // NOI18N
         sortByChooserComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -386,9 +384,8 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
 }//GEN-LAST:event_tableChooserComboBoxActionPerformed
 
 private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortByChooserComboBoxActionPerformed
-// TODO add your handling code here:
+    actionListener.actionPerformed(new ActionEvent(this, 0, "sortby"));
 }//GEN-LAST:event_sortByChooserComboBoxActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel andLabel;
     private javax.swing.JComboBox filterComboBox;
