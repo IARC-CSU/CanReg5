@@ -62,7 +62,6 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         variableLabel = new javax.swing.JLabel();
         operationLabel = new javax.swing.JLabel();
         valueLabel = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
         valuesSplitPane = new javax.swing.JSplitPane();
         valueTextField = new javax.swing.JTextField();
         valueTextField2 = new javax.swing.JTextField();
@@ -103,6 +102,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         operationComboBox.setName("operationComboBox"); // NOI18N
 
         logicalOperatorComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        logicalOperatorComboBox.setAction(actionMap.get("operatorAction")); // NOI18N
         logicalOperatorComboBox.setName("logicalOperatorComboBox"); // NOI18N
 
         variableLabel.setText(resourceMap.getString("variableLabel.text")); // NOI18N
@@ -113,10 +113,6 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
 
         valueLabel.setText(resourceMap.getString("valueLabel.text")); // NOI18N
         valueLabel.setName("valueLabel"); // NOI18N
-
-        jButton3.setAction(actionMap.get("addAction")); // NOI18N
-        jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
-        jButton3.setName("jButton3"); // NOI18N
 
         valuesSplitPane.setResizeWeight(0.5);
         valuesSplitPane.setName("valuesSplitPane"); // NOI18N
@@ -147,46 +143,39 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
             .addComponent(instructionLabel1)
             .addComponent(instructionLabel2)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(variableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(variableLabel))
+                .addComponent(variableLabel)
+                .addGap(73, 73, 73)
+                .addComponent(operationLabel)
+                .addGap(18, 18, 18)
+                .addComponent(valueLabel)
+                .addGap(311, 311, 311))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(variableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(operationLabel)
-                    .addComponent(operationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(operationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(valuesSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+                .addComponent(valuesSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(logicalOperatorComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3))
-                    .addComponent(valueLabel)))
+                .addComponent(logicalOperatorComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(instructionLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(instructionLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(variableLabel)
+                    .addComponent(operationLabel)
+                    .addComponent(valueLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(instructionLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(instructionLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(variableLabel)
-                            .addComponent(valueLabel)
-                            .addComponent(operationLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(variableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3)
-                            .addComponent(logicalOperatorComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(operationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(60, 60, 60)
-                        .addComponent(valuesSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(logicalOperatorComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(variableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(operationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(valuesSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         filterPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("filterPanel.border.title"))); // NOI18N
@@ -201,11 +190,11 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         filterPanel.setLayout(filterPanelLayout);
         filterPanelLayout.setHorizontalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
         );
         filterPanelLayout.setVerticalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
         );
 
         cancelButton.setAction(actionMap.get("cancelAction")); // NOI18N
@@ -236,7 +225,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
                 .addComponent(filterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okButton)
                     .addComponent(cancelButton))
@@ -248,7 +237,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
 
 private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseClickHandler
     DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
-    if (dictionaryPopUp && dbvle.getVariableType().equalsIgnoreCase("dict")) {
+    if (dictionaryPopUp && valueTextField.equals(evt.getSource()) && dbvle.getVariableType().equalsIgnoreCase("dict")) {
         if (possibleValuesMap == null) {
             JOptionPane.showInternalMessageDialog(this, "Empty dictionary.", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
@@ -313,7 +302,6 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
     private javax.swing.JPanel filterPanel;
     private javax.swing.JLabel instructionLabel1;
     private javax.swing.JLabel instructionLabel2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JComboBox logicalOperatorComboBox;
     private javax.swing.JButton okButton;
@@ -402,7 +390,7 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
      */
     @Action
     public void okAction() {
-        if (!currentSelectionAdded) {
+        if (currentSelectionIsNotAdded()) {
             addAction();
         }
         actionListener.actionPerformed(new ActionEvent(this, 0, textPane.getText().trim()));
@@ -452,7 +440,12 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
         newFilterPart +=
                 " ";
         textPane.setText(textPane.getText() + newFilterPart);
+
+        // reset things
+        valueTextField.setText("");
+        valueTextField2.setText("");
         logicalOperatorComboBox.setSelectedIndex(0);
+
         currentSelectionAdded = true;
     }
 
@@ -502,5 +495,22 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
             dictionaryPopUp = true;
         }
         currentSelectionAdded = false;
+    }
+
+    private boolean currentSelectionIsNotAdded() {
+        boolean isAdded = false;
+        if (valueTextField.getText().trim().length() == 0) {
+            isAdded = true;
+        } else {
+            isAdded = currentSelectionAdded;
+        }
+        return !isAdded;
+    }
+
+    @Action
+    public void operatorAction() {
+        if (currentSelectionIsNotAdded()) {
+            addAction();
+        }
     }
 }
