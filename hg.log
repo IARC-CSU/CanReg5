@@ -1,5 +1,40 @@
-changeset:   320:dcd4036b1c4f
+changeset:   327:57a073071882
 tag:         tip
+user:        ervikm@X60112
+date:        Wed Nov 25 11:44:17 2009 +0100
+summary:     Browser: improved layout.
+
+changeset:   326:5192bc5ad140
+user:        ervikm@X60112
+date:        Wed Nov 25 11:43:53 2009 +0100
+summary:     FastFilter: BETWEEN improved, New label "Logical operator".
+
+changeset:   325:874a0065726e
+user:        ervikm@X60112
+date:        Tue Nov 24 18:37:08 2009 +0100
+summary:     BrowseInternalFrame: Sort by column is now highlighted
+
+changeset:   324:a899ade3e822
+user:        ervikm@X60112
+date:        Tue Nov 24 18:35:54 2009 +0100
+summary:     FastFilter: reworked the logic and text on screen
+
+changeset:   323:2e361216beb3
+user:        ervikm@X60112
+date:        Fri Nov 20 17:43:27 2009 +0100
+summary:     Small changes, bugfixes, comments. (4.99.14 RC1)
+
+changeset:   322:f6028faafee5
+user:        ervikm@X60112
+date:        Fri Nov 20 17:41:27 2009 +0100
+summary:     VariablesChooserPanel: Take into account all the checkboxes when returning the checked variables.
+
+changeset:   321:8be35a3ef280
+user:        ervikm@X60112
+date:        Fri Nov 20 17:32:40 2009 +0100
+summary:     Import: fixed a bug where the import would brake down if the IDs where defined in the import file.
+
+changeset:   320:dcd4036b1c4f
 user:        ervikm@X60112
 date:        Fri Nov 20 16:21:59 2009 +0100
 summary:     ExportExportReport now let's you output long variable names, format dates and correct unknown dates.
