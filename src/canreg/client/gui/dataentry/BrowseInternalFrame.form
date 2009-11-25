@@ -39,14 +39,14 @@
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="resultPanel" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
+                      <Component id="rangeFilterPanel" pref="352" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="variablesPanel" min="0" pref="0" max="32767" attributes="1"/>
-                          <Component id="navigationPanel" alignment="0" max="32767" attributes="1"/>
+                          <Component id="navigationPanel" alignment="1" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="buttonsPanel" max="32767" attributes="0"/>
+                      <Component id="buttonsPanel" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -58,13 +58,13 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="rangeFilterPanel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="variablesPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="navigationPanel" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="buttonsPanel" max="32767" attributes="1"/>
+                  <Component id="rangeFilterPanel" min="-2" pref="265" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="resultPanel" max="32767" attributes="0"/>
@@ -82,22 +82,15 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="editTableRecordButton" alignment="0" pref="232" max="32767" attributes="1"/>
-                      <Component id="createNextButton" alignment="0" pref="232" max="32767" attributes="1"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="editTumourNumberButton" max="32767" attributes="1"/>
-                              <Component id="editPatientNumberButton" alignment="0" max="32767" attributes="1"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="patientNumberTextField" pref="85" max="32767" attributes="1"/>
-                              <Component id="tumourNumberTextField" alignment="0" pref="85" max="32767" attributes="1"/>
-                          </Group>
-                      </Group>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="tumourNumberTextField" alignment="0" pref="141" max="32767" attributes="1"/>
+                      <Component id="editTumourNumberButton" alignment="0" pref="141" max="32767" attributes="1"/>
+                      <Component id="editTableRecordButton" alignment="0" pref="141" max="32767" attributes="1"/>
+                      <Component id="createNextButton" alignment="0" pref="141" max="32767" attributes="1"/>
+                      <Component id="editPatientNumberButton" alignment="0" max="32767" attributes="1"/>
+                      <Component id="patientNumberTextField" alignment="0" pref="141" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -110,16 +103,14 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="editTableRecordButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="editPatientNumberButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="patientNumberTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="editPatientNumberButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="editTumourNumberButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="tumourNumberTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace pref="161" max="32767" attributes="0"/>
+                  <Component id="patientNumberTextField" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="editTumourNumberButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="tumourNumberTextField" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="103" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -201,12 +192,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="709" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="629" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="234" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="216" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
