@@ -1,4 +1,24 @@
 Changelog
+
+4.99.14 Build 764
+- ExportReport now lets you export category and description of dictionary elements and output long variable names, format dates and correct unknown dates.
+
+- SystemDefinitionConverter strips blanks from database variable names.
+
+- DateHelper: Dates are now transformed "backwards" so that a two digit year contains the last two digits...
+
+- Updated the xsd of the system XML.
+
+- Import function now generates record IDs if none are specified.
+
+- Import: fixed a bug where the import would brake down if the IDs where defined in the import file.
+
+- FastFilter: reworked the logic and text on screen
+
+- BrowseInternalFrame: Sort by column is now highlighted, layout improved
+
+
+
 4.99.13 Build 749
 - Source table implemented.
 
