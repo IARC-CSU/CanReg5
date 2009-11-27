@@ -279,7 +279,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public void importCompleteDictionaryAction() {
         JInternalFrame importFrame = new ImportCompleteDictionaryInternalFrame();
-        CanRegClientView.showAndCenterInternalFrame(desktopPane, importFrame);
+        CanRegClientView.showAndPositionInternalFrame(desktopPane, importFrame);
         this.dispose();
     }
 

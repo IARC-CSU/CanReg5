@@ -252,7 +252,7 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
             try {
                 edvif.loadSystemDefinition(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + codeField.getText() + ".xml");
                 edvif.setDesktopPane(dtp);
-                CanRegClientView.showAndCenterInternalFrame(dtp, edvif);
+                CanRegClientView.showAndPositionInternalFrame(dtp, edvif);
             } catch (SAXException ex) {
                 Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {

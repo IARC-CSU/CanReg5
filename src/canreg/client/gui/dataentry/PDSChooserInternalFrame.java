@@ -187,7 +187,7 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
     public void editAction() {
         PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulationDatasets);
         populationDatasetEditorInternalFrame.setPopulationDataset((PopulationDataset) populationDataSetsList.getSelectedValue());
-        CanRegClientView.showAndCenterInternalFrame(dtp, populationDatasetEditorInternalFrame);
+        CanRegClientView.showAndPositionInternalFrame(dtp, populationDatasetEditorInternalFrame);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -261,6 +261,6 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
     public void newPDSAction() {
         PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulationDatasets);
         // populationDatasetEditorInternalFrame.setPopulationDataset(new PopulationDataset());
-        CanRegClientView.showAndCenterInternalFrame(dtp, populationDatasetEditorInternalFrame);
+        CanRegClientView.showAndPositionInternalFrame(dtp, populationDatasetEditorInternalFrame);
     }
 }

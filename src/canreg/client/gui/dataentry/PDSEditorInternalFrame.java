@@ -696,7 +696,7 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
     public void editWorldPopulation() {
         PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulations);
         populationDatasetEditorInternalFrame.setPopulationDataset((PopulationDataset) standardPopulationComboBox.getSelectedItem());
-        CanRegClientView.showAndCenterInternalFrame(dtp, populationDatasetEditorInternalFrame);
+        CanRegClientView.showAndPositionInternalFrame(dtp, populationDatasetEditorInternalFrame);
     }
 
     /**

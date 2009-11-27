@@ -57,9 +57,6 @@ import javax.swing.JOptionPane;
  */
 public class CanRegClientView extends FrameView {
 
-    private static boolean debug = true;
-    LocalSettings localSettings;
-
     /**
      * 
      * @param app
@@ -136,6 +133,7 @@ public class CanRegClientView extends FrameView {
                 }
             }
         });
+        this.getFrame().pack();
         // Show the welcome frame...
         if (!CanRegClientApp.getApplication().isLoggedIn()) {
             showWelcomeFrame();
@@ -324,7 +322,7 @@ public class CanRegClientView extends FrameView {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 707, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -604,13 +602,32 @@ public class CanRegClientView extends FrameView {
 
     private void showWelcomeFrame() {
         WelcomeInternalFrame welcomeInternalFrame = new WelcomeInternalFrame(this);
-
+        /*
         desktopPane.add(welcomeInternalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
         Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
+        scr = this.getFrame().getSize();
         welcomeInternalFrame.setVisible(true);
-        welcomeInternalFrame.setLocation(scr.width / 2 - welcomeInternalFrame.getWidth() / 2, scr.height / 2 - welcomeInternalFrame.getHeight() / 2 - 142);
+        welcomeInternalFrame.setLocation(scr.width / 2 - welcomeInternalFrame.getWidth() / 2, (scr.height - 180) / 2 - welcomeInternalFrame.getHeight() / 2);
+         */
+        showAndPositionInternalFrame(desktopPane, welcomeInternalFrame);
+        centerInternalFrame(desktopPane, welcomeInternalFrame);
         welcomeInternalFrame.setDesktopPane(desktopPane);
+    }
 
+    public static void maximizeHeight(JDesktopPane desktopPane, JInternalFrame internalFrame) {
+        int x = internalFrame.getX(), y = internalFrame.getY();
+        internalFrame.setBounds(x, y, internalFrame.getWidth(), desktopPane.getHeight() - y);
+    }
+
+    public static void maximizeWidth(JDesktopPane desktopPane, JInternalFrame internalFrame) {
+        int x = internalFrame.getX(), y = internalFrame.getY();
+        internalFrame.setBounds(x, y, internalFrame.getWidth(), desktopPane.getHeight() - y);
+    }
+
+    public static void centerInternalFrame(JDesktopPane desktopPane, JInternalFrame internalFrame) {
+        int width = internalFrame.getWidth(), height = internalFrame.getHeight();
+        int leftX = desktopPane.getWidth() / 2 - width / 2, topY = (desktopPane.getHeight() - toolBarHeight) / 2 - height / 2;
+        internalFrame.setBounds(leftX, topY, width, height);
     }
 
     private class OpenICDO3ManualTask extends org.jdesktop.application.Task<Object, Void> {
@@ -651,7 +668,7 @@ public class CanRegClientView extends FrameView {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Already logged in.", "Message", JOptionPane.INFORMATION_MESSAGE);
         } else {
             LoginInternalFrame loginInternalFrame = new LoginInternalFrame(this, desktopPane);
-            showAndCenterInternalFrame(desktopPane, loginInternalFrame);
+            showAndPositionInternalFrame(desktopPane, loginInternalFrame);
         }
     }
 
@@ -860,8 +877,8 @@ public class CanRegClientView extends FrameView {
         if (!CanRegClientApp.getApplication().isCanRegServerRunningOnThisMachine()) {
             toolsMenu.setEnabled(!loggedIn);
             restoreMenuItem.setEnabled(false);
-        // We show the install system button if we are not logged in to a remote server...
-        // installSystemButton.setEnabled((userRightsLevel == Globals.UserRightLevels.NOT_LOGGED_IN));
+            // We show the install system button if we are not logged in to a remote server...
+            // installSystemButton.setEnabled((userRightsLevel == Globals.UserRightLevels.NOT_LOGGED_IN));
         } else {
             toolsMenu.setEnabled(true);
             restoreMenuItem.setEnabled(true);
@@ -872,7 +889,7 @@ public class CanRegClientView extends FrameView {
      * 
      */
     @Action
-    public void ShowPatient() {
+    public void showPatient() {
         // PatientFrame1.setVisible(!PatientFrame1.isVisible());
     }
 
@@ -931,7 +948,8 @@ public class CanRegClientView extends FrameView {
     @Action
     public void importData() {
         ImportView importInternalFrame = new ImportView();
-        showAndCenterInternalFrame(desktopPane, importInternalFrame);
+        showAndPositionInternalFrame(desktopPane, importInternalFrame);
+        maximizeHeight(desktopPane, importInternalFrame);
     }
 
     /**
@@ -940,7 +958,8 @@ public class CanRegClientView extends FrameView {
     @Action
     public void showExportFrame() {
         ExportReportInternalFrame exportFrame = new ExportReportInternalFrame(desktopPane);
-        showAndCenterInternalFrame(desktopPane, exportFrame);
+        showAndPositionInternalFrame(desktopPane, exportFrame);
+        maximizeHeight(desktopPane, exportFrame);
     }
 
     /**
@@ -949,7 +968,8 @@ public class CanRegClientView extends FrameView {
     @Action
     public void browseEditAction() {
         JInternalFrame internalFrame = new BrowseInternalFrame(desktopPane);
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+        showAndPositionInternalFrame(desktopPane, internalFrame);
+        maximizeHeight(desktopPane, internalFrame);
     }
 
     /**
@@ -958,7 +978,7 @@ public class CanRegClientView extends FrameView {
     @Action
     public void backupAction() {
         JInternalFrame internalFrame = new BackUpInternalFrame();
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+        showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
     /**
@@ -967,7 +987,7 @@ public class CanRegClientView extends FrameView {
     @Action
     public void editDictionaryAction() {
         JInternalFrame internalFrame = new EditDictionaryInternalFrame(desktopPane);
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+        showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
     /**
@@ -976,7 +996,7 @@ public class CanRegClientView extends FrameView {
     @Action
     public void showOptionFrame() {
         JInternalFrame internalFrame = new OptionsFrame(this);
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+        showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
     /**
@@ -985,7 +1005,7 @@ public class CanRegClientView extends FrameView {
     @Action
     public void showNameSexAction() {
         JInternalFrame internalFrame = new FirstNameSexInternalFrame();
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+        showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
     /**
@@ -993,11 +1013,16 @@ public class CanRegClientView extends FrameView {
      * @param desktopPane
      * @param internalFrame
      */
-    public static void showAndCenterInternalFrame(JDesktopPane desktopPane, JInternalFrame internalFrame) {
+    public static void showAndPositionInternalFrame(JDesktopPane desktopPane, JInternalFrame internalFrame) {
+        int numberOfOpenFrames = desktopPane.getAllFrames().length;
         desktopPane.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
         internalFrame.setVisible(true);
-        int posX = Math.max(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, 0);
-        int posY = Math.max(desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2, 0);
+        int posX = 0;
+        // Math.max(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, 0);
+        posX = Math.min(posX + numberOfOpenFrames * xOffset, desktopPane.getWidth() - xOffset);
+        int posY = 0;
+        // Math.max(desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2, 0);
+        posY = Math.min(posY + numberOfOpenFrames * yOffset, desktopPane.getHeight() - yOffset);
         internalFrame.setLocation(posX, posY);
         //CanRegClientApp.getApplication().getMainFrame();
         internalFrame.setVisible(true);
@@ -1012,7 +1037,7 @@ public class CanRegClientView extends FrameView {
         // copy it to system folder
         // Give log in window with settings from XML
         JInternalFrame internalFrame = new InstallNewSystemInternalFrame();
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+        showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
     /**
@@ -1022,7 +1047,7 @@ public class CanRegClientView extends FrameView {
     public void convertCanReg4SystemAction() {
         CanReg4SystemConverterInternalFrame internalFrame = new CanReg4SystemConverterInternalFrame();
         internalFrame.setDesktopPane(desktopPane);
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+        showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
     /**
@@ -1031,7 +1056,7 @@ public class CanRegClientView extends FrameView {
     @Action
     public void restoreAction() {
         JInternalFrame internalFrame = new RestoreInternalFrame();
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+        showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
     /**
@@ -1062,7 +1087,8 @@ public class CanRegClientView extends FrameView {
         } catch (Exception ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
         }
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+        showAndPositionInternalFrame(desktopPane, internalFrame);
+        maximizeHeight(desktopPane, internalFrame);
     }
 
     /**
@@ -1071,7 +1097,7 @@ public class CanRegClientView extends FrameView {
     @Action
     public void showFrequenciesFrame() {
         JInternalFrame internalFrame = new FrequenciesByYearInternalFrame(desktopPane);
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+        showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
     /**
@@ -1084,7 +1110,8 @@ public class CanRegClientView extends FrameView {
         internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
         internalFrame.addRecord(new Tumour());
         internalFrame.addRecord(new Patient());
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+        showAndPositionInternalFrame(desktopPane, internalFrame);
+        maximizeHeight(desktopPane, internalFrame);
     }
 
     /**
@@ -1095,7 +1122,7 @@ public class CanRegClientView extends FrameView {
         JInternalFrame internalFrame;
         try {
             internalFrame = new PDSChooserInternalFrame(desktopPane, CanRegClientApp.getApplication().getPopulationDatasets());
-            showAndCenterInternalFrame(desktopPane, internalFrame);
+            showAndPositionInternalFrame(desktopPane, internalFrame);
         } catch (SecurityException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
@@ -1109,7 +1136,7 @@ public class CanRegClientView extends FrameView {
     @Action
     public void duplicateSearchAction() {
         JInternalFrame internalFrame = new PersonSearchFrame(desktopPane);
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+        showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
     @Action
@@ -1133,7 +1160,7 @@ public class CanRegClientView extends FrameView {
             // on a background thread, so don't reference
             // the Swing GUI from here.
             JInternalFrame internalFrame = new TableBuilderInternalFrame();
-            showAndCenterInternalFrame(desktopPane, internalFrame);
+            showAndPositionInternalFrame(desktopPane, internalFrame);
             return null;  // return your result
         }
 
@@ -1147,7 +1174,7 @@ public class CanRegClientView extends FrameView {
     @Action
     public void showUserManagement() {
         JInternalFrame internalFrame = new UserManagerInternalFrame();
-        showAndCenterInternalFrame(desktopPane, internalFrame);
+        showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
     @Action
@@ -1156,7 +1183,7 @@ public class CanRegClientView extends FrameView {
         try {
             internalFrame = new CanReg4PDSImporterInternalFrame(desktopPane, CanRegClientApp.getApplication().getPopulationDatasets());
             internalFrame.setDesktopPane(desktopPane);
-            showAndCenterInternalFrame(desktopPane, internalFrame);
+            showAndPositionInternalFrame(desktopPane, internalFrame);
         } catch (SecurityException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
@@ -1227,7 +1254,6 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem usersMenuItem;
     private javax.swing.JMenuItem viewWorkFilesMenuItem;
     // End of variables declaration//GEN-END:variables
-
     // private javax.swing.JInternalFrame internalFrame;
     // private javax.swing.JInternalFrame welcomeInternalFrame;
     private final Timer messageTimer;
@@ -1237,4 +1263,8 @@ public class CanRegClientView extends FrameView {
     private int busyIconIndex = 0;
     private JDialog aboutBox;
     private Globals.UserRightLevels userRightsLevel = Globals.UserRightLevels.NOT_LOGGED_IN;
+    private static boolean debug = true;
+    LocalSettings localSettings;
+    private static int xOffset = 30, yOffset = 30;
+    private static int toolBarHeight = 80;
 }

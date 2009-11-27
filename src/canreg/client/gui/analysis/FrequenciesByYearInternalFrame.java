@@ -441,7 +441,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     public void popOutTableAction() {
         resultScrollPane.setVisible(false);
         resultScrollPane = tableInternalFrame.setResultTable(resultTable);
-        CanRegClientView.showAndCenterInternalFrame(dtp, tableInternalFrame);
+        CanRegClientView.showAndPositionInternalFrame(dtp, tableInternalFrame);
         popOutTableButton.setEnabled(false);
     }
 }

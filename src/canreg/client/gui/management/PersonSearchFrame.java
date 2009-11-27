@@ -647,7 +647,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                     // store them in a map, so we don't show them several times
                     recordEditor.addRecord(rec);
                 }
-                CanRegClientView.showAndCenterInternalFrame(desktopPane, recordEditor);
+                CanRegClientView.showAndPositionInternalFrame(desktopPane, recordEditor);
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Record not found", "Error", JOptionPane.ERROR_MESSAGE);
             }

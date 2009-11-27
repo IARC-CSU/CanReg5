@@ -339,9 +339,9 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
 }//GEN-LAST:event_browserClosed
 
 private void editPatientIDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_editPatientIDKeyTyped
-        if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_ENTER) {
-            editPatientID();
-        }
+    if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_ENTER) {
+        editPatientID();
+    }
 }//GEN-LAST:event_editPatientIDKeyTyped
 
 private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_editTumourRecordKeyTyped
@@ -606,7 +606,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
     recordEditor.addRecord(rec);
     }
     }
-    CanRegClientView.showAndCenterInternalFrame(dtp, recordEditor);
+    CanRegClientView.showAndPositionInternalFrame(dtp, recordEditor);
     }
     else {
     JOptionPane.showMessageDialog(rootPane, "Record not found", "Error", JOptionPane.ERROR_MESSAGE);
@@ -700,7 +700,8 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                     // store them in a map, so we don't show them several times
                     recordEditor.addRecord(rec);
                 }
-                CanRegClientView.showAndCenterInternalFrame(dtp, recordEditor);
+                CanRegClientView.showAndPositionInternalFrame(dtp, recordEditor);
+                CanRegClientView.maximizeHeight(dtp, recordEditor);
             } else {
                 JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD_NOT_FOUND"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             }

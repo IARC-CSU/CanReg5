@@ -214,7 +214,7 @@ public class CanReg4PDSImporterInternalFrame extends javax.swing.JInternalFrame 
             pdseif.setPopulationDataset(pds);
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Population dataset loaded: \'" + pds.getPopulationDatasetName() + "\'.\nPlease verify and save it to the CanReg database.", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-            CanRegClientView.showAndCenterInternalFrame(dtp, pdseif);
+            CanRegClientView.showAndPositionInternalFrame(dtp, pdseif);
 
             this.dispose();
         } catch (FileNotFoundException ex) {

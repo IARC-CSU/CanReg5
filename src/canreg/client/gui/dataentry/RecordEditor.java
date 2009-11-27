@@ -687,7 +687,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 editChecksInternalFrame.setCrossChecksTextAreaText(message);
                 editChecksInternalFrame.setResultTextFieldText(worstResultCodeFound.toString());
 
-                CanRegClientView.showAndCenterInternalFrame(desktopPane, editChecksInternalFrame);
+                CanRegClientView.showAndPositionInternalFrame(desktopPane, editChecksInternalFrame);
             } else if (e.getActionCommand().equalsIgnoreCase(SAVE)) {
                 boolean OK = true;
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
