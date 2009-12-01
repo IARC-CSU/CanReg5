@@ -270,7 +270,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         tableChooserPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Table"));
         tableChooserPanel.setName("tableChooserPanel"); // NOI18N
 
-        tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tumour", "Patient", "Both" }));
+        tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tumour", "Patient", "Both", "Source" }));
         tableChooserComboBox.setName("tableChooserComboBox"); // NOI18N
         tableChooserComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -372,6 +372,9 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
             indexesInTableTemp = indexesInDB;
         }
         rangeComboBox.setModel(new DefaultComboBoxModel(indexesInTableTemp));
+        boolean rangeEnabled = !(indexesInTableTemp.length == 0);
+        rangePanel.setVisible(rangeEnabled);
+        andLabel.setVisible(rangeEnabled);
     }
 
 private void refreshTableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshTableButtonActionPerformed
@@ -381,6 +384,7 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     refreshVariableList();
     refreshIndexList();
     filterWizardInternalFrame.setTableName(tableChooserComboBox.getSelectedItem().toString());
+    actionListener.actionPerformed(new ActionEvent(this, 0, "tableChanged"));
 }//GEN-LAST:event_tableChooserComboBoxActionPerformed
 
 private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortByChooserComboBoxActionPerformed
