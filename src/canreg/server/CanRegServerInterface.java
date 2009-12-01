@@ -370,4 +370,6 @@ public interface CanRegServerInterface extends Remote {
     public Map<String, Map<String, Float>> nextStepGlobalPersonSearch(String idString) throws SecurityException, RemoteException, Exception;
 
     public void interuptGlobalPersonSearch(String idString) throws RemoteException, SecurityException;
+
+    public DatabaseStats getDatabaseStats() throws RemoteException, SecurityException;
 }

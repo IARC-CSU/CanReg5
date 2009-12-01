@@ -765,4 +765,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         userManager.writePasswordsToFile();
         return id;
     }
+
+    public DatabaseStats getDatabaseStats() throws RemoteException, SecurityException {
+        return db.getDatabaseStats();
+    }
 }

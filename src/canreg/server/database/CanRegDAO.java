@@ -11,6 +11,7 @@ import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.server.DatabaseStats;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -82,6 +83,7 @@ public class CanRegDAO {
         strGetHighestSourceRecordID = QueryGenerator.strGetHighestSourceRecordID(globalToolBox);
         strEditUser = QueryGenerator.strEditUser();
         strSaveUser = QueryGenerator.strSaveUser();
+        strMaxNumberOfSourcesPerTumourRecord = QueryGenerator.strMaxNumberOfSourcesPerTumourRecord(globalToolBox);
         /* We don't use tumour record ID...
         strGetHighestTumourRecordID = QueryGenerator.strGetHighestTumourRecordID(globalToolBox);
          */
@@ -913,6 +915,7 @@ public class CanRegDAO {
             stmtDeleteSourceRecord = dbConnection.prepareStatement(strDeleteSourceRecord);
 
             stmtGetDictionary = dbConnection.prepareStatement(strGetDictionary);
+            stmtMaxNumberOfSourcesPerTumourRecord = dbConnection.prepareStatement(strMaxNumberOfSourcesPerTumourRecord);
             // stmtGetDictionaries = dbConnection.prepareStatement(strGetDictionaries);
             // stmtDeletePatient = dbConnection.prepareStatement(strDeletePatient);
 
@@ -2005,6 +2008,7 @@ public class CanRegDAO {
     private PreparedStatement stmtGetHighestTumourID;
     private PreparedStatement stmtGetHighestTumourRecordID;
     private PreparedStatement stmtGetHighestSourceRecordID;
+    private PreparedStatement stmtMaxNumberOfSourcesPerTumourRecord;
     private String ns = Globals.NAMESPACE;
     private static final String strGetPatient =
             "SELECT * FROM APP.PATIENT " +
@@ -2068,6 +2072,7 @@ public class CanRegDAO {
             "DELETE FROM APP.PDSET " +
             "WHERE PDS_ID = ?";
     // The Dynamic ones
+    private String strMaxNumberOfSourcesPerTumourRecord;
     private String strSavePatient;
     private String strSaveTumour;
     private String strSaveSource;
@@ -2138,5 +2143,19 @@ public class CanRegDAO {
             lock = lockSet.contains(recordID);
         }
         return lock;
+    }
+
+    public DatabaseStats getDatabaseStats() {
+        DatabaseStats dbs = new DatabaseStats();
+        try {
+            ResultSet result = stmtMaxNumberOfSourcesPerTumourRecord.executeQuery();
+            result.next();
+            int maxNumberOfSourcesPerTumourRecord = result.getInt(1);
+            dbs.setMaxNumberOfSourcesPerTumourRecord(maxNumberOfSourcesPerTumourRecord);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return dbs;
     }
 }

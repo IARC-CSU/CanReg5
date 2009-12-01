@@ -282,4 +282,9 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         checkPermission("releaseRecord: " + tableName +"-"+ recordID);
         theServer.releaseRecord(recordID, tableName);
     }
+
+    public DatabaseStats getDatabaseStats() throws RemoteException, SecurityException {
+        checkPermission("getDatabaseStats");
+        return theServer.getDatabaseStats();
+    }
 }

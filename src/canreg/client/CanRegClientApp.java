@@ -19,6 +19,7 @@ import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.exceptions.WrongCanRegVersionException;
 import canreg.server.CanRegLoginInterface;
 import canreg.server.CanRegServerInterface;
+import canreg.server.DatabaseStats;
 import canreg.server.database.UnknownTableException;
 import canreg.server.database.User;
 import canreg.server.database.DatabaseRecord;
@@ -374,6 +375,10 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public String getSystemName() {
         return systemName;
+    }
+
+    public DatabaseStats getDatabaseStats() throws RemoteException, SecurityException {
+        return server.getDatabaseStats();
     }
 
     /**

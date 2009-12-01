@@ -570,4 +570,9 @@ public class QueryGenerator {
             Logger.getLogger(QueryGenerator.class.getName()).log(Level.INFO, msg);
         }
     }
+
+    static String strMaxNumberOfSourcesPerTumourRecord(GlobalToolBox globalToolBox) {
+        String tumourRecordIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
+        return "SELECT COUNT(*) AS N FROM APP.SOURCE GROUP BY "+tumourRecordIDVariableNameSourceTable+" ORDER BY N DESC";
+    }
 }
