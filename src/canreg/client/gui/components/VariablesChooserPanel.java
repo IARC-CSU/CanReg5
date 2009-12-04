@@ -23,8 +23,8 @@ import org.jdesktop.application.Action;
 public class VariablesChooserPanel extends javax.swing.JPanel {
 
     private Map<String, VariablesExportDetailsPanel> panelMap;
-    private DatabaseVariablesListElement[] variablesInDB;
-    private String tableName = "both";
+    private DatabaseVariablesListElement[] variablesInTable;
+    private String tableName = Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME;
 
     /** Creates new form VariablesChooserPanel */
     public VariablesChooserPanel() {
@@ -100,29 +100,36 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
         DatabaseVariablesListElement[] tumourVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
         DatabaseVariablesListElement[] sourceVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
 
-        if (tableName.equalsIgnoreCase("both")) {
-            variablesInDB = new DatabaseVariablesListElement[patientVariablesInDB.length + tumourVariablesInDB.length];
-
+        if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
+            variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length + tumourVariablesInDB.length];
             for (int position = 0; position < patientVariablesInDB.length; position++) {
-                variablesInDB[position] = patientVariablesInDB[position];
+                variablesInTable[position] = patientVariablesInDB[position];
             }
             for (int position = 0; position < tumourVariablesInDB.length; position++) {
-                variablesInDB[position + patientVariablesInDB.length] = tumourVariablesInDB[position];
+                variablesInTable[position + patientVariablesInDB.length] = tumourVariablesInDB[position];
+            }
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
+            variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length + tumourVariablesInDB.length];
+            for (int position = 0; position < sourceVariablesInDB.length; position++) {
+                variablesInTable[position] = sourceVariablesInDB[position];
+            }
+            for (int position = 0; position < tumourVariablesInDB.length; position++) {
+                variablesInTable[position + sourceVariablesInDB.length] = tumourVariablesInDB[position];
             }
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-            variablesInDB = new DatabaseVariablesListElement[patientVariablesInDB.length];
-            variablesInDB = patientVariablesInDB;
+            variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length];
+            variablesInTable = patientVariablesInDB;
         } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-            variablesInDB = new DatabaseVariablesListElement[tumourVariablesInDB.length];
-            variablesInDB = tumourVariablesInDB;
+            variablesInTable = new DatabaseVariablesListElement[tumourVariablesInDB.length];
+            variablesInTable = tumourVariablesInDB;
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
-            variablesInDB = new DatabaseVariablesListElement[sourceVariablesInDB.length];
-            variablesInDB = sourceVariablesInDB;
+            variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length];
+            variablesInTable = sourceVariablesInDB;
         }
 
 
         // Add the panels
-        for (DatabaseVariablesListElement variable : variablesInDB) {
+        for (DatabaseVariablesListElement variable : variablesInTable) {
             VariablesExportDetailsPanel ved = new VariablesExportDetailsPanel();
             ved.setDictionary(dictionary.get(variable.getDictionaryID()));
             panelMap.put(variable.getDatabaseVariableName().toUpperCase(), ved);
@@ -173,7 +180,7 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
             //Take into account all the checkboxes when returning the checked variables.
             if (checkBoxes[0] || checkBoxes[1] || checkBoxes[2]) {
                 element = ved.getVariable();
-                if ("both".equalsIgnoreCase(tableName) || element.getDatabaseTableName().equalsIgnoreCase(tableName)) {
+                if (tableName.toUpperCase().contains(element.getDatabaseTableName().toUpperCase())) {
                     variables.add(element.getDatabaseVariableName().toUpperCase());
                 }
             }

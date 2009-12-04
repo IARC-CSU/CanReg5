@@ -107,7 +107,7 @@ public class Globals {
     /**
      * 
      */
-    public static int NUMBER_OF_LINES_IN_IMPORT_PREVIEW = 42;
+    public static int NUMBER_OF_LINES_IN_IMPORT_PREVIEW = 100;
     /**
      * 
      */
@@ -115,6 +115,15 @@ public class Globals {
     public static String PATIENT_TABLE_NAME = "Patient";
     public static String SOURCE_TABLE_NAME = "Source";
     public static String USERS_TABLE_NAME = "USERS";
+    static public String TUMOUR_AND_PATIENT_JOIN_TABLE_NAME = TUMOUR_TABLE_NAME + "+" + PATIENT_TABLE_NAME;
+    static public String SOURCE_AND_TUMOUR_JOIN_TABLE_NAME = SOURCE_TABLE_NAME + "+" + TUMOUR_TABLE_NAME;
+    static public String[] DEFAULT_TABLE_CHOOSER_TABLE_LIST = {
+        TUMOUR_TABLE_NAME,
+        PATIENT_TABLE_NAME,
+        TUMOUR_AND_PATIENT_JOIN_TABLE_NAME,
+        SOURCE_TABLE_NAME,
+        SOURCE_AND_TUMOUR_JOIN_TABLE_NAME
+    };
     /**
      * 
      */
@@ -429,13 +438,11 @@ public class Globals {
     public static String FILL_IN_STATUS_AUTOMATIC_STRING = "Automatic";
     public static String FILL_IN_STATUS_OPTIONAL_STRING = "Optional";
     public static String FILL_IN_STATUS_SYSTEM_STRING = "System";
-
     public static int PDS_DATABASE_NAME_LENGTH = 100;
     public static int ADDITIONAL_DIGITS_FOR_PATIENT_RECORD = 2;
     public static int ADDITIONAL_DIGITS_FOR_TUMOUR_ID = 2;
     public static int ADDITIONAL_DIGITS_FOR_SOURCE_ID = 2;
     public static int MAX_USERNAME_LENGHT = 16;
-
     public static String VARIABLE_TYPE_DATE_NAME = "Date";
     public static String VARIABLE_TYPE_ALPHA_NAME = "Alpha";
     public static String VARIABLE_TYPE_NUMBER_NAME = "Number";

@@ -2,6 +2,7 @@ package canreg.common.conversions;
 
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
+import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
@@ -28,7 +29,7 @@ public class Converter {
         /**
          * 
          */
-        ICDO3toICCC,
+        ICDO3toICCC3,
         /**
          * 
          */
@@ -82,10 +83,10 @@ public class Converter {
         for (DatabaseVariablesListElement dbvle : standardVariables) {
             String name = dbvle.getStandardVariableName();
             StandardVariableNames standardVariable = StandardVariableNames.valueOf(name);
-            Object data;
-            if (dbvle.getTable().equalsIgnoreCase("Patient")) {
+            Object data = null;
+            if (dbvle.getTable().equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
                 data = patient.getVariable(dbvle.getShortName());
-            } else {
+            } else if (dbvle.getTable().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
                 data = tumour.getVariable(dbvle.getShortName());
             }
             variables.put(standardVariable, data);

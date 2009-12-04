@@ -314,10 +314,11 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
 
     private void initOtherComponents() {
         rangeFilterPanel.setActionListener(this);
-        rangeFilterPanel.setTableChooserVisible(false);
+        // rangeFilterPanel.setTableChooserVisible(false);
         rangeFilterPanel.setRecordPanelvisible(false);
         rangeFilterPanel.setSortByVariableShown(false);
         resultScrollPane.setVisible(false);
+        variablesChooserPanel.setTableName(rangeFilterPanel.getSelectedTable());
         variablesChooserPanel.initPanel(dictionary);
         tableInternalFrame = new TableInternalFrame();
 
@@ -418,6 +419,11 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         if ("refresh".equalsIgnoreCase(e.getActionCommand())) {
             Task refreshTask = refresh();
             refreshTask.execute();
+        } else if ("tableChanged".equalsIgnoreCase(e.getActionCommand())) {
+            tableName = rangeFilterPanel.getSelectedTable();
+            variablesChooserPanel.setTableName(tableName);
+            variablesChooserPanel.initPanel(dictionary);
+            resultPanel.setVisible(false);
         }
     }
 

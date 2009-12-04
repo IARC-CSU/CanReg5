@@ -5,6 +5,7 @@
  */
 package canreg.client.gui.components;
 
+import canreg.client.CanRegClientApp;
 import canreg.client.dataentry.DictionaryHelper;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
@@ -30,7 +31,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
 
     private DatabaseVariablesListElement[] variablesInTable;
     private Document doc;
-    private String tableName = "both";
+    private String tableName = Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME;
     private Map<Integer, Dictionary> dictionaries;
     Dictionary dictionary;
     private Map<String, DictionaryEntry> possibleValuesMap;
@@ -38,6 +39,9 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
     private int maxLength;
     private boolean dictionaryPopUp = true;
     private boolean currentSelectionAdded = false;
+    private DatabaseVariablesListElement[] patientVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
+    private DatabaseVariablesListElement[] tumourVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
+    private DatabaseVariablesListElement[] sourceVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
 
     /** Creates new form FastFilterInternalFrame */
     public FastFilterInternalFrame() {
@@ -344,21 +348,31 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
     }
 
     private void refreshVariableList() {
-        variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
-        if (!tableName.equalsIgnoreCase("both")) {
-            LinkedList<DatabaseVariablesListElement> tempVariablesInTable = new LinkedList<DatabaseVariablesListElement>();
-            for (int i = 0; i <
-                    variablesInTable.length; i++) {
-                if (variablesInTable[i].getDatabaseTableName().equalsIgnoreCase(tableName)) {
-                    tempVariablesInTable.add(variablesInTable[i]);
-                }
+        if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
+            variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length + tumourVariablesInDB.length];
+            for (int position = 0; position < patientVariablesInDB.length; position++) {
+                variablesInTable[position] = patientVariablesInDB[position];
             }
-            variablesInTable = new DatabaseVariablesListElement[tempVariablesInTable.size()];
-            for (int i = 0; i <
-                    variablesInTable.length; i++) {
-                variablesInTable[i] = tempVariablesInTable.get(i);
+            for (int position = 0; position < tumourVariablesInDB.length; position++) {
+                variablesInTable[position + patientVariablesInDB.length] = tumourVariablesInDB[position];
             }
-
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
+            variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length + tumourVariablesInDB.length];
+            for (int position = 0; position < sourceVariablesInDB.length; position++) {
+                variablesInTable[position] = sourceVariablesInDB[position];
+            }
+            for (int position = 0; position < tumourVariablesInDB.length; position++) {
+                variablesInTable[position + sourceVariablesInDB.length] = tumourVariablesInDB[position];
+            }
+        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+            variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length];
+            variablesInTable = patientVariablesInDB;
+        } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+            variablesInTable = new DatabaseVariablesListElement[tumourVariablesInDB.length];
+            variablesInTable = tumourVariablesInDB;
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+            variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length];
+            variablesInTable = sourceVariablesInDB;
         }
         variableComboBox.setModel(new DefaultComboBoxModel(variablesInTable));
     }

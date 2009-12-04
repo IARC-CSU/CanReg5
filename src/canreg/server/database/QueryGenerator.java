@@ -368,8 +368,6 @@ public class QueryGenerator {
         String patientRecordIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
         return "SELECT * FROM APP.TUMOUR, APP.PATIENT " +
                 "WHERE APP.TUMOUR." + patientRecordIDVariableNameTumourTable + "= APP.PATIENT." + patientRecordIDVariableNamePatientTable;
-        //return "SELECT * FROM APP.TUMOUR LEFT OUTER JOIN APP.PATIENT ON " +
-        //    "APP.TUMOUR."+patientRecordIDVariableNameTumourTable +" = APP.PATIENT."+patientRecordIDVariableNamePatientTable;
     }
 
     static String strCountPatientsAndTumours(GlobalToolBox globalToolBox) {
@@ -377,8 +375,20 @@ public class QueryGenerator {
         String patientRecordIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
         return "SELECT COUNT(*) FROM APP.TUMOUR, APP.PATIENT " +
                 "WHERE APP.TUMOUR." + patientRecordIDVariableNameTumourTable + "= APP.PATIENT." + patientRecordIDVariableNamePatientTable;
-        //return "SELECT COUNT(*) FROM APP.TUMOUR LEFT OUTER JOIN APP.PATIENT ON " +
-        //    "APP.TUMOUR."+patientRecordIDVariableNameTumourTable +" = APP.PATIENT."+patientRecordIDVariableNamePatientTable;
+     }
+
+    static String strGetSourcesAndTumours(GlobalToolBox globalToolBox) {
+        String tumourIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
+        String tumourIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+        return "SELECT * FROM APP.SOURCE, APP.TUMOUR " +
+                "WHERE APP.TUMOUR." + tumourIDVariableNameTumourTable + "= APP.SOURCE." + tumourIDVariableNameSourceTable;
+    }
+
+    static String strCountSourcesAndTumours(GlobalToolBox globalToolBox) {
+        String tumourIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
+        String tumourIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+         return "SELECT COUNT(*) FROM APP.SOURCE, APP.TUMOUR " +
+                "WHERE APP.TUMOUR." + tumourIDVariableNameTumourTable + "= APP.SOURCE." + tumourIDVariableNameSourceTable;
     }
 
     private static final String strSaveRecord(Document doc, String tableName) {
@@ -440,13 +450,13 @@ public class QueryGenerator {
     static String strGetHighestTumourID(GlobalToolBox globalToolBox) {
         String tumourIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         String patientRecordIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
-        return "SELECT max(\"" + tumourIDVariableNameTumourTable.toUpperCase() + "\") FROM APP.TUMOUR WHERE "+patientRecordIDVariableNameTumourTable.toUpperCase()+" = ?";
+        return "SELECT max(\"" + tumourIDVariableNameTumourTable.toUpperCase() + "\") FROM APP.TUMOUR WHERE " + patientRecordIDVariableNameTumourTable.toUpperCase() + " = ?";
     }
 
     static String strGetHighestPatientRecordID(GlobalToolBox globalToolBox) {
         String patientRecordIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
         String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
-        return "SELECT max(\"" + patientRecordIDVariableNamePatientTable.toUpperCase() + "\") FROM APP.PATIENT WHERE "+patientIDVariableNamePatientTable.toUpperCase()+" = ?";
+        return "SELECT max(\"" + patientRecordIDVariableNamePatientTable.toUpperCase() + "\") FROM APP.PATIENT WHERE " + patientIDVariableNamePatientTable.toUpperCase() + " = ?";
     }
 
     static String strGetHighestSourceRecordID(GlobalToolBox globalToolBox) {
@@ -455,7 +465,7 @@ public class QueryGenerator {
         if (le != null) {
             String sourceRecordIDVariableName = le.getDatabaseVariableName();
             String tumourIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
-            returnString = "SELECT max(\"" + sourceRecordIDVariableName.toUpperCase() + "\") FROM APP.SOURCE WHERE "+tumourIDVariableNameSourceTable.toUpperCase()+" = ?";
+            returnString = "SELECT max(\"" + sourceRecordIDVariableName.toUpperCase() + "\") FROM APP.SOURCE WHERE " + tumourIDVariableNameSourceTable.toUpperCase() + " = ?";
         }
         return returnString;
     }
@@ -573,6 +583,6 @@ public class QueryGenerator {
 
     static String strMaxNumberOfSourcesPerTumourRecord(GlobalToolBox globalToolBox) {
         String tumourRecordIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
-        return "SELECT COUNT(*) AS N FROM APP.SOURCE GROUP BY "+tumourRecordIDVariableNameSourceTable+" ORDER BY N DESC";
+        return "SELECT COUNT(*) AS N FROM APP.SOURCE GROUP BY " + tumourRecordIDVariableNameSourceTable + " ORDER BY N DESC";
     }
 }

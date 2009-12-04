@@ -37,6 +37,9 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
     private ActionListener actionListener;
     // private DatabaseVariablesListElement[] variablesInDB;
     private DatabaseVariablesListElement[] variablesInTable;
+    private DatabaseVariablesListElement[] patientVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
+    private DatabaseVariablesListElement[] tumourVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
+    private DatabaseVariablesListElement[] sourceVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
 
     /** Creates new form RangeFilterPanel */
     public RangeFilterPanel() {
@@ -108,7 +111,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
      */
     public void setTableChooserVisible(boolean visible) {
         tableChooserPanel.setVisible(visible);
-        tableChooserComboBox.setSelectedItem("Both");
+        tableChooserComboBox.setSelectedItem(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME);
     }
 
     /**
@@ -270,7 +273,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         tableChooserPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Table"));
         tableChooserPanel.setName("tableChooserPanel"); // NOI18N
 
-        tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tumour", "Patient", "Both", "Source" }));
+        tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tumour", "Patient", "Tumour+Patient", "Source", "Source+Tumour" }));
         tableChooserComboBox.setName("tableChooserComboBox"); // NOI18N
         tableChooserComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -355,7 +358,8 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
     private void refreshIndexList() {
         DatabaseIndexesListElement[] indexesInTableTemp;
         String tableName = tableChooserComboBox.getSelectedItem().toString();
-        if (!tableName.equalsIgnoreCase("both")) {
+        // tidy this for sources
+        if (!tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
             LinkedList<DatabaseIndexesListElement> tempIndexesInTable = new LinkedList<DatabaseIndexesListElement>();
             for (int i = 0; i <
                     indexesInDB.length; i++) {
@@ -460,7 +464,8 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
         doc = CanRegClientApp.getApplication().getDatabseDescription();
         // variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
         indexesInDB = canreg.common.Tools.getIndexesListElements(doc, Globals.NAMESPACE);
-        variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+        // variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+
         rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(indexesInDB));
 
         filterWizardInternalFrame = new FastFilterInternalFrame();
@@ -476,25 +481,36 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
     }
 
     private void refreshVariableList() {
-        DatabaseVariablesListElement[] variablesInTableTemp;
         String tableName = tableChooserComboBox.getSelectedItem().toString();
-        if (!tableName.equalsIgnoreCase("both")) {
-            LinkedList<DatabaseVariablesListElement> tempVariablesInTable = new LinkedList<DatabaseVariablesListElement>();
-            for (int i = 0; i <
-                    variablesInTable.length; i++) {
-                if (variablesInTable[i].getDatabaseTableName().equalsIgnoreCase(tableName)) {
-                    tempVariablesInTable.add(variablesInTable[i]);
-                }
+
+        if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
+            variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length + tumourVariablesInDB.length];
+            for (int position = 0; position < patientVariablesInDB.length; position++) {
+                variablesInTable[position] = patientVariablesInDB[position];
             }
-            variablesInTableTemp = new DatabaseVariablesListElement[tempVariablesInTable.size()];
-            for (int i = 0; i <
-                    variablesInTableTemp.length; i++) {
-                variablesInTableTemp[i] = tempVariablesInTable.get(i);
+            for (int position = 0; position < tumourVariablesInDB.length; position++) {
+                variablesInTable[position + patientVariablesInDB.length] = tumourVariablesInDB[position];
             }
-        } else {
-            variablesInTableTemp = variablesInTable;
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
+            variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length + tumourVariablesInDB.length];
+            for (int position = 0; position < sourceVariablesInDB.length; position++) {
+                variablesInTable[position] = sourceVariablesInDB[position];
+            }
+            for (int position = 0; position < tumourVariablesInDB.length; position++) {
+                variablesInTable[position + sourceVariablesInDB.length] = tumourVariablesInDB[position];
+            }
+        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+            variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length];
+            variablesInTable = patientVariablesInDB;
+        } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+            variablesInTable = new DatabaseVariablesListElement[tumourVariablesInDB.length];
+            variablesInTable = tumourVariablesInDB;
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+            variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length];
+            variablesInTable = sourceVariablesInDB;
         }
-        sortByChooserComboBox.setModel(new DefaultComboBoxModel(variablesInTableTemp));
+
+        sortByChooserComboBox.setModel(new DefaultComboBoxModel(variablesInTable));
     }
 
     /**
@@ -634,5 +650,9 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
     public void rangeComboboxChanged() {
         rangeStartTextField.setText("");
         rangeEndTextField.setText("");
+    }
+
+    public void setTablesToChooseFrom(String[] tables){
+        tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(tables));
     }
 }

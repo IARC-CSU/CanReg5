@@ -806,7 +806,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     }
                 }
                 DatabaseFilter filter = new DatabaseFilter();
-                String tableName = "both";
+                String tableName = Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME;
                 String filterString = rangeFilterPanel.getFilter().trim();
 
                 if (filterString.length() != 0) {

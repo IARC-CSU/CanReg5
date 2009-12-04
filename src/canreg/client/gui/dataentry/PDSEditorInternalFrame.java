@@ -604,7 +604,7 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
 
         filterWizardInternalFrame = new FastFilterInternalFrame();
-        filterWizardInternalFrame.setTableName("Both");
+        filterWizardInternalFrame.setTableName(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME);
         filterWizardInternalFrame.setActionListener(this);
 
         ageGroupStructureComboBox.setModel(new javax.swing.DefaultComboBoxModel(Globals.defaultAgeGroupStructures));

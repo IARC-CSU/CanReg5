@@ -6,6 +6,7 @@
 package canreg.client.gui.components;
 
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.Globals;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -21,6 +22,9 @@ public class VariablesPanel extends javax.swing.JPanel {
     Map<String, LinkedList<String>> mapTableVariableNamesKey;
     Map<String, LinkedList<String>> mapTableVariableNamesMandatory;
     Map<String, LinkedList<String>> mapTableVariableNamesAll;
+    LinkedList<String> keyVariableNames = new LinkedList<String>();
+    LinkedList<String> mandatoryVariableNames = new LinkedList<String>();
+    LinkedList<String> allVariableNames = new LinkedList<String>();
 
     /** Creates new form VariablesPanel */
     public VariablesPanel() {
@@ -33,60 +37,97 @@ public class VariablesPanel extends javax.swing.JPanel {
      */
     public void setDatabaseVariables(DatabaseVariablesListElement[] dbles) {
         // Build maps
+        keyVariableNames = new LinkedList<String>();
+        mandatoryVariableNames = new LinkedList<String>();
+        allVariableNames = new LinkedList<String>();
+        for (DatabaseVariablesListElement dble : dbles) {
+            if (dble.getStandardVariableName() != null) {
+                keyVariableNames.add(dble.getDatabaseVariableName().toUpperCase());
+            }
+            if (dble.getFillInStatus().equalsIgnoreCase("Mandatory")) {
+                mandatoryVariableNames.add(dble.getDatabaseVariableName().toUpperCase());
+            }
+            // Add it to the all list
+            allVariableNames.add(dble.getDatabaseVariableName().toUpperCase());
+        }
+
+        /*
         mapTableVariableNamesKey = new LinkedHashMap<String, LinkedList<String>>();
         mapTableVariableNamesMandatory = new LinkedHashMap<String, LinkedList<String>>();
         mapTableVariableNamesAll = new LinkedHashMap<String, LinkedList<String>>();
         for (DatabaseVariablesListElement dble : dbles) {
-            if (dble.getStandardVariableName() != null) {
-                // Add it to the proper list
-                LinkedList list = mapTableVariableNamesKey.get(dble.getTable());
-                // Create the list if necessary
-                if (list == null) {
-                    list = new LinkedList<String>();
-                    mapTableVariableNamesKey.put(dble.getDatabaseTableName(), list);
-                }
-                list.add(dble.getDatabaseVariableName().toUpperCase());
-            }
-            if (dble.getFillInStatus().equalsIgnoreCase("Mandatory")||dble.getFillInStatus().equalsIgnoreCase("Automatic")) {
-                // Add it to the proper list
-                LinkedList list = mapTableVariableNamesMandatory.get(dble.getTable());
-                // Create the list if necessary
-                if (list == null) {
-                    list = new LinkedList<String>();
-                    mapTableVariableNamesMandatory.put(dble.getDatabaseTableName(), list);
-                }
-                list.add(dble.getDatabaseVariableName().toUpperCase());
-            }
-            // Add it to the all list
-            LinkedList list = mapTableVariableNamesAll.get(dble.getTable());
-            // Create the list if necessary
-            if (list == null) {
-                list = new LinkedList<String>();
-                mapTableVariableNamesAll.put(dble.getDatabaseTableName(), list);
-            }
-            list.add(dble.getDatabaseVariableName().toUpperCase());
+        if (dble.getStandardVariableName() != null) {
+        // Add it to the proper list
+        LinkedList list = mapTableVariableNamesKey.get(dble.getTable());
+        // Create the list if necessary
+        if (list == null) {
+        list = new LinkedList<String>();
+        mapTableVariableNamesKey.put(dble.getDatabaseTableName(), list);
+        }
+        list.add(dble.getDatabaseVariableName().toUpperCase());
+        }
+        if (dble.getFillInStatus().equalsIgnoreCase("Mandatory")) {
+        // Add it to the proper list
+        LinkedList list = mapTableVariableNamesMandatory.get(dble.getTable());
+        // Create the list if necessary
+        if (list == null) {
+        list = new LinkedList<String>();
+        mapTableVariableNamesMandatory.put(dble.getDatabaseTableName(), list);
+        }
+        list.add(dble.getDatabaseVariableName().toUpperCase());
+        }
+        // Add it to the all list
+        LinkedList list = mapTableVariableNamesAll.get(dble.getTable());
+        // Create the list if necessary
+        if (list == null) {
+        list = new LinkedList<String>();
+        mapTableVariableNamesAll.put(dble.getDatabaseTableName(), list);
+        }
+        list.add(dble.getDatabaseVariableName().toUpperCase());
         }
 
-        LinkedList bothKeylist = new LinkedList<String>();
-        Iterator <LinkedList<String>> it = mapTableVariableNamesKey.values().iterator();
-        while (it.hasNext()){
-            bothKeylist.addAll(it.next());
+        LinkedList tumourAndPatientKeylist = new LinkedList<String>();
+        Iterator<LinkedList<String>> it = mapTableVariableNamesKey.values().iterator();
+        while (it.hasNext()) {
+        tumourAndPatientKeylist.addAll(it.next());
         }
-        mapTableVariableNamesKey.put("Both", bothKeylist);
-        
-        LinkedList bothMandatoryList = new LinkedList<String>();
-        Iterator <LinkedList<String>> it2 = mapTableVariableNamesMandatory.values().iterator();
-        while (it2.hasNext()){
-            bothMandatoryList.addAll(it2.next());
+        mapTableVariableNamesKey.put(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME, tumourAndPatientKeylist);
+
+        LinkedList tumourAndPatientMandatoryList = new LinkedList<String>();
+        Iterator<LinkedList<String>> it2 = mapTableVariableNamesMandatory.values().iterator();
+        while (it2.hasNext()) {
+        tumourAndPatientMandatoryList.addAll(it2.next());
         }
-        mapTableVariableNamesMandatory.put("Both", bothMandatoryList);
-        
-        LinkedList bothAllList = new LinkedList<String>();
-        Iterator <LinkedList<String>> it3 = mapTableVariableNamesAll.values().iterator();
-        while (it3.hasNext()){
-            bothAllList.addAll(it3.next());
+        mapTableVariableNamesMandatory.put(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME, tumourAndPatientMandatoryList);
+
+        LinkedList tumourAndPatientAllList = new LinkedList<String>();
+        Iterator<LinkedList<String>> it3 = mapTableVariableNamesAll.values().iterator();
+        while (it3.hasNext()) {
+        tumourAndPatientAllList.addAll(it3.next());
         }
-        mapTableVariableNamesAll.put("Both", bothAllList);
+        mapTableVariableNamesAll.put(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME, tumourAndPatientAllList);
+
+        LinkedList tumourAndSourceKeylist = new LinkedList<String>();
+        Iterator<LinkedList<String>> it4 = mapTableVariableNamesKey.values().iterator();
+        while (it4.hasNext()) {
+        tumourAndSourceKeylist.addAll(it4.next());
+        }
+        mapTableVariableNamesKey.put(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME, tumourAndPatientKeylist);
+
+        LinkedList tumourAndSourceMandatoryList = new LinkedList<String>();
+        Iterator<LinkedList<String>> it5 = mapTableVariableNamesMandatory.values().iterator();
+        while (it5.hasNext()) {
+        tumourAndSourceMandatoryList.addAll(it5.next());
+        }
+        mapTableVariableNamesMandatory.put(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME, tumourAndPatientMandatoryList);
+
+        LinkedList tumourAndSourceAllList = new LinkedList<String>();
+        Iterator<LinkedList<String>> it6 = mapTableVariableNamesAll.values().iterator();
+        while (it6.hasNext()) {
+        tumourAndSourceAllList.addAll(it6.next());
+        }
+        mapTableVariableNamesAll.put(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME, tumourAndPatientAllList);
+         */
     }
 
     /**
@@ -96,11 +137,11 @@ public class VariablesPanel extends javax.swing.JPanel {
      */
     public LinkedList<String> getVariablesToShow(String tableName) {
         if (keyRadioButton.isSelected()) {
-            return mapTableVariableNamesKey.get(tableName);
+            return keyVariableNames;
         } else if (mandatoryRadioButton.isSelected()) {
-            return mapTableVariableNamesMandatory.get(tableName);
+            return mandatoryVariableNames;
         } else {
-            return mapTableVariableNamesAll.get(tableName);
+            return allVariableNames;
         }
     }
 

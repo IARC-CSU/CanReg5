@@ -76,7 +76,9 @@ public class CanRegDAO {
         strSavePopoulationDatasetsEntry = QueryGenerator.strSavePopoulationDatasetsEntry();
         strSaveNameSexRecord = QueryGenerator.strSaveNameSexEntry();
         strGetPatientsAndTumours = QueryGenerator.strGetPatientsAndTumours(globalToolBox);
+        strGetSourcesAndTumours = QueryGenerator.strGetSourcesAndTumours(globalToolBox);
         strCountPatientsAndTumours = QueryGenerator.strCountPatientsAndTumours(globalToolBox);
+        strCountSourcesAndTumours = QueryGenerator.strCountSourcesAndTumours(globalToolBox);
         strGetHighestPatientID = QueryGenerator.strGetHighestPatientID(globalToolBox);
         strGetHighestTumourID = QueryGenerator.strGetHighestTumourID(globalToolBox);
         strGetHighestPatientRecordID = QueryGenerator.strGetHighestPatientRecordID(globalToolBox);
@@ -439,14 +441,36 @@ public class CanRegDAO {
             }
             String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
             String patientIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
-            String IncidenceDateVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.IncidenceDate.toString()).getDatabaseVariableName();
+            String incidenceDateVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.IncidenceDate.toString()).getDatabaseVariableName();
+            String tumourIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
+            String tumourIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
 
-            query = "SELECT SUBSTR(" + IncidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases " +
-                    "FROM APP.TUMOUR, APP.PATIENT " +
-                    "WHERE APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " " + filterString + " " +
-                    "GROUP BY SUBSTR(" + IncidenceDateVariableName + ",1,4) " + variablesList + " " +
-                    "ORDER BY SUBSTR(" + IncidenceDateVariableName + ",1,4) " + variablesList;
+            if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME) ||
+                    tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+                query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases " +
+                        "FROM APP.TUMOUR, APP.PATIENT " +
+                        "WHERE APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " " +
+                        filterString + " " +
+                        "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " " +
+                        "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+            } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME) ||
+                    tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
+                query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases " +
+                        "FROM APP.SOURCE, APP.TUMOUR " +
+                        "WHERE APP.SOURCE." + tumourIDVariableNameSourceTable + " = APP.TUMOUR." + tumourIDVariableNameTumourTable + " " +
+                        filterString + " " +
+                        "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " " +
+                        "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+            } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+                query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases " +
+                        "FROM APP.TUMOUR " +
+                        (filterString.trim().length() > 0 ? filterString + " ": "") +
+                        "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " " +
+                        "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+            }
             System.out.print(query);
+
+
             try {
                 result = statement.executeQuery(query);
             } catch (java.sql.SQLSyntaxErrorException ex) {
@@ -523,8 +547,8 @@ public class CanRegDAO {
             } catch (java.sql.SQLSyntaxErrorException ex) {
                 throw ex;
             }
-        } // Or a "regular" query from a join of both tables
-        else if (tableName.equalsIgnoreCase("both")) {
+        } // Or a "regular" query from a join of tumour and patient tables
+        else if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
             String filterString = filter.getFilterString();
             if (!filterString.isEmpty()) {
                 filterString = " AND (" + filterString.trim() + ")";
@@ -538,7 +562,6 @@ public class CanRegDAO {
             }
 
             // debugOut(strCountPatientsAndTumours + filterString);
-
 
             ResultSet countRowSet;
             try {
@@ -562,7 +585,7 @@ public class CanRegDAO {
                 throw ex;
             }
 
-        } // Or a "regular" query from the tumour table
+        } // Or a "regular" query from the source table
         else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
             String filterString = filter.getFilterString();
             if (!filterString.isEmpty()) {
@@ -597,7 +620,44 @@ public class CanRegDAO {
             } catch (java.sql.SQLSyntaxErrorException ex) {
                 throw ex;
             }
-        }// Or an unknown query...
+        }// Or a "regular" query from a join of tumour and source tables
+        else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
+            String filterString = filter.getFilterString();
+            if (!filterString.isEmpty()) {
+                filterString = " AND (" + filterString.trim() + ")";
+            }
+            // Add the range part
+            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
+
+                filterString += " AND ";
+
+                filterString += QueryGenerator.buildRangePart(filter);
+            }
+
+            // debugOut(strCountPatientsAndTumours + filterString);
+
+            ResultSet countRowSet;
+            try {
+                countRowSet = statement.executeQuery(strCountSourcesAndTumours + filterString);
+            } catch (java.sql.SQLSyntaxErrorException ex) {
+                throw ex;
+            }
+
+            // Count the rows...
+            if (countRowSet.next()) {
+                rowCount = countRowSet.getInt(1);
+            }
+            // feed it to the garbage dump
+            countRowSet = null;
+            if (filter.getSortByVariable() != null) {
+                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
+            }
+            try {
+                result = statement.executeQuery(strGetSourcesAndTumours + filterString);
+            } catch (java.sql.SQLSyntaxErrorException ex) {
+                throw ex;
+            }
+        } // Or an unknown query...
         else {
             throw new UnknownTableException("Unknown table name.");
         }
@@ -897,7 +957,7 @@ public class CanRegDAO {
             stmtGetPatients = dbConnection.prepareStatement(strGetPatients);
             stmtGetSources = dbConnection.prepareStatement(strGetSources);
             stmtGetPatientsAndTumours = dbConnection.prepareStatement(strGetPatientsAndTumours);
-
+            stmtGetSourcesAndTumours = dbConnection.prepareStatement(strGetSourcesAndTumours);
             stmtGetHighestPatientID = dbConnection.prepareStatement(strGetHighestPatientID);
             stmtGetHighestTumourID = dbConnection.prepareStatement(strGetHighestTumourID);
             stmtGetHighestPatientRecordID = dbConnection.prepareStatement(strGetHighestPatientRecordID);
@@ -1991,6 +2051,7 @@ public class CanRegDAO {
     private PreparedStatement stmtGetSources;
     private PreparedStatement stmtGetTumours;
     private PreparedStatement stmtGetPatientsAndTumours;
+    private PreparedStatement stmtGetSourcesAndTumours;
     private PreparedStatement stmtGetRecord;
     private PreparedStatement stmtGetRecords;
     private PreparedStatement stmtGetDictionary;
@@ -2025,6 +2086,8 @@ public class CanRegDAO {
             "SELECT * FROM APP.SOURCE";
     private String strGetPatientsAndTumours;
     private String strCountPatientsAndTumours;
+    private String strGetSourcesAndTumours;
+    private String strCountSourcesAndTumours;
     private static final String strGetTumour =
             "SELECT * FROM APP.TUMOUR " +
             "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
