@@ -79,6 +79,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
     private String patientIDlookupVariable;
     private String patientIDTumourTablelookupVariable;
     private String tumourIDlookupVariable;
+    private String tumourIDSourceTableLookupVariable;
     int patientIDLength;
     int tumourIDLength;
     private int highlightedColumnNumber = 0;
@@ -92,6 +93,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         patientIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
         patientIDTumourTablelookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName();
         tumourIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+        tumourIDSourceTableLookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
         patientIDLength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getVariableLength();
         tumourIDLength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getVariableLength();
         initComponents();
@@ -357,8 +359,12 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             TableModel model = target.getModel();
             int columnNumber = 0;
             String lookUpVariable;
-            if (rangeFilterPanel.getSelectedTable().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+            if (rangeFilterPanel.getSelectedTable().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)
+                    || rangeFilterPanel.getSelectedTable().equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
                 lookUpVariable = tumourIDlookupVariable;
+                referenceTable = Globals.TUMOUR_TABLE_NAME;
+            } else if (rangeFilterPanel.getSelectedTable().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+                lookUpVariable = tumourIDSourceTableLookupVariable;
                 referenceTable = Globals.TUMOUR_TABLE_NAME;
             } else {
                 lookUpVariable = patientIDlookupVariable;

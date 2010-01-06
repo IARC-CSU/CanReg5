@@ -105,7 +105,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     RecordEditorPanel panel = (RecordEditorPanel) component;
                     changesDone = changesDone || panel.isSaveNeeded();
                 }
-                if (changesDone) { // TODO: Implement "If changes has been made" check...
+                if (changesDone) {
                     option = JOptionPane.showConfirmDialog(null, "Really close?\nChanges made will be lost.");
                     if (option == JOptionPane.YES_OPTION) {
                         releaseRecords();
