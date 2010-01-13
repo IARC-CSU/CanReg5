@@ -159,6 +159,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         rangePanel.setName("rangePanel"); // NOI18N
 
         rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Record Number", "ICD10", "Names" }));
+        rangeComboBox.setToolTipText(resourceMap.getString("rangeComboBox.toolTipText")); // NOI18N
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RangeFilterPanel.class, this);
         rangeComboBox.setAction(actionMap.get("rangeComboboxChanged")); // NOI18N
         rangeComboBox.setName("rangeComboBox"); // NOI18N
@@ -169,10 +170,12 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 
+        rangeStartTextField.setToolTipText(resourceMap.getString("rangeStartTextField.toolTipText")); // NOI18N
         rangeStartTextField.setMinimumSize(new java.awt.Dimension(50, 20));
         rangeStartTextField.setName("rangeStartTextField"); // NOI18N
         rangeStartTextField.setPreferredSize(new java.awt.Dimension(70, 20));
 
+        rangeEndTextField.setToolTipText(resourceMap.getString("rangeEndTextField.toolTipText")); // NOI18N
         rangeEndTextField.setMinimumSize(new java.awt.Dimension(50, 20));
         rangeEndTextField.setName("rangeEndTextField"); // NOI18N
         rangeEndTextField.setPreferredSize(new java.awt.Dimension(70, 20));
@@ -209,12 +212,15 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         filterPanel.setName("filterPanel"); // NOI18N
 
         filterComboBox.setEditable(true);
+        filterComboBox.setToolTipText(resourceMap.getString("filterComboBox.toolTipText")); // NOI18N
         filterComboBox.setName("filterComboBox"); // NOI18N
 
         useFilterCheckBox.setText(resourceMap.getString("useFilterCheckBox.text")); // NOI18N
+        useFilterCheckBox.setToolTipText(resourceMap.getString("useFilterCheckBox.toolTipText")); // NOI18N
         useFilterCheckBox.setName("useFilterCheckBox"); // NOI18N
 
         wizardButton.setAction(actionMap.get("filterWizardAction")); // NOI18N
+        wizardButton.setToolTipText(resourceMap.getString("wizardButton.toolTipText")); // NOI18N
         wizardButton.setName("wizardButton"); // NOI18N
 
         javax.swing.GroupLayout filterPanelLayout = new javax.swing.GroupLayout(filterPanel);
@@ -243,6 +249,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
 
         recordsShownField.setEditable(false);
         recordsShownField.setText(resourceMap.getString("recordsShownField.text")); // NOI18N
+        recordsShownField.setToolTipText(resourceMap.getString("recordsShownField.toolTipText")); // NOI18N
         recordsShownField.setName("recordsShownField"); // NOI18N
 
         recordsShownLabel.setText(resourceMap.getString("recordsShownLabel.text")); // NOI18N
@@ -274,6 +281,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         tableChooserPanel.setName("tableChooserPanel"); // NOI18N
 
         tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tumour", "Patient", "Tumour+Patient", "Source", "Source+Tumour" }));
+        tableChooserComboBox.setToolTipText(resourceMap.getString("tableChooserComboBox.toolTipText")); // NOI18N
         tableChooserComboBox.setName("tableChooserComboBox"); // NOI18N
         tableChooserComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -295,6 +303,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         sortByChooserPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("sortByChooserPanel.border.title"))); // NOI18N
         sortByChooserPanel.setName("sortByChooserPanel"); // NOI18N
 
+        sortByChooserComboBox.setToolTipText(resourceMap.getString("sortByChooserComboBox.toolTipText")); // NOI18N
         sortByChooserComboBox.setName("sortByChooserComboBox"); // NOI18N
         sortByChooserComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -314,6 +323,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         );
 
         refreshTableButton.setAction(actionMap.get("refreshAction")); // NOI18N
+        refreshTableButton.setToolTipText(resourceMap.getString("refreshTableButton.toolTipText")); // NOI18N
         refreshTableButton.setName("refreshTableButton"); // NOI18N
         refreshTableButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

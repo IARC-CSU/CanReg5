@@ -153,6 +153,7 @@
                 <StringItem index="3" value="Item 4"/>
               </StringArray>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="variableComboBox.toolTipText"/>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.FastFilterInternalFrame" id="varibleChosenAction" methodName="varibleChosenAction"/>
             </Property>
@@ -169,6 +170,7 @@
                 <StringItem index="3" value="Item 4"/>
               </StringArray>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="operationComboBox.toolTipText"/>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.FastFilterInternalFrame" id="operatorSelected" methodName="operatorSelected"/>
             </Property>
@@ -185,6 +187,7 @@
                 <StringItem index="3" value="Item 4"/>
               </StringArray>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="logicalOperatorComboBox.toolTipText"/>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.components.FastFilterInternalFrame" id="operatorAction" methodName="operatorAction"/>
             </Property>
@@ -220,6 +223,7 @@
             <Component class="javax.swing.JTextField" name="valueTextField">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="valueTextField.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="valueTextField.toolTipText"/>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.FastFilterInternalFrame" id="addAction" methodName="addAction"/>
                 </Property>
@@ -236,6 +240,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="valueTextField2">
               <Properties>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="valueTextField2.toolTipText"/>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.FastFilterInternalFrame" id="addAction" methodName="addAction"/>
                 </Property>
@@ -280,7 +285,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="scrollPane" alignment="0" pref="109" max="32767" attributes="0"/>
+              <Component id="scrollPane" alignment="0" pref="113" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -294,6 +299,7 @@
           <SubComponents>
             <Component class="javax.swing.JTextPane" name="textPane">
               <Properties>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="textPane.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="textPane" noResource="true"/>
               </Properties>
             </Component>
@@ -306,6 +312,7 @@
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
           <action class="canreg.client.gui.FastFilterInternalFrame" id="cancelAction" methodName="cancelAction"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" resourceKey="cancelButton.toolTipText"/>
         <Property name="name" type="java.lang.String" value="cancelButton" noResource="true"/>
       </Properties>
     </Component>
@@ -314,6 +321,7 @@
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
           <action class="canreg.client.gui.FastFilterInternalFrame" id="okAction" methodName="okAction"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" resourceKey="okButton.toolTipText"/>
         <Property name="name" type="java.lang.String" value="okButton" noResource="true"/>
       </Properties>
     </Component>

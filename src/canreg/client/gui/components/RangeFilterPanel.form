@@ -109,6 +109,7 @@
                 <StringItem index="2" value="Names"/>
               </StringArray>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="rangeComboBox.toolTipText"/>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.components.RangeFilterPanel" id="rangeComboboxChanged" methodName="rangeComboboxChanged"/>
             </Property>
@@ -129,6 +130,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="rangeStartTextField">
           <Properties>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="rangeStartTextField.toolTipText"/>
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[50, 20]"/>
             </Property>
@@ -140,6 +142,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="rangeEndTextField">
           <Properties>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="rangeEndTextField.toolTipText"/>
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[50, 20]"/>
             </Property>
@@ -193,12 +196,14 @@
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="filterComboBox.toolTipText"/>
             <Property name="name" type="java.lang.String" value="filterComboBox" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="useFilterCheckBox">
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="useFilterCheckBox.text"/>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="useFilterCheckBox.toolTipText"/>
             <Property name="name" type="java.lang.String" value="useFilterCheckBox" noResource="true"/>
           </Properties>
         </Component>
@@ -207,6 +212,7 @@
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.components.RangeFilterPanel" id="filterWizardAction" methodName="filterWizardAction"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="wizardButton.toolTipText"/>
             <Property name="name" type="java.lang.String" value="wizardButton" noResource="true"/>
           </Properties>
         </Component>
@@ -248,6 +254,7 @@
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="text" type="java.lang.String" resourceKey="recordsShownField.text"/>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="recordsShownField.toolTipText"/>
             <Property name="name" type="java.lang.String" value="recordsShownField" noResource="true"/>
           </Properties>
         </Component>
@@ -300,6 +307,7 @@
                 <StringItem index="4" value="Source+Tumour"/>
               </StringArray>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="tableChooserComboBox.toolTipText"/>
             <Property name="name" type="java.lang.String" value="tableChooserComboBox" noResource="true"/>
           </Properties>
           <Events>
@@ -338,6 +346,7 @@
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="sortByChooserComboBox.toolTipText"/>
             <Property name="name" type="java.lang.String" value="sortByChooserComboBox" noResource="true"/>
           </Properties>
           <Events>
@@ -351,6 +360,7 @@
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
           <action class="canreg.client.gui.components.RangeFilterPanel" id="refreshAction" methodName="refreshAction"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" resourceKey="refreshTableButton.toolTipText"/>
         <Property name="name" type="java.lang.String" value="refreshTableButton" noResource="true"/>
       </Properties>
       <Events>

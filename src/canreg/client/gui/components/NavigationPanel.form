@@ -7,6 +7,7 @@
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="2"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
@@ -43,11 +44,11 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="102" attributes="1">
                           <Component id="topButton" min="-2" pref="31" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="topButton2" min="-2" pref="31" max="-2" attributes="0"/>
+                          <Component id="topButton2" min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="topButton1" min="-2" pref="31" max="-2" attributes="0"/>
@@ -63,8 +64,8 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="topButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="topButton2" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="topButton" min="-2" max="-2" attributes="0"/>
+                      <Component id="topButton2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -82,6 +83,7 @@
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.components.NavigationPanel" id="goToTopAction" methodName="goToTopAction"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="topButton.toolTipText"/>
             <Property name="name" type="java.lang.String" value="topButton" noResource="true"/>
           </Properties>
         </Component>
@@ -90,6 +92,7 @@
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.components.NavigationPanel" id="goToBottomAction" methodName="goToBottomAction"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="topButton1.toolTipText"/>
             <Property name="name" type="java.lang.String" value="topButton1" noResource="true"/>
           </Properties>
         </Component>
@@ -98,6 +101,8 @@
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.components.NavigationPanel" id="goOneUpAction" methodName="goOneUpAction"/>
             </Property>
+            <Property name="text" type="java.lang.String" resourceKey="topButton2.text"/>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="topButton2.toolTipText"/>
             <Property name="name" type="java.lang.String" value="topButton2" noResource="true"/>
           </Properties>
         </Component>
@@ -106,6 +111,7 @@
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.components.NavigationPanel" id="goOneDownAction" methodName="goOneDownAction"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="topButton3.toolTipText"/>
             <Property name="name" type="java.lang.String" value="topButton3" noResource="true"/>
           </Properties>
         </Component>

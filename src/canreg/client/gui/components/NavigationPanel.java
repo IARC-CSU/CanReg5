@@ -45,15 +45,21 @@ public class NavigationPanel extends javax.swing.JPanel {
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(NavigationPanel.class, this);
         topButton.setAction(actionMap.get("goToTopAction")); // NOI18N
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(NavigationPanel.class);
+        topButton.setToolTipText(resourceMap.getString("topButton.toolTipText")); // NOI18N
         topButton.setName("topButton"); // NOI18N
 
         topButton1.setAction(actionMap.get("goToBottomAction")); // NOI18N
+        topButton1.setToolTipText(resourceMap.getString("topButton1.toolTipText")); // NOI18N
         topButton1.setName("topButton1"); // NOI18N
 
         topButton2.setAction(actionMap.get("goOneUpAction")); // NOI18N
+        topButton2.setText(resourceMap.getString("topButton2.text")); // NOI18N
+        topButton2.setToolTipText(resourceMap.getString("topButton2.toolTipText")); // NOI18N
         topButton2.setName("topButton2"); // NOI18N
 
         topButton3.setAction(actionMap.get("goOneDownAction")); // NOI18N
+        topButton3.setToolTipText(resourceMap.getString("topButton3.toolTipText")); // NOI18N
         topButton3.setName("topButton3"); // NOI18N
 
         javax.swing.GroupLayout navigatePanelLayout = new javax.swing.GroupLayout(navigatePanel);
@@ -62,11 +68,11 @@ public class NavigationPanel extends javax.swing.JPanel {
             navigatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(navigatePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(navigatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(navigatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(navigatePanelLayout.createSequentialGroup()
                         .addComponent(topButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(topButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(topButton2, 0, 0, Short.MAX_VALUE))
                     .addGroup(navigatePanelLayout.createSequentialGroup()
                         .addComponent(topButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
