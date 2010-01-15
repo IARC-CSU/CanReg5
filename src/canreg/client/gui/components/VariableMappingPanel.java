@@ -3,7 +3,7 @@
  *
  * Created on 27 May 2008, 16:58
  */
-package canreg.client.gui.dataentry;
+package canreg.client.gui.components;
 
 import canreg.common.DatabaseVariablesListElement;
 import org.jdesktop.application.Action;
@@ -22,7 +22,7 @@ public class VariableMappingPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    void setDBVariables(DatabaseVariablesListElement[] variablesInDB) {
+    public void setDBVariables(DatabaseVariablesListElement[] variablesInDB) {
         this.variablesInDB = variablesInDB;
         DatabaseVariablesListElement[] entriesInComboBox = new DatabaseVariablesListElement[variablesInDB.length + 1];
         entriesInComboBox[0] = null;

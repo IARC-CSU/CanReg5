@@ -16,6 +16,7 @@ import canreg.client.*;
 import canreg.client.gui.dataentry.EditDictionaryInternalFrame;
 import canreg.client.gui.analysis.FrequenciesByYearInternalFrame;
 import canreg.client.gui.analysis.TableBuilderInternalFrame;
+import canreg.client.gui.dataentry.ImportFilesView;
 import canreg.client.gui.dataentry.PDSChooserInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
 import canreg.client.gui.management.CanReg4PDSImporterInternalFrame;
@@ -27,8 +28,6 @@ import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -322,7 +321,7 @@ public class CanRegClientView extends FrameView {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 707, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -947,7 +946,15 @@ public class CanRegClientView extends FrameView {
      */
     @Action
     public void importData() {
-        ImportView importInternalFrame = new ImportView();
+        JInternalFrame importInternalFrame;
+        int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you hava all your data in one file?", "One file?", JOptionPane.YES_NO_OPTION);
+        if (i == 0) {
+            importInternalFrame= new ImportView();
+        }
+        else {
+            importInternalFrame= new ImportFilesView();
+        }
+
         showAndPositionInternalFrame(desktopPane, importInternalFrame);
         maximizeHeight(desktopPane, importInternalFrame);
     }

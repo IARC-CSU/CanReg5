@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package canreg.client.dataentry;
 
 import java.nio.charset.Charset;
@@ -12,6 +11,7 @@ import java.nio.charset.Charset;
  * @author ervikm
  */
 public class ImportOptions {
+
     /**
      * 
      */
@@ -24,38 +24,31 @@ public class ImportOptions {
      * 
      */
     public static int REJECT = 2;
-    
     // maxlines = -1 to read whole file...
     private int maxLines;
     private boolean testOnly;
     private int discrepancies;
     private char separator;
-    
     private boolean doChecks;
     private boolean doPersonSearch;
     private boolean queryNewNames;
-    
     private boolean dataFromPreviousCanReg;
-
     private String multiplePrimaryVariableName;
     private String patientIDVariableName;
     private String tumourIDVariablename;
-
     private String patientRecordIDVariableName;
     private String tumourRecordIDVariablename;
-
     private String tumourUpdateDateVariableName;
     private String patientUpdateDateVariableName;
-
     private String patientIDTumourTableVariableName;
     private String patientRecordIDTumourTableVariableName;
-
+    private String tumourIDSourceTableVariableName;
     private String obsoleteTumourFlagVariableName;
     private String obsoletePatientFlagVariableName;
-
     private String tumourSequenceVariableName;
-
     private Charset fileCharset;
+    private Charset[] fileCharsets;
+    private char[] separators;
 
     /**
      * 
@@ -365,5 +358,41 @@ public class ImportOptions {
      */
     public void setTumourSequenceVariableName(String tumourSequenceVariableName) {
         this.tumourSequenceVariableName = tumourSequenceVariableName;
+    }
+
+    public void setFilesCharsets(Charset[] charsets) {
+        this.fileCharsets = charsets;
+    }
+
+    public void setSeparators(char[] separators) {
+        this.separators = separators;
+    }
+
+    /**
+     * @return the fileCharsets
+     */
+    public Charset[] getFileCharsets() {
+        return fileCharsets;
+    }
+
+    /**
+     * @return the separators
+     */
+    public char[] getSeparators() {
+        return separators;
+    }
+
+    /**
+     * @return the tumourIDSourceTableVariableName
+     */
+    public String getTumourIDSourceTableVariableName() {
+        return tumourIDSourceTableVariableName;
+    }
+
+    /**
+     * @param tumourIDSourceTableVariableName the tumourIDSourceTableVariableName to set
+     */
+    public void setTumourIDSourceTableVariableName(String tumourIDSourceTableVariableName) {
+        this.tumourIDSourceTableVariableName = tumourIDSourceTableVariableName;
     }
 }

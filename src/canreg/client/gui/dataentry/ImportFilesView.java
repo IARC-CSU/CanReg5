@@ -12,34 +12,31 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.client.dataentry.Import;
 import canreg.client.dataentry.ImportOptions;
 import canreg.client.dataentry.Relation;
+import canreg.client.gui.components.PreviewFilePanel;
+import canreg.client.gui.components.VariableMappingAlternativePanel;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.server.database.RecordLockedException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.DefaultTableModel;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
@@ -55,23 +52,25 @@ import org.w3c.dom.Document;
  * 
  * 
  */
-public class ImportView extends javax.swing.JInternalFrame {
+public class ImportFilesView extends javax.swing.JInternalFrame implements ActionListener {
 
     private boolean needToRebuildVariableMap = true;
-    private File inFile;
+    private File patientInFile;
+    private File tumourInFile;
+    private File sourceInFile;
     private Document doc;
-    private List<VariableMappingPanel> panelList;
-    private DatabaseVariablesListElement[] variablesInDB;
-    private JFileChooser chooser;
+    private DatabaseVariablesListElement[] patientVariablesInDB;
+    private DatabaseVariablesListElement[] tumourVariablesInDB;
+    private DatabaseVariablesListElement[] sourceVariablesInDB;
     private String path;
     private LocalSettings localSettings;
     private GlobalToolBox globalToolBox;
     private Task importTask;
 
     /** Creates new form ImportView */
-    public ImportView() {
+    public ImportFilesView() {
         initComponents();
-        previewPanel.setVisible(false);
+        // previewPanel.setVisible(false);
 
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
 
@@ -85,17 +84,21 @@ public class ImportView extends javax.swing.JInternalFrame {
                 changeTab(tabbedPane.getSelectedIndex());
             }
         };
+
+        patientPreviewFilePanel.init(this);
+        tumourPreviewFilePanel.init(this);
+        sourcePreviewFilePanel.init(this);
+
         // And add the listener to the tabbedPane
         tabbedPane.addChangeListener(tabbedPaneChangeListener);
 
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
         path = localSettings.getProperty("import_path");
 
-        if (path == null) {
-            chooser = new JFileChooser();
-        } else {
-            chooser = new JFileChooser(path);
-        }
+        patientPreviewFilePanel.setPath(path);
+        tumourPreviewFilePanel.setPath(path);
+        sourcePreviewFilePanel.setPath(path);
+
         // Group the radiobuttons
         ButtonGroup discrepanciesButtonGroup = new ButtonGroup();
         // Add to the button group
@@ -105,25 +108,10 @@ public class ImportView extends javax.swing.JInternalFrame {
 
         // Get the system description
         doc = CanRegClientApp.getApplication().getDatabseDescription();
-        variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
-
-        // get the available charsets
-        SortedMap<String, Charset> charsets = Charset.availableCharsets();
-        charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(charsets.values().toArray()));
-        // set the default mapping
-        charsetsComboBox.setSelectedItem(globalToolBox.getStandardCharset());
-        // initializeVariableMappingTab();
-    }
-
-    private void changeFile() {
-        inFile = new File(fileNameTextField.getText().trim());
-        path = inFile.getPath();
-        needToRebuildVariableMap = true;
-        try {
-            numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath()) - 1));
-        } catch (IOException ex) {
-            Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        // variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+        patientVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
+        tumourVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
+        sourceVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
     }
 
     private void changeTab(int tabNumber) {
@@ -141,30 +129,14 @@ public class ImportView extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         tabbedPane = new javax.swing.JTabbedPane();
-        chooseFilePanel = new javax.swing.JPanel();
-        fileNameTextField = new javax.swing.JTextField();
-        browseButton = new javax.swing.JButton();
-        previewPanel = new javax.swing.JPanel();
-        numberOfRecordsLabel = new javax.swing.JLabel();
-        numberOfRecordsTextField = new javax.swing.JTextField();
-        previewTableScrollPane = new javax.swing.JScrollPane();
-        previewTable = new javax.swing.JTable();
-        numberOfRecordsShownLabel = new javax.swing.JLabel();
-        numberOfRecordsShownTextField = new javax.swing.JTextField();
-        previewButton = new javax.swing.JButton();
-        fileLabel = new javax.swing.JLabel();
-        separatingCharacterComboBox = new javax.swing.JComboBox();
-        separatingCharacterLabel = new javax.swing.JLabel();
-        autodetectButton = new javax.swing.JButton();
-        fileEncodingLabel = new javax.swing.JLabel();
-        charsetsComboBox = new javax.swing.JComboBox();
-        associateVariablesPanel = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
-        variablesScrollPane = new javax.swing.JScrollPane();
-        variablesPanel = new javax.swing.JPanel();
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        chooseFilesTabbedPane = new javax.swing.JTabbedPane();
+        patientPreviewFilePanel = new canreg.client.gui.components.PreviewFilePanel();
+        tumourPreviewFilePanel = new canreg.client.gui.components.PreviewFilePanel();
+        sourcePreviewFilePanel = new canreg.client.gui.components.PreviewFilePanel();
+        associateVariavlesTabbedPane = new javax.swing.JTabbedPane();
+        patientVariablesAssociationPanel = new canreg.client.gui.components.VariablesAssociationPanel();
+        tumourVariablesAssociationPanel = new canreg.client.gui.components.VariablesAssociationPanel();
+        sourceVariablesAssociationPanel = new canreg.client.gui.components.VariablesAssociationPanel();
         importFilePanel = new javax.swing.JPanel();
         importButton = new javax.swing.JButton();
         discrepanciesPanel = new javax.swing.JPanel();
@@ -189,7 +161,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(ImportView.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(ImportFilesView.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
@@ -201,214 +173,35 @@ public class ImportView extends javax.swing.JInternalFrame {
 
         tabbedPane.setName("tabbedPane"); // NOI18N
 
-        chooseFilePanel.setName("chooseFilePanel"); // NOI18N
+        chooseFilesTabbedPane.setName("chooseFilesTabbedPane"); // NOI18N
 
-        fileNameTextField.setName("fileNameTextField"); // NOI18N
-        fileNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                fileNameTextFieldFocusLost(evt);
-            }
-        });
+        patientPreviewFilePanel.setName("patientPreviewFilePanel"); // NOI18N
+        chooseFilesTabbedPane.addTab(resourceMap.getString("patientPreviewFilePanel.TabConstraints.tabTitle"), patientPreviewFilePanel); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ImportView.class, this);
-        browseButton.setAction(actionMap.get("browseFiles")); // NOI18N
-        browseButton.setName("browseButton"); // NOI18N
+        tumourPreviewFilePanel.setName("tumourPreviewFilePanel"); // NOI18N
+        chooseFilesTabbedPane.addTab(resourceMap.getString("tumourPreviewFilePanel.TabConstraints.tabTitle"), tumourPreviewFilePanel); // NOI18N
 
-        previewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Preview"));
-        previewPanel.setEnabled(false);
-        previewPanel.setName("previewPanel"); // NOI18N
+        sourcePreviewFilePanel.setName("sourcePreviewFilePanel"); // NOI18N
+        chooseFilesTabbedPane.addTab(resourceMap.getString("sourcePreviewFilePanel.TabConstraints.tabTitle"), sourcePreviewFilePanel); // NOI18N
 
-        numberOfRecordsLabel.setText(resourceMap.getString("numberOfRecordsLabel.text")); // NOI18N
-        numberOfRecordsLabel.setFocusable(false);
-        numberOfRecordsLabel.setName("numberOfRecordsLabel"); // NOI18N
+        tabbedPane.addTab(resourceMap.getString("chooseFilesTabbedPane.TabConstraints.tabTitle"), chooseFilesTabbedPane); // NOI18N
 
-        numberOfRecordsTextField.setEditable(false);
-        numberOfRecordsTextField.setText(resourceMap.getString("numberOfRecordsTextField.text")); // NOI18N
-        numberOfRecordsTextField.setFocusable(false);
-        numberOfRecordsTextField.setName("numberOfRecordsTextField"); // NOI18N
+        associateVariavlesTabbedPane.setName("associateVariavlesTabbedPane"); // NOI18N
 
-        previewTableScrollPane.setName("previewTableScrollPane"); // NOI18N
+        patientVariablesAssociationPanel.setName("patientVariablesAssociationPanel"); // NOI18N
+        associateVariavlesTabbedPane.addTab(resourceMap.getString("patientVariablesAssociationPanel.TabConstraints.tabTitle"), patientVariablesAssociationPanel); // NOI18N
 
-        previewTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        previewTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        previewTable.setName("previewTable"); // NOI18N
-        previewTableScrollPane.setViewportView(previewTable);
+        tumourVariablesAssociationPanel.setName("tumourVariablesAssociationPanel"); // NOI18N
+        associateVariavlesTabbedPane.addTab(resourceMap.getString("tumourVariablesAssociationPanel.TabConstraints.tabTitle"), tumourVariablesAssociationPanel); // NOI18N
 
-        numberOfRecordsShownLabel.setText(resourceMap.getString("numberOfRecordsShownLabel.text")); // NOI18N
-        numberOfRecordsShownLabel.setFocusable(false);
-        numberOfRecordsShownLabel.setName("numberOfRecordsShownLabel"); // NOI18N
+        sourceVariablesAssociationPanel.setName("sourceVariablesAssociationPanel"); // NOI18N
+        associateVariavlesTabbedPane.addTab(resourceMap.getString("sourceVariablesAssociationPanel.TabConstraints.tabTitle"), sourceVariablesAssociationPanel); // NOI18N
 
-        numberOfRecordsShownTextField.setEditable(false);
-        numberOfRecordsShownTextField.setFocusable(false);
-        numberOfRecordsShownTextField.setName("numberOfRecordsShownTextField"); // NOI18N
-
-        javax.swing.GroupLayout previewPanelLayout = new javax.swing.GroupLayout(previewPanel);
-        previewPanel.setLayout(previewPanelLayout);
-        previewPanelLayout.setHorizontalGroup(
-            previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(previewPanelLayout.createSequentialGroup()
-                .addComponent(numberOfRecordsLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(numberOfRecordsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(numberOfRecordsShownLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(numberOfRecordsShownTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))
-            .addComponent(previewTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
-        );
-        previewPanelLayout.setVerticalGroup(
-            previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(previewPanelLayout.createSequentialGroup()
-                .addGroup(previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(numberOfRecordsLabel)
-                    .addComponent(numberOfRecordsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(numberOfRecordsShownLabel)
-                    .addComponent(numberOfRecordsShownTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previewTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
-        );
-
-        previewButton.setAction(actionMap.get("previewAction")); // NOI18N
-        previewButton.setName("previewButton"); // NOI18N
-
-        fileLabel.setText(resourceMap.getString("fileLabel.text")); // NOI18N
-        fileLabel.setName("fileLabel"); // NOI18N
-
-        separatingCharacterComboBox.setEditable(true);
-        separatingCharacterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tab", "Comma" }));
-        separatingCharacterComboBox.setAction(actionMap.get("comboBoxChanged")); // NOI18N
-        separatingCharacterComboBox.setName("separatingCharacterComboBox"); // NOI18N
-
-        separatingCharacterLabel.setText(resourceMap.getString("separatingCharacterLabel.text")); // NOI18N
-        separatingCharacterLabel.setName("separatingCharacterLabel"); // NOI18N
-
-        autodetectButton.setAction(actionMap.get("autodetectSeparatingCharacterAction")); // NOI18N
-        autodetectButton.setText(resourceMap.getString("autodetectButton.text")); // NOI18N
-        autodetectButton.setToolTipText(resourceMap.getString("autodetectButton.toolTipText")); // NOI18N
-        autodetectButton.setName("autodetectButton"); // NOI18N
-
-        fileEncodingLabel.setText(resourceMap.getString("fileEncodingLabel.text")); // NOI18N
-        fileEncodingLabel.setName("fileEncodingLabel"); // NOI18N
-
-        charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        charsetsComboBox.setName("charsetsComboBox"); // NOI18N
-
-        javax.swing.GroupLayout chooseFilePanelLayout = new javax.swing.GroupLayout(chooseFilePanel);
-        chooseFilePanel.setLayout(chooseFilePanelLayout);
-        chooseFilePanelLayout.setHorizontalGroup(
-            chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chooseFilePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(chooseFilePanelLayout.createSequentialGroup()
-                        .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chooseFilePanelLayout.createSequentialGroup()
-                                .addComponent(fileEncodingLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(charsetsComboBox, 0, 150, Short.MAX_VALUE)
-                                .addGap(9, 9, 9)
-                                .addComponent(separatingCharacterLabel))
-                            .addGroup(chooseFilePanelLayout.createSequentialGroup()
-                                .addComponent(fileLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(browseButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(separatingCharacterComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(previewButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(autodetectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
-        );
-        chooseFilePanelLayout.setVerticalGroup(
-            chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(chooseFilePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(previewButton)
-                    .addComponent(browseButton)
-                    .addComponent(fileLabel)
-                    .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(autodetectButton)
-                    .addComponent(separatingCharacterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(separatingCharacterLabel)
-                    .addComponent(fileEncodingLabel)
-                    .addComponent(charsetsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        tabbedPane.addTab("Choose File", chooseFilePanel);
-
-        associateVariablesPanel.setName("associateVariablesPanel"); // NOI18N
-
-        jLabel8.setName("jLabel8"); // NOI18N
-
-        variablesScrollPane.setName("variablesScrollPane"); // NOI18N
-
-        variablesPanel.setName("variablesPanel"); // NOI18N
-        variablesPanel.setLayout(new java.awt.GridLayout(0, 1));
-        variablesScrollPane.setViewportView(variablesPanel);
-
-        jSplitPane1.setDividerLocation(200);
-        jSplitPane1.setResizeWeight(0.5);
-        jSplitPane1.setName("jSplitPane1"); // NOI18N
-
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
-        jLabel2.setName("jLabel2"); // NOI18N
-        jSplitPane1.setLeftComponent(jLabel2);
-
-        jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
-        jLabel4.setMaximumSize(new java.awt.Dimension(139, 14));
-        jLabel4.setMinimumSize(new java.awt.Dimension(139, 14));
-        jLabel4.setName("jLabel4"); // NOI18N
-        jSplitPane1.setRightComponent(jLabel4);
-
-        javax.swing.GroupLayout associateVariablesPanelLayout = new javax.swing.GroupLayout(associateVariablesPanel);
-        associateVariablesPanel.setLayout(associateVariablesPanelLayout);
-        associateVariablesPanelLayout.setHorizontalGroup(
-            associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(associateVariablesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
-                    .addComponent(jLabel8)
-                    .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        associateVariablesPanelLayout.setVerticalGroup(
-            associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(associateVariablesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        tabbedPane.addTab("Associate Variables", associateVariablesPanel);
+        tabbedPane.addTab(resourceMap.getString("associateVariavlesTabbedPane.TabConstraints.tabTitle"), associateVariavlesTabbedPane); // NOI18N
 
         importFilePanel.setName("importFilePanel"); // NOI18N
 
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ImportFilesView.class, this);
         importButton.setAction(actionMap.get("importAction")); // NOI18N
         importButton.setName("importButton"); // NOI18N
 
@@ -489,7 +282,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                     .addComponent(personSearchCheckBox)
                     .addComponent(queryNewNameCheckBox)
                     .addComponent(previousCanRegDataCheckBox))
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(107, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -543,7 +336,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
+            .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -579,7 +372,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(importButton)
-                .addGap(56, 56, 56))
+                .addGap(318, 318, 318))
         );
 
         tabbedPane.addTab("Import File", importFilePanel);
@@ -606,14 +399,14 @@ public class ImportView extends javax.swing.JInternalFrame {
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(nextButton))
-                    .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE))
+                    .addComponent(tabbedPane))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -622,29 +415,10 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
+        getAccessibleContext().setAccessibleName(resourceMap.getString("Form.AccessibleContext.accessibleName")); // NOI18N
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void fileNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fileNameTextFieldFocusLost
-        changeFile();
-    }//GEN-LAST:event_fileNameTextFieldFocusLost
-
-    /**
-     * 
-     */
-    @Action
-    public void browseFiles() {
-
-        int returnVal = chooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            try {
-                //set the file name
-                fileNameTextField.setText(chooser.getSelectedFile().getCanonicalPath());
-                changeFile();
-            } catch (IOException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
 
     /**
      * 
@@ -716,6 +490,12 @@ public class ImportView extends javax.swing.JInternalFrame {
         return importTask;
     }
 
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals(PreviewFilePanel.FILE_CHANGED_ACTION)) {
+            needToRebuildVariableMap = true;
+        }
+    }
+
     private class ImportActionTask extends org.jdesktop.application.Task<Object, Void> {
 
         ImportActionTask(org.jdesktop.application.Application app) {
@@ -733,15 +513,15 @@ public class ImportView extends javax.swing.JInternalFrame {
             boolean success = false;
             try {
                 // Calls the client app import action with the file parameters provided,
-                success = CanRegClientApp.getApplication().importFile(this, doc, buildMap(), inFile, buildImportOptions());
+                success = CanRegClientApp.getApplication().importFiles(this, doc, buildMap(), new File[]{patientInFile, tumourInFile, sourceInFile}, buildImportOptions());
             } catch (SecurityException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RecordLockedException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
                 success = false;
             }
             return success;  // return your result
@@ -752,82 +532,106 @@ public class ImportView extends javax.swing.JInternalFrame {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             if (!(Boolean) result) {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Something wrong with the file " + inFile.getAbsolutePath() + ".", "File NOT successfully imported", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Something wrong with the file " + patientInFile.getAbsolutePath() + ".", "File NOT successfully imported", JOptionPane.WARNING_MESSAGE);
             } else {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully imported file " + inFile.getAbsolutePath() + ".", "File successfully imported", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully imported file " + patientInFile.getAbsolutePath() + ".", "File successfully imported", JOptionPane.INFORMATION_MESSAGE);
             }
             importTask = null;
         }
     }
 
     private void initializeVariableMappingTab() {
-        if (needToRebuildVariableMap && fileNameTextField.getText().trim().length() > 0) {
-            BufferedReader br = null;
-            List<Relation> map = null;
-            panelList = new LinkedList();
-            try {
-                // Remove all variable mappings
-                variablesPanel.removeAll();
-
-                // Read the first line of the file
-                br = new BufferedReader(new FileReader(inFile));
+        BufferedReader br = null;
+        try {
+            // patient mapping
+            patientInFile = patientPreviewFilePanel.getInFile();
+            if (needToRebuildVariableMap && patientInFile != null) {
+                br = new BufferedReader(new FileReader(patientInFile));
                 String line = br.readLine();
-//                String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
-                String[] lineElements = canreg.common.Tools.breakDownLine(getSeparator(), line);
-                // Build variable mapping
-                map = Import.constructRelations(doc, lineElements);
-
-                // Add the panels
-                for (Relation rel : map) {
-                    VariableMappingPanel vmp = new VariableMappingPanel();
-                    panelList.add(vmp);
-                    vmp.setDBVariables(variablesInDB);
-                    vmp.setFileVariableName(rel.getFileVariableName());
-                    vmp.setSelectedDBIndex(rel.getDatabaseTableVariableID());
-                    variablesPanel.add(vmp);
-                    vmp.setVisible(true);
-                }
-
-                variablesPanel.revalidate();
-                variablesPanel.repaint();
-
-            } catch (RemoteException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not open file: \'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (IOException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                needToRebuildVariableMap = false;
-                try {
+                String[] lineElements = canreg.common.Tools.breakDownLine(patientPreviewFilePanel.getSeparator(), line);
+                List<Relation> map = Import.constructRelations(doc, lineElements);
+                patientVariablesAssociationPanel.initializeVariableMappingPanel(map, patientVariablesInDB, lineElements);
+            }
+            // tumour mapping
+            tumourInFile = tumourPreviewFilePanel.getInFile();
+            if (needToRebuildVariableMap && tumourInFile != null) {
+                br = new BufferedReader(new FileReader(tumourInFile));
+                String line = br.readLine();
+                String[] lineElements = canreg.common.Tools.breakDownLine(tumourPreviewFilePanel.getSeparator(), line);
+                List<Relation> map = Import.constructRelations(doc, lineElements);
+                tumourVariablesAssociationPanel.initializeVariableMappingPanel(map, tumourVariablesInDB, lineElements);
+            }
+            // source mapping
+            sourceInFile = sourcePreviewFilePanel.getInFile();
+            if (needToRebuildVariableMap && sourceInFile != null) {
+                br = new BufferedReader(new FileReader(sourceInFile));
+                String line = br.readLine();
+                String[] lineElements = canreg.common.Tools.breakDownLine(sourcePreviewFilePanel.getSeparator(), line);
+                List<Relation> map = Import.constructRelations(doc, lineElements);
+                sourceVariablesAssociationPanel.initializeVariableMappingPanel(map, sourceVariablesInDB, lineElements);
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not open file: \'" + patientInFile.getPath() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+            Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            needToRebuildVariableMap = false;
+            try {
+                if (br != null) {
                     br.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
+            } catch (IOException ex) {
+                Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     private List<Relation> buildMap() {
         List<Relation> map = new LinkedList();
-        int i = 0;
-        for (VariableMappingPanel vmp : panelList) {
+        for (VariableMappingAlternativePanel vmp : patientVariablesAssociationPanel.getPanelList()) {
             Relation rel = new Relation();
-
-            DatabaseVariablesListElement dbVLE = vmp.getSelectedDBVariableObject();
-            if (dbVLE != null) {
+            int fileColumnNumber = vmp.getSelectedFileColumnNumber();
+            if (fileColumnNumber >= 0) {
+                DatabaseVariablesListElement dbVLE = vmp.getDatabaseVariablesListElement();
                 rel.setDatabaseTableName(dbVLE.getDatabaseTableName());
                 rel.setDatabaseTableVariableID(vmp.getDBVariableIndex());
                 rel.setDatabaseVariableName(dbVLE.getDatabaseVariableName());
-                rel.setFileColumnNumber(i);
-                rel.setFileVariableName(vmp.getFileVariableName());
+                rel.setFileColumnNumber(fileColumnNumber);
+                rel.setFileVariableName(vmp.getSelectedFileElement());
                 rel.setVariableType(dbVLE.getVariableType());
-
                 map.add(rel);
             }
-            i++;
+        }
+        for (VariableMappingAlternativePanel vmp : tumourVariablesAssociationPanel.getPanelList()) {
+            Relation rel = new Relation();
+            int fileColumnNumber = vmp.getSelectedFileColumnNumber();
+            if (fileColumnNumber >= 0) {
+                DatabaseVariablesListElement dbVLE = vmp.getDatabaseVariablesListElement();
+                rel.setDatabaseTableName(dbVLE.getDatabaseTableName());
+                rel.setDatabaseTableVariableID(vmp.getDBVariableIndex());
+                rel.setDatabaseVariableName(dbVLE.getDatabaseVariableName());
+                rel.setFileColumnNumber(fileColumnNumber);
+                rel.setFileVariableName(vmp.getSelectedFileElement());
+                rel.setVariableType(dbVLE.getVariableType());
+                map.add(rel);
+            }
+        }
+        for (VariableMappingAlternativePanel vmp : sourceVariablesAssociationPanel.getPanelList()) {
+            Relation rel = new Relation();
+            int fileColumnNumber = vmp.getSelectedFileColumnNumber();
+            if (fileColumnNumber >= 0) {
+                DatabaseVariablesListElement dbVLE = vmp.getDatabaseVariablesListElement();
+                rel.setDatabaseTableName(dbVLE.getDatabaseTableName());
+                rel.setDatabaseTableVariableID(vmp.getDBVariableIndex());
+                rel.setDatabaseVariableName(dbVLE.getDatabaseVariableName());
+                rel.setFileColumnNumber(fileColumnNumber);
+                rel.setFileVariableName(vmp.getSelectedFileElement());
+                rel.setVariableType(dbVLE.getVariableType());
+                map.add(rel);
+            }
         }
         return map;
     }
@@ -851,8 +655,12 @@ public class ImportView extends javax.swing.JInternalFrame {
         }
         io.setTestOnly(testOnlyCheckBox.isSelected());
 
-        // separator
-        io.setSeparator(getSeparator());
+        // separators
+        io.setSeparators(new char[]{
+                    patientPreviewFilePanel.getSeparator(),
+                    tumourPreviewFilePanel.getSeparator(),
+                    sourcePreviewFilePanel.getSeparator()
+                });
 
         // CanReg data
         io.setDoChecks(doChecksCheckBox.isSelected());
@@ -869,80 +677,24 @@ public class ImportView extends javax.swing.JInternalFrame {
         io.setTumourIDVariablename(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName());
         io.setPatientRecordIDVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
         io.setPatientRecordIDTumourTableVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName());
+        io.setTumourIDSourceTableVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName());
         io.setObsoletePatientFlagVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString()).getDatabaseVariableName());
         io.setObsoleteTumourFlagVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString()).getDatabaseVariableName());
         io.setTumourSequenceVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimSeq.toString()).getDatabaseVariableName());
 
-        // Set the characterset
-        io.setFileCharset((Charset) charsetsComboBox.getSelectedItem());
+        // Set the charactersets
+        io.setFilesCharsets(getCharsets());
 
         return io;
     }
 
-    private char getSeparator() {
-        String sc = separatingCharacterComboBox.getSelectedItem().toString();
-        char schar = ','; // Default
-        if (sc.equalsIgnoreCase("Tab")) {
-            schar = '\t';
-        } else if (sc.equalsIgnoreCase("Comma")) {
-            schar = ',';
-        } else if (sc.length() > 0) {
-            schar = sc.charAt(0);
-        }
-        return schar;
-    }
-
-    /**
-     * 
-     */
-    @Action
-    public void previewAction() {
-        // show the contents of the file
-        BufferedReader br = null;
-        try {
-            changeFile();
-            // numberOfRecordsTextField.setText(""+(canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath())-1));
-            FileInputStream fis = new FileInputStream(inFile);
-            br = new BufferedReader(new InputStreamReader(fis, (Charset) charsetsComboBox.getSelectedItem()));
-            // Read the parts of the file into the preview area...
-            int i = 0;
-
-            String line = br.readLine();
-            String headers = new String();
-            // String dataText = new String();
-            Vector<Vector<String>> data = new Vector<Vector<String>>();
-
-            while (i < Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW && line != null) {
-                if (i == 0) {
-                    headers = line;
-                } else {
-                    String[] lineData = line.split(getSeparator() + "");
-                    Vector vec = new Vector(Arrays.asList(lineData));
-                    data.add(vec);
-                    // dataText += line + "\n";
-                }
-                line = br.readLine();
-                i++;
-                numberOfRecordsShownTextField.setText(i + "");
-            }
-
-            // previewTextArea.setText(headers + "\n" + dataText);
-            // previewTextArea.setCaretPosition(0);
-            previewPanel.setVisible(true);
-            Vector columnNames = new Vector(Arrays.asList(headers.split(getSeparator() + "")));
-            previewTable.setModel(new DefaultTableModel(data, columnNames));
-        } catch (FileNotFoundException fileNotFoundException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not preview file: \'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, fileNotFoundException);
-        } catch (IOException ex) {
-            Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                br.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+    private Charset[] getCharsets() {
+        // get one from each table
+        return new Charset[]{
+                    patientPreviewFilePanel.getCharacterSet(),
+                    tumourPreviewFilePanel.getCharacterSet(),
+                    sourcePreviewFilePanel.getCharacterSet()
+                };
     }
 
     /**
@@ -961,49 +713,33 @@ public class ImportView extends javax.swing.JInternalFrame {
         JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Not yet implemented.", "Error", JOptionPane.ERROR_MESSAGE);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel associateVariablesPanel;
-    private javax.swing.JButton autodetectButton;
+    private javax.swing.JTabbedPane associateVariavlesTabbedPane;
     private javax.swing.JButton backButton;
-    private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JComboBox charsetsComboBox;
-    private javax.swing.JPanel chooseFilePanel;
+    private javax.swing.JTabbedPane chooseFilesTabbedPane;
     private javax.swing.JPanel discrepanciesPanel;
     private javax.swing.JCheckBox doChecksCheckBox;
-    private javax.swing.JLabel fileEncodingLabel;
-    private javax.swing.JLabel fileLabel;
-    private javax.swing.JTextField fileNameTextField;
     private javax.swing.JButton importButton;
     private javax.swing.JPanel importFilePanel;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel maxLinesPanel;
     private javax.swing.JTextField maxLinesTextField;
     private javax.swing.JButton nextButton;
-    private javax.swing.JLabel numberOfRecordsLabel;
-    private javax.swing.JLabel numberOfRecordsShownLabel;
-    private javax.swing.JTextField numberOfRecordsShownTextField;
-    private javax.swing.JTextField numberOfRecordsTextField;
     private javax.swing.JRadioButton overwriteRadioButton;
+    private canreg.client.gui.components.PreviewFilePanel patientPreviewFilePanel;
+    private canreg.client.gui.components.VariablesAssociationPanel patientVariablesAssociationPanel;
     private javax.swing.JCheckBox personSearchCheckBox;
-    private javax.swing.JButton previewButton;
-    private javax.swing.JPanel previewPanel;
-    private javax.swing.JTable previewTable;
-    private javax.swing.JScrollPane previewTableScrollPane;
     private javax.swing.JCheckBox previousCanRegDataCheckBox;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JCheckBox queryNewNameCheckBox;
     private javax.swing.JRadioButton rejectRadioButton;
-    private javax.swing.JComboBox separatingCharacterComboBox;
-    private javax.swing.JLabel separatingCharacterLabel;
+    private canreg.client.gui.components.PreviewFilePanel sourcePreviewFilePanel;
+    private canreg.client.gui.components.VariablesAssociationPanel sourceVariablesAssociationPanel;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JCheckBox testOnlyCheckBox;
+    private canreg.client.gui.components.PreviewFilePanel tumourPreviewFilePanel;
+    private canreg.client.gui.components.VariablesAssociationPanel tumourVariablesAssociationPanel;
     private javax.swing.JRadioButton updateRadioButton;
-    private javax.swing.JPanel variablesPanel;
-    private javax.swing.JScrollPane variablesScrollPane;
     // End of variables declaration//GEN-END:variables
 }

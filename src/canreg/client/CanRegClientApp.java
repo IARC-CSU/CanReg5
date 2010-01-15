@@ -232,7 +232,8 @@ public class CanRegClientApp extends SingleFrameApplication {
                             if (numberOfRecordsOpen > 0) {
                                 option = JOptionPane.showConfirmDialog(null, "Really exit?\n" + users + " other user(s) connected to this server will be disconnected.\nYou have " + numberOfRecordsOpen + " of records open.\nDo you really want to exit?", "Really exit?", JOptionPane.YES_NO_OPTION);
                             } else {
-                                option = JOptionPane.showConfirmDialog(null, "Really exit?\n" + users + " other user(s) connected to this server will be disconnected.", "Really exit?", JOptionPane.YES_NO_OPTION);}
+                                option = JOptionPane.showConfirmDialog(null, "Really exit?\n" + users + " other user(s) connected to this server will be disconnected.", "Really exit?", JOptionPane.YES_NO_OPTION);
+                            }
                         } else {
                             option = JOptionPane.showConfirmDialog(null, "Really exit?\nOther user(s) connected to this server will be disconnected.", "Really exit?", JOptionPane.YES_NO_OPTION);
                         }
@@ -489,6 +490,19 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     public boolean importFile(Task<Object, Void> task, Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException, SQLException, SecurityException, RecordLockedException {
         return canreg.client.dataentry.Import.importFile(task, doc, map, file, server, io);
+    }
+
+        /**
+     *
+     * @param task
+     * @param doc
+     * @param map
+     * @param files
+     * @param io
+     * @throws java.rmi.RemoteException
+     */
+    public boolean importFiles(Task<Object, Void> task, Document doc, List<Relation> map, File[] files, ImportOptions io) throws RemoteException, SQLException, SecurityException, RecordLockedException {
+        return canreg.client.dataentry.Import.importFiles(task, doc, map, files, server, io);
     }
 
     /**
@@ -794,8 +808,50 @@ public class CanRegClientApp extends SingleFrameApplication {
                 records[j] = getRecord(id, lookUpTableName, lock);
             }
         }
-
+        releaseResultSet(distributedTableDescription.getResultSetID());
         return records;
+    }
+
+    public Tumour getTumourRecordBasedOnTumourID(String idString, boolean lock) throws RemoteException, SecurityException, SQLException, RecordLockedException, Exception {
+        Tumour[] records = null;
+        String lookUpTableName = "";
+        DatabaseFilter filter = new DatabaseFilter();
+        String lookUpColumnName = "";
+
+        lookUpTableName = Globals.TUMOUR_TABLE_NAME;
+        filter.setFilterString(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName() + " = '" + idString + "'");
+
+        lookUpColumnName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
+        Object[][] rows;
+
+        DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, lookUpTableName);
+        int numberOfRecords = distributedTableDescription.getRowCount();
+
+        // Retrieve all rows
+        rows = retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
+
+        String[] columnNames = distributedTableDescription.getColumnNames();
+
+        boolean found = false;
+        int idColumnNumber = 0;
+        while (!found && idColumnNumber < columnNames.length) {
+            found = columnNames[idColumnNumber++].equalsIgnoreCase(lookUpColumnName);
+        }
+
+        if (found) {
+            int id;
+            records = new Tumour[numberOfRecords];
+            idColumnNumber--;
+            for (int j = 0; j < numberOfRecords; j++) {
+                id = (Integer) rows[j][idColumnNumber];
+                records[j] = (Tumour) getRecord(id, lookUpTableName, lock);
+            }
+        } else {
+            records = new Tumour[numberOfRecords];
+            records[0]= null;
+        }
+        releaseResultSet(distributedTableDescription.getResultSetID());
+        return records[0];
     }
 
     /**
