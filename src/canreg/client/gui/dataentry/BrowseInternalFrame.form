@@ -176,7 +176,7 @@
         <Property name="name" type="java.lang.String" value="navigationPanel" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="canreg.client.gui.components.VariablesPanel" name="variablesPanel">
+    <Component class="canreg.client.gui.components.DisplayVariablesPanel" name="variablesPanel">
       <Properties>
         <Property name="name" type="java.lang.String" value="variablesPanel" noResource="true"/>
       </Properties>

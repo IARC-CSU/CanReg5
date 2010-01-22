@@ -1,5 +1,5 @@
 /*
- * VariablesPanel.java
+ * DisplayVariablesPanel.java
  *
  * Created on 23 June 2008, 11:52
  */
@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author  ervikm
  */
-public class VariablesPanel extends javax.swing.JPanel {
+public class DisplayVariablesPanel extends javax.swing.JPanel {
 
     DatabaseVariablesListElement[] databaseVariablesListElements;
     Map<String, LinkedList<String>> mapTableVariableNamesKey;
@@ -26,8 +26,8 @@ public class VariablesPanel extends javax.swing.JPanel {
     LinkedList<String> mandatoryVariableNames = new LinkedList<String>();
     LinkedList<String> allVariableNames = new LinkedList<String>();
 
-    /** Creates new form VariablesPanel */
-    public VariablesPanel() {
+    /** Creates new form DisplayVariablesPanel */
+    public DisplayVariablesPanel() {
         initComponents();
     }
 
@@ -171,7 +171,7 @@ public class VariablesPanel extends javax.swing.JPanel {
         variablesPanel.setName("variablesPanel"); // NOI18N
 
         buttonGroup.add(allRadioButton);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(VariablesPanel.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(DisplayVariablesPanel.class);
         allRadioButton.setText(resourceMap.getString("allRadioButton.text")); // NOI18N
         allRadioButton.setName("allRadioButton"); // NOI18N
 

@@ -1,14 +1,15 @@
-package canreg.client.gui.components;
+package canreg.common;
 
 /**
  *
  * @author ervikm
+ * A simple way to translate list elements
  */
-public class TranslatedListElement {
+public class TranslatableListElement {
     String translatedName;
     String originalName;
 
-    public TranslatedListElement(String originalName, String translatedName){
+    public TranslatableListElement(String originalName, String translatedName){
         this.originalName = originalName;
         this.translatedName = translatedName;
     }

@@ -125,7 +125,7 @@ public class CheckResult implements Serializable {
 
     @Override
     public String toString() {
-        return checkName + ": " + resultCode + " - " + message;
+        return resultCode+ " " + checkName + ": " + message;
     }
 
     /*

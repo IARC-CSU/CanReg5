@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class VariablesAssociationPanel extends javax.swing.JPanel {
 
-    private List<VariableMappingAlternativePanel> panelList;
+    private List<VariableMappingAlternativePanel> panelList = null;
 
     /** Creates new form VariablesAssociationPanel */
     public VariablesAssociationPanel() {
@@ -55,6 +55,10 @@ public class VariablesAssociationPanel extends javax.swing.JPanel {
             vmp.setDBVariable(dbvle);
             variablesPanel.add(vmp);
             vmp.setVisible(true);
+        }
+
+        if (panelList.size()==0) {
+            panelList = null;
         }
 
         variablesPanel.revalidate();

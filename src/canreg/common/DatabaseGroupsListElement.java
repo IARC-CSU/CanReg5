@@ -4,12 +4,12 @@ package canreg.common;
  *
  * @author ervikm
  */
-public class DatabaseGroupsListElement {
+public class DatabaseGroupsListElement implements DatabaseElement {
     private String groupName;
     private int groupIndex;
     private int groupPosition;
 
-    DatabaseGroupsListElement(String groupName, int index, int position) {
+    public DatabaseGroupsListElement(String groupName, int index, int position) {
         this.groupName = groupName;
         this.groupIndex = index;
         this.groupPosition = position;
@@ -61,5 +61,10 @@ public class DatabaseGroupsListElement {
      */
     public void setGroupPosition(int groupPosition) {
         this.groupPosition = groupPosition;
+    }
+
+    @Override
+    public String toString(){
+        return groupName;
     }
 }

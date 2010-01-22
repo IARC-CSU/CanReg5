@@ -449,4 +449,20 @@ public class Globals {
     public static String VARIABLE_TYPE_DICTIONARY_NAME = "Dict";
     public static String VARIABLE_TYPE_ASIAN_TEXT_NAME = "AsianText";
     public static String VARIABLE_TYPE_TEXT_AREA_NAME = "TextArea";
+    public static String MULTIPLEPRIMARY_COPY_INTERESTING_STRING = "Intr";
+    public static String MULTIPLEPRIMARY_COPY_OTHER_STRING = "Othr";
+    public static String MULTIPLEPRIMARY_COPY_MUST_STRING = "Must";
+    public static String MULTIPLEPRIMARY_COPY_PROBABLY_STRING = "Prob";
+    public static String[] REGIONS = new String[]{
+        "0 - not assigned",
+        "Africa",
+        "Americas",
+        "EastMed",
+        "Europe",
+        "SEAsia",
+        "West Pacific",
+        "7 - not assigned",
+        "8 - not assigned",
+        "Training"
+    };
 }

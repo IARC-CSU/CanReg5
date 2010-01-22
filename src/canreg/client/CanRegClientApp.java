@@ -704,7 +704,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         return server.deleteRecord(id, tableName);
     }
 
-    public void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException {
+    public synchronized void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException {
         // release a locked record
         Set lockSet = locksMap.get(tableName);
         if (lockSet != null) {
@@ -1010,7 +1010,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         launch(CanRegClientApp.class, args);
     }
 
-    private void lockRecord(int recordID, String tableName) {
+    private synchronized void lockRecord(int recordID, String tableName) {
         Set lockSet = locksMap.get(tableName);
         if (lockSet == null) {
             lockSet = new TreeSet<Integer>();
@@ -1060,7 +1060,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         return records;
     }
 
-    private int numberOfRecordsOpen() {
+    private synchronized int numberOfRecordsOpen() {
         int numberOfRecords = 0;
         for (String tableName : locksMap.keySet()) {
             Set<Integer> lockSet = locksMap.get(tableName);
@@ -1069,7 +1069,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         return numberOfRecords;
     }
 
-    private void releaseAllRecordsHeldByThisClient() {
+    private synchronized void releaseAllRecordsHeldByThisClient() {
         for (String tableName : locksMap.keySet()) {
             Set<Integer> lockSet = locksMap.get(tableName);
             if (lockSet != null) {

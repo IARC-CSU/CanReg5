@@ -6,7 +6,7 @@ import java.io.Serializable;
  *
  * @author ervikm
  */
-public class DatabaseVariablesListElement implements Serializable {
+public class DatabaseVariablesListElement implements Serializable, DatabaseElement {
     // Table in the database for the variable
 
     private String table;

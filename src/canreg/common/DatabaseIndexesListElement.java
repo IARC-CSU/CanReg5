@@ -7,7 +7,7 @@ import java.util.LinkedList;
  *
  * @author ervikm
  */
-public class DatabaseIndexesListElement  implements Serializable {
+public class DatabaseIndexesListElement  implements Serializable, DatabaseElement {
 
     private String indexName;
     private String databaseTableName;

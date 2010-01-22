@@ -121,7 +121,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         editTumourNumberButton = new javax.swing.JButton();
         rangeFilterPanel = new canreg.client.gui.components.RangeFilterPanel();
         navigationPanel = new canreg.client.gui.components.NavigationPanel();
-        variablesPanel = new canreg.client.gui.components.VariablesPanel();
+        variablesPanel = new canreg.client.gui.components.DisplayVariablesPanel();
         resultPanel = new javax.swing.JPanel();
 
         setClosable(true);
@@ -820,7 +820,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
     private canreg.client.gui.components.RangeFilterPanel rangeFilterPanel;
     private javax.swing.JPanel resultPanel;
     private javax.swing.JTextField tumourNumberTextField;
-    private canreg.client.gui.components.VariablesPanel variablesPanel;
+    private canreg.client.gui.components.DisplayVariablesPanel variablesPanel;
     // End of variables declaration//GEN-END:variables
 
     public void actionPerformed(ActionEvent e) {

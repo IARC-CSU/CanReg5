@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -66,6 +67,8 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     private LocalSettings localSettings;
     private GlobalToolBox globalToolBox;
     private Task importTask;
+    private JFileChooser chooser;
+    private boolean reportFileNameSet = false;
 
     /** Creates new form ImportView */
     public ImportFilesView() {
@@ -95,9 +98,15 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
         path = localSettings.getProperty("import_path");
 
-        patientPreviewFilePanel.setPath(path);
-        tumourPreviewFilePanel.setPath(path);
-        sourcePreviewFilePanel.setPath(path);
+        if (path == null) {
+            chooser = new JFileChooser();
+        } else {
+            chooser = new JFileChooser(path);
+        }
+
+        patientPreviewFilePanel.setChooser(chooser);
+        tumourPreviewFilePanel.setChooser(chooser);
+        sourcePreviewFilePanel.setChooser(chooser);
 
         // Group the radiobuttons
         ButtonGroup discrepanciesButtonGroup = new ButtonGroup();
@@ -147,17 +156,28 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         doChecksCheckBox = new javax.swing.JCheckBox();
         personSearchCheckBox = new javax.swing.JCheckBox();
         queryNewNameCheckBox = new javax.swing.JCheckBox();
-        previousCanRegDataCheckBox = new javax.swing.JCheckBox();
         maxLinesPanel = new javax.swing.JPanel();
         maxLinesTextField = new javax.swing.JTextField();
         testOnlyCheckBox = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         progressBar = new javax.swing.JProgressBar();
+        overallLabel = new javax.swing.JLabel();
+        recordLabel = new javax.swing.JLabel();
+        patientsLabel = new javax.swing.JLabel();
+        tumoursLabel = new javax.swing.JLabel();
+        recordProgressBar = new javax.swing.JProgressBar();
+        patientsProgressBar = new javax.swing.JProgressBar();
+        tumoursProgressBar = new javax.swing.JProgressBar();
+        sourcesProgressBar = new javax.swing.JProgressBar();
+        sourcesLabel = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        browseButton = new javax.swing.JButton();
+        reportFileNameTextField = new javax.swing.JTextField();
+        fileLabel = new javax.swing.JLabel();
         nextButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
 
-        setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
@@ -207,20 +227,16 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 
         discrepanciesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Discrepancies"));
         discrepanciesPanel.setToolTipText(resourceMap.getString("discrepanciesPanel.toolTipText")); // NOI18N
-        discrepanciesPanel.setEnabled(false);
         discrepanciesPanel.setName("discrepanciesPanel"); // NOI18N
 
         rejectRadioButton.setText(resourceMap.getString("rejectRadioButton.text")); // NOI18N
-        rejectRadioButton.setEnabled(false);
         rejectRadioButton.setName("rejectRadioButton"); // NOI18N
 
         updateRadioButton.setSelected(true);
         updateRadioButton.setText(resourceMap.getString("updateRadioButton.text")); // NOI18N
-        updateRadioButton.setEnabled(false);
         updateRadioButton.setName("updateRadioButton"); // NOI18N
 
         overwriteRadioButton.setText(resourceMap.getString("overwriteRadioButton.text")); // NOI18N
-        overwriteRadioButton.setEnabled(false);
         overwriteRadioButton.setName("overwriteRadioButton"); // NOI18N
 
         javax.swing.GroupLayout discrepanciesPanelLayout = new javax.swing.GroupLayout(discrepanciesPanel);
@@ -249,9 +265,9 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("CanReg data"));
         jPanel7.setName("jPanel7"); // NOI18N
 
+        doChecksCheckBox.setSelected(true);
         doChecksCheckBox.setText(resourceMap.getString("doChecksCheckBox.text")); // NOI18N
         doChecksCheckBox.setToolTipText(resourceMap.getString("doChecksCheckBox.toolTipText")); // NOI18N
-        doChecksCheckBox.setEnabled(false);
         doChecksCheckBox.setName("doChecksCheckBox"); // NOI18N
 
         personSearchCheckBox.setSelected(true);
@@ -266,11 +282,6 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         queryNewNameCheckBox.setEnabled(false);
         queryNewNameCheckBox.setName("queryNewNameCheckBox"); // NOI18N
 
-        previousCanRegDataCheckBox.setSelected(true);
-        previousCanRegDataCheckBox.setText(resourceMap.getString("previousCanRegDataCheckBox.text")); // NOI18N
-        previousCanRegDataCheckBox.setToolTipText(resourceMap.getString("previousCanRegDataCheckBox.toolTipText")); // NOI18N
-        previousCanRegDataCheckBox.setName("previousCanRegDataCheckBox"); // NOI18N
-
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -280,9 +291,8 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(doChecksCheckBox)
                     .addComponent(personSearchCheckBox)
-                    .addComponent(queryNewNameCheckBox)
-                    .addComponent(previousCanRegDataCheckBox))
-                .addContainerGap(107, Short.MAX_VALUE))
+                    .addComponent(queryNewNameCheckBox))
+                .addContainerGap(225, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -292,9 +302,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 .addComponent(personSearchCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(queryNewNameCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previousCanRegDataCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         maxLinesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Max Lines"));
@@ -332,15 +340,108 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 
         progressBar.setName("progressBar"); // NOI18N
 
+        overallLabel.setText(resourceMap.getString("overallLabel.text")); // NOI18N
+        overallLabel.setName("overallLabel"); // NOI18N
+
+        recordLabel.setText(resourceMap.getString("recordLabel.text")); // NOI18N
+        recordLabel.setName("recordLabel"); // NOI18N
+
+        patientsLabel.setText(resourceMap.getString("patientsLabel.text")); // NOI18N
+        patientsLabel.setName("patientsLabel"); // NOI18N
+
+        tumoursLabel.setText(resourceMap.getString("tumoursLabel.text")); // NOI18N
+        tumoursLabel.setName("tumoursLabel"); // NOI18N
+
+        recordProgressBar.setName("recordProgressBar"); // NOI18N
+
+        patientsProgressBar.setName("patientsProgressBar"); // NOI18N
+
+        tumoursProgressBar.setName("tumoursProgressBar"); // NOI18N
+
+        sourcesProgressBar.setName("sourcesProgressBar"); // NOI18N
+
+        sourcesLabel.setText(resourceMap.getString("sourcesLabel.text")); // NOI18N
+        sourcesLabel.setName("sourcesLabel"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(47, 47, 47)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(patientsLabel)
+                    .addComponent(tumoursLabel)
+                    .addComponent(recordLabel)
+                    .addComponent(sourcesLabel)
+                    .addComponent(overallLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sourcesProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
+                    .addComponent(tumoursProgressBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
+                    .addComponent(patientsProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
+                    .addComponent(recordProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
+                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(recordLabel)
+                    .addComponent(recordProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(patientsLabel)
+                    .addComponent(patientsProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tumoursProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tumoursLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sourcesProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sourcesLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(overallLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel2.border.title"))); // NOI18N
+        jPanel2.setName("jPanel2"); // NOI18N
+
+        browseButton.setAction(actionMap.get("browseFiles")); // NOI18N
+        browseButton.setName("browseButton"); // NOI18N
+
+        reportFileNameTextField.setName("reportFileNameTextField"); // NOI18N
+        reportFileNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                reportFileNameTextFieldFocusLost(evt);
+            }
+        });
+
+        fileLabel.setText(resourceMap.getString("fileLabel.text")); // NOI18N
+        fileLabel.setName("fileLabel"); // NOI18N
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(fileLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(reportFileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(browseButton, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fileLabel)
+                    .addComponent(reportFileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(browseButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout importFilePanelLayout = new javax.swing.GroupLayout(importFilePanel);
@@ -350,13 +451,14 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             .addGroup(importFilePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(importFilePanelLayout.createSequentialGroup()
                         .addComponent(discrepanciesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(maxLinesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(importButton, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
@@ -369,10 +471,12 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                     .addComponent(discrepanciesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(maxLinesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(importButton)
-                .addGap(318, 318, 318))
+                .addGap(334, 334, 334))
         );
 
         tabbedPane.addTab("Import File", importFilePanel);
@@ -399,14 +503,14 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(nextButton))
-                    .addComponent(tabbedPane))
+                    .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
+                .addComponent(tabbedPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -419,6 +523,10 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void reportFileNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_reportFileNameTextFieldFocusLost
+        reportFileNameSet = true;
+}//GEN-LAST:event_reportFileNameTextFieldFocusLost
 
     /**
      * 
@@ -470,7 +578,24 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     @Action()
     public Task importAction() {
         // TODO: Add a handler for errors in the file structure...
-        localSettings.setProperty("import_path", path);
+
+        // see if the report file already exists...
+        File file = new File(reportFileNameTextField.getText());
+        if (file.exists()) {
+            int result = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "The report file " + file.getAbsolutePath() + " already exists.\nDo you want to overwrite it?",
+                    "Report file exists. Overwrite?",
+                    JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.NO_OPTION) {
+                return null;
+            }
+        }
+
+        try {
+            localSettings.setProperty("import_path", chooser.getCurrentDirectory().getCanonicalPath());
+        } catch (IOException ex) {
+            Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         localSettings.writeSettings();
         progressBar.setStringPainted(true);
         importButton.setEnabled(false);
@@ -479,11 +604,23 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         importTask.addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
-                if ("progress".equals(evt.getPropertyName())) {
+                if (Import.PROGRESS.equals(evt.getPropertyName())) {
                     progressBar.setValue((Integer) evt.getNewValue());
                     progressBar.setString(evt.getNewValue().toString() + "%");
-                } else if ("finished".equals(evt.getPropertyName())) {
-                    dispose();
+                } else if (Import.FINISHED.equals(evt.getPropertyName())) {
+                    // dispose();
+                } else if (Import.RECORD.equals(evt.getPropertyName())) {
+                    recordProgressBar.setValue((Integer) evt.getNewValue());
+                    recordProgressBar.setString(evt.getNewValue().toString() + "%");
+                } else if (Import.PATIENTS.equals(evt.getPropertyName())) {
+                    patientsProgressBar.setValue((Integer) evt.getNewValue());
+                    patientsProgressBar.setString(evt.getNewValue().toString() + "%");
+                } else if (Import.TUMOURS.equals(evt.getPropertyName())) {
+                    tumoursProgressBar.setValue((Integer) evt.getNewValue());
+                    tumoursProgressBar.setString(evt.getNewValue().toString() + "%");
+                } else if (Import.SOURCES.equals(evt.getPropertyName())) {
+                    sourcesProgressBar.setValue((Integer) evt.getNewValue());
+                    sourcesProgressBar.setString(evt.getNewValue().toString() + "%");
                 }
             }
         });
@@ -493,16 +630,35 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(PreviewFilePanel.FILE_CHANGED_ACTION)) {
             needToRebuildVariableMap = true;
+            if (!reportFileNameSet) {
+                File file = new File(chooser.getCurrentDirectory().getAbsolutePath() + File.separatorChar + "import_report.txt");
+                // chooser.setSelectedFile(file);
+                reportFileNameTextField.setText(file.getAbsolutePath());
+            }
         }
     }
 
     private class ImportActionTask extends org.jdesktop.application.Task<Object, Void> {
 
+        private final List<Relation> variablesMap;
+        private final File[] files;
+        private final ImportOptions io;
+
         ImportActionTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
             // to ImportActionTask fields, here.
+
             super(app);
+            variablesMap = buildMap();
+
+            files = new File[]{
+                        patientPreviewFilePanel.getInFile(),
+                        tumourPreviewFilePanel.getInFile(),
+                        sourcePreviewFilePanel.getInFile()
+                    };
+
+            io = buildImportOptions();
         }
 
         @Override
@@ -513,7 +669,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             boolean success = false;
             try {
                 // Calls the client app import action with the file parameters provided,
-                success = CanRegClientApp.getApplication().importFiles(this, doc, buildMap(), new File[]{patientInFile, tumourInFile, sourceInFile}, buildImportOptions());
+                success = CanRegClientApp.getApplication().importFiles(this, doc, variablesMap, files, io);
             } catch (SecurityException ex) {
                 Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RecordLockedException ex) {
@@ -531,12 +687,20 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
+            String fileListString = "";
+            for (int i = 0; i < files.length; i++) {
+                if (files[i] != null) {
+                    fileListString += files[i].getName() + ", ";
+                }
+            }
+
             if (!(Boolean) result) {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Something wrong with the file " + patientInFile.getAbsolutePath() + ".", "File NOT successfully imported", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Something wrong with the file(s) " + fileListString + ".", "File(s) NOT successfully imported", JOptionPane.WARNING_MESSAGE);
             } else {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully imported file " + patientInFile.getAbsolutePath() + ".", "File successfully imported", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully imported file(s) " + fileListString + ".", "File(s) successfully imported", JOptionPane.INFORMATION_MESSAGE);
             }
             importTask = null;
+            dispose();
         }
     }
 
@@ -591,46 +755,52 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 
     private List<Relation> buildMap() {
         List<Relation> map = new LinkedList();
-        for (VariableMappingAlternativePanel vmp : patientVariablesAssociationPanel.getPanelList()) {
-            Relation rel = new Relation();
-            int fileColumnNumber = vmp.getSelectedFileColumnNumber();
-            if (fileColumnNumber >= 0) {
-                DatabaseVariablesListElement dbVLE = vmp.getDatabaseVariablesListElement();
-                rel.setDatabaseTableName(dbVLE.getDatabaseTableName());
-                rel.setDatabaseTableVariableID(vmp.getDBVariableIndex());
-                rel.setDatabaseVariableName(dbVLE.getDatabaseVariableName());
-                rel.setFileColumnNumber(fileColumnNumber);
-                rel.setFileVariableName(vmp.getSelectedFileElement());
-                rel.setVariableType(dbVLE.getVariableType());
-                map.add(rel);
+        if (patientVariablesAssociationPanel.getPanelList() != null) {
+            for (VariableMappingAlternativePanel vmp : patientVariablesAssociationPanel.getPanelList()) {
+                Relation rel = new Relation();
+                int fileColumnNumber = vmp.getSelectedFileColumnNumber();
+                if (fileColumnNumber >= 0) {
+                    DatabaseVariablesListElement dbVLE = vmp.getDatabaseVariablesListElement();
+                    rel.setDatabaseTableName(dbVLE.getDatabaseTableName());
+                    rel.setDatabaseTableVariableID(vmp.getDBVariableIndex());
+                    rel.setDatabaseVariableName(dbVLE.getDatabaseVariableName());
+                    rel.setFileColumnNumber(fileColumnNumber);
+                    rel.setFileVariableName(vmp.getSelectedFileElement());
+                    rel.setVariableType(dbVLE.getVariableType());
+                    map.add(rel);
+                }
             }
         }
-        for (VariableMappingAlternativePanel vmp : tumourVariablesAssociationPanel.getPanelList()) {
-            Relation rel = new Relation();
-            int fileColumnNumber = vmp.getSelectedFileColumnNumber();
-            if (fileColumnNumber >= 0) {
-                DatabaseVariablesListElement dbVLE = vmp.getDatabaseVariablesListElement();
-                rel.setDatabaseTableName(dbVLE.getDatabaseTableName());
-                rel.setDatabaseTableVariableID(vmp.getDBVariableIndex());
-                rel.setDatabaseVariableName(dbVLE.getDatabaseVariableName());
-                rel.setFileColumnNumber(fileColumnNumber);
-                rel.setFileVariableName(vmp.getSelectedFileElement());
-                rel.setVariableType(dbVLE.getVariableType());
-                map.add(rel);
+        if (tumourVariablesAssociationPanel.getPanelList() != null) {
+            for (VariableMappingAlternativePanel vmp : tumourVariablesAssociationPanel.getPanelList()) {
+                Relation rel = new Relation();
+                int fileColumnNumber = vmp.getSelectedFileColumnNumber();
+                if (fileColumnNumber >= 0) {
+                    DatabaseVariablesListElement dbVLE = vmp.getDatabaseVariablesListElement();
+                    rel.setDatabaseTableName(dbVLE.getDatabaseTableName());
+                    rel.setDatabaseTableVariableID(vmp.getDBVariableIndex());
+                    rel.setDatabaseVariableName(dbVLE.getDatabaseVariableName());
+                    rel.setFileColumnNumber(fileColumnNumber);
+                    rel.setFileVariableName(vmp.getSelectedFileElement());
+                    rel.setVariableType(dbVLE.getVariableType());
+                    map.add(rel);
+                }
             }
         }
-        for (VariableMappingAlternativePanel vmp : sourceVariablesAssociationPanel.getPanelList()) {
-            Relation rel = new Relation();
-            int fileColumnNumber = vmp.getSelectedFileColumnNumber();
-            if (fileColumnNumber >= 0) {
-                DatabaseVariablesListElement dbVLE = vmp.getDatabaseVariablesListElement();
-                rel.setDatabaseTableName(dbVLE.getDatabaseTableName());
-                rel.setDatabaseTableVariableID(vmp.getDBVariableIndex());
-                rel.setDatabaseVariableName(dbVLE.getDatabaseVariableName());
-                rel.setFileColumnNumber(fileColumnNumber);
-                rel.setFileVariableName(vmp.getSelectedFileElement());
-                rel.setVariableType(dbVLE.getVariableType());
-                map.add(rel);
+        if (sourceVariablesAssociationPanel.getPanelList() != null) {
+            for (VariableMappingAlternativePanel vmp : sourceVariablesAssociationPanel.getPanelList()) {
+                Relation rel = new Relation();
+                int fileColumnNumber = vmp.getSelectedFileColumnNumber();
+                if (fileColumnNumber >= 0) {
+                    DatabaseVariablesListElement dbVLE = vmp.getDatabaseVariablesListElement();
+                    rel.setDatabaseTableName(dbVLE.getDatabaseTableName());
+                    rel.setDatabaseTableVariableID(vmp.getDBVariableIndex());
+                    rel.setDatabaseVariableName(dbVLE.getDatabaseVariableName());
+                    rel.setFileColumnNumber(fileColumnNumber);
+                    rel.setFileVariableName(vmp.getSelectedFileElement());
+                    rel.setVariableType(dbVLE.getVariableType());
+                    map.add(rel);
+                }
             }
         }
         return map;
@@ -666,7 +836,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         io.setDoChecks(doChecksCheckBox.isSelected());
         io.setDoPersonSearch(personSearchCheckBox.isSelected());
         io.setQueryNewNames(queryNewNameCheckBox.isSelected());
-        io.setDataFromPreviousCanReg(previousCanRegDataCheckBox.isSelected());
+        io.setDataFromPreviousCanReg(false);
 
         // Set standard variable names
         io.setMultiplePrimaryVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimCode.toString()).getDatabaseVariableName());
@@ -684,6 +854,9 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 
         // Set the charactersets
         io.setFilesCharsets(getCharsets());
+
+        // Set the report fileName
+        io.setReportFileName(reportFileNameTextField.getText());
 
         return io;
     }
@@ -712,34 +885,71 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     public void autodetectSeparatingCharacterAction() {
         JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Not yet implemented.", "Error", JOptionPane.ERROR_MESSAGE);
     }
+
+    /**
+     *
+     */
+    @Action
+    public void browseFiles() {
+        if (!reportFileNameSet) {
+            File file = new File(chooser.getCurrentDirectory().getAbsolutePath() + File.separatorChar + "import_report.txt");
+            chooser.setSelectedFile(file);
+        } else {
+            File file = new File(reportFileNameTextField.getText());
+            chooser.setSelectedFile(file);
+        }
+        int returnVal = chooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                //set the file name
+                reportFileNameTextField.setText(chooser.getSelectedFile().getCanonicalPath());
+                // changeFile();
+            } catch (IOException ex) {
+                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            reportFileNameSet = true;
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane associateVariavlesTabbedPane;
     private javax.swing.JButton backButton;
+    private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JTabbedPane chooseFilesTabbedPane;
     private javax.swing.JPanel discrepanciesPanel;
     private javax.swing.JCheckBox doChecksCheckBox;
+    private javax.swing.JLabel fileLabel;
     private javax.swing.JButton importButton;
     private javax.swing.JPanel importFilePanel;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel maxLinesPanel;
     private javax.swing.JTextField maxLinesTextField;
     private javax.swing.JButton nextButton;
+    private javax.swing.JLabel overallLabel;
     private javax.swing.JRadioButton overwriteRadioButton;
     private canreg.client.gui.components.PreviewFilePanel patientPreviewFilePanel;
     private canreg.client.gui.components.VariablesAssociationPanel patientVariablesAssociationPanel;
+    private javax.swing.JLabel patientsLabel;
+    private javax.swing.JProgressBar patientsProgressBar;
     private javax.swing.JCheckBox personSearchCheckBox;
-    private javax.swing.JCheckBox previousCanRegDataCheckBox;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JCheckBox queryNewNameCheckBox;
+    private javax.swing.JLabel recordLabel;
+    private javax.swing.JProgressBar recordProgressBar;
     private javax.swing.JRadioButton rejectRadioButton;
+    private javax.swing.JTextField reportFileNameTextField;
     private canreg.client.gui.components.PreviewFilePanel sourcePreviewFilePanel;
     private canreg.client.gui.components.VariablesAssociationPanel sourceVariablesAssociationPanel;
+    private javax.swing.JLabel sourcesLabel;
+    private javax.swing.JProgressBar sourcesProgressBar;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JCheckBox testOnlyCheckBox;
     private canreg.client.gui.components.PreviewFilePanel tumourPreviewFilePanel;
     private canreg.client.gui.components.VariablesAssociationPanel tumourVariablesAssociationPanel;
+    private javax.swing.JLabel tumoursLabel;
+    private javax.swing.JProgressBar tumoursProgressBar;
     private javax.swing.JRadioButton updateRadioButton;
     // End of variables declaration//GEN-END:variables
 }

@@ -6,13 +6,19 @@ package canreg.client.dataentry;
 
 import canreg.client.CanRegClientApp;
 import canreg.common.Globals;
+import canreg.common.qualitycontrol.CheckResult;
+import canreg.common.qualitycontrol.CheckResult.ResultCode;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -20,7 +26,9 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +45,12 @@ public class Import {
 
     private static String namespace = "ns3:";
     private static boolean debug = true;
+    public static String FINISHED = "finished";
+    public static String PROGRESS = "progress";
+    public static String RECORD = "record";
+    public static String PATIENTS = "patients";
+    public static String TUMOURS = "tumours";
+    public static String SOURCES = "sources";
 
     /**
      * 
@@ -245,6 +259,14 @@ public class Import {
     }
 
     public static boolean importFiles(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File[] files, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
+        Writer reportWriter = new BufferedWriter(new OutputStreamWriter(System.out));
+        if (io.getReportFileName() != null && io.getReportFileName().trim().length() > 0) {
+            try {
+                reportWriter = new BufferedWriter(new FileWriter(io.getReportFileName()));
+            } catch (IOException ex) {
+                Logger.getLogger(Import.class.getName()).log(Level.WARNING, null, ex);
+            }
+        }
         boolean success = false;
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
         noNeedToLookAtPatientVariables.add(io.getPatientIDVariableName().toLowerCase());
@@ -254,209 +276,401 @@ public class Import {
         BufferedReader bufferedReader = null;
         int linesToRead = io.getMaxLines();
         String[] lineElements;
+        ResultCode worstResultCodeFound;
+
         try {
             // first we get the patients
-            FileInputStream patientFIS = new FileInputStream(files[0]);
-            InputStreamReader patientISR = new InputStreamReader(patientFIS, io.getFileCharsets()[0]);
+            task.firePropertyChange(PROGRESS, 0, 0);
+            task.firePropertyChange(PATIENTS, 0, 0);
+            if (files[0] != null) {
+                reportWriter.write("Starting to import patients from " + files[0].getAbsolutePath() + "\n");
+                FileInputStream patientFIS = new FileInputStream(files[0]);
+                InputStreamReader patientISR = new InputStreamReader(patientFIS, io.getFileCharsets()[0]);
 
-            Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + patientISR.getEncoding());
+                Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + patientISR.getEncoding());
 
-            int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[0].getAbsolutePath());
-            bufferedReader = new BufferedReader(patientISR);
-            String line = bufferedReader.readLine();
-            // Skip first line
-            line = bufferedReader.readLine();
-            // patientNumber
+                int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[0].getAbsolutePath());
+                bufferedReader = new BufferedReader(patientISR);
+                String line = bufferedReader.readLine();
+                // Skip first line
+                line = bufferedReader.readLine();
+                // patientNumber
 
-            if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
-                linesToRead = numberOfRecordsInFile;
-            }
-
-            while (line != null && (numberOfLinesRead < linesToRead)) {
-                // We allow for null tasks...
-                boolean needToSavePatientAgain = true;
-                int patientDatabaseRecordID = -1;
-
-                if (task != null) {
-                    task.firePropertyChange("progress", (numberOfLinesRead - 1) * 100 / linesToRead, (numberOfLinesRead) * 100 / linesToRead);
+                if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
+                    linesToRead = numberOfRecordsInFile;
                 }
-                lineElements = canreg.common.Tools.breakDownLine(io.getSeparators()[0], line);
 
-                // Build patient part
-                Patient patient = new Patient();
-                for (int i = 0; i < map.size(); i++) {
-                    Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
-                        if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                            if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                while (line != null && (numberOfLinesRead < linesToRead)) {
+                    // We allow for null tasks...
+                    boolean savePatient = true;
+                    boolean deletePatient = false;
+                    int oldPatientDatabaseRecordID = -1;
+
+                    if (task != null) {
+                        task.firePropertyChange(PROGRESS, ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, ((numberOfLinesRead) * 100 / linesToRead) / 3);
+                        task.firePropertyChange(PATIENTS, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
+                    }
+                    lineElements = canreg.common.Tools.breakDownLine(io.getSeparators()[0], line);
+
+                    // Build patient part
+                    Patient patient = new Patient();
+                    for (int i = 0; i < map.size(); i++) {
+                        Relation rel = map.get(i);
+                        if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
+                            if (rel.getVariableType().equalsIgnoreCase("Number")) {
+                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                    patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                }
+                            } else {
+                                patient.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
                             }
-                        } else {
-                            patient.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
+                        }
+                        if (task != null) {
+                            task.firePropertyChange(RECORD, i - 1 / map.size() * 50, i / map.size() * 50);
                         }
                     }
-                }
-                // debugOut(patient.toString());
+                    // debugOut(patient.toString());
 
-                // debugOut(tumour.toString());
-                // add patient to the database
-                Object patientID = patient.getVariable(io.getPatientIDVariableName());
+                    // debugOut(tumour.toString());
+                    // add patient to the database
+                    Object patientID = patient.getVariable(io.getPatientRecordIDVariableName());
+                    Patient oldPatient = null;
+                    try {
+                        oldPatient = CanRegClientApp.getApplication().getPatientRecordByID(
+                                (String) patientID, false);
+                    } catch (Exception ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 
-                if (patientID == null) {
-                    // save the record to get the new patientID;
-                    patientDatabaseRecordID = server.savePatient(patient);
-                    patient = (Patient) server.getRecord(patientDatabaseRecordID, Globals.PATIENT_TABLE_NAME, false);
-                    patientID = patient.getVariable(io.getPatientIDVariableName());
-                }
+                    if (oldPatient != null) {
+                        // deal with discrepancies
+                        switch (io.getDiscrepancies()) {
+                            case ImportOptions.REJECT:
+                                savePatient = false;
+                                break;
+                            case ImportOptions.UPDATE:
+                                String updateReport = updateRecord(oldPatient, patient);
+                                if (updateReport.length() > 0) {
+                                    reportWriter.write(patient.getVariable(
+                                            io.getTumourIDVariablename()) + "\n" + updateReport);
+                                }
+                                oldPatientDatabaseRecordID = (Integer) oldPatient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                                patient = oldPatient;
+                                savePatient = true;
+                                break;
+                            case ImportOptions.OVERWRITE:
+                                // deleteTumour;
+                                oldPatientDatabaseRecordID = (Integer) oldPatient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                                String overWriteReport = overwriteRecord(oldPatient, patient);
+                                if (overWriteReport.length() > 0) {
+                                    reportWriter.write(patient.getVariable(
+                                            io.getTumourIDVariablename()) + "\n" + overWriteReport);
+                                }
+                                patient = oldPatient;
+                                savePatient = true;
+                                break;
+                        }
+                        // reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "Tumour already exists.\n");
 
-                if (needToSavePatientAgain) {
-                    if (patientDatabaseRecordID > 0) {
-                        server.editPatient(patient);
-                    } else {
-                        patientDatabaseRecordID = server.savePatient(patient);
+                    }
+
+
+                    if (task != null) {
+                        task.firePropertyChange(RECORD, 50, 75);
+                    }
+
+                    if ((!io.isTestOnly())) {
+                        if (deletePatient) {
+                            server.deleteRecord(oldPatientDatabaseRecordID, Globals.PATIENT_TABLE_NAME);
+                        }
+                        if (savePatient) {
+                            if (patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) != null) {
+                                server.editPatient(patient);
+                            } else {
+                                server.savePatient(patient);
+                            }
+                        }
+                    }
+
+                    if (task != null) {
+                        task.firePropertyChange(RECORD, 100, 75);
+                    }
+
+                    //Read next line of data
+                    line = bufferedReader.readLine();
+                    numberOfLinesRead++;
+
+                    reportWriter.flush();
+
+                    if (Thread.interrupted()) {
+                        //We've been interrupted: no more importing.
+                        throw new InterruptedException();
                     }
                 }
-
-                //Read next line of data
-                line = bufferedReader.readLine();
-                numberOfLinesRead++;
-
-                if (Thread.interrupted()) {
-                    //We've been interrupted: no more importing.
-                    throw new InterruptedException();
-                }
+                reportWriter.write("Finished reading patients.\n\n");
             }
-
-
-
-
+            task.firePropertyChange(PATIENTS, 100, 100);
+            task.firePropertyChange("progress", 33, 34);
             // then we get the tumours
+            task.firePropertyChange(TUMOURS, 0, 0);
+            if (files[1] != null) {
+                reportWriter.write("Starting to import tumours from " + files[1].getAbsolutePath() + "\n");
 
-            patientFIS = new FileInputStream(files[1]);
-            patientISR = new InputStreamReader(patientFIS, io.getFileCharsets()[1]);
+                FileInputStream tumourFIS = new FileInputStream(files[1]);
+                InputStreamReader tumourISR = new InputStreamReader(tumourFIS, io.getFileCharsets()[1]);
 
-            Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + patientISR.getEncoding());
+                Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + tumourISR.getEncoding());
 
-            numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[1].getAbsolutePath());
-            bufferedReader = new BufferedReader(patientISR);
-            line = bufferedReader.readLine();
-            // Skip first line
-            line = bufferedReader.readLine();
+                int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[1].getAbsolutePath());
+                bufferedReader = new BufferedReader(tumourISR);
+                String line = bufferedReader.readLine();
+                // Skip first line
+                line = bufferedReader.readLine();
 
-            // reset the number of lines read
-            numberOfLinesRead = 0;
+                // reset the number of lines read
+                numberOfLinesRead = 0;
 
-            if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
-                linesToRead = numberOfRecordsInFile;
-            }
-            while (line != null && (numberOfLinesRead < linesToRead)) {
-                // We allow for null tasks...
-                boolean needToSavePatientAgain = true;
-                int patientDatabaseRecordID = -1;
-
-                if (task != null) {
-                    task.firePropertyChange("progress", (numberOfLinesRead - 1) * 100 / linesToRead, (numberOfLinesRead) * 100 / linesToRead);
+                if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
+                    linesToRead = numberOfRecordsInFile;
                 }
-                lineElements = canreg.common.Tools.breakDownLine(io.getSeparators()[1], line);
-                // Build tumour part
-                Tumour tumour = new Tumour();
-                for (int i = 0; i < map.size(); i++) {
-                    Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
-                        if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                            if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                while (line != null && (numberOfLinesRead < linesToRead)) {
+                    // We allow for null tasks...
+                    boolean saveTumour = true;
+                    boolean deleteTumour = false;
+
+                    if (task != null) {
+                        task.firePropertyChange(PROGRESS, 33 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 33 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
+                        task.firePropertyChange(TUMOURS, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
+                    }
+                    lineElements = canreg.common.Tools.breakDownLine(io.getSeparators()[1], line);
+                    // Build tumour part
+                    Tumour tumour = new Tumour();
+                    for (int i = 0; i < map.size(); i++) {
+                        Relation rel = map.get(i);
+                        if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
+                            if (rel.getVariableType().equalsIgnoreCase("Number")) {
+                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                    tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                }
+                            } else {
+                                tumour.setVariable(rel.getDatabaseVariableName(),
+                                        lineElements[rel.getFileColumnNumber()]);
                             }
-                        } else {
-                            tumour.setVariable(rel.getDatabaseVariableName(),
-                                    lineElements[rel.getFileColumnNumber()]);
+                        }
+                        if (task != null) {
+                            task.firePropertyChange(RECORD, i - 1 / map.size() * 50, i / map.size() * 50);
                         }
                     }
+
+                    // see if this thumour exists in the database already
+                    Tumour tumour2 = null;
+                    try {
+                        tumour2 = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(
+                                (String) tumour.getVariable(io.getTumourIDVariablename()), false);
+                    } catch (Exception ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    if (tumour2 != null) {
+                        // deal with discrepancies
+                        switch (io.getDiscrepancies()) {
+                            case ImportOptions.REJECT:
+                                saveTumour = false;
+                                break;
+                            case ImportOptions.UPDATE:
+                                String updateReport = updateRecord(tumour2, tumour);
+                                if (updateReport.length() > 0) {
+                                    reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "\n" + updateReport);
+                                }
+                                tumour = tumour2;
+                                saveTumour = true;
+                                break;
+                            case ImportOptions.OVERWRITE:
+                                // deleteTumour;
+                                deleteTumour = true;
+                                saveTumour = true;
+                                break;
+                        }
+                        // reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "Tumour already exists.\n");
+
+                    }
+
+                    Patient patient = null;
+                    if (io.isDoChecks() && saveTumour) {
+                        try {
+                            patient = CanRegClientApp.getApplication().getPatientRecord(
+                                    (String) tumour.getVariable(io.getPatientRecordIDTumourTableVariableName()), false);
+                        } catch (Exception ex) {
+                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                        if (patient != null) {
+                            // run the edits...
+                            String message = "";
+                            LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumour);
+
+                            Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes = new TreeMap<Globals.StandardVariableNames, CheckResult.ResultCode>();
+                            worstResultCodeFound = CheckResult.ResultCode.OK;
+                            for (CheckResult result : checkResults) {
+                                if (result.getResultCode() != CheckResult.ResultCode.OK) {
+                                    message += result + "\t";
+                                    worstResultCodeFound = CheckResult.decideWorstResultCode(result.getResultCode(), worstResultCodeFound);
+                                    for (Globals.StandardVariableNames standardVariableName : result.getVariablesInvolved()) {
+                                        CheckResult.ResultCode worstResultCodeFoundForThisVariable = mapOfVariablesAndWorstResultCodes.get(standardVariableName);
+                                        if (worstResultCodeFoundForThisVariable == null) {
+                                            mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());
+                                        } else if (CheckResult.compareResultSets(result.getResultCode(), worstResultCodeFoundForThisVariable) > 0) {
+                                            mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());
+                                        }
+                                    }
+                                }
+                                // Logger.getLogger(Import.class.getName()).log(Level.INFO, result.toString());
+                            }
+
+                            if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing) {
+                                // If no errors were found we generate ICD10 code
+                                // ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
+                            }
+
+                            if (worstResultCodeFound == CheckResult.ResultCode.OK) {
+                                // message += "Cross-check conclusion: Valid";
+                            } else {
+                                reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "\t" + message + "\n");
+                                // System.out.println(tumour.getVariable(io.getTumourIDVariablename()) + " " + message);
+                            }
+                        } else {
+                            reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "\t" + "No patient matches this Tumour." + "\n");
+                        }
+                    }
+                    if (task != null) {
+                        task.firePropertyChange(RECORD, 50, 75);
+                    }
+                    if (!io.isTestOnly()) {
+                        if (deleteTumour) {
+                            server.deleteRecord((Integer) tumour2.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME), Globals.TUMOUR_TABLE_NAME);
+                        }
+                        if (saveTumour) {
+                            // if tumour has no record ID we save it
+                            if (tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) == null) {
+                                server.saveTumour(tumour);
+                            } // if not we edit it
+                            else {
+                                server.editTumour(tumour);
+                            }
+                        }
+                    }
+                    if (task != null) {
+                        task.firePropertyChange(RECORD, 75, 100);
+                    }
+                    //Read next line of data
+                    line = bufferedReader.readLine();
+                    numberOfLinesRead++;
+                    reportWriter.flush();
+
+                    if (Thread.interrupted()) {
+                        //We've been interrupted: no more importing.
+                        throw new InterruptedException();
+                    }
                 }
-
-                int tumourDatabaseIDNumber = server.saveTumour(tumour);
-
-                //Read next line of data
-                line = bufferedReader.readLine();
-                numberOfLinesRead++;
-
-                if (Thread.interrupted()) {
-                    //We've been interrupted: no more importing.
-                    throw new InterruptedException();
-                }
+                reportWriter.write("Finished reading tumours.\n\n");
             }
-
-
-
+            task.firePropertyChange(TUMOURS, 100, 100);
 
             // then at last we get the sources
-            patientFIS = new FileInputStream(files[2]);
-            patientISR = new InputStreamReader(patientFIS, io.getFileCharsets()[2]);
+            task.firePropertyChange(SOURCES, 0, 0);
+            task.firePropertyChange(PROGRESS, 66, 66);
+            if (files[2] != null) {
+                reportWriter.write("Starting to import sources from " + files[2].getAbsolutePath() + "\n");
 
-            Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + patientISR.getEncoding());
+                FileInputStream sourceFIS = new FileInputStream(files[2]);
+                InputStreamReader sourceISR = new InputStreamReader(sourceFIS, io.getFileCharsets()[2]);
 
-            numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[2].getAbsolutePath());
-            bufferedReader = new BufferedReader(patientISR);
-            line = bufferedReader.readLine();
-            // Skip first line
-            line = bufferedReader.readLine();
+                Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + sourceISR.getEncoding());
 
-            // reset the number of lines read
-            numberOfLinesRead = 0;
+                int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[2].getAbsolutePath());
+                bufferedReader = new BufferedReader(sourceISR);
+                String line = bufferedReader.readLine();
+                // Skip first line
+                line = bufferedReader.readLine();
 
-            if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
-                linesToRead = numberOfRecordsInFile;
-            }
-            while (line != null && (numberOfLinesRead < linesToRead)) {
-                // We allow for null tasks...
-                boolean needToSavePatientAgain = true;
-                int patientDatabaseRecordID = -1;
+                // reset the number of lines read
+                numberOfLinesRead = 0;
 
-                if (task != null) {
-                    task.firePropertyChange("progress", (numberOfLinesRead - 1) * 100 / linesToRead, (numberOfLinesRead) * 100 / linesToRead);
+                if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
+                    linesToRead = numberOfRecordsInFile;
                 }
-                lineElements = canreg.common.Tools.breakDownLine(io.getSeparators()[2], line);
+                while (line != null && (numberOfLinesRead < linesToRead)) {
+                    // We allow for null tasks...
+                    boolean needToSavePatientAgain = true;
+                    int patientDatabaseRecordID = -1;
 
-                // Build source part
+                    if (task != null) {
+                        task.firePropertyChange(PROGRESS, 67 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 67 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
+                        task.firePropertyChange(SOURCES, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
+                    }
+                    lineElements = canreg.common.Tools.breakDownLine(io.getSeparators()[2], line);
 
-                Source source = new Source();
-                for (int i = 0; i < map.size(); i++) {
-                    Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
-                        if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                            if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                    // Build source part
+
+                    Source source = new Source();
+                    for (int i = 0; i < map.size(); i++) {
+                        Relation rel = map.get(i);
+                        if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+                            if (rel.getVariableType().equalsIgnoreCase("Number")) {
+                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                    source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                }
+                            } else {
+                                source.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
                             }
-                        } else {
-                            source.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
+                        }
+                        if (task != null) {
+                            task.firePropertyChange(RECORD, i - 1 / map.size() * 50, i / map.size() * 50);
                         }
                     }
+
+                    Tumour tumour = null;
+                    try {
+                        tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(
+                                (String) source.getVariable(io.getTumourIDSourceTableVariableName()), false);
+                    } catch (Exception ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    if (task != null) {
+                        task.firePropertyChange(RECORD, 50, 75);
+                    }
+                    if (tumour != null) {
+                        Set<Source> sources = tumour.getSources();
+                        sources.add(source);
+                        // get the tumour...
+                        tumour.setSources(sources);
+                        if (!io.isTestOnly()) {
+                            server.editTumour(tumour);
+                        }
+                    } else {
+                        //implement an error report
+                    }
+                    if (task != null) {
+                        task.firePropertyChange(RECORD, 75, 100);
+                    }
+                    //Read next line of data
+                    line = bufferedReader.readLine();
+                    numberOfLinesRead++;
+                    reportWriter.flush();
+
+                    if (Thread.interrupted()) {
+                        //We've been interrupted: no more importing.
+                        throw new InterruptedException();
+                    }
                 }
-
-                Tumour tumour = new Tumour();
-                try {
-                    tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(
-                            (String) source.getVariable(io.getTumourIDSourceTableVariableName()), false);
-                } catch (Exception ex) {
-                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                Set<Source> sources = tumour.getSources();
-                sources.add(source);
-                // get the tumour...
-                tumour.setSources(sources);
-
-                int tumourDatabaseIDNumber = server.saveTumour(tumour);
-
-                //Read next line of data
-                line = bufferedReader.readLine();
-                numberOfLinesRead++;
-
-                if (Thread.interrupted()) {
-                    //We've been interrupted: no more importing.
-                    throw new InterruptedException();
-                }
+                reportWriter.write("Finished reading sources.\n\n");
             }
-
+            task.firePropertyChange(SOURCES, 100, 100);
+            task.firePropertyChange(PROGRESS, 100, 100);
+            while (!task.isProgressPropertyValid()) {
+                // wait untill progress has been updated...
+            }
+            reportWriter.write("Finished\n");
             success = true;
         } catch (IOException ex) {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
@@ -475,6 +689,13 @@ public class Import {
             if (bufferedReader != null) {
                 try {
                     bufferedReader.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (reportWriter != null) {
+                try {
+                    reportWriter.close();
                 } catch (IOException ex) {
                     Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -538,5 +759,54 @@ public class Import {
             id = IDNumberObj;
         }
         return id;
+    }
+
+    private static String updateRecord(DatabaseRecord oldRecord, DatabaseRecord newRecord) {
+        String report = "";
+        // get all the elements from the newTumour and put them in the oldTumour
+        for (String variableName : newRecord.getVariableNames()) {
+            Object newData = newRecord.getVariable(variableName);
+            if (newData != null) {
+                Object oldData = oldRecord.getVariable(variableName);
+                oldRecord.setVariable(variableName, newData);
+                if (oldData != null) {
+                    if (newData.toString().equals(oldData.toString())) {
+                        //nothing has changed
+                    } else {
+                        report += variableName + ": " + oldData + "->" + newData + "\n";
+                    }
+                } else {
+                    report += variableName + ": null ->" + newData + "\n";
+                }
+            }
+        }
+        return report;
+    }
+
+    private static String overwriteRecord(DatabaseRecord oldRecord, DatabaseRecord newRecord) {
+        String report = "";
+        // get all the elements from the newTumour and put them in the oldTumour
+        for (String variableName : oldRecord.getVariableNames()) {
+            if (!variableName.equalsIgnoreCase(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME)) {
+                oldRecord.setVariable(variableName, null);
+            }
+        }
+        for (String variableName : newRecord.getVariableNames()) {
+            Object newData = newRecord.getVariable(variableName);
+            if (newData != null) {
+                Object oldData = oldRecord.getVariable(variableName);
+                oldRecord.setVariable(variableName, newData);
+                if (oldData != null) {
+                    if (newData.toString().equals(oldData.toString())) {
+                        //nothing has changed
+                    } else {
+                        report += variableName + ": " + oldData + "->" + newData + "\n";
+                    }
+                } else {
+                    report += variableName + ": null ->" + newData + "\n";
+                }
+            }
+        }
+        return report;
     }
 }

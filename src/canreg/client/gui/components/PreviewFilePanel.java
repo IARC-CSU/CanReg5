@@ -37,9 +37,7 @@ import org.jdesktop.application.Action;
  */
 public class PreviewFilePanel extends javax.swing.JPanel {
 
-    private File inFile;
-    private String path;
-    private boolean needToRebuildVariableMap = true;
+    private File inFile = null;
     private JFileChooser chooser;
     private ActionListener listener;
     public static final String FILE_CHANGED_ACTION = "file_changed";
@@ -58,14 +56,6 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         // set the default mapping
         charsetsComboBox.setSelectedItem(CanRegClientApp.getApplication().getGlobalToolBox().getStandardCharset());
         // initializeVariableMappingTab();
-    }
-
-    public void setPath(String path) {
-        if (path == null) {
-            chooser = new JFileChooser();
-        } else {
-            chooser = new JFileChooser(path);
-        }
     }
 
     /** This method is called from within the constructor to
@@ -271,7 +261,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
     @Action
     public void browseAction() {
         if (chooser == null) {
-            setPath(path);
+            chooser = new JFileChooser();
         }
         int returnVal = chooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -292,35 +282,37 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         try {
             changeFile();
             // numberOfRecordsTextField.setText(""+(canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath())-1));
-            FileInputStream fis = new FileInputStream(inFile);
-            br = new BufferedReader(new InputStreamReader(fis, (Charset) charsetsComboBox.getSelectedItem()));
-            // Read the parts of the file into the preview area...
-            int i = 0;
+            if (inFile != null) {
+                FileInputStream fis = new FileInputStream(inFile);
+                br = new BufferedReader(new InputStreamReader(fis, (Charset) charsetsComboBox.getSelectedItem()));
+                // Read the parts of the file into the preview area...
+                int i = 0;
 
-            String line = br.readLine();
-            String headers = new String();
-            // String dataText = new String();
-            Vector<Vector<String>> data = new Vector<Vector<String>>();
+                String line = br.readLine();
+                String headers = new String();
+                // String dataText = new String();
+                Vector<Vector<String>> data = new Vector<Vector<String>>();
 
-            while (i < Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW && line != null) {
-                if (i == 0) {
-                    headers = line;
-                } else {
-                    String[] lineData = line.split(getSeparator() + "");
-                    Vector vec = new Vector(Arrays.asList(lineData));
-                    data.add(vec);
-                    // dataText += line + "\n";
+                while (i < Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW && line != null) {
+                    if (i == 0) {
+                        headers = line;
+                    } else {
+                        String[] lineData = line.split(getSeparator() + "");
+                        Vector vec = new Vector(Arrays.asList(lineData));
+                        data.add(vec);
+                        // dataText += line + "\n";
+                    }
+                    line = br.readLine();
+                    i++;
+                    numberOfRecordsShownTextField.setText(i + "");
                 }
-                line = br.readLine();
-                i++;
-                numberOfRecordsShownTextField.setText(i + "");
-            }
 
-            // previewTextArea.setText(headers + "\n" + dataText);
-            // previewTextArea.setCaretPosition(0);
-            previewPanel.setVisible(true);
-            Vector columnNames = new Vector(Arrays.asList(headers.split(getSeparator() + "")));
-            previewTable.setModel(new DefaultTableModel(data, columnNames));
+                // previewTextArea.setText(headers + "\n" + dataText);
+                // previewTextArea.setCaretPosition(0);
+                previewPanel.setVisible(true);
+                Vector columnNames = new Vector(Arrays.asList(headers.split(getSeparator() + "")));
+                previewTable.setModel(new DefaultTableModel(data, columnNames));
+            }
         } catch (FileNotFoundException fileNotFoundException) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not preview file: \'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, fileNotFoundException);
@@ -359,14 +351,16 @@ public class PreviewFilePanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void changeFile() {
-        inFile = new File(fileNameTextField.getText().trim());
-        path = inFile.getPath();
-        needToRebuildVariableMap = true;
-        try {
-            numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getCanonicalPath()) - 1));
-            listener.actionPerformed(new ActionEvent(this, 0, FILE_CHANGED_ACTION));
-        } catch (IOException ex) {
-            Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
+        if (fileNameTextField.getText().trim().length() > 0) {
+            inFile = new File(fileNameTextField.getText().trim());
+            try {
+                listener.actionPerformed(new ActionEvent(this, 0, FILE_CHANGED_ACTION));
+                numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getCanonicalPath()) - 1));
+            } catch (IOException ex) {
+                Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            inFile = null;
         }
     }
 
@@ -390,5 +384,9 @@ public class PreviewFilePanel extends javax.swing.JPanel {
 
     public Charset getCharacterSet() {
         return (Charset) charsetsComboBox.getSelectedItem();
+    }
+
+    public void setChooser(JFileChooser chooser) {
+        this.chooser = chooser;
     }
 }

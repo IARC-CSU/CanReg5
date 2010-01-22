@@ -23,6 +23,7 @@ import canreg.client.gui.management.CanReg4PDSImporterInternalFrame;
 import canreg.client.gui.management.RestoreInternalFrame;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.management.CanReg4SystemConverterInternalFrame;
+import canreg.client.gui.management.ModifyDatabaseStructureInternalFrame;
 import canreg.client.gui.management.UserManagerInternalFrame;
 import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
@@ -225,6 +226,9 @@ public class CanRegClientView extends FrameView {
         toolsMenu = new javax.swing.JMenu();
         convertCR4SystDefMenuItem = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         canReg5HelpMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
@@ -495,6 +499,19 @@ public class CanRegClientView extends FrameView {
         jMenuItem2.setText(resourceMap.getString("jMenuItem2.text")); // NOI18N
         jMenuItem2.setName("jMenuItem2"); // NOI18N
         toolsMenu.add(jMenuItem2);
+
+        jMenu1.setText(resourceMap.getString("jMenu1.text")); // NOI18N
+        jMenu1.setName("jMenu1"); // NOI18N
+
+        jMenuItem3.setAction(actionMap.get("setUpNewDatabaseStructureAction")); // NOI18N
+        jMenuItem3.setName("jMenuItem3"); // NOI18N
+        jMenu1.add(jMenuItem3);
+
+        jMenuItem4.setAction(actionMap.get("modifyDatabaseStructureAction")); // NOI18N
+        jMenuItem4.setName("jMenuItem4"); // NOI18N
+        jMenu1.add(jMenuItem4);
+
+        toolsMenu.add(jMenu1);
 
         menuBar.add(toolsMenu);
 
@@ -1197,6 +1214,20 @@ public class CanRegClientView extends FrameView {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    @Action
+    public void setUpNewDatabaseStructureAction() {
+        ModifyDatabaseStructureInternalFrame internalFrame = new ModifyDatabaseStructureInternalFrame();
+
+        showAndPositionInternalFrame(desktopPane, internalFrame);
+    }
+
+    @Action
+    public void modifyDatabaseStructureAction() {
+        ModifyDatabaseStructureInternalFrame internalFrame = new ModifyDatabaseStructureInternalFrame();
+        
+        showAndPositionInternalFrame(desktopPane, internalFrame);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;
@@ -1219,11 +1250,14 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem icdo3ManualMenuItem;
     private javax.swing.JMenuItem importDataMenuItem;
     private javax.swing.JMenuItem incidenceTablesMenuItem;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem18;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;

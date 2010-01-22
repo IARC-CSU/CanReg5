@@ -98,7 +98,7 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
                 if (!hasMore) {
                     // set pointer to last so that we can keep using resultset
                     resultSet.last();
-                    Logger.getLogger(DistributedTableDataSourceResultSetImpl.class.getName()).log(Level.INFO, "last record reached");
+                    // Logger.getLogger(DistributedTableDataSourceResultSetImpl.class.getName()).log(Level.INFO, "last record reached");
                 }
             }
         } catch (SQLException ex) {

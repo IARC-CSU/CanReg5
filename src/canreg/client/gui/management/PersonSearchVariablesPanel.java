@@ -40,7 +40,7 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
      */
     public void setDoc(Document doc) {
         this.doc = doc;
-        variablesInDB = Tools.getVariableListElements(doc, Globals.NAMESPACE, "Patient");
+        variablesInDB = Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
         PersonSearchVariable[] searchVariables = Tools.getPersonSearchVariables(doc, Globals.NAMESPACE);
         searcher = new DefaultPersonSearch(variablesInDB);
         searcher.setSearchVariables(searchVariables);

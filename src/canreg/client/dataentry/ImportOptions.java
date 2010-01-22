@@ -15,15 +15,15 @@ public class ImportOptions {
     /**
      * 
      */
-    public static int UPDATE = 0;
+    public final static int UPDATE = 0;
     /**
      * 
      */
-    public static int OVERWRITE = 1;
+    public final static int OVERWRITE = 1;
     /**
      * 
      */
-    public static int REJECT = 2;
+    public final static int REJECT = 2;
     // maxlines = -1 to read whole file...
     private int maxLines;
     private boolean testOnly;
@@ -49,6 +49,8 @@ public class ImportOptions {
     private Charset fileCharset;
     private Charset[] fileCharsets;
     private char[] separators;
+
+    private String reportFileName;
 
     /**
      * 
@@ -394,5 +396,19 @@ public class ImportOptions {
      */
     public void setTumourIDSourceTableVariableName(String tumourIDSourceTableVariableName) {
         this.tumourIDSourceTableVariableName = tumourIDSourceTableVariableName;
+    }
+
+    /**
+     * @return the reportFileName
+     */
+    public String getReportFileName() {
+        return reportFileName;
+    }
+
+    /**
+     * @param reportFileName the reportFileName to set
+     */
+    public void setReportFileName(String reportFileName) {
+        this.reportFileName = reportFileName;
     }
 }

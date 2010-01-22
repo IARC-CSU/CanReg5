@@ -1,6 +1,10 @@
 package canreg.server.management;
 
+import canreg.common.DatabaseDictionaryListElement;
+import canreg.common.DatabaseGroupsListElement;
+import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.Tools;
 import canreg.server.database.QueryGenerator;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import java.io.FileInputStream;
@@ -22,6 +26,8 @@ public class SystemDescription {
     private DOMParser parser;
     private String fileName;
     private String namespace = "ns3:";
+
+    ;
 
     /**
      * 
@@ -88,6 +94,33 @@ public class SystemDescription {
     }
 
     /**
+     *
+     * @return
+     */
+    public String getRegion() {
+        String region = null;
+
+        if (doc != null) {
+            NodeList nl = doc.getElementsByTagName(namespace + "region_code");
+
+            if (nl != null) {
+                Element element = (Element) nl.item(0);
+                region = element.getTextContent();
+                if (region != null && region.trim().length() > 0) {
+                    int regionID = Integer.parseInt(region.trim());
+                    try {
+                        region = Globals.REGIONS[regionID];
+                    } catch (NumberFormatException nfe) {
+                        // not a number
+                    }
+                }
+            }
+        }
+
+        return region;
+    }
+
+    /**
      * 
      * @return
      */
@@ -133,6 +166,18 @@ public class SystemDescription {
             }
         }
         return element;
+    }
+
+    public DatabaseVariablesListElement[] getDatabaseVariableListElements() {
+        return Tools.getVariableListElements(doc, Globals.NAMESPACE);
+    }
+
+    public DatabaseDictionaryListElement[] getDatabaseDictionaryListElements() {
+        return Tools.getDictionaryListElements(doc, namespace);
+    }
+
+    public DatabaseGroupsListElement[] getDatabaseGroupsListElements() {
+        return Tools.getGroupsListElements(doc, namespace);
     }
 
     /**

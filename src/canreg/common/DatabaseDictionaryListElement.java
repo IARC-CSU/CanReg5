@@ -1,10 +1,12 @@
 package canreg.common;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ervikm
  */
-public class DatabaseDictionaryListElement {
+public class DatabaseDictionaryListElement implements Serializable, DatabaseElement {
 
     private int dictionaryID;
     private String name;
