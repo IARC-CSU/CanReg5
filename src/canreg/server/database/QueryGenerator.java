@@ -160,8 +160,8 @@ public class QueryGenerator {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".DICTIONARY" +
                 " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), " +
                 "DICTIONARY INT, " +
-                "CODE VARCHAR(20), " +
-                "DESCRIPTION VARCHAR(256) " + // How long should we allow the labels to be?
+                "CODE VARCHAR(" + Globals.DICTIONARY_MAX_CODE_LENGTH +"), " +
+                "DESCRIPTION VARCHAR(" + Globals.DICTIONARY_DESCRIPTION_LENGTH +") " + // How long should we allow the labels to be?
                 ")";
         return queryLine;
     }
