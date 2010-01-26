@@ -243,11 +243,11 @@ public class QueryGenerator {
                 "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
                 "PDS_ID INT not null unique," +
                 "PDS_NAME VARCHAR(" + Globals.PDS_DATABASE_NAME_LENGTH + ")," +
-                "FILTER VARCHAR(255)," +
-                "DATE VARCHAR(8)," +
-                "SOURCE VARCHAR(255)," +
-                "AGE_GROUP_STRUCTURE VARCHAR(40), " +
-                "DESCRIPTION VARCHAR(255), " +
+                "FILTER VARCHAR(" + Globals.PDS_FILTER_LENGTH + ")," +
+                "DATE VARCHAR(" + Globals.DATE_FORMAT_STRING.length() + ")," +
+                "SOURCE VARCHAR(" + Globals.PDS_SOURCE_LENGTH + ")," +
+                "AGE_GROUP_STRUCTURE VARCHAR(" + Globals.PDS_AGE_GROUP_STRUCTURE_STRING_MAX_LENGTH + "), " +
+                "DESCRIPTION VARCHAR(" + Globals.PDS_DESCRIPTION_LENGTH + "), " +
                 "WORLD_POPULATION_ID INT, " +
                 "WORLD_POPULATION_BOOL INT" +
                 " )";

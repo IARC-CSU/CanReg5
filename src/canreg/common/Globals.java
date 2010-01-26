@@ -166,6 +166,12 @@ public class Globals {
     public static String OBSOLETE_VALUE = "1";
     public static String NOT_OBSOLETE_VALUE = "0";
     public static int MAX_DICTIONARY_DISPLAY_SIZE = 2000;
+    public static int DICTIONARY_DESCRIPTION_LENGTH = 255;
+    public static int DICTIONARY_MAX_CODE_LENGTH = 20;
+    public static int PDS_FILTER_LENGTH = 255;
+    public static int PDS_SOURCE_LENGTH = 255;
+    public static int PDS_AGE_GROUP_STRUCTURE_STRING_MAX_LENGTH = 40;
+    public static int PDS_DESCRIPTION_LENGTH = 255;
 
     /**
      * 
@@ -443,6 +449,11 @@ public class Globals {
     public static int ADDITIONAL_DIGITS_FOR_TUMOUR_ID = 2;
     public static int ADDITIONAL_DIGITS_FOR_SOURCE_ID = 2;
     public static int MAX_USERNAME_LENGHT = 16;
+
+    public static String FONT_LATIN = "Latin";
+    public static String FONT_ASIAN = "Asian";
+    public static String DICTIONARY_TYPE_SIMPLE = "Simple";
+    public static String DICTIONARY_TYPE_COMPOUND = "Compound";
     public static String VARIABLE_TYPE_DATE_NAME = "Date";
     public static String VARIABLE_TYPE_ALPHA_NAME = "Alpha";
     public static String VARIABLE_TYPE_NUMBER_NAME = "Number";
