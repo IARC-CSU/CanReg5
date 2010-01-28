@@ -626,7 +626,8 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
      * @return
      */
     public String getSortByVariable() {
-        return sortByChooserComboBox.getSelectedItem().toString();
+        DatabaseVariablesListElement dble = (DatabaseVariablesListElement) sortByChooserComboBox.getSelectedItem();
+        return dble.getDatabaseVariableName();
     }
 
     /**

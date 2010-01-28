@@ -14,7 +14,6 @@ import canreg.server.database.DictionaryEntry;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
@@ -436,8 +435,9 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
     @Action
     public void addAction() {
         String newFilterPart = "";
+        DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
         newFilterPart +=
-                variableComboBox.getSelectedItem().toString();
+                dbvle.getDatabaseVariableName();
         newFilterPart +=
                 " ";
         newFilterPart +=
