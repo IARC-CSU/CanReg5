@@ -9,14 +9,16 @@ import java.io.Serializable;
 public class DatabaseDictionaryListElement implements Serializable, DatabaseElement {
 
     private int dictionaryID;
-    private String name;
-    private String font;
-    private String type;
+    private String name = null;
+    private String font = null;
+    private String type = null;
     private int codeLength;
     private int categoryDescriptionLength;
     private int fullDictionaryCodeLength;
     private int fullDictionaryCategoryDescriptionLength;
     private boolean locked = false;
+    private boolean compound = false;
+    private String unknownCode = null;
 
     /**
      * 
@@ -172,5 +174,17 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
      */
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    public boolean isCompound() {
+        return ("Compound".equalsIgnoreCase(getType()));
+    }
+
+    public String getUnkownCode() {
+        return unknownCode;
+    }
+
+    public void setUnkownCode(String unknownCode) {
+        this.unknownCode = unknownCode;
     }
 }

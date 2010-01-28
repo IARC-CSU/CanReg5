@@ -17,22 +17,19 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     // Variable type
     private String variableType;
     // Dictionary
-    private String useDictionary;
-    // Dictionary ID
-    private int dictionaryID = -1;
-    // Dictionary Compund?
-    private boolean dictionaryCompound = false;
+    private DatabaseDictionaryListElement databaseDictionaryListElement;
     private String fullName;
     private String englishName;
     // private String groupName;
-    private String standardVariableName;
-    private int xPos;
-    private int yPos;
+    private String standardVariableName = null;
+    private int xPos = 0;
+    private int yPos = 0;
     private int variableLength;
     private String fillInStatus;
-    private int groupID;
     private Object unknownCode = null;
     private String variableFormula = null;
+    private String multiplePrimaryCopy = null;
+    private DatabaseGroupsListElement group;
 
     /**
      * 
@@ -127,8 +124,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
 
     @Override
     public String toString() {
-        return getShortName();
-
+        return getFullName();
     }
 
     /**
@@ -136,15 +132,11 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
      * @return
      */
     public int getDictionaryID() {
-        return dictionaryID;
-    }
-
-    /**
-     * 
-     * @param dictionaryID
-     */
-    public void setDictionaryID(int dictionaryID) {
-        this.dictionaryID = dictionaryID;
+        if (databaseDictionaryListElement == null) {
+            return -1;
+        } else {
+            return databaseDictionaryListElement.getDictionaryID();
+        }
     }
 
     /**
@@ -200,15 +192,11 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
      * @return
      */
     public String getUseDictionary() {
-        return useDictionary;
-    }
-
-    /**
-     * 
-     * @param useDictionary
-     */
-    public void setUseDictionary(String useDictionary) {
-        this.useDictionary = useDictionary;
+        if (databaseDictionaryListElement != null) {
+            return databaseDictionaryListElement.getName();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -248,15 +236,11 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
      * @return
      */
     public int getGroupID() {
-        return groupID;
-    }
-
-    /**
-     * 
-     * @param groupID
-     */
-    public void setGroupID(int groupID) {
-        this.groupID = groupID;
+        if (group != null) {
+            return group.getGroupIndex();
+        } else {
+            return -1;
+        }
     }
 
     /**
@@ -371,14 +355,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
      * @return the dictionaryCompound
      */
     public boolean isDictionaryCompound() {
-        return dictionaryCompound;
-    }
-
-    /**
-     * @param dictionaryCompound the dictionaryCompound to set
-     */
-    public void setDictionaryCompound(boolean dictionaryCompound) {
-        this.dictionaryCompound = dictionaryCompound;
+        return databaseDictionaryListElement.isCompound();
     }
 
     /**
@@ -409,6 +386,34 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
      */
     public void setMetaVariableFormula(String metaVariableFormula) {
         this.variableFormula = metaVariableFormula;
+    }
+
+    /**
+     * @return the multiplePrimaryCopy
+     */
+    public String getMultiplePrimaryCopy() {
+        return multiplePrimaryCopy;
+    }
+
+    /**
+     * @param multiplePrimaryCopy the multiplePrimaryCopy to set
+     */
+    public void setMultiplePrimaryCopy(String multiplePrimaryCopy) {
+        this.multiplePrimaryCopy = multiplePrimaryCopy;
+    }
+
+    public void setDictionary(DatabaseDictionaryListElement dictionary) {
+        this.databaseDictionaryListElement = dictionary;
+        this.variableLength = dictionary.getFullDictionaryCodeLength();
+        this.unknownCode = dictionary.getUnkownCode();
+    }
+
+    public DatabaseDictionaryListElement getDictionary() {
+        return databaseDictionaryListElement;
+    }
+
+    public void setGroup(DatabaseGroupsListElement group) {
+        this.group = group;
     }
 }
 
