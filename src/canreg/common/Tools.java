@@ -26,17 +26,7 @@ public class Tools {
      * @return
      */
     public static int findInArray(Object[] objects, Object object) {
-        int position = 0;
-        boolean found = false;
-        while (!found && position < objects.length) {
-            found = object.equals(objects[position++]);
-        }
-        if (!found) {
-            position = -1;
-        } else {
-            position -= 1;
-        }
-        return position;
+        return Arrays.asList(objects).indexOf(object);
     }
 
     /**
@@ -128,17 +118,28 @@ public class Tools {
         return Integer.parseInt(e.getElementsByTagName(namespace + "minimum_match").item(0).getTextContent());
     }
 
+    public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace) {
+        TreeMap<String, DatabaseDictionaryListElement> dictionaryMap = new TreeMap<String, DatabaseDictionaryListElement>();
+        for (DatabaseDictionaryListElement dictionary : getDictionaryListElements(doc, namespace)) {
+            dictionaryMap.put(dictionary.getName(), dictionary);
+        }
+        TreeMap<String, DatabaseGroupsListElement> groupsMap = new TreeMap<String, DatabaseGroupsListElement>();
+        for (DatabaseGroupsListElement group : getGroupsListElements(doc, namespace)) {
+            groupsMap.put(group.getGroupIndex() + "", group);
+        }
+        return getVariableListElements(doc, namespace, dictionaryMap, groupsMap);
+    }
+
     /**
      * 
      * @param doc
      * @param namespace
      * @return
      */
-    public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace) {
+    public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace, TreeMap<String, DatabaseDictionaryListElement> dictionaryMap, TreeMap<String, DatabaseGroupsListElement> groupsMap) {
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
         // DatabaseVariablesListElement[] variables = new DatabaseVariablesListElement[nl.getLength()];
         LinkedList<DatabaseVariablesListElement> variablesList = new LinkedList<DatabaseVariablesListElement>();
-
         // build a list of database variables
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
@@ -149,18 +150,15 @@ public class Tools {
                     e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent());
             if (e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent().equalsIgnoreCase("Dict")) {
                 String dictionaryName = e.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
-                int id = canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, dictionaryName);
-                variable.setDictionaryID(id);
-                boolean compound = canreg.client.dataentry.DictionaryHelper.isCompoundDictionarybyName(doc, dictionaryName);
-                variable.setDictionaryCompound(compound);
-                variable.setUseDictionary(dictionaryName);
+                DatabaseDictionaryListElement dictionary = dictionaryMap.get(dictionaryName);
+                variable.setDictionary(dictionary);
             }
 
             variable.setEnglishName(e.getElementsByTagName(namespace + "english_name").item(0).getTextContent());
 
             NodeList groupNameNodeList = e.getElementsByTagName(namespace + "group_id");
             if (groupNameNodeList != null && groupNameNodeList.getLength() > 0) {
-                variable.setGroupID(Integer.parseInt(groupNameNodeList.item(0).getTextContent()));
+                variable.setGroup(groupsMap.get(groupNameNodeList.item(0).getTextContent()));
             }
 
             variable.setFullName(e.getElementsByTagName(namespace + "full_name").item(0).getTextContent());
@@ -198,10 +196,14 @@ public class Tools {
             if (standardVariableNameNodeList != null && standardVariableNameNodeList.getLength() > 0) {
                 variable.setStandardVariableName(standardVariableNameNodeList.item(0).getTextContent());
             }
-
-            // TODO
-            // Accommodate unknown codes
-
+            NodeList mpcopyVariableNameNodeList = e.getElementsByTagName(namespace + "multiple_primary_copy");
+            if (mpcopyVariableNameNodeList != null && mpcopyVariableNameNodeList.getLength() > 0) {
+                variable.setMultiplePrimaryCopy(mpcopyVariableNameNodeList.item(0).getTextContent());
+            }
+            NodeList unknownValueVariableNameNodeList = e.getElementsByTagName(namespace + "unknown_code");
+            if (unknownValueVariableNameNodeList != null && unknownValueVariableNameNodeList.getLength() > 0) {
+                variable.setUnknownCode(unknownValueVariableNameNodeList.item(0).getTextContent());
+            }
 
             // Add variable to the list.
             variablesList.add(variable);
@@ -224,15 +226,15 @@ public class Tools {
     public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace, String tableName) {
         DatabaseVariablesListElement[] variablesInTable = getVariableListElements(doc, namespace);
         LinkedList<DatabaseVariablesListElement> tempVariablesInTable = new LinkedList<DatabaseVariablesListElement>();
-        for (int i = 0; i <
-                variablesInTable.length; i++) {
+        for (int i = 0; i
+                < variablesInTable.length; i++) {
             if (variablesInTable[i].getDatabaseTableName().equalsIgnoreCase(tableName)) {
                 tempVariablesInTable.add(variablesInTable[i]);
             }
         }
         variablesInTable = new DatabaseVariablesListElement[tempVariablesInTable.size()];
-        for (int i = 0; i <
-                variablesInTable.length; i++) {
+        for (int i = 0; i
+                < variablesInTable.length; i++) {
             variablesInTable[i] = tempVariablesInTable.get(i);
         }
         return variablesInTable;
@@ -327,7 +329,7 @@ public class Tools {
             dictionaries[i].setFullDictionaryCategoryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_description_length").item(0).getTextContent()));
             // lock part
             NodeList elem = e.getElementsByTagName(namespace + "locked");
-            if (elem!=null && elem.getLength()>0){
+            if (elem != null && elem.getLength() > 0) {
                 dictionaries[i].setLocked("true".equalsIgnoreCase(elem.item(0).getTextContent()));
             } else {
                 dictionaries[i].setLocked(false);
@@ -366,6 +368,7 @@ public class Tools {
                     position);
         }
         Arrays.sort(indexes, new Comparator() {
+
             public int compare(Object o1, Object o2) {
                 DatabaseGroupsListElement group1 = (DatabaseGroupsListElement) o1;
                 DatabaseGroupsListElement group2 = (DatabaseGroupsListElement) o2;
@@ -384,8 +387,8 @@ public class Tools {
     public static String[] getVariableNames(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
         String[] variableNames = new String[nl.getLength()];
-        for (int i = 0; i <
-                nl.getLength(); i++) {
+        for (int i = 0; i
+                < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
             variableNames[i] = e.getElementsByTagName(namespace + "short_name").item(0).getTextContent();
         }
@@ -618,5 +621,4 @@ public class Tools {
 
         return standardEncoding;
     }
-
 }
