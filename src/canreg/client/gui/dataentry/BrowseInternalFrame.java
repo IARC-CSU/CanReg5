@@ -412,7 +412,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             tableName = rangeFilterPanel.getSelectedTable();
             variablesToShow = variablesPanel.getVariablesToShow(tableName);
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
-            filter.setSortByVariable(rangeFilterPanel.getSortByVariable().trim());
+            filter.setSortByVariable(rangeFilterPanel.getSortByVariable());
             filter.setRange(rangeFilterPanel.getRange());
             sortByVariableName = rangeFilterPanel.getSortByVariable().toUpperCase();
             // setProgress(0, 0, 4);
