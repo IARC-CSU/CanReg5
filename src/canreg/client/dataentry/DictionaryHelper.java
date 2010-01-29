@@ -10,7 +10,6 @@ import canreg.common.Globals;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.DictionaryEntry;
 import java.rmi.RemoteException;
-// import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -190,7 +189,7 @@ public class DictionaryHelper {
         if (dictionary != null) {
             codeLength = dictionary.getCodeLength();
             fullCodeLength = dictionary.getFullDictionaryCodeLength();
-            if (!"Compound".equalsIgnoreCase(dictionary.getType())) {
+            if (!dictionary.isCompound()) {
                 codeLength = -1;
             }
         }
