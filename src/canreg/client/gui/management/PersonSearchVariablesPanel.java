@@ -31,7 +31,7 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
     /** Creates new form PersonSearchVariablesPanel */
     public PersonSearchVariablesPanel() {
         initComponents();
-
+        setEditable(false);
     }
 
     /**
@@ -51,6 +51,7 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
     private void setSearcher(DefaultPersonSearch searcher) {
         PersonSearchVariable[] searchVariables = searcher.getPersonSearchVariables();
         personSearchVariablePanelList = new LinkedList<PersonSearchVariablePanel>();
+        variablesListPanel.removeAll();
         for (PersonSearchVariable searchVariable : searchVariables) {
             PersonSearchVariablePanel psvp = new PersonSearchVariablePanel();
             addPersonSearchVariablePanel(psvp);
@@ -113,10 +114,12 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(PersonSearchVariablesPanel.class, this);
         addVariableButton.setAction(actionMap.get("addVariableAction")); // NOI18N
+        addVariableButton.setEnabled(false);
         addVariableButton.setName("addVariableButton"); // NOI18N
 
         jPanel1.setName("jPanel1"); // NOI18N
 
+        jScrollPane1.setBorder(null);
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
         variablesListPanel.setName("variablesListPanel"); // NOI18N
@@ -127,11 +130,11 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
         );
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PersonSearchVariablesPanel.class);
@@ -154,27 +157,24 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(118, Short.MAX_VALUE)
+                .addComponent(minumumMatchLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(minumumMatchLabel)
+                        .addComponent(defaultSettingsToggleButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(defaultSettingsToggleButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(addVariableButton))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(percentLabel)))))
+                        .addComponent(addVariableButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(percentLabel)))
                 .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -222,7 +222,7 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
         String command = e.getActionCommand();
         if ("remove".equalsIgnoreCase(command)) {
             variablesListPanel.remove((Component) e.getSource());
-            personSearchVariablePanelList.remove(e.getSource());
+            personSearchVariablePanelList.remove((PersonSearchVariablePanel) e.getSource());
             variablesListPanel.revalidate();
             variablesListPanel.repaint();
         }
@@ -230,20 +230,26 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
 
     @Action
     public void toggleDefaultSettingsAction() {
-        if (defaultSettingsToggleButton.isSelected()) {
-            jPanel1.setEnabled(false);
-            thresholdTextField.setEnabled(false);
-            setVariableListEnabled(false);
-        } else {
-            jPanel1.setEnabled(true);
-            thresholdTextField.setEnabled(true);
-            setVariableListEnabled(true);
-        }
+        setEditable(!defaultSettingsToggleButton.isSelected());
     }
 
     private void setVariableListEnabled(boolean b) {
-        for (PersonSearchVariablePanel panel : personSearchVariablePanelList) {
-            panel.setActive(b);
+        if (personSearchVariablePanelList != null) {
+            for (PersonSearchVariablePanel panel : personSearchVariablePanelList) {
+                panel.setActive(b);
+            }
         }
+    }
+
+    public void setDefaultButtonVisibility(boolean visible) {
+        defaultSettingsToggleButton.setVisible(visible);
+        setEditable(!visible);
+    }
+
+    private void setEditable(boolean editable) {
+        jPanel1.setEnabled(editable);
+        thresholdTextField.setEnabled(editable);
+        setVariableListEnabled(editable);
+        addVariableButton.setEnabled(editable);
     }
 }
