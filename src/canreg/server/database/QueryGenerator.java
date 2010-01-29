@@ -40,13 +40,13 @@ public class QueryGenerator {
         }
 
         // Common for all tables
-        String query = "create table " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase() +
-                // Add the system variables
+        String query = "create table " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase()
+                + // Add the system variables
                 // ID is just a variable for the database
-                " ( " + recordIDVariableName + " INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)" +
-                // NEXT_RECORD_DB_ID is a pointer to the ID of the next version of this record - used only by the database 
-                ", NEXT_RECORD_DB_ID INTEGER" +
-                // LAST_RECORD_DB_ID is a pointer to the ID of the last version of this record - used only by the database 
+                " ( " + recordIDVariableName + " INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)"
+                + // NEXT_RECORD_DB_ID is a pointer to the ID of the next version of this record - used only by the database
+                ", NEXT_RECORD_DB_ID INTEGER"
+                + // LAST_RECORD_DB_ID is a pointer to the ID of the last version of this record - used only by the database
                 ", LAST_RECORD_DB_ID INTEGER";
 
         // Get the variables node in the XML
@@ -89,20 +89,20 @@ public class QueryGenerator {
                 tableRecordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
             }
 
-            filterString += "APP." + tableName + "." + tableRecordIDVariableName +
-                    " IN ( SELECT " + tableRecordIDVariableName +
-                    " FROM APP." + tableName +
-                    " WHERE ";
+            filterString += "APP." + tableName + "." + tableRecordIDVariableName
+                    + " IN ( SELECT " + tableRecordIDVariableName
+                    + " FROM APP." + tableName
+                    + " WHERE ";
             if (filter.getRangeStart() != null && filter.getRangeStart().length() > 0) {
-                filterString += filter.getRangeDatabaseIndexedListElement().getMainVariable() +
-                        " >= " + filter.getRangeStart();
+                filterString += filter.getRangeDatabaseIndexedListElement().getMainVariable()
+                        + " >= " + filter.getRangeStart();
             }
             if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) && (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
                 filterString += " AND ";
             }
             if (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0) {
-                filterString += filter.getRangeDatabaseIndexedListElement().getMainVariable() +
-                        " <= " + filter.getRangeEnd();
+                filterString += filter.getRangeDatabaseIndexedListElement().getMainVariable()
+                        + " <= " + filter.getRangeEnd();
             }
             filterString += ")";
         }
@@ -112,21 +112,23 @@ public class QueryGenerator {
 
     static LinkedList<String> strCreateIndexTable(String tableName, Document doc) {
         LinkedList<String> queries = new LinkedList();
-        TreeMap<String, LinkedList<String>> indexMap = canreg.common.Tools.buildIndexMap(tableName, doc, namespace);
+        DatabaseIndexesListElement[] indexes = canreg.common.Tools.getIndexesListElements(doc, namespace);
         // Go through all the indexes definitions...
-        for (String indexName : indexMap.keySet()) {
-            String query = "create index \"" + indexName + "_idx\" on " + Globals.SCHEMA_NAME + "." + tableName + " (";
-            // Go through all database variables in the index...
-            LinkedList<String> indexedVariables = indexMap.get(indexName);
-            for (int j = 0; j < indexedVariables.size(); j++) {
-                if (j > 0) {
-                    query += ", ";
+        for (DatabaseIndexesListElement index : indexes) {
+            if (tableName.equalsIgnoreCase(index.getDatabaseTableName())) {
+                String query = "create index \"" + index.getIndexName() + "_idx\" on " + Globals.SCHEMA_NAME + "." + tableName + " (";
+                // Go through all database variables in the index...
+                LinkedList<String> indexedVariables = index.getVariableNamesInIndex();
+                for (int j = 0; j < indexedVariables.size(); j++) {
+                    if (j > 0) {
+                        query += ", ";
+                    }
+                    query += "\"" + indexedVariables.get(j) + "\"";
                 }
-                query += "\"" + indexedVariables.get(j) + "\"";
+                query += ") ";
+                debugOut(query);
+                queries.add(query);
             }
-            query += ") ";
-            debugOut(query);
-            queries.add(query);
         }
         return queries;
     }
@@ -137,17 +139,17 @@ public class QueryGenerator {
      * @return
      */
     public static final String strCreateTablesOfDictionaries(Document doc) {
-        String queryLine = "create table " + Globals.SCHEMA_NAME + ".DICTIONARIES" +
-                " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), " +
-                "DICTIONARYID INT, " +
-                "NAME VARCHAR(50), " +
-                "FONT VARCHAR(20), " +
-                "TYPE VARCHAR(20), " +
-                "CODELENGTH INT, " +
-                "CATEGORYDESCLENGTH INT, " +
-                "FULLDICTCODELENGTH INT, " +
-                "FULLDICTDESCLENGTH INT" +
-                ")";
+        String queryLine = "create table " + Globals.SCHEMA_NAME + ".DICTIONARIES"
+                + " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
+                + "DICTIONARYID INT, "
+                + "NAME VARCHAR(50), "
+                + "FONT VARCHAR(20), "
+                + "TYPE VARCHAR(20), "
+                + "CODELENGTH INT, "
+                + "CATEGORYDESCLENGTH INT, "
+                + "FULLDICTCODELENGTH INT, "
+                + "FULLDICTDESCLENGTH INT"
+                + ")";
         return queryLine;
     }
 
@@ -157,11 +159,11 @@ public class QueryGenerator {
      * @return
      */
     public static final String strCreateDictionaryTable(Document doc) {
-        String queryLine = "create table " + Globals.SCHEMA_NAME + ".DICTIONARY" +
-                " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), " +
-                "DICTIONARY INT, " +
-                "CODE VARCHAR(" + Globals.DICTIONARY_MAX_CODE_LENGTH +"), " +
-                "DESCRIPTION VARCHAR(" + Globals.DICTIONARY_DESCRIPTION_LENGTH +") " + // How long should we allow the labels to be?
+        String queryLine = "create table " + Globals.SCHEMA_NAME + ".DICTIONARY"
+                + " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
+                + "DICTIONARY INT, "
+                + "CODE VARCHAR(" + Globals.DICTIONARY_MAX_CODE_LENGTH + "), "
+                + "DESCRIPTION VARCHAR(" + Globals.DICTIONARY_DESCRIPTION_LENGTH + ") " + // How long should we allow the labels to be?
                 ")";
         return queryLine;
     }
@@ -171,10 +173,10 @@ public class QueryGenerator {
      * @return
      */
     public static final String strSaveDictionary() {
-        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".DICTIONARIES " +
-                "   (DICTIONARYID, NAME, FONT, TYPE, CODELENGTH, CATEGORYDESCLENGTH, " +
-                "    FULLDICTCODELENGTH, FULLDICTDESCLENGTH) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".DICTIONARIES "
+                + "   (DICTIONARYID, NAME, FONT, TYPE, CODELENGTH, CATEGORYDESCLENGTH, "
+                + "    FULLDICTCODELENGTH, FULLDICTDESCLENGTH) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         return queryLine;
     }
 
@@ -183,9 +185,9 @@ public class QueryGenerator {
      * @return
      */
     public static final String strSaveDictionaryEntry() {
-        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".DICTIONARY " +
-                "   (DICTIONARY, CODE, DESCRIPTION) " +
-                "VALUES (?, ?, ?)";
+        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".DICTIONARY "
+                + "   (DICTIONARY, CODE, DESCRIPTION) "
+                + "VALUES (?, ?, ?)";
         return queryLine;
     }
 
@@ -194,9 +196,9 @@ public class QueryGenerator {
      * @return
      */
     public static final String strSaveUser() {
-        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".USERS " +
-                "   (USERNAME, PASSWORD, USER_LEVEL, EMAIL, REAL_NAME) " +
-                "VALUES (?, ?, ?, ?, ?)";
+        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".USERS "
+                + "   (USERNAME, PASSWORD, USER_LEVEL, EMAIL, REAL_NAME) "
+                + "VALUES (?, ?, ?, ?, ?)";
         return queryLine;
     }
 
@@ -205,9 +207,9 @@ public class QueryGenerator {
      * @return
      */
     public static final String strEditUser() {
-        String queryLine = "UPDATE " + Globals.SCHEMA_NAME + ".USERS " +
-                "   SET USERNAME = ?, PASSWORD = ?, USER_LEVEL = ?, EMAIL = ?, REAL_NAME = ? " +
-                "WHERE ID = ?";
+        String queryLine = "UPDATE " + Globals.SCHEMA_NAME + ".USERS "
+                + "   SET USERNAME = ?, PASSWORD = ?, USER_LEVEL = ?, EMAIL = ?, REAL_NAME = ? "
+                + "WHERE ID = ?";
         return queryLine;
     }
 
@@ -216,10 +218,10 @@ public class QueryGenerator {
      * @return
      */
     public static final String strSavePopoulationDataset() {
-        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".PDSETS " +
-                "   (PDS_ID, PDS_NAME, FILTER, DATE, SOURCE,AGE_GROUP_STRUCTURE, " +
-                "DESCRIPTION, WORLD_POPULATION_ID, WORLD_POPULATION_BOOL) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".PDSETS "
+                + "   (PDS_ID, PDS_NAME, FILTER, DATE, SOURCE,AGE_GROUP_STRUCTURE, "
+                + "DESCRIPTION, WORLD_POPULATION_ID, WORLD_POPULATION_BOOL) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return queryLine;
     }
 
@@ -228,9 +230,9 @@ public class QueryGenerator {
      * @return
      */
     public static final String strSavePopoulationDatasetsEntry() {
-        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".PDSET " +
-                "   (PDS_ID, AGE_GROUP, SEX, COUNT) " +
-                "VALUES (?, ?, ?, ?)";
+        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".PDSET "
+                + "   (PDS_ID, AGE_GROUP, SEX, COUNT) "
+                + "VALUES (?, ?, ?, ?)";
         return queryLine;
     }
 
@@ -239,18 +241,18 @@ public class QueryGenerator {
      * @return
      */
     public static final String strCreatePopulationDatasetTable() {
-        String queryLine = "create table " + Globals.SCHEMA_NAME + ".PDSETS (" +
-                "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
-                "PDS_ID INT not null unique," +
-                "PDS_NAME VARCHAR(" + Globals.PDS_DATABASE_NAME_LENGTH + ")," +
-                "FILTER VARCHAR(" + Globals.PDS_FILTER_LENGTH + ")," +
-                "DATE VARCHAR(" + Globals.DATE_FORMAT_STRING.length() + ")," +
-                "SOURCE VARCHAR(" + Globals.PDS_SOURCE_LENGTH + ")," +
-                "AGE_GROUP_STRUCTURE VARCHAR(" + Globals.PDS_AGE_GROUP_STRUCTURE_STRING_MAX_LENGTH + "), " +
-                "DESCRIPTION VARCHAR(" + Globals.PDS_DESCRIPTION_LENGTH + "), " +
-                "WORLD_POPULATION_ID INT, " +
-                "WORLD_POPULATION_BOOL INT" +
-                " )";
+        String queryLine = "create table " + Globals.SCHEMA_NAME + ".PDSETS ("
+                + "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+                + "PDS_ID INT not null unique,"
+                + "PDS_NAME VARCHAR(" + Globals.PDS_DATABASE_NAME_LENGTH + "),"
+                + "FILTER VARCHAR(" + Globals.PDS_FILTER_LENGTH + "),"
+                + "DATE VARCHAR(" + Globals.DATE_FORMAT_STRING.length() + "),"
+                + "SOURCE VARCHAR(" + Globals.PDS_SOURCE_LENGTH + "),"
+                + "AGE_GROUP_STRUCTURE VARCHAR(" + Globals.PDS_AGE_GROUP_STRUCTURE_STRING_MAX_LENGTH + "), "
+                + "DESCRIPTION VARCHAR(" + Globals.PDS_DESCRIPTION_LENGTH + "), "
+                + "WORLD_POPULATION_ID INT, "
+                + "WORLD_POPULATION_BOOL INT"
+                + " )";
         return queryLine;
     }
 
@@ -259,13 +261,13 @@ public class QueryGenerator {
      * @return
      */
     public static final String strCreatePopulationDatasetsTable() {
-        String queryLine = "create table " + Globals.SCHEMA_NAME + ".PDSET (" +
-                "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
-                "PDS_ID INT not null," +
-                "AGE_GROUP INT," +
-                "SEX INT, " +
-                "COUNT INT" +
-                " )";
+        String queryLine = "create table " + Globals.SCHEMA_NAME + ".PDSET ("
+                + "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+                + "PDS_ID INT not null,"
+                + "AGE_GROUP INT,"
+                + "SEX INT, "
+                + "COUNT INT"
+                + " )";
         return queryLine;
     }
 
@@ -274,14 +276,14 @@ public class QueryGenerator {
      * @return
      */
     public static final String strCreateUsersTable() {
-        String queryLine = "create table " + Globals.SCHEMA_NAME + ".USERS (" +
-                "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
-                "USERNAME VARCHAR(255)," +
-                "PASSWORD VARCHAR(255)," +
-                "USER_LEVEL INT," +
-                "EMAIL VARCHAR(255)," +
-                "REAL_NAME VARCHAR(255)" +
-                " )";
+        String queryLine = "create table " + Globals.SCHEMA_NAME + ".USERS ("
+                + "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+                + "USERNAME VARCHAR(255),"
+                + "PASSWORD VARCHAR(255),"
+                + "USER_LEVEL INT,"
+                + "EMAIL VARCHAR(255),"
+                + "REAL_NAME VARCHAR(255)"
+                + " )";
         return queryLine;
     }
 
@@ -290,20 +292,20 @@ public class QueryGenerator {
      * @return
      */
     public static final String strCreateSystemPropertiesTable() {
-        String queryLine = "create table " + Globals.SCHEMA_NAME + ".SYSTEM (" +
-                "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
-                "LOOKUP VARCHAR(255) NOT NULL UNIQUE," +
-                "VALUE VARCHAR(255)" +
-                ")";
+        String queryLine = "create table " + Globals.SCHEMA_NAME + ".SYSTEM ("
+                + "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+                + "LOOKUP VARCHAR(255) NOT NULL UNIQUE,"
+                + "VALUE VARCHAR(255)"
+                + ")";
         return queryLine;
     }
 
     static String strCreateNameSexTable() {
-        String queryLine = "create table " + Globals.SCHEMA_NAME + ".NAMESEX (" +
-                "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
-                "NAME VARCHAR(255) NOT NULL UNIQUE," +
-                "SEX INT" +
-                ")";
+        String queryLine = "create table " + Globals.SCHEMA_NAME + ".NAMESEX ("
+                + "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+                + "NAME VARCHAR(255) NOT NULL UNIQUE,"
+                + "SEX INT"
+                + ")";
         return queryLine;
     }
 
@@ -312,9 +314,9 @@ public class QueryGenerator {
      * @return
      */
     public static final String strSaveNameSexEntry() {
-        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".NAMESEX " +
-                "   (NAME, SEX) " +
-                "VALUES (?, ?)";
+        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".NAMESEX "
+                + "   (NAME, SEX) "
+                + "VALUES (?, ?)";
         return queryLine;
     }
 
@@ -358,37 +360,37 @@ public class QueryGenerator {
         // set variables unique
         LinkedList<String> commands = new LinkedList<String>();
         // create foreign key
-        commands.add("ALTER TABLE APP.TUMOUR ADD FOREIGN KEY (" + tumourDatabaseVariableNames.toUpperCase() + ") " +
-                "REFERENCES APP.PATIENT (" + patientDatabaseVariableNames.toUpperCase() + ") ");
+        commands.add("ALTER TABLE APP.TUMOUR ADD FOREIGN KEY (" + tumourDatabaseVariableNames.toUpperCase() + ") "
+                + "REFERENCES APP.PATIENT (" + patientDatabaseVariableNames.toUpperCase() + ") ");
         return commands.toArray(new String[0]);
     }
 
     static String strGetPatientsAndTumours(GlobalToolBox globalToolBox) {
         String patientRecordIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
         String patientRecordIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
-        return "SELECT * FROM APP.TUMOUR, APP.PATIENT " +
-                "WHERE APP.TUMOUR." + patientRecordIDVariableNameTumourTable + "= APP.PATIENT." + patientRecordIDVariableNamePatientTable;
+        return "SELECT * FROM APP.TUMOUR, APP.PATIENT "
+                + "WHERE APP.TUMOUR." + patientRecordIDVariableNameTumourTable + "= APP.PATIENT." + patientRecordIDVariableNamePatientTable;
     }
 
     static String strCountPatientsAndTumours(GlobalToolBox globalToolBox) {
         String patientRecordIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
         String patientRecordIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
-        return "SELECT COUNT(*) FROM APP.TUMOUR, APP.PATIENT " +
-                "WHERE APP.TUMOUR." + patientRecordIDVariableNameTumourTable + "= APP.PATIENT." + patientRecordIDVariableNamePatientTable;
-     }
+        return "SELECT COUNT(*) FROM APP.TUMOUR, APP.PATIENT "
+                + "WHERE APP.TUMOUR." + patientRecordIDVariableNameTumourTable + "= APP.PATIENT." + patientRecordIDVariableNamePatientTable;
+    }
 
     static String strGetSourcesAndTumours(GlobalToolBox globalToolBox) {
         String tumourIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
         String tumourIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
-        return "SELECT * FROM APP.SOURCE, APP.TUMOUR " +
-                "WHERE APP.TUMOUR." + tumourIDVariableNameTumourTable + "= APP.SOURCE." + tumourIDVariableNameSourceTable;
+        return "SELECT * FROM APP.SOURCE, APP.TUMOUR "
+                + "WHERE APP.TUMOUR." + tumourIDVariableNameTumourTable + "= APP.SOURCE." + tumourIDVariableNameSourceTable;
     }
 
     static String strCountSourcesAndTumours(GlobalToolBox globalToolBox) {
         String tumourIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
         String tumourIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
-         return "SELECT COUNT(*) FROM APP.SOURCE, APP.TUMOUR " +
-                "WHERE APP.TUMOUR." + tumourIDVariableNameTumourTable + "= APP.SOURCE." + tumourIDVariableNameSourceTable;
+        return "SELECT COUNT(*) FROM APP.SOURCE, APP.TUMOUR "
+                + "WHERE APP.TUMOUR." + tumourIDVariableNameTumourTable + "= APP.SOURCE." + tumourIDVariableNameSourceTable;
     }
 
     private static final String strSaveRecord(Document doc, String tableName) {
@@ -529,9 +531,9 @@ public class QueryGenerator {
         //Get the variable type
         String variableType = element.getElementsByTagName("ns3:variable_type").item(0).getTextContent();
 
-        if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) ||
-                variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) ||
-                variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
+        if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME)
+                || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME)
+                || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
             queryLine += " VARCHAR(";
             queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent() + ") ";
         } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
