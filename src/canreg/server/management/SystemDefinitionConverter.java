@@ -1,6 +1,8 @@
 package canreg.server.management;
 
 import canreg.common.DatabaseDictionaryListElement;
+import canreg.common.DatabaseIndexesListElement;
+import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.common.Tools;
 import java.nio.charset.CharacterCodingException;
@@ -25,6 +27,7 @@ import java.util.LinkedList;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import oracle.toplink.essentials.sessions.DatabaseLogin;
 
 /**
  *
@@ -233,6 +236,8 @@ public class SystemDefinitionConverter {
         variableToTableMap = new TreeMap<String, String>();
         standardVariableToIndexMap = new TreeMap<String, Integer>();
         DatabaseDictionaryListElement[] dictionaryListElements;
+        TreeMap<String, DatabaseVariablesListElement> variablesMap = new TreeMap<String, DatabaseVariablesListElement>();
+        TreeMap<String, DatabaseIndexesListElement> indexMap = new TreeMap<String, DatabaseIndexesListElement>();
 
         try {
 
@@ -429,24 +434,24 @@ public class SystemDefinitionConverter {
                     String tableName = Globals.TUMOUR_TABLE_NAME;
 
                     if (groupName.equalsIgnoreCase("Patient")) {
-                        if ((englishName.equalsIgnoreCase("age")) ||
-                                (englishName.toLowerCase().startsWith("addr")) ||
-                                (englishName.toLowerCase().startsWith("occu"))) {
+                        if ((englishName.equalsIgnoreCase("age"))
+                                || (englishName.toLowerCase().startsWith("addr"))
+                                || (englishName.toLowerCase().startsWith("occu"))) {
                             tableName = Globals.TUMOUR_TABLE_NAME;
                         } else {
                             tableName = Globals.PATIENT_TABLE_NAME;
                         }
-                    } else if (groupName.toLowerCase().startsWith("follow") ||
-                            groupName.toLowerCase().startsWith("suiv")) {
+                    } else if (groupName.toLowerCase().startsWith("follow")
+                            || groupName.toLowerCase().startsWith("suiv")) {
                         tableName = Globals.PATIENT_TABLE_NAME;
-                    } else if (groupName.toLowerCase().startsWith("source") ||
-                            groupName.toLowerCase().startsWith("hosp")) {
+                    } else if (groupName.toLowerCase().startsWith("source")
+                            || groupName.toLowerCase().startsWith("hosp")) {
                         tableName = Globals.SOURCE_TABLE_NAME;
                     } else if (groupName.toLowerCase().startsWith("new control panel")) {
-                        if ((englishName.equalsIgnoreCase("Reg.No.")) ||
-                                (englishName.toLowerCase().startsWith("addr")) ||
-                                (englishName.toLowerCase().startsWith("per")) ||
-                                (englishName.toLowerCase().startsWith("occu"))) {
+                        if ((englishName.equalsIgnoreCase("Reg.No."))
+                                || (englishName.toLowerCase().startsWith("addr"))
+                                || (englishName.toLowerCase().startsWith("per"))
+                                || (englishName.toLowerCase().startsWith("occu"))) {
                             tableName = Globals.PATIENT_TABLE_NAME;
                         } else {
                             tableName = Globals.TUMOUR_TABLE_NAME;
@@ -455,28 +460,29 @@ public class SystemDefinitionConverter {
                     element.appendChild(createElement(namespace + "table", tableName));
                     variableToTableMap.put(nameInDatabase, tableName);
                 }
-
+                variablesMap = Tools.buildVariablesMap(Tools.getVariableListElements(doc, namespace));
                 // Read the indexes part
                 // We build the doc for this later.
                 int numberOfIndexes = readNumber(2);
                 debugOut("Number of Indexes: " + numberOfIndexes);
 
-                TreeMap<String, LinkedList<String>> indexMap = new TreeMap<String, LinkedList<String>>();
                 // first scan
                 for (int i = 0; i < numberOfIndexes; i++) {
 
                     String indexName = readText();
-                    LinkedList variables = new LinkedList<String>();
+                    LinkedList<DatabaseVariablesListElement> variables = new LinkedList<DatabaseVariablesListElement>();
 
                     for (int j = 0; j < 3; j++) {
                         int variableIndex = readNumber(2);
                         if (variableIndex >= 0) {
                             Element variableElement = (Element) doc.getElementsByTagName(namespace + "variable").item(variableIndex);
                             String variableName = variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent();
-                            variables.add(variableName);
+                            variables.add(variablesMap.get(variableName.toUpperCase()));
                         }
                     }
-                    indexMap.put(indexName, variables);
+                    DatabaseIndexesListElement index = new DatabaseIndexesListElement(indexName);
+                    index.setVariablesInIndex(variables.toArray(new DatabaseVariablesListElement[0]));
+                    indexMap.put(indexName, index);
                 }
 
                 // Create the Person Search part
@@ -646,19 +652,25 @@ public class SystemDefinitionConverter {
                 root.appendChild(indexParentElement);
 
                 // Index some important new variables to speed things up
-                LinkedList<String> tempIndexList;
+                LinkedList<DatabaseVariablesListElement> tempIndexList;
 
                 // Patient ID in tumour table index
-                tempIndexList = new LinkedList<String>();
-                tempIndexList.add(Globals.StandardVariableNames.PatientIDTumourTable.toString());
-                tempIndexList.add(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString());
-                indexMap.put(Globals.StandardVariableNames.PatientIDTumourTable.toString(), tempIndexList);
+                tempIndexList = new LinkedList<DatabaseVariablesListElement>();
+                tempIndexList.add(variablesMap.get(Globals.StandardVariableNames.PatientIDTumourTable.toString().toUpperCase()));
+                tempIndexList.add(variablesMap.get(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString().toUpperCase()));
+                DatabaseIndexesListElement patientIDindex = new DatabaseIndexesListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString());
+                patientIDindex.setDatabaseTableName(Globals.TUMOUR_TABLE_NAME);
+                patientIDindex.setVariablesInIndex(tempIndexList.toArray(new DatabaseVariablesListElement[0]));
+                indexMap.put(patientIDindex.getIndexName(), patientIDindex);
 
                 // Tumour ID in tumour table index
-                tempIndexList = new LinkedList<String>();
-                tempIndexList.add(Globals.StandardVariableNames.TumourID.toString());
-                // tempIndexList.add(Globals.StandardVariableNames.TumourRecordID.toString());
-                indexMap.put(Globals.StandardVariableNames.TumourID.toString(), tempIndexList);
+                tempIndexList = new LinkedList<DatabaseVariablesListElement>();
+                tempIndexList.add(variablesMap.get(Globals.StandardVariableNames.TumourRecordID.toString().toUpperCase()));
+                tempIndexList.add(variablesMap.get(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString().toUpperCase()));
+                DatabaseIndexesListElement tumourIDindex = new DatabaseIndexesListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString());
+                tumourIDindex.setDatabaseTableName(Globals.TUMOUR_TABLE_NAME);
+                tumourIDindex.setVariablesInIndex(tempIndexList.toArray(new DatabaseVariablesListElement[0]));
+                indexMap.put(tumourIDindex.getIndexName(), tumourIDindex);
 
                 // Split the indexes that needs to be split
                 indexMap = splitIndexMapInTumourAndPatient(indexMap, variableToTableMap);
@@ -673,7 +685,7 @@ public class SystemDefinitionConverter {
                     Element childElement = createElement(namespace + "name", indexName);
                     element.appendChild(childElement);
 
-                    LinkedList<String> variablesInThisIndex = indexMap.get(indexName);
+                    LinkedList<String> variablesInThisIndex = indexMap.get(indexName).getVariableNamesInIndex();
 
                     String tableOfThisIndex = variableToTableMap.get(variablesInThisIndex.getFirst());
                     childElement = createElement(namespace + "table", tableOfThisIndex);
@@ -783,16 +795,17 @@ public class SystemDefinitionConverter {
      * @param variableToTableMap A map between the variable names and the respective tables.
      * @return An indexMap built to suit the two table scheme
      */
-    public static TreeMap<String, LinkedList<String>> splitIndexMapInTumourAndPatient(TreeMap<String, LinkedList<String>> indexMap, TreeMap<String, String> variableToTableMap) {
-        TreeMap<String, LinkedList<String>> newIndexMap = new TreeMap<String, LinkedList<String>>();
+    public static TreeMap<String, DatabaseIndexesListElement> splitIndexMapInTumourAndPatient(TreeMap<String, DatabaseIndexesListElement> indexMap, TreeMap<String, String> variableToTableMap) {
+        TreeMap<String, DatabaseIndexesListElement> newIndexMap = new TreeMap<String, DatabaseIndexesListElement>();
         Set<String> indexesNames = indexMap.keySet();
         for (String indexName : indexesNames) {
+            DatabaseIndexesListElement index = indexMap.get(indexName);
             String tableName = null;
-            LinkedList<String> variablesInThisTable = new LinkedList<String>();
-            LinkedList<String> variablesInOtherTable = new LinkedList<String>();
+            LinkedList<DatabaseVariablesListElement> variablesInThisTable = new LinkedList<DatabaseVariablesListElement>();
+            LinkedList<DatabaseVariablesListElement> variablesInOtherTable = new LinkedList<DatabaseVariablesListElement>();
             String otherTableName = null;
-            for (String indexedVariable : indexMap.get(indexName)) {
-                String tableOfThisVariable = variableToTableMap.get(indexedVariable);
+            for (DatabaseVariablesListElement indexedVariable : index.getVariableListElementsInIndex()) {
+                String tableOfThisVariable = indexedVariable.getDatabaseTableName();
                 if (tableName == null) {
                     tableName = tableOfThisVariable;
                     variablesInThisTable.add(indexedVariable);
@@ -804,15 +817,25 @@ public class SystemDefinitionConverter {
                 }
             }
             if (indexName.endsWith(tableName)) {
-                newIndexMap.put(indexName, variablesInThisTable);
+                index.setVariablesInIndex(variablesInThisTable.toArray(new DatabaseVariablesListElement[0]));
             } else {
-                newIndexMap.put(indexName + "-" + tableName, variablesInThisTable);
+                indexMap.remove(indexName);
+                index.setIndexName(indexName + "-" + tableName);
+                indexMap.put(index.getIndexName(), index);
+                index.setVariablesInIndex(variablesInThisTable.toArray(new DatabaseVariablesListElement[0]));
             }
             if (variablesInOtherTable.size() > 0) {
+                DatabaseIndexesListElement otherIndex;
                 if (indexName.endsWith(otherTableName)) {
-                    newIndexMap.put(indexName, variablesInOtherTable);
+                    otherIndex = new DatabaseIndexesListElement(indexName);
+                    otherIndex.setDatabaseTableName(otherTableName);
+                    otherIndex.setVariablesInIndex(variablesInOtherTable.toArray(new DatabaseVariablesListElement[0]));
+                    indexMap.put(otherIndex.getIndexName(), otherIndex);
                 } else {
-                    newIndexMap.put(indexName + "-" + otherTableName, variablesInOtherTable);
+                    otherIndex = new DatabaseIndexesListElement(indexName + "-" + otherTableName);
+                    otherIndex.setDatabaseTableName(otherTableName);
+                    otherIndex.setVariablesInIndex(variablesInOtherTable.toArray(new DatabaseVariablesListElement[0]));
+                    indexMap.put(otherIndex.getIndexName(), otherIndex);
                 }
             }
         }
