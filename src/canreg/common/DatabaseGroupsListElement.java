@@ -1,10 +1,12 @@
 package canreg.common;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ervikm
  */
-public class DatabaseGroupsListElement implements DatabaseElement {
+public class DatabaseGroupsListElement implements Serializable, DatabaseElement {
     private String groupName;
     private int groupIndex;
     private int groupPosition;

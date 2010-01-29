@@ -11,8 +11,9 @@ public class DatabaseIndexesListElement  implements Serializable, DatabaseElemen
 
     private String indexName;
     private String databaseTableName;
-    private LinkedList<String> variablesInIndex;
+    private LinkedList<String> variableNamesInIndex;
     private String mainVariable = null;
+    private DatabaseVariablesListElement[] variableListElementsInIndex;
 
     public DatabaseIndexesListElement(String indexName) {
         this.indexName = indexName;
@@ -61,8 +62,8 @@ public class DatabaseIndexesListElement  implements Serializable, DatabaseElemen
      * @return the mainVariable
      */
     public String getMainVariable() {
-        if (getVariablesInIndex() != null) {
-            return getVariablesInIndex().getFirst();
+        if (getVariableNamesInIndex() != null) {
+            return getVariableNamesInIndex().getFirst();
         } else {
             return mainVariable;
         }
@@ -71,14 +72,20 @@ public class DatabaseIndexesListElement  implements Serializable, DatabaseElemen
     /**
      * @return the variablesInIndex
      */
-    public LinkedList<String> getVariablesInIndex() {
-        return variablesInIndex;
+    public LinkedList<String> getVariableNamesInIndex() {
+        return variableNamesInIndex;
     }
 
-    /**
-     * @param variablesInIndex the variablesInIndex to set
-     */
-    public void setVariablesInIndex(LinkedList<String> variablesInIndex) {
-        this.variablesInIndex = variablesInIndex;
+
+    public void setVariablesInIndex(DatabaseVariablesListElement[] variableListElementsInIndex) {
+        variableNamesInIndex = new LinkedList<String>();
+        for (DatabaseVariablesListElement dvle:variableListElementsInIndex){
+            variableNamesInIndex.add(dvle.getDatabaseVariableName());
+        }
+        this.variableListElementsInIndex = variableListElementsInIndex;
+    }
+
+    public DatabaseVariablesListElement[] getVariableListElementsInIndex(){
+        return variableListElementsInIndex;
     }
 }
