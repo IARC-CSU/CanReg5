@@ -1,5 +1,145 @@
-changeset:   327:57a073071882
+changeset:   355:20f720dc254e
 tag:         tip
+user:        ervikm@X60112
+date:        Fri Jan 29 15:57:26 2010 +0100
+summary:     SystemDescription: Changes to accomodate the changes in DatabaseListElements, added setters to change the database's doc.
+
+changeset:   354:e5ed228f792b
+user:        ervikm@X60112
+date:        Fri Jan 29 15:56:51 2010 +0100
+summary:     SystemDefinitionConverter: Changes to accomodate the changes in DatabaseListElements.
+
+changeset:   353:7953e1aebd60
+user:        ervikm@X60112
+date:        Fri Jan 29 15:56:25 2010 +0100
+summary:     QueryGenerator: Changes to accomodate the changes in DatabaseListElements.
+
+changeset:   352:d775fa2f0a00
+user:        ervikm@X60112
+date:        Fri Jan 29 15:55:17 2010 +0100
+summary:     TranslatableListElement: Added equals().
+
+changeset:   351:d711cf2b7cb3
+user:        ervikm@X60112
+date:        Fri Jan 29 15:54:23 2010 +0100
+summary:     Tools: Changes to accomodate the changes in DatabaseListElements.
+
+changeset:   350:40d16b799fa8
+user:        ervikm@X60112
+date:        Fri Jan 29 15:53:15 2010 +0100
+summary:     DatabaseGroupsListElement and DatabaseIndexListElement is now Serializable. Index-elements now store references to the actual DatabaseVariableListElements that it consists of.
+
+changeset:   349:0aaaaf1be322
+user:        ervikm@X60112
+date:        Fri Jan 29 15:51:12 2010 +0100
+summary:     PersonSearchVariablesPanel: Modified to accommodate the use in database structure editor.
+
+changeset:   348:b09f3710022b
+user:        ervikm@X60112
+date:        Fri Jan 29 15:49:54 2010 +0100
+summary:     Editors and panels to modify and set up a new CanReg system.
+
+changeset:   347:713a270f4d6a
+user:        ervikm@X60112
+date:        Fri Jan 29 15:48:34 2010 +0100
+summary:     Dictionaryhelper queries the dictionaries better.
+
+changeset:   346:cd20f0028baa
+user:        ervikm@X60112
+date:        Thu Jan 28 10:14:45 2010 +0100
+summary:     New structures of DatabaseListElements
+
+changeset:   345:4b185e064431
+user:        ervikm@X60112
+date:        Thu Jan 28 10:14:04 2010 +0100
+summary:     Tools: Updated to reflect new structures of DatabaseListElements
+
+changeset:   344:d6052c11bf3d
+user:        ervikm@X60112
+date:        Thu Jan 28 10:13:02 2010 +0100
+summary:     Globals: Default system XML for system definition editor added.
+
+changeset:   343:25cb9c6cc66e
+user:        ervikm@X60112
+date:        Thu Jan 28 10:12:06 2010 +0100
+summary:     Browser: improved the display of variablenames.
+
+changeset:   342:09dfbf70971f
+user:        ervikm@X60112
+date:        Thu Jan 28 10:04:05 2010 +0100
+summary:     FastFilter, RangeFilter: improved the display of variablenames.
+
+changeset:   341:2914128bfbe3
+user:        ervikm@X60112
+date:        Tue Jan 26 15:20:48 2010 +0100
+summary:     QueryGenerator, Globals: Made dictionary code and description sizes defined globally etc.
+
+changeset:   340:781f944a0a72
+user:        ervikm@X60112
+date:        Tue Jan 26 11:50:57 2010 +0100
+summary:     QueryGenerator: Made dictionary code and description sizes defined globally.
+
+changeset:   339:0864460e9e9e
+user:        ervikm@X60112
+date:        Fri Jan 22 17:56:51 2010 +0100
+summary:     DatabaseStructure editor started. Import improved.
+
+changeset:   338:3251db5bd60e
+user:        ervikm@X60112
+date:        Thu Jan 21 10:24:32 2010 +0100
+summary:     TranslateListElement: A simple way to translate list elements
+
+changeset:   337:27e0bd843329
+user:        ervikm@X60112
+date:        Fri Jan 15 18:01:30 2010 +0100
+summary:     Import from multiple files now implemented.
+
+changeset:   336:f1994943acdf
+user:        ervikm@X60112
+date:        Wed Jan 13 17:51:53 2010 +0100
+summary:     Tooltip texts updated.
+
+changeset:   335:9fa64a3ebd55
+user:        ervikm@X60112
+date:        Wed Jan 06 15:51:56 2010 +0100
+summary:     Browser: Fixed a bug where you could not open records by double clicking on them if looking at source or source+tumour tables.
+
+changeset:   334:2fe44a88924d
+user:        ervikm@X60112
+date:        Fri Dec 04 13:56:00 2009 +0100
+summary:     Various changes. Ready for Egypt.
+
+changeset:   333:1058fb7deee9
+user:        ervikm@X60112
+date:        Tue Dec 01 17:51:01 2009 +0100
+summary:     VariablesChooserPanel now only displays the variables from valid table(s).
+
+changeset:   332:8bbaab58d3df
+user:        ervikm@X60112
+date:        Tue Dec 01 17:50:13 2009 +0100
+summary:     RangeFilterPanel now handles source tables and empty index lists better, fires table changed events.
+
+changeset:   331:a70715c912d5
+user:        ervikm@X60112
+date:        Tue Dec 01 17:33:28 2009 +0100
+summary:     Implemented a DatabaseStats system.
+
+changeset:   330:bebd75a22a37
+user:        ervikm@X60112
+date:        Fri Nov 27 12:26:18 2009 +0100
+summary:     InternalFrames/windows better positioned on various screen-sizes.
+
+changeset:   329:32c8b031ee9e
+user:        ervikm@X60112
+date:        Thu Nov 26 17:05:16 2009 +0100
+summary:     4.99.15 started
+
+changeset:   328:e5ac804c2885
+user:        ervikm@X60112
+date:        Wed Nov 25 11:52:06 2009 +0100
+summary:     4.99.14 RC2
+
+changeset:   327:57a073071882
 user:        ervikm@X60112
 date:        Wed Nov 25 11:44:17 2009 +0100
 summary:     Browser: improved layout.

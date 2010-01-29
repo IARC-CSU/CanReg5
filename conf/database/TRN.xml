@@ -4,7 +4,7 @@
     <ns3:registry_code>TRN</ns3:registry_code>
     <ns3:region_code>9</ns3:region_code>
     <ns3:registry_name>Training Cancer Registry</ns3:registry_name>
-    <ns3:working_language>E</ns3:working_language>
+    <ns3:working_language>en</ns3:working_language>
   </ns3:general>
   <ns3:dictionaries>
     <ns3:dictionary>
@@ -152,22 +152,27 @@
     <ns3:group>
       <ns3:group_id>0</ns3:group_id>
       <ns3:name>New Control Panel</ns3:name>
+      <ns3:group_pos>0</ns3:group_pos>
     </ns3:group>
     <ns3:group>
       <ns3:group_id>1</ns3:group_id>
       <ns3:name>Patient</ns3:name>
-    </ns3:group>
-    <ns3:group>
-      <ns3:group_id>3</ns3:group_id>
-      <ns3:name>Tumour</ns3:name>
+      <ns3:group_pos>100</ns3:group_pos>
     </ns3:group>
     <ns3:group>
       <ns3:group_id>2</ns3:group_id>
+      <ns3:name>Tumour</ns3:name>
+      <ns3:group_pos>200</ns3:group_pos>
+    </ns3:group>
+    <ns3:group>
+      <ns3:group_id>3</ns3:group_id>
       <ns3:name>Hospital</ns3:name>
+      <ns3:group_pos>300</ns3:group_pos>
     </ns3:group>
     <ns3:group>
       <ns3:group_id>4</ns3:group_id>
       <ns3:name>Follow up</ns3:name>
+      <ns3:group_pos>400</ns3:group_pos>
     </ns3:group>
   </ns3:groups>
   <ns3:variables>
@@ -177,16 +182,14 @@
       <ns3:short_name>RegNo</ns3:short_name>
       <ns3:english_name>Reg.No.</ns3:english_name>
       <ns3:group_id>0</ns3:group_id>
-      <ns3:variable_name_X_pos>33</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>29</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>6</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>25</ns3:variable_Y_pos>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>8</ns3:variable_length>
-      <ns3:table>Tumour</ns3:table>
-      <ns3:standard_variable_name>TumourID</ns3:standard_variable_name>
+      <ns3:table>Patient</ns3:table>
+      <ns3:standard_variable_name>PatientID</ns3:standard_variable_name>
+      <ns3:variable_X_pos>6</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>0</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>1</ns3:variable_id>
@@ -194,20 +197,14 @@
       <ns3:short_name>RecS</ns3:short_name>
       <ns3:english_name>Rec.Stat.</ns3:english_name>
       <ns3:group_id>0</ns3:group_id>
-      <ns3:variable_name_X_pos>364</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>40</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>457</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>36</ns3:variable_Y_pos>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Dict</ns3:variable_type>
       <ns3:use_dictionary>Record status</ns3:use_dictionary>
-      <ns3:category_X_pos>0</ns3:category_X_pos>
-      <ns3:category_Y_pos>0</ns3:category_Y_pos>
-      <ns3:dictionary_X_pos>487</ns3:dictionary_X_pos>
-      <ns3:dictionary_Y_pos>36</ns3:dictionary_Y_pos>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>TumourRecordStatus</ns3:standard_variable_name>
+      <ns3:variable_X_pos>457</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>100</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>2</ns3:variable_id>
@@ -215,20 +212,14 @@
       <ns3:short_name>Chec</ns3:short_name>
       <ns3:english_name>Check</ns3:english_name>
       <ns3:group_id>0</ns3:group_id>
-      <ns3:variable_name_X_pos>27</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>40</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>121</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>36</ns3:variable_Y_pos>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
       <ns3:variable_type>Dict</ns3:variable_type>
       <ns3:use_dictionary>Check status</ns3:use_dictionary>
-      <ns3:category_X_pos>0</ns3:category_X_pos>
-      <ns3:category_Y_pos>0</ns3:category_Y_pos>
-      <ns3:dictionary_X_pos>151</ns3:dictionary_X_pos>
-      <ns3:dictionary_Y_pos>36</ns3:dictionary_Y_pos>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>CheckStatus</ns3:standard_variable_name>
+      <ns3:variable_X_pos>121</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>200</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>3</ns3:variable_id>
@@ -236,37 +227,29 @@
       <ns3:short_name>PerS</ns3:short_name>
       <ns3:english_name>Per.Search</ns3:english_name>
       <ns3:group_id>0</ns3:group_id>
-      <ns3:variable_name_X_pos>29</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>78</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>121</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>74</ns3:variable_Y_pos>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Must</ns3:multiple_primary_copy>
       <ns3:variable_type>Dict</ns3:variable_type>
       <ns3:use_dictionary>Person search</ns3:use_dictionary>
-      <ns3:category_X_pos>0</ns3:category_X_pos>
-      <ns3:category_Y_pos>0</ns3:category_Y_pos>
-      <ns3:dictionary_X_pos>151</ns3:dictionary_X_pos>
-      <ns3:dictionary_Y_pos>74</ns3:dictionary_Y_pos>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>PersonSearch</ns3:standard_variable_name>
+      <ns3:variable_X_pos>121</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>300</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>4</ns3:variable_id>
-      <ns3:full_name>Family name</ns3:full_name>
+      <ns3:full_name>Surname</ns3:full_name>
       <ns3:short_name>FamN</ns3:short_name>
       <ns3:english_name>Surname</ns3:english_name>
       <ns3:group_id>1</ns3:group_id>
-      <ns3:variable_name_X_pos>44</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>25</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>44</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>41</ns3:variable_Y_pos>
       <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Prob</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>15</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>Surname</ns3:standard_variable_name>
+      <ns3:variable_X_pos>36</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>400</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>5</ns3:variable_id>
@@ -274,16 +257,14 @@
       <ns3:short_name>FirstN</ns3:short_name>
       <ns3:english_name>First Name</ns3:english_name>
       <ns3:group_id>1</ns3:group_id>
-      <ns3:variable_name_X_pos>197</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>25</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>197</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>41</ns3:variable_Y_pos>
       <ns3:fill_in_status>Optional</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Prob</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>16</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>FirstName</ns3:standard_variable_name>
+      <ns3:variable_X_pos>197</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>500</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>6</ns3:variable_id>
@@ -291,15 +272,13 @@
       <ns3:short_name>MaidN</ns3:short_name>
       <ns3:english_name>-6-</ns3:english_name>
       <ns3:group_id>1</ns3:group_id>
-      <ns3:variable_name_X_pos>365</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>25</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>365</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>41</ns3:variable_Y_pos>
       <ns3:fill_in_status>Optional</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Prob</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>10</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
+      <ns3:variable_X_pos>365</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>600</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>7</ns3:variable_id>
@@ -307,20 +286,14 @@
       <ns3:short_name>Sex</ns3:short_name>
       <ns3:english_name>Sex</ns3:english_name>
       <ns3:group_id>1</ns3:group_id>
-      <ns3:variable_name_X_pos>44</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>69</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>44</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>85</ns3:variable_Y_pos>
       <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Must</ns3:multiple_primary_copy>
       <ns3:variable_type>Dict</ns3:variable_type>
       <ns3:use_dictionary>Sex</ns3:use_dictionary>
-      <ns3:category_X_pos>0</ns3:category_X_pos>
-      <ns3:category_Y_pos>0</ns3:category_Y_pos>
-      <ns3:dictionary_X_pos>74</ns3:dictionary_X_pos>
-      <ns3:dictionary_Y_pos>85</ns3:dictionary_Y_pos>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>Sex</ns3:standard_variable_name>
+      <ns3:variable_X_pos>44</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>700</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>8</ns3:variable_id>
@@ -328,16 +301,14 @@
       <ns3:short_name>Age</ns3:short_name>
       <ns3:english_name>Age</ns3:english_name>
       <ns3:group_id>1</ns3:group_id>
-      <ns3:variable_name_X_pos>265</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>69</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>265</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>85</ns3:variable_Y_pos>
       <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Number</ns3:variable_type>
       <ns3:variable_length>2</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>Age</ns3:standard_variable_name>
+      <ns3:variable_X_pos>265</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>800</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>9</ns3:variable_id>
@@ -345,16 +316,14 @@
       <ns3:short_name>BirthD</ns3:short_name>
       <ns3:english_name>Birth Date</ns3:english_name>
       <ns3:group_id>1</ns3:group_id>
-      <ns3:variable_name_X_pos>409</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>69</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>409</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>85</ns3:variable_Y_pos>
       <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Must</ns3:multiple_primary_copy>
       <ns3:variable_type>Date</ns3:variable_type>
       <ns3:variable_length>8</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>BirthDate</ns3:standard_variable_name>
+      <ns3:variable_X_pos>409</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>900</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>10</ns3:variable_id>
@@ -362,19 +331,13 @@
       <ns3:short_name>Trib</ns3:short_name>
       <ns3:english_name>-10-</ns3:english_name>
       <ns3:group_id>1</ns3:group_id>
-      <ns3:variable_name_X_pos>44</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>157</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>44</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>173</ns3:variable_Y_pos>
       <ns3:fill_in_status>Optional</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Must</ns3:multiple_primary_copy>
       <ns3:variable_type>Dict</ns3:variable_type>
       <ns3:use_dictionary>Tribe</ns3:use_dictionary>
-      <ns3:category_X_pos>0</ns3:category_X_pos>
-      <ns3:category_Y_pos>0</ns3:category_Y_pos>
-      <ns3:dictionary_X_pos>83</ns3:dictionary_X_pos>
-      <ns3:dictionary_Y_pos>173</ns3:dictionary_Y_pos>
       <ns3:table>Patient</ns3:table>
+      <ns3:variable_X_pos>44</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>1000</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>11</ns3:variable_id>
@@ -382,20 +345,14 @@
       <ns3:short_name>Addr</ns3:short_name>
       <ns3:english_name>Address</ns3:english_name>
       <ns3:group_id>1</ns3:group_id>
-      <ns3:variable_name_X_pos>44</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>113</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>44</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>129</ns3:variable_Y_pos>
       <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Prob</ns3:multiple_primary_copy>
       <ns3:variable_type>Dict</ns3:variable_type>
       <ns3:use_dictionary>Address</ns3:use_dictionary>
-      <ns3:category_X_pos>92</ns3:category_X_pos>
-      <ns3:category_Y_pos>129</ns3:category_Y_pos>
-      <ns3:dictionary_X_pos>200</ns3:dictionary_X_pos>
-      <ns3:dictionary_Y_pos>129</ns3:dictionary_Y_pos>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>AddressCode</ns3:standard_variable_name>
+      <ns3:variable_X_pos>44</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>1100</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>12</ns3:variable_id>
@@ -403,137 +360,103 @@
       <ns3:short_name>Occu</ns3:short_name>
       <ns3:english_name>-12-</ns3:english_name>
       <ns3:group_id>1</ns3:group_id>
-      <ns3:variable_name_X_pos>322</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>157</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>322</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>173</ns3:variable_Y_pos>
       <ns3:fill_in_status>Optional</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Prob</ns3:multiple_primary_copy>
       <ns3:variable_type>Dict</ns3:variable_type>
       <ns3:use_dictionary>Occupation</ns3:use_dictionary>
-      <ns3:category_X_pos>0</ns3:category_X_pos>
-      <ns3:category_Y_pos>0</ns3:category_Y_pos>
-      <ns3:dictionary_X_pos>361</ns3:dictionary_X_pos>
-      <ns3:dictionary_Y_pos>173</ns3:dictionary_Y_pos>
-      <ns3:table>Tumour</ns3:table>
+      <ns3:table>Patient</ns3:table>
+      <ns3:variable_X_pos>322</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>1200</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>13</ns3:variable_id>
       <ns3:full_name>Incidence date</ns3:full_name>
       <ns3:short_name>InciD</ns3:short_name>
       <ns3:english_name>Incid.Date</ns3:english_name>
-      <ns3:group_id>3</ns3:group_id>
-      <ns3:variable_name_X_pos>31</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>128</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>130</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>124</ns3:variable_Y_pos>
+      <ns3:group_id>2</ns3:group_id>
       <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Date</ns3:variable_type>
       <ns3:variable_length>8</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>IncidenceDate</ns3:standard_variable_name>
+      <ns3:variable_X_pos>130</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>1300</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>14</ns3:variable_id>
       <ns3:full_name>Topography</ns3:full_name>
       <ns3:short_name>Top</ns3:short_name>
       <ns3:english_name>Topog.</ns3:english_name>
-      <ns3:group_id>3</ns3:group_id>
-      <ns3:variable_name_X_pos>24</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>29</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>101</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>25</ns3:variable_Y_pos>
+      <ns3:group_id>2</ns3:group_id>
       <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Dict</ns3:variable_type>
       <ns3:use_dictionary>Topography</ns3:use_dictionary>
-      <ns3:category_X_pos>149</ns3:category_X_pos>
-      <ns3:category_Y_pos>25</ns3:category_Y_pos>
-      <ns3:dictionary_X_pos>311</ns3:dictionary_X_pos>
-      <ns3:dictionary_Y_pos>25</ns3:dictionary_Y_pos>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>Topography</ns3:standard_variable_name>
+      <ns3:variable_X_pos>101</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>1400</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>15</ns3:variable_id>
       <ns3:full_name>Morphology</ns3:full_name>
       <ns3:short_name>Mor</ns3:short_name>
       <ns3:english_name>Morpg.</ns3:english_name>
-      <ns3:group_id>3</ns3:group_id>
-      <ns3:variable_name_X_pos>24</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>62</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>101</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>58</ns3:variable_Y_pos>
+      <ns3:group_id>2</ns3:group_id>
       <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Dict</ns3:variable_type>
       <ns3:use_dictionary>Morphology</ns3:use_dictionary>
-      <ns3:category_X_pos>0</ns3:category_X_pos>
-      <ns3:category_Y_pos>0</ns3:category_Y_pos>
-      <ns3:dictionary_X_pos>158</ns3:dictionary_X_pos>
-      <ns3:dictionary_Y_pos>58</ns3:dictionary_Y_pos>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>Morphology</ns3:standard_variable_name>
+      <ns3:variable_X_pos>101</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>1500</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>16</ns3:variable_id>
       <ns3:full_name>Behaviour</ns3:full_name>
       <ns3:short_name>Beh</ns3:short_name>
       <ns3:english_name>Behav.</ns3:english_name>
-      <ns3:group_id>3</ns3:group_id>
-      <ns3:variable_name_X_pos>22</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>95</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>101</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>91</ns3:variable_Y_pos>
+      <ns3:group_id>2</ns3:group_id>
       <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Dict</ns3:variable_type>
       <ns3:use_dictionary>Behaviour</ns3:use_dictionary>
-      <ns3:category_X_pos>0</ns3:category_X_pos>
-      <ns3:category_Y_pos>0</ns3:category_Y_pos>
-      <ns3:dictionary_X_pos>131</ns3:dictionary_X_pos>
-      <ns3:dictionary_Y_pos>91</ns3:dictionary_Y_pos>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>Behaviour</ns3:standard_variable_name>
+      <ns3:variable_X_pos>101</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>1600</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>17</ns3:variable_id>
       <ns3:full_name>Basis diagnosis</ns3:full_name>
       <ns3:short_name>Bas</ns3:short_name>
       <ns3:english_name>Basis Diag.</ns3:english_name>
-      <ns3:group_id>3</ns3:group_id>
-      <ns3:variable_name_X_pos>256</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>128</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>358</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>124</ns3:variable_Y_pos>
+      <ns3:group_id>2</ns3:group_id>
       <ns3:fill_in_status>Mandatory</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Dict</ns3:variable_type>
       <ns3:use_dictionary>Basis of Diagnosis</ns3:use_dictionary>
-      <ns3:category_X_pos>0</ns3:category_X_pos>
-      <ns3:category_Y_pos>0</ns3:category_Y_pos>
-      <ns3:dictionary_X_pos>388</ns3:dictionary_X_pos>
-      <ns3:dictionary_Y_pos>124</ns3:dictionary_Y_pos>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>BasisDiagnosis</ns3:standard_variable_name>
+      <ns3:variable_X_pos>358</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>1700</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>18</ns3:variable_id>
       <ns3:full_name>ICD-10</ns3:full_name>
       <ns3:short_name>I10</ns3:short_name>
       <ns3:english_name>ICD-10</ns3:english_name>
-      <ns3:group_id>3</ns3:group_id>
-      <ns3:variable_name_X_pos>44</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>161</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>101</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>157</ns3:variable_Y_pos>
+      <ns3:group_id>2</ns3:group_id>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>4</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>ICD10</ns3:standard_variable_name>
+      <ns3:variable_X_pos>101</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>1800</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>19</ns3:variable_id>
@@ -541,16 +464,14 @@
       <ns3:short_name>MPcode</ns3:short_name>
       <ns3:english_name>M.P.code</ns3:english_name>
       <ns3:group_id>0</ns3:group_id>
-      <ns3:variable_name_X_pos>369</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>161</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>485</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>157</ns3:variable_Y_pos>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Must</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>3</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>MultPrimCode</ns3:standard_variable_name>
+      <ns3:variable_X_pos>485</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>1900</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>20</ns3:variable_id>
@@ -558,16 +479,14 @@
       <ns3:short_name>MPSeq</ns3:short_name>
       <ns3:english_name>M.P.Seq.</ns3:english_name>
       <ns3:group_id>0</ns3:group_id>
-      <ns3:variable_name_X_pos>106</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>45</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>106</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>60</ns3:variable_Y_pos>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>1</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>MultPrimSeq</ns3:standard_variable_name>
+      <ns3:variable_X_pos>106</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>2000</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>21</ns3:variable_id>
@@ -575,89 +494,71 @@
       <ns3:short_name>MPTot</ns3:short_name>
       <ns3:english_name>M.P.Tot.</ns3:english_name>
       <ns3:group_id>0</ns3:group_id>
-      <ns3:variable_name_X_pos>106</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>45</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>106</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>60</ns3:variable_Y_pos>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>1</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>MultPrimTot</ns3:standard_variable_name>
+      <ns3:variable_X_pos>106</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>2100</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>22</ns3:variable_id>
       <ns3:full_name>Hospital</ns3:full_name>
       <ns3:short_name>Hosp</ns3:short_name>
       <ns3:english_name>Source-1</ns3:english_name>
-      <ns3:group_id>2</ns3:group_id>
-      <ns3:variable_name_X_pos>39</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>29</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>101</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>25</ns3:variable_Y_pos>
+      <ns3:group_id>3</ns3:group_id>
       <ns3:fill_in_status>Optional</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Dict</ns3:variable_type>
       <ns3:use_dictionary>Hospital</ns3:use_dictionary>
-      <ns3:category_X_pos>0</ns3:category_X_pos>
-      <ns3:category_Y_pos>0</ns3:category_Y_pos>
-      <ns3:dictionary_X_pos>140</ns3:dictionary_X_pos>
-      <ns3:dictionary_Y_pos>25</ns3:dictionary_Y_pos>
       <ns3:table>Source</ns3:table>
       <ns3:standard_variable_name>Source1</ns3:standard_variable_name>
+      <ns3:variable_X_pos>101</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>2200</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>23</ns3:variable_id>
       <ns3:full_name>Unit</ns3:full_name>
       <ns3:short_name>Unit</ns3:short_name>
       <ns3:english_name>-23-</ns3:english_name>
-      <ns3:group_id>2</ns3:group_id>
-      <ns3:variable_name_X_pos>60</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>62</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>101</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>58</ns3:variable_Y_pos>
+      <ns3:group_id>3</ns3:group_id>
       <ns3:fill_in_status>Optional</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
       <ns3:variable_type>Dict</ns3:variable_type>
       <ns3:use_dictionary>Unit</ns3:use_dictionary>
-      <ns3:category_X_pos>0</ns3:category_X_pos>
-      <ns3:category_Y_pos>0</ns3:category_Y_pos>
-      <ns3:dictionary_X_pos>140</ns3:dictionary_X_pos>
-      <ns3:dictionary_Y_pos>58</ns3:dictionary_Y_pos>
       <ns3:table>Source</ns3:table>
+      <ns3:variable_X_pos>101</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>2300</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>24</ns3:variable_id>
-      <ns3:full_name>Path lab no.</ns3:full_name>
+      <ns3:full_name>Path lab nº</ns3:full_name>
       <ns3:short_name>LabNo</ns3:short_name>
       <ns3:english_name>-24-</ns3:english_name>
-      <ns3:group_id>2</ns3:group_id>
-      <ns3:variable_name_X_pos>408</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>29</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>485</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>25</ns3:variable_Y_pos>
+      <ns3:group_id>3</ns3:group_id>
       <ns3:fill_in_status>Optional</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>8</ns3:variable_length>
       <ns3:table>Source</ns3:table>
+      <ns3:variable_X_pos>485</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>2400</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>25</ns3:variable_id>
-      <ns3:full_name>Case no.</ns3:full_name>
+      <ns3:full_name>Case nº</ns3:full_name>
       <ns3:short_name>CasNo</ns3:short_name>
       <ns3:english_name>-25-</ns3:english_name>
-      <ns3:group_id>2</ns3:group_id>
-      <ns3:variable_name_X_pos>430</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>62</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>485</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>58</ns3:variable_Y_pos>
+      <ns3:group_id>3</ns3:group_id>
       <ns3:fill_in_status>Optional</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Intr</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>6</ns3:variable_length>
       <ns3:table>Source</ns3:table>
+      <ns3:variable_X_pos>485</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>2500</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>26</ns3:variable_id>
@@ -665,16 +566,14 @@
       <ns3:short_name>DLC</ns3:short_name>
       <ns3:english_name>Last Con.</ns3:english_name>
       <ns3:group_id>4</ns3:group_id>
-      <ns3:variable_name_X_pos>36</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>29</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>149</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>25</ns3:variable_Y_pos>
       <ns3:fill_in_status>Optional</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Must</ns3:multiple_primary_copy>
       <ns3:variable_type>Date</ns3:variable_type>
       <ns3:variable_length>8</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>Lastcontact</ns3:standard_variable_name>
+      <ns3:variable_X_pos>149</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>2600</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>27</ns3:variable_id>
@@ -682,19 +581,13 @@
       <ns3:short_name>Stat</ns3:short_name>
       <ns3:english_name>-27-</ns3:english_name>
       <ns3:group_id>4</ns3:group_id>
-      <ns3:variable_name_X_pos>351</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>29</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>409</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>25</ns3:variable_Y_pos>
       <ns3:fill_in_status>Optional</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Must</ns3:multiple_primary_copy>
       <ns3:variable_type>Dict</ns3:variable_type>
       <ns3:use_dictionary>Status</ns3:use_dictionary>
-      <ns3:category_X_pos>0</ns3:category_X_pos>
-      <ns3:category_Y_pos>0</ns3:category_Y_pos>
-      <ns3:dictionary_X_pos>439</ns3:dictionary_X_pos>
-      <ns3:dictionary_Y_pos>25</ns3:dictionary_Y_pos>
       <ns3:table>Patient</ns3:table>
+      <ns3:variable_X_pos>409</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>2700</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>28</ns3:variable_id>
@@ -702,36 +595,46 @@
       <ns3:short_name>UpDate</ns3:short_name>
       <ns3:english_name>Update</ns3:english_name>
       <ns3:group_id>0</ns3:group_id>
-      <ns3:variable_name_X_pos>106</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>45</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>106</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>60</ns3:variable_Y_pos>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
       <ns3:variable_type>Date</ns3:variable_type>
       <ns3:variable_length>8</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>TumourUpdateDate</ns3:standard_variable_name>
+      <ns3:variable_X_pos>106</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>2800</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>29</ns3:variable_id>
       <ns3:full_name>ICCC code</ns3:full_name>
       <ns3:short_name>ICCC</ns3:short_name>
       <ns3:english_name>ICCC</ns3:english_name>
-      <ns3:group_id>3</ns3:group_id>
-      <ns3:variable_name_X_pos>410</ns3:variable_name_X_pos>
-      <ns3:variable_name_Y_pos>161</ns3:variable_name_Y_pos>
-      <ns3:variable_X_pos>485</ns3:variable_X_pos>
-      <ns3:variable_Y_pos>157</ns3:variable_Y_pos>
+      <ns3:group_id>2</ns3:group_id>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
       <ns3:variable_length>3</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>ICCC</ns3:standard_variable_name>
+      <ns3:variable_X_pos>485</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>2900</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
       <ns3:variable_id>30</ns3:variable_id>
+      <ns3:full_name>MiddleName</ns3:full_name>
+      <ns3:short_name>MidN</ns3:short_name>
+      <ns3:english_name>MiddleName</ns3:english_name>
+      <ns3:group_id>1</ns3:group_id>
+      <ns3:fill_in_status>Optional</ns3:fill_in_status>
+      <ns3:multiple_primary_copy>Prob</ns3:multiple_primary_copy>
+      <ns3:variable_type>Alpha</ns3:variable_type>
+      <ns3:variable_length>15</ns3:variable_length>
+      <ns3:table>Patient</ns3:table>
+      <ns3:variable_X_pos>36</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>3000</ns3:variable_Y_pos>
+    </ns3:variable>
+    <ns3:variable>
+      <ns3:variable_id>31</ns3:variable_id>
       <ns3:full_name>ObsoleteFlagTumourTable</ns3:full_name>
       <ns3:short_name>ObsoleteFlagTumourTable</ns3:short_name>
       <ns3:english_name>ObsoleteFlagTumourTable</ns3:english_name>
@@ -742,9 +645,11 @@
       <ns3:variable_length>1</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>ObsoleteFlagTumourTable</ns3:standard_variable_name>
+      <ns3:variable_X_pos>0</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>3100</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
-      <ns3:variable_id>31</ns3:variable_id>
+      <ns3:variable_id>32</ns3:variable_id>
       <ns3:full_name>ObsoleteFlagPatientTable</ns3:full_name>
       <ns3:short_name>ObsoleteFlagPatientTable</ns3:short_name>
       <ns3:english_name>ObsoleteFlagPatientTable</ns3:english_name>
@@ -755,22 +660,26 @@
       <ns3:variable_length>1</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>ObsoleteFlagPatientTable</ns3:standard_variable_name>
+      <ns3:variable_X_pos>0</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>3200</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
-      <ns3:variable_id>32</ns3:variable_id>
-      <ns3:full_name>PatientID</ns3:full_name>
-      <ns3:short_name>PatientID</ns3:short_name>
-      <ns3:english_name>PatientID</ns3:english_name>
+      <ns3:variable_id>33</ns3:variable_id>
+      <ns3:full_name>TumourID</ns3:full_name>
+      <ns3:short_name>TumourID</ns3:short_name>
+      <ns3:english_name>TumourID</ns3:english_name>
       <ns3:group_id>-1</ns3:group_id>
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
-      <ns3:variable_length>8</ns3:variable_length>
-      <ns3:table>Patient</ns3:table>
-      <ns3:standard_variable_name>PatientID</ns3:standard_variable_name>
+      <ns3:variable_length>12</ns3:variable_length>
+      <ns3:table>Tumour</ns3:table>
+      <ns3:standard_variable_name>TumourID</ns3:standard_variable_name>
+      <ns3:variable_X_pos>0</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>3300</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
-      <ns3:variable_id>33</ns3:variable_id>
+      <ns3:variable_id>34</ns3:variable_id>
       <ns3:full_name>PatientRecordID</ns3:full_name>
       <ns3:short_name>PatientRecordID</ns3:short_name>
       <ns3:english_name>PatientRecordID</ns3:english_name>
@@ -778,12 +687,14 @@
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
-      <ns3:variable_length>8</ns3:variable_length>
+      <ns3:variable_length>10</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>PatientRecordID</ns3:standard_variable_name>
+      <ns3:variable_X_pos>0</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>3400</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
-      <ns3:variable_id>34</ns3:variable_id>
+      <ns3:variable_id>35</ns3:variable_id>
       <ns3:full_name>PatientIDTumourTable</ns3:full_name>
       <ns3:short_name>PatientIDTumourTable</ns3:short_name>
       <ns3:english_name>PatientIDTumourTable</ns3:english_name>
@@ -794,9 +705,11 @@
       <ns3:variable_length>8</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>PatientIDTumourTable</ns3:standard_variable_name>
+      <ns3:variable_X_pos>0</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>3500</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
-      <ns3:variable_id>35</ns3:variable_id>
+      <ns3:variable_id>36</ns3:variable_id>
       <ns3:full_name>PatientRecordIDTumourTable</ns3:full_name>
       <ns3:short_name>PatientRecordIDTumourTable</ns3:short_name>
       <ns3:english_name>PatientRecordIDTumourTable</ns3:english_name>
@@ -804,12 +717,14 @@
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
-      <ns3:variable_length>8</ns3:variable_length>
+      <ns3:variable_length>10</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>PatientRecordIDTumourTable</ns3:standard_variable_name>
+      <ns3:variable_X_pos>0</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>3600</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
-      <ns3:variable_id>36</ns3:variable_id>
+      <ns3:variable_id>37</ns3:variable_id>
       <ns3:full_name>PatientUpdatedBy</ns3:full_name>
       <ns3:short_name>PatientUpdatedBy</ns3:short_name>
       <ns3:english_name>PatientUpdatedBy</ns3:english_name>
@@ -820,9 +735,11 @@
       <ns3:variable_length>16</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>PatientUpdatedBy</ns3:standard_variable_name>
+      <ns3:variable_X_pos>0</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>3700</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
-      <ns3:variable_id>37</ns3:variable_id>
+      <ns3:variable_id>38</ns3:variable_id>
       <ns3:full_name>TumourUpdatedBy</ns3:full_name>
       <ns3:short_name>TumourUpdatedBy</ns3:short_name>
       <ns3:english_name>TumourUpdatedBy</ns3:english_name>
@@ -833,9 +750,11 @@
       <ns3:variable_length>16</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>TumourUpdatedBy</ns3:standard_variable_name>
+      <ns3:variable_X_pos>0</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>3800</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
-      <ns3:variable_id>38</ns3:variable_id>
+      <ns3:variable_id>39</ns3:variable_id>
       <ns3:full_name>PatientUpdateDate</ns3:full_name>
       <ns3:short_name>PatientUpdateDate</ns3:short_name>
       <ns3:english_name>PatientUpdateDate</ns3:english_name>
@@ -846,9 +765,11 @@
       <ns3:variable_length>8</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>PatientUpdateDate</ns3:standard_variable_name>
+      <ns3:variable_X_pos>0</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>3900</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
-      <ns3:variable_id>39</ns3:variable_id>
+      <ns3:variable_id>40</ns3:variable_id>
       <ns3:full_name>PatientRecordStatus</ns3:full_name>
       <ns3:short_name>PatientRecordStatus</ns3:short_name>
       <ns3:english_name>PatientRecordStatus</ns3:english_name>
@@ -859,9 +780,11 @@
       <ns3:variable_length>1</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>PatientRecordStatus</ns3:standard_variable_name>
+      <ns3:variable_X_pos>0</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>4000</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
-      <ns3:variable_id>40</ns3:variable_id>
+      <ns3:variable_id>41</ns3:variable_id>
       <ns3:full_name>PatientCheckStatus</ns3:full_name>
       <ns3:short_name>PatientCheckStatus</ns3:short_name>
       <ns3:english_name>PatientCheckStatus</ns3:english_name>
@@ -872,9 +795,11 @@
       <ns3:variable_length>1</ns3:variable_length>
       <ns3:table>Patient</ns3:table>
       <ns3:standard_variable_name>PatientCheckStatus</ns3:standard_variable_name>
+      <ns3:variable_X_pos>0</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>4100</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
-      <ns3:variable_id>41</ns3:variable_id>
+      <ns3:variable_id>42</ns3:variable_id>
       <ns3:full_name>TumourUnduplicationStatus</ns3:full_name>
       <ns3:short_name>TumourUnduplicationStatus</ns3:short_name>
       <ns3:english_name>TumourUnduplicationStatus</ns3:english_name>
@@ -885,9 +810,11 @@
       <ns3:variable_length>1</ns3:variable_length>
       <ns3:table>Tumour</ns3:table>
       <ns3:standard_variable_name>TumourUnduplicationStatus</ns3:standard_variable_name>
+      <ns3:variable_X_pos>0</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>4200</ns3:variable_Y_pos>
     </ns3:variable>
     <ns3:variable>
-      <ns3:variable_id>42</ns3:variable_id>
+      <ns3:variable_id>43</ns3:variable_id>
       <ns3:full_name>TumourIDSourceTable</ns3:full_name>
       <ns3:short_name>TumourIDSourceTable</ns3:short_name>
       <ns3:english_name>TumourIDSourceTable</ns3:english_name>
@@ -895,22 +822,26 @@
       <ns3:fill_in_status>Automatic</ns3:fill_in_status>
       <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
       <ns3:variable_type>Alpha</ns3:variable_type>
-      <ns3:variable_length>8</ns3:variable_length>
+      <ns3:variable_length>12</ns3:variable_length>
       <ns3:table>Source</ns3:table>
       <ns3:standard_variable_name>TumourIDSourceTable</ns3:standard_variable_name>
+      <ns3:variable_X_pos>0</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>4300</ns3:variable_Y_pos>
     </ns3:variable>
-        <ns3:variable>
-          <ns3:variable_id>42</ns3:variable_id>
-          <ns3:full_name>SourceRecordID</ns3:full_name>
-          <ns3:short_name>SourceRecordID</ns3:short_name>
-          <ns3:english_name>SourceRecordID</ns3:english_name>
-          <ns3:group_id>-1</ns3:group_id>
-          <ns3:fill_in_status>Automatic</ns3:fill_in_status>
-          <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
-          <ns3:variable_type>Alpha</ns3:variable_type>
-          <ns3:variable_length>14</ns3:variable_length>
-          <ns3:table>Source</ns3:table>
-          <ns3:standard_variable_name>SourceRecordID</ns3:standard_variable_name>
+    <ns3:variable>
+      <ns3:variable_id>44</ns3:variable_id>
+      <ns3:full_name>SourceRecordID</ns3:full_name>
+      <ns3:short_name>SourceRecordID</ns3:short_name>
+      <ns3:english_name>SourceRecordID</ns3:english_name>
+      <ns3:group_id>-1</ns3:group_id>
+      <ns3:fill_in_status>Automatic</ns3:fill_in_status>
+      <ns3:multiple_primary_copy>Othr</ns3:multiple_primary_copy>
+      <ns3:variable_type>Alpha</ns3:variable_type>
+      <ns3:variable_length>14</ns3:variable_length>
+      <ns3:table>Source</ns3:table>
+      <ns3:standard_variable_name>SourceRecordID</ns3:standard_variable_name>
+      <ns3:variable_X_pos>0</ns3:variable_X_pos>
+      <ns3:variable_Y_pos>4400</ns3:variable_Y_pos>
     </ns3:variable>
   </ns3:variables>
   <ns3:search_variables>
@@ -979,16 +910,6 @@
       </ns3:indexed_variable>
     </ns3:index>
     <ns3:index>
-      <ns3:name>PatientID-Patient</ns3:name>
-      <ns3:table>Patient</ns3:table>
-      <ns3:indexed_variable>
-        <ns3:variable_name>PATIENTID</ns3:variable_name>
-      </ns3:indexed_variable>
-      <ns3:indexed_variable>
-        <ns3:variable_name>PATIENTRECORDID</ns3:variable_name>
-      </ns3:indexed_variable>
-    </ns3:index>
-    <ns3:index>
       <ns3:name>PatientIDTumourTable-Tumour</ns3:name>
       <ns3:table>Tumour</ns3:table>
       <ns3:indexed_variable>
@@ -999,10 +920,17 @@
       </ns3:indexed_variable>
     </ns3:index>
     <ns3:index>
-      <ns3:name>Registry no-Tumour</ns3:name>
-      <ns3:table>Tumour</ns3:table>
+      <ns3:name>Registry no-Patient</ns3:name>
+      <ns3:table>Patient</ns3:table>
       <ns3:indexed_variable>
         <ns3:variable_name>REGNO</ns3:variable_name>
+      </ns3:indexed_variable>
+    </ns3:index>
+    <ns3:index>
+      <ns3:name>TumourID-Tumour</ns3:name>
+      <ns3:table>Tumour</ns3:table>
+      <ns3:indexed_variable>
+        <ns3:variable_name>TUMOURID</ns3:variable_name>
       </ns3:indexed_variable>
     </ns3:index>
     <ns3:index>
@@ -1030,7 +958,7 @@
       <ns3:mult_prim_rules>0</ns3:mult_prim_rules>
       <ns3:special_registry>0</ns3:special_registry>
       <ns3:password_rules>0</ns3:password_rules>
-      <ns3:data_entry_language>E</ns3:data_entry_language>
+      <ns3:data_entry_language>en</ns3:data_entry_language>
     </ns3:settings>
   </ns3:miscellaneous>
 </ns3:canreg>

@@ -30,6 +30,7 @@ import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -504,6 +505,7 @@ public class CanRegClientView extends FrameView {
         jMenu1.setName("jMenu1"); // NOI18N
 
         jMenuItem3.setAction(actionMap.get("setUpNewDatabaseStructureAction")); // NOI18N
+        jMenuItem3.setEnabled(false);
         jMenuItem3.setName("jMenuItem3"); // NOI18N
         jMenu1.add(jMenuItem3);
 
@@ -1217,17 +1219,18 @@ public class CanRegClientView extends FrameView {
 
     @Action
     public void setUpNewDatabaseStructureAction() {
-        ModifyDatabaseStructureInternalFrame internalFrame = new ModifyDatabaseStructureInternalFrame();
-
+        ModifyDatabaseStructureInternalFrame internalFrame = new ModifyDatabaseStructureInternalFrame(desktopPane);
         showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
     @Action
     public void modifyDatabaseStructureAction() {
-        ModifyDatabaseStructureInternalFrame internalFrame = new ModifyDatabaseStructureInternalFrame();
-        
-        showAndPositionInternalFrame(desktopPane, internalFrame);
+            ModifyDatabaseStructureInternalFrame internalFrame = new ModifyDatabaseStructureInternalFrame(desktopPane);
+            internalFrame.setFileName(Globals.DEFAULT_SYSTEM_XML);
+            internalFrame.openXML();
+            showAndPositionInternalFrame(desktopPane, internalFrame);
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;

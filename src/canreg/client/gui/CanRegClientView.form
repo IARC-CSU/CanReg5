@@ -460,6 +460,7 @@
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.gui.CanRegClientView" id="setUpNewDatabaseStructureAction" methodName="setUpNewDatabaseStructureAction"/>
                     </Property>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="jMenuItem3" noResource="true"/>
                   </Properties>
                 </MenuItem>

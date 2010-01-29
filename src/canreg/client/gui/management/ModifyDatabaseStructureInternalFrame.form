@@ -35,7 +35,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="generalPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="editorsScrollPane" pref="681" max="32767" attributes="0"/>
+              <Component id="editorsScrollPane" pref="693" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -159,7 +159,7 @@
         <Component class="javax.swing.JButton" name="jButton1">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="canreg.client.gui.management.ModifyDatabaseStructureInternalFrame" id="loadXML" methodName="loadXML"/>
+              <action class="canreg.client.gui.management.ModifyDatabaseStructureInternalFrame" id="pickXML" methodName="pickXML"/>
             </Property>
             <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
           </Properties>
@@ -191,13 +191,13 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="indexesPanel" alignment="0" max="32767" attributes="1"/>
+                          <Component id="settingsPanel" alignment="0" pref="338" max="32767" attributes="1"/>
+                          <Component id="codingPanel" alignment="1" max="32767" attributes="1"/>
                           <Component id="dictionariesPanel" alignment="0" max="32767" attributes="1"/>
                           <Component id="groupsPanel" alignment="1" max="32767" attributes="1"/>
                           <Component id="searchVariablesPanel" alignment="0" max="32767" attributes="1"/>
                           <Component id="variablesPanel" alignment="1" max="32767" attributes="1"/>
-                          <Component id="codingPanel" alignment="1" max="32767" attributes="1"/>
-                          <Component id="settingsPanel" alignment="0" max="32767" attributes="1"/>
+                          <Component id="searchVariablesPanel1" alignment="1" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -214,12 +214,12 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="searchVariablesPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="indexesPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="codingPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="settingsPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="searchVariablesPanel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -240,15 +240,12 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="personSearchVariablesPanel" alignment="0" pref="544" max="32767" attributes="0"/>
+                      <Component id="personSearchVariablesPanel" alignment="0" pref="322" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="personSearchVariablesPanel" min="-2" pref="264" max="-2" attributes="0"/>
-                          <EmptySpace pref="50" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="personSearchVariablesPanel" alignment="0" pref="314" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -275,7 +272,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseDictionaryPanel1" alignment="0" pref="544" max="32767" attributes="0"/>
+                      <Component id="databaseDictionaryPanel1" alignment="0" pref="322" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -285,41 +282,9 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="canreg.client.gui.management.DatabaseDictionaryPanel" name="databaseDictionaryPanel1">
+                <Component class="canreg.client.gui.management.DatabaseDictionariesPanel" name="databaseDictionaryPanel1">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="databaseDictionaryPanel1" noResource="true"/>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="indexesPanel">
-              <Properties>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Indexes">
-                      <Property name="titleX" resourceKey="indexesPanel.border.title"/>
-                    </TitledBorder>
-                  </Border>
-                </Property>
-                <Property name="name" type="java.lang.String" value="indexesPanel" noResource="true"/>
-              </Properties>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseIndexPanel1" alignment="1" pref="544" max="32767" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseIndexPanel1" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="canreg.client.gui.management.DatabaseIndexPanel" name="databaseIndexPanel1">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="databaseIndexPanel1" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -339,7 +304,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseVariablePanel1" alignment="0" pref="544" max="32767" attributes="0"/>
+                      <Component id="databaseVariablePanel1" alignment="0" pref="322" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -349,7 +314,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="canreg.client.gui.management.DatabaseVariablePanel" name="databaseVariablePanel1">
+                <Component class="canreg.client.gui.management.DatabaseVariablesPanel" name="databaseVariablePanel1">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="databaseVariablePanel1" noResource="true"/>
                   </Properties>
@@ -371,7 +336,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseGroupPanel1" alignment="0" pref="544" max="32767" attributes="0"/>
+                      <Component id="databaseGroupPanel1" alignment="0" pref="322" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -381,7 +346,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="canreg.client.gui.management.DatabaseGroupPanel" name="databaseGroupPanel1">
+                <Component class="canreg.client.gui.management.DatabaseGroupsPanel" name="databaseGroupPanel1">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="databaseGroupPanel1" noResource="true"/>
                   </Properties>
@@ -442,18 +407,9 @@
                                       </Group>
                                   </Group>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="registrationNumberTypeLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="registrationNumberTypeComboBox" pref="394" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="basisOfDiagnosisLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="basisOfDiagnosisComboBox" pref="394" max="32767" attributes="0"/>
-                              </Group>
+                              <Component id="basisCodesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -480,17 +436,9 @@
                               <Component id="morphologyLengthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="morphologyLengthTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="registrationNumberTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="registrationNumberTypeComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="basisOfDiagnosisLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="basisOfDiagnosisComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="basisCodesCheckBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="12" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -528,6 +476,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="unknownSexTextField">
                   <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
                     <Property name="text" type="java.lang.String" resourceKey="unknownSexTextField.text"/>
                     <Property name="name" type="java.lang.String" value="unknownSexTextField" noResource="true"/>
                   </Properties>
@@ -540,12 +489,13 @@
                 </Component>
                 <Component class="javax.swing.JComboBox" name="dateFormatComboBox">
                   <Properties>
+                    <Property name="editable" type="boolean" value="true"/>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="4">
-                        <StringItem index="0" value="Item 1"/>
-                        <StringItem index="1" value="Item 2"/>
-                        <StringItem index="2" value="Item 3"/>
-                        <StringItem index="3" value="Item 4"/>
+                        <StringItem index="0" value="dd/mm/yyyy"/>
+                        <StringItem index="1" value="mm/dd/yyyy"/>
+                        <StringItem index="2" value="mm/dd/yy"/>
+                        <StringItem index="3" value="yyyy/mm/dd"/>
                       </StringArray>
                     </Property>
                     <Property name="name" type="java.lang.String" value="dateFormatComboBox" noResource="true"/>
@@ -576,42 +526,11 @@
                     <Property name="name" type="java.lang.String" value="morphologyLengthTextField" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="registrationNumberTypeLabel">
+                <Component class="javax.swing.JCheckBox" name="basisCodesCheckBox">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="registrationNumberTypeLabel.text"/>
-                    <Property name="name" type="java.lang.String" value="registrationNumberTypeLabel" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="registrationNumberTypeComboBox">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="4">
-                        <StringItem index="0" value="Item 1"/>
-                        <StringItem index="1" value="Item 2"/>
-                        <StringItem index="2" value="Item 3"/>
-                        <StringItem index="3" value="Item 4"/>
-                      </StringArray>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="registrationNumberTypeComboBox" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="basisOfDiagnosisLabel">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="basisOfDiagnosisLabel.text"/>
-                    <Property name="name" type="java.lang.String" value="basisOfDiagnosisLabel" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="basisOfDiagnosisComboBox">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="4">
-                        <StringItem index="0" value="Item 1"/>
-                        <StringItem index="1" value="Item 2"/>
-                        <StringItem index="2" value="Item 3"/>
-                        <StringItem index="3" value="Item 4"/>
-                      </StringArray>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="basisOfDiagnosisComboBox" noResource="true"/>
+                    <Property name="selected" type="boolean" value="true"/>
+                    <Property name="text" type="java.lang.String" resourceKey="basisCodesCheckBox.text"/>
+                    <Property name="name" type="java.lang.String" value="basisCodesCheckBox" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -634,18 +553,10 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="defaultDataEntryLanguageLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="4" pref="4" max="-2" attributes="0"/>
-                                  <Component id="defaultDataEntryLanguageComboBox" pref="394" max="32767" attributes="0"/>
-                              </Group>
                               <Component id="fastSafeModeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="mprulesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="specialRegistryCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="strictPasswordModeCheckBox" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="401" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="strictPasswordModeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -661,12 +572,6 @@
                           <Component id="specialRegistryCheckBox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="strictPasswordModeCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="defaultDataEntryLanguageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="defaultDataEntryLanguageComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -675,11 +580,14 @@
                 <Component class="javax.swing.JCheckBox" name="fastSafeModeCheckBox">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="fastSafeModeCheckBox.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="fastSafeModeCheckBox.toolTipText"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="fastSafeModeCheckBox" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="mprulesCheckBox">
                   <Properties>
+                    <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" resourceKey="mprulesCheckBox.text"/>
                     <Property name="name" type="java.lang.String" value="mprulesCheckBox" noResource="true"/>
                   </Properties>
@@ -693,26 +601,41 @@
                 <Component class="javax.swing.JCheckBox" name="strictPasswordModeCheckBox">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="strictPasswordModeCheckBox.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="strictPasswordModeCheckBox.toolTipText"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="strictPasswordModeCheckBox" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="defaultDataEntryLanguageLabel">
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="searchVariablesPanel1">
+              <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                    <TitledBorder title="Indexes">
+                      <Property name="titleX" resourceKey="searchVariablesPanel1.border.title"/>
+                    </TitledBorder>
+                  </Border>
+                </Property>
+                <Property name="name" type="java.lang.String" value="searchVariablesPanel1" noResource="true"/>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="databaseIndexPanel1" alignment="0" pref="322" max="32767" attributes="0"/>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="databaseIndexPanel1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="canreg.client.gui.management.DatabaseIndexPanel" name="databaseIndexPanel1">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="defaultDataEntryLanguageLabel.text"/>
-                    <Property name="name" type="java.lang.String" value="defaultDataEntryLanguageLabel" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="defaultDataEntryLanguageComboBox">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="4">
-                        <StringItem index="0" value="Item 1"/>
-                        <StringItem index="1" value="Item 2"/>
-                        <StringItem index="2" value="Item 3"/>
-                        <StringItem index="3" value="Item 4"/>
-                      </StringArray>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="defaultDataEntryLanguageComboBox" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="databaseIndexPanel1" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>

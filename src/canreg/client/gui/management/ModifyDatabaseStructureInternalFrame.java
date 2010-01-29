@@ -10,12 +10,21 @@
  */
 package canreg.client.gui.management;
 
+import canreg.client.gui.CanRegClientView;
+import canreg.common.DatabaseDictionaryListElement;
+import canreg.common.DatabaseElement;
+import canreg.common.DatabaseGroupsListElement;
+import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.server.management.SystemDescription;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -26,8 +35,8 @@ import org.w3c.dom.Document;
 public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalFrame implements ActionListener {
 
     private JFileChooser chooser;
-    private String path;
-    private Globals.StandardVariableNames[] listOfAutomaticlyGeneratedVariables = new Globals.StandardVariableNames[]{
+    private String fileName;
+    public static Globals.StandardVariableNames[] listOfAutomaticlyGeneratedVariables = new Globals.StandardVariableNames[]{
         Globals.StandardVariableNames.CheckStatus,
         Globals.StandardVariableNames.ICD10,
         Globals.StandardVariableNames.MultPrimCode,
@@ -53,23 +62,26 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         Globals.StandardVariableNames.TumourUpdatedBy
     };
     private SystemDescription systemDescription;
+    private final JDesktopPane dtp;
 
     /** Creates new form ModifyDatabaseStructureInternalFrame */
-    public ModifyDatabaseStructureInternalFrame() {
+    public ModifyDatabaseStructureInternalFrame(JDesktopPane dtp) {
         initComponents();
+        this.dtp = dtp;
         regionComboBox.setModel(new DefaultComboBoxModel(new String[]{
-            Globals.REGIONS[1],
-            Globals.REGIONS[2],
-            Globals.REGIONS[3],
-            Globals.REGIONS[4],
-            Globals.REGIONS[5],
-            Globals.REGIONS[6],
-            Globals.REGIONS[9]
-        }));
-    }
-
-    private void setDoc(Document doc) {
-        personSearchVariablesPanel.setDoc(doc);
+                    Globals.REGIONS[1],
+                    Globals.REGIONS[2],
+                    Globals.REGIONS[3],
+                    Globals.REGIONS[4],
+                    Globals.REGIONS[5],
+                    Globals.REGIONS[6],
+                    Globals.REGIONS[9]
+                }));
+        databaseDictionaryPanel1.setActionListener(this);
+        databaseVariablePanel1.setActionListener(this);
+        databaseGroupPanel1.setActionListener(this);
+        databaseIndexPanel1.setActionListener(this);
+        // databaseIndexPanel1.setVisible(false);
     }
 
     public Document getDoc(Document doc) {
@@ -100,13 +112,11 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         searchVariablesPanel = new javax.swing.JPanel();
         personSearchVariablesPanel = new canreg.client.gui.management.PersonSearchVariablesPanel();
         dictionariesPanel = new javax.swing.JPanel();
-        databaseDictionaryPanel1 = new canreg.client.gui.management.DatabaseDictionaryPanel();
-        indexesPanel = new javax.swing.JPanel();
-        databaseIndexPanel1 = new canreg.client.gui.management.DatabaseIndexPanel();
+        databaseDictionaryPanel1 = new canreg.client.gui.management.DatabaseDictionariesPanel();
         variablesPanel = new javax.swing.JPanel();
-        databaseVariablePanel1 = new canreg.client.gui.management.DatabaseVariablePanel();
+        databaseVariablePanel1 = new canreg.client.gui.management.DatabaseVariablesPanel();
         groupsPanel = new javax.swing.JPanel();
-        databaseGroupPanel1 = new canreg.client.gui.management.DatabaseGroupPanel();
+        databaseGroupPanel1 = new canreg.client.gui.management.DatabaseGroupsPanel();
         codingPanel = new javax.swing.JPanel();
         maleCodeLabel = new javax.swing.JLabel();
         maleCodeTextField = new javax.swing.JTextField();
@@ -120,17 +130,14 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         dateSeparatorTextField = new javax.swing.JTextField();
         morphologyLengthLabel = new javax.swing.JLabel();
         morphologyLengthTextField = new javax.swing.JTextField();
-        registrationNumberTypeLabel = new javax.swing.JLabel();
-        registrationNumberTypeComboBox = new javax.swing.JComboBox();
-        basisOfDiagnosisLabel = new javax.swing.JLabel();
-        basisOfDiagnosisComboBox = new javax.swing.JComboBox();
+        basisCodesCheckBox = new javax.swing.JCheckBox();
         settingsPanel = new javax.swing.JPanel();
         fastSafeModeCheckBox = new javax.swing.JCheckBox();
         mprulesCheckBox = new javax.swing.JCheckBox();
         specialRegistryCheckBox = new javax.swing.JCheckBox();
         strictPasswordModeCheckBox = new javax.swing.JCheckBox();
-        defaultDataEntryLanguageLabel = new javax.swing.JLabel();
-        defaultDataEntryLanguageComboBox = new javax.swing.JComboBox();
+        searchVariablesPanel1 = new javax.swing.JPanel();
+        databaseIndexPanel1 = new canreg.client.gui.management.DatabaseIndexPanel();
 
         setClosable(true);
         setResizable(true);
@@ -164,7 +171,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         registryNameTextField.setName("registryNameTextField"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ModifyDatabaseStructureInternalFrame.class, this);
-        jButton1.setAction(actionMap.get("loadXML")); // NOI18N
+        jButton1.setAction(actionMap.get("pickXML")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
         jButton2.setAction(actionMap.get("saveXML")); // NOI18N
@@ -227,13 +234,11 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         searchVariablesPanel.setLayout(searchVariablesPanelLayout);
         searchVariablesPanelLayout.setHorizontalGroup(
             searchVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(personSearchVariablesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+            .addComponent(personSearchVariablesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
         );
         searchVariablesPanelLayout.setVerticalGroup(
             searchVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(searchVariablesPanelLayout.createSequentialGroup()
-                .addComponent(personSearchVariablesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(50, Short.MAX_VALUE))
+            .addComponent(personSearchVariablesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
         );
 
         dictionariesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("dictionariesPanel.border.title"))); // NOI18N
@@ -245,27 +250,11 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         dictionariesPanel.setLayout(dictionariesPanelLayout);
         dictionariesPanelLayout.setHorizontalGroup(
             dictionariesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseDictionaryPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+            .addComponent(databaseDictionaryPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
         );
         dictionariesPanelLayout.setVerticalGroup(
             dictionariesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(databaseDictionaryPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-
-        indexesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("indexesPanel.border.title"))); // NOI18N
-        indexesPanel.setName("indexesPanel"); // NOI18N
-
-        databaseIndexPanel1.setName("databaseIndexPanel1"); // NOI18N
-
-        javax.swing.GroupLayout indexesPanelLayout = new javax.swing.GroupLayout(indexesPanel);
-        indexesPanel.setLayout(indexesPanelLayout);
-        indexesPanelLayout.setHorizontalGroup(
-            indexesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseIndexPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
-        );
-        indexesPanelLayout.setVerticalGroup(
-            indexesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseIndexPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         variablesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("variablesPanel.border.title"))); // NOI18N
@@ -277,7 +266,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         variablesPanel.setLayout(variablesPanelLayout);
         variablesPanelLayout.setHorizontalGroup(
             variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseVariablePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+            .addComponent(databaseVariablePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
         );
         variablesPanelLayout.setVerticalGroup(
             variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,7 +282,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         groupsPanel.setLayout(groupsPanelLayout);
         groupsPanelLayout.setHorizontalGroup(
             groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseGroupPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+            .addComponent(databaseGroupPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
         );
         groupsPanelLayout.setVerticalGroup(
             groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -318,13 +307,15 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         unknownSexLabel.setText(resourceMap.getString("unknownSexLabel.text")); // NOI18N
         unknownSexLabel.setName("unknownSexLabel"); // NOI18N
 
+        unknownSexTextField.setEditable(false);
         unknownSexTextField.setText(resourceMap.getString("unknownSexTextField.text")); // NOI18N
         unknownSexTextField.setName("unknownSexTextField"); // NOI18N
 
         dateFormatLabel.setText(resourceMap.getString("dateFormatLabel.text")); // NOI18N
         dateFormatLabel.setName("dateFormatLabel"); // NOI18N
 
-        dateFormatComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        dateFormatComboBox.setEditable(true);
+        dateFormatComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "dd/mm/yyyy", "mm/dd/yyyy", "mm/dd/yy", "yyyy/mm/dd" }));
         dateFormatComboBox.setName("dateFormatComboBox"); // NOI18N
 
         dateSeparatorLabel.setText(resourceMap.getString("dateSeparatorLabel.text")); // NOI18N
@@ -340,17 +331,9 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         morphologyLengthTextField.setText(resourceMap.getString("morphologyLengthTextField.text")); // NOI18N
         morphologyLengthTextField.setName("morphologyLengthTextField"); // NOI18N
 
-        registrationNumberTypeLabel.setText(resourceMap.getString("registrationNumberTypeLabel.text")); // NOI18N
-        registrationNumberTypeLabel.setName("registrationNumberTypeLabel"); // NOI18N
-
-        registrationNumberTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        registrationNumberTypeComboBox.setName("registrationNumberTypeComboBox"); // NOI18N
-
-        basisOfDiagnosisLabel.setText(resourceMap.getString("basisOfDiagnosisLabel.text")); // NOI18N
-        basisOfDiagnosisLabel.setName("basisOfDiagnosisLabel"); // NOI18N
-
-        basisOfDiagnosisComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        basisOfDiagnosisComboBox.setName("basisOfDiagnosisComboBox"); // NOI18N
+        basisCodesCheckBox.setSelected(true);
+        basisCodesCheckBox.setText(resourceMap.getString("basisCodesCheckBox.text")); // NOI18N
+        basisCodesCheckBox.setName("basisCodesCheckBox"); // NOI18N
 
         javax.swing.GroupLayout codingPanelLayout = new javax.swing.GroupLayout(codingPanel);
         codingPanel.setLayout(codingPanelLayout);
@@ -387,15 +370,8 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                                 .addComponent(dateSeparatorLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(dateSeparatorTextField, 0, 0, Short.MAX_VALUE))))
-                    .addGroup(codingPanelLayout.createSequentialGroup()
-                        .addComponent(registrationNumberTypeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(registrationNumberTypeComboBox, 0, 394, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, codingPanelLayout.createSequentialGroup()
-                        .addComponent(basisOfDiagnosisLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(basisOfDiagnosisComboBox, 0, 394, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(basisCodesCheckBox))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         codingPanelLayout.setVerticalGroup(
             codingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -417,23 +393,20 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                 .addGroup(codingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(morphologyLengthLabel)
                     .addComponent(morphologyLengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(codingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(registrationNumberTypeLabel)
-                    .addComponent(registrationNumberTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(codingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(basisOfDiagnosisLabel)
-                    .addComponent(basisOfDiagnosisComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(basisCodesCheckBox)
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("settingsPanel.border.title"))); // NOI18N
         settingsPanel.setName("settingsPanel"); // NOI18N
 
         fastSafeModeCheckBox.setText(resourceMap.getString("fastSafeModeCheckBox.text")); // NOI18N
+        fastSafeModeCheckBox.setToolTipText(resourceMap.getString("fastSafeModeCheckBox.toolTipText")); // NOI18N
+        fastSafeModeCheckBox.setEnabled(false);
         fastSafeModeCheckBox.setName("fastSafeModeCheckBox"); // NOI18N
 
+        mprulesCheckBox.setSelected(true);
         mprulesCheckBox.setText(resourceMap.getString("mprulesCheckBox.text")); // NOI18N
         mprulesCheckBox.setName("mprulesCheckBox"); // NOI18N
 
@@ -441,13 +414,9 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         specialRegistryCheckBox.setName("specialRegistryCheckBox"); // NOI18N
 
         strictPasswordModeCheckBox.setText(resourceMap.getString("strictPasswordModeCheckBox.text")); // NOI18N
+        strictPasswordModeCheckBox.setToolTipText(resourceMap.getString("strictPasswordModeCheckBox.toolTipText")); // NOI18N
+        strictPasswordModeCheckBox.setEnabled(false);
         strictPasswordModeCheckBox.setName("strictPasswordModeCheckBox"); // NOI18N
-
-        defaultDataEntryLanguageLabel.setText(resourceMap.getString("defaultDataEntryLanguageLabel.text")); // NOI18N
-        defaultDataEntryLanguageLabel.setName("defaultDataEntryLanguageLabel"); // NOI18N
-
-        defaultDataEntryLanguageComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        defaultDataEntryLanguageComboBox.setName("defaultDataEntryLanguageComboBox"); // NOI18N
 
         javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
         settingsPanel.setLayout(settingsPanelLayout);
@@ -456,16 +425,10 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(settingsPanelLayout.createSequentialGroup()
-                        .addComponent(defaultDataEntryLanguageLabel)
-                        .addGap(4, 4, 4)
-                        .addComponent(defaultDataEntryLanguageComboBox, 0, 394, Short.MAX_VALUE))
                     .addComponent(fastSafeModeCheckBox)
                     .addComponent(mprulesCheckBox)
                     .addComponent(specialRegistryCheckBox)
-                    .addGroup(settingsPanelLayout.createSequentialGroup()
-                        .addComponent(strictPasswordModeCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 401, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(strictPasswordModeCheckBox))
                 .addContainerGap())
         );
         settingsPanelLayout.setVerticalGroup(
@@ -477,12 +440,23 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(specialRegistryCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(strictPasswordModeCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(defaultDataEntryLanguageLabel)
-                    .addComponent(defaultDataEntryLanguageComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(strictPasswordModeCheckBox))
+        );
+
+        searchVariablesPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("searchVariablesPanel1.border.title"))); // NOI18N
+        searchVariablesPanel1.setName("searchVariablesPanel1"); // NOI18N
+
+        databaseIndexPanel1.setName("databaseIndexPanel1"); // NOI18N
+
+        javax.swing.GroupLayout searchVariablesPanel1Layout = new javax.swing.GroupLayout(searchVariablesPanel1);
+        searchVariablesPanel1.setLayout(searchVariablesPanel1Layout);
+        searchVariablesPanel1Layout.setHorizontalGroup(
+            searchVariablesPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(databaseIndexPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+        );
+        searchVariablesPanel1Layout.setVerticalGroup(
+            searchVariablesPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(databaseIndexPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         javax.swing.GroupLayout editorsPanelLayout = new javax.swing.GroupLayout(editorsPanel);
@@ -491,13 +465,13 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             editorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(editorsPanelLayout.createSequentialGroup()
                 .addGroup(editorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(indexesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE)
+                    .addComponent(codingPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(dictionariesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(groupsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(searchVariablesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(variablesPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(codingPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(searchVariablesPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         editorsPanelLayout.setVerticalGroup(
@@ -511,12 +485,12 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchVariablesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(indexesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(codingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(searchVariablesPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         editorsScrollPane.setViewportView(editorsPanel);
@@ -533,14 +507,18 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             .addGroup(layout.createSequentialGroup()
                 .addComponent(generalPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 681, Short.MAX_VALUE))
+                .addComponent(editorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 693, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     @Action
-    public void loadXML() {
+    public void pickXML() {
         // open browser - default folder where the current XML is stored, if possible...
         if (chooser == null) {
             chooser = new JFileChooser(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER);
@@ -548,39 +526,85 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         // pick XML file
         int returnVal = chooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            path = chooser.getSelectedFile().getAbsolutePath();
+            fileName = chooser.getSelectedFile().getAbsolutePath();
         }
+        openXML();
+    }
+
+    public void openXML() {
         // load system desc
-        systemDescription = new SystemDescription(path);
-        setDoc(systemDescription.getSystemDescriptionDocument());
+        systemDescription = new SystemDescription(fileName);
+
+        personSearchVariablesPanel.setDoc(systemDescription.getSystemDescriptionDocument());
+        personSearchVariablesPanel.toggleDefaultSettingsAction();
+        personSearchVariablesPanel.setDefaultButtonVisibility(false);
+
         registryNameTextField.setText(systemDescription.getSystemName());
         registryCodeTextField.setText(systemDescription.getSystemCode());
         regionComboBox.setSelectedItem(systemDescription.getRegion());
         databaseVariablePanel1.setElements(systemDescription.getDatabaseVariableListElements());
         databaseGroupPanel1.setElements(systemDescription.getDatabaseGroupsListElements());
         databaseDictionaryPanel1.setElements(systemDescription.getDatabaseDictionaryListElements());
+        databaseIndexPanel1.setElements(systemDescription.getDatabaseIndexesListElements());
+
+        // coding
+        dateFormatComboBox.setSelectedItem(systemDescription.getDateFormat());
+        maleCodeTextField.setText(systemDescription.getTextContentFromElement("male_code"));
+        femaleCodeTextField.setText(systemDescription.getTextContentFromElement("female_code"));
+        unknownSexTextField.setText(systemDescription.getTextContentFromElement("unknown_sex_code"));
+        morphologyLengthTextField.setText(systemDescription.getTextContentFromElement("morphology_length"));
+        basisCodesCheckBox.setSelected(!"1".equals(systemDescription.getTextContentFromElement("basis_diag_codes")));
+
+        // settings
+        fastSafeModeCheckBox.setSelected(!"1".equals(systemDescription.getTextContentFromElement("fast_safe_mode")));
+        mprulesCheckBox.setSelected(!"1".equals(systemDescription.getTextContentFromElement("mult_prim_rules")));
+        specialRegistryCheckBox.setSelected("1".equals(systemDescription.getTextContentFromElement("special_registry")));
+        strictPasswordModeCheckBox.setSelected("1".equals(systemDescription.getTextContentFromElement("password_rules")));
+
     }
 
     @Action
     public void saveXML() {
-        // rebuild doc
+        // refresh the doc
+        // set the system stuff
+        systemDescription.setSystemName(registryNameTextField.getText());
+        systemDescription.setRegistryCode(registryCodeTextField.getText());
+        systemDescription.setRegionCode(Arrays.asList(Globals.REGIONS).indexOf(regionComboBox.getSelectedItem()));
+        systemDescription.setDictionaries((DatabaseDictionaryListElement[]) databaseDictionaryPanel1.getDatabaseElements());
+        systemDescription.setGroups((DatabaseGroupsListElement[]) databaseGroupPanel1.getDatabaseElements());
+        systemDescription.setVariables((DatabaseVariablesListElement[]) databaseVariablePanel1.getDatabaseElements());
         // save doc
+        fileName = Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + File.separator + registryCodeTextField.getText().trim() + ".xml";
+        File file = new File(fileName);
+        File oldFile = null;
+        if (file.exists()) {
+            int i = 0;
+            oldFile = new File(fileName + "." + i);
+            while (oldFile.exists()) {
+                i++;
+                oldFile = new File(fileName + "." + i);
+            }
+            file.renameTo(oldFile.getAbsoluteFile());
+        }
+        systemDescription.saveSystemDescriptionXML(fileName);
+        String message = "System definition saved as " + fileName + ".";
+        if (oldFile != null) {
+            message += "\nOld file backed up as " + oldFile.getAbsolutePath();
+        }
+        JOptionPane.showMessageDialog(this, message, "Title", JOptionPane.INFORMATION_MESSAGE);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox basisOfDiagnosisComboBox;
-    private javax.swing.JLabel basisOfDiagnosisLabel;
+    private javax.swing.JCheckBox basisCodesCheckBox;
     private javax.swing.JButton checkIfUniqueButton;
     private javax.swing.JPanel codingPanel;
-    private canreg.client.gui.management.DatabaseDictionaryPanel databaseDictionaryPanel1;
-    private canreg.client.gui.management.DatabaseGroupPanel databaseGroupPanel1;
+    private canreg.client.gui.management.DatabaseDictionariesPanel databaseDictionaryPanel1;
+    private canreg.client.gui.management.DatabaseGroupsPanel databaseGroupPanel1;
     private canreg.client.gui.management.DatabaseIndexPanel databaseIndexPanel1;
-    private canreg.client.gui.management.DatabaseVariablePanel databaseVariablePanel1;
+    private canreg.client.gui.management.DatabaseVariablesPanel databaseVariablePanel1;
     private javax.swing.JComboBox dateFormatComboBox;
     private javax.swing.JLabel dateFormatLabel;
     private javax.swing.JLabel dateSeparatorLabel;
     private javax.swing.JTextField dateSeparatorTextField;
-    private javax.swing.JComboBox defaultDataEntryLanguageComboBox;
-    private javax.swing.JLabel defaultDataEntryLanguageLabel;
     private javax.swing.JPanel dictionariesPanel;
     private javax.swing.JPanel editorsPanel;
     private javax.swing.JScrollPane editorsScrollPane;
@@ -589,7 +613,6 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     private javax.swing.JTextField femaleCodeTextField;
     private javax.swing.JPanel generalPanel;
     private javax.swing.JPanel groupsPanel;
-    private javax.swing.JPanel indexesPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel maleCodeLabel;
@@ -600,13 +623,12 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     private canreg.client.gui.management.PersonSearchVariablesPanel personSearchVariablesPanel;
     private javax.swing.JComboBox regionComboBox;
     private javax.swing.JLabel regionLabel;
-    private javax.swing.JComboBox registrationNumberTypeComboBox;
-    private javax.swing.JLabel registrationNumberTypeLabel;
     private javax.swing.JLabel registryCodeLabel;
     private javax.swing.JTextField registryCodeTextField;
     private javax.swing.JLabel registryNameLabel;
     private javax.swing.JTextField registryNameTextField;
     private javax.swing.JPanel searchVariablesPanel;
+    private javax.swing.JPanel searchVariablesPanel1;
     private javax.swing.JPanel settingsPanel;
     private javax.swing.JCheckBox specialRegistryCheckBox;
     private javax.swing.JCheckBox strictPasswordModeCheckBox;
@@ -616,8 +638,38 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     // End of variables declaration//GEN-END:variables
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals(DatabaseVariableEditorInternalFrame.OK_ACTION)){
-            
+        if (e.getActionCommand().equals(DatabaseVariableEditorInternalFrame.UPDATED)) {
+            databaseVariablePanel1.redrawTable();
+        } else if (e.getActionCommand().equals(DatabaseGroupEditorInternalFrame.UPDATED)) {
+            databaseGroupPanel1.redrawTable();
+        } else if (e.getActionCommand().equals(DatabaseDictionaryEditorInternalFrame.UPDATED)) {
+            databaseDictionaryPanel1.redrawTable();
+        } else if (e.getActionCommand().equals(DatabaseElementPanel.EDIT_ACTION)) {
+            if (systemDescription != null) {
+                DatabaseElementPanel ep = (DatabaseElementPanel) e.getSource();
+                DatabaseElement dbe = ep.getDatabaseElement();
+                if (dbe instanceof DatabaseVariablesListElement) {
+                    DatabaseVariableEditorInternalFrame dveif = new DatabaseVariableEditorInternalFrame();
+                    dveif.setDictionaries(databaseDictionaryPanel1.getDatabaseElements());
+                    dveif.setGroups(databaseGroupPanel1.getDatabaseElements());
+                    dveif.setDatabaseVariablesListElement((DatabaseVariablesListElement) dbe);
+                    dveif.setActionListener(this);
+                    CanRegClientView.showAndPositionInternalFrame(dtp, dveif);
+                } else if (dbe instanceof DatabaseDictionaryListElement) {
+                    DatabaseDictionaryEditorInternalFrame dveif = new DatabaseDictionaryEditorInternalFrame();
+                    dveif.setDatabaseDictionaryListElement((DatabaseDictionaryListElement) dbe);
+                    dveif.setActionListener(this);
+                    CanRegClientView.showAndPositionInternalFrame(dtp, dveif);
+                } else if (dbe instanceof DatabaseGroupsListElement) {
+                    DatabaseGroupEditorInternalFrame dveif = new DatabaseGroupEditorInternalFrame();
+                    dveif.setDatabaseGroupsListElement((DatabaseGroupsListElement) dbe);
+                    dveif.setActionListener(this);
+                    CanRegClientView.showAndPositionInternalFrame(dtp, dveif);
+                }
+            } else {
+                JOptionPane.showInternalMessageDialog(this,
+                        "Please load a system definition XML first.");
+            }
         }
     }
 }
