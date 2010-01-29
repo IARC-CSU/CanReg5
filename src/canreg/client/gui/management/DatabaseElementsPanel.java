@@ -11,9 +11,12 @@
 package canreg.client.gui.management;
 
 import canreg.common.DatabaseElement;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Comparator;
+import java.util.TreeSet;
 import org.jdesktop.application.Action;
 
 /**
@@ -22,9 +25,24 @@ import org.jdesktop.application.Action;
  */
 public abstract class DatabaseElementsPanel extends javax.swing.JPanel implements ActionListener {
 
+    private ActionListener listener;
+    public static String UPDATED = "database_Elements_panel_updated";
+    protected TreeSet<DatabaseElementPanel> elementPanelsSet;
+    // private List<DatabaseElement> databaseElementsList;
+
     /** Creates new form DatabaseElementsPanel */
     public DatabaseElementsPanel() {
         initComponents();
+        elementPanelsSet = new TreeSet<DatabaseElementPanel>(new Comparator<DatabaseElementPanel>() {
+
+            public int compare(DatabaseElementPanel o1, DatabaseElementPanel o2) {
+                return o1.getPosition() - o2.getPosition();
+            }
+        });
+    }
+
+    public void setActionListener(ActionListener listener) {
+        this.listener = listener;
     }
 
     /** This method is called from within the constructor to
@@ -69,13 +87,22 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
     @Action
     public abstract void addAction();
 
+    public abstract boolean removable(DatabaseElement dbe);
+
     public void add(DatabaseElement element) {
-        ElementPanel elementPanel = new ElementPanel(element);
-        elementPanel.setVisible(true);
+        DatabaseElementPanel elementPanel = new DatabaseElementPanel(element);
+        // elementPanel.setRemovable(removable(element));
+        elementPanel.setPosition(elementPanelsSet.size());
         elementPanel.setActionListener(this);
-        elementsPanel.add(elementPanel);
-        elementsPanel.revalidate();
-        elementsPanel.repaint();
+        if (visible(element)) {
+            elementsPanel.add(elementPanel);
+            elementsPanel.revalidate();
+            elementsPanel.repaint();
+            elementPanel.setVisible(true);
+            elementPanel.setColorSignal(colorize(element));
+        }
+        elementPanelsSet.add(elementPanel);
+        listener.actionPerformed(new ActionEvent(this, 0, UPDATED));
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
@@ -83,20 +110,82 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
     // End of variables declaration//GEN-END:variables
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals(ElementPanel.REMOVE_ACTION)) {
+        if (e.getActionCommand().equals(DatabaseElementPanel.REMOVE_ACTION)) {
             elementsPanel.remove((Component) e.getSource());
             elementsPanel.revalidate();
             elementsPanel.repaint();
-        } else  if (e.getActionCommand().equals(ElementPanel.EDIT_ACTION)) {
-            if (e.getSource() instanceof DatabaseVariablePanel){
-
+        } else if (e.getActionCommand().equals(DatabaseElementPanel.MOVE_UP_ACTION)) {
+            DatabaseElementPanel source = (DatabaseElementPanel) e.getSource();
+            DatabaseElementPanel lower = elementPanelsSet.lower(source);
+            if (lower != null) {
+                elementPanelsSet.remove(source);
+                elementPanelsSet.remove(lower);
+                int tmpPos = source.getPosition();
+                source.setPosition(lower.getPosition());
+                lower.setPosition(tmpPos);
+                elementPanelsSet.add(source);
+                elementPanelsSet.add(lower);
+            }
+            redrawTable();
+        } else if (e.getActionCommand().equals(DatabaseElementPanel.MOVE_DOWN_ACTION)) {
+            DatabaseElementPanel source = (DatabaseElementPanel) e.getSource();
+            DatabaseElementPanel higher = elementPanelsSet.higher(source);
+            if (higher != null) {
+                elementPanelsSet.remove(source);
+                elementPanelsSet.remove(higher);
+                int tmpPos = source.getPosition();
+                source.setPosition(higher.getPosition());
+                higher.setPosition(tmpPos);
+                elementPanelsSet.add(source);
+                elementPanelsSet.add(higher);
+            }
+            redrawTable();
+        } else if (e.getActionCommand().equals(DatabaseElementPanel.EDIT_ACTION)) {
+            // pass it on
+            if (listener != null) {
+                listener.actionPerformed(e);
             }
         }
     }
 
-    void setElements(DatabaseElement[] databaseElements) {
-        for (DatabaseElement dbe:databaseElements){
-            add(dbe);
+    void setElements(DatabaseElement[] databaseElementsArray) {
+        // this.databaseElementsList = java.util.Arrays.asList(databaseElementsArray);
+        elementPanelsSet.clear();
+        for (DatabaseElement dbe : databaseElementsArray) {
+            DatabaseElementPanel elementPanel = new DatabaseElementPanel(dbe);
+            elementPanel.setColorSignal(colorize(dbe));
+            elementPanel.setPosition(elementPanelsSet.size());
+            elementPanel.setActionListener(this);
+            elementPanelsSet.add(elementPanel);
         }
+        redrawTable();
     }
+
+    public DatabaseElement[] getDatabaseElements() {
+        DatabaseElement[] elements = new DatabaseElement[elementPanelsSet.size()];
+        int i = 0;
+        for (DatabaseElementPanel elementPanel : elementPanelsSet) {
+            elements[i] = elementPanel.getDatabaseElement();
+            i++;
+        }
+        return elements;
+    }
+
+    public void redrawTable() {
+        elementsPanel.removeAll();
+        for (DatabaseElementPanel elementPanel : elementPanelsSet) {
+            elementPanel.refresh();
+            if (visible(elementPanel.getDatabaseElement())) {
+                elementsPanel.add(elementPanel);
+                elementPanel.setVisible(true);
+                elementPanel.setColorSignal(colorize(elementPanel.getDatabaseElement()));
+            }
+        }
+        elementsPanel.revalidate();
+        elementsPanel.repaint();
+    }
+
+    public abstract Color colorize(DatabaseElement element);
+
+    public abstract boolean visible(DatabaseElement element);
 }

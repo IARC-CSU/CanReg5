@@ -10,6 +10,7 @@
  */
 package canreg.client.gui.management;
 
+import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
@@ -193,8 +194,8 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
 
         // Update the Indexes part
         //
-        TreeMap<String, LinkedList<String>> indexMap = canreg.common.Tools.buildIndexMap(Globals.PATIENT_TABLE_NAME, doc, Globals.NAMESPACE);
-        indexMap.putAll(canreg.common.Tools.buildIndexMap(Globals.TUMOUR_TABLE_NAME, doc, Globals.NAMESPACE));
+        TreeMap<String, DatabaseIndexesListElement> indexMap = canreg.common.Tools.buildIndexMap(Globals.PATIENT_TABLE_NAME, doc, Globals.NAMESPACE, null);
+        indexMap.putAll(canreg.common.Tools.buildIndexMap(Globals.TUMOUR_TABLE_NAME, doc, Globals.NAMESPACE, null));
 
         Element parentElement = doc.createElement(Globals.NAMESPACE + "indexes");
 
@@ -213,7 +214,7 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
             Element childElement = createElement(Globals.NAMESPACE + "name", indexName);
             element.appendChild(childElement);
 
-            LinkedList<String> variablesInThisIndex = indexMap.get(indexName);
+            LinkedList<String> variablesInThisIndex = indexMap.get(indexName).getVariableNamesInIndex();
 
             String tableOfThisIndex = variablesToTableMap.get(variablesInThisIndex.getFirst());
             childElement = createElement(Globals.NAMESPACE + "table", tableOfThisIndex);

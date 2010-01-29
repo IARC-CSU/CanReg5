@@ -1,18 +1,12 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * DatabaseDictionaryEditorInternalFrame.java
+ *
+ * Created on 26-Jan-2010, 11:15:23
  */
 
-/*
- * DatabaseVariableEditorInternalFrame.java
- *
- * Created on 21-Jan-2010, 11:18:02
- */
 package canreg.client.gui.management;
 
 import canreg.common.DatabaseDictionaryListElement;
-import canreg.common.DatabaseGroupsListElement;
-import canreg.common.DatabaseVariablesListElement;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.jdesktop.application.Action;
@@ -21,13 +15,12 @@ import org.jdesktop.application.Action;
  *
  * @author ervikm
  */
-public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFrame {
-
+public class DatabaseDictionaryEditorInternalFrame extends javax.swing.JInternalFrame {
     private ActionListener listener;
-    public final static String UPDATED = "varaiable_updated";
+    public static String UPDATED = "dictionary_updated";
 
-    /** Creates new form DatabaseVariableEditorInternalFrame */
-    public DatabaseVariableEditorInternalFrame() {
+    /** Creates new form DatabaseDictionaryEditorInternalFrame */
+    public DatabaseDictionaryEditorInternalFrame() {
         initComponents();
     }
 
@@ -43,14 +36,14 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        databaseVariableEditor = new canreg.client.gui.management.DatabaseVariableEditor();
+        databaseDictionaryEditorPanel1 = new canreg.client.gui.management.DatabaseDictionaryEditorPanel();
 
         setResizable(true);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(DatabaseVariableEditorInternalFrame.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(DatabaseDictionaryEditorInternalFrame.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setName("Form"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(DatabaseVariableEditorInternalFrame.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(DatabaseDictionaryEditorInternalFrame.class, this);
         okButton.setAction(actionMap.get("okAction")); // NOI18N
         okButton.setName("okButton"); // NOI18N
 
@@ -59,26 +52,26 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        databaseVariableEditor.setName("databaseVariableEditor"); // NOI18N
-        jScrollPane1.setViewportView(databaseVariableEditor);
+        databaseDictionaryEditorPanel1.setName("databaseDictionaryEditorPanel1"); // NOI18N
+        jScrollPane1.setViewportView(databaseDictionaryEditorPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(272, Short.MAX_VALUE)
+                .addContainerGap(162, Short.MAX_VALUE)
                 .addComponent(cancelButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(okButton)
                 .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okButton)
                     .addComponent(cancelButton))
@@ -95,31 +88,23 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
 
     @Action
     public void okAction() {
-        databaseVariableEditor.refreshDatabaseVariablesListElement();
+        databaseDictionaryEditorPanel1.refreshDatabaseDictionaryListElement();
         listener.actionPerformed(new ActionEvent(this, 0, UPDATED));
         this.dispose();
     }
-
-    public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseVariablesListElement) {
-        // this.setTitle(databaseVariablesListElement.getDatabaseVariableName());
-        databaseVariableEditor.setDatabaseVariablesListElement(databaseVariablesListElement);
+    
+    public void setDatabaseDictionaryListElement(DatabaseDictionaryListElement databaseDictionaryListElement) {
+        databaseDictionaryEditorPanel1.setDatabaseDictionaryListElement(databaseDictionaryListElement);
     }
 
-    public void setGroups(DatabaseGroupsListElement[] groups) {
-        databaseVariableEditor.setGroups(groups);
-    }
-
-    public void setDictionaries(DatabaseDictionaryListElement[] dictionaries) {
-        databaseVariableEditor.setDictionaries(dictionaries);
-    }
-
-    public void setActionListener(ActionListener listener) {
-        this.listener = listener;
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
-    private canreg.client.gui.management.DatabaseVariableEditor databaseVariableEditor;
+    private canreg.client.gui.management.DatabaseDictionaryEditorPanel databaseDictionaryEditorPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton okButton;
     // End of variables declaration//GEN-END:variables
+
+    void setActionListener(ActionListener listener) {
+        this.listener = listener;
+    }
 }

@@ -11,6 +11,7 @@ import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 
 /**
@@ -57,12 +58,12 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
                     new TranslatableListElement(Globals.TUMOUR_TABLE_NAME, "Tumour"),
                     new TranslatableListElement(Globals.SOURCE_TABLE_NAME, "Source")
                 }));
-        dictionaryComboBox.setModel(new DefaultComboBoxModel(new DatabaseDictionaryListElement[] {
-            new DatabaseDictionaryListElement()
-        }));
-        groupComboBox.setModel(new DefaultComboBoxModel(new DatabaseGroupsListElement[] {
-            new DatabaseGroupsListElement("Default",1,1)
-        }));
+        dictionaryComboBox.setModel(new DefaultComboBoxModel(new DatabaseDictionaryListElement[]{
+                    new DatabaseDictionaryListElement()
+                }));
+        groupComboBox.setModel(new DefaultComboBoxModel(new DatabaseGroupsListElement[]{
+                    new DatabaseGroupsListElement("Default", 1, 1)
+                }));
     }
 
     public void setGroups(DatabaseGroupsListElement[] groups) {
@@ -165,6 +166,11 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
 
         variableLengthTextField.setText(resourceMap.getString("variableLengthTextField.text")); // NOI18N
         variableLengthTextField.setName("variableLengthTextField"); // NOI18N
+        variableLengthTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                variableLengthTextFieldFocusLost(evt);
+            }
+        });
 
         dictionaryLabel.setText(resourceMap.getString("dictionaryLabel.text")); // NOI18N
         dictionaryLabel.setEnabled(false);
@@ -172,7 +178,6 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
 
         dictionaryComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         dictionaryComboBox.setAction(actionMap.get("dictionaryChosen")); // NOI18N
-        dictionaryComboBox.setEnabled(false);
         dictionaryComboBox.setName("dictionaryComboBox"); // NOI18N
 
         tableLabel.setText(resourceMap.getString("tableLabel.text")); // NOI18N
@@ -212,12 +217,8 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
                                         .addComponent(groupLabel)
                                         .addComponent(fillInStatusLabel)
                                         .addComponent(mpCopyLabel)))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(shortNameLabel))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(fullNameLabel)))
+                                .addComponent(shortNameLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(fullNameLabel, javax.swing.GroupLayout.Alignment.TRAILING))
                             .addComponent(standardVariableNameLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -307,6 +308,14 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
             englishNameTextField.setText(fullNameTextField.getText());
         }
     }//GEN-LAST:event_fullNameTextFieldFocusLost
+
+    private void variableLengthTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_variableLengthTextFieldFocusLost
+        try {
+            Integer.parseInt(variableLengthTextField.getText());
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showInternalMessageDialog(this, nfe);
+        }
+    }//GEN-LAST:event_variableLengthTextFieldFocusLost
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox dictionaryComboBox;
     private javax.swing.JLabel dictionaryLabel;
@@ -337,7 +346,56 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
     /**
      * @return the databaseVariablesListElement
      */
-    public DatabaseVariablesListElement getDatabaseVariablesListElement() {
+    public DatabaseVariablesListElement refreshDatabaseVariablesListElement() {
+        TranslatableListElement tleTable = (TranslatableListElement) tableComboBox.getSelectedItem();
+        databaseVariablesListElement.setTable(tleTable.getOriginalName());
+
+        TranslatableListElement tleType = (TranslatableListElement) variableTypeComboBox.getSelectedItem();
+        databaseVariablesListElement.setVariableType(tleType.getOriginalName());
+
+        databaseVariablesListElement.setShortName(shortNameTextField.getText());
+
+        // databaseVariablesListElement = new DatabaseVariablesListElement(tleTable.getOriginalName(), id, shortNameTextField.getText(), tleType.getOriginalName());
+
+        if (tleType.equals(new TranslatableListElement(Globals.VARIABLE_TYPE_DICTIONARY_NAME, Globals.VARIABLE_TYPE_DICTIONARY_NAME))) {
+            DatabaseDictionaryListElement dictionary = (DatabaseDictionaryListElement) dictionaryComboBox.getSelectedItem();
+            databaseVariablesListElement.setDictionary(dictionary);
+        }
+        if (standardVariableNameComboBox.getSelectedIndex() > 0) {
+            databaseVariablesListElement.setStandardVariableName(standardVariableNameComboBox.getSelectedItem().toString());
+        }
+        databaseVariablesListElement.setFullName(fullNameTextField.getText());
+        databaseVariablesListElement.setEnglishName(englishNameTextField.getText());
+
+        if (standardVariableNameComboBox.getSelectedItem() != null) {
+            databaseVariablesListElement.setStandardVariableName(standardVariableNameComboBox.getSelectedItem().toString());
+        }
+
+        // X pos
+        // databaseVariablesListElement.setXPos(0);
+        // Y pos
+        // databaseVariablesListElement.setYPos(id*100);
+
+        try {
+            databaseVariablesListElement.setVariableLength(Integer.parseInt(variableLengthTextField.getText()));
+        } catch (NumberFormatException nfe) {
+            throw nfe;
+        }
+
+        TranslatableListElement tleFIS = (TranslatableListElement) fillInStatusComboBox.getSelectedItem();
+        databaseVariablesListElement.setFillInStatus(tleFIS.getOriginalName());
+
+        DatabaseGroupsListElement dbgle = (DatabaseGroupsListElement) groupComboBox.getSelectedItem();
+        databaseVariablesListElement.setGroup(dbgle);
+
+        if (unknownCodeTextField.getText().length() > 0) {
+            databaseVariablesListElement.setUnknownCode(unknownCodeTextField.getText());
+        } else {
+            databaseVariablesListElement.setUnknownCode(null);
+        }
+        TranslatableListElement tleMPC = (TranslatableListElement) multiplePrimaryComboBox.getSelectedItem();
+        databaseVariablesListElement.setMultiplePrimaryCopy(tleMPC.getOriginalName());
+
         return databaseVariablesListElement;
     }
 
@@ -353,6 +411,7 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
             DatabaseDictionaryListElement ddle = (DatabaseDictionaryListElement) dictionaryComboBox.getItemAt(i);
             if (ddle.getDictionaryID() == dictID) {
                 dictionaryComboBox.setSelectedIndex(i);
+                dictionaryChosen();
             }
         }
 
@@ -365,23 +424,51 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
             }
         }
 
+        String tableName = databaseVariablesListElement.getTable();
+        tableComboBox.setSelectedItem(new TranslatableListElement(tableName, tableName));
+
+        // String multiplePrimaryCopy =
+        String fillInStatus = databaseVariablesListElement.getFillInStatus();
+        fillInStatusComboBox.setSelectedItem(new TranslatableListElement(fillInStatus, fillInStatus));
+
+        String standardVariableName = databaseVariablesListElement.getStandardVariableName();
+        standardVariableNameComboBox.setSelectedItem(standardVariableName);
+
+        String variableType = databaseVariablesListElement.getVariableType();
+        variableTypeComboBox.setSelectedItem(new TranslatableListElement(variableType, variableType));
+
+        String mpCopy = databaseVariablesListElement.getMultiplePrimaryCopy();
+        multiplePrimaryComboBox.setSelectedItem(new TranslatableListElement(mpCopy, mpCopy));
+
         fullNameTextField.setText(databaseVariablesListElement.getFullName());
         shortNameTextField.setText(databaseVariablesListElement.getShortName());
         englishNameTextField.setText(databaseVariablesListElement.getEnglishName());
         fullNameTextField.setText(databaseVariablesListElement.getFullName());
         fullNameTextField.setText(databaseVariablesListElement.getFullName());
+        variableLengthTextField.setText(databaseVariablesListElement.getVariableLength() + "");
+
+        variableTypeChosenAction();
     }
 
     @Action
     public void variableTypeChosenAction() {
         boolean enableDictionarySelection = false;
-        if (variableTypeComboBox.getSelectedItem().toString().equals(Globals.VARIABLE_TYPE_DICTIONARY_NAME)) {
+        boolean enableVariableLengthChange = true;
+        if (variableTypeComboBox.getSelectedItem().equals(new TranslatableListElement(Globals.VARIABLE_TYPE_DICTIONARY_NAME, Globals.VARIABLE_TYPE_DICTIONARY_NAME))) {
             enableDictionarySelection = true;
+            enableVariableLengthChange = false;
+        } else if (variableTypeComboBox.getSelectedItem().equals(new TranslatableListElement(Globals.VARIABLE_TYPE_DATE_NAME, Globals.VARIABLE_TYPE_DATE_NAME))) {
+            // if this is date we have to set the length to 8
+            enableVariableLengthChange = false;
+            enableDictionarySelection = false;
+            variableLengthTextField.setText(Globals.DATE_FORMAT_STRING.length() + "");
         }
         dictionaryComboBox.setEnabled(enableDictionarySelection);
         dictionaryLabel.setEnabled(enableDictionarySelection);
-        variableLengthLabel.setEnabled(!enableDictionarySelection);
-        variableLengthTextField.setEnabled(!enableDictionarySelection);
+        unknownCodeLabel.setEnabled(enableVariableLengthChange);
+        unknownCodeTextField.setEnabled(enableVariableLengthChange);
+        variableLengthLabel.setEnabled(enableVariableLengthChange);
+        variableLengthTextField.setEnabled(enableVariableLengthChange);
     }
 
     @Action
@@ -389,6 +476,9 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
         DatabaseDictionaryListElement ddle = (DatabaseDictionaryListElement) dictionaryComboBox.getSelectedItem();
         if (ddle != null) {
             variableLengthTextField.setText(ddle.getFullDictionaryCodeLength() + "");
+            if (ddle.getUnkownCode() != null) {
+                unknownCodeTextField.setText(ddle.getUnkownCode());
+            }
         }
     }
 }
