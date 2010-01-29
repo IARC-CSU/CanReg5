@@ -240,17 +240,25 @@ public class Tools {
         return variablesInTable;
     }
 
+    public static DatabaseIndexesListElement[] getIndexesListElements(Document doc, String namespace) {
+        return getIndexesListElements(doc, namespace, null);
+    }
+
     /**
      * 
      * @param doc
      * @param namespace
      * @return
      */
-    public static DatabaseIndexesListElement[] getIndexesListElements(Document doc, String namespace) {
+    public static DatabaseIndexesListElement[] getIndexesListElements(Document doc, String namespace, TreeMap<String, DatabaseVariablesListElement> variablesMap) {
         NodeList nl = doc.getElementsByTagName(namespace + "index");
+        if (variablesMap == null) {
+            variablesMap = buildVariablesMap(getVariableListElements(doc, namespace));
+        }
         DatabaseIndexesListElement[] indexes = new DatabaseIndexesListElement[nl.getLength()];
-        TreeMap<String, LinkedList<String>> patientIndexMap = buildIndexMap(Globals.PATIENT_TABLE_NAME, doc, namespace);
-        TreeMap<String, LinkedList<String>> tumourIndexMap = buildIndexMap(Globals.TUMOUR_TABLE_NAME, doc, namespace);
+        TreeMap<String, DatabaseIndexesListElement> patientIndexMap = buildIndexMap(Globals.PATIENT_TABLE_NAME, doc, namespace, variablesMap);
+        TreeMap<String, DatabaseIndexesListElement> tumourIndexMap = buildIndexMap(Globals.TUMOUR_TABLE_NAME, doc, namespace, variablesMap);
+        TreeMap<String, DatabaseIndexesListElement> sourceIndexMap = buildIndexMap(Globals.SOURCE_TABLE_NAME, doc, namespace, variablesMap);
 
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
@@ -258,20 +266,31 @@ public class Tools {
             DatabaseIndexesListElement index = new DatabaseIndexesListElement(indexName);
             String tableName = e.getElementsByTagName(namespace + "table").item(0).getTextContent();
             index.setDatabaseTableName(tableName);
-            LinkedList<String> variablesInIndex = null;
             if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-                variablesInIndex = patientIndexMap.get(indexName);
+                index = patientIndexMap.get(indexName);
             } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-                variablesInIndex = tumourIndexMap.get(indexName);
+                index = tumourIndexMap.get(indexName);
+            } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+                index = sourceIndexMap.get(indexName);
             }
-            index.setVariablesInIndex(variablesInIndex);
             indexes[i] = index;
         }
         return indexes;
     }
 
-    public static TreeMap<String, LinkedList<String>> buildIndexMap(String tableName, Document doc, String namespace) {
-        TreeMap<String, LinkedList<String>> indexMap = new TreeMap<String, LinkedList<String>>();
+    public static TreeMap<String, DatabaseVariablesListElement> buildVariablesMap(DatabaseVariablesListElement[] variableListElements) {
+        TreeMap<String, DatabaseVariablesListElement> variablesMap = new TreeMap<String, DatabaseVariablesListElement>();
+        for (DatabaseVariablesListElement elem : variableListElements) {
+            variablesMap.put(elem.getDatabaseVariableName().toUpperCase(), elem);
+        }
+        return variablesMap;
+    }
+
+    public static TreeMap<String, DatabaseIndexesListElement> buildIndexMap(String tableName, Document doc, String namespace, TreeMap<String, DatabaseVariablesListElement> variablesMap) {
+        if (variablesMap == null) {
+        }
+
+        TreeMap<String, DatabaseIndexesListElement> indexMap = new TreeMap<String, DatabaseIndexesListElement>();
 
         NodeList nodes = doc.getElementsByTagName(namespace + "indexes");
         Element variablesElement = (Element) nodes.item(0);
@@ -288,19 +307,22 @@ public class Tools {
             String tableNameDB = element.getElementsByTagName(namespace + "table").item(0).getTextContent().toUpperCase();
 
             if (tableNameDB.equalsIgnoreCase(tableName)) {
-                LinkedList<String> indexedVariables = new LinkedList<String>();
                 String nameDB = element.getElementsByTagName(namespace + "name").item(0).getTextContent();
-
+                DatabaseIndexesListElement index = new DatabaseIndexesListElement(nameDB);
+                index.setDatabaseTableName(tableName);
                 NodeList variables = element.getElementsByTagName(namespace + "indexed_variable");
-
+                DatabaseVariablesListElement[] variableArray = new DatabaseVariablesListElement[variables.getLength()];
                 if (variables.getLength() > 0) {
                     // we don't allow empty indexes
                     // Go through all the variable definitions
                     for (int j = 0; j < variables.getLength(); j++) {
                         Element variableElement = (Element) variables.item(j);
-                        indexedVariables.add(variableElement.getElementsByTagName(namespace + "variable_name").item(0).getTextContent().toUpperCase());
+                        DatabaseVariablesListElement variable =
+                                variablesMap.get(variableElement.getElementsByTagName(namespace + "variable_name").item(0).getTextContent().toUpperCase());
+                        variableArray[j] = variable;
                     }
-                    indexMap.put(nameDB, indexedVariables);
+                    index.setVariablesInIndex(variableArray);
+                    indexMap.put(nameDB, index);
                 }
             }
         }
