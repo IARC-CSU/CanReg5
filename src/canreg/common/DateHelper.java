@@ -96,20 +96,24 @@ public class DateHelper {
         // NumberFormatter nf = new NumberFormatter(format);
         format.setMinimumIntegerDigits(2);
         format.setGroupingUsed(false);
-        if (calendar.isUnknownYear()) {
-            dateString = setYear(dateString, dateFormatString, "9999");
-        } else {
-            dateString = setYear(dateString, dateFormatString, format.format(calendar.get(Calendar.YEAR)));
-        }
-        if (calendar.isUnknownMonth()) {
-            dateString = setMonth(dateString, dateFormatString, "99");
-        } else {
-            dateString = setMonth(dateString, dateFormatString, format.format(calendar.get(Calendar.MONTH) + 1));
-        }
-        if (calendar.isUnknownDay()) {
-            dateString = setDay(dateString, dateFormatString, "99");
-        } else {
-            dateString = setDay(dateString, dateFormatString, format.format(calendar.get(Calendar.DAY_OF_MONTH)));
+        try {
+            if (calendar.isUnknownYear() || !calendar.isSet(Calendar.YEAR)) {
+                dateString = setYear(dateString, dateFormatString, "9999");
+            } else {
+                dateString = setYear(dateString, dateFormatString, format.format(calendar.get(Calendar.YEAR)));
+            }
+            if (calendar.isUnknownMonth() || !calendar.isSet(Calendar.MONTH)) {
+                dateString = setMonth(dateString, dateFormatString, "99");
+            } else {
+                dateString = setMonth(dateString, dateFormatString, format.format(calendar.get(Calendar.MONTH) + 1));
+            }
+            if (calendar.isUnknownDay() || !calendar.isSet(Calendar.DAY_OF_MONTH)) {
+                dateString = setDay(dateString, dateFormatString, "99");
+            } else {
+                dateString = setDay(dateString, dateFormatString, format.format(calendar.get(Calendar.DAY_OF_MONTH)));
+            }
+        } catch (IllegalArgumentException iae) {
+            System.out.println(iae + ": " + calendar);
         }
         return dateString;
     }
@@ -159,7 +163,7 @@ public class DateHelper {
         int placeInReplacementString = 0;
         for (int i = 0; i < string.length() && i < filter.length(); i++) {
             if (filter.charAt(filter.length() - 1 - i) == lookFor) {
-                newString = replacementString.charAt(replacementString.length() - 1 - placeInReplacementString++)  + newString;
+                newString = replacementString.charAt(replacementString.length() - 1 - placeInReplacementString++) + newString;
                 if (placeInReplacementString >= replacementString.length()) {
                     placeInReplacementString = 0;
                 }
