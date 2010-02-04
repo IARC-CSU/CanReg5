@@ -286,6 +286,16 @@ public class Tools {
         return variablesMap;
     }
 
+    public static TreeMap<String, DatabaseVariablesListElement> buildStandardVariablesMap(DatabaseVariablesListElement[] variableListElements) {
+        TreeMap<String, DatabaseVariablesListElement> variablesMap = new TreeMap<String, DatabaseVariablesListElement>();
+        for (DatabaseVariablesListElement elem : variableListElements) {
+            if (elem.getStandardVariableName() != null) {
+                variablesMap.put(elem.getStandardVariableName().toUpperCase(), elem);
+            }
+        }
+        return variablesMap;
+    }
+
     public static TreeMap<String, DatabaseIndexesListElement> buildIndexMap(String tableName, Document doc, String namespace, TreeMap<String, DatabaseVariablesListElement> variablesMap) {
         if (variablesMap == null) {
         }
