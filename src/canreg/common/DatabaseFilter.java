@@ -25,9 +25,13 @@ public class DatabaseFilter implements Serializable {
         /**
          * 
          */
-        PERSON_SEARCH
+        PERSON_SEARCH,
+        /**
+         *
+         */
+        NAMES_SEARCH
     }
-    private String filterString;
+    private String filterString = "";
     private Set<DatabaseVariablesListElement> databaseVariables;
     private QueryType queryType;
     private String sortByVariable;
