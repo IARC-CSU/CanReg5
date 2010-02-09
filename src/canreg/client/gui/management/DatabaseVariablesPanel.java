@@ -1,6 +1,7 @@
 package canreg.client.gui.management;
 
 import canreg.common.DatabaseElement;
+import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import java.awt.Color;
@@ -12,10 +13,13 @@ import org.jdesktop.application.Action;
  * @author ervikm
  */
 public class DatabaseVariablesPanel extends DatabaseElementsPanel {
+    private DatabaseGroupsListElement defaultGroup;
 
     @Action
     public void addAction() {
-        add(new DatabaseVariablesListElement(Globals.PATIENT_TABLE_NAME, 1, "Default name", Globals.VARIABLE_TYPE_ALPHA_NAME));
+        DatabaseVariablesListElement variable = new DatabaseVariablesListElement(Globals.PATIENT_TABLE_NAME, 1, "Default name", Globals.VARIABLE_TYPE_ALPHA_NAME);
+        variable.setGroup(defaultGroup);
+        add(variable);
     }
 
     @Override
@@ -50,5 +54,9 @@ public class DatabaseVariablesPanel extends DatabaseElementsPanel {
             color = Color.yellow;
         }
         return color;
+    }
+
+    public void setDefaultGroup(DatabaseGroupsListElement defaultGroup) {
+        this.defaultGroup = defaultGroup;
     }
 }
