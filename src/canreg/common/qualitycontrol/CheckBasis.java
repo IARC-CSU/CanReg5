@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @author ervikm
  */
-public class CheckBasis implements CheckInterface {
+public class CheckBasis extends CheckInterface {
 
     /**
      * 

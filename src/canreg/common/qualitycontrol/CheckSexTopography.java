@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @author ervikm
  */
-public class CheckSexTopography implements CheckInterface {
+public class CheckSexTopography extends CheckInterface {
 
     /**
      * 

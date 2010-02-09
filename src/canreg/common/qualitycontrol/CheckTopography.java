@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author ervikm
  */
-public class CheckTopography implements CheckInterface {
+public class CheckTopography extends CheckInterface {
 
     /**
      * 

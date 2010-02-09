@@ -1,5 +1,6 @@
 package canreg.common.qualitycontrol;
 
+import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DateHelper;
 import canreg.common.Globals;
 import canreg.common.GregorianCalendarCanReg;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author ervikm
  */
-public class CheckAgeIncidenceDateBirthDate implements CheckInterface {
+public class CheckAgeIncidenceDateBirthDate extends CheckInterface {
 
     /**
      *
@@ -53,6 +54,20 @@ public class CheckAgeIncidenceDateBirthDate implements CheckInterface {
         GregorianCalendarCanReg incidenceDate = null;
         GregorianCalendarCanReg birthDate = null;
 
+        DatabaseVariablesListElement ageVariableListElement = variableListElementMap.get(Globals.StandardVariableNames.Age);
+
+        Object unknownAgeCodeObject = ageVariableListElement.getUnknownCode();
+
+        String unknownAgeCodeString = "";
+        if (unknownAgeCodeObject == null) {
+            for (int i = 0; i < ageVariableListElement.getVariableLength(); i++) {
+                unknownAgeCodeString += "9";
+            }
+        } else {
+            unknownAgeCodeString = unknownAgeCodeObject.toString();
+        }
+        int unknownAge = Integer.parseInt(unknownAgeCodeString);
+
         try {
             result.addVariableInvolved(Globals.StandardVariableNames.Age);
             ageCode = variables.get(Globals.StandardVariableNames.Age).toString();
@@ -79,8 +94,8 @@ public class CheckAgeIncidenceDateBirthDate implements CheckInterface {
 
         if (!(birthDate.isUnknownYear() || incidenceDate.isUnknownYear())) {
             int allowedDifference = 0;
-            if (birthDate.isUnknownMonth() || birthDate.isUnknownDay() ||
-                    incidenceDate.isUnknownMonth() || incidenceDate.isUnknownDay()) {
+            if (birthDate.isUnknownMonth() || birthDate.isUnknownDay()
+                    || incidenceDate.isUnknownMonth() || incidenceDate.isUnknownDay()) {
                 allowedDifference = 1;
             }
             long calculatedAge = DateHelper.yearsBetween(birthDate, incidenceDate);
@@ -91,7 +106,11 @@ public class CheckAgeIncidenceDateBirthDate implements CheckInterface {
                 result.setMessage("Incidence date before birth date.");
                 result.setResultCode(CheckResult.ResultCode.Invalid);
                 return result;
-            } else if (Math.abs((calculatedAge-ageNumber))>allowedDifference) {
+            } else if (ageNumber == unknownAge) {
+                result.setMessage("Unknown age stated, but both birth year and incidence year are known.");
+                result.setResultCode(CheckResult.ResultCode.Query);
+                return result;
+            } else if (Math.abs((calculatedAge - ageNumber)) > allowedDifference) {
                 result.setMessage("Age error. Stated: " + ageNumber + ", Calculated: " + calculatedAge);
                 result.setResultCode(CheckResult.ResultCode.Invalid);
                 return result;

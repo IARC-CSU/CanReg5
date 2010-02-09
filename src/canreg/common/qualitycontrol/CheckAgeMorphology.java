@@ -9,7 +9,7 @@ import java.util.Map;
  * @author 
  * Based on the "age histology"-check of Andy Cooke
  */
-public class CheckAgeMorphology implements CheckInterface {
+public class CheckAgeMorphology extends CheckInterface {
 
     /**
      * 

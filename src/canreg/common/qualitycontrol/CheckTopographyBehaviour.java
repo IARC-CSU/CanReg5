@@ -10,7 +10,7 @@ import java.util.Map;
  * 
  * DepEdits check #25
  */
-public class CheckTopographyBehaviour implements CheckInterface {
+public class CheckTopographyBehaviour extends CheckInterface {
 
     /**
      * 

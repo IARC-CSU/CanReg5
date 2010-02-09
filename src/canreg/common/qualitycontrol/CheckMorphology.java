@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author ervikm
  */
-public class CheckMorphology implements CheckInterface {
+public class CheckMorphology extends CheckInterface {
 
     /**
      * 

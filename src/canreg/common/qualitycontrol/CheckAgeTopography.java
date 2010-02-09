@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @author ervikm
  */
-public class CheckAgeTopography implements CheckInterface {
+public class CheckAgeTopography extends CheckInterface {
 
     /**
      * 

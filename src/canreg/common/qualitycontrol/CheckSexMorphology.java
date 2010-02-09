@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author ervikm
  */
-public class CheckSexMorphology implements CheckInterface {
+public class CheckSexMorphology extends CheckInterface {
 
     /**
      * 
