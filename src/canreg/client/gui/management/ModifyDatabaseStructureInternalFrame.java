@@ -543,6 +543,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         registryCodeTextField.setText(systemDescription.getSystemCode());
         regionComboBox.setSelectedItem(systemDescription.getRegion());
         databaseVariablePanel1.setElements(systemDescription.getDatabaseVariableListElements());
+        databaseVariablePanel1.setDefaultGroup(systemDescription.getDatabaseGroupsListElements()[1]);
         databaseGroupPanel1.setElements(systemDescription.getDatabaseGroupsListElements());
         databaseDictionaryPanel1.setElements(systemDescription.getDatabaseDictionaryListElements());
         databaseIndexPanel1.setElements(systemDescription.getDatabaseIndexesListElements());
