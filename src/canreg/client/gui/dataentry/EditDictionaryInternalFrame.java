@@ -322,10 +322,16 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 testOK = false;
                 String errorString = new String();
                 Iterator<Integer> iterator = errors.keySet().iterator();
-                while (iterator.hasNext()) {
+                int errorLines = 0;
+                while (iterator.hasNext() && errorLines<Globals.MAX_ERROR_LINES) {
                     Integer line = iterator.next();
                     errorString += errors.get(line) + "\n";
+                    errorLines++;
                 }
+                if (iterator.hasNext()){
+                    errorString += "...and more.";
+                }
+
                 JOptionPane.showInternalMessageDialog(rootPane, errorString, "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
