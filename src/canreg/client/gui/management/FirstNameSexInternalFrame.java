@@ -239,6 +239,10 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
             Set<String> set = map.keySet();
             for(String name:set){
                 Integer sex = map.get(name);
+                // both 9 and 3 codes for unknown sex
+                if (sex == 9){
+                    sex = 3;
+                }
                 names[sex-1]+=name+"\n";
             }
             namesTextArea.setText(maleHeader+names[0]+"\n"+
@@ -250,7 +254,6 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
