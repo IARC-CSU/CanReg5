@@ -49,8 +49,9 @@ public class ImportOptions {
     private Charset fileCharset;
     private Charset[] fileCharsets;
     private char[] separators;
-
     private String reportFileName;
+    private String firstNameVariableName;
+    private String sexVariableName;
 
     /**
      * 
@@ -410,5 +411,33 @@ public class ImportOptions {
      */
     public void setReportFileName(String reportFileName) {
         this.reportFileName = reportFileName;
+    }
+
+    /**
+     * @return the firstNameVariableName
+     */
+    public String getFirstNameVariableName() {
+        return firstNameVariableName;
+    }
+
+    /**
+     * @param firstNameVariableName the firstNameVariableName to set
+     */
+    public void setFirstNameVariableName(String firstNameVariableName) {
+        this.firstNameVariableName = firstNameVariableName;
+    }
+
+    /**
+     * @return the sexVariableName
+     */
+    public String getSexVariableName() {
+        return sexVariableName;
+    }
+
+    /**
+     * @param sexVariableName the sexVariableName to set
+     */
+    public void setSexVariableName(String sexVariableName) {
+        this.sexVariableName = sexVariableName;
     }
 }

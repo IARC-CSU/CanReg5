@@ -4,6 +4,7 @@
  */
 package canreg.client.dataentry;
 
+import cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.common.Globals;
 import canreg.common.qualitycontrol.CheckResult;
@@ -67,9 +68,12 @@ public class Import {
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
         noNeedToLookAtPatientVariables.add(io.getPatientIDVariableName().toLowerCase());
         noNeedToLookAtPatientVariables.add(io.getPatientRecordIDVariableName().toLowerCase());
+        String firstNameVariableName = io.getFirstNameVariableName();
+        String sexVariableName = io.getSexVariableName();
         HashMap mpCodes = new HashMap();
         int numberOfLinesRead = 0;
         BufferedReader bufferedReader = null;
+        Map<String, Integer> nameSexTable = server.getNameSexTables();
         try {
             // Tro to detect the encoding...
             FileInputStream fis = new FileInputStream(file);
@@ -165,7 +169,9 @@ public class Import {
 
                     // Set the patientID the same as the tumourID initially
 
-                    Object tumourSequence = tumour.getVariable(io.getTumourSequenceVariableName());
+                    // Object tumourSequence = tumour.getVariable(io.getTumourSequenceVariableName());
+                    Object tumourSequence = "1";
+
                     String tumourSequenceString = tumourSequence + "";
                     while (tumourSequenceString.length() < Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD) {
                         tumourSequenceString = "0" + tumourSequenceString;
@@ -176,6 +182,22 @@ public class Import {
                     String mpCodeString = (String) tumour.getVariable(io.getMultiplePrimaryVariableName());
                     if (mpCodeString != null && mpCodeString.length() > 0) {
                         patientID = lookUpPatientID(mpCodeString, patientID, mpCodes);
+
+                        // rebuild sequenceNumber
+                        Tumour[] tumours = new Tumour[0];
+                        try {
+                            tumours = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", false);
+                        } catch (DistributedTableDescriptionException ex) {
+                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (UnknownTableException ex) {
+                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                        tumourSequenceString = (tumours.length + 1) + "";
+                        while (tumourSequenceString.length() < Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD) {
+                            tumourSequenceString = "0" + tumourSequenceString;
+                        }
+
                         patientRecordID = patientID + "" + tumourSequenceString;
                         Patient[] oldPatients = null;
                         try {
@@ -211,6 +233,34 @@ public class Import {
                     // Set the deprecated flag to 0 - no obsolete records from CR4
                     tumour.setVariable(io.getObsoleteTumourFlagVariableName(), "0");
                     patient.setVariable(io.getObsoletePatientFlagVariableName(), "0");
+
+                    // Set the name in the firstName database
+                    String sex = (String) patient.getVariable(sexVariableName);
+                    if (sex != null && sex.length() > 0) {
+                        Integer sexCode = Integer.parseInt(sex);
+                        String firstName = (String) patient.getVariable(firstNameVariableName);
+                        if (firstName != null && firstName.trim().length() > 0) {
+                            firstName = firstName.toUpperCase();
+                            Integer registeredSexCode = nameSexTable.get(firstName);
+                            if (registeredSexCode == null) {
+                                NameSexRecord nsr = new NameSexRecord();
+                                nsr.setName(firstName);
+                                nsr.setSex(sexCode);
+                                server.saveNameSexRecord(nsr, false);
+                                nameSexTable.put(firstName, sexCode);
+                            } else if (registeredSexCode != sexCode) {
+                                if (registeredSexCode != 9) {
+                                    sexCode = 9;
+                                    NameSexRecord nsr = new NameSexRecord();
+                                    nsr.setName(firstName);
+                                    nsr.setSex(sexCode);
+                                    server.saveNameSexRecord(nsr, true);
+                                    nameSexTable.remove(firstName);
+                                    nameSexTable.put(firstName, sexCode);
+                                }
+                            }
+                        }
+                    }
                 }
                 if (needToSavePatientAgain) {
                     if (patientDatabaseRecordID > 0) {
