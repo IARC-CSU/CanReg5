@@ -695,7 +695,9 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                     tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true);
                     for (DatabaseRecord rec : tumourRecords) {
                         // store them in a set, so we don't show them several times
-                        set.add(rec);
+                        if (rec != null) {
+                            set.add(rec);
+                        }
                     }
                 }
                 if (set.isEmpty()) {
