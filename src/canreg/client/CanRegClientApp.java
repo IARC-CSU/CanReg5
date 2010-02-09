@@ -672,7 +672,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdatedBy.toString()).getDatabaseVariableName(), username);
                 recordNumber = server.saveTumour((Tumour) databaseRecord);
             } else if (databaseRecord instanceof NameSexRecord) {
-                recordNumber = server.saveNameSexRecord((NameSexRecord) databaseRecord);
+                recordNumber = server.saveNameSexRecord((NameSexRecord) databaseRecord, true);
             } else if (databaseRecord instanceof PopulationDataset) {
                 // recordNumber = server.savePopulationDataset((PopulationDataset) databaseRecord);
             }
@@ -773,8 +773,8 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.sql.SQLException
      * @throws java.lang.Exception
      */
-    public DatabaseRecord[] getTumourRecordsBasedOnPatientID(String idString, boolean lock) throws RemoteException, SecurityException, SQLException, RecordLockedException, Exception {
-        DatabaseRecord[] records = null;
+    public Tumour[] getTumourRecordsBasedOnPatientID(String idString, boolean lock) throws RemoteException, SecurityException, SQLException, RecordLockedException, DistributedTableDescriptionException, UnknownTableException {
+        Tumour[] records = null;
         String lookUpTableName = "";
         DatabaseFilter filter = new DatabaseFilter();
         String lookUpColumnName = "";
@@ -801,11 +801,15 @@ public class CanRegClientApp extends SingleFrameApplication {
 
         if (found) {
             int id;
-            records = new DatabaseRecord[numberOfRecords];
+            records = new Tumour[numberOfRecords];
             idColumnNumber--;
             for (int j = 0; j < numberOfRecords; j++) {
                 id = (Integer) rows[j][idColumnNumber];
-                records[j] = getRecord(id, lookUpTableName, lock);
+                try {
+                    records[j] = (Tumour) getRecord(id, lookUpTableName, lock);
+                } catch (RecordLockedException recordLockedException) {
+                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record "+ id+ " already locked?", recordLockedException);
+                }
             }
         }
         releaseResultSet(distributedTableDescription.getResultSetID());
