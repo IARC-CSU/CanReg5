@@ -213,9 +213,9 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return theServer.getNameSexTables();
     }
 
-    public int saveNameSexRecord(NameSexRecord nameSexRecord) throws RemoteException, SecurityException {
+    public int saveNameSexRecord(NameSexRecord nameSexRecord, boolean replace) throws RemoteException, SecurityException {
         checkPermission("saveNameSexRecord");
-        return theServer.saveNameSexRecord(nameSexRecord);
+        return theServer.saveNameSexRecord(nameSexRecord, replace);
     }
 
     public boolean clearNameSexTable() throws RemoteException, SecurityException {

@@ -554,8 +554,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public int saveNameSexRecord(NameSexRecord nameSexRecord) throws RemoteException, SecurityException {
-        return db.saveNameSexRecord(nameSexRecord);
+    public int saveNameSexRecord(NameSexRecord nameSexRecord, boolean replace) throws RemoteException, SecurityException {
+        return db.saveNameSexRecord(nameSexRecord, replace);
     }
 
     /**

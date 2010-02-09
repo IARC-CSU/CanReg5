@@ -338,7 +338,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public int saveNameSexRecord(NameSexRecord nameSexRecord) throws RemoteException, SecurityException;
+    public int saveNameSexRecord(NameSexRecord nameSexRecord, boolean replace) throws RemoteException, SecurityException;
 
     /**
      * 
