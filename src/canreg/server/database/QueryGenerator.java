@@ -123,7 +123,7 @@ public class QueryGenerator {
                     if (j > 0) {
                         query += ", ";
                     }
-                    query += "\"" + indexedVariables.get(j) + "\"";
+                    query += "\"" + indexedVariables.get(j).toUpperCase() + "\"";
                 }
                 query += ") ";
                 debugOut(query);
@@ -301,7 +301,7 @@ public class QueryGenerator {
     }
 
     static String strCreateNameSexTable() {
-        String queryLine = "create table " + Globals.SCHEMA_NAME + ".NAMESEX ("
+        String queryLine = "create table " + Globals.SCHEMA_NAME + "." + Globals.NAMESEX_TABLE_NAME + " ("
                 + "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
                 + "NAME VARCHAR(255) NOT NULL UNIQUE,"
                 + "SEX INT"
@@ -314,9 +314,20 @@ public class QueryGenerator {
      * @return
      */
     public static final String strSaveNameSexEntry() {
-        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".NAMESEX "
-                + "   (NAME, SEX) "
+        String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + "." + Globals.NAMESEX_TABLE_NAME + " "
+                + "   (" + Globals.NAMESEX_TABLE_FIRST_NAME_VARIABLE_NAME + ", "
+                + Globals.NAMESEX_TABLE_SEX_VARIABLE_NAME + ") "
                 + "VALUES (?, ?)";
+        return queryLine;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public static final String strDeleteNameSexEntry() {
+        String queryLine = "DELETE FROM APP." + Globals.NAMESEX_TABLE_NAME + " "
+                + "WHERE " + Globals.NAMESEX_TABLE_FIRST_NAME_VARIABLE_NAME + " = ?";
         return queryLine;
     }
 
