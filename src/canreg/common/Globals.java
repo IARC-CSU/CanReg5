@@ -173,6 +173,10 @@ public class Globals {
     public static int PDS_SOURCE_LENGTH = 255;
     public static int PDS_AGE_GROUP_STRUCTURE_STRING_MAX_LENGTH = 40;
     public static int PDS_DESCRIPTION_LENGTH = 255;
+    public static String NAMESEX_TABLE_FIRST_NAME_VARIABLE_NAME = "NAME";
+    public static String NAMESEX_TABLE_SEX_VARIABLE_NAME = "SEX";
+    public static String NAMESEX_TABLE_NAME = "NAMESEX";
+    public static final int MAX_ERROR_LINES = 25;
 
     /**
      * 
@@ -213,6 +217,7 @@ public class Globals {
      */
     static public AgeGroupStructure[] defaultAgeGroupStructures = {
         new AgeGroupStructure(5, 85),
+        new AgeGroupStructure(5, 80),
         new AgeGroupStructure(5, 75),
         new AgeGroupStructure(5, 65),
         new AgeGroupStructure(10, 75, 15),
