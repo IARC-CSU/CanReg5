@@ -25,6 +25,7 @@ import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.management.CanReg4SystemConverterInternalFrame;
 import canreg.client.gui.management.ModifyDatabaseStructureInternalFrame;
 import canreg.client.gui.management.UserManagerInternalFrame;
+import canreg.client.management.DatabaseGarbler;
 import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Patient;
@@ -230,6 +231,7 @@ public class CanRegClientView extends FrameView {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        garbleDatabaseMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         canReg5HelpMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
@@ -505,7 +507,6 @@ public class CanRegClientView extends FrameView {
         jMenu1.setName("jMenu1"); // NOI18N
 
         jMenuItem3.setAction(actionMap.get("setUpNewDatabaseStructureAction")); // NOI18N
-        jMenuItem3.setEnabled(false);
         jMenuItem3.setName("jMenuItem3"); // NOI18N
         jMenu1.add(jMenuItem3);
 
@@ -514,6 +515,10 @@ public class CanRegClientView extends FrameView {
         jMenu1.add(jMenuItem4);
 
         toolsMenu.add(jMenu1);
+
+        garbleDatabaseMenuItem.setAction(actionMap.get("garbleDatabaseAction")); // NOI18N
+        garbleDatabaseMenuItem.setName("garbleDatabaseMenuItem"); // NOI18N
+        toolsMenu.add(garbleDatabaseMenuItem);
 
         menuBar.add(toolsMenu);
 
@@ -729,7 +734,6 @@ public class CanRegClientView extends FrameView {
                 File file = new File(localSettings.getProperty(LocalSettings.WORKING_DIR_PATH_KEY));
                 Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL " + file.getAbsolutePath());
             }
-
             return null;  // return your result
         }
 
@@ -872,6 +876,8 @@ public class CanRegClientView extends FrameView {
             }
         }
 
+        garbleDatabaseMenuItem.setVisible(false);
+
         //toolbar buttons        
         // a bit too drastic : toolBar.setVisible(loggedIn);
         browseEditButton.setEnabled(analysis);
@@ -967,11 +973,10 @@ public class CanRegClientView extends FrameView {
     public void importData() {
         JInternalFrame importInternalFrame;
         int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you hava all your data in one file?", "One file?", JOptionPane.YES_NO_OPTION);
-        if (i == 0) {
-            importInternalFrame= new ImportView();
-        }
-        else {
-            importInternalFrame= new ImportFilesView();
+        if (i == JOptionPane.YES_OPTION) {
+            importInternalFrame = new ImportView();
+        } else {
+            importInternalFrame = new ImportFilesView();
         }
 
         showAndPositionInternalFrame(desktopPane, importInternalFrame);
@@ -1225,12 +1230,50 @@ public class CanRegClientView extends FrameView {
 
     @Action
     public void modifyDatabaseStructureAction() {
-            ModifyDatabaseStructureInternalFrame internalFrame = new ModifyDatabaseStructureInternalFrame(desktopPane);
-            internalFrame.setFileName(Globals.DEFAULT_SYSTEM_XML);
-            internalFrame.openXML();
-            showAndPositionInternalFrame(desktopPane, internalFrame);
+        ModifyDatabaseStructureInternalFrame internalFrame = new ModifyDatabaseStructureInternalFrame(desktopPane);
+        internalFrame.setFileName(Globals.DEFAULT_SYSTEM_XML);
+        internalFrame.openXML();
+        showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
+    @Action
+    public Task garbleDatabaseAction() {
+        int r = JOptionPane.showConfirmDialog(null, "Do you really want to garble the database?\nAll your data will be garbled!");
+        if (r == JOptionPane.YES_OPTION) {
+            int r2 = JOptionPane.showConfirmDialog(null, "Do you REALLY really want to garble the database?\nAll your data will be scrambled!!!");
+            if (r2 == JOptionPane.YES_OPTION) {
+                return new GarbleDatabaseActionTask(getApplication());
+            }
+        }
+        return null;
+
+    }
+
+    private class GarbleDatabaseActionTask extends org.jdesktop.application.Task<Object, Void> {
+
+        GarbleDatabaseActionTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to GarbleDatabaseActionTask fields, here.
+            super(app);
+        }
+
+        @Override
+        protected Object doInBackground() throws RemoteException {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+            DatabaseGarbler garbler = new DatabaseGarbler();
+            garbler.garble(this);
+            return null;  // return your result
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;
@@ -1247,6 +1290,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem encrWebsiteMenuItem;
     private javax.swing.JMenuItem exportDataReportsMenuItem;
     private javax.swing.JMenuItem frequenciesMenuItem;
+    private javax.swing.JMenuItem garbleDatabaseMenuItem;
     private javax.swing.JButton helpButton;
     private javax.swing.JMenuItem iacrWebsiteMenuItem;
     private javax.swing.JMenuItem icdo3DocumentationWebsiteMenuItem;

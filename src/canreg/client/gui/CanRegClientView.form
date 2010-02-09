@@ -460,7 +460,6 @@
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.gui.CanRegClientView" id="setUpNewDatabaseStructureAction" methodName="setUpNewDatabaseStructureAction"/>
                     </Property>
-                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="jMenuItem3" noResource="true"/>
                   </Properties>
                 </MenuItem>
@@ -474,6 +473,14 @@
                 </MenuItem>
               </SubComponents>
             </Menu>
+            <MenuItem class="javax.swing.JMenuItem" name="garbleDatabaseMenuItem">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="garbleDatabaseAction" methodName="garbleDatabaseAction"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="garbleDatabaseMenuItem" noResource="true"/>
+              </Properties>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="helpMenu">
