@@ -278,6 +278,10 @@ public class Tools {
         return indexes;
     }
 
+    /*
+     * mapping variable names in capital letters to variable list elements
+     *
+     */
     public static TreeMap<String, DatabaseVariablesListElement> buildVariablesMap(DatabaseVariablesListElement[] variableListElements) {
         TreeMap<String, DatabaseVariablesListElement> variablesMap = new TreeMap<String, DatabaseVariablesListElement>();
         for (DatabaseVariablesListElement elem : variableListElements) {
@@ -286,6 +290,10 @@ public class Tools {
         return variablesMap;
     }
 
+    /*
+     * mapping standard variable names in capital letters to variable list elements
+     *
+     */
     public static TreeMap<String, DatabaseVariablesListElement> buildStandardVariablesMap(DatabaseVariablesListElement[] variableListElements) {
         TreeMap<String, DatabaseVariablesListElement> variablesMap = new TreeMap<String, DatabaseVariablesListElement>();
         for (DatabaseVariablesListElement elem : variableListElements) {
