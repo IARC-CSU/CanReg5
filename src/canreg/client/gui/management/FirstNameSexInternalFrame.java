@@ -239,7 +239,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
             Set<String> set = map.keySet();
             for(String name:set){
                 Integer sex = map.get(name);
-                // both 9 and 3 codes for unknown sex
+                // both 9 and 3 codes for unisex
                 if (sex == 9){
                     sex = 3;
                 }
