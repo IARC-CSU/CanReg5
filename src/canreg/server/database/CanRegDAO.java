@@ -75,6 +75,7 @@ public class CanRegDAO {
         strSavePopoulationDataset = QueryGenerator.strSavePopoulationDataset();
         strSavePopoulationDatasetsEntry = QueryGenerator.strSavePopoulationDatasetsEntry();
         strSaveNameSexRecord = QueryGenerator.strSaveNameSexEntry();
+        strDeleteNameSexRecord = QueryGenerator.strDeleteNameSexEntry();
         strGetPatientsAndTumours = QueryGenerator.strGetPatientsAndTumours(globalToolBox);
         strGetSourcesAndTumours = QueryGenerator.strGetSourcesAndTumours(globalToolBox);
         strCountPatientsAndTumours = QueryGenerator.strCountPatientsAndTumours(globalToolBox);
@@ -445,28 +446,28 @@ public class CanRegDAO {
             String tumourIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
             String tumourIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
 
-            if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME) ||
-                    tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-                query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases " +
-                        "FROM APP.TUMOUR, APP.PATIENT " +
-                        "WHERE APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " " +
-                        filterString + " " +
-                        "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " " +
-                        "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
-            } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME) ||
-                    tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
-                query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases " +
-                        "FROM APP.SOURCE, APP.TUMOUR " +
-                        "WHERE APP.SOURCE." + tumourIDVariableNameSourceTable + " = APP.TUMOUR." + tumourIDVariableNameTumourTable + " " +
-                        filterString + " " +
-                        "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " " +
-                        "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+            if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)
+                    || tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+                query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
+                        + "FROM APP.TUMOUR, APP.PATIENT "
+                        + "WHERE APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " "
+                        + filterString + " "
+                        + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
+                        + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+            } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)
+                    || tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
+                query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
+                        + "FROM APP.SOURCE, APP.TUMOUR "
+                        + "WHERE APP.SOURCE." + tumourIDVariableNameSourceTable + " = APP.TUMOUR." + tumourIDVariableNameTumourTable + " "
+                        + filterString + " "
+                        + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
+                        + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
             } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-                query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases " +
-                        "FROM APP.TUMOUR " +
-                        (filterString.trim().length() > 0 ? filterString + " ": "") +
-                        "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " " +
-                        "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+                query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
+                        + "FROM APP.TUMOUR "
+                        + (filterString.trim().length() > 0 ? filterString + " " : "")
+                        + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
+                        + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
             }
             System.out.print(query);
 
@@ -476,7 +477,6 @@ public class CanRegDAO {
             } catch (java.sql.SQLSyntaxErrorException ex) {
                 throw ex;
             }
-
 
         } // Or a "regular" query from the tumour table
         else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
@@ -516,6 +516,9 @@ public class CanRegDAO {
         } // Or a "regular" query from the patient table
         else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             String filterString = filter.getFilterString();
+            if (filterString==null){
+                filterString = "";
+            }
             if (!filterString.isEmpty()) {
                 filterString = " WHERE (" + filterString + " )";
             }
@@ -950,6 +953,7 @@ public class CanRegDAO {
             stmtSaveNewNameSexRecord = dbConnection.prepareStatement(strSaveNameSexRecord, Statement.RETURN_GENERATED_KEYS);
             stmtDeleteDictionaryEntries = dbConnection.prepareStatement(strDeleteDictionaryEntries);
             stmtClearNameSexTable = dbConnection.prepareStatement(strClearNameSexTable);
+            stmtDeleteNameSexRecord = dbConnection.prepareStatement(strDeleteNameSexRecord);
             stmtDeletePopoulationDataset = dbConnection.prepareStatement(strDeletePopulationDataset);
             stmtDeletePopoulationDatasetEntries = dbConnection.prepareStatement(strDeletePopulationDatasetEntries);
             //stmtUpdateExistingPatient = dbConnection.prepareStatement(strUpdatePatient);
@@ -1333,8 +1337,17 @@ public class CanRegDAO {
      * @param nameSexRecord
      * @return
      */
-    public synchronized int saveNameSexRecord(NameSexRecord nameSexRecord) {
+    public synchronized int saveNameSexRecord(NameSexRecord nameSexRecord, boolean replace) {
         int id = -1;
+        if (replace) {
+            try {
+                stmtDeleteNameSexRecord.clearParameters();
+                stmtDeleteNameSexRecord.setString(1, nameSexRecord.getName());
+                stmtDeleteNameSexRecord.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         try {
             stmtSaveNewNameSexRecord.clearParameters();
 
@@ -2043,6 +2056,7 @@ public class CanRegDAO {
     private PreparedStatement stmtEditUser;
     private PreparedStatement stmtSaveNewPopoulationDataset;
     private PreparedStatement stmtSaveNewNameSexRecord;
+    private PreparedStatement stmtDeleteNameSexRecord;
     private PreparedStatement stmtUpdateExistingPatient;
     private PreparedStatement stmtGetPatient;
     private PreparedStatement stmtGetTumour;
@@ -2072,8 +2086,8 @@ public class CanRegDAO {
     private PreparedStatement stmtMaxNumberOfSourcesPerTumourRecord;
     private String ns = Globals.NAMESPACE;
     private static final String strGetPatient =
-            "SELECT * FROM APP.PATIENT " +
-            "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+            "SELECT * FROM APP.PATIENT "
+            + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private String strGetPatients =
             "SELECT * FROM APP.PATIENT";
     private String strGetUsers =
@@ -2089,23 +2103,23 @@ public class CanRegDAO {
     private String strGetSourcesAndTumours;
     private String strCountSourcesAndTumours;
     private static final String strGetTumour =
-            "SELECT * FROM APP.TUMOUR " +
-            "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+            "SELECT * FROM APP.TUMOUR "
+            + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private static final String strGetSource =
-            "SELECT * FROM APP.Source " +
-            "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+            "SELECT * FROM APP.Source "
+            + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private String strGetTumours =
             "SELECT * FROM APP.TUMOUR";
     private String strCountTumours =
             "SELECT COUNT(*) FROM APP.TUMOUR";
     private static final String strGetDictionary =
-            "SELECT * FROM APP.DICTIONARIES " +
-            "WHERE ID = ?";
+            "SELECT * FROM APP.DICTIONARIES "
+            + "WHERE ID = ?";
     private String strGetDictionaries =
             "SELECT * FROM APP.DICTIONARIES ";
     private static final String strGetDictionaryEntry =
-            "SELECT * FROM APP.DICTIONARY " +
-            "WHERE ID = ?";
+            "SELECT * FROM APP.DICTIONARY "
+            + "WHERE ID = ?";
     private static final String strGetDictionaryEntries =
             "SELECT * FROM APP.DICTIONARY ORDER BY ID";
     private static final String strGetPopulationDatasetEntries =
@@ -2115,25 +2129,25 @@ public class CanRegDAO {
     private static final String strGetNameSexRecords =
             "SELECT * FROM APP.NAMESEX ";
     private static final String strDeletePatientRecord =
-            "DELETE FROM APP.PATIENT " +
-            "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+            "DELETE FROM APP.PATIENT "
+            + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private static final String strDeleteSourceRecord =
-            "DELETE FROM APP.SOURCE " +
-            "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+            "DELETE FROM APP.SOURCE "
+            + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private static final String strDeleteTumourRecord =
-            "DELETE FROM APP.TUMOUR " +
-            "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+            "DELETE FROM APP.TUMOUR "
+            + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private static final String strDeleteDictionaryEntries =
-            "DELETE FROM APP.DICTIONARY " +
-            "WHERE DICTIONARY = ?";
+            "DELETE FROM APP.DICTIONARY "
+            + "WHERE DICTIONARY = ?";
     private static final String strClearNameSexTable =
             "DELETE FROM APP.NAMESEX";
     private static final String strDeletePopulationDataset =
-            "DELETE FROM APP.PDSETS " +
-            "WHERE PDS_ID = ?";
+            "DELETE FROM APP.PDSETS "
+            + "WHERE PDS_ID = ?";
     private static final String strDeletePopulationDatasetEntries =
-            "DELETE FROM APP.PDSET " +
-            "WHERE PDS_ID = ?";
+            "DELETE FROM APP.PDSET "
+            + "WHERE PDS_ID = ?";
     // The Dynamic ones
     private String strMaxNumberOfSourcesPerTumourRecord;
     private String strSavePatient;
@@ -2147,6 +2161,7 @@ public class CanRegDAO {
     private String strSavePopoulationDataset;
     private String strSavePopoulationDatasetsEntry;
     private String strSaveNameSexRecord;
+    private String strDeleteNameSexRecord;
     private String strGetHighestPatientID;
     private String strGetHighestTumourID;
     private String strGetHighestPatientRecordID;
