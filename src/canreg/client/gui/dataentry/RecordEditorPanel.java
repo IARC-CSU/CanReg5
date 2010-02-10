@@ -470,7 +470,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         if (panelType == panelTypes.PATIENT) {
             tableName = Globals.PATIENT_TABLE_NAME;
             mpPanel.setVisible(false);
-            changePatientRecordButton.setVisible(false);
+            changePatientRecordMenuItem.setVisible(false);
             checksPanel.setVisible(false);
             sequencePanel.setVisible(false);
         } else if (panelType == panelTypes.TUMOUR) {
@@ -630,6 +630,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        popupMenu = new javax.swing.JPopupMenu();
+        deleteMenuItem = new javax.swing.JMenuItem();
+        changePatientRecordMenuItem = new javax.swing.JMenuItem();
         systemPanel = new javax.swing.JPanel();
         checksPanel = new javax.swing.JPanel();
         checksButton = new javax.swing.JButton();
@@ -642,11 +645,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         mpLabel = new javax.swing.JLabel();
         recordStatusPanel = new javax.swing.JPanel();
         recordStatusComboBox = new javax.swing.JComboBox();
-        controlPanel = new javax.swing.JPanel();
-        changePatientRecordButton = new javax.swing.JButton();
         obsoleteToggleButton = new javax.swing.JToggleButton();
-        jButton1 = new javax.swing.JButton();
+        controlPanel = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
+        menuButton = new javax.swing.JButton();
         updatedByPanel = new javax.swing.JPanel();
         byLabel = new javax.swing.JLabel();
         userLabel = new javax.swing.JLabel();
@@ -659,15 +661,26 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         dataScrollPane = new javax.swing.JScrollPane();
         dataPanel = new javax.swing.JPanel();
 
+        popupMenu.setName("popupMenu"); // NOI18N
+
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditorPanel.class, this);
+        deleteMenuItem.setAction(actionMap.get("deleteRecord")); // NOI18N
+        deleteMenuItem.setName("deleteMenuItem"); // NOI18N
+        popupMenu.add(deleteMenuItem);
+
+        changePatientRecordMenuItem.setAction(actionMap.get("changePatientRecord")); // NOI18N
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RecordEditorPanel.class);
+        changePatientRecordMenuItem.setText(resourceMap.getString("changePatientRecordMenuItem.text")); // NOI18N
+        changePatientRecordMenuItem.setName("changePatientRecordMenuItem"); // NOI18N
+        popupMenu.add(changePatientRecordMenuItem);
+
         setName("Form"); // NOI18N
 
         systemPanel.setName("systemPanel"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RecordEditorPanel.class);
         checksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("checksPanel.border.title"))); // NOI18N
         checksPanel.setName("checksPanel"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditorPanel.class, this);
         checksButton.setAction(actionMap.get("runChecksAction")); // NOI18N
         checksButton.setText(resourceMap.getString("checksButton.text")); // NOI18N
         checksButton.setName("checksButton"); // NOI18N
@@ -754,65 +767,58 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         recordStatusComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         recordStatusComboBox.setName("recordStatusComboBox"); // NOI18N
 
+        obsoleteToggleButton.setAction(actionMap.get("setObsoleteFlag")); // NOI18N
+        obsoleteToggleButton.setText(resourceMap.getString("obsoleteToggleButton.text")); // NOI18N
+        obsoleteToggleButton.setName("obsoleteToggleButton"); // NOI18N
+
         javax.swing.GroupLayout recordStatusPanelLayout = new javax.swing.GroupLayout(recordStatusPanel);
         recordStatusPanel.setLayout(recordStatusPanelLayout);
         recordStatusPanelLayout.setHorizontalGroup(
             recordStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(recordStatusPanelLayout.createSequentialGroup()
-                .addComponent(recordStatusComboBox, 0, 73, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, recordStatusPanelLayout.createSequentialGroup()
+                .addGroup(recordStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(obsoleteToggleButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                    .addComponent(recordStatusComboBox, 0, 157, Short.MAX_VALUE))
                 .addContainerGap())
         );
         recordStatusPanelLayout.setVerticalGroup(
             recordStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(recordStatusPanelLayout.createSequentialGroup()
                 .addComponent(recordStatusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(obsoleteToggleButton)
+                .addContainerGap())
         );
 
         controlPanel.setName("controlPanel"); // NOI18N
 
-        changePatientRecordButton.setAction(actionMap.get("changePatientRecord")); // NOI18N
-        changePatientRecordButton.setText(resourceMap.getString("changePatientRecordButton.text")); // NOI18N
-        changePatientRecordButton.setToolTipText(resourceMap.getString("changePatientRecordButton.toolTipText")); // NOI18N
-        changePatientRecordButton.setName("changePatientRecordButton"); // NOI18N
-
-        obsoleteToggleButton.setAction(actionMap.get("setObsoleteFlag")); // NOI18N
-        obsoleteToggleButton.setText(resourceMap.getString("obsoleteToggleButton.text")); // NOI18N
-        obsoleteToggleButton.setName("obsoleteToggleButton"); // NOI18N
-
-        jButton1.setAction(actionMap.get("deleteRecord")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
-
         saveButton.setAction(actionMap.get("saveRecord")); // NOI18N
         saveButton.setText(resourceMap.getString("saveButton.text")); // NOI18N
         saveButton.setName("saveButton"); // NOI18N
+
+        menuButton.setAction(actionMap.get("menuAction")); // NOI18N
+        menuButton.setText(resourceMap.getString("menuButton.text")); // NOI18N
+        menuButton.setName("menuButton"); // NOI18N
 
         javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
         controlPanel.setLayout(controlPanelLayout);
         controlPanelLayout.setHorizontalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(obsoleteToggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(changePatientRecordButton)
-                    .addComponent(saveButton, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(menuButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                    .addComponent(saveButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
                 .addContainerGap())
         );
         controlPanelLayout.setVerticalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
+            .addGroup(controlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(obsoleteToggleButton)
-                    .addComponent(changePatientRecordButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(saveButton))
-                .addContainerGap())
+                .addComponent(menuButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(saveButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         updatedByPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("updatedByPanel.border.title"))); // NOI18N
@@ -846,7 +852,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                     .addComponent(userLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         sequencePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("sequencePanel.border.title"))); // NOI18N
@@ -890,7 +896,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                         .addComponent(sequenceNumberValueLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(sequenceTotalValueLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout systemPanelLayout = new javax.swing.GroupLayout(systemPanel);
@@ -902,7 +908,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(personSearchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(mpPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(mpPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(recordStatusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -916,14 +922,13 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(systemPanelLayout.createSequentialGroup()
                 .addGroup(systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(controlPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(recordStatusPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(sequencePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(updatedByPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(mpPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(personSearchPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(checksPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(mpPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+                    .addComponent(personSearchPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+                    .addComponent(checksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+                    .addComponent(sequencePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(updatedByPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(controlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(recordStatusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -938,7 +943,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(systemPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(dataScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 848, Short.MAX_VALUE)
+            .addComponent(dataScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 758, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -952,7 +957,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel byLabel;
-    private javax.swing.JButton changePatientRecordButton;
+    private javax.swing.JMenuItem changePatientRecordMenuItem;
     private javax.swing.JButton checksButton;
     private javax.swing.JLabel checksLabel;
     private javax.swing.JPanel checksPanel;
@@ -960,12 +965,14 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     private javax.swing.JPanel dataPanel;
     private javax.swing.JScrollPane dataScrollPane;
     private javax.swing.JLabel dateLabel;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JMenuItem deleteMenuItem;
+    private javax.swing.JButton menuButton;
     private javax.swing.JButton mpButton;
     private javax.swing.JLabel mpLabel;
     private javax.swing.JPanel mpPanel;
     private javax.swing.JToggleButton obsoleteToggleButton;
     private javax.swing.JPanel personSearchPanel;
+    private javax.swing.JPopupMenu popupMenu;
     private javax.swing.JComboBox recordStatusComboBox;
     private javax.swing.JPanel recordStatusPanel;
     private javax.swing.JButton saveButton;
@@ -1117,5 +1124,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     @Action
     public void autoFill() {
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.AUTO_FILL));
+    }
+
+    @Action
+    public void menuAction() {
+        popupMenu.show(menuButton,0,0);
     }
 }
