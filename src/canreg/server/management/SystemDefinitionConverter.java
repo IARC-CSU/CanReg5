@@ -23,7 +23,9 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharsetDecoder;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -236,8 +238,8 @@ public class SystemDefinitionConverter {
         variableToTableMap = new TreeMap<String, String>();
         standardVariableToIndexMap = new TreeMap<String, Integer>();
         DatabaseDictionaryListElement[] dictionaryListElements;
-        TreeMap<String, DatabaseVariablesListElement> variablesMap = new TreeMap<String, DatabaseVariablesListElement>();
-        TreeMap<String, DatabaseIndexesListElement> indexMap = new TreeMap<String, DatabaseIndexesListElement>();
+        Map<String, DatabaseVariablesListElement> variablesMap = Collections.synchronizedMap(new TreeMap<String, DatabaseVariablesListElement>());
+        Map<String, DatabaseIndexesListElement> indexMap = Collections.synchronizedMap(new TreeMap<String, DatabaseIndexesListElement>());
 
         try {
 
@@ -458,7 +460,7 @@ public class SystemDefinitionConverter {
                         }
                     }
                     element.appendChild(createElement(namespace + "table", tableName));
-                    variableToTableMap.put(nameInDatabase, tableName);
+                    variableToTableMap.put(nameInDatabase.toUpperCase(), tableName);
                 }
                 variablesMap = Tools.buildVariablesMap(Tools.getVariableListElements(doc, namespace));
                 // Read the indexes part
@@ -647,6 +649,9 @@ public class SystemDefinitionConverter {
                             -1, Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Othr", Globals.VARIABLE_TYPE_ALPHA_NAME, recordIDlength + Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD + Globals.ADDITIONAL_DIGITS_FOR_TUMOUR_ID + Globals.ADDITIONAL_DIGITS_FOR_SOURCE_ID, -1, Globals.SOURCE_TABLE_NAME, variableName));
                 }
 
+                // rebuild the variablesmap
+                variablesMap = Tools.buildVariablesMap(Tools.getVariableListElements(doc, namespace));
+
                 // Build the indexes
                 Element indexParentElement = doc.createElement(namespace + "indexes");
                 root.appendChild(indexParentElement);
@@ -665,13 +670,12 @@ public class SystemDefinitionConverter {
 
                 // Tumour ID in tumour table index
                 tempIndexList = new LinkedList<DatabaseVariablesListElement>();
-                tempIndexList.add(variablesMap.get(Globals.StandardVariableNames.TumourRecordID.toString().toUpperCase()));
+                tempIndexList.add(variablesMap.get(Globals.StandardVariableNames.TumourID.toString().toUpperCase()));
                 tempIndexList.add(variablesMap.get(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString().toUpperCase()));
                 DatabaseIndexesListElement tumourIDindex = new DatabaseIndexesListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString());
                 tumourIDindex.setDatabaseTableName(Globals.TUMOUR_TABLE_NAME);
                 tumourIDindex.setVariablesInIndex(tempIndexList.toArray(new DatabaseVariablesListElement[0]));
                 indexMap.put(tumourIDindex.getIndexName(), tumourIDindex);
-
                 // Split the indexes that needs to be split
                 indexMap = splitIndexMapInTumourAndPatient(indexMap, variableToTableMap);
 
@@ -687,7 +691,7 @@ public class SystemDefinitionConverter {
 
                     LinkedList<String> variablesInThisIndex = indexMap.get(indexName).getVariableNamesInIndex();
 
-                    String tableOfThisIndex = variableToTableMap.get(variablesInThisIndex.getFirst());
+                    String tableOfThisIndex = variableToTableMap.get(variablesInThisIndex.getFirst().toUpperCase());
                     childElement = createElement(namespace + "table", tableOfThisIndex);
                     element.appendChild(childElement);
                     for (String variableName : variablesInThisIndex) {
@@ -795,7 +799,7 @@ public class SystemDefinitionConverter {
      * @param variableToTableMap A map between the variable names and the respective tables.
      * @return An indexMap built to suit the two table scheme
      */
-    public static TreeMap<String, DatabaseIndexesListElement> splitIndexMapInTumourAndPatient(TreeMap<String, DatabaseIndexesListElement> indexMap, TreeMap<String, String> variableToTableMap) {
+    public static Map<String, DatabaseIndexesListElement> splitIndexMapInTumourAndPatient(Map<String, DatabaseIndexesListElement> indexMap, Map<String, String> variableToTableMap) {
         TreeMap<String, DatabaseIndexesListElement> newIndexMap = new TreeMap<String, DatabaseIndexesListElement>();
         Set<String> indexesNames = indexMap.keySet();
         for (String indexName : indexesNames) {
@@ -816,12 +820,14 @@ public class SystemDefinitionConverter {
                     variablesInThisTable.add(indexedVariable);
                 }
             }
+            // put it in the indexmap
             if (indexName.endsWith(tableName)) {
                 index.setVariablesInIndex(variablesInThisTable.toArray(new DatabaseVariablesListElement[0]));
+                newIndexMap.put(indexName,index);
             } else {
-                indexMap.remove(indexName);
+                // indexMap.remove(indexName);
                 index.setIndexName(indexName + "-" + tableName);
-                indexMap.put(index.getIndexName(), index);
+                newIndexMap.put(index.getIndexName(), index);
                 index.setVariablesInIndex(variablesInThisTable.toArray(new DatabaseVariablesListElement[0]));
             }
             if (variablesInOtherTable.size() > 0) {
@@ -830,12 +836,12 @@ public class SystemDefinitionConverter {
                     otherIndex = new DatabaseIndexesListElement(indexName);
                     otherIndex.setDatabaseTableName(otherTableName);
                     otherIndex.setVariablesInIndex(variablesInOtherTable.toArray(new DatabaseVariablesListElement[0]));
-                    indexMap.put(otherIndex.getIndexName(), otherIndex);
+                    newIndexMap.put(otherIndex.getIndexName(), otherIndex);
                 } else {
                     otherIndex = new DatabaseIndexesListElement(indexName + "-" + otherTableName);
                     otherIndex.setDatabaseTableName(otherTableName);
                     otherIndex.setVariablesInIndex(variablesInOtherTable.toArray(new DatabaseVariablesListElement[0]));
-                    indexMap.put(otherIndex.getIndexName(), otherIndex);
+                    newIndexMap.put(otherIndex.getIndexName(), otherIndex);
                 }
             }
         }
@@ -883,7 +889,7 @@ public class SystemDefinitionConverter {
         }
         // Place variable in the right table
         element.appendChild(createElement(namespace + "table", table));
-        variableToTableMap.put(shortName, table);
+        variableToTableMap.put(shortName.toUpperCase(), table);
         element.appendChild(createElement(namespace + "standard_variable_name", standardVariableName));
         return element;
     }

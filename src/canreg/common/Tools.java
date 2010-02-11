@@ -8,7 +8,9 @@ import org.w3c.dom.NodeList;
 import java.net.*;
 import java.io.*;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -256,9 +258,9 @@ public class Tools {
             variablesMap = buildVariablesMap(getVariableListElements(doc, namespace));
         }
         DatabaseIndexesListElement[] indexes = new DatabaseIndexesListElement[nl.getLength()];
-        TreeMap<String, DatabaseIndexesListElement> patientIndexMap = buildIndexMap(Globals.PATIENT_TABLE_NAME, doc, namespace, variablesMap);
-        TreeMap<String, DatabaseIndexesListElement> tumourIndexMap = buildIndexMap(Globals.TUMOUR_TABLE_NAME, doc, namespace, variablesMap);
-        TreeMap<String, DatabaseIndexesListElement> sourceIndexMap = buildIndexMap(Globals.SOURCE_TABLE_NAME, doc, namespace, variablesMap);
+        Map<String, DatabaseIndexesListElement> patientIndexMap = buildIndexMap(Globals.PATIENT_TABLE_NAME, doc, namespace, variablesMap);
+        Map<String, DatabaseIndexesListElement> tumourIndexMap = buildIndexMap(Globals.TUMOUR_TABLE_NAME, doc, namespace, variablesMap);
+        Map<String, DatabaseIndexesListElement> sourceIndexMap = buildIndexMap(Globals.SOURCE_TABLE_NAME, doc, namespace, variablesMap);
 
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
@@ -304,11 +306,12 @@ public class Tools {
         return variablesMap;
     }
 
-    public static TreeMap<String, DatabaseIndexesListElement> buildIndexMap(String tableName, Document doc, String namespace, TreeMap<String, DatabaseVariablesListElement> variablesMap) {
+    public static Map<String, DatabaseIndexesListElement> buildIndexMap(String tableName, Document doc, String namespace, TreeMap<String, DatabaseVariablesListElement> variablesMap) {
         if (variablesMap == null) {
+            variablesMap = buildVariablesMap(getVariableListElements(doc, namespace));
         }
 
-        TreeMap<String, DatabaseIndexesListElement> indexMap = new TreeMap<String, DatabaseIndexesListElement>();
+        Map<String, DatabaseIndexesListElement> indexMap = Collections.synchronizedMap(new TreeMap<String, DatabaseIndexesListElement>());
 
         NodeList nodes = doc.getElementsByTagName(namespace + "indexes");
         Element variablesElement = (Element) nodes.item(0);

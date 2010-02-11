@@ -18,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.swing.JDesktopPane;
@@ -194,7 +195,7 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
 
         // Update the Indexes part
         //
-        TreeMap<String, DatabaseIndexesListElement> indexMap = canreg.common.Tools.buildIndexMap(Globals.PATIENT_TABLE_NAME, doc, Globals.NAMESPACE, null);
+        Map<String, DatabaseIndexesListElement> indexMap = canreg.common.Tools.buildIndexMap(Globals.PATIENT_TABLE_NAME, doc, Globals.NAMESPACE, null);
         indexMap.putAll(canreg.common.Tools.buildIndexMap(Globals.TUMOUR_TABLE_NAME, doc, Globals.NAMESPACE, null));
 
         Element parentElement = doc.createElement(Globals.NAMESPACE + "indexes");
@@ -202,10 +203,9 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
         // Split the indexes that needs to be split
         indexMap = canreg.server.management.SystemDefinitionConverter.splitIndexMapInTumourAndPatient(indexMap, variablesToTableMap);
 
-        // then build doc
-        Set<String> indexNames = indexMap.keySet();
         Element element;
-        // then build doc
+        // then build doc for the indexes
+        Set<String> indexNames = indexMap.keySet();
         for (String indexName : indexNames) {
             String table = null;
 
@@ -216,7 +216,7 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
 
             LinkedList<String> variablesInThisIndex = indexMap.get(indexName).getVariableNamesInIndex();
 
-            String tableOfThisIndex = variablesToTableMap.get(variablesInThisIndex.getFirst());
+            String tableOfThisIndex = variablesToTableMap.get(variablesInThisIndex.getFirst().toUpperCase());
             childElement = createElement(Globals.NAMESPACE + "table", tableOfThisIndex);
             element.appendChild(childElement);
             for (String variableName : variablesInThisIndex) {
@@ -240,7 +240,6 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
         childElement.appendChild(doc.createTextNode(value));
         return childElement;
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton saveButton;

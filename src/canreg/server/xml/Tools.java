@@ -94,12 +94,20 @@ public class Tools {
             e.printStackTrace();
             // throw new RuntimeException(e);
         } catch (NullPointerException npe) {
-            // this is fatal, just dump the stack and throw a runtime exception
+            try {
+                // this is fatal, just dump the stack and throw a runtime exception
+                if (result != null && result.getWriter() != null) {
+                    result.getWriter().flush();
+                    result.getWriter().close();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+            }
             npe.printStackTrace();
             // throw new RuntimeException(npe);
         } finally {
             try {
-                if (result != null && result.getWriter() != null ) {
+                if (result != null && result.getWriter() != null) {
                     result.getWriter().flush();
                     result.getWriter().close();
                 }
