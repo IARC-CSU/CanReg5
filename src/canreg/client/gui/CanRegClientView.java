@@ -228,9 +228,9 @@ public class CanRegClientView extends FrameView {
         toolsMenu = new javax.swing.JMenu();
         convertCR4SystDefMenuItem = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        databaseStructureMenu = new javax.swing.JMenu();
+        setUpDatabaseMenuItem = new javax.swing.JMenuItem();
+        modifyDatabaseMenuItem = new javax.swing.JMenuItem();
         garbleDatabaseMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         canReg5HelpMenuItem = new javax.swing.JMenuItem();
@@ -503,18 +503,18 @@ public class CanRegClientView extends FrameView {
         jMenuItem2.setName("jMenuItem2"); // NOI18N
         toolsMenu.add(jMenuItem2);
 
-        jMenu1.setText(resourceMap.getString("jMenu1.text")); // NOI18N
-        jMenu1.setName("jMenu1"); // NOI18N
+        databaseStructureMenu.setText(resourceMap.getString("databaseStructureMenu.text")); // NOI18N
+        databaseStructureMenu.setName("databaseStructureMenu"); // NOI18N
 
-        jMenuItem3.setAction(actionMap.get("setUpNewDatabaseStructureAction")); // NOI18N
-        jMenuItem3.setName("jMenuItem3"); // NOI18N
-        jMenu1.add(jMenuItem3);
+        setUpDatabaseMenuItem.setAction(actionMap.get("setUpNewDatabaseStructureAction")); // NOI18N
+        setUpDatabaseMenuItem.setName("setUpDatabaseMenuItem"); // NOI18N
+        databaseStructureMenu.add(setUpDatabaseMenuItem);
 
-        jMenuItem4.setAction(actionMap.get("modifyDatabaseStructureAction")); // NOI18N
-        jMenuItem4.setName("jMenuItem4"); // NOI18N
-        jMenu1.add(jMenuItem4);
+        modifyDatabaseMenuItem.setAction(actionMap.get("modifyDatabaseStructureAction")); // NOI18N
+        modifyDatabaseMenuItem.setName("modifyDatabaseMenuItem"); // NOI18N
+        databaseStructureMenu.add(modifyDatabaseMenuItem);
 
-        toolsMenu.add(jMenu1);
+        toolsMenu.add(databaseStructureMenu);
 
         garbleDatabaseMenuItem.setAction(actionMap.get("garbleDatabaseAction")); // NOI18N
         garbleDatabaseMenuItem.setName("garbleDatabaseMenuItem"); // NOI18N
@@ -877,6 +877,7 @@ public class CanRegClientView extends FrameView {
         }
 
         garbleDatabaseMenuItem.setVisible(false);
+        setUpDatabaseMenuItem.setVisible(false);
 
         //toolbar buttons        
         // a bit too drastic : toolBar.setVisible(loggedIn);
@@ -1284,6 +1285,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem convertCR4SystDefMenuItem;
     private javax.swing.JButton createNewRecordButton;
     private javax.swing.JMenu dataEntryMenu;
+    private javax.swing.JMenu databaseStructureMenu;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenuItem duplicateSearchMenuItem;
     private javax.swing.JMenuItem editDictionaryMenuItem;
@@ -1297,14 +1299,11 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem icdo3ManualMenuItem;
     private javax.swing.JMenuItem importDataMenuItem;
     private javax.swing.JMenuItem incidenceTablesMenuItem;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem18;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
@@ -1326,12 +1325,14 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenu managementMenu;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem modifyDatabaseMenuItem;
     private javax.swing.JMenuItem nameSexMenuItem;
     private javax.swing.JButton optionsButton;
     private javax.swing.JMenuItem optionsMenuItem;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JMenu qualityControlMenu;
     private javax.swing.JMenuItem restoreMenuItem;
+    private javax.swing.JMenuItem setUpDatabaseMenuItem;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
