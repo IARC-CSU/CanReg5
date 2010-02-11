@@ -1,5 +1,135 @@
-changeset:   355:20f720dc254e
+changeset:   381:648c54fd2290
 tag:         tip
+user:        ervikm@X60112
+date:        Thu Feb 11 15:28:48 2010 +0100
+summary:     Fixed some bugs related to the migration of CanReg4 databases and indexes in the XML.
+
+changeset:   380:24971e3bcff6
+user:        ervikm@X60112
+date:        Thu Feb 11 15:27:36 2010 +0100
+summary:     CanRegClientView: Set up new CanReg now hidden. Only "modify..." visible
+
+changeset:   379:e86126e846b0
+user:        ervikm@X60112
+date:        Thu Feb 11 14:08:14 2010 +0100
+summary:     Record Editor: Tidied the interface, added a menu
+
+changeset:   378:0e3d05a2d753
+user:        ervikm@X60112
+date:        Wed Feb 10 17:05:02 2010 +0100
+summary:     Record Editor: Tidied the interface
+
+changeset:   377:c9b1c47ea443
+user:        ervikm@X60112
+date:        Tue Feb 09 17:42:08 2010 +0100
+summary:     CanReg5.0 RC1
+
+changeset:   376:0b29269c29c7
+user:        ervikm@X60112
+date:        Tue Feb 09 17:40:27 2010 +0100
+summary:     CanRegClientView: database garbler support implemented.
+
+changeset:   375:97e02a546feb
+user:        ervikm@X60112
+date:        Tue Feb 09 17:39:44 2010 +0100
+summary:     Checks: now support better unknown codes.
+
+changeset:   374:9c7fa1af4631
+user:        ervikm@X60112
+date:        Tue Feb 09 17:08:53 2010 +0100
+summary:     Server: modify/replace name sex records implemented.
+
+changeset:   373:32a966d98e2a
+user:        ervikm@X60112
+date:        Tue Feb 09 12:06:48 2010 +0100
+summary:     Import: name/sex mapping implemented, resequencing of tumours.
+
+changeset:   372:8107f3fdbce8
+user:        ervikm@X60112
+date:        Tue Feb 09 12:05:10 2010 +0100
+summary:     EditDictionaryInternalFrame: Fixed a bug that occured if a dictionary had more errors than possible to display.
+
+changeset:   371:20463dd3a621
+user:        ervikm@X60112
+date:        Tue Feb 09 12:04:02 2010 +0100
+summary:     FirstNameSexInternalFrame: better handling of unisex names.
+
+changeset:   370:a5b6ca7efea0
+user:        ervikm@X60112
+date:        Tue Feb 09 11:58:39 2010 +0100
+summary:     QueryGenerator: modify name sex records implemented.
+
+changeset:   369:9dd3082830af
+user:        ervikm@X60112
+date:        Tue Feb 09 11:58:15 2010 +0100
+summary:     CanRegDAO: modify name sex records implemented.
+
+changeset:   368:a90cdc462fad
+user:        ervikm@X60112
+date:        Tue Feb 09 11:57:12 2010 +0100
+summary:     Tools: comments added
+
+changeset:   367:c704cc7a00a4
+user:        ervikm@X60112
+date:        Tue Feb 09 11:56:43 2010 +0100
+summary:     Globals: added a default age group structure, standardized som table names
+
+changeset:   366:3c2d8f98dbe2
+user:        ervikm@X60112
+date:        Tue Feb 09 11:46:50 2010 +0100
+summary:     ModifyDatabaseStructureInternalFrame: default group implemented
+
+changeset:   365:5dcda71f827e
+user:        ervikm@X60112
+date:        Tue Feb 09 11:46:04 2010 +0100
+summary:     FirstNameSexInternalFrame: better handling of unknown sex.
+
+changeset:   364:a0a43aff2ea8
+user:        ervikm@X60112
+date:        Tue Feb 09 11:44:48 2010 +0100
+summary:     DatabaseVariablesPanel: default group implemented
+
+changeset:   363:9ca32854de37
+user:        ervikm@X60112
+date:        Tue Feb 09 11:43:59 2010 +0100
+summary:     CanRegClientApp: handles better locked tumoru records.
+
+changeset:   362:f5e91e86fa5c
+user:        ervikm@X60112
+date:        Tue Feb 09 11:40:02 2010 +0100
+summary:     BrowseInternalFrame: handles null pointers better.
+
+changeset:   361:c4868fb71094
+user:        ervikm@X60112
+date:        Thu Feb 04 11:26:29 2010 +0100
+summary:     Tools: a variable Map builder implemented, mapping variable names in capital letters to variable list elements
+
+changeset:   360:24eb24b741be
+user:        ervikm@X60112
+date:        Thu Feb 04 11:00:07 2010 +0100
+summary:     DatabaseFilter: bugs fixed
+
+changeset:   359:0c968caf0fae
+user:        ervikm@X60112
+date:        Thu Feb 04 10:59:27 2010 +0100
+summary:     Buddhist Calendar work started.
+
+changeset:   358:63ea504073ca
+user:        ervikm@X60112
+date:        Thu Feb 04 10:58:50 2010 +0100
+summary:     DatabaseGarbler: A tool to anonymize a CanReg database. Dangerous.
+
+changeset:   357:b4f11382f4b0
+user:        ervikm@X60112
+date:        Mon Feb 01 18:44:53 2010 +0100
+summary:     DateHelper: fixed a bug that occured when date was not set and was read.
+
+changeset:   356:0bff4c102861
+user:        ervikm@X60112
+date:        Fri Jan 29 17:57:13 2010 +0100
+summary:     ModifyDatabaseStructure implemented and improved.
+
+changeset:   355:20f720dc254e
 user:        ervikm@X60112
 date:        Fri Jan 29 15:57:26 2010 +0100
 summary:     SystemDescription: Changes to accomodate the changes in DatabaseListElements, added setters to change the database's doc.

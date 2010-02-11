@@ -1,6 +1,47 @@
 Changelog
 
+4.99.15 Build 804 (5.0 RC1)
+
+- Import from multiple files now implemented.
+
+- DatabaseStructure editor implemented with a default XML.
+
+- InternalFrames/windows better positioned on various screen-sizes.
+
+- RangeFilterPanel now handles source tables and empty index lists better, fires table changed events.
+
+- VariablesChooserPanel now only displays the variables from valid table(s).
+
+- Browser: Fixed a bug where you could not open records by double clicking on them if looking at source or source+tumour tables.
+
+- Tooltip texts updated.
+
+- TranslateListElement: A simple way to translate list elements implemented
+
+- EditDictionaryInternalFrame: Fixed a bug that occured if a dictionary had more errors than possible to display.
+
+- QueryGenerator improved.
+
+- Improved the display of variable names (FastFilter, RangeFilter, Browser.)
+
+- SystemDescription: Changes to accomodate the changes in DatabaseListElements, added setters to change the database's doc.
+
+- DateHelper: fixed a bug that occured when date was not set and was read. Buddhist Calendar work started.
+
+- Handles better locked tumour records.
+
+- FirstNameSexInternalFrame: better handling of unisex names.
+
+- Checks: now support better unknown codes.
+
+- Performance fixes.
+
+- Other stability and bug fixes.
+
+
+
 4.99.14 Build 764
+
 - ExportReport now lets you export category and description of dictionary elements and output long variable names, format dates and correct unknown dates.
 
 - SystemDefinitionConverter strips blanks from database variable names.
@@ -20,6 +61,7 @@ Changelog
 
 
 4.99.13 Build 749
+
 - Source table implemented.
 
 - Sources now imported.
@@ -64,12 +106,16 @@ Changelog
 
 - Bugfixes.
 
+
 4.99.12 Build 707
+
 - PDSEditorInternalFrame: Improved GUI
 
 - Minor changes.
 
+
 4.99.11 Build 703
+
 - Eliminated a bug where records where set to pending while saving. 
 
 - Improved the "Do you really want to close this record" dialog box to appear only when the user has done actual changes to a record.
@@ -82,7 +128,9 @@ Changelog
 
 - Updated the about page.
 
+
 4.99.10 Build 688
+
 - FrequenciesByYear: Fixed a bug where the table did not show up. 
 
 - FrequenciesByYear: Printing now works.
@@ -97,7 +145,9 @@ Changelog
 
 - Updated the about page.
 
+
 4.99.9 Build 680
+
 - RecordEditor: Hid the tumour record number and patient record number.
 
 - Improved the FastFilterInternalFrame to deal better with keywords BETWEEN and LIKE.
@@ -143,7 +193,10 @@ Changelog
 - Range now works properly when making frequency by year tables as well.
 
 - Various bug fixes.
+
+
 4.99.8 Build 661
+
 - Added functionality to import Population data sets from CanReg4.
 
 - Added functionality to merge patients.
@@ -170,7 +223,9 @@ Changelog
 
 - Various bug fixes.
 
+
 4.99.7 Build 656
+
 - Global person search implemented.
 
 - Range filtering implemented.
@@ -178,11 +233,17 @@ Changelog
 - FastFilterInternalFrame: added operators IN and BETWEEN.
 
 - Minor changes, documentation updated, trn-dictionary improved, TRN.xml improved.
+
+
 4.99.6 Build 648
+
 - Fixed a bug in the way the server addresses were handled on machines with multiple network interfaces.
 
 - Changed default coding schemes for various languages during import of old data to fix bug found by the Jordanian cancer registry on Arabic letters not imported properly.
+
+
 4.99.5 Build 645
+
 - User manager implemented. 
 
 - Migrator function implemented for situations where we need to change database structure between releases of CanReg5.
@@ -217,7 +278,9 @@ Changelog
 
 - Various fixes.
 
+
 4.99.4 Build 624
+
 - Fixed bug that flagged all opened cases as pending.
 
 - Started work on detection of changes.
@@ -242,7 +305,9 @@ Changelog
 
 - Various small fixes and improvements.
 
+
 4.99.3 Build 612
+
 - Browser: It should now be possible to sort results on variables with “.” in the name. (ie. “RegNo.” or similar).
 
 - Import: Fixed bugs during import of a file. The correct number of records read. 
@@ -251,7 +316,9 @@ Changelog
 
 - Other bug fixes.
 
+
 4.99.2 Build 607
+
 - Show/hide obsolete records implemented.
 
 - Obsolete-button implemented to toggle obsolete-flag. 
@@ -274,6 +341,7 @@ Changelog
 
 
 4.99.1 Build 598
+
 - Improved handling and error reporting of record ids.
 
 - RangeFilterPanel: Tumour table now default table, sort by variables only the ones in the table selected.
@@ -304,5 +372,7 @@ Changelog
 
 - Fixed bug #1: Filter with OR not working.
 
+
 4.99.0 Build 590
+
 - First beta release
