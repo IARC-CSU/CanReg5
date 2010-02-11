@@ -665,11 +665,12 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditorPanel.class, this);
         deleteMenuItem.setAction(actionMap.get("deleteRecord")); // NOI18N
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RecordEditorPanel.class);
+        deleteMenuItem.setText(resourceMap.getString("deleteMenuItem.text")); // NOI18N
         deleteMenuItem.setName("deleteMenuItem"); // NOI18N
         popupMenu.add(deleteMenuItem);
 
         changePatientRecordMenuItem.setAction(actionMap.get("changePatientRecord")); // NOI18N
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RecordEditorPanel.class);
         changePatientRecordMenuItem.setText(resourceMap.getString("changePatientRecordMenuItem.text")); // NOI18N
         changePatientRecordMenuItem.setName("changePatientRecordMenuItem"); // NOI18N
         popupMenu.add(changePatientRecordMenuItem);

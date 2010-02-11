@@ -16,6 +16,7 @@
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.dataentry.RecordEditorPanel" id="deleteRecord" methodName="deleteRecord"/>
             </Property>
+            <Property name="text" type="java.lang.String" resourceKey="deleteMenuItem.text"/>
             <Property name="name" type="java.lang.String" value="deleteMenuItem" noResource="true"/>
           </Properties>
         </MenuItem>
