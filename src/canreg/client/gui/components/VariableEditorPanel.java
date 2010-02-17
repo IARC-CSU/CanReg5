@@ -398,7 +398,7 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
                 try {
                     valueObject = Integer.parseInt(valueString.trim());
                 } catch (NumberFormatException numberFormatException) {
-                    valueObject = -1;
+                    // valueObject = -1;
                     Logger.getLogger(VariableEditorPanel.class.getName()).log(Level.WARNING, databaseListElement.getShortName() + " " + valueString, numberFormatException);
                 }
             } else {
@@ -470,9 +470,12 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         if (possibleValuesMap == null) {
             splitPane2.setVisible(false);
         } else {
-            m = possibleValuesMap.get(getValue());
-            if (m != null) {
-                descriptionTextField.setText(m.getDescription());
+            Object value = getValue();
+            if (value != null) {
+                m = possibleValuesMap.get(value.toString());
+                if (m != null) {
+                    descriptionTextField.setText(m.getDescription());
+                }
             }
         }
     }
