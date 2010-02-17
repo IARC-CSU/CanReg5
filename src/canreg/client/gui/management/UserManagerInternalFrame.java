@@ -538,9 +538,11 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         if (okToDelete && id > 0) {
             try {
                 canreg.client.CanRegClientApp.getApplication().deleteRecord(id, "USERS");
+            } catch (SQLException ex) {
+                Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RecordLockedException ex) {
                 Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
+            }catch (SecurityException ex) {
                 Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
                 Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
