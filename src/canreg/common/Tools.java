@@ -333,15 +333,25 @@ public class Tools {
                 index.setDatabaseTableName(tableName);
                 NodeList variables = element.getElementsByTagName(namespace + "indexed_variable");
                 DatabaseVariablesListElement[] variableArray = new DatabaseVariablesListElement[variables.getLength()];
+                LinkedList<DatabaseVariablesListElement> variableLinkedList = new LinkedList<DatabaseVariablesListElement>();
                 if (variables.getLength() > 0) {
                     // we don't allow empty indexes
                     // Go through all the variable definitions
                     for (int j = 0; j < variables.getLength(); j++) {
                         Element variableElement = (Element) variables.item(j);
+                        String variableName = variableElement.getElementsByTagName(namespace + "variable_name").item(0).getTextContent();
                         DatabaseVariablesListElement variable =
-                                variablesMap.get(variableElement.getElementsByTagName(namespace + "variable_name").item(0).getTextContent().toUpperCase());
-                        variableArray[j] = variable;
+                                variablesMap.get(variableName);
+                        if (variable == null) {
+                            variable = variablesMap.get(variableName.toUpperCase());
+                        }
+                        if (variable != null) {
+                            variableLinkedList.add(variable);
+                        } else {
+                            System.out.println("Variable " + variableName + " not found");
+                        }
                     }
+                    variableArray = variableLinkedList.toArray(variableArray);
                     index.setVariablesInIndex(variableArray);
                     indexMap.put(nameDB, index);
                 }
