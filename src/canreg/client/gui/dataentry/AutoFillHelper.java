@@ -26,6 +26,7 @@ class AutoFillHelper {
                 //    code = unknownCodeObject.toString();
                 // } else {
                 // old school unknown code
+                // TODO: Calculate age in autofill!
                     for (int i = 0; i < dvle.getVariableLength(); i++) {
                         code += "9";
                     }
