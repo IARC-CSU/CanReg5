@@ -187,7 +187,7 @@ public class DateHelper {
     public static long yearsBetween(Calendar startDate, Calendar endDate) {
         Calendar date = (Calendar) startDate.clone();
         long yearsBetween = 0;
-        while (date.before(endDate)) {
+        while (date.before(endDate) || date.equals(endDate)) {
             date.add(Calendar.YEAR, 1);
             yearsBetween++;
         }
