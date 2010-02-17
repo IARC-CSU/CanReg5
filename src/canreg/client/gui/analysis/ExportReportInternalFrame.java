@@ -572,8 +572,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             variableChooserPanel.initPanel(dictionary);
             resultPanel.setVisible(false);
             // We can't add the source info if we don't have tumour info...
-            if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME) ||
-                    tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+            if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)
+                    || tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
                 exportSourceInformationCheckBox.setEnabled(false);
             } else {
                 exportSourceInformationCheckBox.setEnabled(true);
@@ -774,6 +774,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                                     value = DateHelper.parseGregorianCalendarCanRegToDateString(gregorianCanRegCalendar, (String) dateFormatComboBox.getSelectedItem());
                                 } catch (ParseException ex) {
                                     Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (IllegalArgumentException ex) {
+                                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.WARNING, "Value: " + value, ex);
                                 }
                             }
                             line += value + separatingString;
