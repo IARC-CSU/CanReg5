@@ -35,7 +35,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="generalPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="editorsScrollPane" pref="693" max="32767" attributes="0"/>
+              <Component id="editorsScrollPane" pref="697" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -122,6 +122,8 @@
         <Component class="javax.swing.JButton" name="checkIfUniqueButton">
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="checkIfUniqueButton.text"/>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="checkIfUniqueButton.toolTipText"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="checkIfUniqueButton" noResource="true"/>
           </Properties>
         </Component>
@@ -191,7 +193,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="settingsPanel" alignment="0" pref="338" max="32767" attributes="1"/>
+                          <Component id="settingsPanel" alignment="0" pref="560" max="32767" attributes="1"/>
                           <Component id="codingPanel" alignment="1" max="32767" attributes="1"/>
                           <Component id="dictionariesPanel" alignment="0" max="32767" attributes="1"/>
                           <Component id="groupsPanel" alignment="1" max="32767" attributes="1"/>
@@ -240,7 +242,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="personSearchVariablesPanel" alignment="0" pref="322" max="32767" attributes="0"/>
+                      <Component id="personSearchVariablesPanel" alignment="0" pref="544" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -272,7 +274,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseDictionaryPanel1" alignment="0" pref="322" max="32767" attributes="0"/>
+                      <Component id="databaseDictionaryPanel1" alignment="0" pref="544" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -304,7 +306,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseVariablePanel1" alignment="0" pref="322" max="32767" attributes="0"/>
+                      <Component id="databaseVariablePanel1" alignment="0" pref="544" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -336,7 +338,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseGroupPanel1" alignment="0" pref="322" max="32767" attributes="0"/>
+                      <Component id="databaseGroupPanel1" alignment="0" pref="544" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -409,7 +411,7 @@
                               </Group>
                               <Component id="basisCodesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="232" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -623,7 +625,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseIndexPanel1" alignment="0" pref="322" max="32767" attributes="0"/>
+                      <Component id="databaseIndexPanel1" alignment="0" pref="544" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">

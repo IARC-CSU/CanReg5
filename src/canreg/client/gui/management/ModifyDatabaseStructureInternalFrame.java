@@ -156,6 +156,8 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         registryCodeTextField.setName("registryCodeTextField"); // NOI18N
 
         checkIfUniqueButton.setText(resourceMap.getString("checkIfUniqueButton.text")); // NOI18N
+        checkIfUniqueButton.setToolTipText(resourceMap.getString("checkIfUniqueButton.toolTipText")); // NOI18N
+        checkIfUniqueButton.setEnabled(false);
         checkIfUniqueButton.setName("checkIfUniqueButton"); // NOI18N
 
         regionLabel.setText(resourceMap.getString("regionLabel.text")); // NOI18N
@@ -234,7 +236,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         searchVariablesPanel.setLayout(searchVariablesPanelLayout);
         searchVariablesPanelLayout.setHorizontalGroup(
             searchVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(personSearchVariablesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+            .addComponent(personSearchVariablesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
         );
         searchVariablesPanelLayout.setVerticalGroup(
             searchVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -250,7 +252,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         dictionariesPanel.setLayout(dictionariesPanelLayout);
         dictionariesPanelLayout.setHorizontalGroup(
             dictionariesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseDictionaryPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+            .addComponent(databaseDictionaryPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
         );
         dictionariesPanelLayout.setVerticalGroup(
             dictionariesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -266,7 +268,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         variablesPanel.setLayout(variablesPanelLayout);
         variablesPanelLayout.setHorizontalGroup(
             variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseVariablePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+            .addComponent(databaseVariablePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
         );
         variablesPanelLayout.setVerticalGroup(
             variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -282,7 +284,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         groupsPanel.setLayout(groupsPanelLayout);
         groupsPanelLayout.setHorizontalGroup(
             groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseGroupPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+            .addComponent(databaseGroupPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
         );
         groupsPanelLayout.setVerticalGroup(
             groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -371,7 +373,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(dateSeparatorTextField, 0, 0, Short.MAX_VALUE))))
                     .addComponent(basisCodesCheckBox))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(232, Short.MAX_VALUE))
         );
         codingPanelLayout.setVerticalGroup(
             codingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -452,7 +454,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         searchVariablesPanel1.setLayout(searchVariablesPanel1Layout);
         searchVariablesPanel1Layout.setHorizontalGroup(
             searchVariablesPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseIndexPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+            .addComponent(databaseIndexPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
         );
         searchVariablesPanel1Layout.setVerticalGroup(
             searchVariablesPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -465,7 +467,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             editorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(editorsPanelLayout.createSequentialGroup()
                 .addGroup(editorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE)
+                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
                     .addComponent(codingPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(dictionariesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(groupsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -507,7 +509,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             .addGroup(layout.createSequentialGroup()
                 .addComponent(generalPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 693, Short.MAX_VALUE))
+                .addComponent(editorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE))
         );
 
         pack();
