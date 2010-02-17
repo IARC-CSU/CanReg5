@@ -95,7 +95,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             } catch (NumberFormatException numberFormatException) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, numberFormatException);
             } catch (IllegalArgumentException ex) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, ex);
             } catch (StringIndexOutOfBoundsException stringIndexOutOfBoundsException) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, stringIndexOutOfBoundsException);
             }
@@ -121,7 +121,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             } catch (ParseException ex) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException ex) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + valueString + ", Date format: " + dateChooser.getDateFormatString(), ex);
             }
         }
 
