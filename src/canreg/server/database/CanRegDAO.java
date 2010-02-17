@@ -1404,7 +1404,7 @@ public class CanRegDAO {
         return success;
     }
 
-    public synchronized boolean deletePatientRecord(int patientRecordID) throws RecordLockedException {
+    public synchronized boolean deletePatientRecord(int patientRecordID) throws RecordLockedException, SQLException {
         boolean success = false;
         if (isRecordLocked(patientRecordID, Globals.PATIENT_TABLE_NAME)) {
             throw new RecordLockedException();

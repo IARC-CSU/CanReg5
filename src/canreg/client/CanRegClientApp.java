@@ -700,7 +700,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
-    public boolean deleteRecord(int id, String tableName) throws SecurityException, RemoteException, RecordLockedException {
+    public boolean deleteRecord(int id, String tableName) throws SecurityException, RemoteException, RecordLockedException, SQLException {
         return server.deleteRecord(id, tableName);
     }
 

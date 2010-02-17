@@ -149,7 +149,7 @@ public interface CanRegServerInterface extends Remote {
             throws RemoteException, SecurityException;
 
     public boolean deleteRecord(int id, String tableName)
-            throws RemoteException, SecurityException, RecordLockedException;
+            throws RemoteException, SecurityException, RecordLockedException, SQLException;
 
     /**
      * 

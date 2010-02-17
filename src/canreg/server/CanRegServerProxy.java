@@ -248,7 +248,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         return theServer.initiateGlobalPersonSearch(searcher, rangeStart, rangeEnd);
     }
 
-    public boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException, RecordLockedException {
+    public boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException, RecordLockedException, SQLException {
         checkPermission("deleteRecord: " + tableName);
         return theServer.deleteRecord(id, tableName);
     }
