@@ -877,7 +877,7 @@ public class CanRegClientView extends FrameView {
         }
 
         garbleDatabaseMenuItem.setVisible(false);
-        setUpDatabaseMenuItem.setVisible(false);
+        // setUpDatabaseMenuItem.setVisible(false);
 
         //toolbar buttons        
         // a bit too drastic : toolBar.setVisible(loggedIn);
