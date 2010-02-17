@@ -85,7 +85,7 @@ public class CheckAgeIncidenceDateBirthDate extends CheckInterface {
             result.setMessage("Not a number");
             return result;
         } catch (IllegalArgumentException ex) {
-            Logger.getLogger(CheckAgeIncidenceDateBirthDate.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CheckAgeIncidenceDateBirthDate.class.getName()).log(Level.WARNING, "Dates: " + birthDateCode + ", "+incidenceDate, ex);
         } catch (NullPointerException nullPointerException) {
             result.setResultCode(CheckResult.ResultCode.Missing);
             result.setMessage("Missing variable(s) needed.");
