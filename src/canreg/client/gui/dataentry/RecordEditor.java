@@ -582,8 +582,11 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                         try {
                             canreg.client.CanRegClientApp.getApplication().releaseRecord(id, tableName);
                             success = canreg.client.CanRegClientApp.getApplication().deleteRecord(id, tableName);
+                        } catch (SQLException ex) {
+                            JOptionPane.showInternalMessageDialog(this, "This record has other records assigned to it.\nPlease delete or move those first.");
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.WARNING, null, ex);
                         } catch (RecordLockedException ex) {
-                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.WARNING, null, ex);
                         } catch (SecurityException ex) {
                             Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (RemoteException ex) {
@@ -836,11 +839,18 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 if (sourceOfActionDatabaseRecord instanceof Tumour) {
                     RecordEditorPanel patientRecordEditorPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
                     otherDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
+                    autoFillHelper.autoFill(autoFillList, sourceOfActionDatabaseRecord, otherDatabaseRecord, recordEditorPanel);
+                    patientRecordEditorPanel.refreshDatabaseRecord(otherDatabaseRecord);
+                    recordEditorPanel.refreshDatabaseRecord(sourceOfActionDatabaseRecord);
                 } else if (sourceOfActionDatabaseRecord instanceof Patient) {
                     RecordEditorPanel tumourRecordEditorPanel = (RecordEditorPanel) tumourTabbedPane.getSelectedComponent();
                     otherDatabaseRecord = tumourRecordEditorPanel.getDatabaseRecord();
+                    autoFillHelper.autoFill(autoFillList, sourceOfActionDatabaseRecord, otherDatabaseRecord, recordEditorPanel);
+                    tumourRecordEditorPanel.refreshDatabaseRecord(otherDatabaseRecord);
+                    recordEditorPanel.refreshDatabaseRecord(sourceOfActionDatabaseRecord);
                 }
-                autoFillHelper.autoFill(autoFillList, sourceOfActionDatabaseRecord, otherDatabaseRecord, recordEditorPanel);
+//                 autoFillHelper.autoFill(autoFillList, sourceOfActionDatabaseRecord, otherDatabaseRecord, recordEditorPanel);
+
             }
         }
     }
@@ -848,8 +858,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private DatabaseRecord saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException, SQLException, RecordLockedException {
         // id is the internal database id
         DatabaseRecord newDatabaseRecord = null;
-        if (databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) == null &&
-                databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) == null) {
+        if (databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) == null
+                && databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) == null) {
             int id = canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord);
             if (databaseRecord instanceof Patient) {
                 // databaseRecord.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, id);
