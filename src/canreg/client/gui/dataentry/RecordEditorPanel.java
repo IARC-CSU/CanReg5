@@ -174,6 +174,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         }
         // Set record status
         if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
+            recStatus = "0";
             if (hasChanged) {
                 recStatus = "0";
             } else {
@@ -307,20 +308,20 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                     Calendar todayCal = new GregorianCalendarCanReg();
                     Calendar recordCal = new GregorianCalendarCanReg();
                     recordCal.setTime(date);
-                    if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR) &&
-                            todayCal.get(Calendar.DAY_OF_YEAR) == recordCal.get(Calendar.DAY_OF_YEAR)) {
+                    if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR)
+                            && todayCal.get(Calendar.DAY_OF_YEAR) == recordCal.get(Calendar.DAY_OF_YEAR)) {
                         updateDateString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("TODAY");
                         updateDateToolTip = DateFormat.getDateInstance().format(date);
-                    } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR) &&
-                            todayCal.get(Calendar.DAY_OF_YEAR) - recordCal.get(Calendar.DAY_OF_YEAR) == 1) {
+                    } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR)
+                            && todayCal.get(Calendar.DAY_OF_YEAR) - recordCal.get(Calendar.DAY_OF_YEAR) == 1) {
                         updateDateString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("YESTERDAY");
                         updateDateToolTip = DateFormat.getDateInstance().format(date);
-                    } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR) &&
-                            todayCal.get(Calendar.WEEK_OF_YEAR) == recordCal.get(Calendar.WEEK_OF_YEAR)) {
+                    } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR)
+                            && todayCal.get(Calendar.WEEK_OF_YEAR) == recordCal.get(Calendar.WEEK_OF_YEAR)) {
                         updateDateString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("THIS_WEEK");
                         updateDateToolTip = DateFormat.getDateInstance().format(date);
-                    } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR) &&
-                            todayCal.get(Calendar.WEEK_OF_YEAR) - recordCal.get(Calendar.WEEK_OF_YEAR) == 1) {
+                    } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR)
+                            && todayCal.get(Calendar.WEEK_OF_YEAR) - recordCal.get(Calendar.WEEK_OF_YEAR) == 1) {
                         updateDateString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("LAST_WEEK");
                         updateDateToolTip = DateFormat.getDateInstance().format(date);
                     } else {
@@ -346,6 +347,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     }
 
     private enum panelTypes {
+
         PATIENT, TUMOUR, SOURCE
     }
 
@@ -509,8 +511,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
         Map<String, DictionaryEntry> possibleValues;
 
-        for (int i = 0; i <
-                variablesInTable.length; i++) {
+        for (int i = 0; i
+                < variablesInTable.length; i++) {
             DatabaseVariablesListElement currentVariable = variablesInTable[i];
             VariableEditorPanel vep;
 
@@ -1028,9 +1030,14 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                 if (recordStatusValue != null) {
                     databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusValue.getCode());
                 } else {
+                    databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
                     // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
                     Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
                 }
+            } else {
+                databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
+                // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
+                Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
             }
         }
         if (obsoleteFlagVariableListElement != null) {
@@ -1040,7 +1047,22 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                 databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.NOT_OBSOLETE_VALUE);
             }
         }
-
+        // TODO: Make dynamic result codes
+        if (checkVariableListElement != null) {
+            if (resultCode.equals(ResultCode.OK)) {
+                databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), "1");
+            } else if (resultCode.equals(ResultCode.Invalid)) {
+                databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), "3");
+            } else if (resultCode.equals(ResultCode.Missing)) {
+                databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), "3");
+            } else if (resultCode.equals(ResultCode.Rare)) {
+                databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), "2");
+            } else if (resultCode.equals(ResultCode.NotDone)) {
+                databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), "0");
+            } else {
+                databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), "0");
+            }
+        }
     }
 
     public LinkedList<DatabaseVariablesListElement> getAutoFillList() {
@@ -1129,6 +1151,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
     @Action
     public void menuAction() {
-        popupMenu.show(menuButton,0,0);
+        popupMenu.show(menuButton, 0, 0);
     }
 }
