@@ -226,152 +226,154 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
 
         int sex, icdNumber, year, icdIndex, yearIndex, ageGroup, ageInt, basis, cases;
 
-        for (Object[] line : incidenceData) {
+        if (incidenceData != null) {
+            for (Object[] line : incidenceData) {
 
 
-            // Set default
-            icdIndex = -1;
-            cases = 0;
+                // Set default
+                icdIndex = -1;
+                cases = 0;
 
-            // Unknown sex group = 3
-            sex = 3;
-            // Extract data
-            sexString = (String) line[SEX_COLUMN];
-            sex = Integer.parseInt(sexString.trim());
-
-            // sex = 3 is unknown sex
-
-            if (sex > 2) {
+                // Unknown sex group = 3
                 sex = 3;
-            }
+                // Extract data
+                sexString = (String) line[SEX_COLUMN];
+                sex = Integer.parseInt(sexString.trim());
 
-            morphologyString = (String) line[MORPHOLOGY_COLUMN];
+                // sex = 3 is unknown sex
 
-            /*
-            if (morphologyString.length() > 0) {
-            int morphology = Integer.parseInt(morphologyString);
-            if (morphology == 9140) {
-            String behaviourString = getContentOfField(
-            incidenceFieldDescriptionList,
-            "behaviour", line).trim();
-            if (behaviourString.equals("3")) {
-            icdIndex = kaposiSarkomaCancerGroupIndex;
-            }
-
-            } else if ((int)(morphology/10) == 905) {
-            String behaviourString = getContentOfField(incidenceFieldDescriptionList,
-            "behaviour", line).trim();
-            if (behaviourString.equals("3")) {
-            icdIndex = mesotheliomaCancerGroupIndex;
-            }
-            }
-            }
-             */
-
-            if (icdIndex < 0) {
-                icdString = (String) line[ICD10_COLUMN];
-                if (icdString.length() > 0 &&
-                        icdString.trim().substring(0, 1).equals("C")) {
-                    icdString = icdString.trim().substring(1);
-                    icdNumber = Integer.parseInt(icdString);
-                    if (icdString.length() < 3) {
-                        icdNumber = icdNumber * 10;
-                    }
-                    icdIndex = getICD10index(icdNumber, cancerGroupsLocal);
-                    if (icdIndex == -1) {
-                        icdIndex = -1;
-                    }
-                } else if (icdString.length() > 0 &&
-                        icdString.trim().substring(0, 1).equals("D")) {
-                    icdString = icdString.trim().substring(1);
-                    icdNumber = Integer.parseInt(icdString);
-                    if (icdString.length() < 3) {
-                        icdNumber = icdNumber * 10;
-                    }
-                    if (icdNumber == 90 || icdNumber == 414) {
-                        icdIndex = bladderCancerGroupIndex;
-                    } else if ((int) (icdNumber / 10) == 45 || (int) (icdNumber / 10) == 47) {
-                        icdIndex = myeloproliferativeDisordersCancerGroupIndex;
-                    } else if ((int) (icdNumber / 10) == 46) {
-                        icdIndex = myelodysplasticSyndromesCancerGroupIndex;
-                    }
+                if (sex > 2) {
+                    sex = 3;
                 }
 
-            }
+                morphologyString = (String) line[MORPHOLOGY_COLUMN];
 
-            yearString = line[YEAR_COLUMN].toString();
-            year = Integer.parseInt(yearString);
-            yearIndex = year - years[0];
-            ageString = line[AGE_COLUMN].toString();
-            ageInt = Integer.parseInt(ageString);
-
-            if (ageInt == unknownAgeInt) {
-                ageGroup = unknownAgeGroupIndex;
-            } else {
-                ageGroup = populations[yearIndex].getAgeGroupIndex(ageInt);
-                // Adjust age group
-                if (populations[yearIndex].getAgeGroupStructure().getSizeOfFirstGroup() != 1) {
-                    ageGroup += 1;
+                /*
+                if (morphologyString.length() > 0) {
+                int morphology = Integer.parseInt(morphologyString);
+                if (morphology == 9140) {
+                String behaviourString = getContentOfField(
+                incidenceFieldDescriptionList,
+                "behaviour", line).trim();
+                if (behaviourString.equals("3")) {
+                icdIndex = kaposiSarkomaCancerGroupIndex;
                 }
-            }
 
-            // Extract cases
-            cases = (Integer) line[CASES_COLUMN];
+                } else if ((int)(morphology/10) == 905) {
+                String behaviourString = getContentOfField(incidenceFieldDescriptionList,
+                "behaviour", line).trim();
+                if (behaviourString.equals("3")) {
+                icdIndex = mesotheliomaCancerGroupIndex;
+                }
+                }
+                }
+                 */
 
-            if (year <= years[1] && year >= years[0]) {
+                if (icdIndex < 0) {
+                    icdString = (String) line[ICD10_COLUMN];
+                    if (icdString.length() > 0
+                            && icdString.trim().substring(0, 1).equals("C")) {
+                        icdString = icdString.trim().substring(1);
+                        icdNumber = Integer.parseInt(icdString);
+                        if (icdString.length() < 3) {
+                            icdNumber = icdNumber * 10;
+                        }
+                        icdIndex = getICD10index(icdNumber, cancerGroupsLocal);
+                        if (icdIndex == -1) {
+                            icdIndex = -1;
+                        }
+                    } else if (icdString.length() > 0
+                            && icdString.trim().substring(0, 1).equals("D")) {
+                        icdString = icdString.trim().substring(1);
+                        icdNumber = Integer.parseInt(icdString);
+                        if (icdString.length() < 3) {
+                            icdNumber = icdNumber * 10;
+                        }
+                        if (icdNumber == 90 || icdNumber == 414) {
+                            icdIndex = bladderCancerGroupIndex;
+                        } else if ((int) (icdNumber / 10) == 45 || (int) (icdNumber / 10) == 47) {
+                            icdIndex = myeloproliferativeDisordersCancerGroupIndex;
+                        } else if ((int) (icdNumber / 10) == 46) {
+                            icdIndex = myelodysplasticSyndromesCancerGroupIndex;
+                        }
+                    }
 
-                // Basis of diagnosis
-                basisString = line[BASIS_DIAGNOSIS_COLUMN].toString();
-                if (basisString != null) {
-                    basis = Integer.parseInt(basisString.trim());
+                }
+
+                yearString = line[YEAR_COLUMN].toString();
+                year = Integer.parseInt(yearString);
+                yearIndex = year - years[0];
+                ageString = line[AGE_COLUMN].toString();
+                ageInt = Integer.parseInt(ageString);
+
+                if (ageInt == unknownAgeInt) {
+                    ageGroup = unknownAgeGroupIndex;
                 } else {
-                    basis = -1;
+                    ageGroup = populations[yearIndex].getAgeGroupIndex(ageInt);
+                    // Adjust age group
+                    if (populations[yearIndex].getAgeGroupStructure().getSizeOfFirstGroup() != 1) {
+                        ageGroup += 1;
+                    }
                 }
 
-                if (sex <= numberOfSexes && icdIndex >= 0 &&
-                        icdIndex <= cancerGroupsLocal.length) {
+                // Extract cases
+                cases = (Integer) line[CASES_COLUMN];
 
-                    casesArray[icdIndex][sex - 1][ageGroup] += cases;
+                if (year <= years[1] && year >= years[0]) {
 
-                    //
-                    if (basis == 00) {
-                        DCO[sex - 1][icdIndex] += cases;
-                    } else if (basis >= 10 && basis <= 19) {
-                        MV[sex - 1][icdIndex] += cases;
+                    // Basis of diagnosis
+                    basisString = line[BASIS_DIAGNOSIS_COLUMN].toString();
+                    if (basisString != null) {
+                        basis = Integer.parseInt(basisString.trim());
+                    } else {
+                        basis = -1;
                     }
-                } else {
-                    if (otherCancerGroupsIndex >= 0) {
-                        casesArray[otherCancerGroupsIndex][sex -
-                                1][ageGroup] += cases;
+
+                    if (sex <= numberOfSexes && icdIndex >= 0
+                            && icdIndex <= cancerGroupsLocal.length) {
+
+                        casesArray[icdIndex][sex - 1][ageGroup] += cases;
+
+                        //
+                        if (basis == 00) {
+                            DCO[sex - 1][icdIndex] += cases;
+                        } else if (basis >= 10 && basis <= 19) {
+                            MV[sex - 1][icdIndex] += cases;
+                        }
+                    } else {
+                        if (otherCancerGroupsIndex >= 0) {
+                            casesArray[otherCancerGroupsIndex][sex
+                                    - 1][ageGroup] += cases;
+                        }
+                    }
+                    if (allCancerGroupsIndex >= 0) {
+                        casesArray[allCancerGroupsIndex][sex - 1][ageGroup] += cases;
+                        if (basis == 0) {
+                            DCO[sex - 1][allCancerGroupsIndex] += cases;
+                        } else if (basis >= 10 && basis <= 19) {
+                            MV[sex - 1][allCancerGroupsIndex] += cases;
+                        }
+                    }
+                    if (allCancerGroupsButSkinIndex >= 0
+                            && skinCancerGroupIndex >= 0
+                            && icdIndex != skinCancerGroupIndex) {
+                        casesArray[allCancerGroupsButSkinIndex][sex
+                                - 1][ageGroup] += cases;
+                        if (basis == 0) {
+                            DCO[sex - 1][allCancerGroupsButSkinIndex] += cases;
+                        } else if (basis >= 10 && basis <= 19) {
+                            MV[sex - 1][allCancerGroupsButSkinIndex] += cases;
+                        }
+                    }
+                    records += cases;
+                    if (records % recordsPerFeedback == 0) {
+                        System.out.println("Processing record number: " + records);
                     }
                 }
-                if (allCancerGroupsIndex >= 0) {
-                    casesArray[allCancerGroupsIndex][sex - 1][ageGroup] += cases;
-                    if (basis == 0) {
-                        DCO[sex - 1][allCancerGroupsIndex] += cases;
-                    } else if (basis >= 10 && basis <= 19) {
-                        MV[sex - 1][allCancerGroupsIndex] += cases;
-                    }
-                }
-                if (allCancerGroupsButSkinIndex >= 0 &&
-                        skinCancerGroupIndex >= 0 &&
-                        icdIndex != skinCancerGroupIndex) {
-                    casesArray[allCancerGroupsButSkinIndex][sex -
-                            1][ageGroup] += cases;
-                    if (basis == 0) {
-                        DCO[sex - 1][allCancerGroupsButSkinIndex] += cases;
-                    } else if (basis >= 10 && basis <= 19) {
-                        MV[sex - 1][allCancerGroupsButSkinIndex] += cases;
-                    }
-                }
-                records += cases;
-                if (records % recordsPerFeedback == 0) {
-                    System.out.println("Processing record number: " + records);
-                }
+                // Read next line
+
+
             }
-        // Read next line
-
-
         }
         System.out.println("Processed " + records + " records.");
 
@@ -418,14 +420,14 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                                 previousAgeGroupWstdPopulation += standardPopulationArray[sexNumber][ag];
                             }
                         }
-                        if (foundAgeGroups[ageGroupNumber] &&
-                                ageGroupNumber < highestPopulationAgeGroup) {
+                        if (foundAgeGroups[ageGroupNumber]
+                                && ageGroupNumber < highestPopulationAgeGroup) {
                             casesPerHundredThousand[sexNumber][ageGroupNumber][icdGroup] =
-                                    100000 *
-                                    (casesArray[icdGroup][sexNumber][ageGroupNumber] +
-                                    previousAgeGroupCases) /
-                                    (populationArray[sexNumber][ageGroupNumber] +
-                                    previousAgeGroupPopulation);
+                                    100000
+                                    * (casesArray[icdGroup][sexNumber][ageGroupNumber]
+                                    + previousAgeGroupCases)
+                                    / (populationArray[sexNumber][ageGroupNumber]
+                                    + previousAgeGroupPopulation);
 
                             previousAgeGroupCases = 0;
                             previousAgeGroupPopulation = 0;
@@ -439,9 +441,9 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                     }
                     // We calculate the "leftovers" from the last age group
                     if (previousAgeGroupPopulation > 0) {
-                        casesPerHundredThousand[sexNumber][highestPopulationAgeGroup][icdGroup] = 100000 *
-                                (previousAgeGroupCases) /
-                                (previousAgeGroupPopulation);
+                        casesPerHundredThousand[sexNumber][highestPopulationAgeGroup][icdGroup] = 100000
+                                * (previousAgeGroupCases)
+                                / (previousAgeGroupPopulation);
 
                     }
 
@@ -478,16 +480,16 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                             previousAgeGroupWstdPopulation += standardPopulationArray[sexNumber][ag];
                         }
                     }
-                    if (foundAgeGroups[ageGroupNumber] &&
-                            ageGroupNumber < highestPopulationAgeGroup &&
-                            (previousAgeGroupPopulation +
-                            populationArray[sexNumber][ageGroupNumber] > 0)) {
-                        double asr = calculateASR((previousAgeGroupCases +
-                                casesArray[icdGroup][sexNumber][ageGroupNumber]),
-                                (previousAgeGroupPopulation +
-                                populationArray[sexNumber][ageGroupNumber]),
-                                (previousAgeGroupWstdPopulation +
-                                standardPopulationArray[sexNumber][ageGroupNumber]));
+                    if (foundAgeGroups[ageGroupNumber]
+                            && ageGroupNumber < highestPopulationAgeGroup
+                            && (previousAgeGroupPopulation
+                            + populationArray[sexNumber][ageGroupNumber] > 0)) {
+                        double asr = calculateASR((previousAgeGroupCases
+                                + casesArray[icdGroup][sexNumber][ageGroupNumber]),
+                                (previousAgeGroupPopulation
+                                + populationArray[sexNumber][ageGroupNumber]),
+                                (previousAgeGroupWstdPopulation
+                                + standardPopulationArray[sexNumber][ageGroupNumber]));
 
                         ASR[sexNumber][icdGroup] += asr;
 
@@ -535,15 +537,15 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
 
                     ASRbyAgeGroup[sexNumber][icdGroup][highestPopulationAgeGroup] =
                             asr;
-                /* We don't use confidence intervals so this was removed 16.07.07
-                double varil = calculateVariL(lastAgeGroupCases,
-                lastAgeGroupWstdPopulation, lastAgeGroupPopulation);
+                    /* We don't use confidence intervals so this was removed 16.07.07
+                    double varil = calculateVariL(lastAgeGroupCases,
+                    lastAgeGroupWstdPopulation, lastAgeGroupPopulation);
 
-                variL[sex][icdGroup] += varil;
+                    variL[sex][icdGroup] += varil;
 
-                variLbyAgeGroup[sex][icdGroup][highestPopulationAgeGroup] =
-                varil;
-                 */
+                    variLbyAgeGroup[sex][icdGroup][highestPopulationAgeGroup] =
+                    varil;
+                     */
 
                 }
 
@@ -552,13 +554,13 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
 
                 if (totalCasesPerHundredThousand[sexNumber][icdGroup] > 0) {
 
-                    DCO[sexNumber][icdGroup] = 100 * (int) DCO[sexNumber][icdGroup] /
-                            totalCasesPerHundredThousand[sexNumber][icdGroup];
-                    MV[sexNumber][icdGroup] = 100 * (int) MV[sexNumber][icdGroup] /
-                            totalCasesPerHundredThousand[sexNumber][icdGroup];
-                    crudeRate[sexNumber][icdGroup] = totalCasesPerHundredThousand[sexNumber][icdGroup] *
-                            standardPopulationArray[sexNumber][allAgeGroupsIndex] /
-                            (populationArray[sexNumber][allAgeGroupsIndex]);
+                    DCO[sexNumber][icdGroup] = 100 * (int) DCO[sexNumber][icdGroup]
+                            / totalCasesPerHundredThousand[sexNumber][icdGroup];
+                    MV[sexNumber][icdGroup] = 100 * (int) MV[sexNumber][icdGroup]
+                            / totalCasesPerHundredThousand[sexNumber][icdGroup];
+                    crudeRate[sexNumber][icdGroup] = totalCasesPerHundredThousand[sexNumber][icdGroup]
+                            * standardPopulationArray[sexNumber][allAgeGroupsIndex]
+                            / (populationArray[sexNumber][allAgeGroupsIndex]);
 
                     /* We don't use confidence intervals so this was removed 16.07.07
                     double[] asrlul = calculateASRluL(ASR[sex][icdGroup],
@@ -583,23 +585,23 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
 
                     // adjust the ASR and cum rates for unknown ages
                     if (ASR[sexNumber][icdGroup] > 0) {
-                        double ratio = totalCasesPerHundredThousand[sexNumber][icdGroup] /
-                                (totalCasesPerHundredThousand[sexNumber][icdGroup] -
-                                casesArray[icdGroup][sexNumber][unknownAgeGroupIndex]);
+                        double ratio = totalCasesPerHundredThousand[sexNumber][icdGroup]
+                                / (totalCasesPerHundredThousand[sexNumber][icdGroup]
+                                - casesArray[icdGroup][sexNumber][unknownAgeGroupIndex]);
                         ASR[sexNumber][icdGroup] *= ratio;
                         cumRate64[sexNumber][icdGroup] *= ratio;
                         cumRate74[sexNumber][icdGroup] *= ratio;
 
                     }
-                /*                    if (!isSpecialized) {
-                cumRate64[sex][allCancerGroupsIndex] += cumRate64[sex][icdGroup];
-                cumRate74[sex][allCancerGroupsIndex] += cumRate74[sex][icdGroup];
-                if (icdGroup!=skinCancerGroupIndex) {
-                cumRate64[sex][allCancerGroupsIndex] += cumRate64[sex][icdGroup];
-                cumRate74[sex][allCancerGroupsIndex] += cumRate74[sex][icdGroup];
-                }
-                }
-                 */
+                    /*                    if (!isSpecialized) {
+                    cumRate64[sex][allCancerGroupsIndex] += cumRate64[sex][icdGroup];
+                    cumRate74[sex][allCancerGroupsIndex] += cumRate74[sex][icdGroup];
+                    if (icdGroup!=skinCancerGroupIndex) {
+                    cumRate64[sex][allCancerGroupsIndex] += cumRate64[sex][icdGroup];
+                    cumRate74[sex][allCancerGroupsIndex] += cumRate74[sex][icdGroup];
+                    }
+                    }
+                     */
                 }
             }
         }
@@ -778,15 +780,15 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                         if (isLineBreak(j - 1) != 0) {
                             k -= 2;
                         }
-                        if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex ||
-                                j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
+                        if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex
+                                || j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
                             fw.write("ICDfont SF\n");
                         } else {
                             fw.write("ICDfont SF\n");
                         }
 
-                        fw.write("745 " + k + " MT (" +
-                                icd10GroupDescriptions[j] + ") show\n");
+                        fw.write("745 " + k + " MT ("
+                                + icd10GroupDescriptions[j] + ") show\n");
                         k -= (tableFontSize);
                     }
                 }
@@ -803,15 +805,15 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                         if (isLineBreak(j - 1) != 0) {
                             k -= 2;
                         }
-                        if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex ||
-                                j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
+                        if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex
+                                || j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
                             fw.write("ASRitalicsfont SF\n");
                         } else {
                             fw.write("ASRfont SF\n");
                         }
 
-                        fw.write("0 " + k + " MT (" + formatNumber(ASR[sexNumber][j]) +
-                                ") RS\n");
+                        fw.write("0 " + k + " MT (" + formatNumber(ASR[sexNumber][j])
+                                + ") RS\n");
                         k -= (tableFontSize);
                     }
                 }
@@ -827,19 +829,19 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                             if (isLineBreak(j - 1) != 0) {
                                 k -= 2;
                             }
-                            if (j == skinCancerGroupIndex ||
-                                    j == ovaryCancerGroupIndex ||
-                                    j == bladderCancerGroupIndex ||
-                                    j == myelodysplasticSyndromesCancerGroupIndex ||
-                                    j == myeloproliferativeDisordersCancerGroupIndex ||
-                                    j == brainAndCentralNervousSystemCancerGroupIndex) {
+                            if (j == skinCancerGroupIndex
+                                    || j == ovaryCancerGroupIndex
+                                    || j == bladderCancerGroupIndex
+                                    || j == myelodysplasticSyndromesCancerGroupIndex
+                                    || j == myeloproliferativeDisordersCancerGroupIndex
+                                    || j == brainAndCentralNervousSystemCancerGroupIndex) {
                                 fw.write("ICDfont SF\n");
                             } else {
                                 fw.write("Tablefont SF\n");
                             }
 
-                            fw.write("0 " + k + " MT (" + formatNumber(cumRate74[sexNumber][j], 2) +
-                                    ") RS\n");
+                            fw.write("0 " + k + " MT (" + formatNumber(cumRate74[sexNumber][j], 2)
+                                    + ") RS\n");
                             k -= (tableFontSize);
                         }
                     }
@@ -856,15 +858,15 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                         if (isLineBreak(j - 1) != 0) {
                             k -= 2;
                         }
-                        if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex ||
-                                j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
+                        if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex
+                                || j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
                             fw.write("ICDfont SF\n");
                         } else {
                             fw.write("Tablefont SF\n");
                         }
 
-                        fw.write("0 " + k + " MT (" + formatNumber(cumRate64[sexNumber][j], 2) +
-                                ") RS\n");
+                        fw.write("0 " + k + " MT (" + formatNumber(cumRate64[sexNumber][j], 2)
+                                + ") RS\n");
                         k -= (tableFontSize);
                     }
                 }
@@ -904,22 +906,22 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                             k -= 2;
                         }
 
-                        if (j == skinCancerGroupIndex ||
-                                j == ovaryCancerGroupIndex ||
-                                j == bladderCancerGroupIndex ||
-                                j == myelodysplasticSyndromesCancerGroupIndex ||
-                                j == myeloproliferativeDisordersCancerGroupIndex ||
-                                j == brainAndCentralNervousSystemCancerGroupIndex) {
+                        if (j == skinCancerGroupIndex
+                                || j == ovaryCancerGroupIndex
+                                || j == bladderCancerGroupIndex
+                                || j == myelodysplasticSyndromesCancerGroupIndex
+                                || j == myeloproliferativeDisordersCancerGroupIndex
+                                || j == brainAndCentralNervousSystemCancerGroupIndex) {
                             fw.write("ICDfont SF\n");
                         } else {
                             fw.write("Tablefont SF\n");
                         }
 
                         if (j != allCancerGroupsIndex && allCancerGroupsButSkinIndex >= 0) {
-                            fw.write("0 " + k + " MT (" +
-                                    formatNumber(100 * totalCasesPerHundredThousand[sexNumber][j] /
-                                    totalCasesPerHundredThousand[sexNumber][allCancerGroupsButSkinIndex]) +
-                                    ") RS\n");
+                            fw.write("0 " + k + " MT ("
+                                    + formatNumber(100 * totalCasesPerHundredThousand[sexNumber][j]
+                                    / totalCasesPerHundredThousand[sexNumber][allCancerGroupsButSkinIndex])
+                                    + ") RS\n");
                         }
                         k -= (tableFontSize);
                     }
@@ -933,19 +935,19 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                         if (isLineBreak(j - 1) != 0) {
                             k -= 2;
                         }
-                        if (j == skinCancerGroupIndex ||
-                                j == ovaryCancerGroupIndex ||
-                                j == bladderCancerGroupIndex ||
-                                j == myelodysplasticSyndromesCancerGroupIndex ||
-                                j == myeloproliferativeDisordersCancerGroupIndex ||
-                                j == brainAndCentralNervousSystemCancerGroupIndex) {
+                        if (j == skinCancerGroupIndex
+                                || j == ovaryCancerGroupIndex
+                                || j == bladderCancerGroupIndex
+                                || j == myelodysplasticSyndromesCancerGroupIndex
+                                || j == myeloproliferativeDisordersCancerGroupIndex
+                                || j == brainAndCentralNervousSystemCancerGroupIndex) {
                             fw.write("ICDfont SF\n");
                         } else {
                             fw.write("Tablefont SF\n");
                         }
 
-                        fw.write("0 " + k + " MT (" + formatNumber(crudeRate[sexNumber][j]) +
-                                ") RS\n");
+                        fw.write("0 " + k + " MT (" + formatNumber(crudeRate[sexNumber][j])
+                                + ") RS\n");
                         k -= (tableFontSize);
                     }
                 }
@@ -958,19 +960,19 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                         if (isLineBreak(j - 1) != 0) {
                             k -= 2;
                         }
-                        if (j == skinCancerGroupIndex ||
-                                j == ovaryCancerGroupIndex ||
-                                j == bladderCancerGroupIndex ||
-                                j == myelodysplasticSyndromesCancerGroupIndex ||
-                                j == myeloproliferativeDisordersCancerGroupIndex ||
-                                j == brainAndCentralNervousSystemCancerGroupIndex) {
+                        if (j == skinCancerGroupIndex
+                                || j == ovaryCancerGroupIndex
+                                || j == bladderCancerGroupIndex
+                                || j == myelodysplasticSyndromesCancerGroupIndex
+                                || j == myeloproliferativeDisordersCancerGroupIndex
+                                || j == brainAndCentralNervousSystemCancerGroupIndex) {
                             fw.write("ICDfont SF\n");
                         } else {
                             fw.write("Tablefont SF\n");
                         }
 
-                        fw.write("0 " + k + " MT (" +
-                                formatNumber(totalCasesPerHundredThousand[sexNumber][j], 0) + ") RS\n");
+                        fw.write("0 " + k + " MT ("
+                                + formatNumber(totalCasesPerHundredThousand[sexNumber][j], 0) + ") RS\n");
                         k -= (tableFontSize);
                     }
                 }
@@ -983,20 +985,20 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                         if (isLineBreak(j - 1) != 0) {
                             k -= 2;
                         }
-                        if (j == skinCancerGroupIndex ||
-                                j == ovaryCancerGroupIndex ||
-                                j == bladderCancerGroupIndex ||
-                                j == myelodysplasticSyndromesCancerGroupIndex ||
-                                j == myeloproliferativeDisordersCancerGroupIndex ||
-                                j == brainAndCentralNervousSystemCancerGroupIndex) {
+                        if (j == skinCancerGroupIndex
+                                || j == ovaryCancerGroupIndex
+                                || j == bladderCancerGroupIndex
+                                || j == myelodysplasticSyndromesCancerGroupIndex
+                                || j == myeloproliferativeDisordersCancerGroupIndex
+                                || j == brainAndCentralNervousSystemCancerGroupIndex) {
                             fw.write("ICDfont SF\n");
                         } else {
                             fw.write("Tablefont SF\n");
                         }
 
-                        fw.write("0 " + k + " MT (" +
-                                formatNumber(casesArray[j][sexNumber][unknownAgeGroupIndex], 0) +
-                                ") RS\n");
+                        fw.write("0 " + k + " MT ("
+                                + formatNumber(casesArray[j][sexNumber][unknownAgeGroupIndex], 0)
+                                + ") RS\n");
                         k -= (tableFontSize);
                     }
                 }
@@ -1022,11 +1024,11 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                                 k -= 2;
                             }
 
-                            if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex ||
-                                    j ==
-                                    myeloproliferativeDisordersCancerGroupIndex ||
-                                    j ==
-                                    brainAndCentralNervousSystemCancerGroupIndex) {
+                            if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex
+                                    || j
+                                    == myeloproliferativeDisordersCancerGroupIndex
+                                    || j
+                                    == brainAndCentralNervousSystemCancerGroupIndex) {
                                 fw.write("ICDfont SF\n");
                             } else {
                                 fw.write("Tablefont SF\n");
@@ -1034,8 +1036,8 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
 
 
                             if (casesPerHundredThousand[sexNumber][age][j] > 0) {
-                                fw.write("0 " + k + " MT (" +
-                                        formatNumber(casesPerHundredThousand[sexNumber][age][j]) + ") RS\n");
+                                fw.write("0 " + k + " MT ("
+                                        + formatNumber(casesPerHundredThousand[sexNumber][age][j]) + ") RS\n");
                             } else {
                                 fw.write("0 " + k + " MT (    -  ) RS\n");
                             }
@@ -1050,19 +1052,19 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                         if (isLineBreak(j - 1) != 0) {
                             k -= 2;
                         }
-                        if (j == skinCancerGroupIndex ||
-                                j == ovaryCancerGroupIndex ||
-                                j == bladderCancerGroupIndex ||
-                                j == myelodysplasticSyndromesCancerGroupIndex ||
-                                j == myeloproliferativeDisordersCancerGroupIndex ||
-                                j == brainAndCentralNervousSystemCancerGroupIndex) {
+                        if (j == skinCancerGroupIndex
+                                || j == ovaryCancerGroupIndex
+                                || j == bladderCancerGroupIndex
+                                || j == myelodysplasticSyndromesCancerGroupIndex
+                                || j == myeloproliferativeDisordersCancerGroupIndex
+                                || j == brainAndCentralNervousSystemCancerGroupIndex) {
                             fw.write("ICDfont SF\n");
                         } else {
                             fw.write("Tablefont SF\n");
                         }
 
-                        fw.write("3 " + k + " MT (" + icdLabel[j].substring(3) +
-                                ") show\n");
+                        fw.write("3 " + k + " MT (" + icdLabel[j].substring(3)
+                                + ") show\n");
                         k -= (tableFontSize);
                     }
                 }
