@@ -558,7 +558,7 @@ public class Import {
                             Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes = new TreeMap<Globals.StandardVariableNames, CheckResult.ResultCode>();
                             worstResultCodeFound = CheckResult.ResultCode.OK;
                             for (CheckResult result : checkResults) {
-                                if (result.getResultCode() != CheckResult.ResultCode.OK  || result.getResultCode() != CheckResult.ResultCode.NotDone) {
+                                if (result.getResultCode() != CheckResult.ResultCode.OK  && result.getResultCode() != CheckResult.ResultCode.NotDone) {
                                     message += result + "\t";
                                     if (!result.getResultCode().equals(CheckResult.ResultCode.Missing)) {
                                         worstResultCodeFound = CheckResult.decideWorstResultCode(result.getResultCode(), worstResultCodeFound);
