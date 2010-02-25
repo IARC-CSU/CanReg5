@@ -116,7 +116,9 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                 String dateFormatString = dateChooser.getDateFormatString();
                 // valueObject = Integer.parseInt(valueString.trim());
                 GregorianCalendarCanReg tempCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg(valueString, dateFormatString);
-                valueObjectString = DateHelper.parseGregorianCalendarCanRegToDateString(tempCalendar, Globals.DATE_FORMAT_STRING);
+                if (tempCalendar != null) {
+                    valueObjectString = DateHelper.parseGregorianCalendarCanRegToDateString(tempCalendar, Globals.DATE_FORMAT_STRING);
+                }
                 // valueObject = Integer.parseInt(valueObjectString.trim());
             } catch (ParseException ex) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);

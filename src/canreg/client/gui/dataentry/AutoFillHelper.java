@@ -55,6 +55,16 @@ class AutoFillHelper {
                         Logger.getLogger(AutoFillHelper.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IllegalArgumentException ex) {
                         Logger.getLogger(AutoFillHelper.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (NullPointerException nex) {
+                        code = dvle.getUnknownCode();
+                        if (code == null) {
+                            String codeString = "";
+                            for (int i = 0; i < dvle.getVariableLength(); i++) {
+                                codeString += "9";
+                            }
+                            code = codeString;
+                        }
+                        Logger.getLogger(AutoFillHelper.class.getName()).log(Level.WARNING, null, nex);
                     }
                 } else {
                     code = dvle.getUnknownCode();

@@ -114,7 +114,7 @@ public class DatabaseGarbler {
                     if (birthDateString != null && birthDateString.trim().length() == 8) {
                         try {
                             birthDateCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg(birthDateString, Globals.DATE_FORMAT_STRING);
-                            if (!(birthDateCalendar.isUnknownDay() && birthDateCalendar.isUnknownMonth())) {
+                            if (birthDateCalendar!=null && !(birthDateCalendar.isUnknownDay() && birthDateCalendar.isUnknownMonth())) {
                                 birthDateCalendar = new GregorianCalendarCanReg();
                                 birthDateCalendar.set(GregorianCalendarCanReg.YEAR, Integer.parseInt(DateHelper.getYear(birthDateString, Globals.DATE_FORMAT_STRING)));
                                 birthDateCalendar.set(GregorianCalendarCanReg.DAY_OF_YEAR, rnd.nextInt(365) + 1);
@@ -170,7 +170,7 @@ public class DatabaseGarbler {
                             String incidenceDateString = (String) tumor.getVariable(incidenceDateVariableListElement.getDatabaseVariableName());
                             if (incidenceDateString != null && incidenceDateString.trim().length() == 8) {
                                 incidenceDateCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg(incidenceDateString, Globals.DATE_FORMAT_STRING);
-                                if (!(incidenceDateCalendar.isUnknownDay() && incidenceDateCalendar.isUnknownMonth())) {
+                                if (incidenceDateCalendar!=null && !(incidenceDateCalendar.isUnknownDay() && incidenceDateCalendar.isUnknownMonth())) {
                                     incidenceDateCalendar = new GregorianCalendarCanReg();
                                     incidenceDateCalendar.set(GregorianCalendarCanReg.YEAR, Integer.parseInt(DateHelper.getYear(incidenceDateString, Globals.DATE_FORMAT_STRING)));
                                     incidenceDateCalendar.set(GregorianCalendarCanReg.DAY_OF_YEAR, rnd.nextInt(365) + 1);
