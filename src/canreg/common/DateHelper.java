@@ -15,6 +15,11 @@ import java.util.Calendar;
 public class DateHelper {
 
     public static GregorianCalendarCanReg parseDateStringToGregorianCalendarCanReg(String dateString, String dateFormatString) throws ParseException, IllegalArgumentException {
+
+        if (dateString.length()!=dateFormatString.length()){
+            return null;
+        }
+
         boolean unknownDay = false;
         boolean unknownMonth = false;
         boolean unknownYear = false;
