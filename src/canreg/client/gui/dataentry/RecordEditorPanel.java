@@ -159,7 +159,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         this.resultCode = resultCode;
         String recStatus = null;
         boolean canBeConfirmed = false;
-        if (resultCode == null || resultCode == ResultCode.NotDone) {
+        if (resultCode == null) {
+            checksLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("NOT_DONE"));
+            canBeConfirmed = false;
+        } else if (resultCode == ResultCode.NotDone) {
             checksLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("NOT_DONE"));
             canBeConfirmed = false;
         } else {
@@ -237,6 +240,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             String recStatus = (String) record.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
             if (recStatus != null) {
                 recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
+            } else {
+                recordStatusComboBox.setSelectedItem(recStatusDictMap.get("0"));
             }
         } else {
             recordStatusPanel.setVisible(false);
@@ -254,6 +259,11 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                 resultCode = CheckResult.toResultCode(checkStatusString);
                 setSaveNeeded(false);
                 setChecksResultCode(resultCode);
+            } else {
+                // String checkStatusString = (String) checkStatus;
+                // resultCode = CheckResult.toResultCode(checkStatusString);
+                setSaveNeeded(true);
+                setChecksResultCode(ResultCode.NotDone);
             }
         }
     }
@@ -599,7 +609,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             refreshCheckStatus(databaseRecord);
         }
         refreshUpdatedBy();
-
         dataPanel.revalidate();
         dataPanel.repaint();
     }
@@ -1049,6 +1058,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         }
         // TODO: Make dynamic result codes
         if (checkVariableListElement != null) {
+            if (resultCode == null){
+                resultCode = ResultCode.NotDone;
+            }
             if (resultCode.equals(ResultCode.OK)) {
                 databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), "1");
             } else if (resultCode.equals(ResultCode.Invalid)) {

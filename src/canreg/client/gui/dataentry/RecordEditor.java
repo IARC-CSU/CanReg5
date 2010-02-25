@@ -639,15 +639,17 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes = new TreeMap<Globals.StandardVariableNames, CheckResult.ResultCode>();
                     worstResultCodeFound = CheckResult.ResultCode.OK;
                     for (CheckResult result : checkResults) {
-                        if (result.getResultCode() != CheckResult.ResultCode.OK) {
+                        if (result.getResultCode() != CheckResult.ResultCode.OK || result.getResultCode() != CheckResult.ResultCode.NotDone) {
                             message += result + "\n";
-                            worstResultCodeFound = CheckResult.decideWorstResultCode(result.getResultCode(), worstResultCodeFound);
-                            for (Globals.StandardVariableNames standardVariableName : result.getVariablesInvolved()) {
-                                CheckResult.ResultCode worstResultCodeFoundForThisVariable = mapOfVariablesAndWorstResultCodes.get(standardVariableName);
-                                if (worstResultCodeFoundForThisVariable == null) {
-                                    mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());
-                                } else if (CheckResult.compareResultSets(result.getResultCode(), worstResultCodeFoundForThisVariable) > 0) {
-                                    mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());
+                            if (!result.getResultCode().equals(CheckResult.ResultCode.Missing)) {
+                                worstResultCodeFound = CheckResult.decideWorstResultCode(result.getResultCode(), worstResultCodeFound);
+                                for (Globals.StandardVariableNames standardVariableName : result.getVariablesInvolved()) {
+                                    CheckResult.ResultCode worstResultCodeFoundForThisVariable = mapOfVariablesAndWorstResultCodes.get(standardVariableName);
+                                    if (worstResultCodeFoundForThisVariable == null) {
+                                        mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());
+                                    } else if (CheckResult.compareResultSets(result.getResultCode(), worstResultCodeFoundForThisVariable) > 0) {
+                                        mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());
+                                    }
                                 }
                             }
                         }

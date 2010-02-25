@@ -69,7 +69,11 @@ public class Checker {
         /**
          * 
          */
-        AgeIncidenceDateBirthDate
+        AgeIncidenceDateBirthDate,
+        /**
+         *
+         */
+        DateOfLastContact
     }
     LinkedList<CheckInterface> checks;
 
@@ -81,8 +85,8 @@ public class Checker {
         this.toolBox = toolBox;
         standardVariables = toolBox.getStandardVariables();
         Set<StandardVariableNames> variableExistSet = getVariableExistSet(standardVariables);
-        Map<StandardVariableNames, DatabaseVariablesListElement> standardVariablesMap= buildStandardVariablesMap(standardVariables);
-        
+        Map<StandardVariableNames, DatabaseVariablesListElement> standardVariablesMap = buildStandardVariablesMap(standardVariables);
+
         checks = new LinkedList<CheckInterface>();
 
         CheckInterface check;
@@ -141,7 +145,14 @@ public class Checker {
             checks.add(check);
         }
 
+        // Add incidence birth date age check
         check = new CheckAgeIncidenceDateBirthDate();
+        if (canPerformThisCheck(check, variableExistSet)) {
+            check.setVariableListElementsMap(standardVariablesMap);
+            checks.add(check);
+        }
+        // Add date of last contact check
+        check = new CheckDateOfLastContact();
         if (canPerformThisCheck(check, variableExistSet)) {
             check.setVariableListElementsMap(standardVariablesMap);
             checks.add(check);

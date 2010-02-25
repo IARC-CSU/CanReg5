@@ -133,7 +133,7 @@ public class CheckSexMorphology extends CheckInterface {
         String morphologyFamilyString = morphologicalFamiliesMap.get(morphologyCode);
 
         if (morphologyFamilyString == null) {
-            result.setResultCode(CheckResult.ResultCode.NotDone);
+            result.setResultCode(CheckResult.ResultCode.Invalid);
             result.setMessage("Invalid morphology code.");
             return result;
         } else {

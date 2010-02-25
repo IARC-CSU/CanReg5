@@ -187,7 +187,11 @@ public class CheckResult implements Serializable {
 
     public static ResultCode decideWorstResultCode(ResultCode resultCodeA, ResultCode resultCodeB) {
         ResultCode worstResultCodeFound = resultCodeB;
-        if (resultCodeA == CheckResult.ResultCode.OK) {
+        if (resultCodeA == CheckResult.ResultCode.NotDone){
+            worstResultCodeFound = resultCodeB;
+        } else if (resultCodeB == CheckResult.ResultCode.NotDone){
+            worstResultCodeFound = resultCodeA;
+        } else if (resultCodeA == CheckResult.ResultCode.OK) {
             worstResultCodeFound = resultCodeB;
         } else if (resultCodeA == CheckResult.ResultCode.Invalid) {
             worstResultCodeFound = CheckResult.ResultCode.Invalid;
