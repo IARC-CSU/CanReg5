@@ -757,7 +757,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                             if (formatDate && dvle.getVariable().getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)) {
                                 try {
                                     gregorianCanRegCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg((String) value, Globals.DATE_FORMAT_STRING);
-                                    if (correctUnknown) {
+                                    if (correctUnknown && gregorianCanRegCalendar != null) {
                                         if (gregorianCanRegCalendar.isUnknownMonth()) {
                                             // Set month to July
                                             gregorianCanRegCalendar.set(Calendar.MONTH, 7 - 1);
@@ -771,7 +771,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                                             gregorianCanRegCalendar.setUnknownDay(false);
                                         }
                                     }
-                                    value = DateHelper.parseGregorianCalendarCanRegToDateString(gregorianCanRegCalendar, (String) dateFormatComboBox.getSelectedItem());
+                                    if (gregorianCanRegCalendar != null) {
+                                        value = DateHelper.parseGregorianCalendarCanRegToDateString(gregorianCanRegCalendar, (String) dateFormatComboBox.getSelectedItem());
+                                    }
                                 } catch (ParseException ex) {
                                     Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                                 } catch (IllegalArgumentException ex) {
