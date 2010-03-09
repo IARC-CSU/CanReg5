@@ -1233,8 +1233,8 @@ public class CanRegDAO {
             //Make sure that we have valid length
             String description = dictionaryEntry.getDescription();
             if (dict != null) {
-                if (dict.getFullDictionaryDescriptionLength() < description.length()) {
-                    description = description.substring(0, dict.getFullDictionaryDescriptionLength());
+                if (Globals.DICTIONARY_DESCRIPTION_LENGTH < description.length()) {
+                    description = description.substring(0, Globals.DICTIONARY_DESCRIPTION_LENGTH);
                 }
             } else {
                 return id;
