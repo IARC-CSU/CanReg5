@@ -15,6 +15,7 @@ import canreg.client.dataentry.Relation;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.server.database.RecordLockedException;
+import java.awt.Cursor;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
@@ -721,6 +722,8 @@ public class ImportView extends javax.swing.JInternalFrame {
             // doInBackground() depends on from parameters
             // to ImportActionTask fields, here.
             super(app);
+            Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+            setCursor(hourglassCursor);
         }
 
         @Override
@@ -749,6 +752,8 @@ public class ImportView extends javax.swing.JInternalFrame {
         protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
+            Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+            setCursor(normalCursor);
             if (!(Boolean) result) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Something wrong with the file " + inFile.getAbsolutePath() + ".", "File NOT successfully imported", JOptionPane.WARNING_MESSAGE);
             } else {

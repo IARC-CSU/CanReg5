@@ -5,7 +5,7 @@
  */
 package canreg.client.gui.dataentry;
 
-import canreg.client.gui.components.VariableMappingPanel;
+// import canreg.client.gui.components.VariableMappingPanel;
 import canreg.client.LocalSettings;
 import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseVariablesListElement;
@@ -17,6 +17,7 @@ import canreg.client.gui.components.VariableMappingAlternativePanel;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.server.database.RecordLockedException;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -645,11 +646,9 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         private final ImportOptions io;
 
         ImportActionTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to ImportActionTask fields, here.
-
             super(app);
+            Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+            setCursor(hourglassCursor);
             variablesMap = buildMap();
 
             files = new File[]{
@@ -693,7 +692,8 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                     fileListString += files[i].getName() + ", ";
                 }
             }
-
+            Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+            setCursor(normalCursor);
             if (!(Boolean) result) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Something wrong with the file(s) " + fileListString + ".", "File(s) NOT successfully imported", JOptionPane.WARNING_MESSAGE);
             } else {

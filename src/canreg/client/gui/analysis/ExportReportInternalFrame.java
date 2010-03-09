@@ -18,6 +18,7 @@ import canreg.common.DateHelper;
 import canreg.common.Globals;
 import canreg.common.GregorianCalendarCanReg;
 import canreg.server.database.Dictionary;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -628,6 +629,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             // doInBackground() depends on from parameters
             // to WriteFileActionTask fields, here.
             super(app);
+
+            Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+            setCursor(hourglassCursor);
+
             writeFileButton.setEnabled(false);
             // refresh the table if necessary
             if (!resultPanel.isVisible()) {
@@ -830,6 +835,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
         @Override
         protected void succeeded(Object result) {
+            Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+            setCursor(normalCursor);
+
             try {
                 // Runs on the EDT.  Update the GUI based on
                 // the result computed by doInBackground().

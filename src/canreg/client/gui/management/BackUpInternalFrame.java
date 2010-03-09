@@ -6,6 +6,7 @@
 package canreg.client.gui.management;
 
 import canreg.common.Globals;
+import java.awt.Cursor;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -125,27 +126,23 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
     private class PerformBackupActionTask extends org.jdesktop.application.Task<Object, Void> {
 
         PerformBackupActionTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to PerformBackupActionTask fields, here.
             super(app);
+            Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+            setCursor(hourglassCursor);
             performBackupButton.setEnabled(false);
             textArea.setText("Backing up database... Please wait.");
         }
 
         @Override
         protected Object doInBackground() {
-            // Your Task's code here.  This method runs
-            // on a background thread, so don't reference
-            // the Swing GUI from here.
             backupPath = canreg.client.CanRegClientApp.getApplication().performBackup();
-            return null;  // return your result
+            return null;
         }
 
         @Override
         protected void succeeded(Object result) {
-            // Runs on the EDT.  Update the GUI based on
-            // the result computed by doInBackground().            
+            Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+            setCursor(normalCursor);
             textArea.setText(textArea.getText() + "\nBacked up database to " + backupPath + ".");
         }
     }

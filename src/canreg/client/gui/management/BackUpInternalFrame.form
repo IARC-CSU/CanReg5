@@ -70,7 +70,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="feedbackLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="scrollPane" pref="99" max="32767" attributes="0"/>
+                  <Component id="scrollPane" pref="103" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="openFolderButton" min="-2" max="-2" attributes="0"/>
               </Group>

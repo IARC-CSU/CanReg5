@@ -1,5 +1,52 @@
 Changelog
 
+4.99.18 Build 821 (5.0 RC4)
+
+- Better handling of malformed date strings.
+
+- Date of last contact check implemented.
+
+- Better handling of check results.
+
+- AutoFillHelper: auto age calculation implemented...
+
+- RecordEditor and RecordEditorPanel: Improved the way check status is handled.
+
+
+4.99.17 Build 818 (5.0 RC3)
+
+- DateHelper: difference in dates in days calculated properly.
+
+- RecordEditor: Better error handling
+
+- AutoFillHelper: Added comments
+
+- VariableEditorPanel: Better handling of null-pointers, number no longer defaults to -1.
+
+- ModifyDatabaseStructureIF: GUI fixes
+
+- UserManagerInternalFrame: Better error handling
+
+- Tools.buildIndexMap: better handling of indexes with missing variables
+
+- DateVariableEditorPanel: Better error handling
+
+- ExportReportInternalFrame: Better error handling
+
+- CanRegClientView: display set up new system-menu
+
+- CheckAgeIncidence: better error message
+
+- DateHelper: fixed a one-off error when birthday,month=incidenceday,month
+
+
+4.99.16 Build 806 (5.0 RC2)
+
+- Set up new database now in the menu
+
+- Deleting records can now throw SQLexceptions.
+
+
 4.99.15 Build 804 (5.0 RC1)
 
 - Import from multiple files now implemented.

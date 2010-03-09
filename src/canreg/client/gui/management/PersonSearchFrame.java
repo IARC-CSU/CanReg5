@@ -18,6 +18,7 @@ import canreg.common.qualitycontrol.DefaultPersonSearch;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
@@ -415,10 +416,9 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     private class PerformDuplicateSearchTask extends org.jdesktop.application.Task<Object, Void> {
 
         PerformDuplicateSearchTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to PerformDuplicateSearchTask fields, here.
             super(app);
+            Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+            setCursor(hourglassCursor);
         }
 
         @Override
@@ -449,7 +449,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                         }
                         matchesFoundTextField.setText(matchesFound + "");
 
-                    // TODO: Write to file
+                        // TODO: Write to file
 
                     }
                     result = CanRegClientApp.getApplication().nextStepGlobalPersonSearch(personSearchHandlerID);
@@ -471,10 +471,12 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
+            Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+            setCursor(normalCursor);
             performButton.setEnabled(true);
             interruptButton.setEnabled(false);
             personSearcherRunning = false;
-        // TODO: Display results
+            // TODO: Display results
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -517,15 +519,15 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         if (duplicateSearchTask != null) {
             try {
                 CanRegClientApp.getApplication().interuptGlobalPersonSearch(personSearchHandlerID);
-            // boolean cancelled = duplicateSearchTask.cancel(true);
-            // if (!cancelled) {
-            //     JOptionPane.showConfirmDialog(this, "Task can not be interupted...");
-            // } else {
-            //    duplicateSearchTask = null;
-            // }
-            // personSearcherRunning = false;
-            // performButton.setEnabled(true);
-            // interruptButton.setEnabled(false);
+                // boolean cancelled = duplicateSearchTask.cancel(true);
+                // if (!cancelled) {
+                //     JOptionPane.showConfirmDialog(this, "Task can not be interupted...");
+                // } else {
+                //    duplicateSearchTask = null;
+                // }
+                // personSearcherRunning = false;
+                // performButton.setEnabled(true);
+                // interruptButton.setEnabled(false);
             } catch (SecurityException ex) {
                 Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {

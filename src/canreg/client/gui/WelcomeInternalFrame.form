@@ -69,7 +69,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="logoButton" min="-2" pref="274" max="-2" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="aboutScrollPane" pref="166" max="32767" attributes="0"/>
+                          <Component id="aboutScrollPane" pref="170" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="14" max="-2" attributes="1"/>
                           <Component id="versionLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -108,7 +108,7 @@
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="font" type="java.awt.Font" resourceKey="aboutEditorPane.font"/>
-                <Property name="text" type="java.lang.String" value="Morten Johannes Ervik&#xa;Maria-Paula Curado&#xa;Lydia Voti&#xa;Andy Cooke&#xa;Jacques Ferlay&#xa;&#xa;DEP (c) 2009&#xa;International Agency for &#xa;Research on Cancer&#xa;World Health Organization" noResource="true"/>
+                <Property name="text" type="java.lang.String" value="Morten Johannes Ervik&#xa;Maria-Paula Curado&#xa;Lydia Voti&#xa;Andy Cooke&#xa;Jacques Ferlay&#xa;&#xa;DEP &#xa9; 2008-2010&#xa;International Agency for &#xa;Research on Cancer&#xa;World Health Organization" noResource="true"/>
                 <Property name="focusCycleRoot" type="boolean" value="false"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="aboutEditorPane" noResource="true"/>
@@ -144,9 +144,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="loginButton" pref="220" max="32767" attributes="0"/>
+                      <Component id="loginButton" pref="222" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="restoreBackupButton" pref="220" max="32767" attributes="0"/>
+                      <Component id="restoreBackupButton" pref="222" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

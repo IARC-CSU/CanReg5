@@ -10,6 +10,7 @@ import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.ServerDescription;
 import canreg.exceptions.WrongCanRegVersionException;
+import java.awt.Cursor;
 import java.beans.PropertyChangeSupport;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -471,7 +472,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             if (canRegSystemName != null) {
                 fv.getFrame().setTitle("CanReg5 - " + canRegSystemName);
                 this.dispose();
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SUCCESSFULLY_LOGGED_IN_TO_") +" "+ canRegSystemName + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("_AS_") +" "+ username + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("LOGGED_IN"), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SUCCESSFULLY_LOGGED_IN_TO_") + " " + canRegSystemName + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("_AS_") + " " + username + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("LOGGED_IN"), JOptionPane.INFORMATION_MESSAGE);
                 // test backup
                 if (LocalSettings.TRUE_PROPERTY.equalsIgnoreCase(localSettings.getProperty(LocalSettings.AUTO_BACKUP_KEY))) {
                     String maxDiffString = localSettings.getProperty(LocalSettings.BACKUP_EVERY_KEY);
@@ -655,11 +656,9 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
         WaitFrame waitFrame;
 
         PerformBackUpActionTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to LaunchCanRegServerActionTask fields, here.
             super(app);
-            // launchServerButton.setEnabled(false);
+            Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+            setCursor(hourglassCursor);
             feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("PERFORMING_BACKUP..."));
             waitFrame = new WaitFrame();
             waitFrame.setLabel(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("PERFORMING_BACKUP..."));
@@ -671,9 +670,6 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
 
         @Override
         protected Object doInBackground() {
-            // Your Task's code here.  This method runs
-            // on a background thread, so don't reference
-            // the Swing GUI from here...
             String result = null;
             result = CanRegClientApp.getApplication().performBackup();
             return result;
@@ -681,6 +677,8 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
 
         @Override
         protected void succeeded(Object resultObject) {
+            Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+            setCursor(normalCursor);
             waitFrame.dispose();
             String resultString = (String) resultObject;
             if (resultString != null) {

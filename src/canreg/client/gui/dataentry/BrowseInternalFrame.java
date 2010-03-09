@@ -24,6 +24,7 @@ import canreg.server.database.Tumour;
 import canreg.server.database.UnknownTableException;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
@@ -636,6 +637,10 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
      * @param idString
      */
     public void editPatientID(String idString) {
+        Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+        Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+        setCursor(hourglassCursor);
+
         String tableName = Globals.PATIENT_TABLE_NAME;
 
         RecordEditor recordEditor = new RecordEditor(dtp);
@@ -664,6 +669,8 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                     distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
                     numberOfRecords = distributedTableDescription.getRowCount();
                 } else {
+
+                    setCursor(normalCursor);
                     return;
                 }
             }
@@ -723,7 +730,10 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            setCursor(normalCursor);
         }
+        // setCursor(normalCursor);
     }
 
     /**

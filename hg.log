@@ -1,5 +1,130 @@
-changeset:   381:648c54fd2290
+changeset:   406:5eac9c1e362b
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 25 15:50:58 2010 +0100
+summary:     AgeSpecificCasesPer100000: Fixed a nullpointer error that could occur if no cases in table
+
+changeset:   405:edfe5efcd459
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 25 15:50:17 2010 +0100
+summary:     AgeSpecificCasesTableBuilder: Fixed a nullpointer error that could occur if no cases in table
+
+changeset:   404:0219aa31f6a6
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 25 15:11:18 2010 +0100
+summary:     Commentaries added.
+
+changeset:   403:3197401eaffb
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 25 15:10:51 2010 +0100
+summary:     ExportReport: Better handling of malformed date strings.
+
+changeset:   402:2c2bdf2b28cc
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 25 15:10:04 2010 +0100
+summary:     Better handling of malformed date strings.
+
+changeset:   401:ba36016d4dc8
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 25 15:09:35 2010 +0100
+summary:     DateHelper: better handling of malformed date strings.
+
+changeset:   400:c2db5b63a576
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 25 15:09:02 2010 +0100
+summary:     Date of last contact check implemented.
+
+changeset:   399:933b9fb0f2ce
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 25 15:08:27 2010 +0100
+summary:     Better handling of check results.
+
+changeset:   398:6efcaf9ba1c5
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 25 11:15:36 2010 +0100
+summary:     AutoFillHelper: auto age calculation implemented...
+
+changeset:   397:b1a6db546069
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Feb 24 17:40:09 2010 +0100
+summary:     RecordEditor and RecordEditorPanel: Improved the way check status is handled.
+
+changeset:   396:dcfe2ffb3170
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Feb 23 10:24:34 2010 +0100
+summary:     DateHelper: difference in dates in days calculated properly.
+
+changeset:   395:573dd53a581c
+user:        ervikm@X70245.iarc.lan
+date:        Wed Feb 17 18:48:59 2010 +0200
+summary:     Back from Turkey
+
+changeset:   394:8c4c438fc216
+user:        ervikm@X70245.iarc.lan
+date:        Wed Feb 17 18:43:39 2010 +0200
+summary:     RecordEditor: Better error handling
+
+changeset:   393:321aa9124809
+user:        ervikm@X70245.iarc.lan
+date:        Wed Feb 17 18:40:54 2010 +0200
+summary:     AutoFillHelper: Added comments
+
+changeset:   392:0393ecbf49c6
+user:        ervikm@X70245.iarc.lan
+date:        Wed Feb 17 18:31:07 2010 +0200
+summary:     VariableEditorPanel: Better handling of null-pointers, number no longer defaults to -1.
+
+changeset:   391:af9630c0e690
+user:        ervikm@X70245.iarc.lan
+date:        Wed Feb 17 18:29:42 2010 +0200
+summary:     ModifyDatabaseStructureIF: GUI fixes
+
+changeset:   390:2cd49d382497
+user:        ervikm@X70245.iarc.lan
+date:        Wed Feb 17 18:24:41 2010 +0200
+summary:     UserManagerInternalFrame: Better error handling
+
+changeset:   389:1a0048203521
+user:        ervikm@X70245.iarc.lan
+date:        Wed Feb 17 18:23:39 2010 +0200
+summary:     Tools.buildIndexMap: better handling of indexes with missing variables
+
+changeset:   388:b51565d9b9b7
+user:        ervikm@X70245.iarc.lan
+date:        Wed Feb 17 18:17:43 2010 +0200
+summary:     DateVariableEditorPanel: Better error handling
+
+changeset:   387:4ac1017986ea
+user:        ervikm@X70245.iarc.lan
+date:        Wed Feb 17 18:06:10 2010 +0200
+summary:     ExportReportInternalFrame: Better error handling
+
+changeset:   386:810a8ce12b97
+user:        ervikm@X70245.iarc.lan
+date:        Wed Feb 17 18:04:04 2010 +0200
+summary:     CanRegClientView: display set up new system-menu
+
+changeset:   385:0dc42904d2ba
+user:        ervikm@X70245.iarc.lan
+date:        Wed Feb 17 18:03:27 2010 +0200
+summary:     CheckAgeIncidence: better error message
+
+changeset:   384:2fc5b2d7b893
+user:        ervikm@X70245.iarc.lan
+date:        Wed Feb 17 14:58:58 2010 +0200
+summary:     DateHelper: fixed a on-off error when birthday,month=incidenceday,month
+
+changeset:   383:78fe5bcf0dba
+user:        ervikm@X70245.iarc.lan
+date:        Wed Feb 17 14:56:43 2010 +0200
+summary:     Deleting records can now throw SQLexceptions.
+
+changeset:   382:6e0614ef8c57
+user:        ervikm@X60112
+date:        Thu Feb 11 15:33:43 2010 +0100
+summary:     5.0 RC2: Ready for Antalya
+
+changeset:   381:648c54fd2290
 user:        ervikm@X60112
 date:        Thu Feb 11 15:28:48 2010 +0100
 summary:     Fixed some bugs related to the migration of CanReg4 databases and indexes in the XML.

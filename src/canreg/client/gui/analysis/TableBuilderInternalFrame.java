@@ -27,7 +27,7 @@ import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.server.database.PopulationDataset;
-import java.awt.Component;
+import java.awt.Cursor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -592,8 +592,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             descriptionTextPane.setText("");
         }
         previewImageLabel.setIcon(icon);
-    // tableTypePanel.revalidate();
-    // tableTypePanel.repaint();
+        // tableTypePanel.revalidate();
+        // tableTypePanel.repaint();
     }//GEN-LAST:event_tableTypeListValueChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
@@ -834,7 +834,14 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                         incidenceData = tableDataSource.retrieveRows(0, tableDatadescription.getRowCount());
                     }
 
+                    Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+                    setCursor(hourglassCursor);
+
                     LinkedList<String> filesGenerated = tableBuilder.buildTable(heading, fileName, startYear, endYear, incidenceData, populations, standardPopulations, tble.getConfigFields(), tble.getEngineParameters());
+
+                    Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+                    setCursor(normalCursor);
+                    
                     JOptionPane.showMessageDialog(this, "Tables built.", "Tables built.", JOptionPane.INFORMATION_MESSAGE);
 
                     // Opening the resulting files...
@@ -850,7 +857,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (NotCompatibleDataException ex) {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }catch (Exception ex) {
+                } catch (Exception ex) {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {

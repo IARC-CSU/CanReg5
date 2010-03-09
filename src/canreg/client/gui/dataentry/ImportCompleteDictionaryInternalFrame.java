@@ -9,11 +9,11 @@ import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import java.awt.Cursor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
@@ -304,6 +304,8 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             previewButton.setEnabled(false);
             cr4dictionary = cr4dictionaryCheckBox.isSelected();
             fileName = fileNameTextField.getText().trim();
+            Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+            setCursor(hourglassCursor);
         }
 
         @Override
@@ -406,6 +408,8 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             File file = new File(fileName);
             localSettings.setProperty("dictionary_import_path", file.getParent());
             localSettings.writeSettings();
+            Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+            setCursor(normalCursor);
             if (allErrors.size() == 0) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully imported dictionaries from file.", "Dictionary successfully imported.", JOptionPane.INFORMATION_MESSAGE);
             } else {
