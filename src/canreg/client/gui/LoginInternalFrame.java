@@ -472,7 +472,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             if (canRegSystemName != null) {
                 fv.getFrame().setTitle("CanReg5 - " + canRegSystemName);
                 this.dispose();
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SUCCESSFULLY_LOGGED_IN_TO_") + " " + canRegSystemName + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("_AS_") + " " + username + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("LOGGED_IN"), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SUCCESSFULLY_LOGGED_IN_TO_") + " " + canRegSystemName + " " + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("_AS_") + " " + username + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("LOGGED_IN"), JOptionPane.INFORMATION_MESSAGE);
                 // test backup
                 if (LocalSettings.TRUE_PROPERTY.equalsIgnoreCase(localSettings.getProperty(LocalSettings.AUTO_BACKUP_KEY))) {
                     String maxDiffString = localSettings.getProperty(LocalSettings.BACKUP_EVERY_KEY);
