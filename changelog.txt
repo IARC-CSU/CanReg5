@@ -1,5 +1,16 @@
 Changelog
 
+4.99.19 Build 8xx (5.0 RC5)
+
+- Hourglass feedback added for longish operations.
+
+- Problem with truncated dictionary labels solved.
+
+- Fixed a bug where all checks show up in the result message, even though they are OK.
+
+- TableBuilder: Fixed a nullpointer error that could occur if no cases in table
+
+
 4.99.18 Build 821 (5.0 RC4)
 
 - Better handling of malformed date strings.

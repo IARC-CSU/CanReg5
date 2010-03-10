@@ -1,5 +1,25 @@
-changeset:   406:5eac9c1e362b
+changeset:   410:22249c89872a
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 09 14:16:54 2010 +0100
+summary:     Fixed a missing space error.
+
+changeset:   409:4cbe2af3b9d1
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 09 10:46:46 2010 +0100
+summary:     Hourglass feedback added.
+
+changeset:   408:f6e9d6be2896
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 09 09:59:51 2010 +0100
+summary:     CanRegDAO: instead of reading the max length of dictionary descriptions from the dictionary, rather look at the global definition of max description length.
+
+changeset:   407:c1b589ee7a21
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 25 17:40:34 2010 +0100
+summary:     Fixed a bug where all checks show up in the result message, even though they are OK.
+
+changeset:   406:5eac9c1e362b
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Thu Feb 25 15:50:58 2010 +0100
 summary:     AgeSpecificCasesPer100000: Fixed a nullpointer error that could occur if no cases in table
