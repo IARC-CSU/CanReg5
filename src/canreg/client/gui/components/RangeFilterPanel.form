@@ -109,7 +109,6 @@
                 <StringItem index="2" value="Names"/>
               </StringArray>
             </Property>
-            <Property name="toolTipText" type="java.lang.String" resourceKey="rangeComboBox.toolTipText"/>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.components.RangeFilterPanel" id="rangeComboboxChanged" methodName="rangeComboboxChanged"/>
             </Property>

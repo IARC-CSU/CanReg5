@@ -313,6 +313,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     }
 
     private void initOtherComponents() {
+        rangeFilterPanel.setDatabaseDescription(CanRegClientApp.getApplication().getDatabseDescription());
         rangeFilterPanel.setActionListener(this);
         // rangeFilterPanel.setTableChooserVisible(false);
         rangeFilterPanel.setRecordPanelvisible(false);

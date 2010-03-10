@@ -98,6 +98,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         patientIDLength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getVariableLength();
         tumourIDLength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getVariableLength();
         initComponents();
+        rangeFilterPanel.setDatabaseDescription(globalToolBox.getDocument());
         initOtherComponents();
         initValues();
     }

@@ -5,7 +5,6 @@
  */
 package canreg.client.gui.components;
 
-import canreg.client.gui.*;
 import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
@@ -37,9 +36,9 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
     private ActionListener actionListener;
     // private DatabaseVariablesListElement[] variablesInDB;
     private DatabaseVariablesListElement[] variablesInTable;
-    private DatabaseVariablesListElement[] patientVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
-    private DatabaseVariablesListElement[] tumourVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
-    private DatabaseVariablesListElement[] sourceVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
+    private DatabaseVariablesListElement[] patientVariablesInDB;
+    private DatabaseVariablesListElement[] tumourVariablesInDB;
+    private DatabaseVariablesListElement[] sourceVariablesInDB;
 
     /** Creates new form RangeFilterPanel */
     public RangeFilterPanel() {
@@ -59,6 +58,18 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
      */
     public Document getDatabseDescription() {
         return doc;
+    }
+
+    public void setDatabaseDescription(Document doc){
+        this.doc = doc;
+        indexesInDB = canreg.common.Tools.getIndexesListElements(doc, Globals.NAMESPACE);
+        rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(indexesInDB));
+        patientVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
+        tumourVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
+        sourceVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
+        refreshVariableList();
+        refreshFilterComboBox();
+        refreshIndexList();
     }
 
     /**
@@ -371,15 +382,15 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         // tidy this for sources
         if (!tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
             LinkedList<DatabaseIndexesListElement> tempIndexesInTable = new LinkedList<DatabaseIndexesListElement>();
-            for (int i = 0; i <
-                    indexesInDB.length; i++) {
+            for (int i = 0; i
+                    < indexesInDB.length; i++) {
                 if (indexesInDB[i].getDatabaseTableName().equalsIgnoreCase(tableName)) {
                     tempIndexesInTable.add(indexesInDB[i]);
                 }
             }
             indexesInTableTemp = new DatabaseIndexesListElement[tempIndexesInTable.size()];
-            for (int i = 0; i <
-                    indexesInTableTemp.length; i++) {
+            for (int i = 0; i
+                    < indexesInTableTemp.length; i++) {
                 indexesInTableTemp[i] = tempIndexesInTable.get(i);
             }
         } else {
@@ -471,12 +482,6 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
     public void initValues() {
         filterCollection = new Vector();
         // Get the system description
-        doc = CanRegClientApp.getApplication().getDatabseDescription();
-        // variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
-        indexesInDB = canreg.common.Tools.getIndexesListElements(doc, Globals.NAMESPACE);
-        // variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
-
-        rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(indexesInDB));
 
         filterWizardInternalFrame = new FastFilterInternalFrame();
         filterWizardInternalFrame.setActionListener(this);
@@ -485,9 +490,6 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
 
         // variablesInDB = CanRegClientApp.getApplication().getGlobalToolBox().getVariables();
 
-        refreshVariableList();
-        refreshFilterComboBox();
-        refreshIndexList();
     }
 
     private void refreshVariableList() {
@@ -663,7 +665,7 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
         rangeEndTextField.setText("");
     }
 
-    public void setTablesToChooseFrom(String[] tables){
+    public void setTablesToChooseFrom(String[] tables) {
         tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(tables));
     }
 }

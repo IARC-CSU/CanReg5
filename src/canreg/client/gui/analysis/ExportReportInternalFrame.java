@@ -76,6 +76,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         this.dtp = dtp;
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
         dictionary = CanRegClientApp.getApplication().getDictionary();
+        rangeFilterPanel.setDatabaseDescription(CanRegClientApp.getApplication().getDatabseDescription());
         initOtherComponents();
         initValues();
     }
@@ -131,7 +132,6 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             e1.printStackTrace();
         }
 
-        settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("settingsPanel.border.title"))); // NOI18N
         settingsPanel.setName("settingsPanel"); // NOI18N
 
         setupPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("setupPanel.border.title"))); // NOI18N
@@ -215,12 +215,12 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     .addGroup(optionsPanelLayout.createSequentialGroup()
                         .addComponent(fileFormatLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(fileFormatComboBox, 0, 179, Short.MAX_VALUE))
+                        .addComponent(fileFormatComboBox, 0, 215, Short.MAX_VALUE))
                     .addGroup(optionsPanelLayout.createSequentialGroup()
                         .addComponent(formatDateCheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dateFormatComboBox, 0, 157, Short.MAX_VALUE))
-                    .addComponent(exportSourceInformationCheckBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+                        .addComponent(dateFormatComboBox, 0, 193, Short.MAX_VALUE))
+                    .addComponent(exportSourceInformationCheckBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
                     .addComponent(correctUnknownCheckBox))
                 .addContainerGap())
         );
@@ -247,7 +247,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        exportPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("exportPanel.border.title"))); // NOI18N
+        exportPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         exportPanel.setName("exportPanel"); // NOI18N
 
         writeFileButton.setAction(actionMap.get("writeFileAction")); // NOI18N
@@ -257,11 +257,13 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         exportPanel.setLayout(exportPanelLayout);
         exportPanelLayout.setHorizontalGroup(
             exportPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(writeFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
+            .addComponent(writeFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
         );
         exportPanelLayout.setVerticalGroup(
             exportPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(writeFileButton)
+            .addGroup(exportPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(writeFileButton))
         );
 
         javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
@@ -274,18 +276,18 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     .addComponent(optionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(settingsPanelLayout.createSequentialGroup()
                         .addComponent(setupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(exportPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         settingsPanelLayout.setVerticalGroup(
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(setupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(exportPanel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(exportPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         resultPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("resultPanel.border.title"))); // NOI18N
@@ -295,11 +297,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 763, Short.MAX_VALUE)
+            .addGap(0, 782, Short.MAX_VALUE)
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 68, Short.MAX_VALUE)
+            .addGap(0, 73, Short.MAX_VALUE)
         );
 
         variableChooserPanel.setName("variableChooserPanel"); // NOI18N
@@ -317,7 +319,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(variableChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                        .addComponent(variableChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())

@@ -39,7 +39,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variableChooserPanel" pref="130" max="32767" attributes="0"/>
+                      <Component id="variableChooserPanel" pref="129" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="settingsPanel" min="-2" max="-2" attributes="1"/>
                   </Group>
@@ -67,13 +67,6 @@
   <SubComponents>
     <Container class="javax.swing.JPanel" name="settingsPanel">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Settings">
-              <Property name="titleX" resourceKey="settingsPanel.border.title"/>
-            </TitledBorder>
-          </Border>
-        </Property>
         <Property name="name" type="java.lang.String" value="settingsPanel" noResource="true"/>
       </Properties>
 
@@ -86,7 +79,7 @@
                       <Component id="optionsPanel" alignment="0" max="32767" attributes="1"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="setupPanel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="exportPanel" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -97,12 +90,12 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <Component id="optionsPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="setupPanel" min="-2" max="-2" attributes="1"/>
-                      <Component id="exportPanel" min="0" max="32767" attributes="1"/>
+                      <Component id="exportPanel" min="-2" pref="48" max="-2" attributes="1"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace pref="35" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -182,14 +175,14 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="fileFormatLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="fileFormatComboBox" pref="179" max="32767" attributes="0"/>
+                              <Component id="fileFormatComboBox" pref="215" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="formatDateCheckBox" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="dateFormatComboBox" pref="157" max="32767" attributes="0"/>
+                              <Component id="dateFormatComboBox" pref="193" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="exportSourceInformationCheckBox" alignment="1" pref="244" max="32767" attributes="0"/>
+                          <Component id="exportSourceInformationCheckBox" alignment="1" pref="280" max="32767" attributes="0"/>
                           <Component id="correctUnknownCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -315,9 +308,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Export">
-                  <Property name="titleX" resourceKey="exportPanel.border.title"/>
-                </TitledBorder>
+                <TitledBorder/>
               </Border>
             </Property>
             <Property name="name" type="java.lang.String" value="exportPanel" noResource="true"/>
@@ -326,12 +317,15 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="writeFileButton" alignment="0" pref="114" max="32767" attributes="0"/>
+                  <Component id="writeFileButton" alignment="0" pref="146" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="writeFileButton" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="writeFileButton" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -363,12 +357,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="763" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="782" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="68" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="73" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
