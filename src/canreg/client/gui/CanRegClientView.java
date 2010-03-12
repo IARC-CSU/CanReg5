@@ -30,6 +30,7 @@ import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
 import canreg.server.database.Patient;
 import canreg.server.database.Tumour;
+import java.awt.Cursor;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;

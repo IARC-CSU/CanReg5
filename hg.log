@@ -1,5 +1,20 @@
-changeset:   410:22249c89872a
+changeset:   413:5bd7da784047
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Mar 10 17:21:53 2010 +0100
+summary:     French translation continued.
+
+changeset:   412:8a716c721fe7
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Mar 10 16:06:03 2010 +0100
+summary:     French translation started.
+
+changeset:   411:d5387f4a40e8
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Mar 10 16:05:43 2010 +0100
+summary:     Improved the layout of certain screens.
+
+changeset:   410:22249c89872a
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Tue Mar 09 14:16:54 2010 +0100
 summary:     Fixed a missing space error.

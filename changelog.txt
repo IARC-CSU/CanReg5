@@ -1,6 +1,6 @@
 Changelog
 
-4.99.19 Build 8xx (5.0 RC5)
+4.99.19 Build 829 (5.0 RC5)
 
 - Hourglass feedback added for longish operations.
 
@@ -8,7 +8,11 @@ Changelog
 
 - Fixed a bug where all checks show up in the result message, even though they are OK.
 
-- TableBuilder: Fixed a nullpointer error that could occur if no cases in table
+- TableBuilder: Fixed a nullpointer error that could occur if no cases in table.
+
+- Improved the layout of certain screens.
+
+- French translation started.
 
 
 4.99.18 Build 821 (5.0 RC4)

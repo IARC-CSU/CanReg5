@@ -98,9 +98,9 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         patientIDLength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getVariableLength();
         tumourIDLength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getVariableLength();
         initComponents();
-        rangeFilterPanel.setDatabaseDescription(globalToolBox.getDocument());
         initOtherComponents();
         initValues();
+        pack();
     }
     ///
     // org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, new java.util.List(), jTable1);
@@ -225,11 +225,11 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 564, Short.MAX_VALUE)
+            .addGap(0, 660, Short.MAX_VALUE)
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 59, Short.MAX_VALUE)
+            .addGap(0, 67, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -241,7 +241,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(resultPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
+                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(variablesPanel, 0, 0, Short.MAX_VALUE)
@@ -298,7 +298,6 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         resultTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         resultTable.setColumnSelectionAllowed(true);
         resultPanel.setVisible(false);
-
         resultTable.setName("resultTable"); // NOI18N
         resultTable.addMouseListener(new java.awt.event.MouseAdapter() {
 
@@ -312,7 +311,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
                 columnTableMousePressed(evt);
             }
         });
-
+        
     }
 
     private void initValues() {
@@ -321,6 +320,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         navigationPanel.setTable(resultTable);
         rangeFilterPanel.setActionListener(this);
         rangeFilterPanel.setTablesToChooseFrom(Globals.DEFAULT_TABLE_CHOOSER_TABLE_LIST);
+        rangeFilterPanel.setDatabaseDescription(globalToolBox.getDocument());
         variablesPanel.setDatabaseVariables(CanRegClientApp.getApplication().getGlobalToolBox().getVariables());
         // Task task = refresh();
         // task.run();

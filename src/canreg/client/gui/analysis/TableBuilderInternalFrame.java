@@ -63,10 +63,13 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private LocalSettings localSettings;
     private String path;
     private JFileChooser chooser;
+    private Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+    private Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
 
     /** Creates new form TableBuilderInternalFrame */
     public TableBuilderInternalFrame() {
-        initComponents();        
+        initComponents();
+        setCursor(hourglassCursor);
         initData();
 
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -94,6 +97,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         // remove filter tab
         // Component filterTab = tabbedPane.getComponents()[3];
         tabbedPane.remove(3);
+        setCursor(normalCursor);
     }
 
     private String generateHeadingString() {
@@ -836,14 +840,12 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                         incidenceData = tableDataSource.retrieveRows(0, tableDatadescription.getRowCount());
                     }
 
-                    Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
                     setCursor(hourglassCursor);
 
                     LinkedList<String> filesGenerated = tableBuilder.buildTable(heading, fileName, startYear, endYear, incidenceData, populations, standardPopulations, tble.getConfigFields(), tble.getEngineParameters());
 
-                    Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
                     setCursor(normalCursor);
-                    
+
                     JOptionPane.showMessageDialog(this, "Tables built.", "Tables built.", JOptionPane.INFORMATION_MESSAGE);
 
                     // Opening the resulting files...
