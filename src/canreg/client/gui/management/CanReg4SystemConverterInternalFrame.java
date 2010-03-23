@@ -45,7 +45,7 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
             chooser = new JFileChooser(Globals.CANREG4_SYSTEM_FOLDER);
         }
         // Filter only the DEF-files.
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("CanReg4 System Definition File", "DEF");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("CANREG4 SYSTEM DEFINITION FILE"), "DEF");
         chooser.addChoosableFileFilter(filter);
 
         // get the available charsets

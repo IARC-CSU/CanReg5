@@ -61,7 +61,7 @@ public class CanReg4PDSImporterInternalFrame extends javax.swing.JInternalFrame 
             chooser = new JFileChooser(Globals.CANREG4_SYSTEM_FOLDER);
         }
         // Filter only the DEF-files.
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("CanReg4 PDS File", "PDS");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("CANREG4 PDS FILE"), "PDS");
         chooser.addChoosableFileFilter(filter);
     }
 
@@ -212,14 +212,14 @@ public class CanReg4PDSImporterInternalFrame extends javax.swing.JInternalFrame 
 
             PDSEditorInternalFrame pdseif = new PDSEditorInternalFrame(dtp, worldPopulations);
             pdseif.setPopulationDataset(pds);
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Population dataset loaded: \'" + pds.getPopulationDatasetName() + "\'.\nPlease verify and save it to the CanReg database.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("POPULATION DATASET LOADED:") + pds.getPopulationDatasetName() + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("PLEASE VERIFY AND SAVE IT TO THE CANREG DATABASE."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("SUCCESS"), JOptionPane.INFORMATION_MESSAGE);
 
             CanRegClientView.showAndPositionInternalFrame(dtp, pdseif);
 
             this.dispose();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CanReg4PDSImporterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not open file: \'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("COULD NOT OPEN FILE:") + fileNameTextField.getText().trim() + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
         } catch (IOException ex) {
             Logger.getLogger(CanReg4PDSImporterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }

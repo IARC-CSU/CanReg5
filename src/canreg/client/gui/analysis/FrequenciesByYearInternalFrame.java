@@ -343,7 +343,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             int columnNumber = target.getSelectedColumn();
 
             JPopupMenu jpm = new JPopupMenu("" + columnNumber);
-            jpm.add("Column " + tableColumnModel.getColumn(tableColumnModel.getColumnIndexAtX(evt.getX())).getHeaderValue());
+            jpm.add(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("COLUMN ") + tableColumnModel.getColumn(tableColumnModel.getColumnIndexAtX(evt.getX())).getHeaderValue());
             jpm.show(target, evt.getX(), evt.getY());
         }
     }
@@ -437,10 +437,10 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             if (!resultTable.print(JTable.PrintMode.NORMAL,
                     new MessageFormat(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("CANREG_FREQUENCIES_BY_YEAR") + " - " + rangeFilterPanel.getFilter()),
                     null)) {
-                System.err.println("User cancelled printing");
+                System.err.println(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("USER CANCELLED PRINTING"));
             }
         } catch (java.awt.print.PrinterException e) {
-            System.err.format("Cannot print %s%n", e.getMessage());
+            System.err.format(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("CANNOT PRINT %S%N"), e.getMessage());
         }
     }
 

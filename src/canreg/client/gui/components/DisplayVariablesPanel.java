@@ -6,9 +6,6 @@
 package canreg.client.gui.components;
 
 import canreg.common.DatabaseVariablesListElement;
-import canreg.common.Globals;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 

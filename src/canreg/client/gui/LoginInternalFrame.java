@@ -704,10 +704,10 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
 
         if (systemName != null) {
             nameTextField.setText(systemName);
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Server connection OK.", "Message", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SERVER CONNECTION OK."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
             return true;
         } else {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Server connection not OK.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SERVER CONNECTION NOT OK."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
@@ -749,9 +749,9 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
             } else {
                 addr = InetAddress.getByName(serverURLTextField.getText());
             }
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "<html>The IP address of <b>" + addr.getHostName() + "</b> is <b>" + addr.getHostAddress() + "</b>.</html>", "Message", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("<HTML>THE IP ADDRESS OF <B>") + addr.getHostName() + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("</B> IS <B>") + addr.getHostAddress() + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("</B>.</HTML>"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
         } catch (UnknownHostException ex) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "<html>Cannot find the IP address of <b>" + serverURLTextField.getText() + "</b>.</html>", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("<HTML>CANNOT FIND THE IP ADDRESS OF <B>") + serverURLTextField.getText() + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("</B>.</HTML>"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("MESSAGE"), JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.WARNING, null, ex);
         }
     }

@@ -235,7 +235,7 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
         nameTextField.setText(pds.getPopulationDatasetName());
         sourceTextField.setText(pds.getSource());
         descriptionTextArea.setText(pds.getDescription());
-        dateTextField.setText(""+pds.getDate());
+        dateTextField.setText(pds.getDate().toString());
     }
     
     /**

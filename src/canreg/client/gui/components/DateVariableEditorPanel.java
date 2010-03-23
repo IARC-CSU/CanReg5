@@ -93,11 +93,11 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             } catch (ParseException ex) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NumberFormatException numberFormatException) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, numberFormatException);
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + value, numberFormatException);
             } catch (IllegalArgumentException ex) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, ex);
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + value, ex);
             } catch (StringIndexOutOfBoundsException stringIndexOutOfBoundsException) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + value, stringIndexOutOfBoundsException);
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + value, stringIndexOutOfBoundsException);
             }
         }
 
@@ -123,7 +123,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             } catch (ParseException ex) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException ex) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, "Value: " + valueString + ", Date format: " + dateChooser.getDateFormatString(), ex);
+                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + valueString + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString(", DATE FORMAT: ") + dateChooser.getDateFormatString(), ex);
             }
         }
 

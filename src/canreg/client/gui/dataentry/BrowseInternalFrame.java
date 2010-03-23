@@ -384,7 +384,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             int columnNumber = target.getSelectedColumn();
 
             JPopupMenu jpm = new JPopupMenu("" + columnNumber);
-            jpm.add("Column " + tableColumnModel.getColumn(tableColumnModel.getColumnIndexAtX(evt.getX()), true).getHeaderValue());
+            jpm.add(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("COLUMN ") + tableColumnModel.getColumn(tableColumnModel.getColumnIndexAtX(evt.getX()), true).getHeaderValue());
             jpm.show(target, evt.getX(), evt.getY());
         }
     }
@@ -418,7 +418,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             filter.setRange(rangeFilterPanel.getRange());
             sortByVariableName = rangeFilterPanel.getSortByVariable().toUpperCase();
             // setProgress(0, 0, 4);
-            setMessage("Initiating query...");
+            setMessage(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("INITIATING QUERY..."));
             // setProgress(1, 0, 4);
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
         }
@@ -489,13 +489,13 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                     // setProgress(2, 0, 4);
                 }
 
-                setMessage("Starting a new transaction...");
+                setMessage(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("STARTING A NEW TRANSACTION..."));
 
                 rangeFilterPanel.setRecordsShown(tableDataModel.getRowCount());
 
                 // setProgress(3, 0, 4);
 
-                setMessage("Fetching data...");
+                setMessage(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("FETCHING DATA..."));
                 resultTable.setColumnSelectionAllowed(false);
                 resultTable.setModel(tableDataModel);
                 tableColumnModel = new XTableColumnModel();
@@ -570,7 +570,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
     public void editPatientID() {
         String idString = patientNumberTextField.getText().trim();
         if (idString.trim().length() != patientIDLength) {
-            JOptionPane.showMessageDialog(rootPane, "Patient ID should be " + patientIDLength + " characters long.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("PATIENT ID SHOULD BE ") + patientIDLength + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString(" CHARACTERS LONG."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         editPatientID(idString);
@@ -744,7 +744,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
     public void editTumourID() {
         String idString = tumourNumberTextField.getText().trim();
         if (idString.length() != tumourIDLength) {
-            JOptionPane.showMessageDialog(rootPane, "Tumour ID should be " + tumourIDLength + " characters long.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("TUMOUR ID SHOULD BE ") + tumourIDLength + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString(" CHARACTERS LONG."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         editTumourID(idString);
@@ -798,7 +798,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
         } catch (DistributedTableDescriptionException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RecordLockedException ex) {
-            JOptionPane.showMessageDialog(rootPane, "Record is already being edited...", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD IS ALREADY BEING EDITED..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);

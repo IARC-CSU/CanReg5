@@ -5,7 +5,6 @@
  */
 package canreg.client.gui.components;
 
-import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
