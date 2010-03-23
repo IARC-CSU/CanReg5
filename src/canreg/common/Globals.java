@@ -81,6 +81,9 @@ public class Globals {
     static private String CANREG_BACKUP_FOLDER_NAME = "Backup";
     static public String CANREG_PASSWORD_FILE_NAME = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + "passwords.properties";
     static public String CANREG_LEVELS_FILE_NAME = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + "levels.properties";
+    static public String CANREG_INSTRUCTIONS_URL = "http://www.iacr.com.fr/CanReg5/CanReg5-instructions.pdf";
+    static public String CANREG_INSTRUCTIONS_LOCAL_FILE = CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + "CanReg5-instructions.pdf";
+
     /**
      * 
      */

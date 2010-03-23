@@ -25,6 +25,7 @@ import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.management.CanReg4SystemConverterInternalFrame;
 import canreg.client.gui.management.ModifyDatabaseStructureInternalFrame;
 import canreg.client.gui.management.UserManagerInternalFrame;
+import canreg.client.gui.tools.WaitFrame;
 import canreg.client.management.DatabaseGarbler;
 import canreg.common.Globals;
 import canreg.server.database.DatabaseRecord;
@@ -235,6 +236,8 @@ public class CanRegClientView extends FrameView {
         garbleDatabaseMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         canReg5HelpMenuItem = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
         linksMenu = new javax.swing.JMenu();
         iacrWebsiteMenuItem = new javax.swing.JMenuItem();
@@ -531,6 +534,14 @@ public class CanRegClientView extends FrameView {
         canReg5HelpMenuItem.setName("helpMenuItem"); // NOI18N
         helpMenu.add(canReg5HelpMenuItem);
 
+        jMenuItem3.setAction(actionMap.get("openCanReg5Instructions")); // NOI18N
+        jMenuItem3.setName("jMenuItem3"); // NOI18N
+        helpMenu.add(jMenuItem3);
+
+        jMenuItem4.setAction(actionMap.get("downloadLatestInstructions")); // NOI18N
+        jMenuItem4.setName("jMenuItem4"); // NOI18N
+        helpMenu.add(jMenuItem4);
+
         jSeparator1.setName("jSeparator1"); // NOI18N
         helpMenu.add(jSeparator1);
 
@@ -665,7 +676,7 @@ public class CanRegClientView extends FrameView {
 
         @Override
         protected Object doInBackground() throws IOException {
-            canreg.common.Tools.openFile("c:\\admtools.chm");
+            canreg.common.Tools.openFile("no file");
             return null;
         }
 
@@ -682,14 +693,14 @@ public class CanRegClientView extends FrameView {
     @Action
     public void showLoginFrame() {
         if (CanRegClientApp.getApplication().isLoggedIn()) {
-            int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do want to log out of the current CanReg system?", "Already logged in.", JOptionPane.YES_NO_OPTION);
+            int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DO WANT TO LOG OUT OF THE CURRENT CANREG SYSTEM?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("ALREADY LOGGED IN."), JOptionPane.YES_NO_OPTION);
             if (i == 0) {
                 logOut();
             }
         }
         // If still logged in
         if (CanRegClientApp.getApplication().isLoggedIn()) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Already logged in.", "Message", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("ALREADY LOGGED IN."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
         } else {
             LoginInternalFrame loginInternalFrame = new LoginInternalFrame(this, desktopPane);
             showAndPositionInternalFrame(desktopPane, loginInternalFrame);
@@ -701,7 +712,7 @@ public class CanRegClientView extends FrameView {
      */
     @Action
     public void logOutaction() {
-        int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you really want to log out?", "Log out?", JOptionPane.YES_NO_OPTION);
+        int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DO YOU REALLY WANT TO LOG OUT?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("LOG OUT?"), JOptionPane.YES_NO_OPTION);
         if (i == 0) {
             logOut();
         }
@@ -769,7 +780,7 @@ public class CanRegClientView extends FrameView {
             debugOut(users);
 
             // show the dialog box
-            StandardDialog sd = new StandardDialog(getFrame(), true, "Users logged in", users);
+            StandardDialog sd = new StandardDialog(getFrame(), true, java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("USERS LOGGED IN"), users);
             sd.setLocationRelativeTo(null);
             sd.setVisible(true);
 
@@ -819,9 +830,9 @@ public class CanRegClientView extends FrameView {
             // the result computed by doInBackground().
             boolean success = (Boolean) result;
             if (success) {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_started."), "Message", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_started."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_not_started."), "Message", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_not_started."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
@@ -833,7 +844,7 @@ public class CanRegClientView extends FrameView {
     public void stopDatabaseServer() {
         try {
             CanRegClientApp.getApplication().stopDatabaseServer();
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_stopped."), "Message", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_stopped."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
 
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
@@ -930,8 +941,8 @@ public class CanRegClientView extends FrameView {
 
     private void logOut() {
         CanRegClientApp.getApplication().logOut();
-        getFrame().setTitle("CanReg5 - Not logged in.");
-        userLevelLabel.setText("Not logged in.");
+        getFrame().setTitle(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("CANREG5 - NOT LOGGED IN."));
+        userLevelLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("NOT LOGGED IN."));
     }
 
     /**
@@ -974,7 +985,7 @@ public class CanRegClientView extends FrameView {
     @Action
     public void importData() {
         JInternalFrame importInternalFrame;
-        int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you hava all your data in one file?", "One file?", JOptionPane.YES_NO_OPTION);
+        int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DO YOU HAVA ALL YOUR DATA IN ONE FILE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("ONE FILE?"), JOptionPane.YES_NO_OPTION);
         if (i == JOptionPane.YES_OPTION) {
             importInternalFrame = new ImportView();
         } else {
@@ -1276,6 +1287,68 @@ public class CanRegClientView extends FrameView {
             // the result computed by doInBackground().
         }
     }
+
+    @Action
+    public void openCanReg5Instructions() {
+        File file = new File(Globals.CANREG_INSTRUCTIONS_LOCAL_FILE);
+        if (!file.exists()) {
+            int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DO YOU WANT TO DOWNLOAD THE LATEST VERSION OF THE HANDBOOK?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("HANDBOOK NOT FOUND"), JOptionPane.YES_NO_OPTION);
+            if (i == JOptionPane.YES_OPTION) {
+                Task task = downloadLatestInstructions();
+                task.run();
+                while (!task.isDone()) {
+                    //wait for the file to be downloaded...
+                }
+                openCanReg5Instructions();
+            }
+        } else {
+            BareBonesBrowserLaunch.openURL(Globals.CANREG_INSTRUCTIONS_LOCAL_FILE);
+        }
+    }
+
+    @Action
+    public Task downloadLatestInstructions() {
+        return new DownloadLatestInstructionsTask(getApplication());
+    }
+
+    private class DownloadLatestInstructionsTask extends org.jdesktop.application.Task<Object, Void> {
+
+        WaitFrame waitFrame;
+
+        DownloadLatestInstructionsTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to DownloadLatestInstructionsTask fields, here.
+            super(app);
+            waitFrame = new WaitFrame();
+            waitFrame.setLabel(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DOWNLOADING HANDBOOK..."));
+            waitFrame.setIndeterminate(true);
+            desktopPane.add(waitFrame, javax.swing.JLayeredPane.POPUP_LAYER);
+            waitFrame.setVisible(true);
+            waitFrame.setLocation((desktopPane.getWidth() - waitFrame.getWidth()) / 2, (desktopPane.getHeight() - waitFrame.getHeight()) / 2);
+        }
+
+        @Override
+        protected Object doInBackground() {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+            try {
+                canreg.common.Tools.downloadFile(Globals.CANREG_INSTRUCTIONS_URL, Globals.CANREG_INSTRUCTIONS_LOCAL_FILE);
+            } catch (IOException ex) {
+                Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;  // return your result
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
+            waitFrame.setVisible(false);
+            desktopPane.remove(waitFrame);
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;
@@ -1305,6 +1378,8 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem18;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
