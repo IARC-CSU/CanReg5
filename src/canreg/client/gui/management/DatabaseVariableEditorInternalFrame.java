@@ -15,6 +15,9 @@ import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseVariablesListElement;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 
 /**
@@ -95,9 +98,14 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
 
     @Action
     public void okAction() {
-        databaseVariableEditor.refreshDatabaseVariablesListElement();
-        listener.actionPerformed(new ActionEvent(this, 0, UPDATED));
-        this.dispose();
+        try {
+            databaseVariableEditor.refreshDatabaseVariablesListElement();
+            listener.actionPerformed(new ActionEvent(this, 0, UPDATED));
+            this.dispose();
+        } catch (DatabaseVariablesListException ex) {
+            JOptionPane.showInternalMessageDialog(rootPane, ex.getDatabaseVariablesListElement().getDatabaseVariableName() + " : " + ex.getError());
+            Logger.getLogger(DatabaseVariableEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseVariablesListElement) {

@@ -312,6 +312,13 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
     private void variableLengthTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_variableLengthTextFieldFocusLost
         try {
             Integer.parseInt(variableLengthTextField.getText());
+
+            int length = Integer.parseInt(variableLengthTextField.getText());
+            if (length <= 0) {
+                JOptionPane.showInternalMessageDialog(this,
+                        "Variable length should greater than 0.");
+            }
+ 
         } catch (NumberFormatException nfe) {
             JOptionPane.showInternalMessageDialog(this, nfe);
         }
@@ -346,7 +353,7 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
     /**
      * @return the databaseVariablesListElement
      */
-    public DatabaseVariablesListElement refreshDatabaseVariablesListElement() {
+    public DatabaseVariablesListElement refreshDatabaseVariablesListElement() throws DatabaseVariablesListException {
         TranslatableListElement tleTable = (TranslatableListElement) tableComboBox.getSelectedItem();
         databaseVariablesListElement.setTable(tleTable.getOriginalName());
 
@@ -377,7 +384,11 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
         // databaseVariablesListElement.setYPos(id*100);
 
         try {
-            databaseVariablesListElement.setVariableLength(Integer.parseInt(variableLengthTextField.getText()));
+            int length = Integer.parseInt(variableLengthTextField.getText());
+            if (!Globals.VARIABLE_TYPE_NUMBER_NAME.equalsIgnoreCase(databaseVariablesListElement.getVariableType()) && length<=0){
+                throw new DatabaseVariablesListException(databaseVariablesListElement,"Variable length can't be 0 or less.");
+            }
+            databaseVariablesListElement.setVariableLength(length);
         } catch (NumberFormatException nfe) {
             throw nfe;
         }
