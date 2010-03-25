@@ -56,12 +56,12 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
 
         LinkedList<String> generatedFiles = new LinkedList<String>();
 
-        String footerString = "Table built " + new Date() + " by CanReg5-beta.";
+        String footerString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString("TABLE BUILT ") + new Date() + java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString(" BY CANREG5.");
 
         String notesString = "";
 
         if (populations[0].getFilter().length() > 0) {
-            notesString = "Filter used:" + populations[0].getFilter();
+            notesString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString("FILTER USED:") + populations[0].getFilter();
         }
 
         double tableFontSize = 7.5;
@@ -193,7 +193,7 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
         }
 
         if (populations[0].getFilter().length() > 0) {
-            notesString = "Filter used:" + populations[0].getFilter();
+            notesString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString("FILTER USED:") + populations[0].getFilter();
         }
 
         standardPopulationArray = new double[numberOfSexes][numberOfAgeGroups];
@@ -372,7 +372,7 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
                     }
                     records += cases;
                     if (records % recordsPerFeedback == 0) {
-                        System.out.println("Processing record number: " + records);
+                        System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString("PROCESSING RECORD NUMBER: ") + records);
                     }
                 }
                 // Read next line
@@ -380,7 +380,7 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
 
             }
         }
-        System.out.println("Processed " + records + " records.");
+        System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString("PROCESSED ") + records + java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString(" RECORDS."));
 
         // Get our matrixes ready
 
@@ -616,7 +616,7 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
         ASRf = new char[numberOfSexes][numberOfCancerGroups];
 
         // Writing
-        System.out.println("Writing data...\n");
+        System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString("WRITING DATA..."));
 
         PrintStream reportStream = new PrintStream(System.out);
         File reportFile;
@@ -626,7 +626,7 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
             try {
                 reportFile = new File(tabReportFileName);
                 reportStream = new PrintStream(tabReportFileName);
-                System.out.println("Writing to " + tabReportFileName);
+                System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString("WRITING TO ") + tabReportFileName);
 
                 // write tab separated stuff here
 

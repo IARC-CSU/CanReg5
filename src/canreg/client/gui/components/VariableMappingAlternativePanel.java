@@ -34,6 +34,27 @@ public class VariableMappingAlternativePanel extends javax.swing.JPanel {
         fileElementsComboBox.setModel(new javax.swing.DefaultComboBoxModel(entriesInComboBox));
     }
 
+        private void updateWarning(String fileElementSelected) {
+        if (fileElementSelected != null && fileElementSelected.trim().length() > 0) {
+            if (databaseVariableListElement != null) {
+                dbVariableLabel.setText("<html>" + dbVariableLabel(databaseVariableListElement) + "<html>");
+                dbVariableLabel.repaint();
+            }
+        } else {
+            if (databaseVariableListElement != null) {
+                dbVariableLabel.setText("<html><b>" + dbVariableLabel(databaseVariableListElement) + "</b><html>");
+                dbVariableLabel.repaint();
+            }
+        }
+    }
+
+    private static String dbVariableLabel(DatabaseVariablesListElement databaseVariablesListElement) {
+        return databaseVariablesListElement.getFullName()
+                + " (" + databaseVariablesListElement.getFillInStatus()
+                + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableMappingAlternativePanel").getString(" - LENGTH: ") + databaseVariablesListElement.getVariableLength() + ""
+                + ")";
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -121,26 +142,7 @@ public class VariableMappingAlternativePanel extends javax.swing.JPanel {
         updateWarning(getSelectedFileElement());
     }
 
-    private void updateWarning(String fileElementSelected) {
-        if (fileElementSelected != null && fileElementSelected.trim().length() > 0) {
-            if (databaseVariableListElement != null) {
-                dbVariableLabel.setText("<html>" + dbVariableLabel(databaseVariableListElement) + "<html>");
-                dbVariableLabel.repaint();
-            }
-        } else {
-            if (databaseVariableListElement != null) {
-                dbVariableLabel.setText("<html><b>" + dbVariableLabel(databaseVariableListElement) + "</b><html>");
-                dbVariableLabel.repaint();
-            }
-        }
-    }
 
-    private static String dbVariableLabel(DatabaseVariablesListElement databaseVariablesListElement) {
-        return databaseVariablesListElement.getFullName()
-                + " (" + databaseVariablesListElement.getFillInStatus()
-                + " - Length: " + databaseVariablesListElement.getVariableLength() + ""
-                + ")";
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel dbVariableLabel;
     private javax.swing.JComboBox fileElementsComboBox;

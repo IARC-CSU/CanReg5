@@ -668,6 +668,17 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                                 }
                             }
                         }
+                        // ...and ICCC3 code
+                        conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumour);
+                        if (conversionResult != null) {
+                            if (conversionResult[0].getResultCode() != ConversionResult.ResultCode.Invalid) {
+                                editChecksInternalFrame.setICCCTextFieldText(conversionResult[0].getValue() + "");
+                                DatabaseVariablesListElement ICCCdatabaseVariablesElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ICCC.toString());
+                                if (ICCCdatabaseVariablesElement != null) {
+                                    tumour.setVariable(ICCCdatabaseVariablesElement.getDatabaseVariableName(), conversionResult[0].getValue());
+                                }
+                            }
+                        }
                     }
 
                     tumourRecordEditorPanel.refreshDatabaseRecord(tumour);

@@ -58,7 +58,9 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Range"/>
+            <TitledBorder title="Range">
+              <Property name="titleX" resourceKey="rangePanel.border.title"/>
+            </TitledBorder>
           </Border>
         </Property>
         <Property name="toolTipText" type="java.lang.String" resourceKey="rangePanel.toolTipText"/>
@@ -157,7 +159,9 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Filter"/>
+            <TitledBorder title="Filter">
+              <Property name="titleX" resourceKey="filterPanel.border.title"/>
+            </TitledBorder>
           </Border>
         </Property>
         <Property name="name" type="java.lang.String" value="filterPanel" noResource="true"/>

@@ -56,7 +56,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
 
         LinkedList<String> generatedFiles = new LinkedList<String>();
 
-        String footerString = "Table built " + new Date() + " by CanReg5-beta.";
+        String footerString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("TABLE BUILT ") + new Date() + java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString(" BY CANREG5.");
 
         String notesString = "";
 
@@ -189,7 +189,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
         }
 
         if (populations[0].getFilter().length() > 0) {
-            notesString = "Filter used:" + populations[0].getFilter();
+            notesString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("FILTER USED:") + populations[0].getFilter();
         }
 
         standardPopulationArray = new double[numberOfSexes][numberOfAgeGroups];
@@ -367,7 +367,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                     }
                     records += cases;
                     if (records % recordsPerFeedback == 0) {
-                        System.out.println("Processing record number: " + records);
+                        System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("PROCESSING RECORD NUMBER: ") + records);
                     }
                 }
                 // Read next line
@@ -375,7 +375,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
 
             }
         }
-        System.out.println("Processed " + records + " records.");
+        System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("PROCESSED ") + records + java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString(" RECORDS."));
 
         // Get our matrixes ready
 

@@ -162,14 +162,13 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
 
         setName("Form"); // NOI18N
 
-        rangePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Range"));
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RangeFilterPanel.class);
+        rangePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("rangePanel.border.title"))); // NOI18N
         rangePanel.setToolTipText(resourceMap.getString("rangePanel.toolTipText")); // NOI18N
         rangePanel.setEnabled(false);
         rangePanel.setName("rangePanel"); // NOI18N
 
         rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Record Number", "ICD10", "Names" }));
-        rangeComboBox.setToolTipText(resourceMap.getString("rangeComboBox.toolTipText")); // NOI18N
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RangeFilterPanel.class, this);
         rangeComboBox.setAction(actionMap.get("rangeComboboxChanged")); // NOI18N
         rangeComboBox.setName("rangeComboBox"); // NOI18N
@@ -218,7 +217,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
                 .addGap(5, 5, 5))
         );
 
-        filterPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Filter"));
+        filterPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("filterPanel.border.title"))); // NOI18N
         filterPanel.setName("filterPanel"); // NOI18N
 
         filterComboBox.setEditable(true);
