@@ -1,5 +1,60 @@
-changeset:   413:5bd7da784047
+changeset:   424:4301f2df369e
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Mar 25 15:08:45 2010 +0100
+summary:     ICCC3 converter: revised the ICCC rules for non malignant cases.
+
+changeset:   423:d79a8c2fbab7
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Mar 25 13:57:01 2010 +0100
+summary:     ICCC3 converter: behaviour less than 3 gets coded 3e.
+
+changeset:   422:267fd015a6f3
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Mar 25 13:53:47 2010 +0100
+summary:     ICCC3 converter implemented.
+
+changeset:   421:6e3192c82c18
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 23 17:58:49 2010 +0100
+summary:     French translation improved.
+
+changeset:   420:33147625a188
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 23 17:33:14 2010 +0100
+summary:     Portugese translation added, French translation improved.
+
+changeset:   419:938e0dde23ec
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 23 17:19:10 2010 +0100
+summary:     DatabaseVariableEditor now throws error messages if somethings not right with the variable definition.
+
+changeset:   418:e1bc790b2783
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 23 11:08:03 2010 +0100
+summary:     Access to handbook, possibility to download latest version.
+
+changeset:   417:c404e690e172
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 23 11:06:44 2010 +0100
+summary:     File downloader implemented.
+
+changeset:   416:3f14b1fe30e6
+user:        ervikm@X70245.iarc.lan
+date:        Mon Mar 22 15:54:47 2010 +0100
+summary:     Back from Casablanca.
+
+changeset:   415:6a61e7fa320a
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 16 11:07:31 2010 +0100
+summary:     4.99.20 - french translation continued etc
+
+changeset:   414:ac144a2bed18
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 12 18:02:15 2010 +0100
+summary:     4.99.19
+
+changeset:   413:5bd7da784047
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Wed Mar 10 17:21:53 2010 +0100
 summary:     French translation continued.

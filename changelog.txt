@@ -1,5 +1,17 @@
 Changelog
 
+4.99.21 Build 848 (5.0 RC6)
+
+- Access to handbook, possibility to download latest version.
+
+- DatabaseVariableEditor now throws error messages if somethings not right with the variable definition during system setup.
+
+- ICCC3 converter implemented.
+
+4.99.20
+
+- Internationalization work. Portugese translation started. French translation started.
+
 4.99.19 Build 829 (5.0 RC5)
 
 - Hourglass feedback added for longish operations.
