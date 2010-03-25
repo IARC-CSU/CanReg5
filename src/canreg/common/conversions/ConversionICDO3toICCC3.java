@@ -41,7 +41,7 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
     private String[] topMax;
     private int[] morList;
     private short[][] iccc3Table;
-    private boolean showExtendedCode = false, romanNums = false, codeNonMalignantTo3e = true;
+    private boolean showExtendedCode = false, romanNums = false;
 
     /**
      * 
@@ -125,7 +125,7 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
      */
     public ConversionResult[] performConversion(Map<StandardVariableNames, Object> variables) {
         String ICCCcode = "";
-        String ErrorMessage = "";
+        String errorMessage = "";
 
         ConversionResult result[] = new ConversionResult[1];
         result[0] = new ConversionResult();
@@ -208,92 +208,89 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
 
         // ICCCnum(5digits) consists of Group(2digits), SubGrp(1dig), ExtendCode(2digs)
 
-        int GroupNum = ICCCnum / 1000;
-        if (GroupNum == 0) {
-            ErrorMessage = "Error - GroupNum zero";
+        int groupNum = ICCCnum / 1000;
+        if (groupNum == 0) {
+            errorMessage = "Error - GroupNum zero";
             result[0].setResultCode(ConversionResult.ResultCode.Invalid);
-            result[0].setMessage(ErrorMessage);
+            result[0].setMessage(errorMessage);
             return result;
         }
-        if (GroupNum > ICCC1Max) {
-            ErrorMessage = "Error - GroupNum too large";
+        if (groupNum > ICCC1Max) {
+            errorMessage = "Error - GroupNum too large";
             result[0].setResultCode(ConversionResult.ResultCode.Invalid);
-            result[0].setMessage(ErrorMessage);
+            result[0].setMessage(errorMessage);
             return result;
         }
 
         int ICCC23 = ICCCnum % 1000;
-        int SubGrpNum = ICCC23 / 100;
-        int ExtendedNum = ICCC23 % 100;
+        int subGrpNum = ICCC23 / 100;
+        int extendedNum = ICCC23 % 100;
 
-        if (SubGrpNum == 0) {
-            ErrorMessage = "Error - SubGrpNum zero";
+        if (subGrpNum == 0) {
+            errorMessage = "Error - SubGrpNum zero";
             result[0].setResultCode(ConversionResult.ResultCode.Invalid);
-            result[0].setMessage(ErrorMessage);
+            result[0].setMessage(errorMessage);
             return result;
         }
-        if (SubGrpNum > ICCC2Max) {
-            ErrorMessage = "Error - SubGrpNum too large";
+        if (subGrpNum > ICCC2Max) {
+            errorMessage = "Error - SubGrpNum too large";
             result[0].setResultCode(ConversionResult.ResultCode.Invalid);
-            result[0].setMessage(ErrorMessage);
+            result[0].setMessage(errorMessage);
             return result;
         }
 
         //-------------------------< only certain combinations allow Non-Malignant codes
         Boolean nonMalignantException = false;
-        if ((GroupNum == 3) || (GroupNum == 10 && SubGrpNum == 1)) // INTRACRANIAL/SPINAL
+        if ((groupNum == 3) || (groupNum == 10 && subGrpNum == 1)) // INTRACRANIAL/SPINAL
         {
             nonMalignantException = true;
         }
 
-        if (!nonMalignantException &&  !behaviourCode.equals("3") && !codeNonMalignantTo3e) {
-            ErrorMessage = "Non-Malignant Behaviour excluded";
+        if (!nonMalignantException && !behaviourCode.equals("3")) {
+            errorMessage = "Non-Malignant Behaviour excluded";
             result[0].setResultCode(ConversionResult.ResultCode.Invalid);
-            result[0].setMessage(ErrorMessage);
+            result[0].setMessage(errorMessage);
             return result;
-        } else if (!nonMalignantException && (behaviourCode.equals("2")||behaviourCode.equals("1")||behaviourCode.equals("0") ) && codeNonMalignantTo3e) {
-            GroupNum = 3;
-            SubGrpNum = 5;
         }
 
         //-----------------------------------------< construct string ICCC code
         if (romanNums) {
-            ICCCcode = ICCCGroup[GroupNum];
+            ICCCcode = ICCCGroup[groupNum];
         } else {
-            ICCCcode = Integer.toString(GroupNum);
+            ICCCcode = Integer.toString(groupNum);
         }
 
-        if (GroupNum != 5) //  group 5 has no subgroups
+        if (groupNum != 5) //  group 5 has no subgroups
         {
-            ICCCcode += ("" + ICCCSubGrp[SubGrpNum]);
+            ICCCcode += ("" + ICCCSubGrp[subGrpNum]);
         }
 
         if (!showExtendedCode) {
             result[0].setResultCode(ConversionResult.ResultCode.OK);
-            result[0].setMessage(ErrorMessage);
+            result[0].setMessage(errorMessage);
             result[0].setValue(ICCCcode);
             return result;
         }
 
         //-----------------------------------------------------< extended code
-        if (ExtendedNum == 0) // no extended code exists
+        if (extendedNum == 0) // no extended code exists
         {
             result[0].setResultCode(ConversionResult.ResultCode.OK);
-            result[0].setMessage(ErrorMessage);
+            result[0].setMessage(errorMessage);
             result[0].setValue(ICCCcode);
             return result;
         }
-        if (ExtendedNum > ICCC3Max) {
-            ErrorMessage = "Error - ExtendedNum too large";
+        if (extendedNum > ICCC3Max) {
+            errorMessage = "Error - ExtendedNum too large";
             result[0].setResultCode(ConversionResult.ResultCode.Invalid);
-            result[0].setMessage(ErrorMessage);
+            result[0].setMessage(errorMessage);
             result[0].setValue(ICCCcode);
             return result;
         }
 
-        ICCCcode += (" " + Integer.toString(ExtendedNum));
+        ICCCcode += (" " + Integer.toString(extendedNum));
         result[0].setResultCode(ConversionResult.ResultCode.OK);
-        result[0].setMessage(ErrorMessage);
+        result[0].setMessage(errorMessage);
         result[0].setValue(ICCCcode);
         return result;
     }
