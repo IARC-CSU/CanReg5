@@ -246,12 +246,12 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
             nonMalignantException = true;
         }
 
-        if (!nonMalignantException && !behaviourCode.equals("3") && !codeNonMalignantTo3e) {
+        if (!nonMalignantException &&  !behaviourCode.equals("3") && !codeNonMalignantTo3e) {
             ErrorMessage = "Non-Malignant Behaviour excluded";
             result[0].setResultCode(ConversionResult.ResultCode.Invalid);
             result[0].setMessage(ErrorMessage);
             return result;
-        } else if (!nonMalignantException && !behaviourCode.equals("3") && codeNonMalignantTo3e) {
+        } else if (!nonMalignantException && (behaviourCode.equals("2")||behaviourCode.equals("1")||behaviourCode.equals("0") ) && codeNonMalignantTo3e) {
             GroupNum = 3;
             SubGrpNum = 5;
         }
