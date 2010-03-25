@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -33,5 +34,20 @@ public class RulesLoader {
             i++;
         }
         return table;
+    }
+
+    public static LinkedList<String []> loadTable(InputStream resourceAsStream) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(resourceAsStream));
+        String line = br.readLine();
+        String[] lineElements;
+        LinkedList<String []> lineElementsList = new LinkedList<String []>();
+        int maxgroups = 0;
+        while (line!=null){
+            lineElements = line.split("\t");
+            maxgroups = Math.max(maxgroups, lineElements.length);
+            lineElementsList.add(lineElements);
+            line = br.readLine();
+        }
+        return lineElementsList;
     }
 }

@@ -52,6 +52,9 @@ public class Converter {
         // Add ICDO3 to ICD10
         conversion = new ConversionICDO3toICD10();
         conversions.put(conversion.getConversionName(),conversion);
+        // Add ICDO3 to ICCC3
+        conversion = new ConversionICDO3toICCC3();
+        conversions.put(conversion.getConversionName(),conversion);
     }
     
     /**

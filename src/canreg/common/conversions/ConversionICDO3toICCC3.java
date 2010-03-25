@@ -1,13 +1,12 @@
 package canreg.common.conversions;
 
 import canreg.common.Globals.StandardVariableNames;
-import canreg.common.LookUpLoader;
 import canreg.common.RulesLoader;
 import canreg.common.conversions.ConversionResult.ResultCode;
 import canreg.common.conversions.Converter.ConversionName;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,42 +27,77 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
     private static StandardVariableNames[] variablesCreated = new StandardVariableNames[]{
         StandardVariableNames.ICCC
     };
-    /**
-     * 
-     */
-    public static int maleCode = 1;
-    /**
-     * 
-     */
-    public static int femaleCode = 2;
-    private Map<String, String> topographyICD10Map;
-    private int topographyCodeLength = 3;
-    private String topographyLookUpFileResource = "/canreg/common/resources/lookup/O3_10T.txt";
-    private Map<String, String> morphologyICD10Map;
-    private int morphologyCodeLength = 5;
-    private String morphologyLookUpFileResource = "/canreg/common/resources/lookup/O3_10M.txt";
-    private Map<Integer, String> topographyRule8Map;
-    private int topographyRule8CodeLength = 7;
-    private String topographyRule8FileResource = "/canreg/common/resources/lookup/O3_10r8.txt";
-    private Map<Integer, String> topographyRule9Map;
-    private int topographyRule9CodeLength = 7;
-    private String topographyRule9FileResource = "/canreg/common/resources/lookup/O3_10r9.txt";
+    static private final int UNASSIGNED = -1;
+    static private final int MAXMORPHRANGE = 1990;	//	Highest morph(9990) -  Lowest morph(8000)
+    static private final int ICCC1Max = 12;			//	ICCC first part - group code, Roman nums
+    static private final String ICCCGroup[] = {"??", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"};
+    static private final int ICCC2Max = 6;			//	ICCC second part - subgroup, letters
+    static private final String ICCCSubGrp[] = {"", "a", "b", "c", "d", "e", "f"};
+    static private final int ICCC3Max = 11;			//	ICCC third part - extended code, numeric
+
+    private String ICCCLookUpFileResource = "/canreg/common/resources/lookup/ICCC-Table.txt";
+    private int nofTopGroups, nofMorLines;
+    private String[] topMin;
+    private String[] topMax;
+    private int[] morList;
+    private short[][] iccc3Table;
+    private boolean showExtendedCode = false, romanNums = false, codeNonMalignantTo3e = true;
 
     /**
      * 
      */
     public ConversionICDO3toICCC3() {
         try {
-            // replace by getResourceAsStream to allow for packaging in a jar/!
-            topographyICD10Map = LookUpLoader.load(this.getClass().getResourceAsStream(topographyLookUpFileResource), topographyCodeLength);
-            morphologyICD10Map = LookUpLoader.load(this.getClass().getResourceAsStream(morphologyLookUpFileResource), morphologyCodeLength);
-            topographyRule8Map = RulesLoader.load(this.getClass().getResourceAsStream(topographyRule8FileResource), topographyRule8CodeLength);
-            topographyRule9Map = RulesLoader.load(this.getClass().getResourceAsStream(topographyRule9FileResource), topographyRule9CodeLength);
+            LinkedList<String[]> ICCCTableRaw = RulesLoader.loadTable(this.getClass().getResourceAsStream(ICCCLookUpFileResource));
+            nofMorLines = ICCCTableRaw.size() - 2;
+
+            String[] lineElements = ICCCTableRaw.getFirst();
+            nofTopGroups = lineElements.length - 1;
+
+            topMin = new String[nofTopGroups];
+            topMax = new String[nofTopGroups];
+
+            for (int t = 0; t < nofTopGroups; ++t) {
+                topMin[t] = lineElements[t + 1];
+            }
+            lineElements = ICCCTableRaw.get(1);
+            for (int t = 0; t < nofTopGroups; ++t) {
+                topMax[t] = lineElements[t + 1];
+            }
+            //------------------------------------------------------------< Prepare memory arrays
+            morList = new int[MAXMORPHRANGE];
+            for (int m = 0; m < MAXMORPHRANGE; ++m) {
+                morList[m] = UNASSIGNED;
+            }
+
+            iccc3Table = new short[nofMorLines][nofTopGroups];
+
+            //---------------------------------------< Morphology and ICCC codes in subsequent lines
+            for (int m = 0; m < nofMorLines; ++m) {
+
+                lineElements = ICCCTableRaw.get(m + 2);
+                int MorLine = Integer.parseInt(lineElements[0]) - 8000;
+                if (MorLine < 0 || MorLine > MAXMORPHRANGE) {
+                    throw new IOException("ICCC Morph Line invalid value: " + lineElements[0]);
+                }
+                morList[MorLine] = m;
+
+                for (int t = 0; t < nofTopGroups; ++t) {
+                    if (t + 1 < lineElements.length) {
+                        String s = lineElements[t + 1];
+                        if (s.length() == 0) {
+                            iccc3Table[m][t] = 0;
+                        } else {
+                            iccc3Table[m][t] = (short) Integer.parseInt(s);
+                        }
+                    } else {
+                        iccc3Table[m][t] = 0;
+                    }
+                }
+            }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConversionICDO3toICCC3.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(ConversionICDO3toICCC3.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (URISyntaxException ex) {
             Logger.getLogger(ConversionICDO3toICCC3.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -95,7 +129,7 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
 
         ConversionResult result[] = new ConversionResult[1];
         result[0] = new ConversionResult();
-        result[0].setVariableName(StandardVariableNames.ICD10);
+        result[0].setVariableName(StandardVariableNames.ICCC);
         result[0].setResultCode(ResultCode.OK);
 
         String sexCode = null;
@@ -132,16 +166,134 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
             return result;
         }
 
-        String morphology5Code = morphologyCode + behaviourCode;
-        String morphologyLookUpLine = morphologyICD10Map.get(morphology5Code.substring(0, morphologyCodeLength));
-        if (morphologyLookUpLine == null) {
-            result[0].setMessage(morphologyCode + "/" + behaviourCode);
+        //------------------------------------< find Topog range (colum in Table)
+        int TopColum = -1;
+        for (int t = 0; t < nofTopGroups; ++t) {
+            if (topographyCode.compareTo(topMin[t]) >= 0
+                    && topographyCode.compareTo(topMax[t]) <= 0) {
+                TopColum = t;
+                break;
+            }
+        }
+        if (TopColum == -1) {
+            //ErrorMessage = "Invalid Topography";
             result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+            result[0].setMessage("Invalid Topography");
             return result;
         }
 
-        /// do the conversionthingy!!!
+        //------------------------------------------< find Morph line in Table
+        int MorNum = morphologyNumber - 8000;
+        if (MorNum < 0 || MorNum > MAXMORPHRANGE) {
+            //ErrorMessage = "Invalid Morphology";
+            result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+            result[0].setMessage("Invalid Morphology");
+            return result;
+        }
+        int MorLine = morList[MorNum];
+        if (MorLine <= UNASSIGNED || MorLine > MAXMORPHRANGE) {
+            //ErrorMessage = "Invalid Morphology";
+            result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+            result[0].setMessage("Invalid Morphology");
+            return result;
+        }
 
+        //--------------------------------------------< lookup in ICCC Table
+        int ICCCnum = iccc3Table[MorLine][TopColum];
+        if (ICCCnum == 0) {
+            result[0].setResultCode(ConversionResult.ResultCode.Rare);
+            result[0].setMessage("No ICCC code (unlikely combination)");
+            return result;
+        }
+
+        // ICCCnum(5digits) consists of Group(2digits), SubGrp(1dig), ExtendCode(2digs)
+
+        int GroupNum = ICCCnum / 1000;
+        if (GroupNum == 0) {
+            ErrorMessage = "Error - GroupNum zero";
+            result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+            result[0].setMessage(ErrorMessage);
+            return result;
+        }
+        if (GroupNum > ICCC1Max) {
+            ErrorMessage = "Error - GroupNum too large";
+            result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+            result[0].setMessage(ErrorMessage);
+            return result;
+        }
+
+        int ICCC23 = ICCCnum % 1000;
+        int SubGrpNum = ICCC23 / 100;
+        int ExtendedNum = ICCC23 % 100;
+
+        if (SubGrpNum == 0) {
+            ErrorMessage = "Error - SubGrpNum zero";
+            result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+            result[0].setMessage(ErrorMessage);
+            return result;
+        }
+        if (SubGrpNum > ICCC2Max) {
+            ErrorMessage = "Error - SubGrpNum too large";
+            result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+            result[0].setMessage(ErrorMessage);
+            return result;
+        }
+
+        //-------------------------< only certain combinations allow Non-Malignant codes
+        Boolean nonMalignantException = false;
+        if ((GroupNum == 3) || (GroupNum == 10 && SubGrpNum == 1)) // INTRACRANIAL/SPINAL
+        {
+            nonMalignantException = true;
+        }
+
+        if (!nonMalignantException && !behaviourCode.equals("3") && !codeNonMalignantTo3e) {
+            ErrorMessage = "Non-Malignant Behaviour excluded";
+            result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+            result[0].setMessage(ErrorMessage);
+            return result;
+        } else if (!nonMalignantException && !behaviourCode.equals("3") && codeNonMalignantTo3e) {
+            GroupNum = 3;
+            SubGrpNum = 5;
+        }
+
+        //-----------------------------------------< construct string ICCC code
+        if (romanNums) {
+            ICCCcode = ICCCGroup[GroupNum];
+        } else {
+            ICCCcode = Integer.toString(GroupNum);
+        }
+
+        if (GroupNum != 5) //  group 5 has no subgroups
+        {
+            ICCCcode += ("" + ICCCSubGrp[SubGrpNum]);
+        }
+
+        if (!showExtendedCode) {
+            result[0].setResultCode(ConversionResult.ResultCode.OK);
+            result[0].setMessage(ErrorMessage);
+            result[0].setValue(ICCCcode);
+            return result;
+        }
+
+        //-----------------------------------------------------< extended code
+        if (ExtendedNum == 0) // no extended code exists
+        {
+            result[0].setResultCode(ConversionResult.ResultCode.OK);
+            result[0].setMessage(ErrorMessage);
+            result[0].setValue(ICCCcode);
+            return result;
+        }
+        if (ExtendedNum > ICCC3Max) {
+            ErrorMessage = "Error - ExtendedNum too large";
+            result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+            result[0].setMessage(ErrorMessage);
+            result[0].setValue(ICCCcode);
+            return result;
+        }
+
+        ICCCcode += (" " + Integer.toString(ExtendedNum));
+        result[0].setResultCode(ConversionResult.ResultCode.OK);
+        result[0].setMessage(ErrorMessage);
         result[0].setValue(ICCCcode);
         return result;
     }
