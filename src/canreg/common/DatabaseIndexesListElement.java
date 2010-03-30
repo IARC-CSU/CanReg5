@@ -12,7 +12,7 @@ public class DatabaseIndexesListElement  implements Serializable, DatabaseElemen
     private String indexName;
     private String databaseTableName;
     private LinkedList<String> variableNamesInIndex;
-    private String mainVariable = null;
+    private DatabaseVariablesListElement mainVariable = null;
     private DatabaseVariablesListElement[] variableListElementsInIndex;
 
     public DatabaseIndexesListElement(String indexName) {
@@ -35,13 +35,9 @@ public class DatabaseIndexesListElement  implements Serializable, DatabaseElemen
         this.indexName = indexName;
     }
 
-    public void setMainVariable(String mainVariable) {
-       this.mainVariable = mainVariable;
-    }
-
     @Override
     public String toString() {
-        return getMainVariable()+" ("+databaseTableName+")";
+        return getMainVariableName()+" ("+databaseTableName+")";
     }
 
     /**
@@ -61,11 +57,11 @@ public class DatabaseIndexesListElement  implements Serializable, DatabaseElemen
     /**
      * @return the mainVariable
      */
-    public String getMainVariable() {
+    public String getMainVariableName() {
         if (getVariableNamesInIndex() != null) {
             return getVariableNamesInIndex().getFirst();
         } else {
-            return mainVariable;
+            return getMainVariable().getDatabaseVariableName();
         }
     }
 
@@ -87,5 +83,16 @@ public class DatabaseIndexesListElement  implements Serializable, DatabaseElemen
 
     public DatabaseVariablesListElement[] getVariableListElementsInIndex(){
         return variableListElementsInIndex;
+    }
+
+    public void setMainVariable(DatabaseVariablesListElement mainVariable) {
+        this.mainVariable = mainVariable;
+    }
+
+    /**
+     * @return the mainVariable
+     */
+    public DatabaseVariablesListElement getMainVariable() {
+        return mainVariable;
     }
 }
