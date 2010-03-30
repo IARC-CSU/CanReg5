@@ -80,19 +80,25 @@ public class CheckAgeIncidenceDateBirthDate extends CheckInterface {
             birthDate = DateHelper.parseDateStringToGregorianCalendarCanReg(birthDateCode, Globals.DATE_FORMAT_STRING);
         } catch (ParseException ex) {
             Logger.getLogger(CheckAgeIncidenceDateBirthDate.class.getName()).log(Level.SEVERE, null, ex);
+            result.setResultCode(CheckResult.ResultCode.Invalid);
+            result.setMessage("Not a number");
+            return result;
         } catch (NumberFormatException numberFormatException) {
             result.setResultCode(CheckResult.ResultCode.Invalid);
             result.setMessage("Not a number");
             return result;
         } catch (IllegalArgumentException ex) {
-            Logger.getLogger(CheckAgeIncidenceDateBirthDate.class.getName()).log(Level.WARNING, "Dates: " + birthDateCode + ", "+incidenceDate, ex);
+            Logger.getLogger(CheckAgeIncidenceDateBirthDate.class.getName()).log(Level.WARNING, "Dates: " + birthDateCode + ", " + incidenceDate, ex);
+            result.setResultCode(CheckResult.ResultCode.Invalid);
+            result.setMessage("Not a number");
+            return result;
         } catch (NullPointerException nullPointerException) {
             result.setResultCode(CheckResult.ResultCode.Missing);
             result.setMessage("Missing variable(s) needed.");
             return result;
         }
 
-        if (!(birthDate.isUnknownYear() || incidenceDate.isUnknownYear())) {
+        if (birthDate != null && incidenceDate != null && !(birthDate.isUnknownYear() || incidenceDate.isUnknownYear())) {
             int allowedDifference = 0;
             if (birthDate.isUnknownMonth() || birthDate.isUnknownDay()
                     || incidenceDate.isUnknownMonth() || incidenceDate.isUnknownDay()) {
