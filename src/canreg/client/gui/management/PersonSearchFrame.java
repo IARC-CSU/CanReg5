@@ -403,8 +403,16 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         DefaultPersonSearch searcher = personSearchVariablesPanel1.getSearcher();
         // TODO: File selector?
         try {
+            String rangeStart = rangeStartTextField.getText();
+            String rangeEnd = rangeEndTextField.getText();
+            if (rangeStart != null && rangeStart.trim().length() > 0) {
+                rangeStart=("'" + rangeStart + "'");
+            }
+            if (rangeEnd != null && rangeEnd.trim().length() > 0) {
+                rangeEnd=("'" + rangeEnd + "'");
+            }
             personSearchHandlerID = CanRegClientApp.getApplication().initiateGlobalDuplicateSearch(
-                    searcher, rangeStartTextField.getText(), rangeEndTextField.getText());
+                    searcher, rangeStart, rangeEnd);
         } catch (SecurityException ex) {
             Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
