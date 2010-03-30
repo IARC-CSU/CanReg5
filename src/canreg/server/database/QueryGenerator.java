@@ -6,7 +6,6 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import java.util.LinkedList;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.Document;
@@ -94,14 +93,14 @@ public class QueryGenerator {
                     + " FROM APP." + tableName
                     + " WHERE ";
             if (filter.getRangeStart() != null && filter.getRangeStart().length() > 0) {
-                filterString += filter.getRangeDatabaseIndexedListElement().getMainVariable()
+                filterString += filter.getRangeDatabaseIndexedListElement().getMainVariableName()
                         + " >= " + filter.getRangeStart();
             }
             if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) && (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
                 filterString += " AND ";
             }
             if (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0) {
-                filterString += filter.getRangeDatabaseIndexedListElement().getMainVariable()
+                filterString += filter.getRangeDatabaseIndexedListElement().getMainVariableName()
                         + " <= " + filter.getRangeEnd();
             }
             filterString += ")";
