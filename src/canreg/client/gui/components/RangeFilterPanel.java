@@ -38,6 +38,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
     private DatabaseVariablesListElement[] patientVariablesInDB;
     private DatabaseVariablesListElement[] tumourVariablesInDB;
     private DatabaseVariablesListElement[] sourceVariablesInDB;
+    private boolean rangeEnabled = true;
 
     /** Creates new form RangeFilterPanel */
     public RangeFilterPanel() {
@@ -59,7 +60,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         return doc;
     }
 
-    public void setDatabaseDescription(Document doc){
+    public void setDatabaseDescription(Document doc) {
         this.doc = doc;
         indexesInDB = canreg.common.Tools.getIndexesListElements(doc, Globals.NAMESPACE);
         rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(indexesInDB));
@@ -395,7 +396,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
             indexesInTableTemp = indexesInDB;
         }
         rangeComboBox.setModel(new DefaultComboBoxModel(indexesInTableTemp));
-        boolean rangeEnabled = !(indexesInTableTemp.length == 0);
+        rangeEnabled = !(indexesInTableTemp.length == 0);
         rangePanel.setVisible(rangeEnabled);
         andLabel.setVisible(rangeEnabled);
     }
@@ -443,9 +444,29 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
      */
     public Object[] getRange() {
         Object[] range = new Object[3];
-        range[0] = rangeComboBox.getSelectedItem();
-        range[1] = rangeStartTextField.getText();
-        range[2] = rangeEndTextField.getText();
+        if (rangeEnabled) {
+            range[0] = rangeComboBox.getSelectedItem();
+            DatabaseIndexesListElement index = (DatabaseIndexesListElement) range[0];
+            DatabaseVariablesListElement variable = null;
+            if (index != null) {
+                DatabaseVariablesListElement[] variables = index.getVariableListElementsInIndex();
+                range[1] = rangeStartTextField.getText();
+                range[2] = rangeEndTextField.getText();
+                if (variables.length > 0) {
+                    variable = variables[0];
+                    String range1 = (String) range[1];
+                    String range2 = (String) range[2];
+                    if (range1.length() > 0) {
+                        range[1] = variable.getSQLqueryFormat(range1);
+                    }
+                    if (range2.length() > 0) {
+                        range[2] = variable.getSQLqueryFormat(range2);
+                    }
+                }
+            } else {
+                range = null;
+            }
+        }
         return range;
     }
 
