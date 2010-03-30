@@ -79,17 +79,21 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             codeTextField.setBackground(java.awt.SystemColor.text);
             try {
                 GregorianCalendarCanReg date = DateHelper.parseDateStringToGregorianCalendarCanReg(value, Globals.DATE_FORMAT_STRING);
-                dateChooser.setCalendar(date);
-                String dateString = codeTextField.getText();
-                String dateFormatString = dateChooser.getDateFormatString();
-                // dateField.setText(value);
-                if (date.isUnknownDay()) {
-                    dateString = DateHelper.setDay(dateString, dateFormatString, "99");
+                if (date != null) {
+                    dateChooser.setCalendar(date);
+                    String dateString = codeTextField.getText();
+                    String dateFormatString = dateChooser.getDateFormatString();
+                    // dateField.setText(value);
+                    if (date.isUnknownDay()) {
+                        dateString = DateHelper.setDay(dateString, dateFormatString, "99");
+                    }
+                    if (date.isUnknownMonth()) {
+                        dateString = DateHelper.setMonth(dateString, dateFormatString, "99");
+                    }
+                    codeTextField.setText(dateString);
+                } else {
+                    codeTextField.setText(value);
                 }
-                if (date.isUnknownMonth()) {
-                    dateString = DateHelper.setMonth(dateString, dateFormatString, "99");
-                }
-                codeTextField.setText(dateString);
             } catch (ParseException ex) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NumberFormatException numberFormatException) {
