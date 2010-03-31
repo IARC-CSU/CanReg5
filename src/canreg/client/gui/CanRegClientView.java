@@ -242,6 +242,8 @@ public class CanRegClientView extends FrameView {
         linksMenu = new javax.swing.JMenu();
         iacrWebsiteMenuItem = new javax.swing.JMenuItem();
         encrWebsiteMenuItem = new javax.swing.JMenuItem();
+        jSeparator12 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem5 = new javax.swing.JMenuItem();
         icdo3DocumentationWebsiteMenuItem = new javax.swing.JMenuItem();
         jSeparator9 = new javax.swing.JSeparator();
         icdo3ManualMenuItem = new javax.swing.JMenuItem();
@@ -556,6 +558,13 @@ public class CanRegClientView extends FrameView {
         encrWebsiteMenuItem.setAction(actionMap.get("openENCRweb")); // NOI18N
         encrWebsiteMenuItem.setName("encrWebsiteMenuItem"); // NOI18N
         linksMenu.add(encrWebsiteMenuItem);
+
+        jSeparator12.setName("jSeparator12"); // NOI18N
+        linksMenu.add(jSeparator12);
+
+        jMenuItem5.setAction(actionMap.get("openPubCanWebsite")); // NOI18N
+        jMenuItem5.setName("jMenuItem5"); // NOI18N
+        linksMenu.add(jMenuItem5);
 
         icdo3DocumentationWebsiteMenuItem.setAction(actionMap.get("openICDO3web")); // NOI18N
         icdo3DocumentationWebsiteMenuItem.setName("icdo3MenuItem"); // NOI18N
@@ -888,7 +897,6 @@ public class CanRegClientView extends FrameView {
             }
         }
 
-        garbleDatabaseMenuItem.setVisible(management&&debug);
         // setUpDatabaseMenuItem.setVisible(false);
 
         //toolbar buttons        
@@ -920,6 +928,9 @@ public class CanRegClientView extends FrameView {
             toolsMenu.setEnabled(true);
             restoreMenuItem.setEnabled(true);
         }
+
+        icdo3ManualMenuItem.setVisible(debug);
+        garbleDatabaseMenuItem.setVisible(management && debug);
     }
 
     /**
@@ -959,7 +970,7 @@ public class CanRegClientView extends FrameView {
      */
     @Action
     public void openICDO3web() {
-        BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://training.seer.cancer.gov/module_icdo3/icdo3_home.html"));
+        BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://training.seer.cancer.gov/icdo3"));
     }
 
     /**
@@ -1349,6 +1360,11 @@ public class CanRegClientView extends FrameView {
             desktopPane.remove(waitFrame);
         }
     }
+
+    @Action
+    public void openPubCanWebsite() {
+        BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.pubcan.org"));
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;
@@ -1380,10 +1396,12 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator11;
+    private javax.swing.JPopupMenu.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator13;
     private javax.swing.JToolBar.Separator jSeparator14;
     private javax.swing.JToolBar.Separator jSeparator15;

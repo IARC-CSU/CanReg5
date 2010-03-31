@@ -1,5 +1,14 @@
 Changelog
 
+4.99.22 Build 858 (5.0 RC7)
+
+- Database engine switched to Java DB 10.5.3.0
+
+- RangeFilter now adds 's if needed by each variable.
+
+- Other bug fixes.
+
+
 4.99.21 Build 848 (5.0 RC6)
 
 - Access to handbook, possibility to download latest version.
@@ -8,9 +17,11 @@ Changelog
 
 - ICCC3 converter implemented.
 
+
 4.99.20
 
-- Internationalization work. Portugese translation started. French translation started.
+- Internationalization work. Portugese translation started. French translation continued.
+
 
 4.99.19 Build 829 (5.0 RC5)
 

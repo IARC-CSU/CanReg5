@@ -1,5 +1,65 @@
-changeset:   424:4301f2df369e
+changeset:   436:6dba8647eba4
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Mar 31 11:38:19 2010 +0200
+summary:     4.99.22
+
+changeset:   435:7f654184e0ca
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Mar 31 11:36:23 2010 +0200
+summary:     Person search moved from RecordEditorPanel to RecordEditor. Now displays hourglass.
+
+changeset:   434:88b6edba0bbf
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Mar 31 11:35:00 2010 +0200
+summary:     Toggle database garbler displayed on off by the debug flag.
+
+changeset:   433:86d9a86361d2
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 30 15:13:58 2010 +0200
+summary:     DatabaseIndexesListElement: main variable list element stored instead of its name.
+
+changeset:   432:fe45773af7d7
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 30 15:13:21 2010 +0200
+summary:     Better handling of 's.
+
+changeset:   431:92993958f536
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 30 15:09:53 2010 +0200
+summary:     Better error-handling.
+
+changeset:   430:b294d2f86081
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 30 15:09:13 2010 +0200
+summary:     DatabaseIndexesListElement: main variable list element stored instead of its name.
+
+changeset:   429:17988e9b03bc
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 30 14:58:42 2010 +0200
+summary:     RangeFilter now adds 's if needed by each variable.
+
+changeset:   428:54522773ac89
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 30 14:21:06 2010 +0200
+summary:     DateVariableEditor: better handling of dates with errors in the database.
+
+changeset:   427:59018b35820f
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Mar 29 16:08:57 2010 +0200
+summary:     Switched to Java DB 10.5.3.0
+
+changeset:   426:a6ce8f814677
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Mar 25 15:15:26 2010 +0100
+summary:     4.99.21
+
+changeset:   425:b31e9639898c
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Mar 25 15:11:17 2010 +0100
+summary:     Internationalization work
+
+changeset:   424:4301f2df369e
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Thu Mar 25 15:08:45 2010 +0100
 summary:     ICCC3 converter: revised the ICCC rules for non malignant cases.

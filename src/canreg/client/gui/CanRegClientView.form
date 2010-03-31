@@ -546,6 +546,19 @@
                     <Property name="name" type="java.lang.String" value="encrWebsiteMenuItem" noResource="true"/>
                   </Properties>
                 </MenuItem>
+                <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator12">
+                  <Properties>
+                    <Property name="name" type="java.lang.String" value="jSeparator12" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem5">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.CanRegClientView" id="openPubCanWebsite" methodName="openPubCanWebsite"/>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="jMenuItem5" noResource="true"/>
+                  </Properties>
+                </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="icdo3DocumentationWebsiteMenuItem">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">

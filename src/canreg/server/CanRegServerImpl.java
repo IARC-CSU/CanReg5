@@ -326,7 +326,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @return
      */
     public int saveTumour(Tumour tumour) throws SQLException, RecordLockedException {
-            return db.saveTumour(tumour);
+        return db.saveTumour(tumour);
 
     }
 
@@ -491,8 +491,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             rows = db.retrieveRows(resultSetID, from, to);
         } catch (DistributedTableDescriptionException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RemoteException("Retrieve rows failed: "+ ex.getMessage());
-        } 
+            throw new RemoteException("Retrieve rows failed: " + ex.getMessage());
+        }
         return rows;
     }
 
@@ -616,7 +616,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             releaseResultSet(resultSetID);
 
             activePersonSearchers.put(resultSetID, gpsh);
-        // releaseResultSet(resultSetID);
+            // releaseResultSet(resultSetID);
         } catch (SQLException ex) {
             Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -686,6 +686,13 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         DistributedTableDescription dataDescription;
         Map<String, Float> patientIDScoreMap = null;
         if (searcher == null) {
+            if (personSearcher == null) {
+                personSearcher = new DefaultPersonSearch(
+                        Tools.getVariableListElements(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
+                PersonSearchVariable[] searchVariables = Tools.getPersonSearchVariables(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE);
+                personSearcher.setSearchVariables(searchVariables);
+                personSearcher.setThreshold(Tools.getPersonSearchMinimumMatch(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
+            }
             searcher = personSearcher;
         }
         try {
@@ -725,10 +732,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                     float score = searcher.compare(patient, patientB);
                     if (score > threshold) {
                         patientIDScoreMap.put((String) patientB.getVariable(patientRecordIDvariableName), score);
-                    // debugOut("Found patient id: " + patientB.getVariable(patientRecordIDvariableName) + ", score: " + score + "%");
+                        // debugOut("Found patient id: " + patientB.getVariable(patientRecordIDvariableName) + ", score: " + score + "%");
                     } else {
                         // debugOut("Not found " + patientB.getVariable(patientRecordIDvariableName) + " " + score);
-                        }
+                    }
                 }
             }
         } catch (Exception ex) {
