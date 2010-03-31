@@ -888,7 +888,7 @@ public class CanRegClientView extends FrameView {
             }
         }
 
-        garbleDatabaseMenuItem.setVisible(false);
+        garbleDatabaseMenuItem.setVisible(management&&debug);
         // setUpDatabaseMenuItem.setVisible(false);
 
         //toolbar buttons        
@@ -1428,7 +1428,7 @@ public class CanRegClientView extends FrameView {
     private int busyIconIndex = 0;
     private JDialog aboutBox;
     private Globals.UserRightLevels userRightsLevel = Globals.UserRightLevels.NOT_LOGGED_IN;
-    private static boolean debug = true;
+    private static boolean debug = false;
     LocalSettings localSettings;
     private static int xOffset = 30, yOffset = 30;
     private static int toolBarHeight = 80;
