@@ -8,6 +8,7 @@ package canreg.client.gui.components;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.Tools;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
@@ -379,7 +380,35 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         DatabaseIndexesListElement[] indexesInTableTemp;
         String tableName = tableChooserComboBox.getSelectedItem().toString();
         // tidy this for sources
-        if (!tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
+        if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
+            LinkedList<DatabaseIndexesListElement> tempIndexesInTable = new LinkedList<DatabaseIndexesListElement>();
+            for (int i = 0; i
+                    < indexesInDB.length; i++) {
+                if (indexesInDB[i].getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)
+                        || indexesInDB[i].getDatabaseTableName().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+                    tempIndexesInTable.add(indexesInDB[i]);
+                }
+            }
+            indexesInTableTemp = new DatabaseIndexesListElement[tempIndexesInTable.size()];
+            for (int i = 0; i
+                    < indexesInTableTemp.length; i++) {
+                indexesInTableTemp[i] = tempIndexesInTable.get(i);
+            }
+        } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
+            LinkedList<DatabaseIndexesListElement> tempIndexesInTable = new LinkedList<DatabaseIndexesListElement>();
+            for (int i = 0; i
+                    < indexesInDB.length; i++) {
+                if (indexesInDB[i].getDatabaseTableName().equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)
+                        || indexesInDB[i].getDatabaseTableName().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+                    tempIndexesInTable.add(indexesInDB[i]);
+                }
+            }
+            indexesInTableTemp = new DatabaseIndexesListElement[tempIndexesInTable.size()];
+            for (int i = 0; i
+                    < indexesInTableTemp.length; i++) {
+                indexesInTableTemp[i] = tempIndexesInTable.get(i);
+            }
+        } else {
             LinkedList<DatabaseIndexesListElement> tempIndexesInTable = new LinkedList<DatabaseIndexesListElement>();
             for (int i = 0; i
                     < indexesInDB.length; i++) {
@@ -392,10 +421,22 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
                     < indexesInTableTemp.length; i++) {
                 indexesInTableTemp[i] = tempIndexesInTable.get(i);
             }
-        } else {
-            indexesInTableTemp = indexesInDB;
         }
+        
+        Object tempIndex = rangeComboBox.getSelectedItem();
+        String tempStart = rangeStartTextField.getText();
+        String tempEnd = rangeEndTextField.getText();
+
         rangeComboBox.setModel(new DefaultComboBoxModel(indexesInTableTemp));
+
+        if (Tools.findInArray(indexesInTableTemp, tempIndex) > -1) {
+            rangeComboBox.setSelectedItem(tempIndex);
+            rangeStartTextField.setText(tempStart);
+            rangeEndTextField.setText(tempEnd);
+        } else {
+            rangeStartTextField.setText("");
+            rangeEndTextField.setText("");
+        }
         rangeEnabled = !(indexesInTableTemp.length == 0);
         rangePanel.setVisible(rangeEnabled);
         andLabel.setVisible(rangeEnabled);

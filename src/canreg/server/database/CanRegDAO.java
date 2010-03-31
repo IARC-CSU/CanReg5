@@ -438,7 +438,7 @@ public class CanRegDAO {
                 }
 
                 // variablesList = variablesList.substring(0, variablesList.length() - 2);
-
+                
             }
             String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
             String patientIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();

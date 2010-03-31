@@ -97,18 +97,15 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         instructionLabel2.setName("instructionLabel2"); // NOI18N
 
         variableComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        variableComboBox.setToolTipText(resourceMap.getString("variableComboBox.toolTipText")); // NOI18N
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(FastFilterInternalFrame.class, this);
         variableComboBox.setAction(actionMap.get("varibleChosenAction")); // NOI18N
         variableComboBox.setName("variableComboBox"); // NOI18N
 
         operationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        operationComboBox.setToolTipText(resourceMap.getString("operationComboBox.toolTipText")); // NOI18N
         operationComboBox.setAction(actionMap.get("operatorSelected")); // NOI18N
         operationComboBox.setName("operationComboBox"); // NOI18N
 
         logicalOperatorComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        logicalOperatorComboBox.setToolTipText(resourceMap.getString("logicalOperatorComboBox.toolTipText")); // NOI18N
         logicalOperatorComboBox.setAction(actionMap.get("operatorAction")); // NOI18N
         logicalOperatorComboBox.setName("logicalOperatorComboBox"); // NOI18N
 
@@ -125,7 +122,6 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         valuesSplitPane.setName("valuesSplitPane"); // NOI18N
 
         valueTextField.setText(resourceMap.getString("valueTextField.text")); // NOI18N
-        valueTextField.setToolTipText(resourceMap.getString("valueTextField.toolTipText")); // NOI18N
         valueTextField.setAction(actionMap.get("addAction")); // NOI18N
         valueTextField.setName("valueTextField"); // NOI18N
         valueTextField.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -135,7 +131,6 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         });
         valuesSplitPane.setLeftComponent(valueTextField);
 
-        valueTextField2.setToolTipText(resourceMap.getString("valueTextField2.toolTipText")); // NOI18N
         valueTextField2.setAction(actionMap.get("addAction")); // NOI18N
         valueTextField2.setName("valueTextField2"); // NOI18N
         valueTextField2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -213,7 +208,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
         );
         filterPanelLayout.setVerticalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
         );
 
         cancelButton.setAction(actionMap.get("cancelAction")); // NOI18N
@@ -340,18 +335,15 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
     // End of variables declaration//GEN-END:variables
 
     private void initValues() {
+        doc = canreg.client.CanRegClientApp.getApplication().getDatabseDescription();
+        dictionaries = canreg.client.CanRegClientApp.getApplication().getDictionary();
+        String[] logicalOperator = {"", "AND", "OR"};
+        logicalOperatorComboBox.setModel(new DefaultComboBoxModel(logicalOperator));
         String[] operators = {"=", "<>", ">", "<", ">=", "<=", "BETWEEN", "LIKE", "IN"};
         operationComboBox.setModel(new DefaultComboBoxModel(operators));
         operationComboBox.setSelectedIndex(0);
         // Get the system description
-        doc = canreg.client.CanRegClientApp.getApplication().getDatabseDescription();
         refreshVariableList();
-
-        String[] logicalOperator = {"", "AND", "OR"};
-        logicalOperatorComboBox.setModel(new DefaultComboBoxModel(logicalOperator));
-        dictionaries = canreg.client.CanRegClientApp.getApplication().getDictionary();
-        updatePossibleValues();
-
     }
 
     private void refreshVariableList() {
@@ -382,6 +374,8 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
             variablesInTable = sourceVariablesInDB;
         }
         variableComboBox.setModel(new DefaultComboBoxModel(variablesInTable));
+        variableComboBox.setSelectedItem(0);
+        updatePossibleValues();
     }
 
     /**
@@ -519,6 +513,10 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
             valuesSplitPane.setDividerLocation(0.5);
             dictionaryPopUp = true;
         } else if ("LIKE".equalsIgnoreCase(operator)) {
+            valueTextField2.setVisible(false);
+            valuesSplitPane.setDividerLocation(1);
+            dictionaryPopUp = false;
+        } else if ("IN".equalsIgnoreCase(operator)) {
             valueTextField2.setVisible(false);
             valuesSplitPane.setDividerLocation(1);
             dictionaryPopUp = false;
