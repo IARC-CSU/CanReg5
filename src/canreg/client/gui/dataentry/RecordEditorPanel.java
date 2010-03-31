@@ -1058,7 +1058,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         }
         // TODO: Make dynamic result codes
         if (checkVariableListElement != null) {
-            if (resultCode == null){
+            if (resultCode == null) {
                 resultCode = ResultCode.NotDone;
             }
             if (resultCode.equals(ResultCode.OK)) {
@@ -1091,35 +1091,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
      */
     @Action
     public void runPersonSearch() {
-        try {
-            buildDatabaseRecord();
-            Map<String, Float> map =
-                    canreg.client.CanRegClientApp.getApplication().performDuplicateSearch((Patient) databaseRecord, null);
-            //remove patients with the same patientID -- already mapped
-            String patientRecordID = databaseRecord.getVariable(patientIDVariableListElement.getDatabaseVariableName()).toString();
+        autoFill();
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.PERSON_SEARCH));
 
-            String records = "";
-            for (String otherPatientRecordID : map.keySet()) {
-                // records += i + ": " + map.get(i) + "\n";
-                if (patientRecordID.equals(otherPatientRecordID)) {
-                    // do nothing
-//                } else if (patientRecordID.equals(otherPatientRecordID)) {
-//                   records += "Patient id: " + otherPatientRecordID + ", score: " + map.get(otherPatientRecordID) + "% (Already matched.)\n";
-                } else {
-                    records += "Patient id: " + otherPatientRecordID + ", score: " + map.get(otherPatientRecordID) + "%\n";
-                }
-            }
-            if (records.length() > 0) {
-                JOptionPane.showInternalMessageDialog(this, "Potential duplicates found:\n" + records);
-            } else {
-                JOptionPane.showInternalMessageDialog(this, "No potential duplicates found.");
-            }
-
-        } catch (SecurityException ex) {
-            Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**

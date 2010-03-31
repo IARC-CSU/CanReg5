@@ -8,6 +8,7 @@ package canreg.client.gui.dataentry;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.tools.PrintUtilities;
+import canreg.client.gui.tools.WaitFrame;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
@@ -23,6 +24,7 @@ import canreg.server.database.RecordLockedException;
 import canreg.server.database.Source;
 import canreg.server.database.Tumour;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
@@ -59,6 +61,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     public static final String CHANGE_PATIENT_RECORD = "changePatientRecord";
     public static final String CALC_AGE = "calcAge";
     public static final String AUTO_FILL = "autoFill";
+    public static final String PERSON_SEARCH = "person search";
     private Document doc;
     private Map<Integer, Dictionary> dictionary;
     private Set<DatabaseRecord> patientRecords;
@@ -863,7 +866,50 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     recordEditorPanel.refreshDatabaseRecord(sourceOfActionDatabaseRecord);
                 }
 //                 autoFillHelper.autoFill(autoFillList, sourceOfActionDatabaseRecord, otherDatabaseRecord, recordEditorPanel);
-
+            } else if (e.getActionCommand().equalsIgnoreCase(PERSON_SEARCH)) {
+                Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+                setCursor(hourglassCursor);
+                WaitFrame waitFrame = new WaitFrame();
+                waitFrame.setLabel(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("SEARCHING..."));
+                waitFrame.setIndeterminate(true);
+                desktopPane.add(waitFrame, javax.swing.JLayeredPane.POPUP_LAYER);
+                waitFrame.setVisible(true);
+                waitFrame.setLocation((desktopPane.getWidth() - waitFrame.getWidth()) / 2, (desktopPane.getHeight() - waitFrame.getHeight()) / 2);
+                try {
+                    RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
+                    DatabaseRecord sourceOfActionDatabaseRecord = recordEditorPanel.getDatabaseRecord();
+                    // buildDatabaseRecord();
+                    Map<String, Float> map = canreg.client.CanRegClientApp.getApplication().performDuplicateSearch((Patient) sourceOfActionDatabaseRecord, null);
+                    //remove patients with the same patientID -- already mapped
+                    String patientRecordID = (String) sourceOfActionDatabaseRecord.getVariable(patientIDVariableName);
+                    String records = "";
+                    for (String otherPatientRecordID : map.keySet()) {
+                        // records += i + ": " + map.get(i) + "\n";
+                        if (patientRecordID.equals(otherPatientRecordID)) {
+                            // do nothing
+                            //                } else if (patientRecordID.equals(otherPatientRecordID)) {
+                            //                   records += "Patient id: " + otherPatientRecordID + ", score: " + map.get(otherPatientRecordID) + "% (Already matched.)\n";
+                        } else {
+                            records += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("PATIENT ID: ") + otherPatientRecordID + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(", SCORE: ") + map.get(otherPatientRecordID) + "%\n";
+                        }
+                    }
+                    waitFrame.dispose();
+                    Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+                    setCursor(normalCursor);
+                    if (records.length() > 0) {
+                        JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("POTENTIAL DUPLICATES FOUND:") + records);
+                    } else {
+                        JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("NO POTENTIAL DUPLICATES FOUND."));
+                        // recordEditorPanel.setPersonSearchStatus();
+                    }
+                } catch (SecurityException ex) {
+                    Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+                    setCursor(normalCursor);
+                }
             }
         }
     }
