@@ -406,10 +406,10 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             String rangeStart = rangeStartTextField.getText();
             String rangeEnd = rangeEndTextField.getText();
             if (rangeStart != null && rangeStart.trim().length() > 0) {
-                rangeStart=("'" + rangeStart + "'");
+                rangeStart = ("'" + rangeStart + "'");
             }
             if (rangeEnd != null && rangeEnd.trim().length() > 0) {
-                rangeEnd=("'" + rangeEnd + "'");
+                rangeEnd = ("'" + rangeEnd + "'");
             }
             personSearchHandlerID = CanRegClientApp.getApplication().initiateGlobalDuplicateSearch(
                     searcher, rangeStart, rangeEnd);
@@ -571,25 +571,35 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             JTable target = (JTable) evt.getSource();
             int rowNumber = target.getSelectedRow();
             int columnNumber = target.getSelectedColumn();
-            TableModel model = target.getModel();
-            Patient patient;
-            try {
-                patient = CanRegClientApp.getApplication().getPatientRecord("" + model.getValueAt(rowNumber, columnNumber), true);
-                editPatientID(patient.getVariable(patientIDlookupVariable).toString());
-            } catch (SQLException ex) {
-                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
-                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
-                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (Exception ex) {
-                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+            if (columnNumber == 0 || columnNumber == 1) {
+                // TableModel model = target.getModel();
+                Patient patient;
+                try {
+                    patient = CanRegClientApp.getApplication().getPatientRecord("" + target.getValueAt(rowNumber, columnNumber), false);
+//                  patient = CanRegClientApp.getApplication().getPatientRecord("" + model.getValueAt(rowNumber, columnNumber), false);
+                    editPatientID(patient.getVariable(patientIDlookupVariable).toString());
+                } catch (SQLException ex) {
+                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SecurityException ex) {
+                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-
         }
     }
 
-    private void editPatientID(String idString) {
+    /**
+     *
+     * @param idString
+     */
+    public void editPatientID(String idString) {
+        Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+        Cursor normalCursor = getCursor();
+        setCursor(hourglassCursor);
+
         String tableName = Globals.PATIENT_TABLE_NAME;
 
         RecordEditor recordEditor = new RecordEditor(desktopPane);
@@ -608,13 +618,19 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
 
             if (numberOfRecords == 0) {
                 /*
-                If we don't get any records with that ID - we create one.
+                If we don't get any records with that ID - we propose to create one.
                  */
-                record = new Patient();
-                record.setVariable(patientIDlookupVariable, idString);
-                CanRegClientApp.getApplication().saveRecord(record);
-                distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
-                numberOfRecords = distributedTableDescription.getRowCount();
+                int answer = JOptionPane.showInternalConfirmDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NO_PATIENT_WITH_THAT_ID_FOUND,_DO_YOU_WANT_TO_CREATE_ONE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("PATIENT_ID_NOT_FOUND"), JOptionPane.YES_NO_OPTION);
+                if (answer == JOptionPane.YES_OPTION) {
+                    record = new Patient();
+                    record.setVariable(patientIDlookupVariable, idString);
+                    CanRegClientApp.getApplication().saveRecord(record);
+                    distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+                    numberOfRecords = distributedTableDescription.getRowCount();
+                } else {
+                    setCursor(normalCursor);
+                    return;
+                }
             }
 
             rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
@@ -644,7 +660,9 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                     tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true);
                     for (DatabaseRecord rec : tumourRecords) {
                         // store them in a set, so we don't show them several times
-                        set.add(rec);
+                        if (rec != null) {
+                            set.add(rec);
+                        }
                     }
                 }
                 if (set.isEmpty()) {
@@ -658,8 +676,9 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                     recordEditor.addRecord(rec);
                 }
                 CanRegClientView.showAndPositionInternalFrame(desktopPane, recordEditor);
+                CanRegClientView.maximizeHeight(desktopPane, recordEditor);
             } else {
-                JOptionPane.showMessageDialog(rootPane, "Record not found", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD_NOT_FOUND"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             }
         } catch (SQLException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -669,6 +688,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            setCursor(normalCursor);
         }
     }
 

@@ -606,7 +606,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             dbile.setDatabaseTableName(Globals.PATIENT_TABLE_NAME);
             dbile.setMainVariable(serverToolbox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()));
             filter.setRangeDatabaseIndexedListElement(dbile);
-
+            filter.setRangeStart(rangeStart);
+            filter.setRangeEnd(rangeEnd);
             dataDescription = getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
             resultSetID = dataDescription.getResultSetID();
             gpsh.setDistributedTableDescription(dataDescription);
