@@ -728,17 +728,23 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 Object[] r = rowData[row];
                 int patientIDB = (Integer) r[0];
                 if (patientIDB != patientIDA) {
-                    patientB = (Patient) getPatient(patientIDB, false);
-                    float score = searcher.compare(patient, patientB);
-                    if (score > threshold) {
-                        patientIDScoreMap.put((String) patientB.getVariable(patientRecordIDvariableName), score);
-                        // debugOut("Found patient id: " + patientB.getVariable(patientRecordIDvariableName) + ", score: " + score + "%");
-                    } else {
-                        // debugOut("Not found " + patientB.getVariable(patientRecordIDvariableName) + " " + score);
+                    try {
+                        patientB = (Patient) getPatient(patientIDB, false);
+                        float score = searcher.compare(patient, patientB);
+                        if (score > threshold) {
+                            patientIDScoreMap.put((String) patientB.getVariable(patientRecordIDvariableName), score);
+                            // debugOut("Found patient id: " + patientB.getVariable(patientRecordIDvariableName) + ", score: " + score + "%");
+                        } else {
+                            // debugOut("Not found " + patientB.getVariable(patientRecordIDvariableName) + " " + score);
+                        }
+                    } catch (RecordLockedException ex) {
+                        Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
-        } catch (Exception ex) {
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return patientIDScoreMap;
