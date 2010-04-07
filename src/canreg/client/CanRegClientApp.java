@@ -492,7 +492,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         return canreg.client.dataentry.Import.importFile(task, doc, map, file, server, io);
     }
 
-        /**
+    /**
      *
      * @param task
      * @param doc
@@ -808,7 +808,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 try {
                     records[j] = (Tumour) getRecord(id, lookUpTableName, lock);
                 } catch (RecordLockedException recordLockedException) {
-                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record "+ id+ " already locked?", recordLockedException);
+                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record " + id + " already locked?", recordLockedException);
                 }
             }
         }
@@ -818,6 +818,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public Tumour getTumourRecordBasedOnTumourID(String idString, boolean lock) throws RemoteException, SecurityException, SQLException, RecordLockedException, Exception {
         Tumour[] records = null;
+        Tumour tumourToReturn = null;
         String lookUpTableName = "";
         DatabaseFilter filter = new DatabaseFilter();
         String lookUpColumnName = "";
@@ -831,31 +832,35 @@ public class CanRegClientApp extends SingleFrameApplication {
         DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, lookUpTableName);
         int numberOfRecords = distributedTableDescription.getRowCount();
 
-        // Retrieve all rows
-        rows = retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
+        if (numberOfRecords > 0) {
+            // Retrieve all rows
+            rows = retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
 
-        String[] columnNames = distributedTableDescription.getColumnNames();
+            String[] columnNames = distributedTableDescription.getColumnNames();
 
-        boolean found = false;
-        int idColumnNumber = 0;
-        while (!found && idColumnNumber < columnNames.length) {
-            found = columnNames[idColumnNumber++].equalsIgnoreCase(lookUpColumnName);
-        }
-
-        if (found) {
-            int id;
-            records = new Tumour[numberOfRecords];
-            idColumnNumber--;
-            for (int j = 0; j < numberOfRecords; j++) {
-                id = (Integer) rows[j][idColumnNumber];
-                records[j] = (Tumour) getRecord(id, lookUpTableName, lock);
+            boolean found = false;
+            int idColumnNumber = 0;
+            while (!found && idColumnNumber < columnNames.length) {
+                found = columnNames[idColumnNumber++].equalsIgnoreCase(lookUpColumnName);
             }
-        } else {
-            records = new Tumour[numberOfRecords];
-            records[0]= null;
+
+            if (found) {
+                int id = 0;
+                records = new Tumour[numberOfRecords];
+                idColumnNumber--;
+                for (int j = 0; j < numberOfRecords; j++) {
+                    id = (Integer) rows[j][idColumnNumber];
+                    records[j] = (Tumour) getRecord(id, lookUpTableName, lock);
+                }
+                try {
+                    tumourToReturn = records[0];
+                } catch (java.lang.ArrayIndexOutOfBoundsException aiobe) {
+                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record " + id + " already locked?", aiobe);
+                }
+            }
         }
         releaseResultSet(distributedTableDescription.getResultSetID());
-        return records[0];
+        return tumourToReturn;
     }
 
     /**
