@@ -14,10 +14,14 @@ import canreg.client.gui.components.VariablesExportDetailsPanel;
 import canreg.client.gui.tools.TableColumnAdjuster;
 import canreg.client.gui.tools.XTableColumnModel;
 import canreg.common.DatabaseFilter;
+import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DateHelper;
 import canreg.common.Globals;
 import canreg.common.GregorianCalendarCanReg;
 import canreg.server.database.Dictionary;
+import canreg.server.database.RecordLockedException;
+import canreg.server.database.Source;
+import canreg.server.database.Tumour;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,8 +34,10 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -418,6 +424,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         } else {
             chooser = new JFileChooser(path);
         }
+        exportSourceInformationCheckBox.setVisible(false);
     }
 
     /**
@@ -579,7 +586,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     || tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
                 exportSourceInformationCheckBox.setEnabled(false);
             } else {
-                exportSourceInformationCheckBox.setEnabled(true);
+                // disable the export source information tool...
+                exportSourceInformationCheckBox.setEnabled(false);
             }
         }
     }
@@ -625,11 +633,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         private boolean correctUnknown = false;
         private boolean exportSources = false;
         int maxNumberOfSourcesPerTumour = 0;
+        private int tumourIDcolumn;
+        private Set<String> sourceVariableNames;
 
         WriteFileActionTask(String fileName, org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to WriteFileActionTask fields, here.
             super(app);
 
             Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
@@ -677,11 +684,37 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+
             // Export the sorces?
             if (exportSourceInformationCheckBox.isSelected()) {
                 try {
                     exportSources = true;
                     maxNumberOfSourcesPerTumour = CanRegClientApp.getApplication().getDatabaseStats().getMaxNumberOfSourcesPerTumourRecord();
+                    Enumeration<TableColumn> columns = tableColumnModel.getColumns(false);
+                    boolean found = false;
+
+                    DatabaseVariablesListElement tumourIDdbvle = CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString());
+
+                    while (tumourIDdbvle != null && !found && columns.hasMoreElements()) {
+                        TableColumn column = columns.nextElement();
+                        String header = column.getIdentifier().toString();
+                        found = tumourIDdbvle.getDatabaseVariableName().equalsIgnoreCase(header);
+                        if (found) {
+                            for (int i = 0; i < columnCount; i++) {
+                                String name = resultTable.getColumnName(i);
+                                if (name.equalsIgnoreCase(header)) {
+                                    tumourIDcolumn = i;
+                                }
+                            }
+                        }
+                    }
+                    sourceVariableNames = new LinkedHashSet<String>();
+                    DatabaseVariablesListElement[] dbvls = CanRegClientApp.getApplication().getGlobalToolBox().getVariables();
+                    for (DatabaseVariablesListElement dbvle:dbvls){
+                        if (dbvle.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)){
+                            sourceVariableNames.add(dbvle.getDatabaseVariableName());
+                        }
+                    }
                     System.out.println("Max number of Sources: " + maxNumberOfSourcesPerTumour);
                     //Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, null, "Max number of Sources: "+ maxNumberOfSourcesPerTumour);
                 } catch (RemoteException ex) {
@@ -690,7 +723,6 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-
         }
 
         @Override
@@ -749,6 +781,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 }
                 // add the source bits if needed
                 if (exportSources) {
+                    for (int i=0;i<maxNumberOfSourcesPerTumour;i++){
+                        for (String header:sourceVariableNames){
+                            line += separatingString+header;
+                        }
+                    }
                 }
 
                 bw.write(line + "\n");
@@ -824,6 +861,27 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     }
                     // if we should export the sources we do that here...
                     if (exportSources) {
+                        String tumourID = resultTable.getValueAt(row, tumourIDcolumn) + "";
+                        Tumour tumour;
+                        try {
+                            tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false);
+                            for (Source source : tumour.getSources()) {
+                                for (String variableName : sourceVariableNames) {
+                                    line += separatingString + source.getVariable(variableName);
+                                }
+                            }
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (RecordLockedException ex) {
+                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
+                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
                     }
                     setProgress(100 * row / rowCount);
                     bw.write(line + "\n");
