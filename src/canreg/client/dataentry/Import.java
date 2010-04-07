@@ -509,6 +509,7 @@ public class Import {
                     }
 
                     // see if this thumour exists in the database already
+                    // TODO: Implement this using arrays and getTumourRexords instead
                     Tumour tumour2 = null;
                     try {
                         tumour2 = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(
