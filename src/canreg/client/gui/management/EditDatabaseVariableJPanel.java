@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * EditDatabaseVariableJPanel.java
  *
  * Created on 06-Jan-2009, 16:15:30

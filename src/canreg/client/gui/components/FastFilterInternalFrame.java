@@ -255,7 +255,7 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
     DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
     if (dictionaryPopUp && (valueTextField.equals(evt.getSource()) || valueTextField2.equals(evt.getSource())) && dbvle.getVariableType().equalsIgnoreCase("dict")) {
         if (possibleValuesMap == null) {
-            JOptionPane.showInternalMessageDialog(this, "Empty dictionary.", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/FastFilterInternalFrame").getString("EMPTY_DICTIONARY"), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/FastFilterInternalFrame").getString("WARNING"), JOptionPane.WARNING_MESSAGE);
         } else {
             DictionaryEntry[] possibleValuesArray;
 

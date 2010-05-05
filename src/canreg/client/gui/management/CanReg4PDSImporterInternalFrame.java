@@ -35,6 +35,7 @@ public class CanReg4PDSImporterInternalFrame extends javax.swing.JInternalFrame 
     private JDesktopPane dtp;
     private PopulationDataset[] worldPopulations;
     private Map<Integer, PopulationDataset> populationDatasets;
+    private String PDS_FILE_EXTENSION = "PDS";
 
     /** Creates new form CanReg4SystemConverterInternalFrame */
     public CanReg4PDSImporterInternalFrame(JDesktopPane dtp, Map<Integer, PopulationDataset> populationDatasets) {
@@ -61,7 +62,7 @@ public class CanReg4PDSImporterInternalFrame extends javax.swing.JInternalFrame 
             chooser = new JFileChooser(Globals.CANREG4_SYSTEM_FOLDER);
         }
         // Filter only the DEF-files.
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("CANREG4 PDS FILE"), "PDS");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("CANREG4 PDS FILE"), PDS_FILE_EXTENSION);
         chooser.addChoosableFileFilter(filter);
     }
 

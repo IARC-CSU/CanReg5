@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * PreviewFilePanel.java
  *
  * Created on 14-Jan-2010, 13:39:33

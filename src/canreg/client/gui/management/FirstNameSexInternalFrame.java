@@ -214,7 +214,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
                 // the result computed by doInBackground().
                 recreateDatabaseOfFirstnameSexButton.setEnabled(true);
                 br.close();
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully restored default database of names.", "Database of names restored.", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/FirstNameSexInternalFrame").getString("SUCCESSFULLY_RESTORED_DEFAULT_DATABASE"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/FirstNameSexInternalFrame").getString("DATABASE_OF_NAMES_RESTORED."), JOptionPane.INFORMATION_MESSAGE);
                
             } catch (IOException ex) {
                 Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -233,9 +233,9 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
             names[0]="";
             names[1]="";
             names[2]="";
-            String maleHeader ="----------\n-  MALE  - \n----------\n\n";
-            String femaleHeader ="----------\n- FEMALE - \n----------\n\n";
-            String unisexHeader ="----------\n- UNISEX - \n----------\n\n";
+            String maleHeader ="----------\n-  "+java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/FirstNameSexInternalFrame").getString("MALE")+"  - \n----------\n\n";
+            String femaleHeader ="----------\n- "+java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/FirstNameSexInternalFrame").getString("FEMALE")+" - \n----------\n\n";
+            String unisexHeader ="----------\n- "+java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/FirstNameSexInternalFrame").getString("UNISEX")+" - \n----------\n\n";
             Set<String> set = map.keySet();
             for(String name:set){
                 Integer sex = map.get(name);

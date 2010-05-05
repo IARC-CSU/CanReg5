@@ -138,7 +138,7 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
     private void refreshTitles() {
         int index = 0;
         for (Component comp : sourcesTabbedPane.getComponents()) {
-            sourcesTabbedPane.setTitleAt(index, "Source: " + (index + 1));
+            sourcesTabbedPane.setTitleAt(index, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/SourcesPanel").getString("SOURCE:_") + (index + 1));
             index++;
         }
     }

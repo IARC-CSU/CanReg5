@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * ModifyDatabaseStructureInternalFrame.java
  *
  * Created on 20-Jan-2010, 14:15:41
@@ -590,9 +585,9 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             file.renameTo(oldFile.getAbsoluteFile());
         }
         systemDescription.saveSystemDescriptionXML(fileName);
-        String message = "System definition saved as " + fileName + ".";
+        String message = java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/ModifyDatabaseStructureInternalFrame").getString("SYSTEM_DEFINITION_SAVED_AS_") + fileName + ".";
         if (oldFile != null) {
-            message += "\nOld file backed up as " + oldFile.getAbsolutePath();
+            message += "\n" +java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/ModifyDatabaseStructureInternalFrame").getString("OLD_FILE_BACKED_UP_AS_")+ oldFile.getAbsolutePath();
         }
         JOptionPane.showMessageDialog(this, message, "Title", JOptionPane.INFORMATION_MESSAGE);
     }

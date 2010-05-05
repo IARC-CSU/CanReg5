@@ -573,15 +573,15 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 if (numberOfDays < 1) {
                     JOptionPane.showInternalMessageDialog(
                             CanRegClientApp.getApplication().getMainFrame().getContentPane(),
-                            "Number too low.",
-                            "Error in automatic backup options.", JOptionPane.ERROR_MESSAGE);
+                            java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("NUMBER_TOO_LOW."),
+                            java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("ERROR_IN_AUTOMATIC_BACKUP_OPTIONS."), JOptionPane.ERROR_MESSAGE);
                     valuesOK = false;
                 }
             } catch (NumberFormatException nfe) {
                 JOptionPane.showInternalMessageDialog(
                         CanRegClientApp.getApplication().getMainFrame().getContentPane(),
-                        numberOfDaysTextField.getText() + " is not a number.",
-                        "Error in automatic backup options.", JOptionPane.ERROR_MESSAGE);
+                        numberOfDaysTextField.getText() + " " + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("IS_NOT_A_NUMBER."),
+                        java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("ERROR_IN_AUTOMATIC_BACKUP_OPTIONS."), JOptionPane.ERROR_MESSAGE);
                 valuesOK = false;
             }
         }
@@ -628,12 +628,12 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             latestVersionTextField.setText(lv);
             latestVersionTextField.setEnabled(true);
             if (!lv.trim().equalsIgnoreCase(versionInstalledTextField.getText())) {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "You do not have the latest official version of CanReg5 installed.", "Message", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("NOT_THE_LATEST_VERSION_INSTALLED"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("MESSAGE"), JOptionPane.WARNING_MESSAGE);
             } else {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "You have the latest official version of CanReg5 installed.", "Message", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("LATEST_VERSION_INSTALLED."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
             }
         } else {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not find information on latest version.", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("NO_INFORMATION"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("MESSAGE"), JOptionPane.ERROR_MESSAGE);
         }
     }
 }

@@ -562,9 +562,9 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     @Action
     public void cancelAction() {
         if (importTask != null) {
-            if (JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you really want to cancel the import process?", "Please confirm.", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            if (JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("REALLY_CANCEL?"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("PLEASE_CONFIRM"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 importTask.cancel(true);
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Import of file interupted.", "Warning.", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("IMPORT_OF_FILE_INTERUPTED"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("WARNING"), JOptionPane.WARNING_MESSAGE);
                 importTask = null;
                 this.dispose();
             }
@@ -584,8 +584,9 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         // see if the report file already exists...
         File file = new File(reportFileNameTextField.getText());
         if (file.exists()) {
-            int result = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "The report file " + file.getAbsolutePath() + " already exists.\nDo you want to overwrite it?",
-                    "Report file exists. Overwrite?",
+            int result = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), 
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("THE_REPORT_FILE")+ file.getAbsolutePath() + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("ALREADY_EXISTS.")+" \n"+java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("DO_YOU_WANT_TO_OVERWRITE_IT?"),
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("REPORT_FILE_EXISTS._OVERWRITE?"),
                     JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.NO_OPTION) {
                 return null;
@@ -696,9 +697,9 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
             setCursor(normalCursor);
             if (!(Boolean) result) {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Something wrong with the file(s) " + fileListString + ".", "File(s) NOT successfully imported", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("SOMETHING_WRONG_WITH_THE_FILE(S)_") + fileListString + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("FILE(S)_NOT_SUCCESSFULLY_IMPORTED"), JOptionPane.WARNING_MESSAGE);
             } else {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully imported file(s) " + fileListString + ".", "File(s) successfully imported", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("SUCCESSFULLY_IMPORTED_FILE(S)_") + fileListString + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("FILE(S)_SUCCESSFULLY_IMPORTED"), JOptionPane.INFORMATION_MESSAGE);
             }
             importTask = null;
             dispose();
@@ -884,7 +885,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
      */
     @Action
     public void autodetectSeparatingCharacterAction() {
-        JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Not yet implemented.", "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("NOT_YET_IMPLEMENTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
     }
 
     /**

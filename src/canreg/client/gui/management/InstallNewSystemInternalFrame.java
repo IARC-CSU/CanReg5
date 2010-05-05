@@ -164,7 +164,7 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
      */
     @Action
     public void browseAction() {
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("XML files", "xml");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString("XML_FILES"), "xml");
  
         JFileChooser chooser = new JFileChooser(".");
         chooser.addChoosableFileFilter(filter);

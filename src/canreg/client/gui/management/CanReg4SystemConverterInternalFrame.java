@@ -32,6 +32,7 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
 
     private JFileChooser chooser;
     private JDesktopPane dtp;
+    private String DEF_FILE_EXTENSION = "DEF";
 
     /** Creates new form CanReg4SystemConverterInternalFrame */
     public CanReg4SystemConverterInternalFrame() {
@@ -45,7 +46,7 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
             chooser = new JFileChooser(Globals.CANREG4_SYSTEM_FOLDER);
         }
         // Filter only the DEF-files.
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("CANREG4 SYSTEM DEFINITION FILE"), "DEF");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("CANREG4 SYSTEM DEFINITION FILE"), DEF_FILE_EXTENSION);
         chooser.addChoosableFileFilter(filter);
 
         // get the available charsets
@@ -236,10 +237,10 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
             sdc.setFileEncoding((Charset) charsetsComboBox.getSelectedItem());
             sdc.convert(fileNameTextField.getText());
 
-            int addServer = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully created the CanReg5 system description: \'" +
+            int addServer = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("SUCCESSFULLY_CREATED_XML: ")+ "\'" +
                     Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR +
                     codeField.getText() + "\'.\n" +
-                    "Do you want to add it to your favourite servers?", "Success", JOptionPane.YES_NO_OPTION);
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("ADD_IT_TO_FAV_SERVERS?"), "Success", JOptionPane.YES_NO_OPTION);
 
             if (addServer == JOptionPane.YES_OPTION) {
                 LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -262,7 +263,7 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
             this.dispose();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not open file: \'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("COULD_NOT_OPEN_FILE:_")+"\'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

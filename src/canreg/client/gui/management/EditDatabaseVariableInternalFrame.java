@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * EditDatabaseVariableInternalFrame.java
  *
  * Created on 06-Jan-2009, 16:19:01

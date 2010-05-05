@@ -231,7 +231,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 fileName = chooser.getSelectedFile().getCanonicalPath();
                 File file = new File(fileName);
                 if (file.exists()) {
-                    int choice = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "File exists: " + fileName + ".\n Overwrite?", "File exists.", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    int choice = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("FILE_EXISTS")+": " + fileName + ".\n "+java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("OVERWRITE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("FILE_EXISTS")+".", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
                     if (choice == JOptionPane.CANCEL_OPTION) {
                         return;
                     } else if (choice == JOptionPane.NO_OPTION) {
@@ -267,7 +267,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
             } catch (IOException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully wrote the dictionaries to: " + fileName, "Dictionaries successfully written to file.", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("SUCCESSFULLY_WROTE_DICTIONARIES")+": " + fileName, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("DICTIONARIES_SUCCESSFULLY_WRITTEN"), JOptionPane.INFORMATION_MESSAGE);
             }
         }
         chooseDictionaryComboBox.setSelectedIndex(selectedDbdle);
@@ -331,8 +331,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 if (iterator.hasNext()){
                     errorString += "...and more.";
                 }
-
-                JOptionPane.showInternalMessageDialog(rootPane, errorString, "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showInternalMessageDialog(rootPane, errorString, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -393,7 +392,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 numberOfLinesShown++;
             }
             if (map.size() > Globals.MAX_DICTIONARY_DISPLAY_SIZE) {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Dictionary " + dbdle.getName() + " is too large.\nOnly the first " + Globals.MAX_DICTIONARY_DISPLAY_SIZE + " entries are displayed here.\nTo edit this dictionary please import it from file.", "Dictionary too large.", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("THE_DICTIONARY_") + dbdle.getName() + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("_IS_TOO_LARGE.")+"\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("ONLY_THE_FIRST_") + Globals.MAX_DICTIONARY_DISPLAY_SIZE + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("_ENTRIES_ARE_DISPLAYED_HERE.")+"\n"+java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("TO_EDIT_THIS..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("DICTIONARY_TOO_LARGE_FOR_DISPLAY"), JOptionPane.WARNING_MESSAGE);
                 editorTextArea.setEditable(false);
                 messageLabel.setVisible(true);
                 updateButton.setEnabled(false);

@@ -554,7 +554,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 tca.adjustColumns();
                 resultPanel.setVisible(true);
             } else if (result.equals("Not valid")) {
-                JOptionPane.showInternalMessageDialog(rootPane, "Not a valid filter.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showInternalMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/ExportReportInternalFrame").getString("NOT_A_VALID_FILTER"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, result);
             }
@@ -607,7 +607,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 fileName = chooser.getSelectedFile().getCanonicalPath();
                 File file = new File(fileName);
                 if (file.exists()) {
-                    int choice = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "File exists: " + fileName + ".\n Overwrite?", "File exists.", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    int choice = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/ExportReportInternalFrame").getString("FILE_EXISTS") +": "+ fileName + ".\n"+java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/ExportReportInternalFrame").getString("OVERWRITE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/ExportReportInternalFrame").getString("FILE_EXISTS")+".", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
                     if (choice == JOptionPane.CANCEL_OPTION) {
                         return null;
                     } else if (choice == JOptionPane.NO_OPTION) {

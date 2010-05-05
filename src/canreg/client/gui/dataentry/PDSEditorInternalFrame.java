@@ -632,7 +632,7 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             if (pds.getPopulationDatasetID() < 0) {
                 CanRegClientApp.getApplication().saveNewPopulationDataset(pds);
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully saved population dataset: " + pds.getPopulationDatasetName() + ".", "Population dataset successfully saved.", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_SAVED_PDS:_") + pds.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
             } else {
                 try {
                     CanRegClientApp.getApplication().deletePopulationDataset(pds.getPopulationDatasetID());
@@ -742,11 +742,11 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
 
     @Action
     public void deletePopulationDataSetAction() {
-        int result = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you really want to delete this population dataset: " + pds.getPopulationDatasetName() + ".", "Do you really want to delete this population dataset.", JOptionPane.YES_NO_OPTION);
+        int result = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("REALLY_DELETE:_") + pds.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("REALLY_DELETE?"), JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
             try {
                 CanRegClientApp.getApplication().deletePopulationDataset(pds.getPopulationDatasetID());
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Successfully saved population dataset: " + pds.getPopulationDatasetName() + ".", "Population dataset successfully saved.", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_SAVED_PDS:_") + pds.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException ex) {
                 Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {

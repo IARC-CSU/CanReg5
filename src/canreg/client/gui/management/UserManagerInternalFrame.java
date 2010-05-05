@@ -512,7 +512,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             String encrypted = PasswordService.getInstance().encrypt(user.getUserName());
             user.setPassword(encrypted.toCharArray());
             canreg.client.CanRegClientApp.getApplication().saveUser(user);
-            JOptionPane.showInternalMessageDialog(this, "User password reset. Temporary password is " + user.getUserName() + ".");
+            JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD_RESET")+"\n"+java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("TEMPORARY_PASSWORD_IS_") + user.getUserName() + ".");
         } catch (SystemUnavailableException ex) {
             Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -531,13 +531,13 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         if (user.getUserRightLevel() == Globals.UserRightLevels.SUPERVISOR) {
             okToDelete = canRemoveSupervisor(user);
             if (!okToDelete) {
-                JOptionPane.showInternalMessageDialog(this, "Not allowed to delete the last supervisor user.");
+                JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("CAN_NOT_DELETE_LAST_SUPERVISOR."));
             }
         }
         int id = user.getID();
         if (okToDelete && id > 0) {
             try {
-                canreg.client.CanRegClientApp.getApplication().deleteRecord(id, "USERS");
+                canreg.client.CanRegClientApp.getApplication().deleteRecord(id, Globals.USERS_TABLE_NAME);
             } catch (SQLException ex) {
                 Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RecordLockedException ex) {

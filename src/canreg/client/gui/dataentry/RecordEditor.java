@@ -232,7 +232,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 regnoString += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" (OBSOLETE)");
             }
             // patientTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
-            patientTabbedPane.addTab(dbr.toString() + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" RECORD ") + (patientTabbedPane.getTabCount() + 1), rePanel);
+            patientTabbedPane.addTab(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("PATIENT")+ ": " + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" RECORD ") + (patientTabbedPane.getTabCount() + 1), rePanel);
             if (!titleSet) {
                 Object patno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
                 String patnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("N/A");
@@ -259,7 +259,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 regnoString += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" (OBSOLETE)");
             }
             // tumourTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
-            tumourTabbedPane.addTab(dbr.toString() + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" RECORD ") + (tumourTabbedPane.getTabCount() + 1), rePanel);
+            tumourTabbedPane.addTab(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("TUMOUR") +" "+ java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" RECORD ") + (tumourTabbedPane.getTabCount() + 1), rePanel);
         }
         refreshShowObsolete();
     }
@@ -423,8 +423,17 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         DatabaseVariablesListElement[] variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
         for (DatabaseVariablesListElement dbvle : variablesInTable) {
             String type = dbvle.getVariableType();
-            if (type.equalsIgnoreCase("Number")) {
-                dbr.setVariable(dbvle.getDatabaseVariableName(), -1);
+            if (type.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
+                Object unk = dbvle.getUnknownCode();
+                int number = -1;
+                if (unk !=null){
+                    if (unk instanceof String){
+                       number = Integer.parseInt((String) unk);
+                    } else {
+                        number = (Integer) unk;
+                    }
+                }
+                dbr.setVariable(dbvle.getDatabaseVariableName(), number);
             } else {
                 dbr.setVariable(dbvle.getDatabaseVariableName(), "");
             }

@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * TableBuilderInternalFrame.java
  *
  * Created on 28-Apr-2009, 16:33:32
@@ -558,10 +553,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private void startYearChooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_startYearChooserPropertyChange
         if (startYearChooser.getYear() > endYearChooser.getYear()) {
             endYearChooser.setYear(startYearChooser.getYear());
-            warningLabel.setText("Start cannot be before end - moving end.");
+            warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("START_BEFORE_END_MOVING_END"));
         } else if (startYearChooser.getYear() <= endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE) {
             endYearChooser.setYear(startYearChooser.getYear() + Globals.MAX_POPULATION_DATASETS_IN_TABLE);
-            warningLabel.setText("Max span allowed is " + Globals.MAX_POPULATION_DATASETS_IN_TABLE + " - moving end.");
+            warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("MAX_SPAN_ALLOWED_IS_") + Globals.MAX_POPULATION_DATASETS_IN_TABLE + java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("_MOVING_END."));
         }
         updateRangeFields();
     }//GEN-LAST:event_startYearChooserPropertyChange
@@ -569,10 +564,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private void endYearChooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_endYearChooserPropertyChange
         if (startYearChooser.getYear() > endYearChooser.getYear()) {
             startYearChooser.setYear(endYearChooser.getYear());
-            warningLabel.setText("End cannot be before start - moving start.");
+            warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("END_BEFORE_START_MOVING_START"));
         } else if (startYearChooser.getYear() <= endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE) {
             startYearChooser.setYear(endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE);
-            warningLabel.setText("Max span allowed is " + Globals.MAX_POPULATION_DATASETS_IN_TABLE + " - moving start.");
+            warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("MAX_SPAN_ALLOWED_IS_") + Globals.MAX_POPULATION_DATASETS_IN_TABLE + java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("_MOVING_START."));
         }
         updateRangeFields();
     }//GEN-LAST:event_endYearChooserPropertyChange
@@ -753,7 +748,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         TableBuilderListElement tble = (TableBuilderListElement) tableTypeList.getSelectedValue();
 
         if (tble == null) {
-            JOptionPane.showMessageDialog(this, "No table type selected.", "No table type selected.", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("NO_TABLE_TYPE_SELECTED"), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("NO_TABLE_TYPE_SELECTED"), JOptionPane.ERROR_MESSAGE);
             return;
         } else if (tble.getEngineName().equalsIgnoreCase("incidencerates")) {
             tableBuilder = new AgeSpecificCasesPerHundredThousandTableBuilder();
@@ -767,7 +762,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         DistributedTableDescription tableDatadescription;
 
         if (tableBuilder == null) {
-            JOptionPane.showMessageDialog(this, "Table type not yet implemented.", "Table type not yet implemented.", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE_TYPE_NOT_YET_IMPLEMENTED"), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE_TYPE_NOT_YET_IMPLEMENTED"), JOptionPane.ERROR_MESSAGE);
             return;
         } else {
             String heading = headerOfTableTextField.getText();
@@ -846,7 +841,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
                     setCursor(normalCursor);
 
-                    JOptionPane.showMessageDialog(this, "Tables built.", "Tables built.", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."), JOptionPane.INFORMATION_MESSAGE);
 
                     // Opening the resulting files...
                     for (String resultFileName : filesGenerated) {
@@ -865,7 +860,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "Population set not compatible.", "No tables built.", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("POPULATION_SET_NOT_COMPATIBLE"), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("NO_TABLES_BUILT"), JOptionPane.ERROR_MESSAGE);
             }
         }
     }

@@ -35,7 +35,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="generalPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="editorsScrollPane" pref="697" max="32767" attributes="0"/>
+              <Component id="editorsScrollPane" pref="701" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

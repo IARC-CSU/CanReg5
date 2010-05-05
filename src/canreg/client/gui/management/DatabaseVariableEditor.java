@@ -34,35 +34,35 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
         standardVariableNameComboBox.setModel(new DefaultComboBoxModel(standardVariableNames));
         fillInStatusComboBox.setModel(new DefaultComboBoxModel(
                 new TranslatableListElement[]{
-                    new TranslatableListElement(Globals.FILL_IN_STATUS_MANDATORY_STRING, "Mandatory"),
-                    new TranslatableListElement(Globals.FILL_IN_STATUS_OPTIONAL_STRING, "Optional"),
-                    new TranslatableListElement(Globals.FILL_IN_STATUS_AUTOMATIC_STRING, "Automatic"),
-                    new TranslatableListElement(Globals.FILL_IN_STATUS_SYSTEM_STRING, "System")}));
+                    new TranslatableListElement(Globals.FILL_IN_STATUS_MANDATORY_STRING, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("MANDATORY")),
+                    new TranslatableListElement(Globals.FILL_IN_STATUS_OPTIONAL_STRING, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("OPTIONAL")),
+                    new TranslatableListElement(Globals.FILL_IN_STATUS_AUTOMATIC_STRING, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("AUTOMATIC")),
+                    new TranslatableListElement(Globals.FILL_IN_STATUS_SYSTEM_STRING, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("SYSTEM"))}));
         multiplePrimaryComboBox.setModel(new DefaultComboBoxModel(
                 new TranslatableListElement[]{
-                    new TranslatableListElement(Globals.MULTIPLEPRIMARY_COPY_OTHER_STRING, "Other"),
-                    new TranslatableListElement(Globals.MULTIPLEPRIMARY_COPY_INTERESTING_STRING, "Interesting"),
-                    new TranslatableListElement(Globals.MULTIPLEPRIMARY_COPY_PROBABLY_STRING, "Probably"),
-                    new TranslatableListElement(Globals.MULTIPLEPRIMARY_COPY_MUST_STRING, "Must")}));
+                    new TranslatableListElement(Globals.MULTIPLEPRIMARY_COPY_OTHER_STRING, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("OTHER")),
+                    new TranslatableListElement(Globals.MULTIPLEPRIMARY_COPY_INTERESTING_STRING, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("INTERESTING")),
+                    new TranslatableListElement(Globals.MULTIPLEPRIMARY_COPY_PROBABLY_STRING, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("PROBABLY")),
+                    new TranslatableListElement(Globals.MULTIPLEPRIMARY_COPY_MUST_STRING, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("MUST"))}));
         variableTypeComboBox.setModel(new DefaultComboBoxModel(
                 new TranslatableListElement[]{
-                    new TranslatableListElement(Globals.VARIABLE_TYPE_ALPHA_NAME, "Alphabetic"),
-                    new TranslatableListElement(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME, "Asian text"),
-                    new TranslatableListElement(Globals.VARIABLE_TYPE_DATE_NAME, "Date"),
-                    new TranslatableListElement(Globals.VARIABLE_TYPE_DICTIONARY_NAME, "Dictionary"),
-                    new TranslatableListElement(Globals.VARIABLE_TYPE_NUMBER_NAME, "Number"),
-                    new TranslatableListElement(Globals.VARIABLE_TYPE_TEXT_AREA_NAME, "Text area")}));
+                    new TranslatableListElement(Globals.VARIABLE_TYPE_ALPHA_NAME, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("ALPHABETIC")),
+                    new TranslatableListElement(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("ASIAN TEXT")),
+                    new TranslatableListElement(Globals.VARIABLE_TYPE_DATE_NAME, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("DATE")),
+                    new TranslatableListElement(Globals.VARIABLE_TYPE_DICTIONARY_NAME, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("DICTIONARY")),
+                    new TranslatableListElement(Globals.VARIABLE_TYPE_NUMBER_NAME, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("NUMBER")),
+                    new TranslatableListElement(Globals.VARIABLE_TYPE_TEXT_AREA_NAME, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("TEXT AREA"))}));
         tableComboBox.setModel(new DefaultComboBoxModel(
                 new TranslatableListElement[]{
-                    new TranslatableListElement(Globals.PATIENT_TABLE_NAME, "Patient"),
-                    new TranslatableListElement(Globals.TUMOUR_TABLE_NAME, "Tumour"),
-                    new TranslatableListElement(Globals.SOURCE_TABLE_NAME, "Source")
+                    new TranslatableListElement(Globals.PATIENT_TABLE_NAME, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("PATIENT")),
+                    new TranslatableListElement(Globals.TUMOUR_TABLE_NAME, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("TUMOUR")),
+                    new TranslatableListElement(Globals.SOURCE_TABLE_NAME, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("SOURCE"))
                 }));
         dictionaryComboBox.setModel(new DefaultComboBoxModel(new DatabaseDictionaryListElement[]{
                     new DatabaseDictionaryListElement()
                 }));
         groupComboBox.setModel(new DefaultComboBoxModel(new DatabaseGroupsListElement[]{
-                    new DatabaseGroupsListElement("Default", 1, 1)
+                    new DatabaseGroupsListElement(java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("DEFAULT"), 1, 1)
                 }));
     }
 
@@ -386,7 +386,7 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
         try {
             int length = Integer.parseInt(variableLengthTextField.getText());
             if (!Globals.VARIABLE_TYPE_NUMBER_NAME.equalsIgnoreCase(databaseVariablesListElement.getVariableType()) && length<=0){
-                throw new DatabaseVariablesListException(databaseVariablesListElement,"Variable length can't be 0 or less.");
+                throw new DatabaseVariablesListException(databaseVariablesListElement,java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("VARIABLE_LENGHT_LESS_THAN_0."));
             }
             databaseVariablesListElement.setVariableLength(length);
         } catch (NumberFormatException nfe) {

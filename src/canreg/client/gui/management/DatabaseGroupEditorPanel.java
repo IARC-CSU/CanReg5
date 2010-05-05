@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * DatabaseGroupEditorPanel.java
  *
  * Created on 26-Jan-2010, 15:23:47

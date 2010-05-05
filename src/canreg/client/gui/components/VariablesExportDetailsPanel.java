@@ -6,6 +6,7 @@
 package canreg.client.gui.components;
 
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.Globals;
 import canreg.server.database.Dictionary;
 
 /**
@@ -28,7 +29,7 @@ public class VariablesExportDetailsPanel extends javax.swing.JPanel {
 
     private void setVariableType(String type) {
 
-        if (type.equalsIgnoreCase("Dict")) {
+        if (type.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME)) {
             dictionaryDescriptionCheckBox.setVisible(true);
             if (variable != null && variable.isDictionaryCompound()) {
                 dictionaryCategoryCheckBox.setVisible(true);

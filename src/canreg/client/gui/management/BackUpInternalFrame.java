@@ -130,7 +130,7 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
             Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
             setCursor(hourglassCursor);
             performBackupButton.setEnabled(false);
-            textArea.setText("Backing up database... Please wait.");
+            textArea.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/BackUpInternalFrame").getString("BACKING_UP_DATABASE...") + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/BackUpInternalFrame").getString("PLEASE_WAIT."));
         }
 
         @Override
@@ -143,7 +143,7 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
         protected void succeeded(Object result) {
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
             setCursor(normalCursor);
-            textArea.setText(textArea.getText() + "\nBacked up database to " + backupPath + ".");
+            textArea.setText(textArea.getText() + "\n" +java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/BackUpInternalFrame").getString("BACKED_UP_TO_") + backupPath + ".");
         }
     }
 

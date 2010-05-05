@@ -6,6 +6,7 @@
 package canreg.client.gui.components;
 
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.Globals;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class DisplayVariablesPanel extends javax.swing.JPanel {
             if (dble.getStandardVariableName() != null) {
                 keyVariableNames.add(dble.getDatabaseVariableName().toUpperCase());
             }
-            if (dble.getFillInStatus().equalsIgnoreCase("Mandatory")) {
+            if (dble.getFillInStatus().equalsIgnoreCase(Globals.FILL_IN_STATUS_MANDATORY_STRING)) {
                 mandatoryVariableNames.add(dble.getDatabaseVariableName().toUpperCase());
             }
             // Add it to the all list

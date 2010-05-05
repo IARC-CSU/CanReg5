@@ -9,6 +9,7 @@ import canreg.client.dataentry.DictionaryHelper;
 import canreg.client.gui.dataentry.RecordEditorPanel;
 import canreg.client.gui.tools.MaxLengthDocument;
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.Globals;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
 import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
@@ -393,7 +394,7 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
     public synchronized Object getValue() {
         Object valueObject = null;
         String valueString = codeTextField.getText();
-        if (databaseListElement.getVariableType().equalsIgnoreCase("Number")) {
+        if (databaseListElement.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
             if (valueString.trim().length() > 0) {
                 try {
                     valueObject = Integer.parseInt(valueString.trim());
@@ -421,10 +422,10 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
             splitPane1.remove(1);
         }
         String fillInStatus = databaseListElement.getFillInStatus();
-        if (fillInStatus.equalsIgnoreCase("Automatic")) {
+        if (fillInStatus.equalsIgnoreCase(Globals.FILL_IN_STATUS_AUTOMATIC_STRING)) {
             codeTextField.setFocusable(false);
             codeTextField.setEditable(false);
-        } else if (fillInStatus.equalsIgnoreCase("Mandatory")) {
+        } else if (fillInStatus.equalsIgnoreCase(Globals.FILL_IN_STATUS_MANDATORY_STRING)) {
             codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
         }
 
@@ -433,7 +434,7 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
         categoryTextField.setVisible(false);
         setMaximumLength(databaseListElement.getVariableLength());
 
-        mandatory = databaseListElement.getFillInStatus().equalsIgnoreCase("Mandatory");
+        mandatory = databaseListElement.getFillInStatus().equalsIgnoreCase(Globals.FILL_IN_STATUS_MANDATORY_STRING);
 
         codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
 

@@ -74,7 +74,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         patientIDTumourTablelookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName();
         tumourIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
 
-        resultTableModel = new DefaultTableModel(new String[]{"Patient A Record ID", "Patient B Record ID", "Match %"}, 0) {
+        resultTableModel = new DefaultTableModel(new String[]{java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("PATIENT A RECORD ID"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("PATIENT B RECORD ID"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("MATCH %")}, 0) {
 
             Class[] types = new Class[]{
                 java.lang.String.class, java.lang.String.class, java.lang.Float.class
@@ -109,7 +109,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             public void internalFrameClosing(InternalFrameEvent e) {
                 int option = JOptionPane.NO_OPTION;
                 if (personSearcherRunning) {
-                    option = JOptionPane.showConfirmDialog(null, "Really close?\nThe person search under way will be interupted.", "Really close?", JOptionPane.YES_NO_OPTION);
+                    option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("REALLY CLOSE?")+"\n"+java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("THE PERSON SEARCH UNDER WAY WILL BE INTERUPTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("REALLY CLOSE?"), JOptionPane.YES_NO_OPTION);
                     if (option == JOptionPane.YES_OPTION) {
                         interruptDuplicateSearchAction();
                         close();

@@ -145,7 +145,7 @@ public class RestoreInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public Task okAction() {
         if (folderNameTextField.getText().trim().length()==0){
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Please specify a folder name.", "Error", JOptionPane.ERROR_MESSAGE);      
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("PLEASE SPECIFY A FOLDER NAME."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             return null;
         }
             this.dispose();
@@ -188,20 +188,20 @@ public class RestoreInternalFrame extends javax.swing.JInternalFrame {
             String resultString = (String) result;
             
             if (resultString.equals("security exception")){
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "You don't have the user level to do this.", "Error", JOptionPane.ERROR_MESSAGE);      
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("YOU DON'T HAVE THE USER LEVEL TO DO THIS."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else if (resultString.equals("remote exception")){
                 // You don't have the user level to do this...
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Server error.", "Error", JOptionPane.ERROR_MESSAGE);       
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("SERVER ERROR."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else if (resultString.equals("no name")){
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Please specify a folder name.", "Error", JOptionPane.ERROR_MESSAGE);      
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("PLEASE SPECIFY A FOLDER NAME."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else if (resultString.equals("shutdown failed")){
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not shut down the database.", "Error", JOptionPane.ERROR_MESSAGE);      
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("COULD NOT SHUT DOWN THE DATABASE."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else if (resultString.equals("failed")){
                 // Restore not successfull
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Restore not successfull.", "Error", JOptionPane.ERROR_MESSAGE);      
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("RESTORE NOT SUCCESSFULL."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else {
                 // All went well
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Restore successfull.\nPlease restart your CanReg system.", "Message", JOptionPane.INFORMATION_MESSAGE);      
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("RESTORE SUCCESSFULL.")+"\n"+java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("PLEASE RESTART YOUR CANREG SYSTEM."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
