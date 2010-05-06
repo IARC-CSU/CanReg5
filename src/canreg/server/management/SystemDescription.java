@@ -7,15 +7,18 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.common.Tools;
 import canreg.server.database.QueryGenerator;
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+// import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import java.io.File;
-import java.io.FileInputStream;
+// import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
-import org.xml.sax.InputSource;
+// import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -26,7 +29,7 @@ public class SystemDescription {
 
     private static boolean debug = Globals.DEBUG;
     private Document doc;
-    private DOMParser parser;
+    // private DOMParser parser;
     private String namespace = "ns3:";
     private String[] canreg4dateFormats = new String[]{"dd/mm/yyyy", "mm/dd/yyyy", "budhist", "yyyy/mm/dd"};
     private DatabaseDictionaryListElement[] dictionaryListElements;
@@ -40,10 +43,7 @@ public class SystemDescription {
      */
     public SystemDescription(String fileName) {
         try {
-            parser = new DOMParser();
-
             setSystemDescriptionXML(fileName);
-
             //For debuging purposes
             if (debug) {
                 //canreg.server.xml.Tools.writeXmlFile(doc, "test.xml");
@@ -54,6 +54,8 @@ public class SystemDescription {
                 debugOut(QueryGenerator.strCreateDictionaryTable(doc));
                 debugOut(QueryGenerator.strCreateTablesOfDictionaries(doc));
             }
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(SystemDescription.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SAXException ex) {
             Logger.getLogger(SystemDescription.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -67,9 +69,10 @@ public class SystemDescription {
      * @throws org.xml.sax.SAXException
      * @throws java.io.IOException
      */
-    public void setSystemDescriptionXML(String fileName) throws SAXException, IOException {
-        parser.parse(new InputSource(new FileInputStream(fileName)));
-        doc = parser.getDocument();
+    public void setSystemDescriptionXML(String fileName) throws SAXException, IOException, ParserConfigurationException {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        doc = db.parse(new File(fileName));
         groupListElements = Tools.getGroupsListElements(doc, namespace);
         dictionaryListElements = Tools.getDictionaryListElements(doc, namespace);
         variableListElements = Tools.getVariableListElements(doc, Globals.NAMESPACE, getDictionaryMap(), getGroupMap());

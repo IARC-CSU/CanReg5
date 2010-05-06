@@ -8,8 +8,7 @@ package canreg.client.gui.management;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -17,11 +16,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.swing.JDesktopPane;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -31,7 +32,6 @@ import org.xml.sax.SAXException;
 public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFrame {
 
     private Document doc;
-    private DOMParser parser;
     private JDesktopPane dtp;
     private TreeMap<String, EditDatabaseVariableJPanel> map;
     private String fileName;
@@ -46,13 +46,13 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
         this.dtp = dtp;
     }
 
-    public boolean loadSystemDefinition(String fileName) throws FileNotFoundException, SAXException, IOException {
+    public boolean loadSystemDefinition(String fileName) throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
         this.fileName = fileName;
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        doc = db.parse(new File(fileName));
         boolean success = false;
         variablesAndTableEditorsPanel.removeAll();
-        parser = new DOMParser();
-        parser.parse(new InputSource(new FileInputStream(fileName)));
-        doc = parser.getDocument();
         map = new TreeMap<String, EditDatabaseVariableJPanel>();
         DatabaseVariablesListElement[] dbles = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
         for (DatabaseVariablesListElement dble : dbles) {
