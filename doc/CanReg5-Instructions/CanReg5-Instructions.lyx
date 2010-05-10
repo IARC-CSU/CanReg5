@@ -200,7 +200,7 @@ The best way, but a more time consuming one, is to set up the source table
 
 \begin_layout Standard
 \align left
-You can of course choose not to use the source table, as well -- just record
+You can of course choose not to use the source table, as well - just record
  the source information per tumour like you would in CanReg4.
  This can be set up while migrating your system definition files.
  
@@ -217,30 +217,13 @@ Forum, Issue tracker, community site, twitter
 \align left
 We have created a project page at Project Kenai to help us keep track of
  issues with CanReg5: 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{http://kenai.com/projects/canreg}{
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://kenai.com/projects/canreg"
 
 \end_inset
 
-http://kenai.com/projects/canreg
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
- .
+.
  This consists of one open forum, one closed user forum and an issue tracker
  (standard BugZilla).
  To have access to the user forum and the issue tracker you need to create
@@ -273,29 +256,7 @@ version
 \series default
  of your CanReg5.
  This can be found on the bottom left of the welcome screen and on the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 About
@@ -304,29 +265,7 @@ About
 
  screen.
  (For example Version: 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 4.99.0b586
@@ -341,56 +280,22 @@ status collapsed
 Please be aware that some problems can be avoided by installing the latest
  version of the Java Runtime Environment (Version 6) before you start.
  (Available from 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{http://java.com/en/download/manual.jsp}{
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://java.com/en/download/manual.jsp"
 
 \end_inset
 
-http://java.com/en/download/manual.jsp
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
- .) 
+.) 
 \end_layout
 
 \begin_layout Standard
 \align left
 Videos documenting certain operations described below can be downloaded
  from: 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{http://www.iacr.com.fr/CanReg5/videos.zip}{
-\end_layout
-
-\end_inset
-
-http://www.iacr.com.fr/CanReg5/videos.zip
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.iacr.com.fr/CanReg5/videos.zip"
 
 \end_inset
 
@@ -402,26 +307,9 @@ status collapsed
 \align left
 Last, but not, least: CanReg has its own stream on twitter.
  Please follow: 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{http://twitter.com/canreg}{
-\end_layout
-
-\end_inset
-
-http://twitter.com/canreg
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://twitter.com/canreg"
 
 \end_inset
 
@@ -440,29 +328,7 @@ Getting hold of the latest version of CanReg
 \align left
 If you are running version 4.99.1 (or newer) of CanReg, you can launch CanReg
  and click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Options...
@@ -470,29 +336,7 @@ Options...
 \end_inset
 
 , go to the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Advanced
@@ -503,29 +347,7 @@ Advanced
  There you see your current version, i.e.
  4.99.1.
  If you click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Check
@@ -534,29 +356,7 @@ Check
 
  CanReg will look for an updated version.
  Afterwards you can click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Download latest version
@@ -583,30 +383,13 @@ Download latest version
 \align left
 If you have version 4.99.0 or no CanReg5 at all you can download the newest
  version from here: 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{http://www.iacr.com.fr/CanReg5/CanReg5.zip}{
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.iacr.com.fr/CanReg5/CanReg5.zip"
 
 \end_inset
 
-http://www.iacr.com.fr/CanReg5/CanReg5.zip
-\begin_inset ERT
-status collapsed
 
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Subsection
@@ -621,70 +404,14 @@ Logfile
 CanReg generates a logfile when you run it.
  This file is called canreg5client.log and is located in your home folder
  (on windows it is most probably under C:
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 Documents and Settings
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula $<$
-\end_inset
-
-your username
-\begin_inset Formula $>$
-\end_inset
-
- ) If you can attach this to emails with feedback/queries it would be very
- useful.
+<your username> ) If you can attach this to emails with feedback/queries
+ it would be very useful.
  Please note that this file is overwritten each time CanReg is started,
  so you need to 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 take it
@@ -861,33 +588,15 @@ Java Runtime Environment
 
 \begin_layout Standard
 \align left
-Install the latest Java Runtime environment (for example for Windows in
- June 2009 it was: jre-6u13-windows-i586-p-s.exe ) You can get that from
- here: 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{http://java.com/en/download/manual.jsp}{
-\end_layout
+Install the latest Java Runtime environment (May 2010: Version 6 Update
+ 20 ) You can get that from here:
+\begin_inset CommandInset href
+LatexCommand href
+target "http://java.com/en/download/manual.jsp"
 
 \end_inset
 
-http://java.com/en/download/manual.jsp
-\begin_inset ERT
-status collapsed
 
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Subsubsection
@@ -917,68 +626,16 @@ On Windows, the tool I recommend is the open sourced and free GSview.
 \begin_layout Standard
 \align left
 To run GS View you need to install Ghostscript first.
- This can be downloaded from here: 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{http://pages.cs.wisc.edu/~ghost/doc/GPL/gpl864.htm}{
-\end_layout
-
-\end_inset
-
-http://pages.cs.wisc.edu/
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-~{}
-\end_layout
-
-\end_inset
-
-ghost/doc/GPL/gpl864.htm
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
+ This can be for example be downloaded from here: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://pages.cs.wisc.edu/~ghost/doc/GPL/gpl864.htm"
 
 \end_inset
 
  (Scroll all the way down, under the heading Microsoft windows and download
  the 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 GPL Ghostscript 8.64 for 32-bit Windows (the common variety)
@@ -986,26 +643,9 @@ GPL Ghostscript 8.64 for 32-bit Windows (the common variety)
 \end_inset
 
  (
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe}{
-\end_layout
-
-\end_inset
-
-http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe"
 
 \end_inset
 
@@ -1020,65 +660,18 @@ Run this file to install Ghostscript.
 \begin_layout Standard
 \align left
 Then you can get GS View from here: 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{http://pages.cs.wisc.edu/~ghost/gsview/get49.htm}{
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://pages.cs.wisc.edu/~ghost/gsview/get49.htm"
 
 \end_inset
 
-http://pages.cs.wisc.edu/
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-~{}
-\end_layout
-
-\end_inset
-
-ghost/gsview/get49.htm
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
- Â (Most probably, you should pick the Win32 self extracting archive - the
+ (Most probably, you should pick the Win32 self extracting archive - the
  first download option.
  
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe}{
-\end_layout
-
-\end_inset
-
-http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe"
 
 \end_inset
 
@@ -1122,120 +715,26 @@ If you wish to un-install CanReg5, delete the following folders (or rename
 \end_inset
 
 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
+\backslash
 
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 Documents and Settings
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
+<your username>
 \backslash
-backslash}
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula $<$
-\end_inset
-
-your username
-\begin_inset Formula $>$
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 .CanRegClient
 \begin_inset Newline newline
 \end_inset
 
 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
+\backslash
 
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 Documents and Settings
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
+<your username>
 \backslash
-backslash}
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula $<$
-\end_inset
-
-your username
-\begin_inset Formula $>$
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 .CanRegServer
-\begin_inset Newline newline
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Subsection
@@ -1289,29 +788,7 @@ Included is the dictionary for the training system located in the demo-folder
  With this you can get a demo-system up and running to test some data entry.
  To run this demo system, install the TRN-file to set up the system.
  Afterwards you should import the dictionary using 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Data Entry
@@ -1319,29 +796,7 @@ Data Entry
 \end_inset
 
  - 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
-\begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
+\begin_inset Quotes erd
 \end_inset
 
 Edit dictionary
@@ -1349,29 +804,7 @@ Edit dictionary
 \end_inset
 
  and 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Import complete dictionary from a file
@@ -1393,29 +826,7 @@ Install a new CanReg5 system
 \align left
 If you want to install an already provided system definition (for example
  the demo system TRN) please click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Install New System
@@ -1469,29 +880,7 @@ First import the variables of CanReg 4 to CanReg 5 - the system definition
 \begin_layout Standard
 \align left
 Go to 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Tool
@@ -1499,29 +888,7 @@ Tool
 \end_inset
 
  in CanReg5 menu and click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Convert system definition
@@ -1546,29 +913,7 @@ Convert system definition
 \begin_layout Standard
 \align left
 Do 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Browse
@@ -1577,65 +922,15 @@ Browse
 
  to find your CanReg 4 system definition file.
  (This is a file located in the folder 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
+\backslash
 
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 CR4SHARE
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 CANREG4
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 CR4-SYST
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
  followed by your 3 letter registry code i.e.
  TRN whose name is ending in .DEF (i.e.
  CR4-TRN.DEF).) 
@@ -1644,29 +939,7 @@ backslash}
 \begin_layout Standard
 \align left
 Select your CanReg4 file and double click it or click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Open
@@ -1680,29 +953,7 @@ Open
 \begin_layout Standard
 \align left
 Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Convert
@@ -1717,29 +968,7 @@ Convert
 \align left
 The program will then ask you if you want to add this server to your favourites.
  Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Yes
@@ -1796,29 +1025,7 @@ The program presents an initial proposal that you might agree with, but
 \begin_layout Standard
 \align left
 Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Save
@@ -1839,65 +1046,13 @@ Optional: Before you proceed to the next step and launch the server you
  it in a text editor or a dedicated XML editor.
  The file is located in your user folder under .CanRegServer.
  (On my machine, for example, running Windows XP it is under: C:
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 Documents and Settings
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 morten
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 .CanRegServer
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 System.)
 \size default
  
@@ -1952,29 +1107,7 @@ Note: Before using this tool it is highly recommended to perform a backup
 \begin_layout Standard
 \align left
 For now please use 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Set up new database
@@ -2101,29 +1234,7 @@ Name:
 Type:
 \series default
  This can either be 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Simple
@@ -2131,29 +1242,7 @@ Simple
 \end_inset
 
  or 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Compound
@@ -2162,29 +1251,7 @@ Compound
 
 .
  A 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Simple
@@ -2193,29 +1260,7 @@ Simple
 
  dictionary is a plain list of codes and corresponding labels, whereas a
  
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 compound
@@ -2381,29 +1426,7 @@ Group:
 Fill in status:
 \series default
  Can be set to 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Mandatory
@@ -2411,29 +1434,7 @@ Mandatory
 \end_inset
 
 , 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Optional
@@ -2441,29 +1442,7 @@ Optional
 \end_inset
 
 , 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Automatic
@@ -2471,29 +1450,7 @@ Automatic
 \end_inset
 
  or 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 System
@@ -2523,29 +1480,7 @@ Multiple Primary Copy:
 Variable Type:
 \series default
  Can be 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Alphabetic
@@ -2553,29 +1488,7 @@ Alphabetic
 \end_inset
 
  (for plain text), 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Asian text
@@ -2583,29 +1496,7 @@ Asian text
 \end_inset
 
  (legacy field, same as 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Alphabetic
@@ -2613,29 +1504,7 @@ Alphabetic
 \end_inset
 
 ), 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Date
@@ -2643,55 +1512,15 @@ Date
 \end_inset
 
 , 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
 \end_inset
 
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
+Dictionary
+\begin_inset Quotes erd
 \end_inset
 
-Dictionary, 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
+, 
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Number
@@ -2699,29 +1528,7 @@ Number
 \end_inset
 
  and 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Text Area
@@ -2749,29 +1556,7 @@ Variable Length:
 Dictionary:
 \series default
  If you chose 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Dictionary
@@ -2915,29 +1700,7 @@ Launching the CanReg server
 \begin_layout Standard
 \align left
 After clicking 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Login
@@ -2946,29 +1709,7 @@ Login
 
  on the welcome screen of CanReg you get the login screen.
  To launch the CanReg server click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Settings
@@ -2977,29 +1718,7 @@ Settings
 
 .
  Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Launch Server
@@ -3026,29 +1745,7 @@ Launch Server
 \align left
 If you get a java firewall query, please confirm that it is OK that java
  can comunicate through you firewall by clicking 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Unblock
@@ -3056,29 +1753,7 @@ Unblock
 \end_inset
 
 , 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 OK
@@ -3086,29 +1761,7 @@ OK
 \end_inset
 
  or 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Yes
@@ -3147,29 +1800,7 @@ Locally
 If you want to log in to a CanReg server running on your local machine,
  after either installing a CanReg5 system XML or converted your CanReg4
  system definition files you go to the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 System
@@ -3177,29 +1808,7 @@ System
 \end_inset
 
  tab of the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Login
@@ -3208,29 +1817,7 @@ Login
 
 -window and choose your server from the drop down list.
  (Most probably already selected.) (The default username is 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 morten
@@ -3238,29 +1825,7 @@ morten
 \end_inset
 
  and password is 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 ervik
@@ -3269,29 +1834,7 @@ ervik
 
 .
  (All in small letters with no double quotes.) Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Login
@@ -3304,29 +1847,7 @@ Login
 \begin_layout Standard
 \align left
 If you get an error message saying 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Could not log in to the CanReg server on localhost with the given credentials.
@@ -3336,29 +1857,7 @@ Could not log in to the CanReg server on localhost with the given credentials.
 , please make sure that you have entered the correct username and password
  and that the server is indeed running.
  (See 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Launching the CanReg server
@@ -3387,29 +1886,7 @@ If you want to log on to a CanReg server running on another machine in your
 \align left
 To find the IP address of a CanReg server you can go to the Settings tab
  on the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Login
@@ -3417,29 +1894,7 @@ Login
 \end_inset
 
 -window and tick 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Advanced
@@ -3447,29 +1902,7 @@ Advanced
 \end_inset
 
  to get access to some more advanced tools, like the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Get IP Address
@@ -3478,29 +1911,7 @@ Get IP Address
 
  tool.
  Click this and you will get a message saying 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 The IP address of (your machine) is www.xxx.yyy.zzz.
@@ -3512,29 +1923,7 @@ The IP address of (your machine) is www.xxx.yyy.zzz.
 \align left
 Launch CanReg on the machine you want to run CanReg on.
  Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Login
@@ -3542,29 +1931,7 @@ Login
 \end_inset
 
  to get to the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Login
@@ -3573,29 +1940,7 @@ Login
 
  screen.
  There you can click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Settings
@@ -3603,29 +1948,7 @@ Settings
 \end_inset
 
  and type the IP address, www.xxx.yyy.zzz, you found above in the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Server URL
@@ -3634,29 +1957,7 @@ Server URL
 
  field along with the system code for your registry.
  (For example TRN.) If you click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Add server to list
@@ -3672,29 +1973,7 @@ Add server to list
 \begin_layout Standard
 \align left
 Click the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 System
@@ -3704,29 +1983,7 @@ System
  tab and choose this networked server from the drop down list of servers,
  enter username and password.
  (The default username is 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 morten
@@ -3734,29 +1991,7 @@ morten
 \end_inset
 
  and password is 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 ervik
@@ -3765,29 +2000,7 @@ ervik
 
 .
  (All in small letters with no double quotes.) Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Login
@@ -3795,29 +2008,7 @@ Login
 \end_inset
 
  and you'll be logged on.) Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Login
@@ -3830,29 +2021,7 @@ Login
 \begin_layout Standard
 \align left
 If you get an error message saying 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Could not log in to the CanReg server on localhost with the given credentials.
@@ -3862,29 +2031,7 @@ Could not log in to the CanReg server on localhost with the given credentials.
 , please make sure that you have entered the correct username and password
  and that the server is indeed running.
  (See 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Launching the CanReg server
@@ -3898,29 +2045,7 @@ Launching the CanReg server
 \align left
 The next time you want to log on to this server all you have to do is launch
  CanReg, select this server, enter username and password and click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Login
@@ -3943,29 +2068,7 @@ Import the dictionaries
 If you are migrating from CanReg4 make sure to export the most updated dictionar
 y from your CanReg4 system.
  (In CanReg4: 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Data Entry
@@ -3973,29 +2076,7 @@ Data Entry
 \end_inset
 
 , 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Dictionary
@@ -4003,29 +2084,7 @@ Dictionary
 \end_inset
 
 , 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Export dictionary to text file
@@ -4040,29 +2099,7 @@ ary.
 \begin_layout Itemize
 \align left
 Go to 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 File
@@ -4070,29 +2107,7 @@ File
 \end_inset
 
 , 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Data Entry
@@ -4100,29 +2115,7 @@ Data Entry
 \end_inset
 
 , 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Edit dictionary
@@ -4147,29 +2140,7 @@ Edit dictionary
 \begin_layout Itemize
 \align left
 Click on 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Import complete dictionary from file
@@ -4205,29 +2176,7 @@ Do Preview
 \begin_layout Itemize
 \align left
 Tick 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 CanReg4 Format
@@ -4273,29 +2222,7 @@ Click OK.
 \begin_layout Itemize
 \align left
 Go back to 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 File
@@ -4303,29 +2230,7 @@ File
 \end_inset
 
 , 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Data Entry
@@ -4333,29 +2238,7 @@ Data Entry
 \end_inset
 
 , 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Edit dictionary
@@ -4382,29 +2265,7 @@ Make sure to export the most updated data from your CanReg4 system.
 \begin_layout Itemize
 \align left
 In CanReg4: 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Analysis
@@ -4412,29 +2273,7 @@ Analysis
 \end_inset
 
 , 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Export data
@@ -4447,29 +2286,7 @@ Export data
 \begin_layout Itemize
 \align left
 Tick 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Export all variables
@@ -4490,29 +2307,7 @@ Choose variables names short
 
 \series bold
 Under 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Export File options
@@ -4520,29 +2315,7 @@ Export File options
 \end_inset
 
  choose 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Comma separated variables
@@ -4557,29 +2330,7 @@ Comma separated variables
 \begin_layout Itemize
 \align left
 Untick 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Format date
@@ -4592,29 +2343,7 @@ Format date
 \begin_layout Itemize
 \align left
 Untick 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Correct Unknown
@@ -4627,29 +2356,7 @@ Correct Unknown
 \begin_layout Itemize
 \align left
 Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 write data to file
@@ -4659,29 +2366,7 @@ write data to file
  and pick a file name that you can find back easily in CanReg5.
  For example on the desktop.
  Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 save
@@ -4701,29 +2386,7 @@ Take a look at the data you have now exported and close CanReg4.
 \begin_layout Itemize
 \align left
 Back in CanReg5 do 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 File
@@ -4731,29 +2394,7 @@ File
 \end_inset
 
 , 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Data Entry
@@ -4761,29 +2402,7 @@ Data Entry
 \end_inset
 
  and 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Import Data
@@ -4809,29 +2428,7 @@ Import Data
 \align left
 The program will ask you if you have all your data in one file.
  Answer 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 yes
@@ -4845,29 +2442,7 @@ yes
 \begin_layout Itemize
 \align left
 Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Browse
@@ -4876,29 +2451,7 @@ Browse
 
  and locate the file from step A.
  Select it and click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Open
@@ -4910,29 +2463,7 @@ Open
  and that the file looks OK.
  If for example Arabic names are garbled you should try to choose another
  
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 File encoding
@@ -4948,29 +2479,7 @@ File encoding
 
 \series bold
 Set 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Separating character
@@ -5004,29 +2513,7 @@ Click Preview to see that the data looks OK.
 \begin_layout Itemize
 \align left
 Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Next
@@ -5034,29 +2521,7 @@ Next
 \end_inset
 
  (or select the tab 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Associate Variables
@@ -5080,29 +2545,7 @@ This lets you associate the variables in the file to import with the variables
 \begin_layout Itemize
 \align left
 Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Next
@@ -5110,29 +2553,7 @@ Next
 \end_inset
 
  (or select the tab 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Import File
@@ -5145,29 +2566,7 @@ Import File
 \begin_layout Itemize
 \align left
 Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Import
@@ -5182,29 +2581,7 @@ Import
 \begin_layout Itemize
 \align left
 Let CanReg5 import the data (this might take a while) and click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 OK
@@ -5218,29 +2595,7 @@ OK
 \begin_layout Itemize
 \align left
 Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Browse/Edit
@@ -5248,29 +2603,7 @@ Browse/Edit
 \end_inset
 
  and 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Refresh Table
@@ -5357,29 +2690,7 @@ Perform backup
 \begin_layout Standard
 \align left
 Under 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Management
@@ -5387,29 +2698,7 @@ Management
 \end_inset
 
  click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Backup
@@ -5434,29 +2723,7 @@ Backup
 \begin_layout Standard
 \align left
 Then click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Perform backup
@@ -5467,29 +2734,7 @@ Perform backup
  This creates the backup of the CanReg5 database on the server machine.
  If you are on the server machine, you can see the files you created by
  clicking 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Open folder containing Backup
@@ -5504,121 +2749,21 @@ CanReg server
  folder under Backup and 3 digit code of the registry and then the date
  of the backup.
  On my machine, for example, it is 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
 \end_inset
 
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
 C:
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 Documents and Settings
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 morten
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 .CanRegServer
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 Backup
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 TRN
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
-ensuremath{
-\backslash
-backslash}
-\end_layout
-
-\end_inset
-
 2009-01-14
 \begin_inset Quotes erd
 \end_inset
@@ -5639,29 +2784,7 @@ Restore from backup
 \align left
 If you are on the server machine you can restore the backup you created
  above by clicking 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Restore
@@ -5669,29 +2792,7 @@ Restore
 \end_inset
 
  in the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Management
@@ -5742,29 +2843,7 @@ To get to a data entry form either press Create New Record from the menu
 \begin_layout Standard
 \align left
 or enter a new record number in the browser and click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Edit Patient ID:
@@ -5791,29 +2870,7 @@ Edit Patient ID:
 This should resemble your CanReg4 data entry form, except that it is split
  in a patient part and a tumour part with a source part.
  Another thing to notice is the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Obsolete
@@ -5865,7 +2922,11 @@ To export your data go to Analysis -- Export Data/Reports:
 
 \begin_layout Standard
 \align left
-You will be presented with a screen that resembles the browse-screen: 
+You will be presented with a screen that resembles the browse-screen:
+\end_layout
+
+\begin_layout Standard
+\align center
 \begin_inset Graphics
 	filename 28.png
 	width 5.4785in
@@ -5888,29 +2949,7 @@ tups is not yet implemented.
 \begin_layout Standard
 \align left
 If you export data to a 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Tab Separated
@@ -6155,8 +3194,7 @@ Click save to save your population dataset.
  
 \end_layout
 
-\begin_layout Standard
-\align left
+\begin_layout Subsubsection
 
 \series bold
 Import population data set from CanReg4
@@ -6168,29 +3206,7 @@ Import population data set from CanReg4
 \align left
 Alternatively you can import population data sets from CanReg4.
  To do this you go to the Tools menu and choose 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Load CanReg4 Population Dataset
@@ -6249,7 +3265,15 @@ Then click Load and a confirmation message that the population dataset has
 
 \begin_layout Standard
 \align left
-Click OK.
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+OK
+\begin_inset Quotes erd
+\end_inset
+
+.
  
 \end_layout
 
@@ -6274,60 +3298,17 @@ Next step is to revise the population dataset and see to that it has been
 \begin_layout Standard
 \align left
 One important thing to do is to see to that the filter is correct.
- That for example the search variables are enclosed by 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-`
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-s.
- If you need to change anything in the dataset you need to 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
+ That for example the search variables are enclosed by 's.
+ If you need to change anything in the dataset you need to unlock it by
+ toggling the 
 \begin_inset Quotes eld
 \end_inset
 
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-Unlock
+Locked
 \begin_inset Quotes erd
 \end_inset
 
- it by toggling the Locked-toggle.
+-toggle.
  
 \end_layout
 
@@ -6421,29 +3402,7 @@ Click Population Data Set.
 \align left
 Then you can go to the Make tables tab to generate the actual tables.
  Click 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Generate post script files
@@ -6471,29 +3430,7 @@ Generate post script files
 \begin_layout Standard
 \align left
 You get a message saying, 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Tables built.
@@ -6517,31 +3454,14 @@ Tables built.
 
 \begin_layout Standard
 \align left
-Click OK and if you have a program that can 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{#_Tables}{
-\end_layout
+Click OK and if you have a program that can read PostScript (See page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "sub:Tables"
 
 \end_inset
 
-read PostScript
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
- files the tables will be displayed after you press OK.
+.) files the tables will be displayed after you press OK.
  
 \end_layout
 
@@ -6673,59 +3593,15 @@ Server
 Q: 
 \series default
 When I click the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Launch Server
 \begin_inset Quotes erd
 \end_inset
 
-/ 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
+/
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Test Connection
@@ -6737,29 +3613,7 @@ Test Connection
 more than 3 minutes
 \series default
  to launch the server and I get the message that the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Server [is] already running
@@ -6780,29 +3634,7 @@ A:
  Xenios found the following solution: On our PCs, we use Microsoft Internet
  Explorer 7.
  In the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Tools / Internet Options / Connections / LAN Settings
@@ -6810,29 +3642,7 @@ Tools / Internet Options / Connections / LAN Settings
 \end_inset
 
  we have a tick in the checkbox for 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Use a proxy server for your LAN
@@ -6841,29 +3651,7 @@ Use a proxy server for your LAN
 
  and the address and port of the proxy server filled in accordingly.
  I put a tick in the checkbox for 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Bypass proxy server for local addresses
@@ -6871,29 +3659,7 @@ Bypass proxy server for local addresses
 \end_inset
 
 , clicked the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Advanced
@@ -6901,29 +3667,7 @@ Advanced
 \end_inset
 
  button and typed the IP address of the PC (localhost) in the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Do not use proxy server for addresses beginning with:
@@ -6938,8 +3682,6 @@ Do not use proxy server for addresses beginning with:
 
 \series bold
 Conversion CanReg4 to CanReg5
-\series default
- 
 \end_layout
 
 \begin_layout Description
@@ -6948,7 +3690,7 @@ Conversion CanReg4 to CanReg5
 \series bold
 Q:
 \series default
- In what table should the variable age be stored? 
+ In what table should the variable age be stored?
 \end_layout
 
 \begin_layout Description
@@ -6971,29 +3713,7 @@ The tumour table.
 Q: 
 \series default
 Do I need to 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 install
@@ -7011,29 +3731,7 @@ install
 A: 
 \series default
 After converting the system you don't need to 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 install
@@ -7071,8 +3769,6 @@ Try exporting your data with a comma separated variables instead of the
 
 \series bold
 Dictionary
-\series default
- 
 \end_layout
 
 \begin_layout Description
@@ -7099,9 +3795,13 @@ ng to your system or do necessary modifications.
 \begin_layout Subsection
 
 \series bold
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Tables"
+
+\end_inset
+
 Tables
-\series default
- 
 \end_layout
 
 \begin_layout Description
@@ -7126,81 +3826,23 @@ A:
  to view them by default.
  On Windows the tool I recommend is the open sourced and free GSview.
  (Available from: 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{http://pages.cs.wisc.edu/~ghost/gsview/}{
-\end_layout
-
-\end_inset
-
-http://pages.cs.wisc.edu/
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-~{}
-\end_layout
-
-\end_inset
-
-ghost/gsview/
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://pages.cs.wisc.edu/~ghost/gsview/"
 
 \end_inset
 
  ) To run GS View you need to install Ghostscript first.
- This can be downloaded from here: http://pages.cs.wisc.edu/
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-~{}
-\end_layout
+ This can be downloaded from here: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://pages.cs.wisc.edu/~ghost/doc/GPL/gpl864.htm"
 
 \end_inset
 
-ghost/doc/GPL/gpl864.htm (Scroll all the way down, under the heading Microsoft
- windows and download the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
+ (Scroll all the way down, under the heading Microsoft windows and download
+ the 
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 GPL Ghostscript 8.64 for 32-bit Windows (the common variety)
@@ -7208,90 +3850,29 @@ GPL Ghostscript 8.64 for 32-bit Windows (the common variety)
 \end_inset
 
  (
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe}{
-\end_layout
-
-\end_inset
-
-http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+name "http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe"
+target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe"
 
 \end_inset
 
 ) Run this file to install Ghostscript.
  Then you can get GS View from here: 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{http://pages.cs.wisc.edu/~ghost/gsview/get49.htm}{
-\end_layout
-
-\end_inset
-
-http://pages.cs.wisc.edu/
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-~{}
-\end_layout
-
-\end_inset
-
-ghost/gsview/get49.htm
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+name "http://pages.cs.wisc.edu/~ghost/gsview/get49.htm"
+target "http://pages.cs.wisc.edu/~ghost/gsview/get49.htm"
 
 \end_inset
 
  (Most probably, you should pick the Win32 self extracting archive - the
  first download option.
  
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe}{
-\end_layout
-
-\end_inset
-
-http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
+\begin_inset CommandInset href
+LatexCommand href
+name "http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe"
+target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe"
 
 \end_inset
 
@@ -7303,8 +3884,6 @@ status collapsed
 
 \series bold
 Import
-\series default
- 
 \end_layout
 
 \begin_layout Description
@@ -7326,29 +3905,7 @@ A:
 If the data is from a program that does not code the data using Unicode
  (for example previous versions of CanReg) you need to specify the coding
  scheme/
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 codepage
@@ -7390,29 +3947,7 @@ The result set in the browser is sometimes very slow to scroll around in.
 \align left
 Temporary solution: Use filters to minimize the number of records shown
  at any time or only browse the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Patient
@@ -7420,29 +3955,7 @@ Patient
 \end_inset
 
  or the 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 Tumour
@@ -7473,29 +3986,7 @@ Category: Database/Browser
 \align left
 Server does not start if language is set to Turkish due to special rules
  in Turkish regarding 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 upper casing
