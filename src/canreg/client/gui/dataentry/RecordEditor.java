@@ -5,6 +5,7 @@
  */
 package canreg.client.gui.dataentry;
 
+import cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.tools.PrintUtilities;
@@ -23,6 +24,7 @@ import canreg.server.database.Patient;
 import canreg.server.database.RecordLockedException;
 import canreg.server.database.Source;
 import canreg.server.database.Tumour;
+import canreg.server.database.UnknownTableException;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
@@ -232,7 +234,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 regnoString += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" (OBSOLETE)");
             }
             // patientTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
-            patientTabbedPane.addTab(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("PATIENT")+ ": " + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" RECORD ") + (patientTabbedPane.getTabCount() + 1), rePanel);
+            patientTabbedPane.addTab(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("PATIENT") + ": " + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" RECORD ") + (patientTabbedPane.getTabCount() + 1), rePanel);
             if (!titleSet) {
                 Object patno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
                 String patnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("N/A");
@@ -259,7 +261,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 regnoString += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" (OBSOLETE)");
             }
             // tumourTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
-            tumourTabbedPane.addTab(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("TUMOUR") +" "+ java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" RECORD ") + (tumourTabbedPane.getTabCount() + 1), rePanel);
+            tumourTabbedPane.addTab(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("TUMOUR") + " " + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" RECORD ") + (tumourTabbedPane.getTabCount() + 1), rePanel);
         }
         refreshShowObsolete();
     }
@@ -426,9 +428,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             if (type.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
                 Object unk = dbvle.getUnknownCode();
                 int number = -1;
-                if (unk !=null){
-                    if (unk instanceof String){
-                       number = Integer.parseInt((String) unk);
+                if (unk != null) {
+                    if (unk instanceof String) {
+                        number = Integer.parseInt((String) unk);
                     } else {
                         number = (Integer) unk;
                     }
@@ -1030,40 +1032,40 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     public void changePatientID() {
         String requestedPatientID = JOptionPane.showInputDialog(null, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("PLEASE ENTER PATIENT ID:"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("CHANGE TO WHICH PATIENTID?"), JOptionPane.QUESTION_MESSAGE);
         if (requestedPatientID != null) {
-            /*try {
-            patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecordByID(requestedPatientID)
-            } catch (SQLException ex) {
-            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
-            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
-            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (Exception ex) {
-            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-            }
-             */ try {
-                for (DatabaseRecord patient : patientRecords) {
-                    patient = associatePatientRecordToPatientID(patient, requestedPatientID);
-                    saveRecord(patient);
+            Patient[] patientDatabaseRecord = null;
+            try {
+                patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecordsByID(requestedPatientID, false);
+                if (patientDatabaseRecord != null && patientDatabaseRecord.length>0) {
+                    for (DatabaseRecord patient : patientRecords) {
+                        patient = associatePatientRecordToPatientID(patient, requestedPatientID);
+                        saveRecord(patient);
+                    }
+                    for (DatabaseRecord tumour : tumourRecords) {
+                        tumour = associateTumourRecordToPatientID(tumour, requestedPatientID);
+                        saveRecord(tumour);
+                    }
+                    JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("RECORD MOVED."));
+                } else {
+                    JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("NO SUCH PATIENT ID."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("FAILED"), JOptionPane.WARNING_MESSAGE);
+                    changePatientID();
                 }
-                for (DatabaseRecord tumour : tumourRecords) {
-                    tumour = associateTumourRecordToPatientID(tumour, requestedPatientID);
-                    saveRecord(tumour);
-                }
-                JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("RECORD MOVED."));
-            } catch (SecurityException ex) {
+            } catch (canreg.server.database.RecordLockedException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
-                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("RECORD_LOCKED"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("RECORD_LOCKED"), JOptionPane.WARNING_MESSAGE);
             } catch (SQLException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RecordLockedException ex) {
+            } catch (RemoteException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnknownTableException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (DistributedTableDescriptionException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("NO SUCH PATIENT ID."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("FAILED"), JOptionPane.WARNING_MESSAGE);
+            // do nothing - cancel operation...
         }
-
     }
 
     private void releaseRecords() {
@@ -1071,72 +1073,215 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         for (DatabaseRecord record : patientRecords) {
             try {
                 Object idObj = record.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+
+
+
+
+
+
                 if (idObj != null) {
                     int id = (Integer) idObj;
                     canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME);
+
+
+
+
+
+
+
+
+
                 }
+
             } catch (RemoteException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             }
+
+
+
+
+
+
         }
         patientRecords.clear();
         // Release all tumour records held
+
+
+
+
+
+
         for (DatabaseRecord record : tumourRecords) {
             Tumour tumour = (Tumour) record;
             // Release all sources
+
+
+
+
+
+
             for (Source source : tumour.getSources()) {
                 try {
                     Object idObj = source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+
+
+
+
+
+
                     if (idObj != null) {
                         int id = (Integer) idObj;
                         canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.SOURCE_TABLE_NAME);
+
+
+
+
+
+
+
+
+
                     }
+
                 } catch (RemoteException ex) {
                     Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SecurityException ex) {
                     Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                 }
+
+
+
+
+
+
             }
             try {
                 Object idObj = tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+
+
+
+
+
+
                 if (idObj != null) {
                     int id = (Integer) idObj;
                     canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME);
+
+
+
+
+
+
+
+
+
                 }
+
             } catch (RemoteException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             }
+
+
+
+
+
+
         }
         tumourRecords.clear();
+
+
+
+
+
+
     }
 
     private void updateTumourSequences() {
         // first do the counting
         int totalTumours = 0;
-        for (int i = 0; i < tumourTabbedPane.getComponentCount(); i++) {
+
+
+
+
+
+
+        for (int i = 0; i
+                < tumourTabbedPane.getComponentCount(); i++) {
             RecordEditorPanel rep = (RecordEditorPanel) tumourTabbedPane.getComponentAt(i);
             Tumour tumour = (Tumour) rep.getDatabaseRecord();
+
+
+
+
+
+
             boolean obsolete = tumour.getVariable(tumourObsoleteVariableName).toString().equalsIgnoreCase(Globals.OBSOLETE_VALUE);
+
+
+
+
+
+
             if (!obsolete) {
                 totalTumours++;
+
+
+
+
+
+
             }
         }
         int tumourSequence = 0;
-        for (int i = 0; i < tumourTabbedPane.getComponentCount(); i++) {
+
+
+
+
+
+
+        for (int i = 0; i
+                < tumourTabbedPane.getComponentCount(); i++) {
             RecordEditorPanel rep = (RecordEditorPanel) tumourTabbedPane.getComponentAt(i);
             Tumour tumour = (Tumour) rep.getDatabaseRecord();
+
+
+
+
+
+
             boolean obsolete = tumour.getVariable(tumourObsoleteVariableName).toString().equalsIgnoreCase(Globals.OBSOLETE_VALUE);
+
+
+
+
+
+
             if (!obsolete) {
                 tumourSequence++;
                 tumour.setVariable(tumourSequenceVariableName, tumourSequence + "");
+
+
+
+
+
+
             } else {
                 tumour.setVariable(tumourSequenceVariableName, "-");
+
+
+
+
+
+
             }
             tumour.setVariable(tumourSequenceTotalVariableName, totalTumours + "");
+
+
+
         }
     }
 }
