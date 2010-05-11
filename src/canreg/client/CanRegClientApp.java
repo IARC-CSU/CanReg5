@@ -104,15 +104,15 @@ public class CanRegClientApp extends SingleFrameApplication {
         return server.deletePopulationDataset(populationDatasetID);
     }
 
-    public Patient getPatientRecord(String requestedPatientRecordID, boolean lock) throws SQLException, RemoteException, SecurityException, Exception {
+    public Patient getPatientRecord(String requestedPatientRecordID, boolean lock) throws SQLException, RemoteException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException {
         return (Patient) getRecordByID(requestedPatientRecordID, Globals.PATIENT_TABLE_NAME, lock);
     }
 
-    public Patient getPatientRecordByID(String requestedPatientID, boolean lock) throws SQLException, RemoteException, SecurityException, Exception {
+    public Patient getPatientRecordByID(String requestedPatientID, boolean lock) throws SQLException, RemoteException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException {
         return (Patient) getRecordByID(requestedPatientID, Globals.PATIENT_TABLE_NAME, lock);
     }
 
-    public Tumour getTumourRecord(String requestedPatientRecordID, boolean lock) throws SQLException, RemoteException, SecurityException, Exception {
+    public Tumour getTumourRecord(String requestedPatientRecordID, boolean lock) throws SQLException, RemoteException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException {
         return (Tumour) getRecordByID(requestedPatientRecordID, Globals.TUMOUR_TABLE_NAME, lock);
     }
 
@@ -1028,7 +1028,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         lockSet.add(recordID);
     }
 
-    public Patient[] getPatientRecordsByID(String recordID, boolean lock) throws SQLException, RemoteException, SecurityException, RecordLockedException, Exception {
+    public Patient[] getPatientRecordsByID(String recordID, boolean lock) throws SQLException, RemoteException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException {
         Patient[] records = null;
 
         String databaseRecordIDVariableName = null;
