@@ -2632,19 +2632,17 @@ You can import data from other programs than CanReg4 by using the import
 
 \begin_layout Itemize
 \align left
-Dates should be coded as year month day (yyyyMMdd) 
+Dates should be coded as year month day (yyyyMMdd)
 \end_layout
 
 \begin_layout Itemize
 \align left
 Topography in 3 digits ICD-O-3 with no leading C.
- 
 \end_layout
 
 \begin_layout Itemize
 \align left
 Morphology in 4 (or 5) digits ICD-O-3.
- 
 \end_layout
 
 \begin_layout Standard
