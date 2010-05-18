@@ -1,6 +1,7 @@
 %% LyX 1.6.5 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
 \documentclass[12pt,a4paper,twoside,english,portrait]{article}
+\usepackage[T1]{fontenc}
 \usepackage[latin1]{inputenc}
 \pagestyle{headings}
 \usepackage{color}
@@ -200,67 +201,67 @@ newest version from here: \href{http://www.iacr.com.fr/CanReg5/CanReg5.zip}{http
 \begin{flushleft}
 CanReg generates a logfile when you run it. This file is called canreg5client.log
 and is located in your home folder (on windows it is most probably
-under C:\textbackslash{}Documents and Settings\textbackslash{}\textless{}your
-username\textgreater{} ) If you can attach this to emails with feedback/queries
+under C:\textbackslash{}Documents and Settings\textbackslash{}<your
+username> ) If you can attach this to emails with feedback/queries
 it would be very useful. Please note that this file is overwritten
 each time CanReg is started, so you need to {}``take it'' just after,
 for example, your error occurs.%
 \begin{minipage}[t]{1\columnwidth}%
 Example log-file:
 \begin{lyxcode}
-\textless{}?xml~version=\char`\"{}1.0\char`\"{}~encoding=\char`\"{}windows-1252\char`\"{}~standalone=\char`\"{}no\char`\"{}?\textgreater{}
+<?xml~version=\textquotedbl{}1.0\textquotedbl{}~encoding=\textquotedbl{}windows-1252\textquotedbl{}~standalone=\textquotedbl{}no\textquotedbl{}?>
 
-\textless{}!DOCTYPE~log~SYSTEM~\char`\"{}logger.dtd\char`\"{}\textgreater{}
+<!DOCTYPE~log~SYSTEM~\textquotedbl{}logger.dtd\textquotedbl{}>
 
-\textless{}log\textgreater{}
+<log>
 
-\textless{}record\textgreater{}
+<record>
 \begin{lyxcode}
-\textless{}date\textgreater{}2009-06-25T16:09:27\textless{}/date\textgreater{}
+<date>2009-06-25T16:09:27</date>
 
-\textless{}millis\textgreater{}1245938967921\textless{}/millis\textgreater{}
+<millis>1245938967921</millis>
 
-\textless{}sequence\textgreater{}0\textless{}/sequence\textgreater{}
+<sequence>0</sequence>
 
-\textless{}logger\textgreater{}canreg.client.CanRegClientApp\textless{}/logger\textgreater{}
+<logger>canreg.client.CanRegClientApp</logger>
 
-\textless{}level\textgreater{}INFO\textless{}/level\textgreater{}
+<level>INFO</level>
 
-\textless{}class\textgreater{}canreg.client.CanRegClientApp\textless{}/class\textgreater{}
+<class>canreg.client.CanRegClientApp</class>
 
-\textless{}method\textgreater{}startup\textless{}/method\textgreater{}
+<method>startup</method>
 
-\textless{}thread\textgreater{}10\textless{}/thread\textgreater{}
+<thread>10</thread>
 
-\textless{}message\textgreater{}CanReg~version:~4.99.9b668~(20090625160546)\textless{}/message\textgreater{}
+<message>CanReg~version:~4.99.9b668~(20090625160546)</message>
 \end{lyxcode}
-\textless{}/record\textgreater{}
+</record>
 
-\textless{}record\textgreater{}
+<record>
 \begin{lyxcode}
-\textless{}date\textgreater{}2009-06-25T16:09:31\textless{}/date\textgreater{}
+<date>2009-06-25T16:09:31</date>
 
-\textless{}millis\textgreater{}1245938971265\textless{}/millis\textgreater{}
+<millis>1245938971265</millis>
 
-\textless{}sequence\textgreater{}1\textless{}/sequence\textgreater{}
+<sequence>1</sequence>
 
-\textless{}logger\textgreater{}canreg.server.management.SystemDescription\textless{}/logger\textgreater{}
+<logger>canreg.server.management.SystemDescription</logger>
 
-\textless{}level\textgreater{}INFO\textless{}/level\textgreater{}
+<level>INFO</level>
 
-\textless{}class\textgreater{}canreg.server.management.SystemDescription\textless{}/class\textgreater{}
+<class>canreg.server.management.SystemDescription</class>
 
-\textless{}method\textgreater{}debugOut\textless{}/method\textgreater{}
+<method>debugOut</method>
 
-\textless{}thread\textgreater{}11\textless{}/thread\textgreater{}
+<thread>11</thread>
 
-\textless{}message\textgreater{}create~table~APP.PATIENT~(~PRID~INTEGER~NOT~NULL~PRIMARY~KEY~GENERATED~ALWAYS~AS~IDENTITY~(START~WITH~1,~INCREMENT~BY~1),~NEXT\_RECORD\_DB\_ID~INTEGER,~LAST\_RECORD\_DB\_ID~INTEGER,~\char`\"{}PERS\char`\"{}~VARCHAR(1)~,~\char`\"{}FAMN\char`\"{}~VARCHAR(15)~,~\char`\"{}FIRSTN\char`\"{}~VARCHAR(16)~,~\char`\"{}MAIDN\char`\"{}~VARCHAR(10)~,~\char`\"{}SEX\char`\"{}~VARCHAR(1)~,~\char`\"{}BIRTHD\char`\"{}~INTEGER,~\char`\"{}TRIB\char`\"{}~VARCHAR(2)~,~\char`\"{}ADDR\char`\"{}~VARCHAR(3)~,~\char`\"{}OCCU\char`\"{}~VARCHAR(2)~,~\char`\"{}DLC\char`\"{}~INTEGER,~\char`\"{}STAT\char`\"{}~VARCHAR(1)~,~\char`\"{}OBSOLETEFLAGPATIENTTABLE\char`\"{}~INTEGER,~\char`\"{}PATIENTID\char`\"{}~VARCHAR(8)~NOT~NULL~,~\char`\"{}PATIENTRECORDID\char`\"{}~VARCHAR(8)~NOT~NULL~UNIQUE~,~\char`\"{}PATIENTUPDATEDBY\char`\"{}~VARCHAR(16)~,~\char`\"{}PATIENTUPDATEDATE\char`\"{}~INTEGER,~\char`\"{}PATIENTRECORDSTATUS\char`\"{}~INTEGER,~\char`\"{}PATIENTCHECKSTATUS\char`\"{}~INTEGER)~\textless{}/message\textgreater{}
+<message>create~table~APP.PATIENT~(~PRID~INTEGER~NOT~NULL~PRIMARY~KEY~GENERATED~ALWAYS~AS~IDENTITY~(START~WITH~1,~INCREMENT~BY~1),~NEXT\_RECORD\_DB\_ID~INTEGER,~LAST\_RECORD\_DB\_ID~INTEGER,~\textquotedbl{}PERS\textquotedbl{}~VARCHAR(1)~,~\textquotedbl{}FAMN\textquotedbl{}~VARCHAR(15)~,~\textquotedbl{}FIRSTN\textquotedbl{}~VARCHAR(16)~,~\textquotedbl{}MAIDN\textquotedbl{}~VARCHAR(10)~,~\textquotedbl{}SEX\textquotedbl{}~VARCHAR(1)~,~\textquotedbl{}BIRTHD\textquotedbl{}~INTEGER,~\textquotedbl{}TRIB\textquotedbl{}~VARCHAR(2)~,~\textquotedbl{}ADDR\textquotedbl{}~VARCHAR(3)~,~\textquotedbl{}OCCU\textquotedbl{}~VARCHAR(2)~,~\textquotedbl{}DLC\textquotedbl{}~INTEGER,~\textquotedbl{}STAT\textquotedbl{}~VARCHAR(1)~,~\textquotedbl{}OBSOLETEFLAGPATIENTTABLE\textquotedbl{}~INTEGER,~\textquotedbl{}PATIENTID\textquotedbl{}~VARCHAR(8)~NOT~NULL~,~\textquotedbl{}PATIENTRECORDID\textquotedbl{}~VARCHAR(8)~NOT~NULL~UNIQUE~,~\textquotedbl{}PATIENTUPDATEDBY\textquotedbl{}~VARCHAR(16)~,~\textquotedbl{}PATIENTUPDATEDATE\textquotedbl{}~INTEGER,~\textquotedbl{}PATIENTRECORDSTATUS\textquotedbl{}~INTEGER,~\textquotedbl{}PATIENTCHECKSTATUS\textquotedbl{}~INTEGER)~</message>
 \end{lyxcode}
-\textless{}/record\textgreater{}
+</record>
 
 ...
 
-\textless{}/log\textgreater{}
+</log>
 \end{lyxcode}
 %
 \end{minipage}
@@ -337,10 +338,10 @@ to keep the same directory structure as inside the zip-file.)
 \begin{flushleft}
 If you wish to un-install CanReg5, delete the following folders (or
 rename if you have anything valuable in them):\\
-\textbackslash{}\textbackslash{}Documents and Settings\textbackslash{}\textless{}your
-username\textgreater{}\textbackslash{}.CanRegClient\\
-\textbackslash{}\textbackslash{}Documents and Settings\textbackslash{}\textless{}your
-username\textgreater{}\textbackslash{}.CanRegServer
+\textbackslash{}\textbackslash{}Documents and Settings\textbackslash{}<your
+username>\textbackslash{}.CanRegClient\\
+\textbackslash{}\textbackslash{}Documents and Settings\textbackslash{}<your
+username>\textbackslash{}.CanRegServer
 \par\end{flushleft}
 
 
@@ -358,7 +359,7 @@ CanReg 5 Welcome window:
 \par\end{flushleft}
 
 \begin{center}
-\includegraphics[width=5.4785in,height=5.2792in]{2}
+\includegraphics[scale=0.5]{\string"C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegWelcomeScreen\string".eps}
 \par\end{center}
 
 
@@ -768,6 +769,10 @@ server is indeed running. (See {}``Launching the CanReg server''
 above.) 
 \par\end{flushleft}
 
+\begin{center}
+\includegraphics{\string"C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegLoginScreen\string".eps}
+\par\end{center}
+
 
 \subsubsection{In a network }
 
@@ -1076,7 +1081,7 @@ but this will be improved later.)
 \par\end{flushleft}
 
 \begin{center}
-\includegraphics[width=5.4785in,height=6.3417in]{26}
+\includegraphics[scale=0.5]{\string"C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/DataEntryExample\string".eps}
 \par\end{center}
 
 
@@ -1221,7 +1226,7 @@ Then fill the population dataset itself:
 \par\end{flushleft}
 
 \begin{center}
-\includegraphics[width=3.97917in,height=5.04167in]{35} 
+\includegraphics{\string"C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegPopSetEditor\string".eps}
 \par\end{center}
 
 \begin{flushleft}

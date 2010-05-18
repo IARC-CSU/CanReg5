@@ -765,9 +765,8 @@ CanReg 5 Welcome window:
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename 2.png
-	width 5.4785in
-	height 5.2792in
+	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegWelcomeScreen.png
+	scale 50
 
 \end_inset
 
@@ -1867,6 +1866,16 @@ Launching the CanReg server
  above.) 
 \end_layout
 
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegLoginScreen.png
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsubsection
 
 \series bold
@@ -2885,9 +2894,8 @@ Obsolete
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename 26.png
-	width 5.4785in
-	height 6.3417in
+	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/DataEntryExample.png
+	scale 50
 
 \end_inset
 
@@ -3171,13 +3179,11 @@ Then fill the population dataset itself:
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename 35.png
-	width 3.97917in
-	height 5.04167in
+	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegPopSetEditor.png
 
 \end_inset
 
- 
+
 \end_layout
 
 \begin_layout Standard
