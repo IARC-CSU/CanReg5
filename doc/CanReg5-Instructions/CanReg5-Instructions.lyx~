@@ -1,0 +1,4713 @@
+#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+%% ================================================================================
+%% This LaTeX file was created by AbiWord.                                         
+%% AbiWord is a free, Open Source word processor.                                  
+%% More information about AbiWord is available at http://www.abisource.com/        
+%% ================================================================================
+\usepackage{calc}\usepackage{fixltx2e}\usepackage{multicol}\usepackage[normalem]{ulem}%% Please revise the following command, if your babel
+%% package does not support English (US)
+\@ifundefined{definecolor}
+ {\usepackage{color}}{}
+\usepackage{hyperref}
+%% \lfoot{\today}
+\end_preamble
+\options portrait
+\use_default_options false
+\language english
+\inputencoding latin1
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize 12
+\spacing single
+\use_hyperref true
+\pdf_title "CanReg5 - Instructions"
+\pdf_author "Morten Johannes ERVIK"
+\pdf_subject "How to set up, run and work with CanReg5"
+\pdf_keywords "CanReg5, Cancer registration"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks true
+\pdf_pdfborder true
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle headings
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 0.png
+	width 2.24931in
+	height 2.24931in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\series bold
+Open source
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+By: Morten Johannes Ervik, IARC 
+\end_layout
+
+\begin_layout Standard
+\align center
+Version: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+
+\family sans
+\series bold
+Introduction
+\end_layout
+
+\begin_layout Standard
+\align left
+CanReg5 is an open source tool to input, store, check and analyse cancer
+ registry data.
+ It has modules to do data entry, quality control, consistency checks and
+ basic analysis of the data.
+ The main improvements from the previous version are the new database engine,
+ the improved multi user capacities and that the development is managed
+ like an open source project.
+ Also included is a tool to facilitate the set up of a new or modification
+ of an existing database by adding new variables, tailoring the data entry
+ forms etc.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Version 5 of CanReg is now ready for download.
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+A short introduction to the database structure in CanReg5
+\end_layout
+
+\begin_layout Standard
+\align left
+New in CanReg5 is the three level table structure.
+ Where CanReg4 stored everything in one big table of tumours, CanReg5 splits
+ this information in three tables: Patient, Tumour and Source.
+ For each patient, you can store as many tumour records as you need, and
+ for each tumour you can store as many source records as you need.
+ This allows us to do more with our databases, for example related to completene
+ss by counting number of sources, but it poses come problem that might require
+ manual intervention during the conversion process of a system from CanReg4
+ to CanReg5.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+For example, some of you might store multiple sources in each tumour record
+ in CanReg4.
+ This should be split into several source records for this tumour record
+ in CanReg5, but this is not an easy task to automate since all registries
+ that have opted for this have solved it in a different way in CanReg4.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+One way around this is to put all the fields related to the source table
+ in CanReg5 so that you are sure not to loose any data, and then start from
+ the date you start using CanReg5 to store multiple source records per tumour.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+The best way, but a more time consuming one, is to set up the source table
+ (by editing the system definition XML) to only contain the data you want
+ to store per source and then work on the exported file from CanReg4 and
+ import additional source information at a later stage.
+ (General import of data is not yet functioning adequately in CanReg5 -
+ only import & migration of old data.) 
+\end_layout
+
+\begin_layout Standard
+\align left
+You can of course choose not to use the source table, as well - just record
+ the source information per tumour like you would in CanReg4.
+ This can be set up while migrating your system definition files.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Forum, Issue tracker, community site, twitter
+\end_layout
+
+\begin_layout Standard
+\align left
+We have created a project page at Project Kenai to help us keep track of
+ issues with CanReg5: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://kenai.com/projects/canreg"
+
+\end_inset
+
+.
+ This consists of one open forum, one closed user forum and an issue tracker
+ (standard BugZilla).
+ To have access to the user forum and the issue tracker you need to create
+ an account at Project Kenai and ask to be associated with the CanReg project.
+ This is free of charge.
+ Using these tools allows you to see what error reports other CanReg users
+ have already filed and if solutions have already been proposed and also
+ discuss potential improvements for CanReg5.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+You can of course still send us emails.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+If you encounter any problems please provide a description of it along with
+ the specifications of your computer.
+ (Operating System (Windows XP, Vista, OSX, Linux?), memory, processor speed
+ etc.) Also it would be very useful if you can precise the 
+\series bold
+version
+\series default
+ and the
+\series bold
+ build code
+\series default
+ of your CanReg5.
+ This can be found on the bottom left of the welcome screen and on the 
+\begin_inset Quotes eld
+\end_inset
+
+About
+\begin_inset Quotes erd
+\end_inset
+
+ screen.
+ (For example Version: 
+\begin_inset Quotes eld
+\end_inset
+
+4.99.0b586
+\begin_inset Quotes erd
+\end_inset
+
+) 
+\end_layout
+
+\begin_layout Standard
+\align left
+Please be aware that some problems can be avoided by installing the latest
+ version of the Java Runtime Environment (Version 6) before you start.
+ (Available from 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://java.com/en/download/manual.jsp"
+
+\end_inset
+
+.) 
+\end_layout
+
+\begin_layout Standard
+\align left
+Videos documenting certain operations described below can be downloaded
+ from: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.iacr.com.fr/CanReg5/videos.zip"
+
+\end_inset
+
+ .
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Last, but not, least: CanReg has its own stream on twitter.
+ Please follow: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://twitter.com/canreg"
+
+\end_inset
+
+ for updates.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Getting hold of the latest version of CanReg
+\end_layout
+
+\begin_layout Standard
+\align left
+If you are running version 4.99.1 (or newer) of CanReg, you can launch CanReg
+ and click 
+\begin_inset Quotes eld
+\end_inset
+
+Options...
+\begin_inset Quotes erd
+\end_inset
+
+, go to the 
+\begin_inset Quotes eld
+\end_inset
+
+Advanced
+\begin_inset Quotes erd
+\end_inset
+
+ tab.
+ There you see your current version, i.e.
+ 4.99.1.
+ If you click 
+\begin_inset Quotes eld
+\end_inset
+
+Check
+\begin_inset Quotes erd
+\end_inset
+
+ CanReg will look for an updated version.
+ Afterwards you can click 
+\begin_inset Quotes eld
+\end_inset
+
+Download latest version
+\begin_inset Quotes erd
+\end_inset
+
+ to get the zip-file containing the most recent version of CanReg5.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 1.png
+	width 4.72917in
+	height 5.36458in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+If you have version 4.99.0 or no CanReg5 at all you can download the newest
+ version from here: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.iacr.com.fr/CanReg5/CanReg5.zip"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Logfile
+\end_layout
+
+\begin_layout Standard
+\align left
+CanReg generates a logfile when you run it.
+ This file is called canreg5client.log and is located in your home folder
+ (on windows it is most probably under C:
+\backslash
+Documents and Settings
+\backslash
+<your username> ) If you can attach this to emails with feedback/queries
+ it would be very useful.
+ Please note that this file is overwritten each time CanReg is started,
+ so you need to 
+\begin_inset Quotes eld
+\end_inset
+
+take it
+\begin_inset Quotes erd
+\end_inset
+
+ just after, for example, your error occurs.
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+Example log-file:
+\end_layout
+
+\begin_layout LyX-Code
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+\end_layout
+
+\begin_layout LyX-Code
+<!DOCTYPE log SYSTEM "logger.dtd">
+\end_layout
+
+\begin_layout LyX-Code
+<log>
+\end_layout
+
+\begin_layout LyX-Code
+<record>
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+<date>2009-06-25T16:09:27</date>
+\end_layout
+
+\begin_layout LyX-Code
+<millis>1245938967921</millis>
+\end_layout
+
+\begin_layout LyX-Code
+<sequence>0</sequence>
+\end_layout
+
+\begin_layout LyX-Code
+<logger>canreg.client.CanRegClientApp</logger>
+\end_layout
+
+\begin_layout LyX-Code
+<level>INFO</level>
+\end_layout
+
+\begin_layout LyX-Code
+<class>canreg.client.CanRegClientApp</class>
+\end_layout
+
+\begin_layout LyX-Code
+<method>startup</method>
+\end_layout
+
+\begin_layout LyX-Code
+<thread>10</thread>
+\end_layout
+
+\begin_layout LyX-Code
+<message>CanReg version: 4.99.9b668 (20090625160546)</message>
+\end_layout
+
+\end_deeper
+\begin_layout LyX-Code
+</record>
+\end_layout
+
+\begin_layout LyX-Code
+<record>
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+<date>2009-06-25T16:09:31</date>
+\end_layout
+
+\begin_layout LyX-Code
+<millis>1245938971265</millis>
+\end_layout
+
+\begin_layout LyX-Code
+<sequence>1</sequence>
+\end_layout
+
+\begin_layout LyX-Code
+<logger>canreg.server.management.SystemDescription</logger>
+\end_layout
+
+\begin_layout LyX-Code
+<level>INFO</level>
+\end_layout
+
+\begin_layout LyX-Code
+<class>canreg.server.management.SystemDescription</class>
+\end_layout
+
+\begin_layout LyX-Code
+<method>debugOut</method>
+\end_layout
+
+\begin_layout LyX-Code
+<thread>11</thread>
+\end_layout
+
+\begin_layout LyX-Code
+<message>create table APP.PATIENT ( PRID INTEGER NOT NULL PRIMARY KEY GENERATED
+ ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), NEXT_RECORD_DB_ID INTEGER,
+ LAST_RECORD_DB_ID INTEGER, "PERS" VARCHAR(1) , "FAMN" VARCHAR(15) , "FIRSTN"
+ VARCHAR(16) , "MAIDN" VARCHAR(10) , "SEX" VARCHAR(1) , "BIRTHD" INTEGER,
+ "TRIB" VARCHAR(2) , "ADDR" VARCHAR(3) , "OCCU" VARCHAR(2) , "DLC" INTEGER,
+ "STAT" VARCHAR(1) , "OBSOLETEFLAGPATIENTTABLE" INTEGER, "PATIENTID" VARCHAR(8)
+ NOT NULL , "PATIENTRECORDID" VARCHAR(8) NOT NULL UNIQUE , "PATIENTUPDATEDBY"
+ VARCHAR(16) , "PATIENTUPDATEDATE" INTEGER, "PATIENTRECORDSTATUS" INTEGER,
+ "PATIENTCHECKSTATUS" INTEGER) </message>
+\end_layout
+
+\end_deeper
+\begin_layout LyX-Code
+</record>
+\end_layout
+
+\begin_layout LyX-Code
+...
+\end_layout
+
+\begin_layout LyX-Code
+</log>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Installing and running CanReg 5
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Install necessary helper applications
+\end_layout
+
+\begin_layout Standard
+\align left
+Before you install and run CanReg5 for the first time it is recommended
+ that you install the following helper applications.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Java Runtime Environment
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Install the latest Java Runtime environment (May 2010: Version 6 Update
+ 20 ) You can get that from here:
+\begin_inset CommandInset href
+LatexCommand href
+target "http://java.com/en/download/manual.jsp"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+PostScript Viewer
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+To view the tables generated by CanReg5 are PostScipt files.
+ PostScript is an open standard, so you can use many different tools to
+ view them.
+ (You can in many cases even send them directly to a printer.) Mac OS X and
+ most Linux-distributions come with tools to view them by default.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+On Windows, the tool I recommend is the open sourced and free GSview.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+To run GS View you need to install Ghostscript first.
+ This can be for example be downloaded from here: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://pages.cs.wisc.edu/~ghost/doc/GPL/gpl864.htm"
+
+\end_inset
+
+ (Scroll all the way down, under the heading Microsoft windows and download
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+GPL Ghostscript 8.64 for 32-bit Windows (the common variety)
+\begin_inset Quotes erd
+\end_inset
+
+ (
+\begin_inset CommandInset href
+LatexCommand href
+target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe"
+
+\end_inset
+
+) 
+\end_layout
+
+\begin_layout Standard
+\align left
+Run this file to install Ghostscript.
+\end_layout
+
+\begin_layout Standard
+\align left
+Then you can get GS View from here: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://pages.cs.wisc.edu/~ghost/gsview/get49.htm"
+
+\end_inset
+
+ (Most probably, you should pick the Win32 self extracting archive - the
+ first download option.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe"
+
+\end_inset
+
+) 
+\end_layout
+
+\begin_layout Standard
+\align left
+Run this file to install GS View.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Install CanReg5
+\end_layout
+
+\begin_layout Standard
+\align left
+CanReg5 is distributed as a zip-archive.
+ To install it simply extract the content to a new folder, for example on
+ your desktop.
+ (It is important to keep the same directory structure as inside the zip-file.)
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Un-install CanReg5
+\end_layout
+
+\begin_layout Standard
+\align left
+If you wish to un-install CanReg5, delete the following folders (or rename
+ if you have anything valuable in them):
+\begin_inset Newline newline
+\end_inset
+
+
+\backslash
+
+\backslash
+Documents and Settings
+\backslash
+<your username>
+\backslash
+.CanRegClient
+\begin_inset Newline newline
+\end_inset
+
+
+\backslash
+
+\backslash
+Documents and Settings
+\backslash
+<your username>
+\backslash
+.CanRegServer
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Run CanReg5
+\end_layout
+
+\begin_layout Standard
+\align left
+Go to the folder you installed CanReg5 in and double click on the coffee
+ cup icon (CanReg.jar).
+ (
+\series bold
+If, at this point, CanReg5 does not start you might have to update your
+ Java Runtime Environment and retry
+\series default
+.
+ (See above.) 
+\end_layout
+
+\begin_layout Standard
+\align left
+CanReg 5 Welcome window:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegWelcomeScreen.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Demo system
+\end_layout
+
+\begin_layout Standard
+\align left
+Included is the dictionary for the training system located in the demo-folder
+ in the zip-file.
+ With this you can get a demo-system up and running to test some data entry.
+ To run this demo system, install the TRN-file to set up the system.
+ Afterwards you should import the dictionary using 
+\begin_inset Quotes eld
+\end_inset
+
+Data Entry
+\begin_inset Quotes erd
+\end_inset
+
+ - 
+\begin_inset Quotes erd
+\end_inset
+
+Edit dictionary
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+Import complete dictionary from a file
+\begin_inset Quotes erd
+\end_inset
+
+, before you start to enter data.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Install a new CanReg5 system
+\end_layout
+
+\begin_layout Standard
+\align left
+If you want to install an already provided system definition (for example
+ the demo system TRN) please click 
+\begin_inset Quotes eld
+\end_inset
+
+Install New System
+\begin_inset Quotes erd
+\end_inset
+
+.
+ CanReg5 will present you with the following message:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 3.png
+	width 4.20833in
+	height 1.30208in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Click browse to find the system definition file.
+ (If you want to use the TRN demo system look in demo/database and select
+ TRN.xml and click open and then Install.) 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Convert the CanReg4 system definitions
+\end_layout
+
+\begin_layout Standard
+\align left
+If you have a CanReg4 system you can use tools built into CanReg to help
+ you migrate this to CanReg5.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+First import the variables of CanReg 4 to CanReg 5 - the system definition
+ of CanReg4.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Go to 
+\begin_inset Quotes eld
+\end_inset
+
+Tool
+\begin_inset Quotes erd
+\end_inset
+
+ in CanReg5 menu and click 
+\begin_inset Quotes eld
+\end_inset
+
+Convert system definition
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 4.png
+	width 4.17708in
+	height 1.42708in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Do 
+\begin_inset Quotes eld
+\end_inset
+
+Browse
+\begin_inset Quotes erd
+\end_inset
+
+ to find your CanReg 4 system definition file.
+ (This is a file located in the folder 
+\backslash
+
+\backslash
+CR4SHARE
+\backslash
+CANREG4
+\backslash
+CR4-SYST
+\backslash
+ followed by your 3 letter registry code i.e.
+ TRN whose name is ending in .DEF (i.e.
+ CR4-TRN.DEF).) 
+\end_layout
+
+\begin_layout Standard
+\align left
+Select your CanReg4 file and double click it or click 
+\begin_inset Quotes eld
+\end_inset
+
+Open
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+Convert
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+The program will then ask you if you want to add this server to your favourites.
+ Click 
+\begin_inset Quotes eld
+\end_inset
+
+Yes
+\begin_inset Quotes erd
+\end_inset
+
+ here.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 5.png
+	width 5.4785in
+	height 3.1764in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+The next step is the trickiest one during the conversion.
+ Since we go from a tumour based database structure with only one big table
+ with all the tumour and patient related information to a structure with
+ both a table for tumour related information and patient related information
+ we need to specify what variable goes in what table of CanReg5.
+ We recommend putting the unique patient related information (name, date
+ of birth and follow-up variables) in the patient table, source information
+ in the Source table and pretty much the rest (tumour information, age,
+ address etc) in the tumour table.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 6.png
+	width 4.32292in
+	height 3.67708in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+The program presents an initial proposal that you might agree with, but
+ please go through one by one the variables and decide.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+Save
+\begin_inset Quotes erd
+\end_inset
+
+.
+ You have now created an XML file that describes your CanReg5 system.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\size footnotesize
+Optional: Before you proceed to the next step and launch the server you
+ can, if you want(!), manually edit this XML file you have created by opening
+ it in a text editor or a dedicated XML editor.
+ The file is located in your user folder under .CanRegServer.
+ (On my machine, for example, running Windows XP it is under: C:
+\backslash
+Documents and Settings
+\backslash
+morten
+\backslash
+.CanRegServer
+\backslash
+System.)
+\size default
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Setting up or modifying a CanReg system using the built in editor
+\end_layout
+
+\begin_layout Standard
+\align left
+To modify an existing CanReg system or set up a new one you can use tools
+ built into CanReg5.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 7.png
+	width 5.4785in
+	height 1.3639in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+They can be found under Tools -
+\begin_inset Formula $>$
+\end_inset
+
+ Database Structure.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\series bold
+Note: Before using this tool it is highly recommended to perform a backup
+ of your CanReg5 database!
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+For now please use 
+\begin_inset Quotes eld
+\end_inset
+
+Set up new database
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This will give you the Modify Database Structure window.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 8.png
+	width 5.4785in
+	height 1.0903in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Please click Load XML and either pick your own XML or, if you start from
+ scratch, the TRN.xml or DEF.xml found in the CanReg installation.
+ (You will need to load an existing XML to be able to create a working XML
+ for your CanReg system.) 
+\end_layout
+
+\begin_layout Standard
+\align left
+Please note that certain modifications done using this tool will impact
+ the structure of the CanReg database to such an extent that it will have
+ to be rebuilt afterwards.
+ Others like renaming groups, changing the displayed name of a variable
+ or reordering the variables are purely cosmetic and do not impact the database
+ structure as such.
+ If you wish to do changes to the structure of the database you'll need
+ to export your data prior to those changes, delete the database files of
+ the CanReg system, do required modifications using this tool or directly
+ in the XML, relaunching the CanReg server and then import the data (this
+ again will potentially have to be adapted to the structural changes).
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+When this has loaded you'll see all the info specifying this CanReg system.
+ On the top you can specify the registry name, registry code and region
+ of the registry.
+ Below you have a list of the Dictionaries, then the Groups and then the
+ Variables.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 9.png
+	width 5.4785in
+	height 7.884in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+To add a dictionary, group or variable, click add in the proper pane.
+ This will then appear as the last item in the corresponding list for you
+ to edit.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Clicking edit on any button related to a dictionary, group or variable brings
+ up the respective editor.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Modifying a dictionary
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 10.png
+	width 3.11458in
+	height 2.65625in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Using the dictionary editor you can modify any dictionary in CanReg5.
+ The fields are as follows: 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Name:
+\series default
+ The name of the dictionary 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Type:
+\series default
+ This can either be 
+\begin_inset Quotes eld
+\end_inset
+
+Simple
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+Compound
+\begin_inset Quotes erd
+\end_inset
+
+.
+ A 
+\begin_inset Quotes eld
+\end_inset
+
+Simple
+\begin_inset Quotes erd
+\end_inset
+
+ dictionary is a plain list of codes and corresponding labels, whereas a
+ 
+\begin_inset Quotes eld
+\end_inset
+
+compound
+\begin_inset Quotes erd
+\end_inset
+
+ dictionary as two levels of refinement.
+ For example the user can pick the two first digits and then the last digit,
+ as in the above example.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Full code length:
+\series default
+ The number of character the codes for this dictionary takes up in the database.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Code length:
+\series default
+ The number of characters in the first level of refinement in the case of
+ a compound dictionary.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Locked:
+\series default
+ Will you allow the super user to modify this dictionary using the tools
+ in CanReg, or should it be locked? 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Modifying a group
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 11.png
+	width 3.34375in
+	height 1.26042in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Using the group editor you can modify any group in CanReg5.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Name:
+\series default
+ The name of the group 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Modifying a variable
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 12.png
+	width 4.28125in
+	height 4.41667in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Using the dictionary editor you can modify any variable stored in the CanReg5
+ database.
+ The fields are as follows: 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Full name:
+\series default
+ The name of the variable as displayed in data entry forms etc.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Short name:
+\series default
+ The name of the variable in the database.
+ (This should be without any blanks and other special characters and reasonably
+ short.) 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+English name:
+\series default
+ It is useful to provide an English name for the variable in case you want
+ to collaborate with people in other countries.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Standard Variable Name:
+\series default
+ This maps the variable to a standard CanReg5 variable for the purpose of
+ edit checks and analysis.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Group:
+\series default
+ The choice of group only affects the display during data entry.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Fill in status:
+\series default
+ Can be set to 
+\begin_inset Quotes eld
+\end_inset
+
+Mandatory
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Optional
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Automatic
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+System
+\begin_inset Quotes erd
+\end_inset
+
+, depending on if you want to force the registrar to provide this information
+ before confirming the record.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Multiple Primary Copy:
+\series default
+ Legacy information.
+ Leave as other.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Variable Type:
+\series default
+ Can be 
+\begin_inset Quotes eld
+\end_inset
+
+Alphabetic
+\begin_inset Quotes erd
+\end_inset
+
+ (for plain text), 
+\begin_inset Quotes eld
+\end_inset
+
+Asian text
+\begin_inset Quotes erd
+\end_inset
+
+ (legacy field, same as 
+\begin_inset Quotes eld
+\end_inset
+
+Alphabetic
+\begin_inset Quotes erd
+\end_inset
+
+), 
+\begin_inset Quotes eld
+\end_inset
+
+Date
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Dictionary
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Number
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+Text Area
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Variable Length:
+\series default
+ The length of the variable in characters.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Dictionary:
+\series default
+ If you chose 
+\begin_inset Quotes eld
+\end_inset
+
+Dictionary
+\begin_inset Quotes erd
+\end_inset
+
+ as type of variable you'll have to choose a dictionary here.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Unknown code:
+\series default
+ Here you can specify the unknown code of this variable.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Table:
+\series default
+ Choose the table where this variable should be stored.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Set up search variables
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 13.png
+	width 5.4785in
+	height 3.4868in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Using this editor you can change the variables that come into play during
+ person search in CanReg5, and their respective weights and minimum match
+ criteria.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Coding
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 14.png
+	width 5.4785in
+	height 1.5014in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Here you can change some coding settings of your CanReg system.
+ (Not yet implemented.) 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Settings
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 15.png
+	width 5.4785in
+	height 1.2653in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Here you can change some settings of your CanReg system.
+ (Not yet implemented.) 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Saving the system
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+By clicking Save XML the system XML will be saved to the system folder of
+ CanReg under the name 
+\begin_inset Formula $<$
+\end_inset
+
+your system code
+\begin_inset Formula $>$
+\end_inset
+
+.xml (for example TRN.xml), ready for use.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Launching the CanReg server
+\end_layout
+
+\begin_layout Standard
+\align left
+After clicking 
+\begin_inset Quotes eld
+\end_inset
+
+Login
+\begin_inset Quotes erd
+\end_inset
+
+ on the welcome screen of CanReg you get the login screen.
+ To launch the CanReg server click 
+\begin_inset Quotes eld
+\end_inset
+
+Settings
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Click 
+\begin_inset Quotes eld
+\end_inset
+
+Launch Server
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 16.png
+	width 5.23958in
+	height 3.91667in
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+If you get a java firewall query, please confirm that it is OK that java
+ can comunicate through you firewall by clicking 
+\begin_inset Quotes eld
+\end_inset
+
+Unblock
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+OK
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+Yes
+\begin_inset Quotes erd
+\end_inset
+
+.
+ If this is the first time you launch the server on this machine it will
+ automatically create the database needed for CanReg5.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Login
+\end_layout
+
+\begin_layout Standard
+\align left
+After launching the server you can log on to your CanReg system.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Locally
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+If you want to log in to a CanReg server running on your local machine,
+ after either installing a CanReg5 system XML or converted your CanReg4
+ system definition files you go to the 
+\begin_inset Quotes eld
+\end_inset
+
+System
+\begin_inset Quotes erd
+\end_inset
+
+ tab of the 
+\begin_inset Quotes eld
+\end_inset
+
+Login
+\begin_inset Quotes erd
+\end_inset
+
+-window and choose your server from the drop down list.
+ (Most probably already selected.) (The default username is 
+\begin_inset Quotes eld
+\end_inset
+
+morten
+\begin_inset Quotes erd
+\end_inset
+
+ and password is 
+\begin_inset Quotes eld
+\end_inset
+
+ervik
+\begin_inset Quotes erd
+\end_inset
+
+.
+ (All in small letters with no double quotes.) Click 
+\begin_inset Quotes eld
+\end_inset
+
+Login
+\begin_inset Quotes erd
+\end_inset
+
+ and you'll be logged on.) 
+\end_layout
+
+\begin_layout Standard
+\align left
+If you get an error message saying 
+\begin_inset Quotes eld
+\end_inset
+
+Could not log in to the CanReg server on localhost with the given credentials.
+\begin_inset Quotes erd
+\end_inset
+
+, please make sure that you have entered the correct username and password
+ and that the server is indeed running.
+ (See 
+\begin_inset Quotes eld
+\end_inset
+
+Launching the CanReg server
+\begin_inset Quotes erd
+\end_inset
+
+ above.) 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegLoginScreen.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+In a network
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+If you want to log on to a CanReg server running on another machine in your
+ network you need to know the address of that machine.
+ (Either it's IP address or name on the network.) 
+\end_layout
+
+\begin_layout Standard
+\align left
+To find the IP address of a CanReg server you can go to the Settings tab
+ on the 
+\begin_inset Quotes eld
+\end_inset
+
+Login
+\begin_inset Quotes erd
+\end_inset
+
+-window and tick 
+\begin_inset Quotes eld
+\end_inset
+
+Advanced
+\begin_inset Quotes erd
+\end_inset
+
+ to get access to some more advanced tools, like the 
+\begin_inset Quotes eld
+\end_inset
+
+Get IP Address
+\begin_inset Quotes erd
+\end_inset
+
+ tool.
+ Click this and you will get a message saying 
+\begin_inset Quotes eld
+\end_inset
+
+The IP address of (your machine) is www.xxx.yyy.zzz.
+ (Most probably something like 10.0.0.x or 192.168.0.x.) Take a note of those numbers.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Launch CanReg on the machine you want to run CanReg on.
+ Click 
+\begin_inset Quotes eld
+\end_inset
+
+Login
+\begin_inset Quotes erd
+\end_inset
+
+ to get to the 
+\begin_inset Quotes eld
+\end_inset
+
+Login
+\begin_inset Quotes erd
+\end_inset
+
+ screen.
+ There you can click 
+\begin_inset Quotes eld
+\end_inset
+
+Settings
+\begin_inset Quotes erd
+\end_inset
+
+ and type the IP address, www.xxx.yyy.zzz, you found above in the 
+\begin_inset Quotes eld
+\end_inset
+
+Server URL
+\begin_inset Quotes erd
+\end_inset
+
+ field along with the system code for your registry.
+ (For example TRN.) If you click 
+\begin_inset Quotes eld
+\end_inset
+
+Add server to list
+\begin_inset Quotes erd
+\end_inset
+
+ the program will test the connection to the server and if this is OK this
+ network server will be added to the list of servers you can log in to from
+ this CanReg installation.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Click the 
+\begin_inset Quotes eld
+\end_inset
+
+System
+\begin_inset Quotes erd
+\end_inset
+
+ tab and choose this networked server from the drop down list of servers,
+ enter username and password.
+ (The default username is 
+\begin_inset Quotes eld
+\end_inset
+
+morten
+\begin_inset Quotes erd
+\end_inset
+
+ and password is 
+\begin_inset Quotes eld
+\end_inset
+
+ervik
+\begin_inset Quotes erd
+\end_inset
+
+.
+ (All in small letters with no double quotes.) Click 
+\begin_inset Quotes eld
+\end_inset
+
+Login
+\begin_inset Quotes erd
+\end_inset
+
+ and you'll be logged on.) Click 
+\begin_inset Quotes eld
+\end_inset
+
+Login
+\begin_inset Quotes erd
+\end_inset
+
+ and you'll be logged on.) 
+\end_layout
+
+\begin_layout Standard
+\align left
+If you get an error message saying 
+\begin_inset Quotes eld
+\end_inset
+
+Could not log in to the CanReg server on localhost with the given credentials.
+\begin_inset Quotes erd
+\end_inset
+
+, please make sure that you have entered the correct username and password
+ and that the server is indeed running.
+ (See 
+\begin_inset Quotes eld
+\end_inset
+
+Launching the CanReg server
+\begin_inset Quotes erd
+\end_inset
+
+ above.) 
+\end_layout
+
+\begin_layout Standard
+\align left
+The next time you want to log on to this server all you have to do is launch
+ CanReg, select this server, enter username and password and click 
+\begin_inset Quotes eld
+\end_inset
+
+Login
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Import the dictionaries
+\end_layout
+
+\begin_layout Standard
+\align left
+If you are migrating from CanReg4 make sure to export the most updated dictionar
+y from your CanReg4 system.
+ (In CanReg4: 
+\begin_inset Quotes eld
+\end_inset
+
+Data Entry
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Dictionary
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Export dictionary to text file
+\begin_inset Quotes erd
+\end_inset
+
+) If you want to use the demo system, the dictionary is located in: demo/diction
+ary.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Go to 
+\begin_inset Quotes eld
+\end_inset
+
+File
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Data Entry
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Edit dictionary
+\begin_inset Quotes erd
+\end_inset
+
+ in CanReg5
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 17.png
+	width 3.91667in
+	height 2in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\align left
+Click on 
+\begin_inset Quotes eld
+\end_inset
+
+Import complete dictionary from file
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 18.png
+	width 4.79792in
+	height 5.04097in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\align left
+Browse and select the dictionary from you CanReg4 work folder or elsewhere.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Do Preview 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Tick 
+\begin_inset Quotes eld
+\end_inset
+
+CanReg4 Format
+\begin_inset Quotes erd
+\end_inset
+
+ if you are migrating from CanReg4, leave unticked if you are using the
+ demo system or otherwise are importing a CanReg5 formatted dictionary.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 19.png
+	width 4.95833in
+	height 3.82292in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\align left
+Click Import.
+ This might take some time.
+ Please note the bar in the lower right indicating that the program is busy.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Afterwards you will receive a message of success imported.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Click OK.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Go back to 
+\begin_inset Quotes eld
+\end_inset
+
+File
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Data Entry
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Edit dictionary
+\begin_inset Quotes erd
+\end_inset
+
+ and verify that the dictionaries have been imported.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Import the data from CanReg4
+\end_layout
+
+\begin_layout Standard
+\align left
+Make sure to export the most updated data from your CanReg4 system.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+In CanReg4: 
+\begin_inset Quotes eld
+\end_inset
+
+Analysis
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Export data
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Tick 
+\begin_inset Quotes eld
+\end_inset
+
+Export all variables
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Choose variables names short 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\series bold
+Under 
+\begin_inset Quotes eld
+\end_inset
+
+Export File options
+\begin_inset Quotes erd
+\end_inset
+
+ choose 
+\begin_inset Quotes eld
+\end_inset
+
+Comma separated variables
+\begin_inset Quotes erd
+\end_inset
+
+
+\series default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Untick 
+\begin_inset Quotes eld
+\end_inset
+
+Format date
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Untick 
+\begin_inset Quotes eld
+\end_inset
+
+Correct Unknown
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+write data to file
+\begin_inset Quotes erd
+\end_inset
+
+ and pick a file name that you can find back easily in CanReg5.
+ For example on the desktop.
+ Click 
+\begin_inset Quotes eld
+\end_inset
+
+save
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Take a look at the data you have now exported and close CanReg4.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Back in CanReg5 do 
+\begin_inset Quotes eld
+\end_inset
+
+File
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Data Entry
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+Import Data
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 20.png
+	width 3.91667in
+	height 2in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\align left
+The program will ask you if you have all your data in one file.
+ Answer 
+\begin_inset Quotes eld
+\end_inset
+
+yes
+\begin_inset Quotes erd
+\end_inset
+
+ as this is the case when migrating from CanReg4.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+Browse
+\begin_inset Quotes erd
+\end_inset
+
+ and locate the file from step A.
+ Select it and click 
+\begin_inset Quotes eld
+\end_inset
+
+Open
+\begin_inset Quotes erd
+\end_inset
+
+.
+ You can if you want preview the file to see that you picked the right one
+ and that the file looks OK.
+ If for example Arabic names are garbled you should try to choose another
+ 
+\begin_inset Quotes eld
+\end_inset
+
+File encoding
+\begin_inset Quotes erd
+\end_inset
+
+ (Default for Arabic text is ISO-8859-6).
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\series bold
+Set 
+\begin_inset Quotes eld
+\end_inset
+
+Separating character
+\begin_inset Quotes erd
+\end_inset
+
+ to Comma.
+
+\series default
+ (Or whatever separating characters your file has.)
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 21.png
+	width 5.00069in
+	height 4.21667in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\align left
+Click Preview to see that the data looks OK.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+Next
+\begin_inset Quotes erd
+\end_inset
+
+ (or select the tab 
+\begin_inset Quotes eld
+\end_inset
+
+Associate Variables
+\begin_inset Quotes erd
+\end_inset
+
+) 
+\end_layout
+
+\begin_layout Itemize
+\align left
+This lets you associate the variables in the file to import with the variables
+ in the database.
+ CanReg5 will find most of these associations by itself, but you should
+ revise them to see if they look OK.
+ Look for variable names in bold, as they are the one that are not assigned
+ at all.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+Next
+\begin_inset Quotes erd
+\end_inset
+
+ (or select the tab 
+\begin_inset Quotes eld
+\end_inset
+
+Import File
+\begin_inset Quotes erd
+\end_inset
+
+) 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+Import
+\begin_inset Quotes erd
+\end_inset
+
+ (leave everything as by default -- the import function only works on empty
+ CanReg databases as per now\SpecialChar \ldots{}
+) 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Let CanReg5 import the data (this might take a while) and click 
+\begin_inset Quotes eld
+\end_inset
+
+OK
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+Browse/Edit
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+Refresh Table
+\begin_inset Quotes erd
+\end_inset
+
+ to see that the data has arrived well.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Import data from other programs
+\end_layout
+
+\begin_layout Standard
+\align left
+You can import data from other programs than CanReg4 by using the import
+ tool in CanReg5.
+ The only thing to pay attention to is that the data has to be coded in
+ exactly the same way as in the CanReg5 database.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Dates should be coded as year month day (yyyyMMdd)
+\end_layout
+
+\begin_layout Itemize
+\align left
+Topography in 3 digits ICD-O-3 with no leading C.
+\end_layout
+
+\begin_layout Itemize
+\align left
+Morphology in 4 (or 5) digits ICD-O-3.
+\end_layout
+
+\begin_layout Standard
+\align left
+Other fields with dictionaries, like for example addresses should follow
+ the dictionary defined for them in CanReg5.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+The data can either be in a single file as the example for CanReg4, or in
+ one separate file for patient-information, tumour information and source
+ information (with pointers to link sources to tumours and tumours to patients).
+ 
+\end_layout
+
+\begin_layout Section
+Working with CanReg5
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Back up and restore
+\end_layout
+
+\begin_layout Standard
+\align left
+Backup-functionality can be found under the Management menu.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Perform backup
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Under 
+\begin_inset Quotes eld
+\end_inset
+
+Management
+\begin_inset Quotes erd
+\end_inset
+
+ click 
+\begin_inset Quotes eld
+\end_inset
+
+Backup
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 22.png
+	width 4.22917in
+	height 2.47917in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Then click 
+\begin_inset Quotes eld
+\end_inset
+
+Perform backup
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This creates the backup of the CanReg5 database on the server machine.
+ If you are on the server machine, you can see the files you created by
+ clicking 
+\begin_inset Quotes eld
+\end_inset
+
+Open folder containing Backup
+\begin_inset Quotes erd
+\end_inset
+
+.
+ It is stored in the 
+\series bold
+CanReg server
+\series default
+ folder under Backup and 3 digit code of the registry and then the date
+ of the backup.
+ On my machine, for example, it is 
+\begin_inset Quotes eld
+\end_inset
+
+C:
+\backslash
+Documents and Settings
+\backslash
+morten
+\backslash
+.CanRegServer
+\backslash
+Backup
+\backslash
+TRN
+\backslash
+2009-01-14
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Restore from backup
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+If you are on the server machine you can restore the backup you created
+ above by clicking 
+\begin_inset Quotes eld
+\end_inset
+
+Restore
+\begin_inset Quotes erd
+\end_inset
+
+ in the 
+\begin_inset Quotes eld
+\end_inset
+
+Management
+\begin_inset Quotes erd
+\end_inset
+
+-menu and choose the folder with the date of the backup you want to restore
+ - either by entering it or by browsing for it.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 23.png
+	width 4.63542in
+	height 1.22917in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Enter cases
+\end_layout
+
+\begin_layout Standard
+\align left
+To get to a data entry form either press Create New Record from the menu
+ bar
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 24.png
+	width 4.11458in
+	height 0.697917in
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+or enter a new record number in the browser and click 
+\begin_inset Quotes eld
+\end_inset
+
+Edit Patient ID:
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 25.png
+	width 2.47917in
+	height 0.302083in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+This should resemble your CanReg4 data entry form, except that it is split
+ in a patient part and a tumour part with a source part.
+ Another thing to notice is the 
+\begin_inset Quotes eld
+\end_inset
+
+Obsolete
+\begin_inset Quotes erd
+\end_inset
+
+ button.
+ This will flag the record as obsolete, so that it will not show up in analysis.
+ It is a way to keep duplicate records that might contain valuable information.
+ Pink fields are the mandatory ones.
+ (Date format is still set to yyyyMMdd, but this will be improved later.)
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/DataEntryExample.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Export data
+\end_layout
+
+\begin_layout Standard
+\align left
+To export your data go to Analysis -- Export Data/Reports:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 27.png
+	width 4.0625in
+	height 1.52083in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+You will be presented with a screen that resembles the browse-screen:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 28.png
+	width 5.4785in
+	height 4.0292in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Now you can select some variables, and tables and sort method and export
+ (some of) your data.
+ Please note that some of the functionality, like the ability to store export-se
+tups is not yet implemented.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+If you export data to a 
+\begin_inset Quotes eld
+\end_inset
+
+Tab Separated
+\begin_inset Quotes erd
+\end_inset
+
+ file you can open this in general spreadsheets (like Excel).
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Manage users
+\end_layout
+
+\begin_layout Standard
+\align left
+The user manager is located under management -- users:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 29.png
+	width 4.10417in
+	height 2.17708in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Change your own password
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+To change your own password, go to the Current user tab in the user manager
+ and enter your new password twice:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 30.png
+	width 5.4785in
+	height 2.6764in
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+Locked records
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Not yet implemented.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+
+\series bold
+User manager
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+If you are logged in with Supervisor rights you have access to the User
+ manager part of the user manager.
+ This allows you to add and delete users.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 31.png
+	width 4.64583in
+	height 3.70833in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+The default password of any user is its user name.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Population Dataset Editor
+\end_layout
+
+\begin_layout Standard
+\align left
+The Population Dataset editor lets you edit population data set to be used
+ in the table builder.
+ This is located under File -- Data Entry Edit Population Dataset: 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 32.png
+	width 3.89583in
+	height 1.86458in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+When you start it you get to the list of all your population datasets.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 33.png
+	width 4.5625in
+	height 3.69792in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Add one by clicking New.
+ This opens the Population Dataset editor: 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 34.png
+	width 4.57292in
+	height 5.23958in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Fill in the details:
+\end_layout
+
+\begin_layout Itemize
+\align left
+A name for the dataset 
+\end_layout
+
+\begin_layout Itemize
+\align left
+A filter if it does not cover your entire area of your database.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+A source 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Some description (less than 255 characters) 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Choose the age group structure.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Set the date of the population dataset.
+ (In the example above it is mid 1992) 
+\end_layout
+
+\begin_layout Itemize
+\align left
+The Standard population used for ASRs when building tables with this set.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Then fill the population dataset itself: 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegPopSetEditor.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+(Please note that you can copy and paste population datasets back and forth
+ from general spreadsheets like Excel.) 
+\end_layout
+
+\begin_layout Standard
+\align left
+Click save to save your population dataset.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Import population data set from CanReg4
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Alternatively you can import population data sets from CanReg4.
+ To do this you go to the Tools menu and choose 
+\begin_inset Quotes eld
+\end_inset
+
+Load CanReg4 Population Dataset
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 36.png
+	width 4.1875in
+	height 1.47917in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Click Browse to find the population dataset:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 37.png
+	width 4.4375in
+	height 3.125in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Then click Load and a confirmation message that the population dataset has
+ been loaded will appear.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 38.png
+	width 4.04167in
+	height 1.35417in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+OK
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Next step is to revise the population dataset and see to that it has been
+ imported correctly.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 39.png
+	width 3.97917in
+	height 5.05208in
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+One important thing to do is to see to that the filter is correct.
+ That for example the search variables are enclosed by 's.
+ If you need to change anything in the dataset you need to unlock it by
+ toggling the 
+\begin_inset Quotes eld
+\end_inset
+
+Locked
+\begin_inset Quotes erd
+\end_inset
+
+-toggle.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Table builder
+\end_layout
+
+\begin_layout Standard
+\align left
+The Table builder lets you build incidence tables etc in CanReg.
+ You find it under analysis -- table builder.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 40.png
+	width 4.07292in
+	height 1.57292in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+When you start it you first choose the type of table you want to produce.
+ (Please note that it is only the Incidence per 100,000 by age group (period)
+ and the Population pyramid that is implemented so far\SpecialChar \ldots{}
+) Pick Incidence per
+ 100,000 by age group (Period): 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 41.png
+	width 5.04167in
+	height 4.125in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Then click on range to set the range of your analysis and set it to match
+ the analysis you want to do, for example here we want to look at Karma
+ City, 1991 to 1993: 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 42.png
+	width 5.02083in
+	height 4.125in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Click Population Data Set.
+ Pick one population data set per year.
+ This can be the same for all three if that year is representative of the
+ period: 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 43.png
+	width 5in
+	height 4.11458in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Then you can go to the Make tables tab to generate the actual tables.
+ Click 
+\begin_inset Quotes eld
+\end_inset
+
+Generate post script files
+\begin_inset Quotes erd
+\end_inset
+
+ and choose a file name.
+ (If the table generates more than one file (like it is the case for incidence
+ per 100,000 some number or text will be added to the name you give for
+ each file.) 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 44.png
+	width 4.98958in
+	height 4.08333in
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+You get a message saying, 
+\begin_inset Quotes eld
+\end_inset
+
+Tables built.
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 45.png
+	width 2.84375in
+	height 1.32292in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Click OK and if you have a program that can read PostScript (See page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "sub:Tables"
+
+\end_inset
+
+.) files the tables will be displayed after you press OK.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 46.png
+	width 5.4785in
+	height 3.7229in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Frequency distributions
+\end_layout
+
+\begin_layout Standard
+\align left
+Frequencies distributions let you look at the data in your database as frequenci
+es by year.
+ You can cross-tabulate several variables.
+ To start this module go to Analysis -- Frequencies Distributions: 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 47.png
+	width 4.09375in
+	height 1.41667in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+If you click Refresh table with no filter and no selected variables you
+ get a table of cases per year.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 48.png
+	width 5.4785in
+	height 4.8181in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+You can sort by any field by clicking its header.
+ For example by number of cases: 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 49.png
+	width 1.60417in
+	height 2.94792in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+You can filter the result by adding a filter like for example on incidence
+ date.
+ You can also add as many variables as you want.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 50.png
+	width 5.4785in
+	height 4.8042in
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+This table can be selected and copied and pasted into Excel, for example.
+ (No right-click shortcut for that is implemented yet, but you can select
+ the lines you want and press Ctrl-C (on Windows and Linux) or Apple-C (on
+ Mac) and paste it into other programs.
+ 
+\end_layout
+
+\begin_layout Section
+\start_of_appendix
+
+\family sans
+\series bold
+Frequently asked questions (FAQ)
+\end_layout
+
+\begin_layout Subsection
+
+\series bold
+Server
+\series default
+ 
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+Q: 
+\series default
+When I click the 
+\begin_inset Quotes eld
+\end_inset
+
+Launch Server
+\begin_inset Quotes erd
+\end_inset
+
+/
+\begin_inset Quotes eld
+\end_inset
+
+Test Connection
+\begin_inset Quotes erd
+\end_inset
+
+ button, it takes 
+\series bold
+more than 3 minutes
+\series default
+ to launch the server and I get the message that the 
+\begin_inset Quotes eld
+\end_inset
+
+Server [is] already running
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Afterwards I cannot log in.
+ 
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+A:
+\series default
+ Xenios found the following solution: On our PCs, we use Microsoft Internet
+ Explorer 7.
+ In the 
+\begin_inset Quotes eld
+\end_inset
+
+Tools / Internet Options / Connections / LAN Settings
+\begin_inset Quotes erd
+\end_inset
+
+ we have a tick in the checkbox for 
+\begin_inset Quotes eld
+\end_inset
+
+Use a proxy server for your LAN
+\begin_inset Quotes erd
+\end_inset
+
+ and the address and port of the proxy server filled in accordingly.
+ I put a tick in the checkbox for 
+\begin_inset Quotes eld
+\end_inset
+
+Bypass proxy server for local addresses
+\begin_inset Quotes erd
+\end_inset
+
+, clicked the 
+\begin_inset Quotes eld
+\end_inset
+
+Advanced
+\begin_inset Quotes erd
+\end_inset
+
+ button and typed the IP address of the PC (localhost) in the 
+\begin_inset Quotes eld
+\end_inset
+
+Do not use proxy server for addresses beginning with:
+\begin_inset Quotes erd
+\end_inset
+
+ box.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\series bold
+Conversion CanReg4 to CanReg5
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+Q:
+\series default
+ In what table should the variable age be stored?
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+A: 
+\series default
+The tumour table.
+ Like that, if the same patient has a new tumour you can (probably) keep
+ the patient record and just add a new tumour record.
+ Birth date is stored in the patient table.
+ (Incidence date with the tumour.) 
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+Q: 
+\series default
+Do I need to 
+\begin_inset Quotes eld
+\end_inset
+
+install
+\begin_inset Quotes erd
+\end_inset
+
+ the CanReg5 system definition file after converting from CanReg4 using
+ the built in tool? 
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+A: 
+\series default
+After converting the system you don't need to 
+\begin_inset Quotes eld
+\end_inset
+
+install
+\begin_inset Quotes erd
+\end_inset
+
+ it afterwards as the XML file is automatically copied to your system folder
+ during conversion.
+ 
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+Q: 
+\series default
+I get errors during import of the data from CanReg4.
+ The process stops after a certain percentage every time.
+ 
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+A: 
+\series default
+Try exporting your data with a comma separated variables instead of the
+ default tab-separated ones (or vice versa) and see if that helps.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\series bold
+Dictionary
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+Q:
+\series default
+ Can I import dictionaries from other CanReg systems to my own? 
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+A:
+\series default
+ Since most CanReg systems have different dictionary structure (length of
+ codes, order of dictionaries etc.) you need to import the dictionary correspondi
+ng to your system or do necessary modifications.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\series bold
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Tables"
+
+\end_inset
+
+Tables
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+Q:
+\series default
+ What program can I use to view the postscript files with? 
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+A:
+\series default
+ PostScript is an open standard, so you can use many different tools to
+ view them.
+ (You can in many cases even send them directly to a printer.) Apple's OSX
+ and most Linux-distributions (Ubuntu, RedHat, SuSE etc) come with a tool
+ to view them by default.
+ On Windows the tool I recommend is the open sourced and free GSview.
+ (Available from: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://pages.cs.wisc.edu/~ghost/gsview/"
+
+\end_inset
+
+ ) To run GS View you need to install Ghostscript first.
+ This can be downloaded from here: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://pages.cs.wisc.edu/~ghost/doc/GPL/gpl864.htm"
+
+\end_inset
+
+ (Scroll all the way down, under the heading Microsoft windows and download
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+GPL Ghostscript 8.64 for 32-bit Windows (the common variety)
+\begin_inset Quotes erd
+\end_inset
+
+ (
+\begin_inset CommandInset href
+LatexCommand href
+name "http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe"
+target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe"
+
+\end_inset
+
+) Run this file to install Ghostscript.
+ Then you can get GS View from here: 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://pages.cs.wisc.edu/~ghost/gsview/get49.htm"
+target "http://pages.cs.wisc.edu/~ghost/gsview/get49.htm"
+
+\end_inset
+
+ (Most probably, you should pick the Win32 self extracting archive - the
+ first download option.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe"
+target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe"
+
+\end_inset
+
+) Run this file to install GS View.
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\series bold
+Import
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+Q: 
+\series default
+Some letters are distorted/missing in records after an import.
+ (For example when importing Arabic names.) Why is that? 
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+A: 
+\series default
+If the data is from a program that does not code the data using Unicode
+ (for example previous versions of CanReg) you need to specify the coding
+ scheme/
+\begin_inset Quotes eld
+\end_inset
+
+codepage
+\begin_inset Quotes erd
+\end_inset
+
+ during import of that file to your database.
+ If you pick the wrong one your data might get distorted.
+ To solve this problem you need to re-import the data.
+ Please use the preview button during import to see to that you have the
+ right coding scheme.
+ 
+\end_layout
+
+\begin_layout Section
+Known issues
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Known bugs (errors)
+\end_layout
+
+\begin_layout Standard
+\align left
+Some known bugs: 
+\end_layout
+
+\begin_layout Itemize
+\align left
+The result set in the browser is sometimes very slow to scroll around in.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\align left
+Temporary solution: Use filters to minimize the number of records shown
+ at any time or only browse the 
+\begin_inset Quotes eld
+\end_inset
+
+Patient
+\begin_inset Quotes erd
+\end_inset
+
+ or the 
+\begin_inset Quotes eld
+\end_inset
+
+Tumour
+\begin_inset Quotes erd
+\end_inset
+
+ table.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Severity: Shouldn't cause loss of data 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Priority: Low 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Category: Database/Browser 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\align left
+Server does not start if language is set to Turkish due to special rules
+ in Turkish regarding 
+\begin_inset Quotes eld
+\end_inset
+
+upper casing
+\begin_inset Quotes erd
+\end_inset
+
+ of letters.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\align left
+Temporary solution: set the language of the server to any other language
+ than Turkish.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Severity: Does not cause information loss 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Priority: Medium 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Category: Server 
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+
+\family sans
+\series bold
+Known limitations
+\end_layout
+
+\begin_layout Itemize
+\align left
+Not all edit checks are in place? 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Date fields not yet properly formatted.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+You need a population dataset with 5 years age groups for many of the tables
+ to work properly\SpecialChar \ldots{}
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Age can not yet be calculated automatically.
+ 
+\end_layout
+
+\begin_layout Section
+
+\family sans
+\series bold
+Changelog
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+4.99.22 Build 858
+\series default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Database engine switched to Java DB 10.5.3.0
+\family default
+\series bold
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+RangeFilter now adds 's if needed by each variable.
+
+\family default
+\series bold
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Other bug fixes.
+
+\family default
+\series bold
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+4.99.21 Build 848
+\series default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Access to handbook, possibility to download latest version.
+
+\family default
+\series bold
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+DatabaseVariableEditor now throws error messages if somethings not right
+ with the variable definition during system setup.
+
+\family default
+\series bold
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+ICCC3 converter implemented.
+
+\family default
+\series bold
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+4.99.20
+\series default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Internationalization work.
+ Portugese translation started.
+ French translation continued.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+4.99.19 Build 829
+\series default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Hourglass feedback added for longish operations.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Problem with truncated dictionary labels solved.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Fixed a bug where all checks show up in the result message, even though
+ they are OK.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+TableBuilder: Fixed a nullpointer error that could occur if no cases in
+ table
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Improved the layout of certain screens.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+French translation started.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+4.99.18 Build 821
+\series default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Better handling of malformed date strings.
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Date of last contact check implemented.
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Better handling of check results.
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Started implementation of auto age calculation.
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+RecordEditor and RecordEditorPanel: Improved the way check status is handled.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+4.99.17 Build 818
+\series default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+DateHelper: difference in dates in days calculated properly.
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+RecordEditor: Better error handling
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+AutoFillHelper: Added comments
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+VariableEditorPanel: Better handling of null-pointers, number no longer
+ defaults to -1.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+ModifyDatabaseStructureIF: GUI fixes
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+UserManagerInternalFrame: Better error handling
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Tools.buildIndexMap: better handling of indexes with missing variables
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+DateVariableEditorPanel: Better error handling
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+ExportReportInternalFrame: Better error handling
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+CanRegClientView: display set up new system-menu
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+CheckAgeIncidence: better error message
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+DateHelper: fixed a one-off error when birthday,month=incidenceday,month
+\family default
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+4.99.16 Build 806
+\series default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Set up new database now in the menu
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Deleting records can now throw SQLexceptions.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+4.99.15 Build 804
+\series default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Import from multiple files now implemented.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+DatabaseStructure editor implemented with a default XML.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+InternalFrames/windows better positioned on various screen-sizes.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+RangeFilterPanel now handles source tables and empty index lists better,
+ fires table changed events.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+VariablesChooserPanel now only displays the variables from valid table(s).
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Browser: Fixed a bug where you could not open records by double clicking
+ on them if looking at source or source+tumour tables.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Tooltip texts updated.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+TranslateListElement: A simple way to translate list elements implemented
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+EditDictionaryInternalFrame: Fixed a bug that occured if a dictionary had
+ more errors than possible to display.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+QueryGenerator improved.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Improved the display of variable names (FastFilter, RangeFilter, Browser.)
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+SystemDescription: Changes to accomodate the changes in DatabaseListElements,
+ added setters to change the database's doc.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+DateHelper: fixed a bug that occured when date was not set and was read.
+ Buddhist Calendar work started.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Handles better locked tumour records.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+FirstNameSexInternalFrame: better handling of unisex names.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Checks: now support better unknown codes.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Performance fixes.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Other stability and bug fixes.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+4.99.14 Build 764
+\series default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+ExportReport now lets you export category and description of dictionary
+ elements and output long variable names, format dates and correct unknown
+ dates.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+SystemDefinitionConverter strips blanks from database variable names.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+DateHelper: Dates are now transformed 
+\begin_inset Quotes erd
+\end_inset
+
+backwards
+\begin_inset Quotes erd
+\end_inset
+
+ so that a two digit year contains the last two digits...
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Updated the xsd of the system XML.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Import function now generates record IDs if none are specified.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Import: fixed a bug where the import would brake down if the IDs where defined
+ in the import file.
+
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+FastFilter: reworked the logic and text on screen
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+BrowseInternalFrame: Sort by column is now highlighted, layout improved
+\begin_inset Newline newline
+\end_inset
+
+
+\family default
+ 
+\end_layout
+
+\end_body
+\end_document
