@@ -92,7 +92,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
             e1.printStackTrace();
         }
 
-        allFieldsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("All Fields"));
+        allFieldsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("allFieldsPanel.border.title"))); // NOI18N
         allFieldsPanel.setName("allFieldsPanel"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(EditDictionaryInternalFrame.class, this);
@@ -120,7 +120,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        oneFieldPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("One Field at a time"));
+        oneFieldPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("oneFieldPanel.border.title"))); // NOI18N
         oneFieldPanel.setName("oneFieldPanel"); // NOI18N
 
         displayEditLabel.setText(resourceMap.getString("displayEditLabel.text")); // NOI18N
@@ -165,7 +165,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(displayEditLabel)
                     .addComponent(chooseDictionaryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(displayScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+                .addComponent(displayScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(oneFieldPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(updateButton)

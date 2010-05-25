@@ -161,7 +161,7 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
         );
         crossChecksPanelLayout.setVerticalGroup(
             crossChecksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(crossChecksScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+            .addComponent(crossChecksScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
         );
 
         nameSexPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("nameSexPanel.border.title"))); // NOI18N

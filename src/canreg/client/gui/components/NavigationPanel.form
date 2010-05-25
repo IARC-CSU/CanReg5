@@ -33,7 +33,9 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Navigate"/>
+            <TitledBorder title="Navigate">
+              <Property name="titleX" resourceKey="navigatePanel.border.title"/>
+            </TitledBorder>
           </Border>
         </Property>
         <Property name="name" type="java.lang.String" value="navigatePanel" noResource="true"/>

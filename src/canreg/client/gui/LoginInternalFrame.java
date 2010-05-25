@@ -483,14 +483,20 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                             Date todaysDate = new Date();
                             int diff = (int) ((todaysDate.getTime() - date.getTime()) / (1000L * 60L * 60L * 24L));
                             if (diff >= maxDiff) {
-                                int showInternalConfirmDialog = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Last backup was performed " + diff + " day(s) ago.\nPerform backup now?", "Back up?", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                                int showInternalConfirmDialog = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), 
+                                        java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("LAST_BACKUP_WAS_PERFORMED_") +
+                                        diff +
+                                        java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("_DAY(S)_AGO.") +
+                                        "\n" +
+                                        java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("PERFORM_BACKUP_NOW?"),
+                                        java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("BACK_UP?"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
                                 if (showInternalConfirmDialog == JOptionPane.YES_OPTION) {
                                     Task backupTask = new PerformBackUpActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
                                     backupTask.execute();
                                 }
                             }
                         } else {
-                            int showInternalConfirmDialog = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "You have never backed up your database.\nPerform backup now?", "Back up?", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                            int showInternalConfirmDialog = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("YOU_HAVE_NEVER_BACKED_UP_YOUR_DATABASE.")+"\n"+java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("PERFORM_BACKUP_NOW?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("BACK_UP?"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
                             if (showInternalConfirmDialog == JOptionPane.YES_OPTION) {
                                 Task backupTask = new PerformBackUpActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
                                 backupTask.execute();
@@ -499,30 +505,37 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
                     }
                 }
             } else {
-                feedbackLabel.setText("Error.");
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
+                feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"));
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("COULD_NOT_LOG_IN_TO_THE_CANREG_SERVER_ON_") + server + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("_WITH_THE_GIVEN_CREDENTIALS."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             }
         } catch (LoginException loginException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
-            feedbackLabel.setText("Error.");
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("COULD_NOT_LOG_IN_TO_THE_CANREG_SERVER_ON_") + server + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("_WITH_THE_GIVEN_CREDENTIALS."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"));
+            debugOut(loginException.getMessage());
         } catch (NullPointerException nullPointerException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials. Nullpointer." + nullPointerException.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            feedbackLabel.setText("Error.");
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("COULD_NOT_LOG_IN_TO_THE_CANREG_SERVER_ON_") + server + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("_WITH_THE_GIVEN_CREDENTIALS.") + nullPointerException.getMessage(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"));
+            debugOut(nullPointerException.getMessage());
         } catch (NotBoundException notBoundException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
-            feedbackLabel.setText("Error.");
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("COULD_NOT_LOG_IN_TO_THE_CANREG_SERVER_ON_") + server + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("_WITH_THE_GIVEN_CREDENTIALS."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"));
+            debugOut(notBoundException.getMessage());
         } catch (MalformedURLException malformedURLException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not find CanReg server: " + server + ".", "Error", JOptionPane.ERROR_MESSAGE);
-            feedbackLabel.setText("Error.");
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not find CanReg server: " + server + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"));
+            debugOut(malformedURLException.getMessage());
         } catch (RemoteException remoteException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not log in to the CanReg server on " + server + " with the given credentials.", "Error", JOptionPane.ERROR_MESSAGE);
-            feedbackLabel.setText("Error.");
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("COULD_NOT_LOG_IN_TO_THE_CANREG_SERVER_ON_") + server + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("_WITH_THE_GIVEN_CREDENTIALS."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"));
+            debugOut(remoteException.getMessage());
         } catch (UnknownHostException unknownHostException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not find CanReg server: " + server + ".", "Error", JOptionPane.ERROR_MESSAGE);
-            feedbackLabel.setText("Error.");
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("COULD_NOT_FIND_CANREG_SERVER:_") + server + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"));
+            debugOut(unknownHostException.getMessage());
         } catch (WrongCanRegVersionException wrongCanRegVersionException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "CanReg server version different than client version. " + wrongCanRegVersionException.toString() + ".", "Error", JOptionPane.ERROR_MESSAGE);
-            feedbackLabel.setText("Error.");
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("CANREG_SERVER_VERSION_DIFFERENT_THAN_CLIENT_VERSION.") + " " + wrongCanRegVersionException.toString() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"));
+            debugOut(wrongCanRegVersionException.getMessage());
         }
     }
 

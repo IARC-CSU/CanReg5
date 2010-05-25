@@ -254,7 +254,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
                 .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        recordsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Records"));
+        recordsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("recordsPanel.border.title"))); // NOI18N
         recordsPanel.setName("recordsPanel"); // NOI18N
 
         recordsShownField.setEditable(false);
@@ -285,7 +285,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         andLabel.setText(resourceMap.getString("andLabel.text")); // NOI18N
         andLabel.setName("andLabel"); // NOI18N
 
-        tableChooserPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Table"));
+        tableChooserPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("tableChooserPanel.border.title"))); // NOI18N
         tableChooserPanel.setName("tableChooserPanel"); // NOI18N
 
         tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tumour", "Patient", "Tumour+Patient", "Source", "Source+Tumour" }));

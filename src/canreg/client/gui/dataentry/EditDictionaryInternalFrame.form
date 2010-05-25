@@ -55,7 +55,9 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="All Fields"/>
+            <TitledBorder title="All Fields">
+              <Property name="titleX" resourceKey="allFieldsPanel.border.title"/>
+            </TitledBorder>
           </Border>
         </Property>
         <Property name="name" type="java.lang.String" value="allFieldsPanel" noResource="true"/>
@@ -106,7 +108,9 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="One Field at a time"/>
+            <TitledBorder title="One Field at a time">
+              <Property name="titleX" resourceKey="oneFieldPanel.border.title"/>
+            </TitledBorder>
           </Border>
         </Property>
         <Property name="name" type="java.lang.String" value="oneFieldPanel" noResource="true"/>
@@ -136,7 +140,7 @@
                       <Component id="chooseDictionaryComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="displayScrollPane" pref="406" max="32767" attributes="0"/>
+                  <Component id="displayScrollPane" pref="410" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="updateButton" alignment="3" min="-2" max="-2" attributes="0"/>

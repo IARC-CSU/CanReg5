@@ -40,12 +40,12 @@ public class NavigationPanel extends javax.swing.JPanel {
 
         setName("Form"); // NOI18N
 
-        navigatePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Navigate"));
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(NavigationPanel.class);
+        navigatePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("navigatePanel.border.title"))); // NOI18N
         navigatePanel.setName("navigatePanel"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(NavigationPanel.class, this);
         topButton.setAction(actionMap.get("goToTopAction")); // NOI18N
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(NavigationPanel.class);
         topButton.setToolTipText(resourceMap.getString("topButton.toolTipText")); // NOI18N
         topButton.setName("topButton"); // NOI18N
 
