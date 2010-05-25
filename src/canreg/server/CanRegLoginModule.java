@@ -126,11 +126,11 @@ public class CanRegLoginModule implements LoginModule {
         }
 
         try {
-            debugOut("user entered password: " + PasswordService.getInstance().encrypt(passwordString) );
+            // debugOut("user entered password: " + PasswordService.getInstance().encrypt(passwordString) );
 
             if ((realPassword == null) || !realPassword.equals(PasswordService.getInstance().encrypt(passwordString))) {
                 {
-                    debugOut("Password does not match: " + realPassword + " " + passwordString + "\n");
+                    // debugOut("Password does not match: " + realPassword + " " + passwordString + "\n");
                     return false;
                 }
             } else {
