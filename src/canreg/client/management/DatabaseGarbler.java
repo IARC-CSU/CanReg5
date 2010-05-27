@@ -57,6 +57,7 @@ public class DatabaseGarbler {
 
         DatabaseVariablesListElement patientIDVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.PatientID.toString().toUpperCase());
         DatabaseVariablesListElement patientRecordIDVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.PatientRecordID.toString().toUpperCase());
+        DatabaseVariablesListElement patientRecordIDTumourTableVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString().toUpperCase());
         DatabaseVariablesListElement firstNameVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.FirstName.toString().toUpperCase());
         DatabaseVariablesListElement lastNameVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.Surname.toString().toUpperCase());
         DatabaseVariablesListElement sexVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.Sex.toString().toUpperCase());
@@ -97,133 +98,139 @@ public class DatabaseGarbler {
                 try {
                     int patientDatabaseRecordID = (Integer) rows[i][0];
                     patient1 = (Patient) CanRegClientApp.getApplication().getRecord(patientDatabaseRecordID, Globals.PATIENT_TABLE_NAME, false);
-                    try {
-                        patients1 = CanRegClientApp.getApplication().getPatientRecordsByID((String) patient1.getVariable(patientIDVariableListElement.getDatabaseVariableName()), true);
-                    } catch (Exception ex) {
-                        Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-                    // draw random firstname - of the same sex
-                    newFirstName = firstNamesArray[rnd.nextInt(firstNamesArray.length)];
-                    int sex = firstNames.get(newFirstName.toUpperCase());
-                    String oldSexString = (String) patient1.getVariable(sexVariableListElement.getDatabaseVariableName());
-                    if (oldSexString != null) {
-                        int oldSex = Integer.parseInt(oldSexString);
-                        while (sex != 9 && sex != oldSex) {
-                            newFirstName = firstNamesArray[rnd.nextInt(firstNamesArray.length)];
-                            sex = firstNames.get(newFirstName.toUpperCase());
-                        }
-                    }
-
-                    // change birthDate
-                    String newBirthDateString = (String) patient1.getVariable(birthDateVariableListElement.getDatabaseVariableName());
-                    if (newBirthDateString != null && newBirthDateString.trim().length() == 8) {
+                    if (patient1 != null) {
                         try {
-                            birthDateCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg(newBirthDateString, Globals.DATE_FORMAT_STRING);
-                            if (birthDateCalendar != null && !(birthDateCalendar.isUnknownDay() && birthDateCalendar.isUnknownMonth())) {
-                                birthDateCalendar = new GregorianCalendarCanReg();
-                                birthDateCalendar.set(GregorianCalendarCanReg.YEAR, Integer.parseInt(DateHelper.getYear(newBirthDateString, Globals.DATE_FORMAT_STRING)));
-                                birthDateCalendar.set(GregorianCalendarCanReg.DAY_OF_YEAR, rnd.nextInt(365) + 1);
-                                newBirthDateString = DateHelper.parseGregorianCalendarCanRegToDateString(birthDateCalendar, Globals.DATE_FORMAT_STRING);
+                            patients1 = CanRegClientApp.getApplication().getPatientRecordsByID((String) patient1.getVariable(patientIDVariableListElement.getDatabaseVariableName()), true);
+                        } catch (Exception ex) {
+                            Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                        // draw random firstname - of the same sex
+                        newFirstName = firstNamesArray[rnd.nextInt(firstNamesArray.length)];
+                        int sex = firstNames.get(newFirstName.toUpperCase());
+                        String oldSexString = (String) patient1.getVariable(sexVariableListElement.getDatabaseVariableName());
+                        if (oldSexString != null) {
+                            int oldSex = Integer.parseInt(oldSexString);
+                            while (sex != 9 && sex != oldSex) {
+                                newFirstName = firstNamesArray[rnd.nextInt(firstNamesArray.length)];
+                                sex = firstNames.get(newFirstName.toUpperCase());
                             }
+                        }
+
+                        // change birthDate
+                        String newBirthDateString = (String) patient1.getVariable(birthDateVariableListElement.getDatabaseVariableName());
+                        if (newBirthDateString != null && newBirthDateString.trim().length() == 8) {
+                            try {
+                                birthDateCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg(newBirthDateString, Globals.DATE_FORMAT_STRING);
+                                if (birthDateCalendar != null && !(birthDateCalendar.isUnknownDay() && birthDateCalendar.isUnknownMonth())) {
+                                    birthDateCalendar = new GregorianCalendarCanReg();
+                                    birthDateCalendar.set(GregorianCalendarCanReg.YEAR, Integer.parseInt(DateHelper.getYear(newBirthDateString, Globals.DATE_FORMAT_STRING)));
+                                    birthDateCalendar.set(GregorianCalendarCanReg.DAY_OF_YEAR, rnd.nextInt(365) + 1);
+                                    newBirthDateString = DateHelper.parseGregorianCalendarCanRegToDateString(birthDateCalendar, Globals.DATE_FORMAT_STRING);
+                                }
+                            } catch (ParseException ex) {
+                                Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (IllegalArgumentException ex) {
+                                Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+
+                        // read another random patient
+                        // TODO read all patient records related to this patient
+                        int patient2RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
+                        while (patient2RecordID == patientDatabaseRecordID) {
+                            patient2RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
+                        }
+                        patient2 = (Patient) CanRegClientApp.getApplication().getRecord(patient2RecordID, Globals.PATIENT_TABLE_NAME, true);
+                        while (patient2 == null) {
+                            CanRegClientApp.getApplication().releaseRecord(patient2RecordID, Globals.PATIENT_TABLE_NAME);
+                            patient2RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
+                            patient2 = (Patient) CanRegClientApp.getApplication().getRecord(patient2RecordID, Globals.PATIENT_TABLE_NAME, true);
+                        }
+                        // swap last names with this one
+                        String oldLastName = (String) patient1.getVariable(lastNameVariableListElement.getDatabaseVariableName());
+                        String newLastName = (String) patient2.getVariable(lastNameVariableListElement.getDatabaseVariableName());
+                        patient2.setVariable(lastNameVariableListElement.getDatabaseVariableName(), oldLastName);
+
+                        // and a third one
+                        // TODO read all patient records related to this patient
+                        int patient3RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
+                        while (patient3RecordID == patientDatabaseRecordID || patient3RecordID == patient2RecordID) {
+                            patient3RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
+                        }
+                        patient3 = (Patient) CanRegClientApp.getApplication().getRecord(patient3RecordID, Globals.PATIENT_TABLE_NAME, true);
+                        while (patient3 == null) {
+                            CanRegClientApp.getApplication().releaseRecord(patient3RecordID, Globals.PATIENT_TABLE_NAME);
+                            patient3RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
+                            patient3 = (Patient) CanRegClientApp.getApplication().getRecord(patient3RecordID, Globals.PATIENT_TABLE_NAME, true);
+                        }
+
+                        // swap adress fields with this one
+                        // String oldAddresscode = (String) patient1.getVariable(adressCodeVariableListElement.getDatabaseVariableName());
+                        // String newAddressCode = patient2.getVariable(adressCodeVariableListElement.getDatabaseVariableName();
+                        // patient1.setVariable(adressCodeVariableListElement.getDatabaseVariableName(), newAddressCode));
+                        // patient2.setVariable(adressCodeVariableListElement.getDatabaseVariableName(), oldAddresscode);
+
+                        // update patient records
+                        for (Patient patient : patients1) {
+                            patient.setVariable(firstNameVariableListElement.getDatabaseVariableName(), newFirstName);
+                            patient.setVariable(birthDateVariableListElement.getDatabaseVariableName(), newBirthDateString);
+                            patient.setVariable(lastNameVariableListElement.getDatabaseVariableName(), newLastName);
+                        }
+
+                        try {
+                            // get the tumours of this patient
+                            tumors = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID((String) patient1.getVariable(patientIDVariableListElement.getDatabaseVariableName()), true);
+                            for (Tumour tumor : tumors) {
+                                // change incidencedate
+                                String incidenceDateString = (String) tumor.getVariable(incidenceDateVariableListElement.getDatabaseVariableName());
+                                if (incidenceDateString != null && incidenceDateString.trim().length() == 8) {
+                                    incidenceDateCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg(incidenceDateString, Globals.DATE_FORMAT_STRING);
+                                    if (incidenceDateCalendar != null && !(incidenceDateCalendar.isUnknownDay() && incidenceDateCalendar.isUnknownMonth())) {
+                                        incidenceDateCalendar = new GregorianCalendarCanReg();
+                                        incidenceDateCalendar.set(GregorianCalendarCanReg.YEAR, Integer.parseInt(DateHelper.getYear(incidenceDateString, Globals.DATE_FORMAT_STRING)));
+                                        incidenceDateCalendar.set(GregorianCalendarCanReg.DAY_OF_YEAR, rnd.nextInt(365) + 1);
+                                        tumor.setVariable(incidenceDateVariableListElement.getDatabaseVariableName(),
+                                                DateHelper.parseGregorianCalendarCanRegToDateString(incidenceDateCalendar, Globals.DATE_FORMAT_STRING));
+                                    }
+                                    if (incidenceDateCalendar != null && birthDateCalendar != null) {
+                                        int age = (int) DateHelper.yearsBetween(birthDateCalendar, incidenceDateCalendar) + 1;
+                                        tumor.setVariable(ageVariableListElement.getDatabaseVariableName(), age);
+                                    }
+                                }
+                                // point the tumour to the first patient record
+                                tumor.setVariable(patientRecordIDTumourTableVariableListElement.getDatabaseVariableName(), patients1[0].getVariable(patientRecordIDVariableListElement.getDatabaseVariableName()));
+                                CanRegClientApp.getApplication().releaseRecord((Integer) tumor.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME), Globals.TUMOUR_TABLE_NAME);
+                                CanRegClientApp.getApplication().editRecord(tumor);
+
+                            }
+
                         } catch (ParseException ex) {
                             Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (IllegalArgumentException ex) {
                             Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (DistributedTableDescriptionException ex) {
+                            Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    }
 
-                    // read another random patient
-                    // TODO read all patient records related to this patient
-                    int patient2RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
-                    while (patient2RecordID == patientDatabaseRecordID) {
-                        patient2RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
-                    }
-                    patient2 = (Patient) CanRegClientApp.getApplication().getRecord(patient2RecordID, Globals.PATIENT_TABLE_NAME, true);
-                    while (patient2 == null) {
+                        // release the records
+                        for (Patient patient : patients1) {
+                            CanRegClientApp.getApplication().releaseRecord((Integer) patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME), Globals.PATIENT_TABLE_NAME);
+                        }
                         CanRegClientApp.getApplication().releaseRecord(patient2RecordID, Globals.PATIENT_TABLE_NAME);
-                        patient2RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
-                        patient2 = (Patient) CanRegClientApp.getApplication().getRecord(patient2RecordID, Globals.PATIENT_TABLE_NAME, true);
-                    }
-                    // swap last names with this one
-                    String oldLastName = (String) patient1.getVariable(lastNameVariableListElement.getDatabaseVariableName());
-                    String newLastName = (String) patient2.getVariable(lastNameVariableListElement.getDatabaseVariableName());
-                    patient2.setVariable(lastNameVariableListElement.getDatabaseVariableName(), oldLastName);
-
-                    // and a third one
-                    // TODO read all patient records related to this patient
-                    int patient3RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
-                    while (patient3RecordID == patientDatabaseRecordID || patient3RecordID == patient2RecordID) {
-                        patient3RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
-                    }
-                    patient3 = (Patient) CanRegClientApp.getApplication().getRecord(patient3RecordID, Globals.PATIENT_TABLE_NAME, true);
-                    while (patient3 == null) {
                         CanRegClientApp.getApplication().releaseRecord(patient3RecordID, Globals.PATIENT_TABLE_NAME);
-                        patient3RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
-                        patient3 = (Patient) CanRegClientApp.getApplication().getRecord(patient3RecordID, Globals.PATIENT_TABLE_NAME, true);
-                    }
 
-                    // swap adress fields with this one
-                    // String oldAddresscode = (String) patient1.getVariable(adressCodeVariableListElement.getDatabaseVariableName());
-                    // String newAddressCode = patient2.getVariable(adressCodeVariableListElement.getDatabaseVariableName();
-                    // patient1.setVariable(adressCodeVariableListElement.getDatabaseVariableName(), newAddressCode));
-                    // patient2.setVariable(adressCodeVariableListElement.getDatabaseVariableName(), oldAddresscode);
+                        // save the first record - drop the others
+                        CanRegClientApp.getApplication().editRecord(patients1[0]);
 
-                    // update patient records
-                    for (Patient patient : patients1) {
-                        patient.setVariable(firstNameVariableListElement.getDatabaseVariableName(), newFirstName);
-                        patient.setVariable(birthDateVariableListElement.getDatabaseVariableName(), newBirthDateString);
-                        patient.setVariable(lastNameVariableListElement.getDatabaseVariableName(), newLastName);
-                    }
-
-                    try {
-                        // get the tumours of this patient
-                        tumors = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID((String) patient1.getVariable(patientIDVariableListElement.getDatabaseVariableName()), true);
-                        for (Tumour tumor : tumors) {
-                            // change incidencedate
-                            String incidenceDateString = (String) tumor.getVariable(incidenceDateVariableListElement.getDatabaseVariableName());
-                            if (incidenceDateString != null && incidenceDateString.trim().length() == 8) {
-                                incidenceDateCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg(incidenceDateString, Globals.DATE_FORMAT_STRING);
-                                if (incidenceDateCalendar != null && !(incidenceDateCalendar.isUnknownDay() && incidenceDateCalendar.isUnknownMonth())) {
-                                    incidenceDateCalendar = new GregorianCalendarCanReg();
-                                    incidenceDateCalendar.set(GregorianCalendarCanReg.YEAR, Integer.parseInt(DateHelper.getYear(incidenceDateString, Globals.DATE_FORMAT_STRING)));
-                                    incidenceDateCalendar.set(GregorianCalendarCanReg.DAY_OF_YEAR, rnd.nextInt(365) + 1);
-                                    tumor.setVariable(incidenceDateVariableListElement.getDatabaseVariableName(),
-                                            DateHelper.parseGregorianCalendarCanRegToDateString(incidenceDateCalendar, Globals.DATE_FORMAT_STRING));
-                                }
-                                if (incidenceDateCalendar != null && birthDateCalendar != null) {
-                                    int age = (int) DateHelper.yearsBetween(birthDateCalendar, incidenceDateCalendar);
-                                    tumor.setVariable(ageVariableListElement.getDatabaseVariableName(), age);
-                                }
-                            }
-
-                            CanRegClientApp.getApplication().releaseRecord((Integer) tumor.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME), Globals.TUMOUR_TABLE_NAME);
-                            CanRegClientApp.getApplication().editRecord(tumor);
+                        for (int j = 1; j < patients1.length; j++) {
+                            int recordID = (Integer) patients1[j].getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                            CanRegClientApp.getApplication().deleteRecord(recordID, Globals.PATIENT_TABLE_NAME);
                         }
+                        CanRegClientApp.getApplication().editRecord(patient2);
+                        CanRegClientApp.getApplication().editRecord(patient3);
 
-                    } catch (ParseException ex) {
-                        Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalArgumentException ex) {
-                        Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (DistributedTableDescriptionException ex) {
-                        Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
-                    // release the records
-                    for (Patient patient : patients1) {
-                        CanRegClientApp.getApplication().releaseRecord((Integer) patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME), Globals.PATIENT_TABLE_NAME);
-                    }
-                    CanRegClientApp.getApplication().releaseRecord(patient2RecordID, Globals.PATIENT_TABLE_NAME);
-                    CanRegClientApp.getApplication().releaseRecord(patient3RecordID, Globals.PATIENT_TABLE_NAME);
-
-                    // save the records
-                    for (Patient patient : patients1) {
-                        CanRegClientApp.getApplication().editRecord(patient);
-                    }
-                    CanRegClientApp.getApplication().editRecord(patient2);
-                    CanRegClientApp.getApplication().editRecord(patient3);
-
-
                 } catch (RecordLockedException ex) {
                     Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
                 }
