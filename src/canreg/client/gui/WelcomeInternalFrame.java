@@ -107,7 +107,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
 
         aboutEditorPane.setEditable(false);
         aboutEditorPane.setFont(resourceMap.getFont("aboutEditorPane.font")); // NOI18N
-        aboutEditorPane.setText("Morten Johannes Ervik\nMaria-Paula Curado\nLydia Voti\nAndy Cooke\nJacques Ferlay\n\nDEP © 2008-2010\nInternational Agency for \nResearch on Cancer\nWorld Health Organization"); // NOI18N
+        aboutEditorPane.setText(resourceMap.getString("aboutEditorPane.text")); // NOI18N
         aboutEditorPane.setFocusCycleRoot(false);
         aboutEditorPane.setFocusable(false);
         aboutEditorPane.setName("aboutEditorPane"); // NOI18N
@@ -144,9 +144,9 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(buttonPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+                .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(restoreBackupButton, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+                .addComponent(restoreBackupButton, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -176,7 +176,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(logoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                        .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
                         .addGap(14, 14, 14)
                         .addComponent(versionLabel)))
                 .addContainerGap())
