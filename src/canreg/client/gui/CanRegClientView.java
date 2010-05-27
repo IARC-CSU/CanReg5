@@ -256,7 +256,6 @@ public class CanRegClientView extends FrameView {
 
         mainPanel.setName("mainPanel"); // NOI18N
 
-        toolBar.setFloatable(false);
         toolBar.setRollover(true);
         toolBar.setName("toolBar"); // NOI18N
 
@@ -1444,7 +1443,7 @@ public class CanRegClientView extends FrameView {
     private int busyIconIndex = 0;
     private JDialog aboutBox;
     private Globals.UserRightLevels userRightsLevel = Globals.UserRightLevels.NOT_LOGGED_IN;
-    private static boolean debug = false;
+    private static boolean debug = true;
     LocalSettings localSettings;
     private static int xOffset = 30, yOffset = 30;
     private static int toolBarHeight = 80;
