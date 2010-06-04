@@ -243,8 +243,6 @@ public class CanRegClientView extends FrameView {
         jSeparator12 = new javax.swing.JPopupMenu.Separator();
         jMenuItem5 = new javax.swing.JMenuItem();
         icdo3DocumentationWebsiteMenuItem = new javax.swing.JMenuItem();
-        jSeparator9 = new javax.swing.JSeparator();
-        icdo3ManualMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
         statusPanel = new javax.swing.JPanel();
@@ -560,6 +558,7 @@ public class CanRegClientView extends FrameView {
         linksMenu.add(jSeparator12);
 
         jMenuItem5.setAction(actionMap.get("openPubCanWebsite")); // NOI18N
+        jMenuItem5.setText(resourceMap.getString("jMenuItem5.text")); // NOI18N
         jMenuItem5.setName("jMenuItem5"); // NOI18N
         linksMenu.add(jMenuItem5);
 
@@ -568,14 +567,6 @@ public class CanRegClientView extends FrameView {
         linksMenu.add(icdo3DocumentationWebsiteMenuItem);
 
         helpMenu.add(linksMenu);
-
-        jSeparator9.setName("jSeparator9"); // NOI18N
-        helpMenu.add(jSeparator9);
-
-        icdo3ManualMenuItem.setAction(actionMap.get("openICDO3Manual")); // NOI18N
-        icdo3ManualMenuItem.setText(resourceMap.getString("icdo3ManualMenuItem.text")); // NOI18N
-        icdo3ManualMenuItem.setName("icdo3ManualMenuItem"); // NOI18N
-        helpMenu.add(icdo3ManualMenuItem);
 
         jSeparator2.setName("jSeparator2"); // NOI18N
         helpMenu.add(jSeparator2);
@@ -926,7 +917,6 @@ public class CanRegClientView extends FrameView {
             restoreMenuItem.setEnabled(true);
         }
 
-        icdo3ManualMenuItem.setVisible(debug);
         garbleDatabaseMenuItem.setVisible(management && debug);
     }
 
@@ -1383,7 +1373,6 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JButton helpButton;
     private javax.swing.JMenuItem iacrWebsiteMenuItem;
     private javax.swing.JMenuItem icdo3DocumentationWebsiteMenuItem;
-    private javax.swing.JMenuItem icdo3ManualMenuItem;
     private javax.swing.JMenuItem importDataMenuItem;
     private javax.swing.JMenuItem incidenceTablesMenuItem;
     private javax.swing.JMenuItem jMenuItem1;
@@ -1409,7 +1398,6 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
-    private javax.swing.JSeparator jSeparator9;
     private javax.swing.JMenu linksMenu;
     private javax.swing.JMenuItem logInMenuItem;
     private javax.swing.JMenuItem logOutMenuItem;

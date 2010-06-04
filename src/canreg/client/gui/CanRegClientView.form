@@ -19,7 +19,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="toolBar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="701" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="707" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -555,6 +555,7 @@
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.gui.CanRegClientView" id="openPubCanWebsite" methodName="openPubCanWebsite"/>
                     </Property>
+                    <Property name="text" type="java.lang.String" resourceKey="jMenuItem5.text"/>
                     <Property name="name" type="java.lang.String" value="jMenuItem5" noResource="true"/>
                   </Properties>
                 </MenuItem>
@@ -568,20 +569,6 @@
                 </MenuItem>
               </SubComponents>
             </Menu>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator9">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="jSeparator9" noResource="true"/>
-              </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="icdo3ManualMenuItem">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.CanRegProto2View" id="openICDO3Manual" methodName="openICDO3Manual"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="icdo3ManualMenuItem.text"/>
-                <Property name="name" type="java.lang.String" value="icdo3ManualMenuItem" noResource="true"/>
-              </Properties>
-            </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator2">
               <Properties>
                 <Property name="name" type="java.lang.String" value="jSeparator2" noResource="true"/>
