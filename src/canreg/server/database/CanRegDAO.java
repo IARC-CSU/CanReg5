@@ -1169,9 +1169,11 @@ public class CanRegDAO {
     public synchronized int saveTumour(Tumour tumour) throws SQLException, RecordLockedException {
         String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         Object tumourID = tumour.getVariable(tumourIDVariableName);
-        if (tumourID == null || tumourID.toString().trim().length() == 0) {
-            String patientRecordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
-            String patientRecordID = (String) tumour.getVariable(patientRecordIDVariableName);
+        String patientRecordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
+        String patientRecordID = (String) tumour.getVariable(patientRecordIDVariableName);
+        if (tumourID == null
+                || tumourID.toString().trim().length() == 0
+                || !tumourID.toString().trim().startsWith(patientRecordID)) {
             tumourID = getNextTumourID(patientRecordID);
             tumour.setVariable(tumourIDVariableName, tumourID);
         }
