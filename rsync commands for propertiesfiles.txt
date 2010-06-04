@@ -1,0 +1,5 @@
+# put all the russian files in one folder
+rsync -Rtrv --include "*/" --include "*_ru.properties" --exclude "*" ./src/ ./translations/ru/
+
+# put all the properties files in one folder
+rsync -Rtrv --include "*/" --include "*.properties" --exclude "*" ./src/ ./translations/

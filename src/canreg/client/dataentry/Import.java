@@ -150,12 +150,14 @@ public class Import {
                 // debugOut(tumour.toString());
                 // add patient to the database
                 Object patientID = patient.getVariable(io.getPatientIDVariableName());
+                Object patientRecordID = patient.getVariable(io.getPatientRecordIDVariableName());
 
                 if (patientID == null) {
                     // save the record to get the new patientID;
                     patientDatabaseRecordID = server.savePatient(patient);
                     patient = (Patient) server.getRecord(patientDatabaseRecordID, Globals.PATIENT_TABLE_NAME, false);
                     patientID = patient.getVariable(io.getPatientIDVariableName());
+                    patientRecordID = patient.getVariable(io.getPatientRecordIDVariableName());
                 }
 
                 if (io.isDataFromPreviousCanReg()) {
@@ -172,7 +174,7 @@ public class Import {
                     while (tumourSequenceString.length() < Globals.ADDITIONAL_DIGITS_FOR_PATIENT_RECORD) {
                         tumourSequenceString = "0" + tumourSequenceString;
                     }
-                    Object patientRecordID = patientID + "" + tumourSequenceString;
+                    patientRecordID = patientID + "" + tumourSequenceString;
 
                     // If this is a multiple primary tumour...
                     String mpCodeString = (String) tumour.getVariable(io.getMultiplePrimaryVariableName());
@@ -266,6 +268,14 @@ public class Import {
                     }
                 }
 
+                if (tumour.getVariable(io.getPatientIDTumourTableVariableName()) == null) {
+                    tumour.setVariable(io.getPatientIDTumourTableVariableName(), patientID);
+                }
+
+                if (tumour.getVariable(io.getPatientRecordIDTumourTableVariableName()) == null) {
+                    tumour.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
+                }
+
                 int tumourDatabaseIDNumber = server.saveTumour(tumour);
 
                 //Read next line of data
@@ -290,6 +300,9 @@ public class Import {
         } catch (IndexOutOfBoundsException ex) {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ",
                     ex);
+            success = false;
+        } catch (SQLException ex) {
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
             success = false;
         } finally {
             if (bufferedReader != null) {
@@ -508,7 +521,7 @@ public class Import {
                         }
                     }
 
-                    // see if this thumour exists in the database already
+                    // see if this tumour exists in the database already
                     // TODO: Implement this using arrays and getTumourRexords instead
                     Tumour tumour2 = null;
                     try {
@@ -559,7 +572,7 @@ public class Import {
                             Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes = new TreeMap<Globals.StandardVariableNames, CheckResult.ResultCode>();
                             worstResultCodeFound = CheckResult.ResultCode.OK;
                             for (CheckResult result : checkResults) {
-                                if (result.getResultCode() != CheckResult.ResultCode.OK  && result.getResultCode() != CheckResult.ResultCode.NotDone) {
+                                if (result.getResultCode() != CheckResult.ResultCode.OK && result.getResultCode() != CheckResult.ResultCode.NotDone) {
                                     message += result + "\t";
                                     if (!result.getResultCode().equals(CheckResult.ResultCode.Missing)) {
                                         worstResultCodeFound = CheckResult.decideWorstResultCode(result.getResultCode(), worstResultCodeFound);

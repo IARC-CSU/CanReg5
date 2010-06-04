@@ -2,3 +2,7 @@
 \.orig\..*$
 \.chg\..*$
 \.rej$
+^src/ContentOfAllPropertiesFiles\.txt$
+^src/difference\.txt$
+^src/ru_propertiesFiles\.txt$
+^src/propertiesFiles\.txt$

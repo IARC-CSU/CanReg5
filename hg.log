@@ -1,5 +1,75 @@
-changeset:   436:6dba8647eba4
+changeset:   450:81be750c5290
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri May 07 17:17:22 2010 +0200
+summary:     Handbook now under version control.
+
+changeset:   449:d23780279522
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu May 06 17:59:56 2010 +0200
+summary:     Changed the XML parser. Now using the standard javax.xml.parsers instead of the apache one. Ref: http://stackoverflow.com/questions/2781653/recommended-parser-for-xml-in-javaabsolute-beginner-to-xml
+
+changeset:   448:0331d285d6c0
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu May 06 17:58:35 2010 +0200
+summary:     Updated the about.html
+
+changeset:   447:5bc51d16c1aa
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed May 05 17:46:04 2010 +0200
+summary:     Improved layout of the RangeFilter.
+
+changeset:   446:7ca377066086
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed May 05 17:03:02 2010 +0200
+summary:     Internationalized strings that were hardcoded before.
+
+changeset:   445:8a237651d230
+user:        ervikm@X70245.iarc.lan
+date:        Mon Apr 26 14:52:55 2010 +0200
+summary:     Back from Latin America...
+
+changeset:   444:c25fe8788677
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Apr 07 17:48:48 2010 +0200
+summary:     4.99.23 - ready for Montpellier.
+
+changeset:   443:bb8dcfb6da02
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Apr 07 17:47:35 2010 +0200
+summary:     Some fixes in getTumourBasedOnTumourID.
+
+changeset:   442:c21b352e3c9d
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Apr 07 17:46:38 2010 +0200
+summary:     Deleted some unused imports.
+
+changeset:   441:00a4c0f7ad2e
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Apr 07 17:45:49 2010 +0200
+summary:     Improved the export of the sources.
+
+changeset:   440:a55fa6a28b62
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Apr 07 17:45:06 2010 +0200
+summary:     Fixes in the database garbler...
+
+changeset:   439:4e1f19b48074
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Apr 06 13:48:34 2010 +0200
+summary:     Range in Global Person Search implemented. Double click now works.
+
+changeset:   438:cab508d8715b
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Apr 06 11:32:25 2010 +0200
+summary:     Improved error-handling of the person search module.
+
+changeset:   437:c2910a36f33d
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Mar 31 16:36:37 2010 +0200
+summary:     4.99.22
+
+changeset:   436:6dba8647eba4
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Wed Mar 31 11:38:19 2010 +0200
 summary:     4.99.22

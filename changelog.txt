@@ -1,5 +1,31 @@
 Changelog
 
+4.99.24 (5.0 RC9)
+
+- Internationalized strings that were hardcoded before.
+
+- Improved layout of the RangeFilter.
+
+- Updated the about.html
+
+- Changed the XML parser. Now using the standard javax.xml.parsers instead of the apache one.
+
+- Handbook now in Latex (Lyx) under version control.
+
+
+4.99.23 (5.0 RC8)
+
+- Improved the export of the sources.
+
+- Range in Global Person Search implemented. Double click now works.
+
+- Improved error-handling of the person search module.
+
+- Minor fixes and updates.
+
+- Tidied the source.
+
+
 4.99.22 Build 858 (5.0 RC7)
 
 - Database engine switched to Java DB 10.5.3.0
@@ -393,7 +419,7 @@ Changelog
 
 4.99.3 Build 612
 
-- Browser: It should now be possible to sort results on variables with “.” in the name. (ie. “RegNo.” or similar).
+- Browser: It should now be possible to sort results on variables with ï¿½.ï¿½ in the name. (ie. ï¿½RegNo.ï¿½ or similar).
 
 - Import: Fixed bugs during import of a file. The correct number of records read. 
 
