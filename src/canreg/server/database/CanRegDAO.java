@@ -438,7 +438,7 @@ public class CanRegDAO {
                 }
 
                 // variablesList = variablesList.substring(0, variablesList.length() - 2);
-                
+
             }
             String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
             String patientIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
@@ -516,7 +516,7 @@ public class CanRegDAO {
         } // Or a "regular" query from the patient table
         else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             String filterString = filter.getFilterString();
-            if (filterString==null){
+            if (filterString == null) {
                 filterString = "";
             }
             if (!filterString.isEmpty()) {
@@ -1056,6 +1056,7 @@ public class CanRegDAO {
         int recordVariableNumber = 0;
 
         // Go through all the variable definitions
+        // todo: optimize this code!
         for (int i = 0; i < variables.getLength(); i++) {
             // Get element
             Element element = (Element) variables.item(i);
@@ -1065,7 +1066,20 @@ public class CanRegDAO {
 
             if (tableNameDB.equalsIgnoreCase(tableName)) {
                 recordVariableNumber++;
+                int variableLength = 0;
                 String variableType = element.getElementsByTagName(Globals.NAMESPACE + "variable_type").item(0).getTextContent();
+                NodeList variableLengthElement = element.getElementsByTagName(Globals.NAMESPACE + "variable_length");
+                String variableLenghtString = null;
+                if (variableLengthElement != null && variableLengthElement.item(0) != null) {
+                    variableLenghtString = variableLengthElement.item(0).getTextContent();
+                    if (variableLenghtString != null) {
+                        try {
+                            variableLength = Integer.parseInt(variableLenghtString);
+                        } catch (NumberFormatException nfe) {
+                            variableLength = 0;
+                        }
+                    }
+                }
                 Object obj = record.getVariable(element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent());
 
                 // System.out.println(
@@ -1077,6 +1091,9 @@ public class CanRegDAO {
                         try {
                             String strObj = obj.toString();
                             if (strObj.length() > 0) {
+                                if (variableLength > 0 && strObj.length() > variableLength) {
+                                    strObj = strObj.substring(0, variableLength);
+                                }
                                 stmtSaveNewRecord.setString(recordVariableNumber, strObj);
                             } else {
                                 stmtSaveNewRecord.setString(recordVariableNumber, "");
@@ -1133,7 +1150,15 @@ public class CanRegDAO {
             patient.setVariable(patientRecordIDVariable.getDatabaseVariableName(), patientRecordID);
             patient.setVariable(patientRecordIDVariable.getDatabaseVariableName(), getNextPatientRecordID(patientID));
         }
-        return saveRecord("Patient", patient, stmtSaveNewPatient);
+        DatabaseVariablesListElement patientRecordStatusVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientCheckStatus.toString());
+        if (patient.getVariable(patientRecordStatusVariable.getDatabaseVariableName()) == null) {
+            patient.setVariable(patientRecordStatusVariable.getDatabaseVariableName(), "0");
+        }
+        DatabaseVariablesListElement patientUnduplicationStatusVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PersonSearch.toString());
+        if (patient.getVariable(patientUnduplicationStatusVariable.getDatabaseVariableName()) == null) {
+            patient.setVariable(patientUnduplicationStatusVariable.getDatabaseVariableName(), "0");
+        }
+        return saveRecord(Globals.PATIENT_TABLE_NAME, patient, stmtSaveNewPatient);
     }
 
     /**
@@ -1149,6 +1174,18 @@ public class CanRegDAO {
             String patientRecordID = (String) tumour.getVariable(patientRecordIDVariableName);
             tumourID = getNextTumourID(patientRecordID);
             tumour.setVariable(tumourIDVariableName, tumourID);
+        }
+        DatabaseVariablesListElement tumourRecordStatusVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
+        if (tumour.getVariable(tumourRecordStatusVariable.getDatabaseVariableName()) == null) {
+            tumour.setVariable(tumourRecordStatusVariable.getDatabaseVariableName(), "0");
+        }
+        DatabaseVariablesListElement tumourUnduplicationStatusVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUnduplicationStatus.toString());
+        if (tumour.getVariable(tumourUnduplicationStatusVariable.getDatabaseVariableName()) == null) {
+            tumour.setVariable(tumourUnduplicationStatusVariable.getDatabaseVariableName(), "0");
+        }
+        DatabaseVariablesListElement tumourCheckStatusVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.CheckStatus.toString());
+        if (tumour.getVariable(tumourCheckStatusVariable.getDatabaseVariableName()) == null) {
+            tumour.setVariable(tumourCheckStatusVariable.getDatabaseVariableName(), "0");
         }
         Set<Source> sources = tumour.getSources();
         // delete old sources
