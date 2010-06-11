@@ -1,5 +1,27 @@
 Changelog
 
+
+4.99.25 (5.0 RC10)
+
+- First draft of the Russian translation ready.
+
+- Created a jsmooth file to build .exe's for CanReg5 on windows.
+
+- Fixed a bug in the merge two patient-function.
+
+- CanRegDAO save record now truncates variables if needed.
+
+- CanRegClientView removed ICD-O-3 manual link.
+
+- CanRegDAO save rumour now harmonizes tumour record ids better.
+
+- Improved exception handling.
+
+- Work on internationalization. 
+
+- Updated the handbook.
+
+
 4.99.24 (5.0 RC9)
 
 - Internationalized strings that were hardcoded before.
@@ -419,7 +441,7 @@ Changelog
 
 4.99.3 Build 612
 
-- Browser: It should now be possible to sort results on variables with �.� in the name. (ie. �RegNo.� or similar).
+- Browser: It should now be possible to sort results on variables with ?.? in the name. (ie. ?RegNo.? or similar).
 
 - Import: Fixed bugs during import of a file. The correct number of records read. 
 

@@ -1,5 +1,100 @@
-changeset:   450:81be750c5290
+changeset:   469:b791f082a38b
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jun 04 17:52:41 2010 +0200
+summary:     Updated translations.
+
+changeset:   468:6355b5549d46
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jun 04 11:56:45 2010 +0200
+summary:     CanRegDAO save rumour now harmonizes tumour record ids better.
+
+changeset:   467:30b0d19ceafe
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jun 04 11:38:26 2010 +0200
+summary:     CanRegClientView removed ICD-O-3 manual link.
+
+changeset:   466:00f80649dbc1
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jun 04 11:37:43 2010 +0200
+summary:     CanRegDAO save record now truncates variables if needed.
+
+changeset:   465:55d49d23edad
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu May 27 15:52:10 2010 +0200
+summary:     Updated the garbler.
+
+changeset:   464:ade02d9687d2
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu May 27 15:51:40 2010 +0200
+summary:     Menubar can now float. Work on internationalization.
+
+changeset:   463:b71f8443954e
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu May 27 15:51:22 2010 +0200
+summary:     Work on internationalization.
+
+changeset:   462:493d688c7b65
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu May 27 15:50:57 2010 +0200
+summary:     Work on internationalization.
+
+changeset:   461:9461a6a2d9c6
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue May 25 14:44:08 2010 +0200
+summary:     Work on internationalization. Added strings to be translated. First draft of Russian translation ready.
+
+changeset:   460:14822d7e7f35
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue May 25 14:40:47 2010 +0200
+summary:     Removed some debug messages.
+
+changeset:   459:c9aa296ae79c
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue May 18 17:57:01 2010 +0200
+summary:     Updated the documentation. Changed some illustrations.
+
+changeset:   458:b38aaf24ee8f
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue May 18 17:56:16 2010 +0200
+summary:     Updated the documentation. Changed some illustrations.
+
+changeset:   457:af32c4d624d8
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue May 18 14:33:06 2010 +0200
+summary:     Created a jsmooth file to build .exe's for CanReg5 on windows.
+
+changeset:   456:07bac78d8787
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed May 12 18:29:56 2010 +0200
+summary:     Committed the tex-version of the handbook as well.
+
+changeset:   455:1619773b1ba9
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue May 11 11:43:32 2010 +0200
+summary:     Fixed a bug in the merge two patient-function.
+
+changeset:   454:6f2c4698bc7a
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue May 11 11:43:05 2010 +0200
+summary:     Updated the about.html
+
+changeset:   453:b16c5e028ef3
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue May 11 11:42:41 2010 +0200
+summary:     Improved exception handling.
+
+changeset:   452:d65a1e99363b
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon May 10 17:50:17 2010 +0200
+summary:     Updated pdf of the handbook.
+
+changeset:   451:a50703c6366f
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon May 10 17:46:16 2010 +0200
+summary:     Updated handbook.
+
+changeset:   450:81be750c5290
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Fri May 07 17:17:22 2010 +0200
 summary:     Handbook now under version control.
