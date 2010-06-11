@@ -766,6 +766,7 @@ CanReg 5 Welcome window:
 \align center
 \begin_inset Graphics
 	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegWelcomeScreen.png
+	scale 50
 
 \end_inset
 
@@ -2894,6 +2895,7 @@ Obsolete
 \align center
 \begin_inset Graphics
 	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/DataEntryExample.png
+	scale 50
 
 \end_inset
 
