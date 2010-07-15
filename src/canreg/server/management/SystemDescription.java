@@ -422,4 +422,32 @@ public class SystemDescription {
             }
         }
     }
+
+    public void setIndexes(DatabaseIndexesListElement[] databaseIndexesListElement) {
+        Element parentElement = (Element) doc.getElementsByTagName(namespace + "indexes").item(0);
+        if (parentElement == null) {
+            parentElement = doc.createElement(namespace + "indexes");
+            doc.appendChild(parentElement);
+        }
+        //  debugOut(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
+        while (parentElement.hasChildNodes()) {
+            parentElement.removeChild(parentElement.getLastChild());
+        }
+        for (DatabaseIndexesListElement index : databaseIndexesListElement) {
+            Element element = createIndex(index);
+            parentElement.appendChild(element);
+        }
+    }
+
+    private Element createIndex(DatabaseIndexesListElement index) {
+        Element element = doc.createElement(namespace + "index");
+        element.appendChild(createElement(namespace + "name", index.getIndexName()));
+        element.appendChild(createElement(namespace + "table", index.getDatabaseTableName()));
+        for (DatabaseVariablesListElement variable : index.getVariableListElementsInIndex()) {
+            Element variableElement = doc.createElement(namespace + "indexed_variable");
+            variableElement.appendChild(createElement(namespace + "variable_name", variable.getDatabaseVariableName()));
+            element.appendChild(variableElement);
+        }
+        return element;
+    }
 }
