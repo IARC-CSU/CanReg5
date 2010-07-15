@@ -29,5 +29,16 @@ public class DatabaseIndexPanel extends DatabaseElementsPanel {
     public Color colorize(DatabaseElement element) {
         return null;
     }
+
+    @Override
+    public DatabaseIndexesListElement[] getDatabaseElements() {
+        DatabaseIndexesListElement[] elements = new DatabaseIndexesListElement[elementPanelsSet.size()];
+        int i = 0;
+        for (DatabaseElementPanel elementPanel : elementPanelsSet) {
+            elements[i] = (DatabaseIndexesListElement) elementPanel.getDatabaseElement();
+            i++;
+        }
+        return elements;
+    }
 }
 

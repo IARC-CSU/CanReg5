@@ -76,7 +76,11 @@ public class DatabaseIndexesListElement  implements Serializable, DatabaseElemen
     public void setVariablesInIndex(DatabaseVariablesListElement[] variableListElementsInIndex) {
         variableNamesInIndex = new LinkedList<String>();
         for (DatabaseVariablesListElement dvle:variableListElementsInIndex){
-            variableNamesInIndex.add(dvle.getDatabaseVariableName());
+            if (dvle!=null){
+                variableNamesInIndex.add(dvle.getDatabaseVariableName());
+            } else {
+                throw new NullPointerException("Something wrong with index "+indexName);
+            }
         }
         this.variableListElementsInIndex = variableListElementsInIndex;
     }

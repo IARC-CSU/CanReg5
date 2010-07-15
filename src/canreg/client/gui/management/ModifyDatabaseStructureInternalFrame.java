@@ -9,6 +9,7 @@ import canreg.client.gui.CanRegClientView;
 import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.DatabaseElement;
 import canreg.common.DatabaseGroupsListElement;
+import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.server.management.SystemDescription;
@@ -571,6 +572,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         systemDescription.setDictionaries((DatabaseDictionaryListElement[]) databaseDictionaryPanel1.getDatabaseElements());
         systemDescription.setGroups((DatabaseGroupsListElement[]) databaseGroupPanel1.getDatabaseElements());
         systemDescription.setVariables((DatabaseVariablesListElement[]) databaseVariablePanel1.getDatabaseElements());
+        systemDescription.setIndexes((DatabaseIndexesListElement[]) databaseIndexPanel1.getDatabaseElements());
         // save doc
         fileName = Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + File.separator + registryCodeTextField.getText().trim() + ".xml";
         File file = new File(fileName);
