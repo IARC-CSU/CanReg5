@@ -112,6 +112,7 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(DatabaseElementPanel.REMOVE_ACTION)) {
             elementsPanel.remove((Component) e.getSource());
+            elementPanelsSet.remove((DatabaseElementPanel) e.getSource());
             elementsPanel.revalidate();
             elementsPanel.repaint();
         } else if (e.getActionCommand().equals(DatabaseElementPanel.MOVE_UP_ACTION)) {
