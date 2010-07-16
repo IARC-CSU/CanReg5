@@ -4064,6 +4064,142 @@ Changelog
 \end_layout
 
 \begin_layout Subsubsection*
+4.99.25 (5.0 RC10)
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+First draft of the Russian translation ready.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Created a jsmooth file to build .exe's for CanReg5 on windows.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Fixed a bug in the merge two patient-function.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+CanRegDAO save record now truncates variables if needed.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+CanRegClientView removed ICD-O-3 manual link.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+CanRegDAO save rumour now harmonizes tumour record ids better.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Improved exception handling.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Work on internationalization.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Updated the handbook.
+\end_layout
+
+\begin_layout Subsubsection*
+4.99.24 (5.0 RC9)
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Internationalized strings that were hardcoded before.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Improved layout of the RangeFilter.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Updated the about.html
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Changed the XML parser.
+ Now using the standard javax.xml.parsers instead of the apache one.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Handbook now in Latex (Lyx) under version control.
+\end_layout
+
+\begin_layout Subsubsection*
+4.99.23 (5.0 RC8)
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Improved the export of the sources.
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Range in Global Person Search implemented.
+ Double click now works.
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Improved error-handling of the person search module.
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Minor fixes and updates.
+\end_layout
+
+\begin_layout Itemize
+\align left
+
+\family typewriter
+Tidied the source.
+\end_layout
+
+\begin_layout Subsubsection*
 
 \series bold
 4.99.22 Build 858

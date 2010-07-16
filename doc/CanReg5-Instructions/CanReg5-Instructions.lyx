@@ -4064,6 +4064,44 @@ Changelog
 \end_layout
 
 \begin_layout Subsubsection*
+4.99.27 (5.0 RC12)
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Set up new CanReg system: Fixed a bug where varaibles removed were not removed.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Set up new database: Indexes are now updated properly in XML.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Improved russian translation.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Other bugfixes.
+\end_layout
+
+\begin_layout Subsubsection*
+4.99.26 (5.0 RC11)
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Disabled some debug code from the release build.
+\end_layout
+
+\begin_layout Subsubsection*
 4.99.25 (5.0 RC10)
 \end_layout
 
