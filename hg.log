@@ -1,5 +1,65 @@
-changeset:   469:b791f082a38b
+changeset:   481:7cf31a30cb5a
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Aug 25 15:14:25 2010 +0200
+summary:     Updated database engine to Apache Derby 10.6.1.0. (Needed for case insensitive searches. Plus security fixes etc.)
+
+changeset:   480:a9aededc419b
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Aug 25 15:13:39 2010 +0200
+summary:     Updated database engine to Apache Derby 10.6.1.0. (Needed for case insensitive searches. Plus security fixes etc.)
+
+changeset:   479:7d7fc233de8a
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Aug 25 15:07:37 2010 +0200
+summary:     Work on the "save needed"-routine.
+
+changeset:   478:651bb730e01b
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Aug 25 15:06:57 2010 +0200
+summary:     When Turkish language is detected default to english for now to avoid problems with capitalization...
+
+changeset:   477:54d0ccd22f58
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jul 16 15:38:13 2010 +0200
+summary:     Set up new database: Indexes are now updated properly in XML.
+
+changeset:   476:944794ea7505
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Jul 15 16:58:47 2010 +0200
+summary:     Set up new database: Indexes are now updated properly in XML.
+
+changeset:   475:d17bdf8983ae
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Jul 15 16:58:25 2010 +0200
+summary:     Set up new database: Indexes are now updated properly in XML.
+
+changeset:   474:9942f5c2a61c
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Jul 15 14:57:34 2010 +0200
+summary:     Improved russian translation.
+
+changeset:   473:a57d038ffacf
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Jul 15 14:51:39 2010 +0200
+summary:     Set up new CanReg system: Fixed a bug where varaibles removed were not removed...
+
+changeset:   472:7a3a7621965a
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Jun 15 13:40:50 2010 +0200
+summary:     4.99.26
+
+changeset:   471:7e396f3a09a8
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jun 11 16:49:52 2010 +0200
+summary:     4.99.25
+
+changeset:   470:8742e3712195
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jun 11 16:49:30 2010 +0200
+summary:     Updated handbook.
+
+changeset:   469:b791f082a38b
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Fri Jun 04 17:52:41 2010 +0200
 summary:     Updated translations.

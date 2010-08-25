@@ -1,5 +1,27 @@
 Changelog
 
+4.99.28 (5.0 RC13)
+
+- Searches and sorts in the database are now case insensitive using the primary component of the letters (i.e. 'å' equals 'A', 'é' equals 'E')
+
+- Updated database engine to Apache Derby 10.6.1.0. (Needed for case insensitive searches. Plus security fixes, performance issues etc.)
+
+- When Turkish language is detected default to english for now to avoid problems with capitalization.
+
+- Other bugfixes.
+
+
+4.99.27 (5.0 RC12)
+
+- Set up new CanReg system: Fixed a bug where varaibles removed were not removed.
+
+- Set up new database: Indexes are now updated properly in XML.
+
+- Improved russian translation.
+
+- Other bugfixes.
+
+
 4.99.26 (5.0 RC11)
 
 - Disabled some debug code from the release build.
@@ -21,7 +43,7 @@ Changelog
 
 - Improved exception handling.
 
-- Work on internationalization. 
+- Work on internationalization.
 
 - Updated the handbook.
 

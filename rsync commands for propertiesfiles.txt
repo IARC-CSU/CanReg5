@@ -3,3 +3,9 @@ rsync -Rtrv --include "*/" --include "*_ru.properties" --exclude "*" ./src/ ./tr
 
 # put all the properties files in one folder
 rsync -Rtrv --include "*/" --include "*.properties" --exclude "*" ./src/ ./translations/
+
+# put all the portuguese files in one folder
+rsync -Rtrv --include "*/" --include "*_pt.properties" --exclude "*" ./src/ ./translations/pt/
+
+# put all the spanish files in one folder
+rsync -Rtrv --include "*/" --include "*_es.properties" --exclude "*" ./src/ ./translations/es/
