@@ -30,7 +30,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,7 +45,6 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import org.jdesktop.application.Action;
@@ -257,7 +255,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             if (checkStatus != null) {
                 String checkStatusString = (String) checkStatus;
                 resultCode = CheckResult.toResultCode(checkStatusString);
-                setSaveNeeded(false);
+                // setSaveNeeded(false);
                 setChecksResultCode(resultCode);
             } else {
                 // String checkStatusString = (String) checkStatus;
