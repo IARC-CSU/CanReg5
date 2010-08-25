@@ -863,6 +863,14 @@ public class CanRegDAO {
         String dbUrl = getDatabaseUrl();
         dbProperties.put("create", "true");
 
+        // testing the case insensitivity
+        // REF: https://issues.apache.org/jira/secure/attachment/12439250/devguide.txt
+        // http://db.apache.org/derby/docs/dev/devguide/tdevdvlpcollation.html#tdevdvlpcollation
+        // We do it without the territory set so that the default JVM one is taken
+        // Should this be moved to an option? I guess not...
+        
+        dbProperties.put("collation", "TERRITORY_BASED:PRIMARY");
+
         try {
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
             bCreated = createTables(dbConnection);
