@@ -1,5 +1,15 @@
-changeset:   481:7cf31a30cb5a
+changeset:   483:4aa75676c66f
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Aug 25 17:56:06 2010 +0200
+summary:     4.99.29 (5.0 RC14)
+
+changeset:   482:422fa26ec3fc
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Aug 25 15:26:17 2010 +0200
+summary:     4.99.28 (5.0 RC13)
+
+changeset:   481:7cf31a30cb5a
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Wed Aug 25 15:14:25 2010 +0200
 summary:     Updated database engine to Apache Derby 10.6.1.0. (Needed for case insensitive searches. Plus security fixes etc.)
