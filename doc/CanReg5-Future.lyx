@@ -1,0 +1,278 @@
+#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+CanReg 5 improvements
+\end_layout
+
+\begin_layout Author
+By: Morten Johannes Ervik, CIN, IARC
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename ../../../../Desktop/CanReg5-Instructions/0.png
+	width 2.24931in
+	height 2.24931in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part*
+\begin_inset Newpage pagebreak
+\end_inset
+
+Introduction
+\end_layout
+
+\begin_layout Standard
+This document is a road map for the development of CanReg5.
+\end_layout
+
+\begin_layout Part*
+\begin_inset Newpage pagebreak
+\end_inset
+
+CanReg 5.0
+\end_layout
+
+\begin_layout Section*
+Data Entry related
+\end_layout
+
+\begin_layout Itemize
+Delete the 
+\begin_inset Quotes eld
+\end_inset
+
+add patient record
+\begin_inset Quotes erd
+\end_inset
+
+-button.
+\end_layout
+
+\begin_layout Itemize
+Improve detection of changes to a record.
+\end_layout
+
+\begin_layout Itemize
+Improve dictionary chooser.
+\end_layout
+
+\begin_layout Itemize
+Sort by code or description.
+\end_layout
+
+\begin_layout Itemize
+Let user enter dates in the format they wish
+\end_layout
+
+\begin_layout Section*
+Database related
+\end_layout
+
+\begin_layout Itemize
+Better database connection security.
+\end_layout
+
+\begin_layout Itemize
+Optional encryption of the database (
+\begin_inset Quotes eld
+\end_inset
+
+boot-password
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Optimize queries.
+\end_layout
+
+\begin_layout Section*
+Analysis related
+\end_layout
+
+\begin_layout Itemize
+Implement all the tables proposed.
+ (And others?)
+\end_layout
+
+\begin_layout Section*
+Quality control 
+\end_layout
+
+\begin_layout Itemize
+First name sex properly implemented
+\end_layout
+
+\begin_layout Itemize
+Improve person search 
+\end_layout
+
+\begin_layout Itemize
+Optimize code.
+ 
+\end_layout
+
+\begin_layout Itemize
+Implement Soundex.
+\end_layout
+
+\begin_layout Section*
+General optimization
+\end_layout
+
+\begin_layout Itemize
+Import slows down after a while...
+ (memory leak?)
+\end_layout
+
+\begin_layout Section*
+Pending bugs
+\end_layout
+
+\begin_layout Itemize
+Bug that drops the result set being browsed.
+\end_layout
+
+\begin_layout Itemize
+Turkish character set bug.
+\end_layout
+
+\begin_layout Part*
+\begin_inset Newpage pagebreak
+\end_inset
+
+Proposals for CanReg 5.1
+\end_layout
+
+\begin_layout Section*
+General
+\end_layout
+
+\begin_layout Itemize
+Internalize some dictionaries:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+ICD-O-3 (Topo, Morpho, Behaviour)
+\end_layout
+
+\begin_layout Itemize
+Record Status
+\end_layout
+
+\begin_layout Itemize
+Check Status
+\end_layout
+
+\begin_layout Itemize
+Person Search Status
+\end_layout
+
+\end_deeper
+\begin_layout Section*
+Data Entry related
+\end_layout
+
+\begin_layout Itemize
+Support for some other date formats
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Buddhist
+\end_layout
+
+\begin_layout Itemize
+Other? Chinese?
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Improve workflow during data entry.
+\end_layout
+
+\begin_layout Section*
+Database related
+\end_layout
+
+\begin_layout Itemize
+Mortality data
+\end_layout
+
+\begin_layout Section*
+Analysis related
+\end_layout
+
+\begin_layout Itemize
+Use of mortality data in analysis
+\end_layout
+
+\begin_layout Section*
+Management related
+\end_layout
+
+\begin_layout Itemize
+Changing some user rights levels
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Hiding the browser for the analyst user
+\end_layout
+
+\begin_layout Itemize
+Hiding the browser for a user-level between analyst and registrar?
+\end_layout
+
+\end_deeper
+\end_body
+\end_document
