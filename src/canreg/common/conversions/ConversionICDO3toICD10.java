@@ -301,7 +301,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
             if (topog8FileLine.startsWith("aos.")) {
                 if (topog8FileLine.charAt(4) == ':') {
                     int rule = (int) topog8FileLine.charAt(5) - 48;
-                    TopogConv(rule,morphologyLookUpLine);
+                    TopogConv(rule,topographyICD10Map.get(topographyCode));
                     break;
                 }
                 ICD10Male = topog8FileLine.substring(4, 8);
@@ -347,7 +347,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
                 if (topog9FileLine.charAt(8) == ':') // female specific site
                 {
                     int rule = (int) topog9FileLine.charAt(9) - 48;
-                    TopogConv(rule, morphologyLookUpLine);
+                    TopogConv(rule, topographyICD10Map.get(topographyCode));
                     ICD10Female = ICD10Male;
                 } else {
                     ICD10Female = topog9FileLine.substring(8, 12);
@@ -355,7 +355,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
                 if (topog9FileLine.charAt(4) == ':') //  male specific site
                 {
                     int rule = (int) topog9FileLine.charAt(5) - 48;
-                    TopogConv(rule, morphologyLookUpLine);
+                    TopogConv(rule, topographyICD10Map.get(topographyCode));
                 } else {
                     ICD10Male = topog9FileLine.substring(4, 8);
                 }
