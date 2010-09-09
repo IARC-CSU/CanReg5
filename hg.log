@@ -1,5 +1,40 @@
-changeset:   483:4aa75676c66f
+changeset:   490:34ecf400d6ce
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Sep 08 18:11:37 2010 +0200
+summary:     Found a bug in the convert to ICD10-part for certain combinations T/M. Fixed it.
+
+changeset:   489:cc3cc2344bad
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Sep 07 17:41:13 2010 +0200
+summary:     Future modified.
+
+changeset:   488:dc08a059c53a
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Sep 07 17:29:05 2010 +0200
+summary:     Tidied the documentation folder.
+
+changeset:   487:3fa7f135efb7
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Sep 07 17:18:09 2010 +0200
+summary:     Document on CanReg Future added to version control
+
+changeset:   486:a351da43375c
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Sep 02 15:54:26 2010 +0200
+summary:     Updated the table of Morphologies after discussion with Jacques and Eric.
+
+changeset:   485:c0a4b225db21
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Aug 31 09:51:04 2010 +0200
+summary:     4.99.29
+
+changeset:   484:056a877518ac
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Aug 27 10:32:03 2010 +0200
+summary:     Updated documentation.
+
+changeset:   483:4aa75676c66f
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Wed Aug 25 17:56:06 2010 +0200
 summary:     4.99.29 (5.0 RC14)
