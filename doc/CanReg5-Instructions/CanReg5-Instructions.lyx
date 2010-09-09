@@ -4111,6 +4111,31 @@ Changelog
 \end_layout
 
 \begin_layout Subsubsection*
+4.99.30 (5.0 RC15)
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Found and fixed a bug in the convert to ICD10-part for certain combinations
+ T/M.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Updated the table of Morphologies.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Other bug fixes.
+\end_layout
+
+\begin_layout Subsubsection*
 4.99.29 (5.0 RC14)
 \end_layout
 
