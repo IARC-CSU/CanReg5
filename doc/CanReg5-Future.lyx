@@ -1,4 +1,4 @@
-#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -35,6 +35,7 @@
 \paperpagestyle default
 \tracking_changes false
 \output_changes false
+\author "" 
 \author "" 
 \end_header
 
@@ -100,14 +101,29 @@ Improve detection of changes to a record.
 
 \begin_layout Itemize
 Improve dictionary chooser.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Build it into the record editor? 
 \end_layout
 
 \begin_layout Itemize
-Sort by code or description.
+Lookup as you type?
 \end_layout
 
+\begin_layout Itemize
+Sort by either code or label.
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Let user enter dates in the format they wish
+\end_layout
+
+\begin_layout Itemize
+Only one save button for all records for a patient?
 \end_layout
 
 \begin_layout Section*
@@ -182,6 +198,18 @@ Bug that drops the result set being browsed.
 \end_layout
 
 \begin_layout Itemize
+Don't let the user click 
+\begin_inset Quotes eld
+\end_inset
+
+Refresh table
+\begin_inset Quotes erd
+\end_inset
+
+ while refresh is in progress...
+\end_layout
+
+\begin_layout Itemize
 Turkish character set bug.
 \end_layout
 
@@ -206,15 +234,15 @@ ICD-O-3 (Topo, Morpho, Behaviour)
 \end_layout
 
 \begin_layout Itemize
-Record Status
+Record Status.
 \end_layout
 
 \begin_layout Itemize
-Check Status
+Check Status.
 \end_layout
 
 \begin_layout Itemize
-Person Search Status
+Person Search Status.
 \end_layout
 
 \end_deeper
@@ -271,6 +299,16 @@ Hiding the browser for the analyst user
 
 \begin_layout Itemize
 Hiding the browser for a user-level between analyst and registrar?
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Streamline the setup of new systems
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+New system wizard
 \end_layout
 
 \end_deeper
