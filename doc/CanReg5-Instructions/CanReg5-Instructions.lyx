@@ -154,6 +154,13 @@ Version 5 of CanReg is now ready for download.
 \family sans
 \series bold
 A short introduction to the database structure in CanReg5
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:A-short-introduction"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -562,6 +569,13 @@ Example log-file:
 
 \begin_layout Section
 Installing and running CanReg 5
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Installing-and-running"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -1062,6 +1076,13 @@ System.)
 \family sans
 \series bold
 Setting up or modifying a CanReg system using the built in editor
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Setting-up-or-modifying"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4100,6 +4121,374 @@ You need a population dataset with 5 years age groups for many of the tables
 \begin_layout Itemize
 \align left
 Age can not yet be calculated automatically.
+ 
+\end_layout
+
+\begin_layout Section
+Migrating from CanReg4 - Step by Step
+\end_layout
+
+\begin_layout Standard
+Install CanReg5.
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "sec:Installing-and-running"
+
+\end_inset
+
+Start CanReg5 and it presents you the Welcome window.
+ Do NOT click anything here just yet.
+\end_layout
+
+\begin_layout Subsection
+Step 1 - Import the variable definitions of CanReg4 to CanReg5
+\end_layout
+
+\begin_layout Standard
+The first step is to import the variables of CanReg4 to CanReg5 - the system
+ definition of CanReg4.)
+\end_layout
+
+\begin_layout Enumerate
+Go to “Tool” in CanReg5 menu and click “Convert system definition” 
+\end_layout
+
+\begin_layout Enumerate
+Do “Browse” to find your CanReg 4 system definition file.
+ (This is a file located in the folder 
+\backslash
+CR4SHARE
+\backslash
+CANREG4
+\backslash
+CR4-SYST
+\backslash
+ followed by your 3 letter registry code i.e.
+ TRN whose name is ending in .DEF (i.e.
+ CR4-TRN.DEF).) 
+\end_layout
+
+\begin_layout Enumerate
+Select your CanReg4 file and double click it or click “Open”.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Click “Convert”.
+ 
+\end_layout
+
+\begin_layout Enumerate
+The program will then ask you if you want to add this server to your favourites.
+ Click “Yes” here.
+ 
+\end_layout
+
+\begin_layout Enumerate
+The next step is the trickiest one during the conversion.
+ Since we go from a tumour based database structure with only one big table
+ with all the tumour and patient related information to a structure with
+ both a table for tumour related information, one for patient related informatio
+n and yet another one for source information
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "sub:A-short-introduction"
+
+\end_inset
+
+ we need to specify what variable goes in what table of CanReg5.
+ We recommend putting the unique patient related information (name, date
+ of birth and follow-up variables) in the patient table, source information
+ in the Source table and pretty much the rest (tumour information, age,
+ address etc) in the tumour table.
+ 
+\end_layout
+
+\begin_layout Enumerate
+The program presents an initial proposal that you might agree with, but
+ please go through one by one the variables and decide.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Click “Save”.
+ You have now created an XML file that describes your CanReg5 system.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Optional: Before you proceed to the next step and launch the server you
+ can, if you want(!), edit this this XML file you have created.
+ Either using the built in grapical tool in CanReg5 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "sub:Setting-up-or-modifying"
+
+\end_inset
+
+ or manually by opening it in a text editor or a dedicated XML editor.
+ The file is located in your user folder under .CanRegServer.
+ (On my machine, for example, running Windows XP it is under: C:
+\backslash
+Documents and Settings
+\backslash
+morten
+\backslash
+.CanRegServer
+\backslash
+System.)
+\end_layout
+
+\begin_layout Enumerate
+Click “Login”.
+\end_layout
+
+\begin_layout Enumerate
+Launch the CanReg server 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Click “Settings” 
+\end_layout
+
+\begin_layout Enumerate
+Click “Launch Server”.
+ (If you get a java firewall query, please confirm that it is OK that java
+ can comunicate through you firewall by clicking “OK” or “Yes”.) If this
+ is the first time you launch the server on this machine it will automatically
+ create the database needed for CanReg5.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Now it is time to log into the system.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Click “System” 
+\end_layout
+
+\begin_layout Enumerate
+Enter username: “morten” 
+\end_layout
+
+\begin_layout Enumerate
+Enter password: “ervik” 
+\end_layout
+
+\begin_layout Enumerate
+Click “Login”.
+ The system will now log you onto your CanReg server.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Step 2 - Import the dictionary from your CanReg4 installation
+\end_layout
+
+\begin_layout Standard
+The thing we want to do now is to import the 
+\emph on
+dictionary
+\emph default
+ from your CanReg4 installation or demo system.
+ (Earlier we only imported the description of what variables exist in you
+ canreg4 database.) This is demonstrated in the video called 06-import-dictionary.
+avi.
+ 
+\end_layout
+
+\begin_layout Enumerate
+If you are migrating from CanReg4 make sure to export the most updated dictionar
+y from your CanReg4 system.
+ (In CanReg4: “Data Entry”, “Dictionary”, “Export dictionary to text file”)
+\end_layout
+
+\begin_layout Enumerate
+Go to “File”, “Data Entry”, “Edit dictionary” in CanReg5 
+\end_layout
+
+\begin_layout Enumerate
+Click on “Import complete dictionary from file”.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Browse and select the dictionary from you CanReg4 work folder or elsewhere.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+Preview
+\begin_inset Quotes erd
+\end_inset
+
+ to take a look at the dictionary.
+\end_layout
+
+\begin_layout Enumerate
+Tick “CanReg4 Format” if you are migrating, leave unticked if you are using
+ the demo system or otherwise are importing a CanReg5 formatted dictionary.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+Import
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This might take some time.
+ Please note the bar in the lower right indicating that the program is busy.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Afterwards you will receive a message of success imported.
+ Click OK.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Go back to “File”, “Data Entry”, “Edit dictionary” and verify that the dictionar
+ies have been imported.
+ 
+\end_layout
+
+\begin_layout Subsection
+Step 3 - Import the data from your CanReg4 installation
+\end_layout
+
+\begin_layout Standard
+The next step is to import the 
+\emph on
+data
+\emph default
+ from CanReg4 to CanReg5.
+ This is demoed in the video called 07-import-data.avi.
+\end_layout
+
+\begin_layout Enumerate
+Make sure you export the most updated data from your CanReg4 system.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+In CanReg4: “Analysis”, “Export data” 
+\end_layout
+
+\begin_layout Enumerate
+Tick “Export all variables”.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Choose variables names short 
+\end_layout
+
+\begin_layout Enumerate
+Under “Export File options” choose “Comma separated variables” 
+\end_layout
+
+\begin_layout Enumerate
+Untick “Format date” 
+\end_layout
+
+\begin_layout Enumerate
+Untick “Correct Unknown” 
+\end_layout
+
+\begin_layout Enumerate
+Click “write data to file” and pick a file name that you can find back easily
+ in CanReg5.
+ For example on the desktop.
+ Click “save”.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Take a look at the data you have now exported and close CanReg4.
+\end_layout
+
+\begin_layout Enumerate
+Take a note of the number of records.
+ (This should later match the number of 
+\emph on
+Tumour records
+\emph default
+ in your CanReg5 system.)
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Back in CanReg5 do “File”, “Data Entry” and “Import Data”.
+\end_layout
+
+\begin_layout Enumerate
+Click “Browse” and locate the file from step A.
+ Select it and click “Open”.
+ You can if you want preview the file to see that you picked the right one
+ and that the file looks OK.
+ If for example Arabic names are garbled you should try to choose another
+ “File encoding” (Default for Arabic text is ISO-8859-6).
+\end_layout
+
+\begin_layout Enumerate
+Set “Separating character” to Comma.
+ (Or whatever separating character your file has.) 
+\end_layout
+
+\begin_layout Enumerate
+Click Preview to see that the data looks OK.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Click “Next” (or select the tab “Associate Variables”) 
+\end_layout
+
+\begin_layout Enumerate
+This lets you associate the variables in the file to import with the variables
+ in the database.
+ CanReg5 will find most of these associations by itself, but you should
+ revise them to see if they look OK.
+ Look for variable names in bold, as they are the one that are not assigned
+ at all.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Click “Next” (or select the tab “Import File”) 
+\end_layout
+
+\begin_layout Enumerate
+Click “Import” (leave everything as by default – the import function only
+ works on empty CanReg databases as per now…) 
+\end_layout
+
+\begin_layout Enumerate
+Let CanReg5 import the data (this might take a while) and click “OK”.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Click “Browse/Edit” and “Refresh Table” to see that the data has arrived
+ well.
+ Double click a record to take a look at it.
  
 \end_layout
 
