@@ -640,6 +640,7 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 CanRegClientApp.getApplication().saveNewPopulationDataset(pds);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_UPDATED_PDS:_") + pds.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (SecurityException ex) {
             Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
