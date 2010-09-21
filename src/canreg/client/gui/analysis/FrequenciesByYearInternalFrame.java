@@ -12,6 +12,7 @@ import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.gui.CanRegClientView;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
+import java.awt.Cursor;
 import java.awt.MenuItem;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -216,6 +217,9 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             // doInBackground() depends on from parameters
             // to RefreshTask fields, here.
             super(app);
+            rangeFilterPanel.setRefreshButtonEnabled(false);
+            Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+            setCursor(hourglassCursor);
             tableName = rangeFilterPanel.getSelectedTable();
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
             filter.setRange(rangeFilterPanel.getRange());
@@ -309,6 +313,9 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             } else {
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, result);
             }
+            Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+            setCursor(normalCursor);
+            rangeFilterPanel.setRefreshButtonEnabled(true);
         }
     }
 

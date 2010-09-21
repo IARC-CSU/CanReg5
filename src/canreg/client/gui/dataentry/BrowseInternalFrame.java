@@ -311,7 +311,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
                 columnTableMousePressed(evt);
             }
         });
-        
+
     }
 
     private void initValues() {
@@ -411,6 +411,9 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             // doInBackground() depends on from parameters
             // to RefreshTask fields, here.
             super(app);
+            rangeFilterPanel.setRefreshButtonEnabled(false);
+            Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+            setCursor(hourglassCursor);
             tableName = rangeFilterPanel.getSelectedTable();
             variablesToShow = variablesPanel.getVariablesToShow(tableName);
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
@@ -519,7 +522,9 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             } else {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, result);
             }
-
+            Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+            setCursor(normalCursor);
+            rangeFilterPanel.setRefreshButtonEnabled(true);
         }
     }
 
@@ -690,6 +695,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 idColumnNumber--;
                 TreeSet<DatabaseRecord> set = new TreeSet<DatabaseRecord>(new Comparator<DatabaseRecord>() {
 
+                    @Override
                     public int compare(DatabaseRecord o1, DatabaseRecord o2) {
                         return (o1.getVariable(tumourIDlookupVariable).toString().compareTo(o2.getVariable(tumourIDlookupVariable).toString()));
                     }
@@ -836,6 +842,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
     private canreg.client.gui.components.DisplayVariablesPanel variablesPanel;
     // End of variables declaration//GEN-END:variables
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if ("refresh".equalsIgnoreCase(e.getActionCommand())) {
             Task refreshTask = refresh();

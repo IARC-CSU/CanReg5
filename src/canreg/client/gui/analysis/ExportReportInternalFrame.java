@@ -449,9 +449,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             // doInBackground() depends on from parameters
             // to RefreshTask fields, here.
             super(app);
+            rangeFilterPanel.setRefreshButtonEnabled(false);
+            Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+            setCursor(hourglassCursor);
             tableName = rangeFilterPanel.getSelectedTable();
             variablesToShow = variableChooserPanel.getSelectedVariableNames(tableName);
-
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
             filter.setSortByVariable(rangeFilterPanel.getSortByVariable().trim());
             filter.setRange(rangeFilterPanel.getRange());
@@ -558,6 +560,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             } else {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, result);
             }
+            Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+            setCursor(normalCursor);
+            rangeFilterPanel.setRefreshButtonEnabled(true);
         }
     }
 
@@ -607,7 +612,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 fileName = chooser.getSelectedFile().getCanonicalPath();
                 File file = new File(fileName);
                 if (file.exists()) {
-                    int choice = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/ExportReportInternalFrame").getString("FILE_EXISTS") +": "+ fileName + ".\n"+java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/ExportReportInternalFrame").getString("OVERWRITE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/ExportReportInternalFrame").getString("FILE_EXISTS")+".", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    int choice = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/ExportReportInternalFrame").getString("FILE_EXISTS") + ": " + fileName + ".\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/ExportReportInternalFrame").getString("OVERWRITE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/ExportReportInternalFrame").getString("FILE_EXISTS") + ".", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
                     if (choice == JOptionPane.CANCEL_OPTION) {
                         return null;
                     } else if (choice == JOptionPane.NO_OPTION) {
@@ -710,8 +715,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     }
                     sourceVariableNames = new LinkedHashSet<String>();
                     DatabaseVariablesListElement[] dbvls = CanRegClientApp.getApplication().getGlobalToolBox().getVariables();
-                    for (DatabaseVariablesListElement dbvle:dbvls){
-                        if (dbvle.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)){
+                    for (DatabaseVariablesListElement dbvle : dbvls) {
+                        if (dbvle.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
                             sourceVariableNames.add(dbvle.getDatabaseVariableName());
                         }
                     }
@@ -781,9 +786,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 }
                 // add the source bits if needed
                 if (exportSources) {
-                    for (int i=0;i<maxNumberOfSourcesPerTumour;i++){
-                        for (String header:sourceVariableNames){
-                            line += separatingString+header;
+                    for (int i = 0; i < maxNumberOfSourcesPerTumour; i++) {
+                        for (String header : sourceVariableNames) {
+                            line += separatingString + header;
                         }
                     }
                 }
