@@ -45,6 +45,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.rmi.RemoteException;
+import java.util.TreeSet;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -84,6 +85,7 @@ public class CanRegClientView extends FrameView {
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
         messageTimer = new Timer(messageTimeout, new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent e) {
                 statusMessageLabel.setText("");
             }
@@ -95,6 +97,7 @@ public class CanRegClientView extends FrameView {
         }
         busyIconTimer = new Timer(busyAnimationRate, new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent e) {
                 busyIconIndex = (busyIconIndex + 1) % busyIcons.length;
                 statusAnimationLabel.setIcon(busyIcons[busyIconIndex]);
@@ -108,6 +111,7 @@ public class CanRegClientView extends FrameView {
         TaskMonitor taskMonitor = new TaskMonitor(getApplication().getContext());
         taskMonitor.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
 
+            @Override
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 String propertyName = evt.getPropertyName();
                 if ("started".equals(propertyName)) {
@@ -1009,9 +1013,14 @@ public class CanRegClientView extends FrameView {
      */
     @Action
     public void browseEditAction() {
-        JInternalFrame internalFrame = new BrowseInternalFrame(desktopPane);
-        showAndPositionInternalFrame(desktopPane, internalFrame);
-        maximizeHeight(desktopPane, internalFrame);
+        if (browseInternalFrame == null) {
+            browseInternalFrame = new BrowseInternalFrame(desktopPane);
+            showAndPositionInternalFrame(desktopPane, browseInternalFrame);
+            maximizeHeight(desktopPane, browseInternalFrame);
+        } else {
+            showAndPositionInternalFrame(desktopPane, browseInternalFrame);
+            maximizeHeight(desktopPane, browseInternalFrame);
+        }
     }
 
     /**
@@ -1057,7 +1066,11 @@ public class CanRegClientView extends FrameView {
      */
     public static void showAndPositionInternalFrame(JDesktopPane desktopPane, JInternalFrame internalFrame) {
         int numberOfOpenFrames = desktopPane.getAllFrames().length;
-        desktopPane.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        try {
+            desktopPane.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        } catch (java.lang.IllegalArgumentException iae){
+            // frame already displayed
+        }
         internalFrame.setVisible(true);
         int posX = 0;
         // Math.max(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, 0);
@@ -1435,4 +1448,5 @@ public class CanRegClientView extends FrameView {
     LocalSettings localSettings;
     private static int xOffset = 30, yOffset = 30;
     private static int toolBarHeight = 80;
+    private JInternalFrame browseInternalFrame;
 }

@@ -328,6 +328,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
     }
 
 private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_browserClosed
+    /* Remove this for now since we only allow one browser and we reuse it...
     rangeFilterPanel.close();
     if (tableDatadescription != null) {
         try {
@@ -338,6 +339,7 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+     */
 }//GEN-LAST:event_browserClosed
 
 private void editPatientIDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_editPatientIDKeyTyped
