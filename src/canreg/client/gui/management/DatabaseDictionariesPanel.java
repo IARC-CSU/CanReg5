@@ -12,6 +12,7 @@ import org.jdesktop.application.Action;
 public class DatabaseDictionariesPanel extends DatabaseElementsPanel {
 
     @Action
+    @Override
     public void addAction() {
         add(new DatabaseDictionaryListElement());
     }
@@ -28,6 +29,7 @@ public class DatabaseDictionariesPanel extends DatabaseElementsPanel {
         return elements;
     }
 
+    @Override
     public boolean removable(DatabaseElement dbe) {
         return true;
     }
