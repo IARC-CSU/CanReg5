@@ -199,15 +199,14 @@ public class CanRegClientView extends FrameView {
         logInMenuItem = new javax.swing.JMenuItem();
         logOutMenuItem = new javax.swing.JMenuItem();
         jSeparator11 = new javax.swing.JSeparator();
+        viewWorkFilesMenuItem = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JSeparator();
+        javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         dataEntryMenu = new javax.swing.JMenu();
         browseEditMenuItem = new javax.swing.JMenuItem();
         editDictionaryMenuItem = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         importDataMenuItem = new javax.swing.JMenuItem();
-        jSeparator4 = new javax.swing.JSeparator();
-        viewWorkFilesMenuItem = new javax.swing.JMenuItem();
-        jSeparator3 = new javax.swing.JSeparator();
-        javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         analysisMenu = new javax.swing.JMenu();
         frequenciesMenuItem = new javax.swing.JMenuItem();
         incidenceTablesMenuItem = new javax.swing.JMenuItem();
@@ -234,7 +233,6 @@ public class CanRegClientView extends FrameView {
         jMenuItem2 = new javax.swing.JMenuItem();
         databaseStructureMenu = new javax.swing.JMenu();
         setUpDatabaseMenuItem = new javax.swing.JMenuItem();
-        modifyDatabaseMenuItem = new javax.swing.JMenuItem();
         garbleDatabaseMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         canReg5HelpMenuItem = new javax.swing.JMenuItem();
@@ -354,6 +352,23 @@ public class CanRegClientView extends FrameView {
         jSeparator11.setName("jSeparator11"); // NOI18N
         fileMenu.add(jSeparator11);
 
+        viewWorkFilesMenuItem.setAction(actionMap.get("viewWorkFiles")); // NOI18N
+        viewWorkFilesMenuItem.setText(resourceMap.getString("viewWorkFilesMenuItem.text")); // NOI18N
+        viewWorkFilesMenuItem.setToolTipText(resourceMap.getString("viewWorkFilesMenuItem.toolTipText")); // NOI18N
+        viewWorkFilesMenuItem.setName("viewWorkFilesMenuItem"); // NOI18N
+        fileMenu.add(viewWorkFilesMenuItem);
+
+        jSeparator3.setName("jSeparator3"); // NOI18N
+        fileMenu.add(jSeparator3);
+
+        exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
+        exitMenuItem.setIcon(resourceMap.getIcon("exitMenuItem.icon")); // NOI18N
+        exitMenuItem.setText(resourceMap.getString("exitMenuItem.text")); // NOI18N
+        exitMenuItem.setName("exitMenuItem"); // NOI18N
+        fileMenu.add(exitMenuItem);
+
+        menuBar.add(fileMenu);
+
         dataEntryMenu.setText(resourceMap.getString("dataEntryMenu.text")); // NOI18N
         dataEntryMenu.setName("dataEntryMenu"); // NOI18N
 
@@ -379,27 +394,7 @@ public class CanRegClientView extends FrameView {
         importDataMenuItem.setName("importMenuItem"); // NOI18N
         dataEntryMenu.add(importDataMenuItem);
 
-        fileMenu.add(dataEntryMenu);
-
-        jSeparator4.setName("jSeparator4"); // NOI18N
-        fileMenu.add(jSeparator4);
-
-        viewWorkFilesMenuItem.setAction(actionMap.get("viewWorkFiles")); // NOI18N
-        viewWorkFilesMenuItem.setText(resourceMap.getString("viewWorkFilesMenuItem.text")); // NOI18N
-        viewWorkFilesMenuItem.setToolTipText(resourceMap.getString("viewWorkFilesMenuItem.toolTipText")); // NOI18N
-        viewWorkFilesMenuItem.setName("viewWorkFilesMenuItem"); // NOI18N
-        fileMenu.add(viewWorkFilesMenuItem);
-
-        jSeparator3.setName("jSeparator3"); // NOI18N
-        fileMenu.add(jSeparator3);
-
-        exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
-        exitMenuItem.setIcon(resourceMap.getIcon("exitMenuItem.icon")); // NOI18N
-        exitMenuItem.setText(resourceMap.getString("exitMenuItem.text")); // NOI18N
-        exitMenuItem.setName("exitMenuItem"); // NOI18N
-        fileMenu.add(exitMenuItem);
-
-        menuBar.add(fileMenu);
+        menuBar.add(dataEntryMenu);
 
         analysisMenu.setText(resourceMap.getString("analysisMenu.text")); // NOI18N
         analysisMenu.setName("analysisMenu"); // NOI18N
@@ -512,12 +507,9 @@ public class CanRegClientView extends FrameView {
         databaseStructureMenu.setName("databaseStructureMenu"); // NOI18N
 
         setUpDatabaseMenuItem.setAction(actionMap.get("setUpNewDatabaseStructureAction")); // NOI18N
+        setUpDatabaseMenuItem.setText(resourceMap.getString("setUpDatabaseMenuItem.text")); // NOI18N
         setUpDatabaseMenuItem.setName("setUpDatabaseMenuItem"); // NOI18N
         databaseStructureMenu.add(setUpDatabaseMenuItem);
-
-        modifyDatabaseMenuItem.setAction(actionMap.get("modifyDatabaseStructureAction")); // NOI18N
-        modifyDatabaseMenuItem.setName("modifyDatabaseMenuItem"); // NOI18N
-        databaseStructureMenu.add(modifyDatabaseMenuItem);
 
         toolsMenu.add(databaseStructureMenu);
 
@@ -1406,7 +1398,6 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JToolBar.Separator jSeparator15;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
@@ -1417,7 +1408,6 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenu managementMenu;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem modifyDatabaseMenuItem;
     private javax.swing.JMenuItem nameSexMenuItem;
     private javax.swing.JButton optionsButton;
     private javax.swing.JMenuItem optionsMenuItem;

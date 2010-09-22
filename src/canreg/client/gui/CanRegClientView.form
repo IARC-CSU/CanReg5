@@ -19,7 +19,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="toolBar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="707" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="701" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -176,57 +176,6 @@
                 <Property name="name" type="java.lang.String" value="jSeparator11" noResource="true"/>
               </Properties>
             </MenuItem>
-            <Menu class="javax.swing.JMenu" name="dataEntryMenu">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="dataEntryMenu.text"/>
-                <Property name="name" type="java.lang.String" value="dataEntryMenu" noResource="true"/>
-              </Properties>
-              <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="browseEditMenuItem">
-                  <Properties>
-                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="canreg.client.gui.CanRegClientView" id="browseEditAction" methodName="browseEditAction"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" resourceKey="browseMenuItem.text"/>
-                    <Property name="toolTipText" type="java.lang.String" resourceKey="browseMenuItem.toolTipText"/>
-                    <Property name="name" type="java.lang.String" value="browseMenuItem" noResource="true"/>
-                  </Properties>
-                </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="editDictionaryMenuItem">
-                  <Properties>
-                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="canreg.client.gui.CanRegClientView" id="editDictionaryAction" methodName="editDictionaryAction"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" resourceKey="dictionaryMenuItem.text"/>
-                    <Property name="toolTipText" type="java.lang.String" resourceKey="dictionaryMenuItem.toolTipText"/>
-                    <Property name="name" type="java.lang.String" value="dictionaryMenuItem" noResource="true"/>
-                  </Properties>
-                </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
-                  <Properties>
-                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="canreg.client.gui.CanRegClientView" id="editPopulationDataSets" methodName="editPopulationDataSets"/>
-                    </Property>
-                    <Property name="toolTipText" type="java.lang.String" resourceKey="jMenuItem1.toolTipText"/>
-                    <Property name="name" type="java.lang.String" value="jMenuItem1" noResource="true"/>
-                  </Properties>
-                </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="importDataMenuItem">
-                  <Properties>
-                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="canreg.client.gui.CanRegClientView" id="importData" methodName="importData"/>
-                    </Property>
-                    <Property name="toolTipText" type="java.lang.String" resourceKey="importMenuItem.toolTipText"/>
-                    <Property name="name" type="java.lang.String" value="importMenuItem" noResource="true"/>
-                  </Properties>
-                </MenuItem>
-              </SubComponents>
-            </Menu>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator4">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="jSeparator4" noResource="true"/>
-              </Properties>
-            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="viewWorkFilesMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
@@ -255,6 +204,52 @@
                 <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
               </AuxValues>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="dataEntryMenu">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="dataEntryMenu.text"/>
+            <Property name="name" type="java.lang.String" value="dataEntryMenu" noResource="true"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="browseEditMenuItem">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="browseEditAction" methodName="browseEditAction"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="browseMenuItem.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="browseMenuItem.toolTipText"/>
+                <Property name="name" type="java.lang.String" value="browseMenuItem" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="editDictionaryMenuItem">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="editDictionaryAction" methodName="editDictionaryAction"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="dictionaryMenuItem.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="dictionaryMenuItem.toolTipText"/>
+                <Property name="name" type="java.lang.String" value="dictionaryMenuItem" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="editPopulationDataSets" methodName="editPopulationDataSets"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="jMenuItem1.toolTipText"/>
+                <Property name="name" type="java.lang.String" value="jMenuItem1" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="importDataMenuItem">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="importData" methodName="importData"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="importMenuItem.toolTipText"/>
+                <Property name="name" type="java.lang.String" value="importMenuItem" noResource="true"/>
+              </Properties>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -459,15 +454,8 @@
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.gui.CanRegClientView" id="setUpNewDatabaseStructureAction" methodName="setUpNewDatabaseStructureAction"/>
                     </Property>
+                    <Property name="text" type="java.lang.String" resourceKey="setUpDatabaseMenuItem.text"/>
                     <Property name="name" type="java.lang.String" value="setUpDatabaseMenuItem" noResource="true"/>
-                  </Properties>
-                </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="modifyDatabaseMenuItem">
-                  <Properties>
-                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="canreg.client.gui.CanRegClientView" id="modifyDatabaseStructureAction" methodName="modifyDatabaseStructureAction"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="modifyDatabaseMenuItem" noResource="true"/>
                   </Properties>
                 </MenuItem>
               </SubComponents>
