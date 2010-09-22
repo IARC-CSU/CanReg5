@@ -126,6 +126,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         // Add a listener for changing the active tab
         ChangeListener tabbedPaneChangeListener = new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 JTabbedPane pane = (JTabbedPane) e.getSource();
                 RecordEditorPanel rep = (RecordEditorPanel) pane.getSelectedComponent();
@@ -140,6 +141,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
         //remove the save all button for now
         saveAllButton.setVisible(false);
+
+        //remove the add patient record button for now
+        addpatientRecordButton.setVisible(false);
 
     }
 
@@ -560,6 +564,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private javax.swing.JTabbedPane tumourTabbedPane;
     // End of variables declaration//GEN-END:variables
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         DatabaseRecord tumourRecord;
