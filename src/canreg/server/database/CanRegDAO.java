@@ -80,6 +80,8 @@ public class CanRegDAO {
         strGetSourcesAndTumours = QueryGenerator.strGetSourcesAndTumours(globalToolBox);
         strCountPatientsAndTumours = QueryGenerator.strCountPatientsAndTumours(globalToolBox);
         strCountSourcesAndTumours = QueryGenerator.strCountSourcesAndTumours(globalToolBox);
+        strGetRecordsAllTables = QueryGenerator.strGetRecordsAllTables(globalToolBox);
+        strCountRecordsAllTables = QueryGenerator.strCountRecordsAllTables(globalToolBox);
         strGetHighestPatientID = QueryGenerator.strGetHighestPatientID(globalToolBox);
         strGetHighestTumourID = QueryGenerator.strGetHighestTumourID(globalToolBox);
         strGetHighestPatientRecordID = QueryGenerator.strGetHighestPatientRecordID(globalToolBox);
@@ -468,6 +470,14 @@ public class CanRegDAO {
                         + (filterString.trim().length() > 0 ? filterString + " " : "")
                         + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
                         + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+            } else if (tableName.equalsIgnoreCase(Globals.ALL_TABLES_NAME)) {
+                query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
+                        + "FROM APP.SOURCE, APP.TUMOUR, APP.PATIENT "
+                        + "WHERE APP.SOURCE." + tumourIDVariableNameSourceTable + " = APP.TUMOUR." + tumourIDVariableNameTumourTable + " "
+                        + "AND APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " "
+                        + filterString + " "
+                        + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
+                        + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
             }
             System.out.print(query);
 
@@ -657,6 +667,43 @@ public class CanRegDAO {
             }
             try {
                 result = statement.executeQuery(strGetSourcesAndTumours + filterString);
+            } catch (java.sql.SQLSyntaxErrorException ex) {
+                throw ex;
+            }
+        }// Or a "regular" query from a join of tumour, source and patient tables
+        else if (tableName.equalsIgnoreCase(Globals.ALL_TABLES_NAME)) {
+            String filterString = filter.getFilterString();
+            if (!filterString.isEmpty()) {
+                filterString = " AND (" + filterString.trim() + ")";
+            }
+            // Add the range part
+            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
+
+                filterString += " AND ";
+
+                filterString += QueryGenerator.buildRangePart(filter);
+            }
+
+            // debugOut(strCountPatientsAndTumours + filterString);
+
+            ResultSet countRowSet;
+            try {
+                countRowSet = statement.executeQuery(strCountRecordsAllTables + filterString);
+            } catch (java.sql.SQLSyntaxErrorException ex) {
+                throw ex;
+            }
+
+            // Count the rows...
+            if (countRowSet.next()) {
+                rowCount = countRowSet.getInt(1);
+            }
+            // feed it to the garbage dump
+            countRowSet = null;
+            if (filter.getSortByVariable() != null) {
+                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
+            }
+            try {
+                result = statement.executeQuery(strGetRecordsAllTables + filterString);
             } catch (java.sql.SQLSyntaxErrorException ex) {
                 throw ex;
             }
@@ -868,7 +915,7 @@ public class CanRegDAO {
         // http://db.apache.org/derby/docs/dev/devguide/tdevdvlpcollation.html#tdevdvlpcollation
         // We do it without the territory set so that the default JVM one is taken
         // Should this be moved to an option? I guess not...
-        
+
         dbProperties.put("collation", "TERRITORY_BASED:PRIMARY");
 
         try {
@@ -970,6 +1017,7 @@ public class CanRegDAO {
             stmtGetSources = dbConnection.prepareStatement(strGetSources);
             stmtGetPatientsAndTumours = dbConnection.prepareStatement(strGetPatientsAndTumours);
             stmtGetSourcesAndTumours = dbConnection.prepareStatement(strGetSourcesAndTumours);
+            stmtGetRecordsAllTables = dbConnection.prepareStatement(strGetRecordsAllTables);
             stmtGetHighestPatientID = dbConnection.prepareStatement(strGetHighestPatientID);
             stmtGetHighestTumourID = dbConnection.prepareStatement(strGetHighestTumourID);
             stmtGetHighestPatientRecordID = dbConnection.prepareStatement(strGetHighestPatientRecordID);
@@ -2113,6 +2161,7 @@ public class CanRegDAO {
     private PreparedStatement stmtGetTumours;
     private PreparedStatement stmtGetPatientsAndTumours;
     private PreparedStatement stmtGetSourcesAndTumours;
+    private PreparedStatement stmtGetRecordsAllTables;
     private PreparedStatement stmtGetRecord;
     private PreparedStatement stmtGetRecords;
     private PreparedStatement stmtGetDictionary;
@@ -2149,6 +2198,8 @@ public class CanRegDAO {
     private String strCountPatientsAndTumours;
     private String strGetSourcesAndTumours;
     private String strCountSourcesAndTumours;
+    private String strGetRecordsAllTables;
+    private String strCountRecordsAllTables;
     private static final String strGetTumour =
             "SELECT * FROM APP.TUMOUR "
             + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";

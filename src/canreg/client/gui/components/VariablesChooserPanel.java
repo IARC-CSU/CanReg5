@@ -100,34 +100,6 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
         DatabaseVariablesListElement[] tumourVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
         DatabaseVariablesListElement[] sourceVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
 
-        if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
-            variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length + tumourVariablesInDB.length];
-            for (int position = 0; position < patientVariablesInDB.length; position++) {
-                variablesInTable[position] = patientVariablesInDB[position];
-            }
-            for (int position = 0; position < tumourVariablesInDB.length; position++) {
-                variablesInTable[position + patientVariablesInDB.length] = tumourVariablesInDB[position];
-            }
-        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
-            variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length + tumourVariablesInDB.length];
-            for (int position = 0; position < sourceVariablesInDB.length; position++) {
-                variablesInTable[position] = sourceVariablesInDB[position];
-            }
-            for (int position = 0; position < tumourVariablesInDB.length; position++) {
-                variablesInTable[position + sourceVariablesInDB.length] = tumourVariablesInDB[position];
-            }
-        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-            variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length];
-            variablesInTable = patientVariablesInDB;
-        } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-            variablesInTable = new DatabaseVariablesListElement[tumourVariablesInDB.length];
-            variablesInTable = tumourVariablesInDB;
-        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
-            variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length];
-            variablesInTable = sourceVariablesInDB;
-        }
-
-
         // Add the panels
         for (DatabaseVariablesListElement variable : variablesInTable) {
             VariablesExportDetailsPanel ved = new VariablesExportDetailsPanel();
@@ -210,5 +182,9 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
      */
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+   
+    public void setVariablesInTable(DatabaseVariablesListElement[] arrayOfVariablesInSelectedTables) {
+        variablesInTable = arrayOfVariablesInSelectedTables;
     }
 }

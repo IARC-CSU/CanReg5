@@ -310,12 +310,13 @@
         <Component class="javax.swing.JComboBox" name="tableChooserComboBox">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="5">
+              <StringArray count="6">
                 <StringItem index="0" value="Tumour"/>
                 <StringItem index="1" value="Patient"/>
                 <StringItem index="2" value="Tumour+Patient"/>
                 <StringItem index="3" value="Source"/>
                 <StringItem index="4" value="Source+Tumour"/>
+                <StringItem index="5" value="All"/>
               </StringArray>
             </Property>
             <Property name="toolTipText" type="java.lang.String" resourceKey="tableChooserComboBox.toolTipText"/>

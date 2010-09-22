@@ -12,6 +12,7 @@ import canreg.common.Tools;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -288,7 +289,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         tableChooserPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("tableChooserPanel.border.title"))); // NOI18N
         tableChooserPanel.setName("tableChooserPanel"); // NOI18N
 
-        tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tumour", "Patient", "Tumour+Patient", "Source", "Source+Tumour" }));
+        tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tumour", "Patient", "Tumour+Patient", "Source", "Source+Tumour", "All" }));
         tableChooserComboBox.setToolTipText(resourceMap.getString("tableChooserComboBox.toolTipText")); // NOI18N
         tableChooserComboBox.setName("tableChooserComboBox"); // NOI18N
         tableChooserComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -410,6 +411,8 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
                     < indexesInTableTemp.length; i++) {
                 indexesInTableTemp[i] = tempIndexesInTable.get(i);
             }
+        } else if (tableName.equalsIgnoreCase(Globals.ALL_TABLES_NAME)) {
+            indexesInTableTemp = indexesInDB;
         } else {
             LinkedList<DatabaseIndexesListElement> tempIndexesInTable = new LinkedList<DatabaseIndexesListElement>();
             for (int i = 0; i
@@ -424,7 +427,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
                 indexesInTableTemp[i] = tempIndexesInTable.get(i);
             }
         }
-        
+
         Object tempIndex = rangeComboBox.getSelectedItem();
         String tempStart = rangeStartTextField.getText();
         String tempEnd = rangeEndTextField.getText();
@@ -556,23 +559,16 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
 
     private void refreshVariableList() {
         String tableName = tableChooserComboBox.getSelectedItem().toString();
-
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
-            variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length + tumourVariablesInDB.length];
-            for (int position = 0; position < patientVariablesInDB.length; position++) {
-                variablesInTable[position] = patientVariablesInDB[position];
-            }
-            for (int position = 0; position < tumourVariablesInDB.length; position++) {
-                variablesInTable[position + patientVariablesInDB.length] = tumourVariablesInDB[position];
-            }
+            LinkedList<DatabaseVariablesListElement> variablesInTableList = new LinkedList<DatabaseVariablesListElement>();
+            variablesInTableList.addAll(Arrays.asList(tumourVariablesInDB));
+            variablesInTableList.addAll(Arrays.asList(patientVariablesInDB));
+            variablesInTable = variablesInTableList.toArray(new DatabaseVariablesListElement[0]);
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
-            variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length + tumourVariablesInDB.length];
-            for (int position = 0; position < sourceVariablesInDB.length; position++) {
-                variablesInTable[position] = sourceVariablesInDB[position];
-            }
-            for (int position = 0; position < tumourVariablesInDB.length; position++) {
-                variablesInTable[position + sourceVariablesInDB.length] = tumourVariablesInDB[position];
-            }
+            LinkedList<DatabaseVariablesListElement> variablesInTableList = new LinkedList<DatabaseVariablesListElement>();
+            variablesInTableList.addAll(Arrays.asList(sourceVariablesInDB));
+            variablesInTableList.addAll(Arrays.asList(tumourVariablesInDB));
+            variablesInTable = variablesInTableList.toArray(new DatabaseVariablesListElement[0]);
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length];
             variablesInTable = patientVariablesInDB;
@@ -582,8 +578,13 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
             variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length];
             variablesInTable = sourceVariablesInDB;
+        } else if (tableName.equalsIgnoreCase(Globals.ALL_TABLES_NAME)) {
+            LinkedList<DatabaseVariablesListElement> variablesInTableList = new LinkedList<DatabaseVariablesListElement>();
+            variablesInTableList.addAll(Arrays.asList(patientVariablesInDB));
+            variablesInTableList.addAll(Arrays.asList(tumourVariablesInDB));
+            variablesInTableList.addAll(Arrays.asList(sourceVariablesInDB));
+            variablesInTable = variablesInTableList.toArray(new DatabaseVariablesListElement[0]);
         }
-
         sortByChooserComboBox.setModel(new DefaultComboBoxModel(variablesInTable));
     }
 
@@ -706,6 +707,7 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
         actionListener.actionPerformed(new ActionEvent(this, 0, "refresh"));
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().getClass() == FastFilterInternalFrame.class) {
             setFilter(e.getActionCommand());
@@ -729,5 +731,9 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
 
     public void setTablesToChooseFrom(String[] tables) {
         tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(tables));
+    }
+
+    public DatabaseVariablesListElement[] getArrayOfVariablesInSelectedTables(){
+        return variablesInTable;
     }
 }

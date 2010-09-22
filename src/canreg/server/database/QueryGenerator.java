@@ -403,6 +403,28 @@ public class QueryGenerator {
                 + "WHERE APP.TUMOUR." + tumourIDVariableNameTumourTable + "= APP.SOURCE." + tumourIDVariableNameSourceTable;
     }
 
+    static String strGetRecordsAllTables(GlobalToolBox globalToolBox) {
+        String patientRecordIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+        String patientRecordIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
+        String tumourIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
+        String tumourIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+        return "SELECT * FROM APP.SOURCE, APP.TUMOUR, APP.PATIENT "
+                + "WHERE APP.TUMOUR." + tumourIDVariableNameTumourTable + " = APP.SOURCE." + tumourIDVariableNameSourceTable
+                + " AND "
+                + "APP.TUMOUR." + patientRecordIDVariableNameTumourTable + " = APP.PATIENT." + patientRecordIDVariableNamePatientTable;
+    }
+
+    static String strCountRecordsAllTables(GlobalToolBox globalToolBox) {
+        String patientRecordIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+        String patientRecordIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
+        String tumourIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
+        String tumourIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+        return "SELECT COUNT(*) FROM APP.SOURCE, APP.TUMOUR, APP.PATIENT "
+                + "WHERE APP.TUMOUR." + tumourIDVariableNameTumourTable + " = APP.SOURCE." + tumourIDVariableNameSourceTable
+                + " AND "
+                + "APP.TUMOUR." + patientRecordIDVariableNameTumourTable + " = APP.PATIENT." + patientRecordIDVariableNamePatientTable;
+    }
+
     private static final String strSaveRecord(Document doc, String tableName) {
         String variableNamesPart = "INSERT INTO " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase();
         String valuesPart = "VALUES ";

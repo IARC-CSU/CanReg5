@@ -83,7 +83,6 @@ public class Globals {
     static public String CANREG_LEVELS_FILE_NAME = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + "levels.properties";
     static public String CANREG_INSTRUCTIONS_URL = "http://www.iacr.com.fr/CanReg5/CanReg5-instructions.pdf";
     static public String CANREG_INSTRUCTIONS_LOCAL_FILE = CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + "CanReg5-instructions.pdf";
-
     /**
      * 
      */
@@ -121,12 +120,14 @@ public class Globals {
     public static String USERS_TABLE_NAME = "USERS";
     static public String TUMOUR_AND_PATIENT_JOIN_TABLE_NAME = TUMOUR_TABLE_NAME + "+" + PATIENT_TABLE_NAME;
     static public String SOURCE_AND_TUMOUR_JOIN_TABLE_NAME = SOURCE_TABLE_NAME + "+" + TUMOUR_TABLE_NAME;
+    public static String ALL_TABLES_NAME = SOURCE_TABLE_NAME + "+" + TUMOUR_TABLE_NAME + "+" + PATIENT_TABLE_NAME;
     static public String[] DEFAULT_TABLE_CHOOSER_TABLE_LIST = {
         TUMOUR_TABLE_NAME,
         PATIENT_TABLE_NAME,
         TUMOUR_AND_PATIENT_JOIN_TABLE_NAME,
         SOURCE_TABLE_NAME,
-        SOURCE_AND_TUMOUR_JOIN_TABLE_NAME
+        SOURCE_AND_TUMOUR_JOIN_TABLE_NAME,
+        ALL_TABLES_NAME
     };
     /**
      * 
@@ -458,7 +459,6 @@ public class Globals {
     public static int ADDITIONAL_DIGITS_FOR_TUMOUR_ID = 2;
     public static int ADDITIONAL_DIGITS_FOR_SOURCE_ID = 2;
     public static int MAX_USERNAME_LENGHT = 16;
-
     public static String FONT_LATIN = "Latin";
     public static String FONT_ASIAN = "Asian";
     public static String DICTIONARY_TYPE_SIMPLE = "Simple";

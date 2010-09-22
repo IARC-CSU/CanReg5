@@ -12,6 +12,7 @@ import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.gui.CanRegClientView;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.Globals;
 import java.awt.Cursor;
 import java.awt.MenuItem;
 import java.awt.Point;
@@ -325,8 +326,10 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         // rangeFilterPanel.setTableChooserVisible(false);
         rangeFilterPanel.setRecordPanelvisible(false);
         rangeFilterPanel.setSortByVariableShown(false);
+        rangeFilterPanel.setTablesToChooseFrom(Globals.DEFAULT_TABLE_CHOOSER_TABLE_LIST);
         resultScrollPane.setVisible(false);
         variablesChooserPanel.setTableName(rangeFilterPanel.getSelectedTable());
+        variablesChooserPanel.setVariablesInTable(rangeFilterPanel.getArrayOfVariablesInSelectedTables());
         variablesChooserPanel.initPanel(dictionary);
         tableInternalFrame = new TableInternalFrame();
 
@@ -423,6 +426,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         jpm.show(target, evt.getX(), evt.getY());
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if ("refresh".equalsIgnoreCase(e.getActionCommand())) {
             Task refreshTask = refresh();
@@ -430,6 +434,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         } else if ("tableChanged".equalsIgnoreCase(e.getActionCommand())) {
             tableName = rangeFilterPanel.getSelectedTable();
             variablesChooserPanel.setTableName(tableName);
+            variablesChooserPanel.setVariablesInTable(rangeFilterPanel.getArrayOfVariablesInSelectedTables());
             variablesChooserPanel.initPanel(dictionary);
             resultPanel.setVisible(false);
         }

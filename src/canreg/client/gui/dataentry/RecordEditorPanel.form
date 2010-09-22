@@ -51,7 +51,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="systemPanel" alignment="0" max="32767" attributes="1"/>
-          <Component id="dataScrollPane" alignment="1" pref="758" max="32767" attributes="0"/>
+          <Component id="dataScrollPane" alignment="1" pref="767" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -85,8 +85,9 @@
                   <Component id="sequencePanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="updatedByPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="controlPanel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -99,8 +100,8 @@
                       <Component id="checksPanel" alignment="0" pref="81" max="32767" attributes="1"/>
                       <Component id="sequencePanel" alignment="0" max="32767" attributes="1"/>
                       <Component id="updatedByPanel" alignment="0" max="32767" attributes="1"/>
-                      <Component id="controlPanel" alignment="0" min="-2" max="-2" attributes="1"/>
                       <Component id="recordStatusPanel" alignment="0" pref="81" max="32767" attributes="1"/>
+                      <Component id="controlPanel" alignment="0" min="-2" max="-2" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -330,8 +331,8 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="menuButton" alignment="0" pref="90" max="32767" attributes="1"/>
-                          <Component id="saveButton" alignment="0" pref="90" max="32767" attributes="1"/>
+                          <Component id="menuButton" alignment="0" pref="77" max="32767" attributes="1"/>
+                          <Component id="saveButton" alignment="0" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>

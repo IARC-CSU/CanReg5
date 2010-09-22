@@ -381,6 +381,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private void initValues() {
         String tableName = rangeFilterPanel.getSelectedTable();
         variableChooserPanel.setTableName(tableName);
+        variableChooserPanel.setVariablesInTable(rangeFilterPanel.getArrayOfVariablesInSelectedTables());
         variableChooserPanel.initPanel(dictionary);
         rangeFilterPanel.setDeskTopPane(dtp);
         rangeFilterPanel.setActionListener(this);
@@ -577,6 +578,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         }
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if ("refresh".equalsIgnoreCase(e.getActionCommand())) {
             Task refreshTask = refresh();
@@ -584,6 +586,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         } else if ("tableChanged".equalsIgnoreCase(e.getActionCommand())) {
             String tableName = rangeFilterPanel.getSelectedTable();
             variableChooserPanel.setTableName(tableName);
+            variableChooserPanel.setVariablesInTable(rangeFilterPanel.getArrayOfVariablesInSelectedTables());
             variableChooserPanel.initPanel(dictionary);
             resultPanel.setVisible(false);
             // We can't add the source info if we don't have tumour info...
