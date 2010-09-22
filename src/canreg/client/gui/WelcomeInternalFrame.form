@@ -34,7 +34,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="mainPanel" min="-2" max="-2" attributes="0"/>
+          <Component id="mainPanel" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -50,9 +50,9 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="aboutScrollPane" pref="330" max="32767" attributes="2"/>
+                      <Component id="aboutScrollPane" pref="309" max="32767" attributes="2"/>
                       <Component id="logoButton" alignment="2" min="-2" pref="298" max="-2" attributes="1"/>
-                      <Component id="versionLabel" alignment="0" pref="330" max="32767" attributes="0"/>
+                      <Component id="versionLabel" alignment="0" pref="309" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="buttonPanel" min="-2" max="-2" attributes="0"/>
@@ -68,8 +68,8 @@
                       <Component id="buttonPanel" alignment="0" max="32767" attributes="1"/>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="logoButton" min="-2" pref="274" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="aboutScrollPane" min="-2" pref="120" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="aboutScrollPane" pref="143" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="versionLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -144,9 +144,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="loginButton" pref="193" max="32767" attributes="0"/>
+                      <Component id="loginButton" pref="205" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="restoreBackupButton" pref="193" max="32767" attributes="0"/>
+                      <Component id="restoreBackupButton" pref="204" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
