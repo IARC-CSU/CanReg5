@@ -6,7 +6,6 @@
 
 package canreg.client.gui.dataentry;
 
-import canreg.client.gui.management.FirstNameSexInternalFrame;
 import org.jdesktop.application.Action;
 
 /**
@@ -20,6 +19,8 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
         initComponents();
         // TODO: Implement the name sex check
         nameSexPanel.setVisible(false);
+        // TODO: Implement the local checks
+        localChecksPanel.setVisible(false);
     }
 
     /**
