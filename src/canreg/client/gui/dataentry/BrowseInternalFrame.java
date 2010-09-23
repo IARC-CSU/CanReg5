@@ -331,13 +331,13 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
     /* Remove this for now since we only allow one browser and we reuse it...
     rangeFilterPanel.close();
     if (tableDatadescription != null) {
-        try {
-            CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
-        } catch (SecurityException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    try {
+    CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
+    } catch (SecurityException ex) {
+    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (RemoteException ex) {
+    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+    }
     }
      */
 }//GEN-LAST:event_browserClosed
@@ -378,6 +378,20 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             editRecord("" + tableDataModel.getValueAt(rowNumber,
                     columnNumber), referenceTable);
         }
+    }
+
+    public void close() {
+        rangeFilterPanel.close();
+        if (tableDatadescription != null) {
+            try {
+                CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
+            } catch (SecurityException ex) {
+                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {
+                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        this.dispose();
     }
 
     private void columnTableMousePressed(java.awt.event.MouseEvent evt) {

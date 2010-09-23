@@ -934,7 +934,13 @@ public class CanRegClientView extends FrameView {
     }
 
     private void logOut() {
+        if (browseInternalFrame != null) {
+            browseInternalFrame.close();
+            browseInternalFrame = null;
+        }
         CanRegClientApp.getApplication().logOut();
+        desktopPane.removeAll();
+        desktopPane.validate();
         getFrame().setTitle(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("CANREG5 - NOT LOGGED IN."));
         userLevelLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("NOT LOGGED IN."));
     }
@@ -1010,8 +1016,25 @@ public class CanRegClientView extends FrameView {
             showAndPositionInternalFrame(desktopPane, browseInternalFrame);
             maximizeHeight(desktopPane, browseInternalFrame);
         } else {
-            showAndPositionInternalFrame(desktopPane, browseInternalFrame);
-            maximizeHeight(desktopPane, browseInternalFrame);
+            boolean newBrowser = false;
+            if (browseInternalFrame.isVisible()) {
+                int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("ONLY ONE BROWSER CAN BE OPEN AT A TIME. OPEN NEW ONE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("NEW BROWSER?"), JOptionPane.YES_NO_OPTION);
+                if (i == JOptionPane.YES_OPTION) {
+                    newBrowser = true;
+                }
+            } else {
+                newBrowser = true;
+            }
+            if (newBrowser) {
+                browseInternalFrame.close();
+                desktopPane.remove(browseInternalFrame);
+                desktopPane.validate();
+                browseInternalFrame = new BrowseInternalFrame(desktopPane);
+                showAndPositionInternalFrame(desktopPane, browseInternalFrame);
+                maximizeHeight(desktopPane, browseInternalFrame);
+            } else {
+                browseInternalFrame.setVisible(true);
+            }
         }
     }
 
@@ -1060,7 +1083,7 @@ public class CanRegClientView extends FrameView {
         int numberOfOpenFrames = desktopPane.getAllFrames().length;
         try {
             desktopPane.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        } catch (java.lang.IllegalArgumentException iae){
+        } catch (java.lang.IllegalArgumentException iae) {
             // frame already displayed
         }
         internalFrame.setVisible(true);
@@ -1438,5 +1461,5 @@ public class CanRegClientView extends FrameView {
     LocalSettings localSettings;
     private static int xOffset = 30, yOffset = 30;
     private static int toolBarHeight = 80;
-    private JInternalFrame browseInternalFrame;
+    private BrowseInternalFrame browseInternalFrame;
 }
