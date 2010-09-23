@@ -56,6 +56,7 @@ public class CanRegDAO {
         globalToolBox = new GlobalToolBox(doc);
 
         distributedDataSources = new LinkedHashMap<String, DistributedTableDataSource>();
+        activeStatements = new LinkedHashMap<String, Statement>();
         dictionaryMap = buildDictionaryMap(doc);
 
         locksMap = new TreeMap<String, Set<Integer>>();
@@ -80,8 +81,8 @@ public class CanRegDAO {
         strGetSourcesAndTumours = QueryGenerator.strGetSourcesAndTumours(globalToolBox);
         strCountPatientsAndTumours = QueryGenerator.strCountPatientsAndTumours(globalToolBox);
         strCountSourcesAndTumours = QueryGenerator.strCountSourcesAndTumours(globalToolBox);
-        strGetRecordsAllTables = QueryGenerator.strGetRecordsAllTables(globalToolBox);
-        strCountRecordsAllTables = QueryGenerator.strCountRecordsAllTables(globalToolBox);
+        strGetSourcesAndTumoursAndPatients = QueryGenerator.strGetRecordsAllTables(globalToolBox);
+        strCountSourcesAndTumoursAndPatients = QueryGenerator.strCountRecordsAllTables(globalToolBox);
         strGetHighestPatientID = QueryGenerator.strGetHighestPatientID(globalToolBox);
         strGetHighestTumourID = QueryGenerator.strGetHighestTumourID(globalToolBox);
         strGetHighestPatientRecordID = QueryGenerator.strGetHighestPatientRecordID(globalToolBox);
@@ -372,6 +373,19 @@ public class CanRegDAO {
         return populationDatasetMap;
     }
 
+    public String generateResultSetID() {
+        // generate resultSetID
+        boolean foundPlace = false;
+        int i = 0;
+        String resultSetID = Integer.toString(i);
+        // Find a spot in the map of datasources
+        while (!foundPlace) {
+            resultSetID = Integer.toString(i++);
+            foundPlace = !distributedDataSources.containsKey(resultSetID);
+        }
+        return resultSetID;
+    }
+
     /**
      * 
      * @param filter
@@ -380,361 +394,30 @@ public class CanRegDAO {
      * @throws java.sql.SQLException
      * @throws java.lang.Exception
      */
-    public synchronized DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(DatabaseFilter filter, String tableName)
+    public synchronized DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(DatabaseFilter filter, String tableName, String resultSetID)
             throws SQLException, UnknownTableException, DistributedTableDescriptionException {
         // distributedDataSources.remove(theUser);
         ResultSet result;
         Statement statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         int rowCount = 0;
         DistributedTableDataSource dataSource;
-        Set<DatabaseVariablesListElement> variables;
+
+        activeStatements.put(resultSetID, statement);
 
         // Is this a person search query?
         if (DatabaseFilter.QueryType.PERSON_SEARCH.equals(filter.getQueryType())) {
-            String query = "";
-            String rangePart = "";
-
-            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-                rangePart = QueryGenerator.buildRangePart(filter);
-                if (rangePart.length() > 0) {
-                    rangePart = " WHERE " + rangePart;
-                }
-            }
-
-            query = "SELECT COUNT(*) FROM APP.PATIENT" + rangePart;
-            System.out.print(query);
-            ResultSet countRowSet = statement.executeQuery(query);
-            if (countRowSet.next()) {
-                rowCount = countRowSet.getInt(1);
-            }
-            countRowSet = null;
-
-            query = "SELECT " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " FROM APP.PATIENT" + rangePart;
-            try {
-                result = statement.executeQuery(query);
-            } catch (java.sql.SQLSyntaxErrorException ex) {
-                throw ex;
-            }
-
+            dataSource = initiatePersonSearchQuery(filter, statement);
         } // Or a Frequency by year query?
         else if (DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR.equals(filter.getQueryType())) {
-            String filterString = filter.getFilterString();
-            String query = "";
-            if (!filterString.isEmpty()) {
-                filterString = " AND ( " + filterString + " )";
-            }
-
-            // Add the range part
-            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-                filterString += " AND ";
-                String rangeFilterString = QueryGenerator.buildRangePart(filter);
-                filterString += rangeFilterString;
-            }
-            variables = filter.getDatabaseVariables();
-            String variablesList = "";
-            if (variables.size() > 0) {
-                for (DatabaseVariablesListElement variable : variables) {
-                    if (variable != null) {
-                        variablesList += ", " + variable.getDatabaseVariableName();
-                    }
-                }
-
-                // variablesList = variablesList.substring(0, variablesList.length() - 2);
-
-            }
-            String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
-            String patientIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
-            String incidenceDateVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.IncidenceDate.toString()).getDatabaseVariableName();
-            String tumourIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
-            String tumourIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
-
-            if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)
-                    || tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-                query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
-                        + "FROM APP.TUMOUR, APP.PATIENT "
-                        + "WHERE APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " "
-                        + filterString + " "
-                        + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
-                        + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
-            } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)
-                    || tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
-                query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
-                        + "FROM APP.SOURCE, APP.TUMOUR "
-                        + "WHERE APP.SOURCE." + tumourIDVariableNameSourceTable + " = APP.TUMOUR." + tumourIDVariableNameTumourTable + " "
-                        + filterString + " "
-                        + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
-                        + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
-            } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-                query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
-                        + "FROM APP.TUMOUR "
-                        + (filterString.trim().length() > 0 ? filterString + " " : "")
-                        + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
-                        + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
-            } else if (tableName.equalsIgnoreCase(Globals.ALL_TABLES_NAME)) {
-                query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
-                        + "FROM APP.SOURCE, APP.TUMOUR, APP.PATIENT "
-                        + "WHERE APP.SOURCE." + tumourIDVariableNameSourceTable + " = APP.TUMOUR." + tumourIDVariableNameTumourTable + " "
-                        + "AND APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " "
-                        + filterString + " "
-                        + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
-                        + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
-            }
-            System.out.print(query);
-
-
-            try {
-                result = statement.executeQuery(query);
-            } catch (java.sql.SQLSyntaxErrorException ex) {
-                throw ex;
-            }
-
-        } // Or a "regular" query from the tumour table
-        else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-            String filterString = filter.getFilterString();
-            if (!filterString.isEmpty()) {
-                filterString = " WHERE " + filterString;
-            }
-
-            // Add the range part
-            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-                if (filterString.isEmpty()) {
-                    filterString = " WHERE " + filterString;
-                } else {
-                    filterString += " AND ";
-                }
-                filterString += QueryGenerator.buildRangePart(filter);
-            }
-
-            // debugOut(strCountTumours + filterString);
-            ResultSet countRowSet;
-            try {
-                countRowSet = statement.executeQuery(strCountTumours + filterString);
-            } catch (java.sql.SQLException ex) {
-                throw ex;
-            }
-            if (countRowSet.next()) {
-                rowCount = countRowSet.getInt(1);
-            }
-            if (filter.getSortByVariable() != null) {
-                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
-            }
-            try {
-                result = statement.executeQuery(strGetTumours + filterString);
-            } catch (java.sql.SQLSyntaxErrorException ex) {
-                throw ex;
-            }
-        } // Or a "regular" query from the patient table
-        else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-            String filterString = filter.getFilterString();
-            if (filterString == null) {
-                filterString = "";
-            }
-            if (!filterString.isEmpty()) {
-                filterString = " WHERE (" + filterString + " )";
-            }
-            // Add the range part
-            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-                if (filterString.isEmpty()) {
-                    filterString = " WHERE " + filterString;
-                } else {
-                    filterString += " AND ";
-                }
-                filterString += QueryGenerator.buildRangePart(filter);
-            }
-            // debugOut(strCountPatients + filterString);
-            ResultSet countRowSet;
-            try {
-                countRowSet = statement.executeQuery(strCountPatients + filterString);
-            } catch (java.sql.SQLSyntaxErrorException ex) {
-                throw ex;
-            }
-
-            if (countRowSet != null && countRowSet.next()) {
-                rowCount = countRowSet.getInt(1);
-            }
-            if (filter.getSortByVariable() != null) {
-                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
-            }
-            try {
-                result = statement.executeQuery(strGetPatients + filterString);
-            } catch (java.sql.SQLSyntaxErrorException ex) {
-                throw ex;
-            }
-        } // Or a "regular" query from a join of tumour and patient tables
-        else if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
-            String filterString = filter.getFilterString();
-            if (!filterString.isEmpty()) {
-                filterString = " AND (" + filterString.trim() + ")";
-            }
-            // Add the range part
-            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-
-                filterString += " AND ";
-
-                filterString += QueryGenerator.buildRangePart(filter);
-            }
-
-            // debugOut(strCountPatientsAndTumours + filterString);
-
-            ResultSet countRowSet;
-            try {
-                countRowSet = statement.executeQuery(strCountPatientsAndTumours + filterString);
-            } catch (java.sql.SQLSyntaxErrorException ex) {
-                throw ex;
-            }
-
-            // Count the rows...
-            if (countRowSet.next()) {
-                rowCount = countRowSet.getInt(1);
-            }
-            // feed it to the garbage dump
-            countRowSet = null;
-            if (filter.getSortByVariable() != null) {
-                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
-            }
-            try {
-                result = statement.executeQuery(strGetPatientsAndTumours + filterString);
-            } catch (java.sql.SQLSyntaxErrorException ex) {
-                throw ex;
-            }
-
-        } // Or a "regular" query from the source table
-        else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
-            String filterString = filter.getFilterString();
-            if (!filterString.isEmpty()) {
-                filterString = " WHERE " + filterString;
-            }
-
-            // Add the range part
-            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-                if (filterString.isEmpty()) {
-                    filterString = " WHERE " + filterString;
-                } else {
-                    filterString += " AND ";
-                }
-                filterString += QueryGenerator.buildRangePart(filter);
-            }
-
-            // debugOut(strCountSources + filterString);
-            ResultSet countRowSet;
-            try {
-                countRowSet = statement.executeQuery(strCountSources + filterString);
-            } catch (java.sql.SQLException ex) {
-                throw ex;
-            }
-            if (countRowSet.next()) {
-                rowCount = countRowSet.getInt(1);
-            }
-            if (filter.getSortByVariable() != null) {
-                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
-            }
-            try {
-                result = statement.executeQuery(strGetSources + filterString);
-            } catch (java.sql.SQLSyntaxErrorException ex) {
-                throw ex;
-            }
-        }// Or a "regular" query from a join of tumour and source tables
-        else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
-            String filterString = filter.getFilterString();
-            if (!filterString.isEmpty()) {
-                filterString = " AND (" + filterString.trim() + ")";
-            }
-            // Add the range part
-            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-
-                filterString += " AND ";
-
-                filterString += QueryGenerator.buildRangePart(filter);
-            }
-
-            // debugOut(strCountPatientsAndTumours + filterString);
-
-            ResultSet countRowSet;
-            try {
-                countRowSet = statement.executeQuery(strCountSourcesAndTumours + filterString);
-            } catch (java.sql.SQLSyntaxErrorException ex) {
-                throw ex;
-            }
-
-            // Count the rows...
-            if (countRowSet.next()) {
-                rowCount = countRowSet.getInt(1);
-            }
-            // feed it to the garbage dump
-            countRowSet = null;
-            if (filter.getSortByVariable() != null) {
-                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
-            }
-            try {
-                result = statement.executeQuery(strGetSourcesAndTumours + filterString);
-            } catch (java.sql.SQLSyntaxErrorException ex) {
-                throw ex;
-            }
-        }// Or a "regular" query from a join of tumour, source and patient tables
-        else if (tableName.equalsIgnoreCase(Globals.ALL_TABLES_NAME)) {
-            String filterString = filter.getFilterString();
-            if (!filterString.isEmpty()) {
-                filterString = " AND (" + filterString.trim() + ")";
-            }
-            // Add the range part
-            if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-
-                filterString += " AND ";
-
-                filterString += QueryGenerator.buildRangePart(filter);
-            }
-
-            // debugOut(strCountPatientsAndTumours + filterString);
-
-            ResultSet countRowSet;
-            try {
-                countRowSet = statement.executeQuery(strCountRecordsAllTables + filterString);
-            } catch (java.sql.SQLSyntaxErrorException ex) {
-                throw ex;
-            }
-
-            // Count the rows...
-            if (countRowSet.next()) {
-                rowCount = countRowSet.getInt(1);
-            }
-            // feed it to the garbage dump
-            countRowSet = null;
-            if (filter.getSortByVariable() != null) {
-                filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
-            }
-            try {
-                result = statement.executeQuery(strGetRecordsAllTables + filterString);
-            } catch (java.sql.SQLSyntaxErrorException ex) {
-                throw ex;
-            }
-        } // Or an unknown query...
+            dataSource = initiateFrequenciesByYearQuery(filter, statement, tableName);
+        } // Or a "regular" query
         else {
-            throw new UnknownTableException("Unknown table name.");
-        }
-
-
-        if (rowCount > 0) {
-            dataSource = new DistributedTableDataSourceResultSetImpl(rowCount, result);
-        } else {
-            dataSource = new DistributedTableDataSourceResultSetImpl(result);
-        }
-
-        DistributedTableDescription tableDescription = dataSource.getTableDescription();
-        //distributedDataSources.put(tableDescription, dataSource);
-
-        boolean foundPlace = false;
-        int i = 0;
-        String place = Integer.toString(i);
-        // Find a spot in the map of datasources
-        while (!foundPlace) {
-            place = Integer.toString(i++);
-            foundPlace = !distributedDataSources.containsKey(place);
-        }
-
-        tableDescription.setResultSetID(place);
-
-        distributedDataSources.put(place, dataSource);
-        return tableDescription;
+            dataSource = initiateTableQuery(filter, statement, tableName);
+        } 
+        distributedDataSources.put(resultSetID, dataSource);
+        activeStatements.remove(resultSetID);
+        dataSource.getTableDescription().setResultSetID(resultSetID);
+        return dataSource.getTableDescription();
     }
 
     /**
@@ -742,7 +425,8 @@ public class CanRegDAO {
      * @param resultSetID
      */
     public synchronized void releaseResultSet(String resultSetID) {
-        distributedDataSources.remove(resultSetID);
+        DistributedTableDataSource dataSource = distributedDataSources.get(resultSetID);
+
     }
 
     /**
@@ -791,7 +475,7 @@ public class CanRegDAO {
      * @return
      * @throws java.lang.Exception
      */
-    public synchronized Object[][] retrieveRows(String resultSetID, int from, int to) throws DistributedTableDescriptionException {
+    public Object[][] retrieveRows(String resultSetID, int from, int to) throws DistributedTableDescriptionException {
         DistributedTableDataSource ts = distributedDataSources.get(resultSetID);
         if (ts != null) {
             return ts.retrieveRows(from, to);
@@ -799,7 +483,7 @@ public class CanRegDAO {
             return null;
         }
     }
-    // This only works for Embedded databases - will look into it!
+    // TODO: This only works for Embedded databases - will look into it!
     // When using Derby this is OK as we can access it via Embedded 
     // and Client drivers at the same time...
 
@@ -1017,7 +701,7 @@ public class CanRegDAO {
             stmtGetSources = dbConnection.prepareStatement(strGetSources);
             stmtGetPatientsAndTumours = dbConnection.prepareStatement(strGetPatientsAndTumours);
             stmtGetSourcesAndTumours = dbConnection.prepareStatement(strGetSourcesAndTumours);
-            stmtGetRecordsAllTables = dbConnection.prepareStatement(strGetRecordsAllTables);
+            stmtGetRecordsAllTables = dbConnection.prepareStatement(strGetSourcesAndTumoursAndPatients);
             stmtGetHighestPatientID = dbConnection.prepareStatement(strGetHighestPatientID);
             stmtGetHighestTumourID = dbConnection.prepareStatement(strGetHighestTumourID);
             stmtGetHighestPatientRecordID = dbConnection.prepareStatement(strGetHighestPatientRecordID);
@@ -2089,7 +1773,7 @@ public class CanRegDAO {
         DistributedTableDescription distributedTableDescription;
         Object[][] rows;
 
-        distributedTableDescription = getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.SOURCE_TABLE_NAME);
+        distributedTableDescription = getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.SOURCE_TABLE_NAME, generateResultSetID());
         int numberOfRecords = distributedTableDescription.getRowCount();
 
         rows = retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
@@ -2136,6 +1820,7 @@ public class CanRegDAO {
     private Map<Integer, Dictionary> dictionaryMap;
     private Map<String, Set<Integer>> locksMap;
     private Map<String, DistributedTableDataSource> distributedDataSources;
+    private Map<String, Statement> activeStatements;
     private boolean tableOfDictionariesFilled = true;
     private boolean tableOfPopulationDataSets = true;
     private PreparedStatement stmtSaveNewPatient;
@@ -2198,8 +1883,8 @@ public class CanRegDAO {
     private String strCountPatientsAndTumours;
     private String strGetSourcesAndTumours;
     private String strCountSourcesAndTumours;
-    private String strGetRecordsAllTables;
-    private String strCountRecordsAllTables;
+    private String strGetSourcesAndTumoursAndPatients;
+    private String strCountSourcesAndTumoursAndPatients;
     private static final String strGetTumour =
             "SELECT * FROM APP.TUMOUR "
             + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
@@ -2333,5 +2018,201 @@ public class CanRegDAO {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return dbs;
+    }
+
+    private DistributedTableDataSource initiatePersonSearchQuery(DatabaseFilter filter, Statement statement) throws SQLException, DistributedTableDescriptionException {
+        ResultSet result;
+        String query = "";
+        String rangePart = "";
+        int rowCount = -1;
+        DistributedTableDataSource dataSource;
+
+        if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
+            rangePart = QueryGenerator.buildRangePart(filter);
+            if (rangePart.length() > 0) {
+                rangePart = " WHERE " + rangePart;
+            }
+        }
+
+        query = "SELECT COUNT(*) FROM APP.PATIENT" + rangePart;
+        System.out.print(query);
+        ResultSet countRowSet = statement.executeQuery(query);
+        if (countRowSet.next()) {
+            rowCount = countRowSet.getInt(1);
+        }
+        countRowSet = null;
+
+        query = "SELECT " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " FROM APP.PATIENT" + rangePart;
+        try {
+            result = statement.executeQuery(query);
+        } catch (java.sql.SQLSyntaxErrorException ex) {
+            throw ex;
+        }
+        if (rowCount > 0) {
+            dataSource = new DistributedTableDataSourceResultSetImpl(rowCount, result);
+        } else {
+            dataSource = new DistributedTableDataSourceResultSetImpl(result);
+        }
+
+        return dataSource;
+    }
+
+    private DistributedTableDataSource initiateFrequenciesByYearQuery(DatabaseFilter filter, Statement statement, String tableName) throws SQLException, DistributedTableDescriptionException {
+        ResultSet result;
+        String query = "";
+        String rangePart = "";
+        int rowCount = -1;
+        DistributedTableDataSource dataSource;
+
+        Set<DatabaseVariablesListElement> variables;
+        String filterString = filter.getFilterString();
+
+        if (!filterString.isEmpty()) {
+            filterString = " AND ( " + filterString + " )";
+        }
+
+        // Add the range part
+        if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
+            filterString += " AND ";
+            String rangeFilterString = QueryGenerator.buildRangePart(filter);
+            filterString += rangeFilterString;
+        }
+        variables = filter.getDatabaseVariables();
+        String variablesList = "";
+        if (variables.size() > 0) {
+            for (DatabaseVariablesListElement variable : variables) {
+                if (variable != null) {
+                    variablesList += ", " + variable.getDatabaseVariableName();
+                }
+            }
+
+            // variablesList = variablesList.substring(0, variablesList.length() - 2);
+
+        }
+        String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+        String patientIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
+        String incidenceDateVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.IncidenceDate.toString()).getDatabaseVariableName();
+        String tumourIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
+        String tumourIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+
+        if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)
+                || tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+            query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
+                    + "FROM APP.TUMOUR, APP.PATIENT "
+                    + "WHERE APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " "
+                    + filterString + " "
+                    + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
+                    + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)
+                || tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
+            query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
+                    + "FROM APP.SOURCE, APP.TUMOUR "
+                    + "WHERE APP.SOURCE." + tumourIDVariableNameSourceTable + " = APP.TUMOUR." + tumourIDVariableNameTumourTable + " "
+                    + filterString + " "
+                    + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
+                    + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+        } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+            query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
+                    + "FROM APP.TUMOUR "
+                    + (filterString.trim().length() > 0 ? filterString + " " : "")
+                    + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
+                    + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
+            query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
+                    + "FROM APP.SOURCE, APP.TUMOUR, APP.PATIENT "
+                    + "WHERE APP.SOURCE." + tumourIDVariableNameSourceTable + " = APP.TUMOUR." + tumourIDVariableNameTumourTable + " "
+                    + "AND APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " "
+                    + filterString + " "
+                    + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
+                    + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+        }
+        System.out.print(query);
+
+
+        try {
+            result = statement.executeQuery(query);
+        } catch (java.sql.SQLSyntaxErrorException ex) {
+            throw ex;
+        }
+
+        if (rowCount > 0) {
+            dataSource = new DistributedTableDataSourceResultSetImpl(rowCount, result);
+        } else {
+            dataSource = new DistributedTableDataSourceResultSetImpl(result);
+        }
+
+        return dataSource;
+    }
+
+    private DistributedTableDataSource initiateTableQuery(DatabaseFilter filter, Statement statement, String tableName) throws UnknownTableException, SQLException, DistributedTableDescriptionException {
+        ResultSet result;
+        int rowCount = -1;
+        DistributedTableDataSource dataSource;
+        String counterString;
+        String getterString;
+        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+            counterString = strCountTumours;
+            getterString = strGetTumours;
+        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+            counterString = strCountPatients;
+            getterString = strGetPatients;
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+            counterString = strCountSources;
+            getterString = strGetSources;
+        } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
+            counterString = strCountPatientsAndTumours;
+            getterString = strGetPatientsAndTumours;
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
+            counterString = strCountSourcesAndTumours;
+            getterString = strGetSourcesAndTumours;
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
+            counterString = strCountSourcesAndTumoursAndPatients;
+            getterString = strGetSourcesAndTumoursAndPatients;
+        } else {
+            throw new UnknownTableException("Unknown table name.");
+        }
+        String filterString = filter.getFilterString();
+        if (!filterString.isEmpty()) {
+            filterString = " WHERE " + filterString;
+        }
+
+        // Add the range part
+        if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
+            if (filterString.isEmpty()) {
+                filterString = " WHERE " + filterString;
+            } else {
+                filterString += " AND ";
+            }
+            filterString += QueryGenerator.buildRangePart(filter);
+        }
+
+        ResultSet countRowSet;
+        try {
+            countRowSet = statement.executeQuery(counterString + filterString);
+        } catch (java.sql.SQLSyntaxErrorException ex) {
+            throw ex;
+        }
+
+        // Count the rows...
+        if (countRowSet.next()) {
+            rowCount = countRowSet.getInt(1);
+        }
+        // feed it to the garbage dump
+        countRowSet = null;
+        if (filter.getSortByVariable() != null) {
+            filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
+        }
+        try {
+            result = statement.executeQuery(getterString + filterString);
+        } catch (java.sql.SQLSyntaxErrorException ex) {
+            throw ex;
+        }
+
+        if (rowCount > 0) {
+            dataSource = new DistributedTableDataSourceResultSetImpl(rowCount, result);
+        } else {
+            dataSource = new DistributedTableDataSourceResultSetImpl(result);
+        }
+        return dataSource;
     }
 }
