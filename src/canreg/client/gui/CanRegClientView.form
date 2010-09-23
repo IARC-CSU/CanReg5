@@ -10,107 +10,16 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="toolBar" alignment="0" pref="1078" max="32767" attributes="0"/>
-              <Component id="jScrollPane1" alignment="0" pref="1078" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" alignment="0" pref="797" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <Component id="toolBar" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="701" max="32767" attributes="0"/>
-              </Group>
+              <Component id="jScrollPane1" alignment="1" pref="654" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="javax.swing.JToolBar" name="toolBar">
-          <Properties>
-            <Property name="rollover" type="boolean" value="true"/>
-            <Property name="name" type="java.lang.String" value="toolBar" noResource="true"/>
-          </Properties>
-
-          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
-          <SubComponents>
-            <Component class="javax.swing.JButton" name="browseEditButton">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.CanRegClientView" id="browseEditAction" methodName="browseEditAction"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="browseEditButton.text"/>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="browseEditButton.toolTipText"/>
-                <Property name="focusable" type="boolean" value="false"/>
-                <Property name="horizontalTextPosition" type="int" value="0"/>
-                <Property name="name" type="java.lang.String" value="browseEditButton" noResource="true"/>
-                <Property name="verticalTextPosition" type="int" value="3"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="createNewRecordButton">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.CanRegClientView" id="createNewRecordSetAction" methodName="createNewRecordSetAction"/>
-                </Property>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="createNewRecordButton.toolTipText"/>
-                <Property name="focusable" type="boolean" value="false"/>
-                <Property name="horizontalTextPosition" type="int" value="0"/>
-                <Property name="name" type="java.lang.String" value="createNewRecordButton" noResource="true"/>
-                <Property name="verticalTextPosition" type="int" value="3"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JToolBar$Separator" name="jSeparator14">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="jSeparator14" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="tableBuilderButton">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.CanRegClientView" id="showTableBuilder" methodName="showTableBuilder"/>
-                </Property>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="tableBuilderButton.toolTipText"/>
-                <Property name="focusable" type="boolean" value="false"/>
-                <Property name="horizontalTextPosition" type="int" value="0"/>
-                <Property name="name" type="java.lang.String" value="tableBuilderButton" noResource="true"/>
-                <Property name="verticalTextPosition" type="int" value="3"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JToolBar$Separator" name="jSeparator13">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="jSeparator13" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="optionsButton">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.CanRegClientView" id="showOptionFrame" methodName="showOptionFrame"/>
-                </Property>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="optionsButton.toolTipText"/>
-                <Property name="focusable" type="boolean" value="false"/>
-                <Property name="horizontalTextPosition" type="int" value="0"/>
-                <Property name="name" type="java.lang.String" value="optionsButton" noResource="true"/>
-                <Property name="verticalTextPosition" type="int" value="3"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JToolBar$Separator" name="jSeparator15">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="jSeparator15" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="helpButton">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.CanRegClientView" id="showCanRegHelpFile" methodName="showCanRegHelpFile"/>
-                </Property>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="helpButton.toolTipText"/>
-                <Property name="focusable" type="boolean" value="false"/>
-                <Property name="horizontalTextPosition" type="int" value="0"/>
-                <Property name="name" type="java.lang.String" value="helpButton" noResource="true"/>
-                <Property name="verticalTextPosition" type="int" value="3"/>
-              </Properties>
-            </Component>
-          </SubComponents>
-        </Container>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
           <Properties>
             <Property name="name" type="java.lang.String" value="jScrollPane1" noResource="true"/>
@@ -129,6 +38,102 @@
               </Properties>
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout"/>
+              <SubComponents>
+                <Container class="javax.swing.JToolBar" name="toolBar">
+                  <Properties>
+                    <Property name="rollover" type="boolean" value="true"/>
+                    <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                      <Color id="Default Cursor"/>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="Tools" noResource="true"/>
+                  </Properties>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
+                      <JLayeredPaneConstraints x="0" y="0" width="800" height="-1" layer="0" position="-1"/>
+                    </Constraint>
+                  </Constraints>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+                  <SubComponents>
+                    <Component class="javax.swing.JButton" name="browseEditButton">
+                      <Properties>
+                        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                          <action class="canreg.client.gui.CanRegClientView" id="browseEditAction" methodName="browseEditAction"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" resourceKey="browseEditButton.text"/>
+                        <Property name="toolTipText" type="java.lang.String" resourceKey="browseEditButton.toolTipText"/>
+                        <Property name="focusable" type="boolean" value="false"/>
+                        <Property name="horizontalTextPosition" type="int" value="0"/>
+                        <Property name="name" type="java.lang.String" value="browseEditButton" noResource="true"/>
+                        <Property name="verticalTextPosition" type="int" value="3"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="createNewRecordButton">
+                      <Properties>
+                        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                          <action class="canreg.client.gui.CanRegClientView" id="createNewRecordSetAction" methodName="createNewRecordSetAction"/>
+                        </Property>
+                        <Property name="toolTipText" type="java.lang.String" resourceKey="createNewRecordButton.toolTipText"/>
+                        <Property name="focusable" type="boolean" value="false"/>
+                        <Property name="horizontalTextPosition" type="int" value="0"/>
+                        <Property name="name" type="java.lang.String" value="createNewRecordButton" noResource="true"/>
+                        <Property name="verticalTextPosition" type="int" value="3"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JToolBar$Separator" name="jSeparator14">
+                      <Properties>
+                        <Property name="name" type="java.lang.String" value="jSeparator14" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="tableBuilderButton">
+                      <Properties>
+                        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                          <action class="canreg.client.gui.CanRegClientView" id="showTableBuilder" methodName="showTableBuilder"/>
+                        </Property>
+                        <Property name="toolTipText" type="java.lang.String" resourceKey="tableBuilderButton.toolTipText"/>
+                        <Property name="focusable" type="boolean" value="false"/>
+                        <Property name="horizontalTextPosition" type="int" value="0"/>
+                        <Property name="name" type="java.lang.String" value="tableBuilderButton" noResource="true"/>
+                        <Property name="verticalTextPosition" type="int" value="3"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JToolBar$Separator" name="jSeparator13">
+                      <Properties>
+                        <Property name="name" type="java.lang.String" value="jSeparator13" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="optionsButton">
+                      <Properties>
+                        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                          <action class="canreg.client.gui.CanRegClientView" id="showOptionFrame" methodName="showOptionFrame"/>
+                        </Property>
+                        <Property name="toolTipText" type="java.lang.String" resourceKey="optionsButton.toolTipText"/>
+                        <Property name="focusable" type="boolean" value="false"/>
+                        <Property name="horizontalTextPosition" type="int" value="0"/>
+                        <Property name="name" type="java.lang.String" value="optionsButton" noResource="true"/>
+                        <Property name="verticalTextPosition" type="int" value="3"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JToolBar$Separator" name="jSeparator15">
+                      <Properties>
+                        <Property name="name" type="java.lang.String" value="jSeparator15" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="helpButton">
+                      <Properties>
+                        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                          <action class="canreg.client.gui.CanRegClientView" id="showCanRegHelpFile" methodName="showCanRegHelpFile"/>
+                        </Property>
+                        <Property name="toolTipText" type="java.lang.String" resourceKey="helpButton.toolTipText"/>
+                        <Property name="focusable" type="boolean" value="false"/>
+                        <Property name="horizontalTextPosition" type="int" value="0"/>
+                        <Property name="name" type="java.lang.String" value="helpButton" noResource="true"/>
+                        <Property name="verticalTextPosition" type="int" value="3"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
+              </SubComponents>
             </Container>
           </SubComponents>
         </Container>
@@ -221,6 +226,14 @@
                 <Property name="text" type="java.lang.String" resourceKey="browseMenuItem.text"/>
                 <Property name="toolTipText" type="java.lang.String" resourceKey="browseMenuItem.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="browseMenuItem" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem6">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="createNewRecordSetAction" methodName="createNewRecordSetAction"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="jMenuItem6" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="editDictionaryMenuItem">
@@ -591,10 +604,10 @@
                   <Component id="userLevelLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="91" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="statusPanelSeparator" alignment="0" pref="910" max="32767" attributes="0"/>
+                      <Component id="statusPanelSeparator" alignment="0" pref="629" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="statusMessageLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="750" max="32767" attributes="0"/>
+                          <EmptySpace pref="469" max="32767" attributes="0"/>
                           <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="statusAnimationLabel" min="-2" max="-2" attributes="0"/>
@@ -684,6 +697,6 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,3,58,0,0,4,54"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,-54,0,0,3,29"/>
   </AuxValues>
 </Form>

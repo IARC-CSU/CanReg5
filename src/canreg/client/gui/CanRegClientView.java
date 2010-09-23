@@ -54,6 +54,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JToolBar;
 
 /**
  * The application's main frame.
@@ -183,6 +184,8 @@ public class CanRegClientView extends FrameView {
     private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        desktopPane = new javax.swing.JDesktopPane();
         toolBar = new javax.swing.JToolBar();
         browseEditButton = new javax.swing.JButton();
         createNewRecordButton = new javax.swing.JButton();
@@ -192,8 +195,6 @@ public class CanRegClientView extends FrameView {
         optionsButton = new javax.swing.JButton();
         jSeparator15 = new javax.swing.JToolBar.Separator();
         helpButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        desktopPane = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         logInMenuItem = new javax.swing.JMenuItem();
@@ -204,6 +205,7 @@ public class CanRegClientView extends FrameView {
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         dataEntryMenu = new javax.swing.JMenu();
         browseEditMenuItem = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
         editDictionaryMenuItem = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         importDataMenuItem = new javax.swing.JMenuItem();
@@ -256,8 +258,16 @@ public class CanRegClientView extends FrameView {
 
         mainPanel.setName("mainPanel"); // NOI18N
 
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
+
+        desktopPane.setAutoscrolls(true);
+        desktopPane.setDoubleBuffered(true);
+        desktopPane.setMinimumSize(new java.awt.Dimension(400, 300));
+        desktopPane.setName("desktopPane"); // NOI18N
+
         toolBar.setRollover(true);
-        toolBar.setName("toolBar"); // NOI18N
+        toolBar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        toolBar.setName("Tools"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(CanRegClientView.class, this);
         browseEditButton.setAction(actionMap.get("browseEditAction")); // NOI18N
@@ -311,27 +321,20 @@ public class CanRegClientView extends FrameView {
         helpButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(helpButton);
 
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
+        toolBar.setBounds(0, 0, 800, 43);
+        desktopPane.add(toolBar, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        desktopPane.setAutoscrolls(true);
-        desktopPane.setDoubleBuffered(true);
-        desktopPane.setMinimumSize(new java.awt.Dimension(400, 300));
-        desktopPane.setName("desktopPane"); // NOI18N
         jScrollPane1.setViewportView(desktopPane);
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 1078, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1078, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 797, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
-                .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -377,6 +380,10 @@ public class CanRegClientView extends FrameView {
         browseEditMenuItem.setToolTipText(resourceMap.getString("browseMenuItem.toolTipText")); // NOI18N
         browseEditMenuItem.setName("browseMenuItem"); // NOI18N
         dataEntryMenu.add(browseEditMenuItem);
+
+        jMenuItem6.setAction(actionMap.get("createNewRecordSetAction")); // NOI18N
+        jMenuItem6.setName("jMenuItem6"); // NOI18N
+        dataEntryMenu.add(jMenuItem6);
 
         editDictionaryMenuItem.setAction(actionMap.get("editDictionaryAction")); // NOI18N
         editDictionaryMenuItem.setText(resourceMap.getString("dictionaryMenuItem.text")); // NOI18N
@@ -597,10 +604,10 @@ public class CanRegClientView extends FrameView {
                 .addComponent(userLevelLabel)
                 .addGap(91, 91, 91)
                 .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 910, Short.MAX_VALUE)
+                    .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
                     .addGroup(statusPanelLayout.createSequentialGroup()
                         .addComponent(statusMessageLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 750, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 469, Short.MAX_VALUE)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(statusAnimationLabel)
@@ -1411,6 +1418,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
