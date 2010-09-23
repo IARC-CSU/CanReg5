@@ -289,6 +289,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         printButton = new javax.swing.JButton();
         showObsoleteRecordsCheckBox = new javax.swing.JCheckBox();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -340,6 +341,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
+        jButton2.setAction(actionMap.get("togglePatientTumour")); // NOI18N
+        jButton2.setLabel(resourceMap.getString("jButton2.label")); // NOI18N
+        jButton2.setName("jButton2"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -353,7 +358,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(showObsoleteRecordsCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveAllButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(printButton)
@@ -367,7 +374,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 .addComponent(showObsoleteRecordsCheckBox)
                 .addComponent(jButton1)
                 .addComponent(addTumourRecordButton)
-                .addComponent(printButton))
+                .addComponent(printButton)
+                .addComponent(jButton2))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -377,7 +385,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
+                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 847, Short.MAX_VALUE)
                 .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
@@ -385,7 +393,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
+                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -555,6 +563,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private javax.swing.JButton addTumourRecordButton;
     private javax.swing.JButton addpatientRecordButton;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTabbedPane patientTabbedPane;
     private javax.swing.JButton printButton;
@@ -1040,7 +1049,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             Patient[] patientDatabaseRecord = null;
             try {
                 patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecordsByID(requestedPatientID, false);
-                if (patientDatabaseRecord != null && patientDatabaseRecord.length>0) {
+                if (patientDatabaseRecord != null && patientDatabaseRecord.length > 0) {
                     for (DatabaseRecord patient : patientRecords) {
                         patient = associatePatientRecordToPatientID(patient, requestedPatientID);
                         saveRecord(patient);
@@ -1088,14 +1097,6 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     int id = (Integer) idObj;
                     canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME);
 
-
-
-
-
-
-
-
-
                 }
 
             } catch (RemoteException ex) {
@@ -1104,50 +1105,21 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-
-
-
-
-
         }
         patientRecords.clear();
         // Release all tumour records held
-
-
-
-
-
 
         for (DatabaseRecord record : tumourRecords) {
             Tumour tumour = (Tumour) record;
             // Release all sources
 
-
-
-
-
-
             for (Source source : tumour.getSources()) {
                 try {
                     Object idObj = source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
 
-
-
-
-
-
                     if (idObj != null) {
                         int id = (Integer) idObj;
                         canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.SOURCE_TABLE_NAME);
-
-
-
-
-
-
-
-
-
                     }
 
                 } catch (RemoteException ex) {
@@ -1156,31 +1128,12 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-
-
-
-
-
             }
             try {
                 Object idObj = tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
-
-
-
-
-
-
                 if (idObj != null) {
                     int id = (Integer) idObj;
                     canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME);
-
-
-
-
-
-
-
-
 
                 }
 
@@ -1189,19 +1142,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             } catch (SecurityException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-
-
-
-
-
         }
         tumourRecords.clear();
-
-
-
-
-
 
     }
 
@@ -1209,84 +1151,45 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         // first do the counting
         int totalTumours = 0;
 
-
-
-
-
-
         for (int i = 0; i
                 < tumourTabbedPane.getComponentCount(); i++) {
             RecordEditorPanel rep = (RecordEditorPanel) tumourTabbedPane.getComponentAt(i);
             Tumour tumour = (Tumour) rep.getDatabaseRecord();
 
-
-
-
-
-
             boolean obsolete = tumour.getVariable(tumourObsoleteVariableName).toString().equalsIgnoreCase(Globals.OBSOLETE_VALUE);
-
-
-
-
-
 
             if (!obsolete) {
                 totalTumours++;
-
-
-
-
-
-
             }
         }
         int tumourSequence = 0;
 
-
-
-
-
-
         for (int i = 0; i
                 < tumourTabbedPane.getComponentCount(); i++) {
             RecordEditorPanel rep = (RecordEditorPanel) tumourTabbedPane.getComponentAt(i);
             Tumour tumour = (Tumour) rep.getDatabaseRecord();
 
-
-
-
-
-
             boolean obsolete = tumour.getVariable(tumourObsoleteVariableName).toString().equalsIgnoreCase(Globals.OBSOLETE_VALUE);
-
-
-
-
-
 
             if (!obsolete) {
                 tumourSequence++;
                 tumour.setVariable(tumourSequenceVariableName, tumourSequence + "");
 
-
-
-
-
-
             } else {
                 tumour.setVariable(tumourSequenceVariableName, "-");
 
-
-
-
-
-
             }
             tumour.setVariable(tumourSequenceTotalVariableName, totalTumours + "");
+        }
+    }
 
-
-
+    @Action
+    public void togglePatientTumour() {
+        int loc = recordSplitPane.getDividerLocation();
+        if (loc == 1) {
+            recordSplitPane.setDividerLocation(1.0);
+        } else {
+            recordSplitPane.setDividerLocation(0.0);
         }
     }
 }
