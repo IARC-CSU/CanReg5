@@ -74,11 +74,13 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         distributedTableDescription = new DistributedTableDescription(columnNames, columnClasses, rowCount);
     }
 
+    @Override
     public DistributedTableDescription getTableDescription() throws DistributedTableDescriptionException {
         return distributedTableDescription;
     }
 
-    public Object[][] retrieveRows(int from, int to) throws DistributedTableDescriptionException {
+    @Override
+    public synchronized Object[][] retrieveRows(int from, int to) throws DistributedTableDescriptionException {
         LinkedList<Object[]> rows = new LinkedList<Object[]>();
         
         try {
@@ -114,18 +116,22 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         return rowsArray;
     }
 
+    @Override
     public int[] sort(int sortColumn, boolean ascending, int[] selectedRows) throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public void setSelectedRowsAndColumns(int[] selectedRows, int[] selectedColumns) throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public int[] getSelectedRows() throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public int[] getSelectedColumns() throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
