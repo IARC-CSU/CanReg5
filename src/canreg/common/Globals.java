@@ -126,8 +126,8 @@ public class Globals {
         PATIENT_TABLE_NAME,
         TUMOUR_AND_PATIENT_JOIN_TABLE_NAME,
         SOURCE_TABLE_NAME,
-        SOURCE_AND_TUMOUR_JOIN_TABLE_NAME,
-        ALL_TABLES_NAME
+        SOURCE_AND_TUMOUR_JOIN_TABLE_NAME
+        // ,ALL_TABLES_NAME
     };
     /**
      * 
