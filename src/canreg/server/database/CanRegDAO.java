@@ -413,7 +413,7 @@ public class CanRegDAO {
         } // Or a "regular" query
         else {
             dataSource = initiateTableQuery(filter, statement, tableName);
-        } 
+        }
         distributedDataSources.put(resultSetID, dataSource);
         activeStatements.remove(resultSetID);
         dataSource.getTableDescription().setResultSetID(resultSetID);
@@ -2018,6 +2018,16 @@ public class CanRegDAO {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return dbs;
+    }
+
+    public boolean interruptQuery(String resultSetID) throws SQLException {
+        Statement statement = activeStatements.get(resultSetID);
+        if (statement != null) {
+            statement.cancel();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private DistributedTableDataSource initiatePersonSearchQuery(DatabaseFilter filter, Statement statement) throws SQLException, DistributedTableDescriptionException {
