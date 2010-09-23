@@ -411,7 +411,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
                     < indexesInTableTemp.length; i++) {
                 indexesInTableTemp[i] = tempIndexesInTable.get(i);
             }
-        } else if (tableName.equalsIgnoreCase(Globals.ALL_TABLES_NAME)) {
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
             indexesInTableTemp = indexesInDB;
         } else {
             LinkedList<DatabaseIndexesListElement> tempIndexesInTable = new LinkedList<DatabaseIndexesListElement>();
@@ -578,7 +578,7 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
             variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length];
             variablesInTable = sourceVariablesInDB;
-        } else if (tableName.equalsIgnoreCase(Globals.ALL_TABLES_NAME)) {
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
             LinkedList<DatabaseVariablesListElement> variablesInTableList = new LinkedList<DatabaseVariablesListElement>();
             variablesInTableList.addAll(Arrays.asList(patientVariablesInDB));
             variablesInTableList.addAll(Arrays.asList(tumourVariablesInDB));
