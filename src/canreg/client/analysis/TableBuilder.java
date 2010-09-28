@@ -37,12 +37,12 @@ public abstract class TableBuilder {
         6000,
         6000, 5000, 4000, 4000, 3000, 2000, 1000, 500, 500, 0,
         100000};
-    static String[] continentLabels = {"Africa",
-        "America",
-        "America",
-        "Asia",
-        "Europe",
-        "Oceania"};
+    static String[] continentLabels = {java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("AFRICA"),
+        java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("AMERICA"),
+        java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("AMERICA"),
+        java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("ASIA"),
+        java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("EUROPE"),
+        java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("OCEANIA")};
     // childCancerReference[sex][age][l/u]
     static double[][][] childCancerReference = {{{12.3, 24.7}, {8.5, 15.6},
             {8.5, 15.0}

@@ -44,6 +44,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
     private double[][] standardPopulationArray;
     private String populationString;
 
+    @Override
     public LinkedList<String> buildTable(String tableHeader,
             String reportFileName,
             int startYear,
@@ -106,7 +107,10 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
 
         tableLabel = ConfigFieldsReader.findConfig("table_label",
                 configList);
-        sexLabel = ConfigFieldsReader.findConfig("sex_label", configList);
+        // sexLabel = ConfigFieldsReader.findConfig("sex_label", configList);
+
+        sexLabel = new String[] {java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("MALE"),java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("FEMALE")};
+
         icdLabel = ConfigFieldsReader.findConfig("ICD_groups_labels",
                 configList);
         icd10GroupDescriptions = ConfigFieldsReader.findConfig(
@@ -611,7 +615,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
         ASRf = new char[numberOfSexes][numberOfCancerGroups];
 
         // Writing
-        System.out.println("Writing data...\n");
+        System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("WRITING DATA...\\N"));
 
         PrintStream reportStream = new PrintStream(System.out);
         File reportFile;
@@ -621,14 +625,14 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
             try {
                 reportFile = new File(tabReportFileName);
                 reportStream = new PrintStream(tabReportFileName);
-                System.out.println("Writing to " + tabReportFileName);
+                System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("WRITING TO ") + tabReportFileName);
 
                 // write tab separated stuff here
 
                 reportStream.flush();
                 reportStream.close();
             } catch (Exception ioe) {
-                System.out.println("Error in reportfile: " + tabReportFileName);
+                System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("ERROR IN REPORTFILE: ") + tabReportFileName);
                 reportStream = new PrintStream(System.out);
             }
 
@@ -647,7 +651,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
         // Make PS-file
 
         for (int sexNumber = 0; sexNumber < numberOfSexes - 1; sexNumber++) {
-            String psFileName = reportFileName + sexNumber + ".ps";
+            String psFileName = reportFileName + "-"+ sexLabel[sexNumber] + ".ps";
             generatedFiles.add(psFileName);
             try {
                 FileWriter fw = new FileWriter(psFileName);
@@ -1091,6 +1095,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
     /**
      * @return the variablesNeeded
      */
+    @Override
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }

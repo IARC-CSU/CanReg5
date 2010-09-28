@@ -44,6 +44,7 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
     private double[][] standardPopulationArray;
     private String populationString;
 
+    @Override
     public LinkedList<String> buildTable(String registryLabel,
             String reportFileName,
             int startYear,
@@ -110,7 +111,9 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
 
         tableLabel = ConfigFieldsReader.findConfig("table_label",
                 configList);
-        sexLabel = ConfigFieldsReader.findConfig("sex_label", configList);
+        // sexLabel = ConfigFieldsReader.findConfig("sex_label", configList);
+        sexLabel = new String[]{java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("MALE"), java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("FEMALE")};
+
         icdLabel = ConfigFieldsReader.findConfig("ICD_groups_labels",
                 configList);
         icd10GroupDescriptions = ConfigFieldsReader.findConfig(
@@ -652,7 +655,7 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
         // Make PS-file
 
         for (int sexNumber = 0; sexNumber < numberOfSexes - 1; sexNumber++) {
-            String psFileName = reportFileName + sexNumber + ".ps";
+            String psFileName = reportFileName + "-"+ sexLabel[sexNumber] + ".ps";
             generatedFiles.add(psFileName);
             try {
                 FileWriter fw = new FileWriter(psFileName);
