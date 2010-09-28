@@ -240,15 +240,15 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                 result = "Not valid";
             } catch (RemoteException ex) {
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                result = "Remote exception";
+                result = "Remote exception " + ex.getLocalizedMessage();
             } catch (SecurityException ex) {
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                result = "Security exception";
+                result = "Security exception " + ex.getLocalizedMessage();
                 // } catch (InterruptedException ignore) {
                 //    result = "Ignore";
-            } catch (Exception ex) {
+            } catch (Exception ex) { //TODO: get rid of general exceptions!
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                result = "Not OK";
+                result = "Not OK" + ex.getLocalizedMessage();
             }
             return result;
         }
@@ -257,7 +257,8 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
-            boolean theResult = result.equals("OK");
+            String resultString = result.toString();
+            boolean theResult = resultString.equals("OK");
             if (theResult) {
 
                 // release old resultSet
@@ -309,10 +310,11 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                     }
                 }
 
-            } else if (result.equals("Not valid")) {
+            } else if (resultString.startsWith("Not valid")) {
                 JOptionPane.showInternalMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("NOT_A_VALID_FILTER."), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else {
-                Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, result);
+                JOptionPane.showInternalMessageDialog(rootPane, resultString, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+                Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, resultString);
             }
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
             setCursor(normalCursor);

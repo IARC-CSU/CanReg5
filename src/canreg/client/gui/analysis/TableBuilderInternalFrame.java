@@ -839,9 +839,14 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
                     LinkedList<String> filesGenerated = tableBuilder.buildTable(heading, fileName, startYear, endYear, incidenceData, populations, standardPopulations, tble.getConfigFields(), tble.getEngineParameters());
 
+                    String filesGeneratedList = new String();
+                    for (String fileN:filesGenerated){
+                        filesGeneratedList+="\n"+fileN;
+                    }
+
                     setCursor(normalCursor);
 
-                    JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."), JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT.")+filesGeneratedList, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."), JOptionPane.INFORMATION_MESSAGE);
 
                     // Opening the resulting files...
                     for (String resultFileName : filesGenerated) {
@@ -849,6 +854,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     }
 
                 } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Something wrong with the SQL query: \n"+ ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (RemoteException ex) {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
