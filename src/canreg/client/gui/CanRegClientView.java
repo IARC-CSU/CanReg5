@@ -45,7 +45,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.rmi.RemoteException;
-import java.util.TreeSet;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -54,7 +53,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JToolBar;
 
 /**
  * The application's main frame.
