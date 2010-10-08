@@ -4544,6 +4544,124 @@ Changelog
 \end_layout
 
 \begin_layout Subsubsection*
+5.00
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+No changes since 4.99.32
+\end_layout
+
+\begin_layout Subsubsection*
+4.99.32 (5.0 RC17)
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Fixed some internationalization of the table builders.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Improved error-messages during login.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Improved error-messages during analysis.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Updated the translations.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Other minor bug fixes 
+\end_layout
+
+\begin_layout Subsubsection*
+4.99.31 (5.0 RC16)
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Modified the main window to work better on small screens.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Moved the data entry menu to a menu of it's own.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Record Editor: Added a toggle patient/tumour view button.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Hid the "local checks" and "name sex checks" result panel and "add patient
+ record" button for now.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Generate resultsets are separated from the initiate query part as a start
+ towards possibility to interrupt a query.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Only one browser per client.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Updated the welcome screen and the about.html
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+PDS updated message box added.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Refresh button is now not possible to click while waiting for respons from
+ server.
+ Hour glass implemented.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Started adding the migration guide to the handbook.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Tidied some code.
+\end_layout
+
+\begin_layout Subsubsection*
 4.99.30 (5.0 RC15)
 \end_layout
 
