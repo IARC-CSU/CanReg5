@@ -718,43 +718,6 @@ CanReg5 is distributed as a zip-archive.
 
 \family sans
 \series bold
-Un-install CanReg5
-\end_layout
-
-\begin_layout Standard
-\align left
-If you wish to un-install CanReg5, delete the following folders (or rename
- if you have anything valuable in them):
-\begin_inset Newline newline
-\end_inset
-
-
-\backslash
-
-\backslash
-Documents and Settings
-\backslash
-<your username>
-\backslash
-.CanRegClient
-\begin_inset Newline newline
-\end_inset
-
-
-\backslash
-
-\backslash
-Documents and Settings
-\backslash
-<your username>
-\backslash
-.CanRegServer
-\end_layout
-
-\begin_layout Subsection
-
-\family sans
-\series bold
 Run CanReg5
 \end_layout
 
@@ -1012,7 +975,7 @@ The next step is the trickiest one during the conversion.
  we need to specify what variable goes in what table of CanReg5.
  We recommend putting the unique patient related information (name, date
  of birth and follow-up variables) in the patient table, source information
- in the Source table and pretty much the rest (tumour information, age,
+ in the source table and pretty much the rest (tumour information, age,
  address etc) in the tumour table.
 \end_layout
 
@@ -2690,6 +2653,43 @@ The data can either be in a single file as the example for CanReg4, or in
  
 \end_layout
 
+\begin_layout Subsection
+
+\family sans
+\series bold
+Un-install CanReg5
+\end_layout
+
+\begin_layout Standard
+\align left
+If you wish to un-install CanReg5, delete the following folders (or rename
+ if you have anything valuable in them):
+\begin_inset Newline newline
+\end_inset
+
+
+\backslash
+
+\backslash
+Documents and Settings
+\backslash
+<your username>
+\backslash
+.CanRegClient
+\begin_inset Newline newline
+\end_inset
+
+
+\backslash
+
+\backslash
+Documents and Settings
+\backslash
+<your username>
+\backslash
+.CanRegServer
+\end_layout
+
 \begin_layout Section
 Working with CanReg5
 \end_layout
@@ -4150,9 +4150,21 @@ The first step is to import the variables of CanReg4 to CanReg5 - the system
 \end_layout
 
 \begin_layout Enumerate
-Go to “Tool” in CanReg5 menu and click “Convert system definition” 
+Go to “Tool” in CanReg5 menu and click “Convert system definition”.
+ 
 \end_layout
 
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Graphics
+	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/ToolsConvertCR4Menu.emf
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Enumerate
 Do “Browse” to find your CanReg 4 system definition file.
  (This is a file located in the folder 
@@ -4181,9 +4193,19 @@ Click “Convert”.
 \begin_layout Enumerate
 The program will then ask you if you want to add this server to your favourites.
  Click “Yes” here.
- 
 \end_layout
 
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Graphics
+	filename 5.png
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Enumerate
 The next step is the trickiest one during the conversion.
  Since we go from a tumour based database structure with only one big table
@@ -4207,9 +4229,19 @@ reference "sub:A-short-introduction"
 \begin_layout Enumerate
 The program presents an initial proposal that you might agree with, but
  please go through one by one the variables and decide.
- 
 \end_layout
 
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Graphics
+	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/chooseTableForVariables.png
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Enumerate
 Click “Save”.
  You have now created an XML file that describes your CanReg5 system.
@@ -4313,6 +4345,18 @@ y from your CanReg4 system.
 Go to “File”, “Data Entry”, “Edit dictionary” in CanReg5 
 \end_layout
 
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Graphics
+	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/dictionaryMenu.png
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Enumerate
 Click on “Import complete dictionary from file”.
  

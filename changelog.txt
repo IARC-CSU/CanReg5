@@ -1,5 +1,46 @@
 Changelog
 
+5.00
+
+- No changes since 4.99.32
+
+4.99.32 (5.0 RC17)
+
+- Fixed some internationalization of the table builders.
+
+- Improved error-messages during login.
+
+- Improved error-messages during analysis.
+
+- Updated the translations.
+
+- Other minor bug fixes 
+
+4.99.31 (5.0 RC16)
+
+- Modified the main window to work better on small screens.
+
+- Moved the data entry menu to a menu of it's own.
+
+- Record Editor: Added a toggle patient/tumour view button.
+
+- Hid the "local checks" and "name sex checks" result panel and "add patient record" button for now.
+
+- Generate resultsets are separated from the initiate query part as a start towards possibility to interrupt a query.
+
+- Only one browser per client.
+
+- Updated the welcome screen and the about.html
+
+- PDS updated message box added.
+
+- Refresh button is now not possible to click while waiting for respons from server. Hour glass implemented.
+
+- Started adding the migration guide to the handbook.
+
+- Tidied some code.
+
+
 4.99.30 (5.0 RC15)
 
 - Found and fixed a bug in the convert to ICD10-part for certain combinations T/M. 

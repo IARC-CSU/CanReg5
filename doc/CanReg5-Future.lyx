@@ -1,4 +1,4 @@
-#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -171,6 +171,24 @@ First name sex properly implemented
 Improve person search 
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Dedicated merge patient interface by clicking 
+\begin_inset Quotes eld
+\end_inset
+
+compare
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Highlight differences between records
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Optimize code.
  
@@ -207,6 +225,7 @@ Refresh table
 \end_inset
 
  while refresh is in progress...
+ This crashes the browser...
 \end_layout
 
 \begin_layout Itemize

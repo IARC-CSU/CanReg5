@@ -1,5 +1,150 @@
-changeset:   490:34ecf400d6ce
+changeset:   519:81c6088344b0
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Oct 05 11:41:42 2010 +0200
+summary:     Small additions to the translation.
+
+changeset:   518:88411f610d9f
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Sep 28 16:27:59 2010 +0200
+summary:     Improved error-messages during analysis.
+
+changeset:   517:78abc621abe9
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Sep 28 16:26:21 2010 +0200
+summary:     Improved error-messages during login.
+
+changeset:   516:1abd1748ff3e
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Sep 28 16:25:45 2010 +0200
+summary:     Fixed some internationalization of the table builders.
+
+changeset:   515:c4d590ba3fa9
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Sep 23 15:44:18 2010 +0200
+summary:     Renamed a variable.
+
+changeset:   514:d2764db1c0e9
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Sep 23 15:44:01 2010 +0200
+summary:     Renamed a variable.
+
+changeset:   513:5793ed78c6e6
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Sep 23 15:43:16 2010 +0200
+summary:     Started work on the interrupt query-functionality.
+
+changeset:   512:9fa9b02e5641
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Sep 23 15:42:27 2010 +0200
+summary:     Added a toggle patient/tumour view button.
+
+changeset:   511:d6a62ddb6f02
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Sep 23 15:41:02 2010 +0200
+summary:     Modified the main window to work better on small screens.
+
+changeset:   510:eb916f547aeb
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Sep 23 12:19:51 2010 +0200
+summary:     Hid the "local checks" result panel for now.
+
+changeset:   509:419c96ed2d66
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Sep 23 12:03:15 2010 +0200
+summary:     Generate resultsets are separated from the initiate query part as a start towards possibility to interrupt a query.
+
+changeset:   508:3f9197369ebc
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Sep 23 11:09:22 2010 +0200
+summary:     Tidied some code.
+
+changeset:   507:0190fee0745d
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Sep 23 11:08:10 2010 +0200
+summary:     Removed the option to join all three tables for now due to speed issues.
+
+changeset:   506:2a155f426d23
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Sep 23 11:07:34 2010 +0200
+summary:     Only one browser per client.
+
+changeset:   505:9a32c18fa24f
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Sep 22 18:15:29 2010 +0200
+summary:     You can now join all three tables in queries, filters and exports etc.
+
+changeset:   504:869edba6ebf7
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Sep 22 18:14:29 2010 +0200
+summary:     Small adjustments to WelcomeInternalFrame.
+
+changeset:   503:7bb77d352ff1
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Sep 22 11:50:29 2010 +0200
+summary:     Moved the data entry menu to a menu of it's own.
+
+changeset:   502:2c68b3222657
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Sep 22 11:45:10 2010 +0200
+summary:     Tidied code.
+
+changeset:   501:47c4b108dfa7
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Sep 22 11:44:44 2010 +0200
+summary:     Hid the "add patient record" button for now...
+
+changeset:   500:df144f463f7b
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Sep 22 11:44:15 2010 +0200
+summary:     Hid the "name sex checks" result panel for now.
+
+changeset:   499:91b419ea4f44
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Sep 22 11:36:16 2010 +0200
+summary:     Updated the welcome screen and the about.html
+
+changeset:   498:6cdbfc548f72
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Sep 22 11:35:38 2010 +0200
+summary:     Updated the welcome screen...
+
+changeset:   497:0dba045e67ab
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Sep 21 18:11:56 2010 +0200
+summary:     PDS updated message box added.
+
+changeset:   496:1babbf153480
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Sep 21 15:39:52 2010 +0200
+summary:     We only allow one browser now.
+
+changeset:   495:e7b9dccb29ff
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Sep 21 15:17:58 2010 +0200
+summary:     Refresh button is now not possible to click while waiting for respons from server. Hour glass implemented.
+
+changeset:   494:bb070d373a3e
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Sep 20 18:00:44 2010 +0200
+summary:     Started adding the migration guide to the handbook.
+
+changeset:   493:d95dc87685f5
+user:        ervikm@X70245.iarc.lan
+date:        Fri Sep 17 15:09:28 2010 +0200
+summary:     Back from South Africa...
+
+changeset:   492:91f70fe7ead2
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Sep 09 11:15:54 2010 +0200
+summary:     Updated the changelog in the handbook.
+
+changeset:   491:0d5aa0632bd0
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Sep 09 11:06:59 2010 +0200
+summary:     4.99.30
+
+changeset:   490:34ecf400d6ce
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Wed Sep 08 18:11:37 2010 +0200
 summary:     Found a bug in the convert to ICD10-part for certain combinations T/M. Fixed it.
