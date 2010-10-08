@@ -4,6 +4,7 @@ Changelog
 
 - No changes since 4.99.32
 
+
 4.99.32 (5.0 RC17)
 
 - Fixed some internationalization of the table builders.
@@ -15,6 +16,7 @@ Changelog
 - Updated the translations.
 
 - Other minor bug fixes 
+
 
 4.99.31 (5.0 RC16)
 
