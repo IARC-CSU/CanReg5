@@ -1,5 +1,6 @@
 package canreg.client.dataentry;
 
+import au.com.bytecode.opencsv.CSVReader;
 import cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.common.Globals;
@@ -11,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -62,14 +64,21 @@ public class Import {
     public static boolean importFile(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
         boolean success = false;
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
+
         noNeedToLookAtPatientVariables.add(io.getPatientIDVariableName().toLowerCase());
         noNeedToLookAtPatientVariables.add(io.getPatientRecordIDVariableName().toLowerCase());
+
         String firstNameVariableName = io.getFirstNameVariableName();
         String sexVariableName = io.getSexVariableName();
+
+        CSVReader reader = null;
+
         HashMap mpCodes = new HashMap();
+
         int numberOfLinesRead = 0;
-        BufferedReader bufferedReader = null;
+
         Map<String, Integer> nameSexTable = server.getNameSexTables();
+
         try {
             // Tro to detect the encoding...
             FileInputStream fis = new FileInputStream(file);
@@ -79,17 +88,21 @@ public class Import {
             Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + isr.getEncoding());
 
             int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath());
-            bufferedReader = new BufferedReader(isr);
-            String line = bufferedReader.readLine();
-            // Skip first line
-            line = bufferedReader.readLine();
-            // patientNumber
+
+            reader = new CSVReader(new FileReader(file), io.getSeparator());
+            String[] lineElements;
 
             int linesToRead = io.getMaxLines();
             if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
                 linesToRead = numberOfRecordsInFile;
             }
-            while (line != null && (numberOfLinesRead < linesToRead)) {
+
+
+            // skip the first line
+            reader.readNext();
+
+            while ((lineElements = reader.readNext()) != null && (numberOfLinesRead < linesToRead)) {
+                numberOfLinesRead++;
                 // We allow for null tasks...
                 boolean needToSavePatientAgain = true;
                 int patientDatabaseRecordID = -1;
@@ -97,18 +110,22 @@ public class Import {
                 if (task != null) {
                     task.firePropertyChange("progress", (numberOfLinesRead - 1) * 100 / linesToRead, (numberOfLinesRead) * 100 / linesToRead);
                 }
-                String[] lineElements = canreg.common.Tools.breakDownLine(io.getSeparator(), line);
+
                 // Build patient part
                 Patient patient = new Patient();
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
                     if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
-                        if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                            if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                        if (rel.getFileColumnNumber() < lineElements.length) {
+                            if (rel.getVariableType().equalsIgnoreCase("Number")) {
+                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                    patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                }
+                            } else {
+                                patient.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
                             }
                         } else {
-                            patient.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
+                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with patient part of line "+numberOfLinesRead+".", new Exception("Error in line: "+ numberOfLinesRead +". Can't find field: "+rel.getDatabaseVariableName()));
                         }
                     }
                 }
@@ -118,13 +135,17 @@ public class Import {
                 Tumour tumour = new Tumour();
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
-                        if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                            if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour") && rel.getFileColumnNumber() < lineElements.length) {
+                        if (rel.getFileColumnNumber() < lineElements.length) {
+                            if (rel.getVariableType().equalsIgnoreCase("Number")) {
+                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                    tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                }
+                            } else {
+                                tumour.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
                             }
                         } else {
-                            tumour.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
+                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with tumour part of line "+numberOfLinesRead+".", new Exception("Error in line: "+ numberOfLinesRead +". Can't find field: "+rel.getDatabaseVariableName()));
                         }
                     }
                 }
@@ -134,15 +155,21 @@ public class Import {
                 Source source = new Source();
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
-                        if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                            if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME) && rel.getFileColumnNumber() < lineElements.length) {
+                        if (rel.getFileColumnNumber() < lineElements.length) {
+                            if (rel.getVariableType().equalsIgnoreCase("Number")) {
+                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                    source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                }
+                            } else {
+                                source.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
                             }
                         } else {
-                            source.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
+                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with source part of line "+numberOfLinesRead+".", new Exception("Error in line: "+ numberOfLinesRead +". Can't find field: "+rel.getDatabaseVariableName()));
                         }
+
                     }
+
                 }
                 sources.add(source);
                 tumour.setSources(sources);
@@ -232,11 +259,16 @@ public class Import {
                     tumour.setVariable(io.getObsoleteTumourFlagVariableName(), "0");
                     patient.setVariable(io.getObsoletePatientFlagVariableName(), "0");
 
-                    // Set the name in the firstName database
-                    String sex = (String) patient.getVariable(sexVariableName);
-                    if (sex != null && sex.length() > 0) {
-                        Integer sexCode = Integer.parseInt(sex);
-                        String firstName = (String) patient.getVariable(firstNameVariableName);
+
+                }
+
+                // Set the name in the firstName database
+                String sex = (String) patient.getVariable(sexVariableName);
+                if (sex != null && sex.length() > 0) {
+                    Integer sexCode = Integer.parseInt(sex);
+                    String firstNames = (String) patient.getVariable(firstNameVariableName);
+                    String[] firstNamesArray = firstNames.split(" ");
+                    for (String firstName : firstNamesArray) {
                         if (firstName != null && firstName.trim().length() > 0) {
                             firstName = firstName.toUpperCase();
                             Integer registeredSexCode = nameSexTable.get(firstName);
@@ -244,7 +276,9 @@ public class Import {
                                 NameSexRecord nsr = new NameSexRecord();
                                 nsr.setName(firstName);
                                 nsr.setSex(sexCode);
+
                                 server.saveNameSexRecord(nsr, false);
+
                                 nameSexTable.put(firstName, sexCode);
                             } else if (registeredSexCode != sexCode) {
                                 if (registeredSexCode != 9) {
@@ -260,6 +294,8 @@ public class Import {
                         }
                     }
                 }
+
+
                 if (needToSavePatientAgain) {
                     if (patientDatabaseRecordID > 0) {
                         server.editPatient(patient);
@@ -277,10 +313,6 @@ public class Import {
                 }
 
                 int tumourDatabaseIDNumber = server.saveTumour(tumour);
-
-                //Read next line of data
-                line = bufferedReader.readLine();
-                numberOfLinesRead++;
 
                 if (Thread.interrupted()) {
                     //We've been interrupted: no more importing.
@@ -305,9 +337,9 @@ public class Import {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
             success = false;
         } finally {
-            if (bufferedReader != null) {
+            if (reader != null) {
                 try {
-                    bufferedReader.close();
+                    reader.close();
                 } catch (IOException ex) {
                     Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                 }
