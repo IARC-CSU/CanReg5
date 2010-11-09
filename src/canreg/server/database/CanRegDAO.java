@@ -2150,6 +2150,8 @@ public class CanRegDAO {
         DistributedTableDataSource dataSource;
         String counterString;
         String getterString;
+        boolean joinedTables = false;
+
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
             counterString = strCountTumours;
             getterString = strGetTumours;
@@ -2162,18 +2164,25 @@ public class CanRegDAO {
         } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
             counterString = strCountPatientsAndTumours;
             getterString = strGetPatientsAndTumours;
+            joinedTables = true;
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
             counterString = strCountSourcesAndTumours;
             getterString = strGetSourcesAndTumours;
+            joinedTables = true;
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
             counterString = strCountSourcesAndTumoursAndPatients;
             getterString = strGetSourcesAndTumoursAndPatients;
+            joinedTables = true;
         } else {
             throw new UnknownTableException("Unknown table name.");
         }
         String filterString = filter.getFilterString();
         if (!filterString.isEmpty()) {
-            filterString = " WHERE " + filterString;
+            if (joinedTables) {
+                filterString = " AND " + filterString;
+            } else {
+                filterString = " WHERE " + filterString;
+            }
         }
 
         // Add the range part
@@ -2185,6 +2194,12 @@ public class CanRegDAO {
             }
             filterString += QueryGenerator.buildRangePart(filter);
         }
+
+        /* debug stuff
+        System.out.println("filterString: " + filterString);
+        System.out.println("getterString: " + getterString);
+        System.out.println("counterString: " + counterString);
+        */
 
         ResultSet countRowSet;
         try {
