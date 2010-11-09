@@ -43,6 +43,8 @@ import org.w3c.dom.*;
  */
 public class CanRegDAO {
 
+    private final DatabaseVariablesListElement[] variables;
+
     /**
      * 
      * @param systemCode 
@@ -54,6 +56,8 @@ public class CanRegDAO {
         this.systemCode = systemCode;
 
         globalToolBox = new GlobalToolBox(doc);
+
+        variables = globalToolBox.getVariables();
 
         distributedDataSources = new LinkedHashMap<String, DistributedTableDataSource>();
         activeStatements = new LinkedHashMap<String, Statement>();
@@ -425,8 +429,8 @@ public class CanRegDAO {
      * @param resultSetID
      */
     public synchronized void releaseResultSet(String resultSetID) {
-        DistributedTableDataSource dataSource = distributedDataSources.get(resultSetID);
-
+        // DistributedTableDataSource dataSource = distributedDataSources.get(resultSetID);
+        distributedDataSources.remove(resultSetID);
     }
 
     /**
@@ -787,40 +791,23 @@ public class CanRegDAO {
 
         stmtSaveNewRecord.clearParameters();
 
-        // Get the dictionaries node in the XML
-        NodeList nodes = doc.getElementsByTagName(Globals.NAMESPACE + "variables");
-        Element variablesElement = (Element) nodes.item(0);
-
-        NodeList variables = variablesElement.getElementsByTagName(Globals.NAMESPACE + "variable");
-
         int recordVariableNumber = 0;
 
         // Go through all the variable definitions
         // todo: optimize this code!
-        for (int i = 0; i < variables.getLength(); i++) {
-            // Get element
-            Element element = (Element) variables.item(i);
+        for (DatabaseVariablesListElement variable : variables) {
 
             // Create line
-            String tableNameDB = element.getElementsByTagName(Globals.NAMESPACE + "table").item(0).getTextContent();
+            String tableNameDB = variable.getDatabaseTableName();
 
             if (tableNameDB.equalsIgnoreCase(tableName)) {
                 recordVariableNumber++;
                 int variableLength = 0;
-                String variableType = element.getElementsByTagName(Globals.NAMESPACE + "variable_type").item(0).getTextContent();
-                NodeList variableLengthElement = element.getElementsByTagName(Globals.NAMESPACE + "variable_length");
+                String variableType = variable.getVariableType();
+                variableLength = variable.getVariableLength();
                 String variableLenghtString = null;
-                if (variableLengthElement != null && variableLengthElement.item(0) != null) {
-                    variableLenghtString = variableLengthElement.item(0).getTextContent();
-                    if (variableLenghtString != null) {
-                        try {
-                            variableLength = Integer.parseInt(variableLenghtString);
-                        } catch (NumberFormatException nfe) {
-                            variableLength = 0;
-                        }
-                    }
-                }
-                Object obj = record.getVariable(element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent());
+
+                Object obj = record.getVariable(variable.getDatabaseVariableName());
 
                 // System.out.println(
                 //         element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
@@ -1140,6 +1127,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
+            System.out.println(nameSexRecord.getName());
             sqle.printStackTrace();
         }
         return id;
@@ -1534,6 +1522,7 @@ public class CanRegDAO {
                     }
                 }
             }
+            result = null;
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
@@ -1590,6 +1579,7 @@ public class CanRegDAO {
             }
 
             record.setSources(sources);
+            result = null;
 
         } catch (SQLException sqle) {
             sqle.printStackTrace();
@@ -1626,7 +1616,7 @@ public class CanRegDAO {
                     }
                 }
             }
-
+            result = null;
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
@@ -2074,7 +2064,7 @@ public class CanRegDAO {
         int rowCount = -1;
         DistributedTableDataSource dataSource;
 
-        Set<DatabaseVariablesListElement> variables;
+        Set<DatabaseVariablesListElement> filterVariables;
         String filterString = filter.getFilterString();
 
         if (!filterString.isEmpty()) {
@@ -2087,10 +2077,10 @@ public class CanRegDAO {
             String rangeFilterString = QueryGenerator.buildRangePart(filter);
             filterString += rangeFilterString;
         }
-        variables = filter.getDatabaseVariables();
+        filterVariables = filter.getDatabaseVariables();
         String variablesList = "";
-        if (variables.size() > 0) {
-            for (DatabaseVariablesListElement variable : variables) {
+        if (filterVariables.size() > 0) {
+            for (DatabaseVariablesListElement variable : filterVariables) {
                 if (variable != null) {
                     variablesList += ", " + variable.getDatabaseVariableName();
                 }
