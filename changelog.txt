@@ -1,5 +1,14 @@
 Changelog
 
+5.00.01
+
+- Database: fixed a bug where some filters didn't work when joining two (or more) tables.
+
+- Import: handles better errors when one line does not have enough elements, the apache licenced csvreader now used to parse the infile.
+
+- Database: fixed a memory leak issue, improved efficiency of import function, improved error handling
+
+
 5.00
 
 - No changes since 4.99.32

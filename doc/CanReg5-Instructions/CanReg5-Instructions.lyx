@@ -4093,6 +4093,57 @@ Category: Server
 \end_layout
 
 \end_deeper
+\begin_layout Itemize
+During import the message 
+\begin_inset Quotes eld
+\end_inset
+
+Something wrong with file
+\begin_inset Quotes erd
+\end_inset
+
+ appears and import is stopped even though there is nothing wrong with the
+ file.
+ This is due to a memory leak during import and is being looked into.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Temporary solution increase memory reserved for CanReg5 by lauching the
+ server with option: -XX:PermSize=256m
+\end_layout
+
+\begin_layout Itemize
+Severity: Does not cause information loss
+\end_layout
+
+\begin_layout Itemize
+Priority: High
+\end_layout
+
+\begin_layout Itemize
+Category: Server
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Version 5.00 does not allow joined tables.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Severity: Does not cause information loss
+\end_layout
+
+\begin_layout Itemize
+Priority: High
+\end_layout
+
+\begin_layout Itemize
+Category: Server
+\end_layout
+
+\end_deeper
 \begin_layout Subsection
 
 \family sans
@@ -4541,6 +4592,31 @@ Click “Browse/Edit” and “Refresh Table” to see that the data has arrived
 \family sans
 \series bold
 Changelog
+\end_layout
+
+\begin_layout Subsubsection*
+5.00.01
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Database: fixed a bug where some filters didn't work when joining two (or
+ more) tables.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Import: handles better errors when one line does not have enough elements,
+ the apache licenced csvreader now used to parse the infile.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Database: fixed a memory leak issue, improved efficiency of import function,
+ improved error handling.
 \end_layout
 
 \begin_layout Subsubsection*
