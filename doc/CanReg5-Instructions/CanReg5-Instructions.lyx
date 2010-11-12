@@ -3703,6 +3703,33 @@ Do not use proxy server for addresses beginning with:
  
 \end_layout
 
+\begin_layout Description
+\align left
+
+\series bold
+Q: 
+\series default
+When I try to log on to the CanReg server I get the message: 
+\begin_inset Quotes eld
+\end_inset
+
+Exception creating connection to: aaa.bbb.ccc.ddd; nested exception is: java.net.Sock
+etException: Malformed reply from SOCKS server
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+A:
+\series default
+ This can be solved using the same procedure as the previous answer.
+\end_layout
+
 \begin_layout Subsection
 
 \series bold
@@ -3945,6 +3972,31 @@ codepage
  
 \end_layout
 
+\begin_layout Description
+\align left
+
+\series bold
+Q: 
+\series default
+While importing my data the process brakes down before the end and I get
+ an error message saying that there is something wrong with the file.
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+A: 
+\series default
+First of all make sure that you have the latest version of CanReg installed,
+ as some of the earlier versions had a bug that manifested itself while
+ importing files.
+ Then look at the line where the import brakes down and see if you have
+ some unclosed quotes in any of the fields.
+ This will brake down the import as CanReg allows qoutes around strings
+ that contain the separating character, but not unclosed quotes.
+\end_layout
+
 \begin_layout Section
 Known issues
 \end_layout
@@ -4090,57 +4142,6 @@ Priority: Medium
 \begin_layout Itemize
 \align left
 Category: Server 
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-During import the message 
-\begin_inset Quotes eld
-\end_inset
-
-Something wrong with file
-\begin_inset Quotes erd
-\end_inset
-
- appears and import is stopped even though there is nothing wrong with the
- file.
- This is due to a memory leak during import and is being looked into.
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Temporary solution increase memory reserved for CanReg5 by lauching the
- server with option: -XX:PermSize=256m
-\end_layout
-
-\begin_layout Itemize
-Severity: Does not cause information loss
-\end_layout
-
-\begin_layout Itemize
-Priority: High
-\end_layout
-
-\begin_layout Itemize
-Category: Server
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Version 5.00 does not allow joined tables.
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Severity: Does not cause information loss
-\end_layout
-
-\begin_layout Itemize
-Priority: High
-\end_layout
-
-\begin_layout Itemize
-Category: Server
 \end_layout
 
 \end_deeper

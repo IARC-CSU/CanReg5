@@ -76,23 +76,11 @@ This document is a road map for the development of CanReg5.
 \begin_inset Newpage pagebreak
 \end_inset
 
-CanReg 5.0
+CanReg 5.1
 \end_layout
 
 \begin_layout Section*
 Data Entry related
-\end_layout
-
-\begin_layout Itemize
-Delete the 
-\begin_inset Quotes eld
-\end_inset
-
-add patient record
-\begin_inset Quotes erd
-\end_inset
-
--button.
 \end_layout
 
 \begin_layout Itemize
@@ -155,8 +143,17 @@ Analysis related
 \end_layout
 
 \begin_layout Itemize
-Implement all the tables proposed.
+Implement all the analysis tables proposed.
  (And others?)
+\end_layout
+
+\begin_layout Itemize
+Write Frequencies by year tables to file
+\end_layout
+
+\begin_layout Itemize
+Group by other meta variables for frequencies by year (age group, 2 digit
+ icd10 etc)
 \end_layout
 
 \begin_layout Section*
@@ -199,12 +196,11 @@ Implement Soundex.
 \end_layout
 
 \begin_layout Section*
-General optimization
+Management related
 \end_layout
 
 \begin_layout Itemize
-Import slows down after a while...
- (memory leak?)
+Streamline the restore from backup-function on a new install.
 \end_layout
 
 \begin_layout Section*
@@ -216,19 +212,6 @@ Bug that drops the result set being browsed.
 \end_layout
 
 \begin_layout Itemize
-Don't let the user click 
-\begin_inset Quotes eld
-\end_inset
-
-Refresh table
-\begin_inset Quotes erd
-\end_inset
-
- while refresh is in progress...
- This crashes the browser...
-\end_layout
-
-\begin_layout Itemize
 Turkish character set bug.
 \end_layout
 
@@ -236,7 +219,7 @@ Turkish character set bug.
 \begin_inset Newpage pagebreak
 \end_inset
 
-Proposals for CanReg 5.1
+Proposals for CanReg 5.2
 \end_layout
 
 \begin_layout Section*
