@@ -170,7 +170,7 @@ public class Globals {
     public static int MAX_POPULATION_DATASETS_IN_TABLE = 50;
     public static String OBSOLETE_VALUE = "1";
     public static String NOT_OBSOLETE_VALUE = "0";
-    public static int MAX_DICTIONARY_DISPLAY_SIZE = 2000;
+    public static int MAX_DICTIONARY_DISPLAY_SIZE = 200000;
     public static int DICTIONARY_DESCRIPTION_LENGTH = 255;
     public static int DICTIONARY_MAX_CODE_LENGTH = 20;
     public static int PDS_FILTER_LENGTH = 255;

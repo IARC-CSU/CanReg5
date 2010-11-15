@@ -380,15 +380,16 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
     public void refreshSelectedDictionaryAction() {
         DatabaseDictionaryListElement dbdle = (DatabaseDictionaryListElement) chooseDictionaryComboBox.getSelectedItem();
         Dictionary dic = CanRegClientApp.getApplication().getDictionary().get(dbdle.getDictionaryID());
-        String str = "";
+        StringBuilder b = new StringBuilder();
         if (dic != null) {
             // Map sortedMap = new TreeMap(map);
             Map<String, DictionaryEntry> map = dic.getDictionaryEntries();
             Iterator<Entry<String, DictionaryEntry>> iterator = map.entrySet().iterator();
             int numberOfLinesShown = 0;
+
             while (iterator.hasNext() && numberOfLinesShown < Globals.MAX_DICTIONARY_DISPLAY_SIZE) {
                 DictionaryEntry entry = iterator.next().getValue();
-                str += entry.getCode() + "\t" + entry.getDescription() + "\n";
+                b.append(entry.getCode() + "\t" + entry.getDescription() + "\n");
                 numberOfLinesShown++;
             }
             if (map.size() > Globals.MAX_DICTIONARY_DISPLAY_SIZE) {
@@ -406,7 +407,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 messageLabel.setVisible(false);
             }
         }
-        editorTextArea.setText(str);
+        editorTextArea.setText(b.toString());
         editorTextArea.setCaretPosition(0);
     }
 }
