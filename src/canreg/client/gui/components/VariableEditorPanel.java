@@ -202,6 +202,11 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
 
         codeTextField.setText(resourceMap.getString("codeTextField.text")); // NOI18N
         codeTextField.setName("codeTextField"); // NOI18N
+        codeTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                codeTextFieldActionPerformed1(evt);
+            }
+        });
         codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 codeTextFieldActionPerformed(evt);
@@ -265,6 +270,8 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
                 }
             }
 
+            // todo: implement sort by code or label
+
             DictionaryEntry selectedValue = (DictionaryEntry) JOptionPane.showInternalInputDialog(this,
                     java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Choose_one"), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Input"),
                     JOptionPane.INFORMATION_MESSAGE, null,
@@ -320,6 +327,11 @@ private void descriptionTextFieldActionPerformed(java.awt.event.ActionEvent evt)
 private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_descriptionTextFieldMouseClicked
     mouseClickHandler(evt);
 }//GEN-LAST:event_descriptionTextFieldMouseClicked
+
+private void codeTextFieldActionPerformed1(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codeTextFieldActionPerformed1
+    // TODO add your handling code here:
+}//GEN-LAST:event_codeTextFieldActionPerformed1
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JTextField categoryTextField;
     protected javax.swing.JTextField codeTextField;
