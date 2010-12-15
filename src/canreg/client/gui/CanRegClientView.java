@@ -238,6 +238,8 @@ public class CanRegClientView extends FrameView {
         canReg5HelpMenuItem = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem7 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
         linksMenu = new javax.swing.JMenu();
         iacrWebsiteMenuItem = new javax.swing.JMenuItem();
@@ -319,7 +321,7 @@ public class CanRegClientView extends FrameView {
         helpButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(helpButton);
 
-        toolBar.setBounds(0, 0, 800, 43);
+        toolBar.setBounds(0, 0, 800, -1);
         desktopPane.add(toolBar, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jScrollPane1.setViewportView(desktopPane);
@@ -332,7 +334,7 @@ public class CanRegClientView extends FrameView {
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -539,6 +541,13 @@ public class CanRegClientView extends FrameView {
         jMenuItem4.setAction(actionMap.get("downloadLatestInstructions")); // NOI18N
         jMenuItem4.setName("jMenuItem4"); // NOI18N
         helpMenu.add(jMenuItem4);
+
+        jSeparator4.setName("jSeparator4"); // NOI18N
+        helpMenu.add(jSeparator4);
+
+        jMenuItem7.setAction(actionMap.get("openReportBug")); // NOI18N
+        jMenuItem7.setName("jMenuItem7"); // NOI18N
+        helpMenu.add(jMenuItem7);
 
         jSeparator1.setName("jSeparator1"); // NOI18N
         helpMenu.add(jSeparator1);
@@ -1385,6 +1394,11 @@ public class CanRegClientView extends FrameView {
     public void openPubCanWebsite() {
         BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.pubcan.org"));
     }
+
+    @Action
+    public void openReportBug() {
+        BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("BugReportWebsite"));
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;
@@ -1417,6 +1431,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
@@ -1427,6 +1442,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JToolBar.Separator jSeparator15;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
