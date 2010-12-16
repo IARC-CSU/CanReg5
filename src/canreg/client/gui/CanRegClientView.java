@@ -1356,9 +1356,6 @@ public class CanRegClientView extends FrameView {
         WaitFrame waitFrame;
 
         DownloadLatestInstructionsTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to DownloadLatestInstructionsTask fields, here.
             super(app);
             waitFrame = new WaitFrame();
             waitFrame.setLabel(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DOWNLOADING HANDBOOK..."));
@@ -1370,21 +1367,16 @@ public class CanRegClientView extends FrameView {
 
         @Override
         protected Object doInBackground() {
-            // Your Task's code here.  This method runs
-            // on a background thread, so don't reference
-            // the Swing GUI from here.
             try {
                 canreg.common.Tools.downloadFile(Globals.CANREG_INSTRUCTIONS_URL, Globals.CANREG_INSTRUCTIONS_LOCAL_FILE);
             } catch (IOException ex) {
                 Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
             }
-            return null;  // return your result
+            return null;
         }
 
         @Override
         protected void succeeded(Object result) {
-            // Runs on the EDT.  Update the GUI based on
-            // the result computed by doInBackground().
             waitFrame.setVisible(false);
             desktopPane.remove(waitFrame);
         }
