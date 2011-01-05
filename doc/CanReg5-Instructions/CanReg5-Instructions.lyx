@@ -567,6 +567,13 @@ Example log-file:
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Installing and running CanReg 5
 \begin_inset CommandInset label
@@ -2688,6 +2695,10 @@ Documents and Settings
 <your username>
 \backslash
 .CanRegServer
+\begin_inset Newpage newpage
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -3593,6 +3604,10 @@ This table can be selected and copied and pasted into Excel, for example.
  the lines you want and press Ctrl-C (on Windows and Linux) or Apple-C (on
  Mac) and paste it into other programs.
  
+\begin_inset Newpage newpage
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -3730,6 +3745,29 @@ A:
  This can be solved using the same procedure as the previous answer.
 \end_layout
 
+\begin_layout Description
+\align left
+
+\series bold
+Q: 
+\series default
+Is CanReg5 only designed for local networks or does it allow remote registration
+? 
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+A:
+\series default
+ CanReg5 is designed for local networks, yes, but traffic is over standard
+ TCP/IP so you can tunnel this through secure channels (SSH/VPN etc) to
+ do remote registration.
+ (This is not "officially" supported, as we haven't been able to test it
+ enough locally (yet).) 
+\end_layout
+
 \begin_layout Subsection
 
 \series bold
@@ -3815,6 +3853,44 @@ A:
 Try exporting your data with a comma separated variables instead of the
  default tab-separated ones (or vice versa) and see if that helps.
  
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+Q: 
+\series default
+In canreg5, how do you clear previous data and import fresh ones from canreg4.
+ 
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+A: 
+\series default
+To clear the previous data from CanReg5 you need to delete the database
+ files.
+ These can be found in your user folder under .CanRegServer
+\backslash
+Database (On my machine it is under C:
+\backslash
+Documents and Settings
+\backslash
+ervikm
+\backslash
+.CanRegServer
+\backslash
+Database ).
+ Please note that this deletes the dictionaries and population data as well,
+ so you might want to export those prior to deleting this.
+ Then you can relaunch CanReg and the server and the empty database will
+ be rebuilt.
+ It is a good idea to keep a backup of an empty database - just containing
+ dictionaries (and population data) to get back to this state of the database
+ if needed.
 \end_layout
 
 \begin_layout Subsection
@@ -3997,6 +4073,89 @@ First of all make sure that you have the latest version of CanReg installed,
  that contain the separating character, but not unclosed quotes.
 \end_layout
 
+\begin_layout Subsection
+Database design
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+Q: 
+\series default
+What is the minimum data set that one would collect?
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+A: 
+\series default
+The minimum data set required is up to your registry to define.
+ Please refer to 
+\begin_inset CommandInset href
+LatexCommand href
+name "this publication"
+target "http://www.iarc.fr./en/publications/pdfs-online/epi/sp95/index.php"
+
+\end_inset
+
+ for more information: (
+\begin_inset CommandInset href
+LatexCommand href
+name "Chapter 6"
+target "http://www.iarc.fr./en/publications/pdfs-online/epi/sp95/sp95-chap6.pdf"
+
+\end_inset
+
+, for example.
+ ) 
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+Q:
+\series default
+ In what table should the variable X be stored?
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+A: 
+\series default
+In the 
+\series bold
+patient
+\series default
+ table you store the information about the patient that never changes (or
+ at least very seldom) in the patient table.
+ (That is birth date, sex, names etc.) You also store follow up information
+ in the patient table.
+ (Vital status, current address, etc.) In the 
+\series bold
+tumour
+\series default
+ table you store all data that can potentially differ between two tumours
+ of the same patient.
+ (Topography, morphology, age, address at the time of the tumour (coded)
+ etc.) Finally, in the 
+\series bold
+source
+\series default
+ table you store all information about the sources of information of any
+ given tumour.
+ (Source name (preferably coded), source type, date etc.)
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Known issues
 \end_layout
@@ -4174,6 +4333,10 @@ You need a population dataset with 5 years age groups for many of the tables
 \align left
 Age can not yet be calculated automatically.
  
+\begin_inset Newpage newpage
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -4585,7 +4748,71 @@ Let CanReg5 import the data (this might take a while) and click “OK”.
 Click “Browse/Edit” and “Refresh Table” to see that the data has arrived
  well.
  Double click a record to take a look at it.
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Third party tools
+\end_layout
+
+\begin_layout Standard
+Here's a list of useful third party tools to use with CanReg5.
+\end_layout
+
+\begin_layout Subsection
+For data cleaning
+\end_layout
+
+\begin_layout Subsubsection
+Google Refine
+\end_layout
+
+\begin_layout Standard
+Google Refine is a free and open source tool that allows you to standardise
+ and clean your data prior to importing it into CanReg5.
+ Please note that even though you access and manipulate your data using
+ a web browser your data is kept locally on your machine.
  
+\end_layout
+
+\begin_layout Standard
+More information about it on: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://code.google.com/p/google-refine/"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Talend Open Studio
+\end_layout
+
+\begin_layout Standard
+Talend Open Studio is a more heavy duty package to clean and standardise
+ your data before importing it into CanReg.
+ It is free and open source.
+ 
+\end_layout
+
+\begin_layout Standard
+More information about it on: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.talend.com/"
+
+\end_inset
+
+
+\begin_inset Newpage newpage
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -4595,1037 +4822,15 @@ Click “Browse/Edit” and “Refresh Table” to see that the data has arrived
 Changelog
 \end_layout
 
-\begin_layout Subsubsection*
-5.00.01
-\end_layout
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "../../changelog.txt"
+lstparams "basicstyle={\\small},breaklines=true,lineskip=0pt"
 
-\begin_layout Itemize
-
-\family typewriter
-Database: fixed a bug where some filters didn't work when joining two (or
- more) tables.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Import: handles better errors when one line does not have enough elements,
- the apache licenced csvreader now used to parse the infile.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Database: fixed a memory leak issue, improved efficiency of import function,
- improved error handling.
-\end_layout
-
-\begin_layout Subsubsection*
-5.00
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-No changes since 4.99.32
-\end_layout
-
-\begin_layout Subsubsection*
-4.99.32 (5.0 RC17)
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Fixed some internationalization of the table builders.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Improved error-messages during login.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Improved error-messages during analysis.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Updated the translations.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Other minor bug fixes 
-\end_layout
-
-\begin_layout Subsubsection*
-4.99.31 (5.0 RC16)
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Modified the main window to work better on small screens.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Moved the data entry menu to a menu of it's own.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Record Editor: Added a toggle patient/tumour view button.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Hid the "local checks" and "name sex checks" result panel and "add patient
- record" button for now.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Generate resultsets are separated from the initiate query part as a start
- towards possibility to interrupt a query.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Only one browser per client.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Updated the welcome screen and the about.html
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-PDS updated message box added.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Refresh button is now not possible to click while waiting for respons from
- server.
- Hour glass implemented.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Started adding the migration guide to the handbook.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Tidied some code.
-\end_layout
-
-\begin_layout Subsubsection*
-4.99.30 (5.0 RC15)
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Found and fixed a bug in the convert to ICD10-part for certain combinations
- T/M.
- 
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Updated the table of Morphologies.
- 
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Other bug fixes.
-\end_layout
-
-\begin_layout Subsubsection*
-4.99.29 (5.0 RC14)
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Updated jlooks to 2.3.1 and jcalendar to 1.3.3
-\end_layout
-
-\begin_layout Subsubsection*
-4.99.28 (5.0 RC13)
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Searches and sorts in the database are now case insensitive using the primary
- component of the letters (i.e.
- 'å' equals 'A', 'é' equals 'E')
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Updated database engine to Apache Derby 10.6.1.0.
- (Needed for case insensitive searches.
- Plus security fixes, performance issues etc.)
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-When Turkish language is detected default to english for now to avoid problems
- with capitalization.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Other bugfixes.
-\end_layout
-
-\begin_layout Subsubsection*
-4.99.27 (5.0 RC12)
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Set up new CanReg system: Fixed a bug where varaibles removed were not removed.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Set up new database: Indexes are now updated properly in XML.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Improved russian translation.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Other bugfixes.
-\end_layout
-
-\begin_layout Subsubsection*
-4.99.26 (5.0 RC11)
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Disabled some debug code from the release build.
-\end_layout
-
-\begin_layout Subsubsection*
-4.99.25 (5.0 RC10)
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-First draft of the Russian translation ready.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Created a jsmooth file to build .exe's for CanReg5 on windows.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Fixed a bug in the merge two patient-function.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-CanRegDAO save record now truncates variables if needed.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-CanRegClientView removed ICD-O-3 manual link.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-CanRegDAO save rumour now harmonizes tumour record ids better.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Improved exception handling.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Work on internationalization.
- 
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Updated the handbook.
-\end_layout
-
-\begin_layout Subsubsection*
-4.99.24 (5.0 RC9)
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Internationalized strings that were hardcoded before.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Improved layout of the RangeFilter.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Updated the about.html
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Changed the XML parser.
- Now using the standard javax.xml.parsers instead of the apache one.
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Handbook now in Latex (Lyx) under version control.
-\end_layout
-
-\begin_layout Subsubsection*
-4.99.23 (5.0 RC8)
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Improved the export of the sources.
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Range in Global Person Search implemented.
- Double click now works.
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Improved error-handling of the person search module.
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Minor fixes and updates.
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Tidied the source.
-\end_layout
-
-\begin_layout Subsubsection*
-
-\series bold
-4.99.22 Build 858
-\series default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Database engine switched to Java DB 10.5.3.0
-\family default
-\series bold
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-RangeFilter now adds 's if needed by each variable.
-
-\family default
-\series bold
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Other bug fixes.
-
-\family default
-\series bold
- 
-\end_layout
-
-\begin_layout Subsubsection*
-
-\series bold
-4.99.21 Build 848
-\series default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Access to handbook, possibility to download latest version.
-
-\family default
-\series bold
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-DatabaseVariableEditor now throws error messages if somethings not right
- with the variable definition during system setup.
-
-\family default
-\series bold
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-ICCC3 converter implemented.
-
-\family default
-\series bold
- 
-\end_layout
-
-\begin_layout Subsubsection*
-
-\series bold
-4.99.20
-\series default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Internationalization work.
- Portugese translation started.
- French translation continued.
-
-\family default
- 
-\end_layout
-
-\begin_layout Subsubsection*
-
-\series bold
-4.99.19 Build 829
-\series default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Hourglass feedback added for longish operations.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Problem with truncated dictionary labels solved.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Fixed a bug where all checks show up in the result message, even though
- they are OK.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-TableBuilder: Fixed a nullpointer error that could occur if no cases in
- table
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Improved the layout of certain screens.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-French translation started.
-
-\family default
- 
-\end_layout
-
-\begin_layout Subsubsection*
-
-\series bold
-4.99.18 Build 821
-\series default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Better handling of malformed date strings.
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Date of last contact check implemented.
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Better handling of check results.
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Started implementation of auto age calculation.
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-RecordEditor and RecordEditorPanel: Improved the way check status is handled.
-
-\family default
- 
-\end_layout
-
-\begin_layout Subsubsection*
-
-\series bold
-4.99.17 Build 818
-\series default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-DateHelper: difference in dates in days calculated properly.
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-RecordEditor: Better error handling
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-AutoFillHelper: Added comments
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-VariableEditorPanel: Better handling of null-pointers, number no longer
- defaults to -1.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-ModifyDatabaseStructureIF: GUI fixes
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-UserManagerInternalFrame: Better error handling
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Tools.buildIndexMap: better handling of indexes with missing variables
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-DateVariableEditorPanel: Better error handling
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-ExportReportInternalFrame: Better error handling
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-CanRegClientView: display set up new system-menu
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-CheckAgeIncidence: better error message
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-DateHelper: fixed a one-off error when birthday,month=incidenceday,month
-\family default
- 
-\end_layout
-
-\begin_layout Subsubsection*
-
-\series bold
-4.99.16 Build 806
-\series default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Set up new database now in the menu
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Deleting records can now throw SQLexceptions.
-
-\family default
- 
-\end_layout
-
-\begin_layout Subsubsection*
-
-\series bold
-4.99.15 Build 804
-\series default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Import from multiple files now implemented.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-DatabaseStructure editor implemented with a default XML.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-InternalFrames/windows better positioned on various screen-sizes.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-RangeFilterPanel now handles source tables and empty index lists better,
- fires table changed events.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-VariablesChooserPanel now only displays the variables from valid table(s).
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Browser: Fixed a bug where you could not open records by double clicking
- on them if looking at source or source+tumour tables.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Tooltip texts updated.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-TranslateListElement: A simple way to translate list elements implemented
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-EditDictionaryInternalFrame: Fixed a bug that occured if a dictionary had
- more errors than possible to display.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-QueryGenerator improved.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Improved the display of variable names (FastFilter, RangeFilter, Browser.)
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-SystemDescription: Changes to accomodate the changes in DatabaseListElements,
- added setters to change the database's doc.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-DateHelper: fixed a bug that occured when date was not set and was read.
- Buddhist Calendar work started.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Handles better locked tumour records.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-FirstNameSexInternalFrame: better handling of unisex names.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Checks: now support better unknown codes.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Performance fixes.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Other stability and bug fixes.
-
-\family default
- 
-\end_layout
-
-\begin_layout Subsubsection*
-
-\series bold
-4.99.14 Build 764
-\series default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-ExportReport now lets you export category and description of dictionary
- elements and output long variable names, format dates and correct unknown
- dates.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-SystemDefinitionConverter strips blanks from database variable names.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-DateHelper: Dates are now transformed 
-\begin_inset Quotes erd
-\end_inset
-
-backwards
-\begin_inset Quotes erd
-\end_inset
-
- so that a two digit year contains the last two digits...
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Updated the xsd of the system XML.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Import function now generates record IDs if none are specified.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-Import: fixed a bug where the import would brake down if the IDs where defined
- in the import file.
-
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-FastFilter: reworked the logic and text on screen
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-
-\family typewriter
-BrowseInternalFrame: Sort by column is now highlighted, layout improved
-\begin_inset Newline newline
 \end_inset
 
 
-\family default
- 
 \end_layout
 
 \end_body
