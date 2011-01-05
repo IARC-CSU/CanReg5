@@ -84,6 +84,7 @@ public class Checker {
     public Checker(GlobalToolBox toolBox) {
         this.toolBox = toolBox;
         standardVariables = toolBox.getStandardVariables();
+        // Create a set of all standard variables in this database
         Set<StandardVariableNames> variableExistSet = getVariableExistSet(standardVariables);
         Map<StandardVariableNames, DatabaseVariablesListElement> standardVariablesMap = buildStandardVariablesMap(standardVariables);
 
@@ -198,10 +199,17 @@ public class Checker {
         return canPerform;
     }
 
+    // Create a set of all standard variables in this database
     private static Set<StandardVariableNames> getVariableExistSet(LinkedList<DatabaseVariablesListElement> list) {
         Set<StandardVariableNames> set = new HashSet<StandardVariableNames>();
         for (DatabaseVariablesListElement element : list) {
-            set.add(StandardVariableNames.valueOf(element.getStandardVariableName()));
+            try {
+                StandardVariableNames standardVariable = StandardVariableNames.valueOf(element.getStandardVariableName());
+                set.add(standardVariable);
+            } catch (IllegalArgumentException iae) {
+                // This should have been detected earlier...
+                System.out.println("Invalid standard variable name");
+            }
         }
         return set;
     }

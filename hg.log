@@ -1,5 +1,50 @@
-changeset:   526:e1c21f4312d9
+changeset:   535:cf806feeef22
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Jan 05 11:48:57 2011 +0100
+summary:     CanReg5 instructions. Updated FAQ.
+
+changeset:   534:38a5bb5c9968
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Jan 05 11:46:32 2011 +0100
+summary:     Fixed a bug when the standard variable was a string of 0 lenght.
+
+changeset:   533:378d42ef8b5e
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Dec 16 14:22:02 2010 +0100
+summary:     Tidied some code.
+
+changeset:   532:2ebc941a79f3
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Dec 15 11:29:15 2010 +0100
+summary:     Added a menu option to file bug/issue reports.
+
+changeset:   531:5405c4b013c7
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Nov 18 14:14:33 2010 +0100
+summary:     Started implementing a new dictionary chooser.
+
+changeset:   530:c3b3a6546068
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Nov 15 17:00:10 2010 +0100
+summary:     Removed unused version.txt
+
+changeset:   529:9da10e03c380
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Nov 15 15:42:15 2010 +0100
+summary:     Dictionary Editor: Now uses StringBuilder to improve performance.
+
+changeset:   528:7f4eb9f5ef2c
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Nov 12 17:33:46 2010 +0100
+summary:     Updated instructions and future.
+
+changeset:   527:7aa69505606c
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Nov 09 15:52:57 2010 +0100
+summary:     5.00.01
+
+changeset:   526:e1c21f4312d9
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Tue Nov 09 14:18:06 2010 +0100
 summary:     Database: fixed a bug where some filters didn't work when joining two (or more) tables.

@@ -1,5 +1,18 @@
 Changelog
 
+5.00.02
+
+- Fixed a bug when the standard variable is a string of 0 lenght.
+
+- Tidied some code.
+
+- Added a menu option to file bug/issue reports.
+
+- Dictionary Editor: Now uses StringBuilder to improve performance and allow for editing of bigger dictionaries.
+
+- Handbook: Updated FAQ
+
+
 5.00.01
 
 - Database: fixed a bug where some filters didn't work when joining two (or more) tables.
@@ -68,7 +81,7 @@ Changelog
 
 4.99.28 (5.0 RC13)
 
-- Searches and sorts in the database are now case insensitive using the primary component of the letters (i.e. 'å' equals 'A', 'é' equals 'E')
+- Searches and sorts in the database are now case insensitive using the primary component of the letters (i.e. 'ï¿½' equals 'A', 'ï¿½' equals 'E')
 
 - Updated database engine to Apache Derby 10.6.1.0. (Needed for case insensitive searches. Plus security fixes, performance issues etc.)
 
