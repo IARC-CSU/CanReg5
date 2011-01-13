@@ -645,7 +645,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             DatabaseVariableEditor dbve = (DatabaseVariableEditor) e.getSource();
             DatabaseVariablesListElement variable = databaseVariablePanel.isThisStandardVariableAlreadyMapped(dbve.getStandardVariable());
             if (variable!=null && variable != dbve.getDatabaseVariablesListElement()) {
-                JOptionPane.showInternalMessageDialog(this,
+                JOptionPane.showInternalMessageDialog(dbve,
                         "This standard variable is already mapped to "+variable.getFullName()+". Please revise.");
             }
         } else if (e.getActionCommand().equals(DatabaseGroupEditorInternalFrame.UPDATED)) {
