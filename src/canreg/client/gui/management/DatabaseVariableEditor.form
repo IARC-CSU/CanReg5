@@ -22,16 +22,16 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="variableLengthLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="variableTypeLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="englishNameLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                                       <Component id="groupLabel" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -46,34 +46,34 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="standardVariableNameComboBox" alignment="0" pref="152" max="32767" attributes="0"/>
-                          <Component id="fullNameTextField" alignment="1" pref="152" max="32767" attributes="1"/>
-                          <Component id="shortNameTextField" alignment="1" pref="152" max="32767" attributes="1"/>
-                          <Component id="englishNameTextField" alignment="1" pref="152" max="32767" attributes="1"/>
-                          <Component id="multiplePrimaryComboBox" alignment="1" pref="152" max="32767" attributes="1"/>
-                          <Component id="variableTypeComboBox" alignment="0" pref="152" max="32767" attributes="0"/>
-                          <Component id="variableLengthTextField" alignment="0" pref="152" max="32767" attributes="0"/>
-                          <Component id="groupComboBox" alignment="1" pref="152" max="32767" attributes="1"/>
-                          <Component id="fillInStatusComboBox" alignment="1" pref="152" max="32767" attributes="1"/>
+                          <Component id="standardVariableNameComboBox" alignment="0" pref="168" max="32767" attributes="0"/>
+                          <Component id="fullNameTextField" alignment="1" pref="168" max="32767" attributes="1"/>
+                          <Component id="shortNameTextField" alignment="1" pref="168" max="32767" attributes="1"/>
+                          <Component id="englishNameTextField" alignment="1" pref="168" max="32767" attributes="1"/>
+                          <Component id="multiplePrimaryComboBox" alignment="1" pref="168" max="32767" attributes="1"/>
+                          <Component id="variableTypeComboBox" alignment="0" pref="168" max="32767" attributes="0"/>
+                          <Component id="variableLengthTextField" alignment="0" pref="168" max="32767" attributes="0"/>
+                          <Component id="groupComboBox" alignment="1" pref="168" max="32767" attributes="1"/>
+                          <Component id="fillInStatusComboBox" alignment="1" pref="168" max="32767" attributes="1"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" pref="93" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="67" max="-2" attributes="0"/>
                       <Component id="dictionaryLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="dictionaryComboBox" pref="152" max="32767" attributes="0"/>
+                      <Component id="dictionaryComboBox" pref="168" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                       <Component id="unknownCodeLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="unknownCodeTextField" pref="152" max="32767" attributes="0"/>
+                      <Component id="unknownCodeTextField" pref="168" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" pref="115" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
                       <Component id="tableLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tableComboBox" pref="152" max="32767" attributes="0"/>
+                      <Component id="tableComboBox" pref="168" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -83,6 +83,11 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="tableLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tableComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="fullNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -137,11 +142,6 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="unknownCodeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="unknownCodeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="tableLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tableComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
