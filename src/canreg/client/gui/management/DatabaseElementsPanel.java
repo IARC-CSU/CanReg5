@@ -35,6 +35,7 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
         initComponents();
         elementPanelsSet = new TreeSet<DatabaseElementPanel>(new Comparator<DatabaseElementPanel>() {
 
+            @Override
             public int compare(DatabaseElementPanel o1, DatabaseElementPanel o2) {
                 return o1.getPosition() - o2.getPosition();
             }
@@ -109,6 +110,7 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
     private javax.swing.JPanel elementsPanel;
     // End of variables declaration//GEN-END:variables
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(DatabaseElementPanel.REMOVE_ACTION)) {
             elementsPanel.remove((Component) e.getSource());

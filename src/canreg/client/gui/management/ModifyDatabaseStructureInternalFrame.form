@@ -274,19 +274,19 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseDictionaryPanel1" alignment="0" pref="544" max="32767" attributes="0"/>
+                      <Component id="databaseDictionaryPanel" alignment="0" pref="544" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseDictionaryPanel1" min="-2" max="-2" attributes="0"/>
+                      <Component id="databaseDictionaryPanel" min="-2" max="-2" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="canreg.client.gui.management.DatabaseDictionariesPanel" name="databaseDictionaryPanel1">
+                <Component class="canreg.client.gui.management.DatabaseDictionariesPanel" name="databaseDictionaryPanel">
                   <Properties>
-                    <Property name="name" type="java.lang.String" value="databaseDictionaryPanel1" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="databaseDictionaryPanel" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -306,19 +306,19 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseVariablePanel1" alignment="0" pref="544" max="32767" attributes="0"/>
+                      <Component id="databaseVariablePanel" alignment="0" pref="544" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseVariablePanel1" alignment="0" pref="56" max="32767" attributes="0"/>
+                      <Component id="databaseVariablePanel" alignment="0" pref="56" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="canreg.client.gui.management.DatabaseVariablesPanel" name="databaseVariablePanel1">
+                <Component class="canreg.client.gui.management.DatabaseVariablesPanel" name="databaseVariablePanel">
                   <Properties>
-                    <Property name="name" type="java.lang.String" value="databaseVariablePanel1" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="databaseVariablePanel" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -338,19 +338,19 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseGroupPanel1" alignment="0" pref="544" max="32767" attributes="0"/>
+                      <Component id="databaseGroupPanel" alignment="0" pref="544" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseGroupPanel1" alignment="0" pref="56" max="32767" attributes="0"/>
+                      <Component id="databaseGroupPanel" alignment="0" pref="56" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="canreg.client.gui.management.DatabaseGroupsPanel" name="databaseGroupPanel1">
+                <Component class="canreg.client.gui.management.DatabaseGroupsPanel" name="databaseGroupPanel">
                   <Properties>
-                    <Property name="name" type="java.lang.String" value="databaseGroupPanel1" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="databaseGroupPanel" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>

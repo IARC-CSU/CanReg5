@@ -340,6 +340,9 @@
             <StringItem index="3" value="Item 4"/>
           </StringArray>
         </Property>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="canreg.client.gui.management.DatabaseVariableEditor" id="standardVariableSet" methodName="standardVariableSet"/>
+        </Property>
         <Property name="name" type="java.lang.String" value="standardVariableNameComboBox" noResource="true"/>
       </Properties>
     </Component>

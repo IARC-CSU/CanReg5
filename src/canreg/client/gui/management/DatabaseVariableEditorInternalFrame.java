@@ -23,6 +23,7 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
 
     private ActionListener listener;
     public final static String UPDATED = "varaiable_updated";
+    public final static String STANDARDVARIABLEMAPPINGCHANGED = "standard_variable_mapping_changed";
 
     /** Creates new form DatabaseVariableEditorInternalFrame */
     public DatabaseVariableEditorInternalFrame() {
@@ -121,6 +122,7 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
 
     public void setActionListener(ActionListener listener) {
         this.listener = listener;
+        databaseVariableEditor.setListener(listener);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;

@@ -10,6 +10,8 @@ import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
@@ -21,6 +23,7 @@ import org.jdesktop.application.Action;
 public class DatabaseVariableEditor extends javax.swing.JPanel {
 
     private DatabaseVariablesListElement databaseVariablesListElement;
+    private ActionListener listener;
 
     /** Creates new form DatabaseVariableEditor */
     public DatabaseVariableEditor() {
@@ -190,6 +193,7 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
         standardVariableNameLabel.setName("standardVariableNameLabel"); // NOI18N
 
         standardVariableNameComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        standardVariableNameComboBox.setAction(actionMap.get("standardVariableSet")); // NOI18N
         standardVariableNameComboBox.setName("standardVariableNameComboBox"); // NOI18N
 
         unknownCodeLabel.setText(resourceMap.getString("unknownCodeLabel.text")); // NOI18N
@@ -318,7 +322,7 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
                 JOptionPane.showInternalMessageDialog(this,
                         "Variable length should greater than 0.");
             }
- 
+
         } catch (NumberFormatException nfe) {
             JOptionPane.showInternalMessageDialog(this, nfe);
         }
@@ -385,8 +389,8 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
 
         try {
             int length = Integer.parseInt(variableLengthTextField.getText());
-            if (!Globals.VARIABLE_TYPE_NUMBER_NAME.equalsIgnoreCase(databaseVariablesListElement.getVariableType()) && length<=0){
-                throw new DatabaseVariablesListException(databaseVariablesListElement,java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("VARIABLE_LENGHT_LESS_THAN_0."));
+            if (!Globals.VARIABLE_TYPE_NUMBER_NAME.equalsIgnoreCase(databaseVariablesListElement.getVariableType()) && length <= 0) {
+                throw new DatabaseVariablesListException(databaseVariablesListElement, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseVariableEditor").getString("VARIABLE_LENGHT_LESS_THAN_0."));
             }
             databaseVariablesListElement.setVariableLength(length);
         } catch (NumberFormatException nfe) {
@@ -492,4 +496,24 @@ public class DatabaseVariableEditor extends javax.swing.JPanel {
             }
         }
     }
+
+    public void setListener(ActionListener listener) {
+        this.listener = listener;
+    }
+
+    @Action
+    public void standardVariableSet() {
+        if (listener != null) {
+            listener.actionPerformed(new ActionEvent(this, 0, DatabaseVariableEditorInternalFrame.STANDARDVARIABLEMAPPINGCHANGED));
+        }
+    }
+
+    public String getStandardVariable() {
+        return standardVariableNameComboBox.getSelectedItem().toString();
+    }
+    
+    public DatabaseVariablesListElement getDatabaseVariablesListElement() {
+        return databaseVariablesListElement;
+    }
+
 }

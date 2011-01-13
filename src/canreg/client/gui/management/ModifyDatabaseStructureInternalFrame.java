@@ -73,9 +73,9 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                     Globals.REGIONS[6],
                     Globals.REGIONS[9]
                 }));
-        databaseDictionaryPanel1.setActionListener(this);
-        databaseVariablePanel1.setActionListener(this);
-        databaseGroupPanel1.setActionListener(this);
+        databaseDictionaryPanel.setActionListener(this);
+        databaseVariablePanel.setActionListener(this);
+        databaseGroupPanel.setActionListener(this);
         databaseIndexPanel1.setActionListener(this);
         // databaseIndexPanel1.setVisible(false);
     }
@@ -108,11 +108,11 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         searchVariablesPanel = new javax.swing.JPanel();
         personSearchVariablesPanel = new canreg.client.gui.management.PersonSearchVariablesPanel();
         dictionariesPanel = new javax.swing.JPanel();
-        databaseDictionaryPanel1 = new canreg.client.gui.management.DatabaseDictionariesPanel();
+        databaseDictionaryPanel = new canreg.client.gui.management.DatabaseDictionariesPanel();
         variablesPanel = new javax.swing.JPanel();
-        databaseVariablePanel1 = new canreg.client.gui.management.DatabaseVariablesPanel();
+        databaseVariablePanel = new canreg.client.gui.management.DatabaseVariablesPanel();
         groupsPanel = new javax.swing.JPanel();
-        databaseGroupPanel1 = new canreg.client.gui.management.DatabaseGroupsPanel();
+        databaseGroupPanel = new canreg.client.gui.management.DatabaseGroupsPanel();
         codingPanel = new javax.swing.JPanel();
         maleCodeLabel = new javax.swing.JLabel();
         maleCodeTextField = new javax.swing.JTextField();
@@ -242,49 +242,49 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         dictionariesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("dictionariesPanel.border.title"))); // NOI18N
         dictionariesPanel.setName("dictionariesPanel"); // NOI18N
 
-        databaseDictionaryPanel1.setName("databaseDictionaryPanel1"); // NOI18N
+        databaseDictionaryPanel.setName("databaseDictionaryPanel"); // NOI18N
 
         javax.swing.GroupLayout dictionariesPanelLayout = new javax.swing.GroupLayout(dictionariesPanel);
         dictionariesPanel.setLayout(dictionariesPanelLayout);
         dictionariesPanelLayout.setHorizontalGroup(
             dictionariesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseDictionaryPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+            .addComponent(databaseDictionaryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
         );
         dictionariesPanelLayout.setVerticalGroup(
             dictionariesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseDictionaryPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(databaseDictionaryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         variablesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("variablesPanel.border.title"))); // NOI18N
         variablesPanel.setName("variablesPanel"); // NOI18N
 
-        databaseVariablePanel1.setName("databaseVariablePanel1"); // NOI18N
+        databaseVariablePanel.setName("databaseVariablePanel"); // NOI18N
 
         javax.swing.GroupLayout variablesPanelLayout = new javax.swing.GroupLayout(variablesPanel);
         variablesPanel.setLayout(variablesPanelLayout);
         variablesPanelLayout.setHorizontalGroup(
             variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseVariablePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+            .addComponent(databaseVariablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
         );
         variablesPanelLayout.setVerticalGroup(
             variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseVariablePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+            .addComponent(databaseVariablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
         );
 
         groupsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("groupsPanel.border.title"))); // NOI18N
         groupsPanel.setName("groupsPanel"); // NOI18N
 
-        databaseGroupPanel1.setName("databaseGroupPanel1"); // NOI18N
+        databaseGroupPanel.setName("databaseGroupPanel"); // NOI18N
 
         javax.swing.GroupLayout groupsPanelLayout = new javax.swing.GroupLayout(groupsPanel);
         groupsPanel.setLayout(groupsPanelLayout);
         groupsPanelLayout.setHorizontalGroup(
             groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseGroupPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+            .addComponent(databaseGroupPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
         );
         groupsPanelLayout.setVerticalGroup(
             groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseGroupPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+            .addComponent(databaseGroupPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
         );
 
         codingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("codingPanel.border.title"))); // NOI18N
@@ -505,7 +505,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             .addGroup(layout.createSequentialGroup()
                 .addComponent(generalPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE))
+                .addComponent(editorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE))
         );
 
         pack();
@@ -540,10 +540,10 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         registryNameTextField.setText(systemDescription.getSystemName());
         registryCodeTextField.setText(systemDescription.getSystemCode());
         regionComboBox.setSelectedItem(systemDescription.getRegion());
-        databaseVariablePanel1.setElements(systemDescription.getDatabaseVariableListElements());
-        databaseVariablePanel1.setDefaultGroup(systemDescription.getDatabaseGroupsListElements()[1]);
-        databaseGroupPanel1.setElements(systemDescription.getDatabaseGroupsListElements());
-        databaseDictionaryPanel1.setElements(systemDescription.getDatabaseDictionaryListElements());
+        databaseVariablePanel.setElements(systemDescription.getDatabaseVariableListElements());
+        databaseVariablePanel.setDefaultGroup(systemDescription.getDatabaseGroupsListElements()[1]);
+        databaseGroupPanel.setElements(systemDescription.getDatabaseGroupsListElements());
+        databaseDictionaryPanel.setElements(systemDescription.getDatabaseDictionaryListElements());
         databaseIndexPanel1.setElements(systemDescription.getDatabaseIndexesListElements());
 
         // coding
@@ -569,9 +569,9 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         systemDescription.setSystemName(registryNameTextField.getText());
         systemDescription.setRegistryCode(registryCodeTextField.getText());
         systemDescription.setRegionCode(Arrays.asList(Globals.REGIONS).indexOf(regionComboBox.getSelectedItem()));
-        systemDescription.setDictionaries((DatabaseDictionaryListElement[]) databaseDictionaryPanel1.getDatabaseElements());
-        systemDescription.setGroups((DatabaseGroupsListElement[]) databaseGroupPanel1.getDatabaseElements());
-        systemDescription.setVariables((DatabaseVariablesListElement[]) databaseVariablePanel1.getDatabaseElements());
+        systemDescription.setDictionaries((DatabaseDictionaryListElement[]) databaseDictionaryPanel.getDatabaseElements());
+        systemDescription.setGroups((DatabaseGroupsListElement[]) databaseGroupPanel.getDatabaseElements());
+        systemDescription.setVariables((DatabaseVariablesListElement[]) databaseVariablePanel.getDatabaseElements());
         systemDescription.setIndexes((DatabaseIndexesListElement[]) databaseIndexPanel1.getDatabaseElements());
         // save doc
         fileName = Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + File.separator + registryCodeTextField.getText().trim() + ".xml";
@@ -589,7 +589,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         systemDescription.saveSystemDescriptionXML(fileName);
         String message = java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/ModifyDatabaseStructureInternalFrame").getString("SYSTEM_DEFINITION_SAVED_AS_") + fileName + ".";
         if (oldFile != null) {
-            message += "\n" +java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/ModifyDatabaseStructureInternalFrame").getString("OLD_FILE_BACKED_UP_AS_")+ oldFile.getAbsolutePath();
+            message += "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/ModifyDatabaseStructureInternalFrame").getString("OLD_FILE_BACKED_UP_AS_") + oldFile.getAbsolutePath();
         }
         JOptionPane.showMessageDialog(this, message, "Title", JOptionPane.INFORMATION_MESSAGE);
     }
@@ -597,10 +597,10 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     private javax.swing.JCheckBox basisCodesCheckBox;
     private javax.swing.JButton checkIfUniqueButton;
     private javax.swing.JPanel codingPanel;
-    private canreg.client.gui.management.DatabaseDictionariesPanel databaseDictionaryPanel1;
-    private canreg.client.gui.management.DatabaseGroupsPanel databaseGroupPanel1;
+    private canreg.client.gui.management.DatabaseDictionariesPanel databaseDictionaryPanel;
+    private canreg.client.gui.management.DatabaseGroupsPanel databaseGroupPanel;
     private canreg.client.gui.management.DatabaseIndexPanel databaseIndexPanel1;
-    private canreg.client.gui.management.DatabaseVariablesPanel databaseVariablePanel1;
+    private canreg.client.gui.management.DatabaseVariablesPanel databaseVariablePanel;
     private javax.swing.JComboBox dateFormatComboBox;
     private javax.swing.JLabel dateFormatLabel;
     private javax.swing.JLabel dateSeparatorLabel;
@@ -637,21 +637,29 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     private javax.swing.JPanel variablesPanel;
     // End of variables declaration//GEN-END:variables
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(DatabaseVariableEditorInternalFrame.UPDATED)) {
-            databaseVariablePanel1.redrawTable();
+            databaseVariablePanel.redrawTable();
+        } else if (e.getActionCommand().equals(DatabaseVariableEditorInternalFrame.STANDARDVARIABLEMAPPINGCHANGED)) {
+            DatabaseVariableEditor dbve = (DatabaseVariableEditor) e.getSource();
+            DatabaseVariablesListElement variable = databaseVariablePanel.isThisStandardVariableAlreadyMapped(dbve.getStandardVariable());
+            if (variable!=null && variable != dbve.getDatabaseVariablesListElement()) {
+                JOptionPane.showInternalMessageDialog(this,
+                        "This standard variable is already mapped to "+variable.getFullName()+". Please revise.");
+            }
         } else if (e.getActionCommand().equals(DatabaseGroupEditorInternalFrame.UPDATED)) {
-            databaseGroupPanel1.redrawTable();
+            databaseGroupPanel.redrawTable();
         } else if (e.getActionCommand().equals(DatabaseDictionaryEditorInternalFrame.UPDATED)) {
-            databaseDictionaryPanel1.redrawTable();
+            databaseDictionaryPanel.redrawTable();
         } else if (e.getActionCommand().equals(DatabaseElementPanel.EDIT_ACTION)) {
             if (systemDescription != null) {
                 DatabaseElementPanel ep = (DatabaseElementPanel) e.getSource();
                 DatabaseElement dbe = ep.getDatabaseElement();
                 if (dbe instanceof DatabaseVariablesListElement) {
                     DatabaseVariableEditorInternalFrame dveif = new DatabaseVariableEditorInternalFrame();
-                    dveif.setDictionaries(databaseDictionaryPanel1.getDatabaseElements());
-                    dveif.setGroups(databaseGroupPanel1.getDatabaseElements());
+                    dveif.setDictionaries(databaseDictionaryPanel.getDatabaseElements());
+                    dveif.setGroups(databaseGroupPanel.getDatabaseElements());
                     dveif.setDatabaseVariablesListElement((DatabaseVariablesListElement) dbe);
                     dveif.setActionListener(this);
                     CanRegClientView.showAndPositionInternalFrame(dtp, dveif);
