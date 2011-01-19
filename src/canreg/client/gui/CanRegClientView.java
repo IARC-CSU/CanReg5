@@ -248,6 +248,7 @@ public class CanRegClientView extends FrameView {
         jMenuItem5 = new javax.swing.JMenuItem();
         icdo3DocumentationWebsiteMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
+        jMenuItem8 = new javax.swing.JMenuItem();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
         statusPanel = new javax.swing.JPanel();
         javax.swing.JSeparator statusPanelSeparator = new javax.swing.JSeparator();
@@ -580,6 +581,11 @@ public class CanRegClientView extends FrameView {
 
         jSeparator2.setName("jSeparator2"); // NOI18N
         helpMenu.add(jSeparator2);
+
+        jMenuItem8.setAction(actionMap.get("openLatestNews")); // NOI18N
+        jMenuItem8.setText(resourceMap.getString("jMenuItem8.text")); // NOI18N
+        jMenuItem8.setName("jMenuItem8"); // NOI18N
+        helpMenu.add(jMenuItem8);
 
         aboutMenuItem.setAction(actionMap.get("showAboutBox")); // NOI18N
         aboutMenuItem.setName("aboutMenuItem"); // NOI18N
@@ -1391,6 +1397,32 @@ public class CanRegClientView extends FrameView {
     public void openReportBug() {
         BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("BugReportWebsite"));
     }
+
+    @Action
+    public Task openLatestNews() {
+        return new OpenLatestNewsTask(getApplication());
+    }
+
+    private class OpenLatestNewsTask extends org.jdesktop.application.Task<Object, Void> {
+        OpenLatestNewsTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to OpenLatestNewsTask fields, here.
+            super(app);
+            LatestNewsInternalFrame internalFrame = new LatestNewsInternalFrame();
+            showAndPositionInternalFrame(desktopPane, internalFrame);
+        }
+        @Override protected Object doInBackground() {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+            return null;  // return your result
+        }
+        @Override protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;
@@ -1424,6 +1456,7 @@ public class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;

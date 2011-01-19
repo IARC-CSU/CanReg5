@@ -6,7 +6,10 @@ package canreg.common;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  *
@@ -16,7 +19,7 @@ public class DateHelper {
 
     public static GregorianCalendarCanReg parseDateStringToGregorianCalendarCanReg(String dateString, String dateFormatString) throws ParseException, IllegalArgumentException {
 
-        if (dateString.length()!=dateFormatString.length()){
+        if (dateString.length() != dateFormatString.length()) {
             return null;
         }
 
@@ -197,5 +200,19 @@ public class DateHelper {
             yearsBetween++;
         }
         return yearsBetween - 1;
+    }
+
+    public static Calendar parseTimestamp(String timestamp, String dateFormat, Locale locale) throws ParseException {
+        /*
+         ** we specify Locale.US since months are in english
+         */
+        if (locale == null){
+            locale = Locale.getDefault();
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, locale);
+        Date d = sdf.parse(timestamp);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        return cal;
     }
 }

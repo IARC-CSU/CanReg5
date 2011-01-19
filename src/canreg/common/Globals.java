@@ -24,6 +24,10 @@ public class Globals {
      * 
      */
     static public String newestVersionURLString = "http://www.iacr.com.fr/version.txt";
+     /**
+     *
+     */
+    static public String CANREG_TWITTER_RSS_URL = "http://twitter.com/statuses/user_timeline/86306086.rss";
     /**
      * 
      */
