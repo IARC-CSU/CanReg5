@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jdesktop.application.Action;
 
 public class LatestNewsInternalFrame extends javax.swing.JInternalFrame {
 
@@ -49,6 +50,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jEditorPane1 = new javax.swing.JEditorPane();
+        jButton1 = new javax.swing.JButton();
 
         setClosable(true);
         setResizable(true);
@@ -72,24 +74,38 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
         );
+
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(LatestNewsInternalFrame.class, this);
+        jButton1.setAction(actionMap.get("okAction")); // NOI18N
+        jButton1.setName("jButton1"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(337, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     public void readRSSDocument() throws RssParserException, IOException {
+
+        // TODO: switch to ROME https://rome.dev.java.net/
 
         RssParser parser = RssParserFactory.createDefault();
         Rss rss = parser.parse(
@@ -107,6 +123,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame {
                 // news+=("<h2>" + item.getTitle() + "</h2><br>");
                 // System.out.println("Link: " + item.getLink());
                 String description = item.getDescription().toString();
+                // remove the canreg: from the twitter feed
                 description = description.replaceFirst("canreg:", "");
                 String calString = "";
                 try {
@@ -136,6 +153,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame {
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -153,5 +171,10 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame {
             jEditorPane1.setText("<h2>No current news found. Please check your internet connection.</h2>");
             Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.INFO, null, ex);
         }
+    }
+
+    @Action
+    public void okAction() {
+        this.dispose();
     }
 }
