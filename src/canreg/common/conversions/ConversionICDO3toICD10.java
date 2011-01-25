@@ -17,20 +17,17 @@ import java.util.logging.Logger;
  * @author ervikm
  */
 public class ConversionICDO3toICD10 implements ConversionInterface {
-    
-    private static ConversionName conversionName = ConversionName.ICDO3toICD10;
 
+    private static ConversionName conversionName = ConversionName.ICDO3toICD10;
     private static StandardVariableNames[] variablesNeeded = new StandardVariableNames[]{
         StandardVariableNames.Sex,
         StandardVariableNames.Topography,
         StandardVariableNames.Morphology,
         StandardVariableNames.Behaviour
     };
-    
     private static StandardVariableNames[] variablesCreated = new StandardVariableNames[]{
         StandardVariableNames.ICD10
     };
-    
     /**
      * 
      */
@@ -39,7 +36,6 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
      * 
      */
     public static int femaleCode = 2;
-    
     private Map<String, String> topographyICD10Map;
     private int topographyCodeLength = 3;
     private String topographyLookUpFileResource = "/canreg/common/resources/lookup/O3_10T.txt";
@@ -52,7 +48,6 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
     private Map<Integer, String> topographyRule9Map;
     private int topographyRule9CodeLength = 7;
     private String topographyRule9FileResource = "/canreg/common/resources/lookup/O3_10r9.txt";
-
     private char flag = ' ';
     private String ICD10Male = "";
     private String ICD10Female = "";
@@ -100,17 +95,17 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
      * @return
      */
     public ConversionResult[] performConversion(Map<StandardVariableNames, Object> variables) {
-        
-	ICD10Male = "?????";
-    	ICD10Female = "?????";
-    	sexDependent = false;
-    	flag = ' ';
-         
+
+        ICD10Male = "?????";
+        ICD10Female = "?????";
+        sexDependent = false;
+        flag = ' ';
+
         ConversionResult result[] = new ConversionResult[1];
-        result[0]= new ConversionResult();
+        result[0] = new ConversionResult();
         result[0].setVariableName(StandardVariableNames.ICD10);
         result[0].setResultCode(ResultCode.OK);
-        
+
         String sexCode = null;
         String topographyCode = null;
         String morphologyCode = null;
@@ -157,9 +152,9 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
         {
             rule = (int) morphologyLookUpLine.charAt(0) - 48; // 1,2,3,4,5, 7,8,9
 
-        //--------------------------------------------< act according to rule
+            //--------------------------------------------< act according to rule
         }
-        
+
         if (rule <= 5) // conversion dependent on Topography code
         {
             String topographyLookUpLine = topographyICD10Map.get(topographyCode);
@@ -170,7 +165,9 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
             if (ICD10Male.charAt(3) == '*') {
                 ICD10Male = ICD10Male.substring(0, 3) + topographyCode.charAt(2);
             }
-            flag = morphologyLookUpLine.charAt(5);
+            if (morphologyLookUpLine.length() > 4) {
+                flag = morphologyLookUpLine.charAt(5);
+            }
         } else if (rule == 8) // dependent on Top and Mor
         {
             boolean ret = Rule8(morphologyLookUpLine, topographyCode);
@@ -200,10 +197,10 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
                 ICD10Male = "C223";
             } else if (MorphNum == 8970) {
                 ICD10Male = "C222";
-            } else if (MorphNum == 8160 || MorphNum == 8161 || MorphNum == 8162 ||
-                    MorphNum == 8140 || MorphNum == 8141 || MorphNum == 8260 ||
-                    MorphNum == 8440 || MorphNum == 8480 || MorphNum == 8481 ||
-                    MorphNum == 8490 || MorphNum == 8500 || MorphNum == 8550 || MorphNum == 8560) {
+            } else if (MorphNum == 8160 || MorphNum == 8161 || MorphNum == 8162
+                    || MorphNum == 8140 || MorphNum == 8141 || MorphNum == 8260
+                    || MorphNum == 8440 || MorphNum == 8480 || MorphNum == 8481
+                    || MorphNum == 8490 || MorphNum == 8500 || MorphNum == 8550 || MorphNum == 8560) {
                 ICD10Male = "C221";
             } else if (MorphNum == 8170 || MorphNum == 8171) {
                 ICD10Male = "C220";
@@ -232,7 +229,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
             if (flag == '+' && sexNumber != femaleCode) // female symbol
             {
                 //  Female Histology; Not Female Sex code
-                result[0].setMessage("Female Histology; Not Female Sex code "+ morphologyCode);
+                result[0].setMessage("Female Histology; Not Female Sex code " + morphologyCode);
                 result[0].setResultCode(ConversionResult.ResultCode.Invalid);
                 return result;
             }
@@ -262,7 +259,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
                 return result;
             }
         }
-         result[0].setValue(ICD10);
+        result[0].setValue(ICD10);
         return result;
     }
 
@@ -283,13 +280,14 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
         ICD10Male = O3_10TLookLine.substring(pos, pos + 4);
     }
     //__________________________________________________________________
+
     private boolean Rule8(String morphologyLookUpLine, String topographyCode) {
-        
+
         int i1 = 0;
         try {
             i1 = Integer.parseInt(morphologyLookUpLine.substring(2).trim());
         } catch (NumberFormatException numberFormatException) {
-             return false;
+            return false;
         }
         i1--;
         do {
@@ -301,7 +299,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
             if (topog8FileLine.startsWith("aos.")) {
                 if (topog8FileLine.charAt(4) == ':') {
                     int rule = (int) topog8FileLine.charAt(5) - 48;
-                    TopogConv(rule,topographyICD10Map.get(topographyCode));
+                    TopogConv(rule, topographyICD10Map.get(topographyCode));
                     break;
                 }
                 ICD10Male = topog8FileLine.substring(4, 8);
@@ -326,6 +324,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
         return true;
     }
     //____________________________________________________________
+
     private boolean Rule9(String morphologyLookUpLine, String topographyCode) {
         sexDependent = true;
 
@@ -334,10 +333,10 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
             morphologyLookUpLine = morphologyLookUpLine.trim();
             i1 = Integer.parseInt(morphologyLookUpLine.substring(2));
         } catch (NumberFormatException numberFormatException) {
-             return false;
+            return false;
         }
         i1--;
-        
+
         do {
             if (i1 >= topographyRule9Map.size()) {
                 return false;
@@ -381,9 +380,9 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
     }
 
     private String setStringChar(String theString, char theChar, int i) {
-        String string = theString.substring(0,i);
+        String string = theString.substring(0, i);
         string += theChar;
-        string += theString.substring(i+1);
+        string += theString.substring(i + 1);
         return string;
     }
 
