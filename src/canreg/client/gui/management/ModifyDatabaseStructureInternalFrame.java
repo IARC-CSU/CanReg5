@@ -12,6 +12,7 @@ import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.server.management.SystemDescription;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -77,6 +78,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         databaseVariablePanel.setActionListener(this);
         databaseGroupPanel.setActionListener(this);
         databaseIndexPanel1.setActionListener(this);
+        searchVariablesPanel.setEnabled(true);
         // databaseIndexPanel1.setVisible(false);
     }
 
@@ -573,6 +575,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         systemDescription.setGroups((DatabaseGroupsListElement[]) databaseGroupPanel.getDatabaseElements());
         systemDescription.setVariables((DatabaseVariablesListElement[]) databaseVariablePanel.getDatabaseElements());
         systemDescription.setIndexes((DatabaseIndexesListElement[]) databaseIndexPanel1.getDatabaseElements());
+        systemDescription.setPersonSearcher((PersonSearcher) personSearchVariablesPanel.getSearcher());
         // save doc
         fileName = Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + File.separator + registryCodeTextField.getText().trim() + ".xml";
         File file = new File(fileName);
