@@ -8,6 +8,7 @@ package canreg.client.gui.management;
 
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.PersonSearchVariable;
+import canreg.common.qualitycontrol.PersonSearcher.CompareAlgorithms;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.jdesktop.application.Action;
@@ -22,6 +23,7 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
     /** Creates new form PersonSearchVariablePanel */
     public PersonSearchVariablePanel() {
         initComponents();
+        compareAlgorithmComboBox.setModel(new javax.swing.DefaultComboBoxModel(CompareAlgorithms.values()));
     }
     
     /**
@@ -43,6 +45,7 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
     void setPersonSearchVariable(PersonSearchVariable searchVariable) {
         boolean found = false;
         String searchVariableName = searchVariable.getName();
+        compareAlgorithmComboBox.setSelectedItem(searchVariable.getCompareAlgorithm());
         DatabaseVariablesListElement databaseVariablesListElement = null;
         int i = 0;
         while (!found && i< variablesComboBox.getItemCount()){
@@ -76,6 +79,10 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         }
         return weight;
     }
+
+    private CompareAlgorithms getCompareAlgorithm(){
+        return (CompareAlgorithms) compareAlgorithmComboBox.getSelectedItem();
+    }
     
     /**
      * 
@@ -91,8 +98,9 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
      */
     public PersonSearchVariable getPersonSearchVariable() {
         PersonSearchVariable psv = new PersonSearchVariable();
-        psv.setName(getSelectedVariable().getShortName());
+        psv.setVariable(getSelectedVariable());
         psv.setWeight(getWeight());
+        psv.setAlgorithm(getCompareAlgorithm());
         return psv;
     }
 
@@ -100,6 +108,7 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         removeButton.setEnabled(enabled);
         weightTextField.setEnabled(enabled);
         variablesComboBox.setEnabled(enabled);
+        compareAlgorithmComboBox.setEnabled(enabled);
     }
     
     /** This method is called from within the constructor to
@@ -117,6 +126,8 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         weightTextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        compareAlgorithmComboBox = new javax.swing.JComboBox();
+        jLabel3 = new javax.swing.JLabel();
 
         setName("Form"); // NOI18N
 
@@ -125,6 +136,7 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         removeButton.setName("removeButton"); // NOI18N
 
         variablesComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        variablesComboBox.setAction(actionMap.get("variableChanged")); // NOI18N
         variablesComboBox.setName("variablesComboBox"); // NOI18N
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PersonSearchVariablePanel.class);
@@ -137,6 +149,12 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 
+        compareAlgorithmComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        compareAlgorithmComboBox.setName("compareAlgorithmComboBox"); // NOI18N
+
+        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
+        jLabel3.setName("jLabel3"); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -146,10 +164,14 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(variablesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(compareAlgorithmComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(weightTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                .addComponent(weightTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(removeButton)
                 .addContainerGap())
@@ -161,7 +183,9 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addComponent(variablesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel2)
-                .addComponent(weightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(weightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(compareAlgorithmComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel3))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -173,9 +197,16 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         listener.actionPerformed(new ActionEvent(this,0,"remove"));
     }
 
+    @Action
+    public void variableChanged() {
+        
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox compareAlgorithmComboBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JButton removeButton;
     private javax.swing.JComboBox variablesComboBox;
     private javax.swing.JTextField weightTextField;

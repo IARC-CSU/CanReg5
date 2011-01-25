@@ -71,7 +71,7 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
 
     private DefaultPersonSearch buildSearcher() {
         DefaultPersonSearch newPersonSearch = null;
-        if (!defaultSettingsToggleButton.isSelected()) {
+        if (!defaultSettingsToggleButton.isSelected()||!defaultSettingsToggleButton.isVisible()) {
             newPersonSearch = new DefaultPersonSearch(variablesInDB);
             Component[] components = variablesListPanel.getComponents();
             PersonSearchVariable[] variables = new PersonSearchVariable[components.length];

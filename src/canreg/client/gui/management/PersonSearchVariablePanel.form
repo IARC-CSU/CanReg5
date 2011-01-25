@@ -24,10 +24,14 @@
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="variablesComboBox" min="-2" pref="120" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="compareAlgorithmComboBox" min="-2" pref="77" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="weightTextField" pref="93" max="32767" attributes="0"/>
+              <Component id="weightTextField" pref="59" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="removeButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -42,6 +46,8 @@
               <Component id="variablesComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
               <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
               <Component id="weightTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="compareAlgorithmComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -65,6 +71,9 @@
             <StringItem index="3" value="Item 4"/>
           </StringArray>
         </Property>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="canreg.client.gui.management.PersonSearchVariablePanel" id="variableChanged" methodName="variableChanged"/>
+        </Property>
         <Property name="name" type="java.lang.String" value="variablesComboBox" noResource="true"/>
       </Properties>
     </Component>
@@ -84,6 +93,25 @@
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="jLabel2.text"/>
         <Property name="name" type="java.lang.String" value="jLabel2" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="compareAlgorithmComboBox">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="4">
+            <StringItem index="0" value="Item 1"/>
+            <StringItem index="1" value="Item 2"/>
+            <StringItem index="2" value="Item 3"/>
+            <StringItem index="3" value="Item 4"/>
+          </StringArray>
+        </Property>
+        <Property name="name" type="java.lang.String" value="compareAlgorithmComboBox" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel3">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="jLabel3.text"/>
+        <Property name="name" type="java.lang.String" value="jLabel3" noResource="true"/>
       </Properties>
     </Component>
   </SubComponents>

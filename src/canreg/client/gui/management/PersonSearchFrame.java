@@ -37,7 +37,6 @@ import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
@@ -109,7 +108,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             public void internalFrameClosing(InternalFrameEvent e) {
                 int option = JOptionPane.NO_OPTION;
                 if (personSearcherRunning) {
-                    option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("REALLY CLOSE?")+"\n"+java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("THE PERSON SEARCH UNDER WAY WILL BE INTERUPTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("REALLY CLOSE?"), JOptionPane.YES_NO_OPTION);
+                    option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("REALLY CLOSE?") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("THE PERSON SEARCH UNDER WAY WILL BE INTERUPTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("REALLY CLOSE?"), JOptionPane.YES_NO_OPTION);
                     if (option == JOptionPane.YES_OPTION) {
                         interruptDuplicateSearchAction();
                         close();
@@ -448,11 +447,15 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 while (result != null) {
                     recordsTestedTextField.setText(recordsTested + "");
                     if (result.size() > 0) {
-                        for (String patientA : result.keySet()) {
-                            Map<String, Float> map = result.get(patientA);
+                        for (String patientRecordNumberA : result.keySet()) {
+                            Map<String, Float> map = result.get(patientRecordNumberA);
                             matchesFound += map.size();
-                            for (String patientB : map.keySet()) {
-                                resultTableModel.addRow(new Object[]{patientA, patientB, map.get(patientB)});
+                            Patient patientA = CanRegClientApp.getApplication().getPatientRecord(patientRecordNumberA, false);
+                            String patientNumberA = (String) patientA.getVariable(patientIDlookupVariable).toString();
+                            for (String patientRecordNumberB : map.keySet()) {
+                                Patient patientB = CanRegClientApp.getApplication().getPatientRecord(patientRecordNumberB, false);
+                                String patientNumberB = (String) patientB.getVariable(patientIDlookupVariable).toString();
+                                resultTableModel.addRow(new Object[]{patientNumberA, patientNumberB, map.get(patientRecordNumberB)});
                             }
                         }
                         matchesFoundTextField.setText(matchesFound + "");
@@ -575,13 +578,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 // TableModel model = target.getModel();
                 Patient patient;
                 try {
-                    patient = CanRegClientApp.getApplication().getPatientRecord("" + target.getValueAt(rowNumber, columnNumber), false);
 //                  patient = CanRegClientApp.getApplication().getPatientRecord("" + model.getValueAt(rowNumber, columnNumber), false);
-                    editPatientID(patient.getVariable(patientIDlookupVariable).toString());
-                } catch (SQLException ex) {
-                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (RemoteException ex) {
-                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    editPatientID("" + target.getValueAt(rowNumber, columnNumber));
                 } catch (SecurityException ex) {
                     Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (Exception ex) {
