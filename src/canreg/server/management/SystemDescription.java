@@ -5,7 +5,9 @@ import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.PersonSearchVariable;
 import canreg.common.Tools;
+import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.server.database.QueryGenerator;
 // import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import java.io.File;
@@ -448,6 +450,31 @@ public class SystemDescription {
             variableElement.appendChild(createElement(namespace + "variable_name", variable.getDatabaseVariableName()));
             element.appendChild(variableElement);
         }
+        return element;
+    }
+
+    public void setPersonSearcher(PersonSearcher personSearcher) {
+        Element parentElement = (Element) doc.getElementsByTagName(namespace + "search_variables").item(0);
+        if (parentElement == null) {
+            parentElement = doc.createElement(namespace + "search_variables");
+            doc.appendChild(parentElement);
+        }
+        //  debugOut(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
+        while (parentElement.hasChildNodes()) {
+            parentElement.removeChild(parentElement.getLastChild());
+        }
+        for (PersonSearchVariable variable : personSearcher.getSearchVariables()) {
+            Element element = createPersonSearchVariable(variable);
+            parentElement.appendChild(element);
+        }
+        parentElement.appendChild(createElement(namespace + "minimum_match", personSearcher.getThreshold()+""));
+    }
+
+    private Element createPersonSearchVariable(PersonSearchVariable variable) {
+        Element element = doc.createElement(namespace + "search_variable");
+        element.appendChild(createElement(namespace + "variable_name", variable.getName()));
+        element.appendChild(createElement(namespace + "weigth", variable.getWeight()+""));
+        element.appendChild(createElement(namespace + "compare_algorithm", variable.getCompareAlgorithm().toString()));
         return element;
     }
 }
