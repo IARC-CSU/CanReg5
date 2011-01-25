@@ -1,5 +1,9 @@
 package canreg.common;
 
+import canreg.common.qualitycontrol.PersonSearcher.CompareAlgorithms;
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 import org.w3c.dom.Document;
@@ -97,15 +101,28 @@ public class Tools {
      * @return
      */
     public static PersonSearchVariable[] getPersonSearchVariables(Document doc, String namespace) {
+        DatabaseVariablesListElement[] variables = getVariableListElements(doc, namespace);
         NodeList nl = doc.getElementsByTagName(namespace + "search_variable");
-        PersonSearchVariable[] variables = new PersonSearchVariable[nl.getLength()];
+        PersonSearchVariable[] searchVariables = new PersonSearchVariable[nl.getLength()];
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
-            variables[i] = new PersonSearchVariable();
-            variables[i].setName(e.getElementsByTagName(namespace + "variable_name").item(0).getTextContent());
-            variables[i].setWeight(Integer.parseInt(e.getElementsByTagName(namespace + "weigth").item(0).getTextContent()));
+            searchVariables[i] = new PersonSearchVariable();
+            String variableName = e.getElementsByTagName(namespace + "variable_name").item(0).getTextContent();
+            boolean found = false;
+            int j = 0;
+            DatabaseVariablesListElement element = null;
+            while (!found && j<variables.length){
+                element = variables[j++];
+                found = element.getDatabaseVariableName().equalsIgnoreCase(variableName);
+            }
+            searchVariables[i].setVariable(element);
+            searchVariables[i].setWeight(Float.parseFloat(e.getElementsByTagName(namespace + "weigth").item(0).getTextContent()));
+            NodeList compareAlgorithmElement = e.getElementsByTagName(namespace + "compare_algorithm");
+            if (compareAlgorithmElement.getLength()>0){
+                searchVariables[i].setAlgorithm(CompareAlgorithms.valueOf(compareAlgorithmElement.item(0).getTextContent()));
+            }
         }
-        return variables;
+        return searchVariables;
     }
 
     /**
@@ -117,7 +134,7 @@ public class Tools {
     public static float getPersonSearchMinimumMatch(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "search_variables");
         Element e = (Element) nl.item(0);
-        return Integer.parseInt(e.getElementsByTagName(namespace + "minimum_match").item(0).getTextContent());
+        return Float.parseFloat(e.getElementsByTagName(namespace + "minimum_match").item(0).getTextContent());
     }
 
     public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace) {
@@ -653,6 +670,18 @@ public class Tools {
             Runtime.getRuntime().exec("open " + file.getAbsolutePath());
         } else {
             Runtime.getRuntime().exec("open " + file.getAbsolutePath());
+        }
+    }
+
+    public static void switchFocus() throws AWTException {
+        try {
+            Robot r = new Robot();
+            r.keyPress(KeyEvent.VK_ALT);
+            r.keyPress(KeyEvent.VK_TAB);
+            r.keyRelease(KeyEvent.VK_ALT);
+            r.keyRelease(KeyEvent.VK_TAB);
+        } catch (AWTException e) {
+            throw e;
         }
     }
 

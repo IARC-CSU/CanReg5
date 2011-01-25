@@ -1,12 +1,13 @@
 package canreg.common.qualitycontrol;
 
 import canreg.common.DatabaseVariablesListElement;
-import canreg.common.Globals;
 import canreg.common.PersonSearchVariable;
+import canreg.common.Soundex;
 import canreg.server.database.Patient;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+//import org.apache.commons.codec.language.*;
 
 /**
  * The default person search module
@@ -25,6 +26,10 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     private float maximumTotalScore;
     private float[] variableWeights;
     Map<String, DatabaseVariablesListElement> variablesInDBMap;
+    private PersonSearchVariable[] searchVariables;
+    // private Soundex soundex = new Soundex();
+    // private DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+    // private Caverphone caverphone = new Caverphone();
 
     /**
      * 
@@ -42,21 +47,17 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
      * @return
      */
     public synchronized PersonSearchVariable[] getPersonSearchVariables() {
-        PersonSearchVariable[] psvs = new PersonSearchVariable[variableNames.length];
-        for (int i = 0; i < variableNames.length; i++) {
-            psvs[i] = new PersonSearchVariable();
-            psvs[i].setName(variableNames[i]);
-            psvs[i].setWeight(variableWeights[i]);
-        }
-        return psvs;
+        return searchVariables;
     }
 
     /**
      * 
      * @param personSearchVariables
      */
+    @Override
     public synchronized void setSearchVariables(PersonSearchVariable[] personSearchVariables) {
         int i = 0;
+        this.searchVariables = personSearchVariables;
         String[] tempVariableNames = new String[personSearchVariables.length];
         float[] tempVariableWeights = new float[personSearchVariables.length];
         for (PersonSearchVariable psv : personSearchVariables) {
@@ -72,7 +73,8 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
      * @param variableNames
      * @param variableWeigths
      */
-    public synchronized void setWeights(String[] variableNames, float[] variableWeigths) {
+
+    private synchronized void setWeights(String[] variableNames, float[] variableWeigths) {
         this.variableNames = variableNames;
         this.variableWeights = variableWeigths;
 
@@ -104,24 +106,23 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         }
     }
 
-    private float calculateDiscPower(String variableName){
+    private float calculateDiscPower(String variableName) {
         float tempDiscPower = 1;
 
         return tempDiscPower;
     }
 
-    private float calculateReliability(String variableName){
+    private float calculateReliability(String variableName) {
         float tempReliability = 1;
 
         return tempReliability;
     }
 
-    private float calculatePresence(String variableName){
+    private float calculatePresence(String variableName) {
         float tempPresence = 1;
 
         return tempPresence;
     }
-
 
     /**
      * 
@@ -129,6 +130,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
      * @param patient2
      * @return
      */
+    @Override
     public synchronized float compare(Patient patient1, Patient patient2) {
         if (variableNames == null) {
             throw (new NullPointerException());
@@ -146,6 +148,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         String patient2data;
         DatabaseVariablesListElement dbvle;
         String varibleType;
+        CompareAlgorithms compareAlgorithm;
 
         for (int link = 0; link < variableNames.length; ++link) {
             dbvle = variablesInDBMap.get(variableNames[link]);
@@ -162,24 +165,26 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                 patient1data = patient1dataObject.toString();
                 patient2data = patient2dataObject.toString();
 
-                varibleType = dbvle.getVariableType();
+                compareAlgorithm = searchVariables[link].getCompareAlgorithm();
 
-                if (patient1data.trim().length()==0 || patient2data.trim().length()==0) {
+                if (patient1data.trim().length() == 0 || patient2data.trim().length() == 0) {
                     similarity = missing;
                 } else if (patient1data.equals(unknownCode)) {
                     similarity = missing;
                 } else if (patient2data.equals(unknownCode)) {
                     similarity = missing;
-                } else if (varibleType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME)) {
-                    similarity = CompareCodes(patient1data, patient2data);
-                } else if (varibleType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME)) {
-                    similarity = CompareText(patient1data, patient2data);
-                } else if (varibleType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)) {
-                    similarity = CompareDate(patient1data, patient2data);
-                } else if (varibleType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
-                    similarity = CompareNumber(patient1data, patient2data);
-                } else {
-                    similarity = CompareText(patient1data, patient2data);
+                } else if (compareAlgorithm.equals(CompareAlgorithms.code)) {
+                    similarity = compareCodes(patient1data, patient2data);
+                } else if (compareAlgorithm.equals(CompareAlgorithms.alpha)) {
+                    similarity = compareText(patient1data, patient2data);
+                } else if (compareAlgorithm.equals(CompareAlgorithms.date)) {
+                    similarity = compareDate(patient1data, patient2data);
+                } else if (compareAlgorithm.equals(CompareAlgorithms.number)) {
+                    similarity = compareNumber(patient1data, patient2data);
+                } else if (compareAlgorithm.equals(CompareAlgorithms.soundex)) {
+                    similarity = compareSoundex(patient1data, patient2data);
+                }  else {
+                    similarity = compareText(patient1data, patient2data);
                 }
 
                 float score;
@@ -202,7 +207,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         return TotalScore;
     }
 
-    private int CompareCodes(String s1, String s2) {
+    private int compareCodes(String s1, String s2) {
         // called from Compare
         // finds how many common chars in same positions in s1 and s2
         // similarity points added if same from beginning
@@ -239,7 +244,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     }
     //_______________________________________________________________
 
-    private int CompareText(String s1, String s2) {
+    private int compareText(String s1, String s2) {
         // called from Compare
         // finds two longest common strings in s1 and s2
         // similarity points awarded according to lengths of common strings
@@ -321,7 +326,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     }
     //_______________________________________________________________
 
-    private int CompareDate(String s1, String s2) {
+    private int compareDate(String s1, String s2) {
         // called from Compare
         // finds similarity between two dates
         // points awarded to same day, month or year
@@ -411,7 +416,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     }
     //_______________________________________________________________
 
-    private int CompareNumber(String s1, String s2) {
+    private int compareNumber(String s1, String s2) {
         // called from Compare
         // finds similarity of two numbers
         // points awarded for proportional numeric closeness
@@ -463,6 +468,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
      * 
      * @return
      */
+    @Override
     public float getThreshold() {
         return threshold;
     }
@@ -471,7 +477,19 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
      * 
      * @param threshold
      */
+    @Override
     public void setThreshold(float threshold) {
         this.threshold = threshold;
+    }
+
+    private int compareSoundex(String patient1data, String patient2data) {
+        String soundex1 = Soundex.soundex(patient1data);
+        String soundex2 = Soundex.soundex(patient2data);
+        return compareCodes(soundex1, soundex2);
+    }
+
+    @Override
+    public PersonSearchVariable[] getSearchVariables() {
+        return searchVariables;
     }
 }

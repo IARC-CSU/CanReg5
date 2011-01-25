@@ -8,27 +8,38 @@ import canreg.server.database.Patient;
  * @author ervikm
  */
 public interface PersonSearcher {
+
+    public PersonSearchVariable[] getSearchVariables();
+
+    public enum CompareAlgorithms {
+
+        alpha,
+        date,
+        number,
+        code,
+        soundex,
+        // double_metaphone,
+        // caverphone
+    };
+
     /**
      * 
      * @return
      */
     public float getThreshold();
+
     /**
      * 
      * @param searchVariables
      */
     public void setSearchVariables(PersonSearchVariable[] searchVariables);
+
     /**
      * 
      * @param d
      */
     public void setThreshold(float d);
-    /**
-     * 
-     * @param variableNames
-     * @param variableWeights
-     */
-    public void setWeights(String[] variableNames, float[] variableWeights);
+
     /**
      * 
      * @param patient1
