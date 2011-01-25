@@ -165,7 +165,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
             if (ICD10Male.charAt(3) == '*') {
                 ICD10Male = ICD10Male.substring(0, 3) + topographyCode.charAt(2);
             }
-            if (morphologyLookUpLine.length() > 4) {
+            if (morphologyLookUpLine.length() > 5) {
                 flag = morphologyLookUpLine.charAt(5);
             }
         } else if (rule == 8) // dependent on Top and Mor
