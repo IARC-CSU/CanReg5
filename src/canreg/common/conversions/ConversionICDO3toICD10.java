@@ -161,8 +161,8 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
             TopogConv(rule, topographyLookUpLine);
         } else if (rule == 7) // conversion dependent on Morphology only
         {
-            ICD10Male = morphologyLookUpLine.substring(1, 5);
-            if (ICD10Male.charAt(3) == '*') {
+            ICD10Male = morphologyLookUpLine.substring(1, morphologyLookUpLine.length());
+            if (ICD10Male.length()>3 && ICD10Male.charAt(3) == '*') {
                 ICD10Male = ICD10Male.substring(0, 3) + topographyCode.charAt(2);
             }
             if (morphologyLookUpLine.length() > 5) {
