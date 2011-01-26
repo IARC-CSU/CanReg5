@@ -14,8 +14,10 @@ package canreg.client.gui;
  *
  * @author ervikm
  */
+import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import com.sun.cnpi.rss.elements.Category;
 import com.sun.cnpi.rss.elements.Item;
+import com.sun.cnpi.rss.elements.Link;
 import com.sun.cnpi.rss.elements.Rss;
 import java.io.IOException;
 import java.text.ParseException;
@@ -28,14 +30,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import org.jdesktop.application.Action;
 
-public class LatestNewsInternalFrame extends javax.swing.JInternalFrame {
+public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implements HyperlinkListener {
 
     /** Creates new form LatestNewsInternalFrame */
     public LatestNewsInternalFrame() {
         initComponents();
         initContent();
+        jEditorPane1.addHyperlinkListener(this);
     }
 
     /** This method is called from within the constructor to
@@ -63,7 +68,9 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame {
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
+        jEditorPane1.setEditable(false);
         jEditorPane1.setName("jEditorPane1"); // NOI18N
+        jEditorPane1.setRequestFocusEnabled(false);
         jScrollPane1.setViewportView(jEditorPane1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -74,7 +81,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
         );
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(LatestNewsInternalFrame.class, this);
@@ -125,6 +132,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame {
                 String description = item.getDescription().toString();
                 // remove the canreg: from the twitter feed
                 description = description.replaceFirst("canreg:", "");
+                Link link = item.getLink();
                 String calString = "";
                 try {
                     String date = item.getPubDate().toString();
@@ -133,7 +141,11 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame {
                 } catch (ParseException ex) {
                     Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                newsStringBuilder.append("<h5>" + calString + ": </h5>" + description + "<br><br>");
+                newsStringBuilder.append("<h5>" + calString + ": </h5>");
+                newsStringBuilder.append(description);
+                newsStringBuilder.append("<br>");
+                newsStringBuilder.append("<a href = \""+link.getText()+"\">Link</a>");
+                newsStringBuilder.append("<br><br>");
             }
             jEditorPane1.setText(newsStringBuilder.toString());
             jEditorPane1.setCaretPosition(0);
@@ -176,5 +188,12 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public void okAction() {
         this.dispose();
+    }
+
+    @Override
+    public void hyperlinkUpdate(HyperlinkEvent event) {
+        if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            BareBonesBrowserLaunch.openURL(event.getURL().toString());
+        }
     }
 }
