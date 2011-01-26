@@ -1,7 +1,6 @@
 /*
  * CanRegClientAboutBox.java
  */
-
 package canreg.client.gui;
 
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
@@ -12,12 +11,14 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import org.jdesktop.application.Action;
 
-public class CanRegClientAboutBox extends javax.swing.JDialog {
+public class CanRegClientAboutBox extends javax.swing.JDialog implements HyperlinkListener {
 
     private Properties appInfoProperties;
-    
+
     /**
      * 
      * @param parent
@@ -40,16 +41,17 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
         } catch (IOException ex) {
             ex.printStackTrace();
         } // end-try-catch
-                
-                
+
         initComponents();
         getRootPane().setDefaultButton(closeButton);
+        aboutEditorPane.addHyperlinkListener(this);
     }
 
     /**
      * 
      */
-    @Action public void closeAboutBox() {
+    @Action
+    public void closeAboutBox() {
         setVisible(false);
     }
 
@@ -63,6 +65,8 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
 
         closeButton = new javax.swing.JButton();
         javax.swing.JLabel appTitleLabel = new javax.swing.JLabel();
+        aboutScrollPane = new javax.swing.JScrollPane();
+        aboutEditorPane = new javax.swing.JEditorPane();
         javax.swing.JLabel versionLabel = new javax.swing.JLabel();
         javax.swing.JLabel appVersionLabel = new javax.swing.JLabel();
         javax.swing.JLabel vendorLabel = new javax.swing.JLabel();
@@ -71,13 +75,11 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
         javax.swing.JLabel appHomepageLabel = new javax.swing.JLabel();
         javax.swing.JLabel appDescLabel = new javax.swing.JLabel();
         javax.swing.JLabel imageLabel = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jEditorPane1 = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setAlwaysOnTop(true);
         setModal(true);
         setName("aboutBox"); // NOI18N
-        setResizable(false);
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(CanRegClientAboutBox.class, this);
         closeButton.setAction(actionMap.get("closeAboutBox")); // NOI18N
@@ -87,6 +89,22 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(CanRegClientAboutBox.class);
         appTitleLabel.setText(resourceMap.getString("Application.title")); // NOI18N
         appTitleLabel.setName("appTitleLabel"); // NOI18N
+
+        aboutScrollPane.setName("aboutScrollPane"); // NOI18N
+
+        aboutEditorPane.setContentType(resourceMap.getString("aboutEditorPane.contentType")); // NOI18N
+        aboutEditorPane.setEditable(false);
+        aboutEditorPane.setText(resourceMap.getString("aboutEditorPane.text")); // NOI18N
+        aboutEditorPane.setName("aboutEditorPane"); // NOI18N
+        aboutScrollPane.setViewportView(aboutEditorPane);
+        URL url = this.getClass().getResource("/canreg/client/gui/resources/about.html");
+        try{
+            aboutEditorPane.setPage(url);
+        }
+        catch (Exception e)
+        {
+            Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.INFO, "Problem setting about page", e);
+        }
 
         versionLabel.setFont(versionLabel.getFont().deriveFont(versionLabel.getFont().getStyle() | java.awt.Font.BOLD));
         versionLabel.setText(resourceMap.getString("versionLabel.text")); // NOI18N
@@ -120,21 +138,6 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
         imageLabel.setIcon(resourceMap.getIcon("imageLabel.icon")); // NOI18N
         imageLabel.setName("imageLabel"); // NOI18N
 
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
-
-        jEditorPane1.setContentType(resourceMap.getString("jEditorPane1.contentType")); // NOI18N
-        jEditorPane1.setText(resourceMap.getString("jEditorPane1.text")); // NOI18N
-        jEditorPane1.setName("jEditorPane1"); // NOI18N
-        jScrollPane1.setViewportView(jEditorPane1);
-        URL url = this.getClass().getResource("/canreg/client/gui/resources/about.html");
-        try{
-            jEditorPane1.setPage(url);
-        }
-        catch (Exception e)
-        {
-            Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.INFO, "Problem setting about page", e);
-        }
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -146,7 +149,6 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(209, 209, 209)
                         .addComponent(closeButton))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(versionLabel)
@@ -158,8 +160,9 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
                             .addComponent(appVendorLabel)
                             .addComponent(appHomepageLabel)))
                     .addComponent(appTitleLabel)
-                    .addComponent(appDescLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(appDescLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                    .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -169,7 +172,7 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
                         .addContainerGap()
                         .addComponent(appTitleLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(appDescLabel)
+                        .addComponent(appDescLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(versionLabel)
@@ -183,10 +186,10 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
                             .addComponent(homepageLabel)
                             .addComponent(appHomepageLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                        .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(closeButton))
-                    .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -204,11 +207,16 @@ public class CanRegClientAboutBox extends javax.swing.JDialog {
 private void homepageLabelMouseClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homepageLabelMouseClick
     BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientAboutBox").getString("http://canreg.iarc.fr/"));
 }//GEN-LAST:event_homepageLabelMouseClick
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JEditorPane aboutEditorPane;
+    private javax.swing.JScrollPane aboutScrollPane;
     private javax.swing.JButton closeButton;
-    private javax.swing.JEditorPane jEditorPane1;
-    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
-    
+
+    @Override
+    public void hyperlinkUpdate(HyperlinkEvent event) {
+        if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            BareBonesBrowserLaunch.openURL(event.getURL().toString());
+        }
+    }
 }

@@ -3,9 +3,9 @@
 <Form version="1.5" maxVersion="1.5" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
+    <Property name="alwaysOnTop" type="boolean" value="true"/>
     <Property name="modal" type="boolean" value="true"/>
     <Property name="name" type="java.lang.String" value="aboutBox" noResource="true"/>
-    <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -33,7 +33,6 @@
                       <EmptySpace min="-2" pref="209" max="-2" attributes="0"/>
                       <Component id="closeButton" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jScrollPane1" alignment="0" pref="268" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="versionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -49,8 +48,9 @@
                   </Group>
                   <Component id="appTitleLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="appDescLabel" alignment="0" pref="268" max="32767" attributes="0"/>
+                  <Component id="aboutScrollPane" alignment="0" pref="268" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -79,11 +79,11 @@
                           <Component id="appHomepageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="103" max="32767" attributes="0"/>
+                      <Component id="aboutScrollPane" pref="146" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="closeButton" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="imageLabel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="imageLabel" alignment="0" pref="333" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -114,6 +114,26 @@
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
       </AuxValues>
     </Component>
+    <Container class="javax.swing.JScrollPane" name="aboutScrollPane">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="aboutScrollPane" noResource="true"/>
+      </Properties>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JEditorPane" name="aboutEditorPane">
+          <Properties>
+            <Property name="contentType" type="java.lang.String" resourceKey="aboutEditorPane.contentType"/>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="text" type="java.lang.String" resourceKey="aboutEditorPane.text"/>
+            <Property name="name" type="java.lang.String" value="aboutEditorPane" noResource="true"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="URL url = this.getClass().getResource(&quot;/canreg/client/gui/resources/about.html&quot;);&#xa;try{&#xa;    aboutEditorPane.setPage(url);&#xa;} &#xa;catch (Exception e)&#xa;{&#xa;    Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.INFO, &quot;Problem setting about page&quot;, e);&#xa;}"/>
+          </AuxValues>
+        </Component>
+      </SubComponents>
+    </Container>
     <Component class="javax.swing.JLabel" name="versionLabel">
       <Properties>
         <Property name="font" type="java.awt.Font" noResource="true" editor="org.netbeans.modules.form.editors2.FontEditor">
@@ -213,24 +233,5 @@
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
       </AuxValues>
     </Component>
-    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
-      <Properties>
-        <Property name="name" type="java.lang.String" value="jScrollPane1" noResource="true"/>
-      </Properties>
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-      <SubComponents>
-        <Component class="javax.swing.JEditorPane" name="jEditorPane1">
-          <Properties>
-            <Property name="contentType" type="java.lang.String" resourceKey="jEditorPane1.contentType"/>
-            <Property name="text" type="java.lang.String" resourceKey="jEditorPane1.text"/>
-            <Property name="name" type="java.lang.String" value="jEditorPane1" noResource="true"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="URL url = this.getClass().getResource(&quot;/canreg/client/gui/resources/about.html&quot;);&#xa;try{&#xa;    jEditorPane1.setPage(url);&#xa;} &#xa;catch (Exception e)&#xa;{&#xa;    Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.INFO, &quot;Problem setting about page&quot;, e);&#xa;}"/>
-          </AuxValues>
-        </Component>
-      </SubComponents>
-    </Container>
   </SubComponents>
 </Form>
