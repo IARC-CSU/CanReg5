@@ -27,6 +27,7 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
 	}
     
     
+    @Override
     public DistributedTableDescription getTableDescription() throws DistributedTableDescriptionException {
         return distributedTableDescription;
     }
@@ -39,6 +40,7 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
         this.distributedTableDescription = distributedTableDescription;
     }
     
+    @Override
     public Object[][] retrieveRows(int from, int to) throws DistributedTableDescriptionException {
         Object[][] rows;
         try {
@@ -50,18 +52,22 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
         return rows;
     }
 
+    @Override
     public int[] sort(int sortColumn, boolean ascending, int[] selectedRows) throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public void setSelectedRowsAndColumns(int[] selectedRows, int[] selectedColumns) throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public int[] getSelectedRows() throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public int[] getSelectedColumns() throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }

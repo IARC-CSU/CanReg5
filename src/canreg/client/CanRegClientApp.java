@@ -214,6 +214,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
         ExitListener maybeExit = new ExitListener() {
 
+            @Override
             public boolean canExit(EventObject e) {
                 int option = JOptionPane.NO_OPTION;
                 if (!isCanregServerRunningInThisThread()) {
@@ -243,6 +244,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 return option == JOptionPane.YES_OPTION;
             }
 
+            @Override
             public void willExit(EventObject e) {
                 if (loggedIn) {
                     logOut();
