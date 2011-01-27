@@ -3,7 +3,6 @@
 <Form version="1.5" maxVersion="1.5" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <Properties>
     <Property name="closable" type="boolean" value="true"/>
-    <Property name="resizable" type="boolean" value="true"/>
     <Property name="frameIcon" type="javax.swing.Icon" resourceKey="Form.frameIcon"/>
     <Property name="name" type="java.lang.String" value="Form" noResource="true"/>
     <Property name="selected" type="boolean" value="true"/>
@@ -48,28 +47,36 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="aboutScrollPane" pref="309" max="32767" attributes="2"/>
-                      <Component id="logoButton" alignment="2" min="-2" pref="298" max="-2" attributes="1"/>
-                      <Component id="versionLabel" alignment="0" pref="309" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="versionLabel" alignment="0" min="-2" max="-2" attributes="1"/>
+                              <Component id="aboutScrollPane" alignment="0" min="-2" pref="347" max="-2" attributes="3"/>
+                          </Group>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="1">
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="logoButton" min="-2" pref="298" max="-2" attributes="1"/>
+                          <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="buttonPanel" min="-2" max="-2" attributes="0"/>
+                  <Component id="buttonPanel" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="buttonPanel" alignment="0" max="32767" attributes="1"/>
-                      <Group type="102" alignment="1" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <Component id="logoButton" min="-2" pref="274" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="aboutScrollPane" pref="143" max="32767" attributes="0"/>
+                          <Component id="aboutScrollPane" pref="82" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="versionLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -111,6 +118,9 @@
                 <Property name="text" type="java.lang.String" resourceKey="aboutEditorPane.text"/>
                 <Property name="focusCycleRoot" type="boolean" value="false"/>
                 <Property name="focusable" type="boolean" value="false"/>
+                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[50, 76]"/>
+                </Property>
                 <Property name="name" type="java.lang.String" value="aboutEditorPane" noResource="true"/>
                 <Property name="requestFocusEnabled" type="boolean" value="false"/>
               </Properties>
@@ -133,8 +143,8 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="loginButton" alignment="0" pref="241" max="32767" attributes="0"/>
-                          <Component id="restoreBackupButton" alignment="0" pref="241" max="32767" attributes="0"/>
+                          <Component id="loginButton" alignment="0" pref="205" max="32767" attributes="0"/>
+                          <Component id="restoreBackupButton" alignment="0" pref="205" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -144,9 +154,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="loginButton" pref="205" max="32767" attributes="0"/>
+                      <Component id="loginButton" pref="174" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="restoreBackupButton" pref="204" max="32767" attributes="0"/>
+                      <Component id="restoreBackupButton" pref="174" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
