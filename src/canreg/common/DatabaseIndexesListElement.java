@@ -7,7 +7,7 @@ import java.util.LinkedList;
  *
  * @author ervikm
  */
-public class DatabaseIndexesListElement  implements Serializable, DatabaseElement {
+public class DatabaseIndexesListElement implements Serializable, DatabaseElement {
 
     private String indexName;
     private String databaseTableName;
@@ -37,7 +37,7 @@ public class DatabaseIndexesListElement  implements Serializable, DatabaseElemen
 
     @Override
     public String toString() {
-        return getMainVariableName()+" ("+databaseTableName+")";
+        return getMainVariableName() + " (" + databaseTableName + ")";
     }
 
     /**
@@ -58,10 +58,12 @@ public class DatabaseIndexesListElement  implements Serializable, DatabaseElemen
      * @return the mainVariable
      */
     public String getMainVariableName() {
-        if (getVariableNamesInIndex() != null) {
+        if (getVariableNamesInIndex() != null && getVariableNamesInIndex().size()>0) {
             return getVariableNamesInIndex().getFirst();
-        } else {
+        } else if (getMainVariable() != null) {
             return getMainVariable().getDatabaseVariableName();
+        } else {
+            return "";
         }
     }
 
@@ -72,20 +74,19 @@ public class DatabaseIndexesListElement  implements Serializable, DatabaseElemen
         return variableNamesInIndex;
     }
 
-
     public void setVariablesInIndex(DatabaseVariablesListElement[] variableListElementsInIndex) {
         variableNamesInIndex = new LinkedList<String>();
-        for (DatabaseVariablesListElement dvle:variableListElementsInIndex){
-            if (dvle!=null){
+        for (DatabaseVariablesListElement dvle : variableListElementsInIndex) {
+            if (dvle != null) {
                 variableNamesInIndex.add(dvle.getDatabaseVariableName());
             } else {
-                throw new NullPointerException("Something wrong with index "+indexName);
+                throw new NullPointerException("Something wrong with index " + indexName);
             }
         }
         this.variableListElementsInIndex = variableListElementsInIndex;
     }
 
-    public DatabaseVariablesListElement[] getVariableListElementsInIndex(){
+    public DatabaseVariablesListElement[] getVariableListElementsInIndex() {
         return variableListElementsInIndex;
     }
 
