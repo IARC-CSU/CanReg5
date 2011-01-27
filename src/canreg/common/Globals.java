@@ -24,7 +24,7 @@ public class Globals {
      * 
      */
     static public String newestVersionURLString = "http://www.iacr.com.fr/version.txt";
-     /**
+    /**
      *
      */
     static public String CANREG_TWITTER_RSS_URL = "http://twitter.com/statuses/user_timeline/86306086.rss";
@@ -131,8 +131,12 @@ public class Globals {
         TUMOUR_AND_PATIENT_JOIN_TABLE_NAME,
         SOURCE_TABLE_NAME,
         SOURCE_AND_TUMOUR_JOIN_TABLE_NAME
-        // ,SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME
+    // ,SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME
     };
+    static public String[] TABLE_LIST = {
+        PATIENT_TABLE_NAME,
+        TUMOUR_TABLE_NAME,
+        SOURCE_TABLE_NAME,};
     /**
      * 
      */
