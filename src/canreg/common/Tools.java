@@ -111,14 +111,14 @@ public class Tools {
             boolean found = false;
             int j = 0;
             DatabaseVariablesListElement element = null;
-            while (!found && j<variables.length){
+            while (!found && j < variables.length) {
                 element = variables[j++];
                 found = element.getDatabaseVariableName().equalsIgnoreCase(variableName);
             }
             searchVariables[i].setVariable(element);
             searchVariables[i].setWeight(Float.parseFloat(e.getElementsByTagName(namespace + "weigth").item(0).getTextContent()));
             NodeList compareAlgorithmElement = e.getElementsByTagName(namespace + "compare_algorithm");
-            if (compareAlgorithmElement.getLength()>0){
+            if (compareAlgorithmElement.getLength() > 0) {
                 searchVariables[i].setAlgorithm(CompareAlgorithms.valueOf(compareAlgorithmElement.item(0).getTextContent()));
             }
         }
@@ -439,6 +439,7 @@ public class Tools {
         }
         Arrays.sort(indexes, new Comparator() {
 
+            @Override
             public int compare(Object o1, Object o2) {
                 DatabaseGroupsListElement group1 = (DatabaseGroupsListElement) o1;
                 DatabaseGroupsListElement group2 = (DatabaseGroupsListElement) o2;
@@ -472,7 +473,7 @@ public class Tools {
      * @return
      */
     public static String getFileFromURL(URL url) {
-        StringBuffer contents = new StringBuffer();
+        StringBuilder contents = new StringBuilder();
 
         try {
 
@@ -654,8 +655,8 @@ public class Tools {
         try {
             System.out.println("Current dir : " + dir1.getCanonicalPath());
             //System.out.println ("Parent  dir : " + dir2.getCanonicalPath());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
