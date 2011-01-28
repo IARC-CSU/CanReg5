@@ -5,16 +5,16 @@ import canreg.server.*;
 import canreg.common.Globals;
 import canreg.server.database.CanRegDAO;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,13 +34,13 @@ public class UserManagerNew {
      */
     static public String DEFAULT_LEVELS_FILENAME = "Levels.properties";
 
-    Vector fClients = new Vector();
+    LinkedList fClients = new LinkedList();
     CanRegDAO db;
 
     public UserManagerNew(CanRegDAO db) {
         this.db = db;
         Map<String, User> userMap = db.getUsers();
-        if (userMap.size() == 0) {
+        if (userMap.isEmpty()) {
             installDefaultUsers();
         }
     }
@@ -49,9 +49,9 @@ public class UserManagerNew {
         return fClients.size();
     }
 
-    public Vector<User> listUsers() {
+    public List<User> listUsers() {
         Map<String, User> userMap = db.getUsers();
-        Vector<User> users = new Vector<User>();
+        LinkedList<User> users = new LinkedList<User>();
         for (String userName : userMap.keySet()) {
             users.add(userMap.get(userName));
         }
@@ -59,7 +59,7 @@ public class UserManagerNew {
     }
 
     private void installDefaultUsers() {
-        Vector<User> users = listDefaultUsers();
+        LinkedList<User> users = listDefaultUsers();
         for (User user : users) {
             addUser(user);
         }
@@ -144,8 +144,8 @@ public class UserManagerNew {
         return success;
     }
 
-    private Vector<User> listDefaultUsers() {
-        Vector<User> users = new Vector<User>();
+    private LinkedList<User> listDefaultUsers() {
+        LinkedList<User> users = new LinkedList<User>();
         try {
             InputStream levelsPropInputStream = null;
             levelsPropInputStream = CanRegLoginModule.class.getResourceAsStream(DEFAULT_LEVELS_FILENAME);
