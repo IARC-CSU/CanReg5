@@ -351,7 +351,7 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     // read untill blank line
                     while (line != null && line.trim().length() > 0) {
                         if (cr4dictionary) {
-                            line = line.replaceFirst("  ", "\t ");
+                            line = line.replaceFirst("  ", "\t");
                         }
                         dictionaryString += line + "\n";
                         line = br.readLine();
@@ -410,7 +410,7 @@ private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             localSettings.writeSettings();
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
             setCursor(normalCursor);
-            if (allErrors.size() == 0) {
+            if (allErrors.isEmpty()) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame").getString("SUCCESSFULLY_IMPORTED_DICTIONARIES_FROM_FILE."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame").getString("DICTIONARY_SUCCESSFULLY_IMPORTED"), JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), allErrors.size() + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame").getString("_DICTIONARIES_WERE_NOT_IMPORTED..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame").getString("DICTIONARY_NOT_SUCCESSFULLY_IMPORTED."), JOptionPane.WARNING_MESSAGE);
