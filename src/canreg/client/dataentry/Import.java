@@ -21,6 +21,7 @@ import java.io.Writer;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -85,7 +86,7 @@ public class Import {
             InputStreamReader isr = new InputStreamReader(fis, io.getFileCharset());
             // Returns the name of the character encoding
 
-            Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + isr.getEncoding());
+            Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", isr.getEncoding());
 
             int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath());
 
@@ -125,7 +126,7 @@ public class Import {
                                 patient.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
                             }
                         } else {
-                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with patient part of line "+numberOfLinesRead+".", new Exception("Error in line: "+ numberOfLinesRead +". Can't find field: "+rel.getDatabaseVariableName()));
+                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with patient part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
                         }
                     }
                 }
@@ -145,7 +146,7 @@ public class Import {
                                 tumour.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
                             }
                         } else {
-                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with tumour part of line "+numberOfLinesRead+".", new Exception("Error in line: "+ numberOfLinesRead +". Can't find field: "+rel.getDatabaseVariableName()));
+                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with tumour part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
                         }
                     }
                 }
@@ -165,7 +166,7 @@ public class Import {
                                 source.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
                             }
                         } else {
-                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with source part of line "+numberOfLinesRead+".", new Exception("Error in line: "+ numberOfLinesRead +". Can't find field: "+rel.getDatabaseVariableName()));
+                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with source part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
                         }
 
                     }
@@ -378,7 +379,7 @@ public class Import {
                 FileInputStream patientFIS = new FileInputStream(files[0]);
                 InputStreamReader patientISR = new InputStreamReader(patientFIS, io.getFileCharsets()[0]);
 
-                Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + patientISR.getEncoding());
+                Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", patientISR.getEncoding());
 
                 int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[0].getAbsolutePath());
                 bufferedReader = new BufferedReader(patientISR);
@@ -510,7 +511,7 @@ public class Import {
                 FileInputStream tumourFIS = new FileInputStream(files[1]);
                 InputStreamReader tumourISR = new InputStreamReader(tumourFIS, io.getFileCharsets()[1]);
 
-                Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + tumourISR.getEncoding());
+                Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", tumourISR.getEncoding());
 
                 int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[1].getAbsolutePath());
                 bufferedReader = new BufferedReader(tumourISR);
@@ -601,7 +602,7 @@ public class Import {
                             String message = "";
                             LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumour);
 
-                            Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes = new TreeMap<Globals.StandardVariableNames, CheckResult.ResultCode>();
+                            Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes = new EnumMap<Globals.StandardVariableNames, CheckResult.ResultCode>(Globals.StandardVariableNames.class);
                             worstResultCodeFound = CheckResult.ResultCode.OK;
                             for (CheckResult result : checkResults) {
                                 if (result.getResultCode() != CheckResult.ResultCode.OK && result.getResultCode() != CheckResult.ResultCode.NotDone) {
@@ -679,7 +680,7 @@ public class Import {
                 FileInputStream sourceFIS = new FileInputStream(files[2]);
                 InputStreamReader sourceISR = new InputStreamReader(sourceFIS, io.getFileCharsets()[2]);
 
-                Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding " + sourceISR.getEncoding());
+                Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", sourceISR.getEncoding());
 
                 int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[2].getAbsolutePath());
                 bufferedReader = new BufferedReader(sourceISR);
