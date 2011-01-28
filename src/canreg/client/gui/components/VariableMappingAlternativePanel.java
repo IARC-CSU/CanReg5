@@ -28,9 +28,7 @@ public class VariableMappingAlternativePanel extends javax.swing.JPanel {
         // this.fileElements = fileElements;
         String[] entriesInComboBox = new String[fileElements.length + 1];
         entriesInComboBox[0] = "";
-        for (int i = 0; i < fileElements.length; i++) {
-            entriesInComboBox[i + 1] = fileElements[i];
-        }
+        System.arraycopy(fileElements, 0, entriesInComboBox, 1, fileElements.length);
         fileElementsComboBox.setModel(new javax.swing.DefaultComboBoxModel(entriesInComboBox));
     }
 

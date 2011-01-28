@@ -26,9 +26,7 @@ public class VariableMappingPanel extends javax.swing.JPanel {
         this.variablesInDB = variablesInDB;
         DatabaseVariablesListElement[] entriesInComboBox = new DatabaseVariablesListElement[variablesInDB.length + 1];
         entriesInComboBox[0] = null;
-        for (int i = 0; i < variablesInDB.length; i++) {
-            entriesInComboBox[i + 1] = variablesInDB[i];
-        }
+        System.arraycopy(variablesInDB, 0, entriesInComboBox, 1, variablesInDB.length);
         dbVariableComboBox.setModel(new javax.swing.DefaultComboBoxModel(entriesInComboBox));
     }
 

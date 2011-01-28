@@ -52,7 +52,7 @@ public class VariablesAssociationPanel extends javax.swing.JPanel {
             vmp.setVisible(true);
         }
 
-        if (panelList.size()==0) {
+        if (panelList.isEmpty()) {
             panelList = null;
         }
 
