@@ -77,7 +77,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="canreg.client.gui.management.DatabaseVariableEditor" name="databaseVariableEditor">
+        <Component class="canreg.client.gui.management.DatabaseVariableEditorPanel" name="databaseVariableEditor">
           <Properties>
             <Property name="name" type="java.lang.String" value="databaseVariableEditor" noResource="true"/>
           </Properties>
