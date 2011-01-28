@@ -12,6 +12,7 @@ import org.jdesktop.application.Action;
 public class DatabaseGroupsPanel extends DatabaseElementsPanel {
 
     @Action
+    @Override
     public void addAction() {
         add(new DatabaseGroupsListElement("Default Group Name", -1, -1));
     }
@@ -29,11 +30,14 @@ public class DatabaseGroupsPanel extends DatabaseElementsPanel {
         return elements;
     }
 
+    @Override
     public boolean removable(DatabaseElement dbe) {
         return true;
     }
 
+    @Override
     public boolean visible(DatabaseElement dbe) {
+        // groups are always visible
         return true;
     }
 

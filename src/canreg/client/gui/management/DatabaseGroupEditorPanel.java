@@ -19,8 +19,8 @@ public class DatabaseGroupEditorPanel extends javax.swing.JPanel {
 
     public void setDatabaseGroupsListElement(DatabaseGroupsListElement databaseGroupsListElement){
         this.databaseGroupsListElement = databaseGroupsListElement;
+        nameTextField.setText(databaseGroupsListElement.getGroupName());
     }
-
 
     /** Creates new form DatabaseGroupEditorPanel */
     public DatabaseGroupEditorPanel() {

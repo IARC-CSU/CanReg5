@@ -105,8 +105,7 @@ public class DatabaseGroupEditorInternalFrame extends javax.swing.JInternalFrame
     private javax.swing.JButton jButton2;
     // End of variables declaration//GEN-END:variables
 
-    void setActionListener(ActionListener listener) {
+    public void setActionListener(ActionListener listener) {
         this.listener = listener;
     }
-
 }
