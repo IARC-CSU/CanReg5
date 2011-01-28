@@ -41,7 +41,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -213,6 +212,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         }
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equalsIgnoreCase("Changed")) {
             if (e.getSource().equals(saveButton)) {
@@ -465,7 +465,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             recStatusDictWithConfirmArray =
                     recStatusDictCollection.toArray(new DictionaryEntry[0]);
 
-            Vector<DictionaryEntry> recStatusDictWithoutConfirmVector = new Vector<DictionaryEntry>();
+            LinkedList<DictionaryEntry> recStatusDictWithoutConfirmVector = new LinkedList<DictionaryEntry>();
             for (DictionaryEntry entry : recStatusDictCollection) {
                 // "1" is the code for confirmed... TODO: change to dynamic code...
                 if (!entry.getCode().equalsIgnoreCase("1")) {
@@ -611,6 +611,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         dataPanel.repaint();
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent e) {
         String propName = e.getPropertyName();
         if ("focusOwner".equals(propName)) {
