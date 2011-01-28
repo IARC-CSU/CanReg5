@@ -77,9 +77,11 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         databaseDictionaryPanel.setActionListener(this);
         databaseVariablePanel.setActionListener(this);
         databaseGroupPanel.setActionListener(this);
-        databaseIndexPanel1.setActionListener(this);
+        databaseIndexPanel.setActionListener(this);
         searchVariablesPanel.setEnabled(true);
-        // databaseIndexPanel1.setVisible(false);
+        // databaseIndexPanel.setVisible(false);
+        codingPanel.setVisible(false);
+        settingsPanel.setVisible(false);
     }
 
     public Document getDoc(Document doc) {
@@ -135,7 +137,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         specialRegistryCheckBox = new javax.swing.JCheckBox();
         strictPasswordModeCheckBox = new javax.swing.JCheckBox();
         searchVariablesPanel1 = new javax.swing.JPanel();
-        databaseIndexPanel1 = new canreg.client.gui.management.DatabaseIndexPanel();
+        databaseIndexPanel = new canreg.client.gui.management.DatabaseIndexPanel();
 
         setClosable(true);
         setResizable(true);
@@ -446,17 +448,17 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         searchVariablesPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("searchVariablesPanel1.border.title"))); // NOI18N
         searchVariablesPanel1.setName("searchVariablesPanel1"); // NOI18N
 
-        databaseIndexPanel1.setName("databaseIndexPanel1"); // NOI18N
+        databaseIndexPanel.setName("databaseIndexPanel"); // NOI18N
 
         javax.swing.GroupLayout searchVariablesPanel1Layout = new javax.swing.GroupLayout(searchVariablesPanel1);
         searchVariablesPanel1.setLayout(searchVariablesPanel1Layout);
         searchVariablesPanel1Layout.setHorizontalGroup(
             searchVariablesPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseIndexPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+            .addComponent(databaseIndexPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
         );
         searchVariablesPanel1Layout.setVerticalGroup(
             searchVariablesPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseIndexPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(databaseIndexPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         javax.swing.GroupLayout editorsPanelLayout = new javax.swing.GroupLayout(editorsPanel);
@@ -507,7 +509,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             .addGroup(layout.createSequentialGroup()
                 .addComponent(generalPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE))
+                .addComponent(editorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE))
         );
 
         pack();
@@ -546,7 +548,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         databaseVariablePanel.setDefaultGroup(systemDescription.getDatabaseGroupsListElements()[1]);
         databaseGroupPanel.setElements(systemDescription.getDatabaseGroupsListElements());
         databaseDictionaryPanel.setElements(systemDescription.getDatabaseDictionaryListElements());
-        databaseIndexPanel1.setElements(systemDescription.getDatabaseIndexesListElements());
+        databaseIndexPanel.setElements(systemDescription.getDatabaseIndexesListElements());
 
         // coding
         dateFormatComboBox.setSelectedItem(systemDescription.getDateFormat());
@@ -574,7 +576,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         systemDescription.setDictionaries((DatabaseDictionaryListElement[]) databaseDictionaryPanel.getDatabaseElements());
         systemDescription.setGroups((DatabaseGroupsListElement[]) databaseGroupPanel.getDatabaseElements());
         systemDescription.setVariables((DatabaseVariablesListElement[]) databaseVariablePanel.getDatabaseElements());
-        systemDescription.setIndexes((DatabaseIndexesListElement[]) databaseIndexPanel1.getDatabaseElements());
+        systemDescription.setIndexes((DatabaseIndexesListElement[]) databaseIndexPanel.getDatabaseElements());
         systemDescription.setPersonSearcher((PersonSearcher) personSearchVariablesPanel.getSearcher());
         // save doc
         fileName = Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + File.separator + registryCodeTextField.getText().trim() + ".xml";
@@ -602,7 +604,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     private javax.swing.JPanel codingPanel;
     private canreg.client.gui.management.DatabaseDictionariesPanel databaseDictionaryPanel;
     private canreg.client.gui.management.DatabaseGroupsPanel databaseGroupPanel;
-    private canreg.client.gui.management.DatabaseIndexPanel databaseIndexPanel1;
+    private canreg.client.gui.management.DatabaseIndexPanel databaseIndexPanel;
     private canreg.client.gui.management.DatabaseVariablesPanel databaseVariablePanel;
     private javax.swing.JComboBox dateFormatComboBox;
     private javax.swing.JLabel dateFormatLabel;
@@ -642,19 +644,23 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals(DatabaseVariableEditorInternalFrame.UPDATED)) {
+        if (e.getActionCommand().equals(DatabaseElementsPanel.UPDATED)) {
             databaseVariablePanel.redrawTable();
         } else if (e.getActionCommand().equals(DatabaseVariableEditorInternalFrame.STANDARDVARIABLEMAPPINGCHANGED)) {
-            DatabaseVariableEditor dbve = (DatabaseVariableEditor) e.getSource();
+            DatabaseVariableEditorPanel dbve = (DatabaseVariableEditorPanel) e.getSource();
             DatabaseVariablesListElement variable = databaseVariablePanel.isThisStandardVariableAlreadyMapped(dbve.getStandardVariable());
             if (variable!=null && variable != dbve.getDatabaseVariablesListElement()) {
                 JOptionPane.showInternalMessageDialog(dbve,
                         "This standard variable is already mapped to "+variable.getFullName()+". Please revise.");
             }
+        } else if (e.getActionCommand().equals(DatabaseVariableEditorInternalFrame.UPDATED)) {
+            databaseVariablePanel.redrawTable();
         } else if (e.getActionCommand().equals(DatabaseGroupEditorInternalFrame.UPDATED)) {
             databaseGroupPanel.redrawTable();
         } else if (e.getActionCommand().equals(DatabaseDictionaryEditorInternalFrame.UPDATED)) {
             databaseDictionaryPanel.redrawTable();
+        } else if (e.getActionCommand().equals(DatabaseIndexEditorInternalFrame.UPDATED)) {
+            databaseIndexPanel.redrawTable();
         } else if (e.getActionCommand().equals(DatabaseElementPanel.EDIT_ACTION)) {
             if (systemDescription != null) {
                 DatabaseElementPanel ep = (DatabaseElementPanel) e.getSource();
@@ -676,6 +682,12 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                     dveif.setDatabaseGroupsListElement((DatabaseGroupsListElement) dbe);
                     dveif.setActionListener(this);
                     CanRegClientView.showAndPositionInternalFrame(dtp, dveif);
+                } else if (dbe instanceof DatabaseIndexesListElement) {
+                    DatabaseIndexEditorInternalFrame diep = new DatabaseIndexEditorInternalFrame();
+                    diep.setVariablesInDatabase((DatabaseVariablesListElement[]) databaseVariablePanel.getDatabaseElements());
+                    diep.setDatabaseIndexesListElement((DatabaseIndexesListElement) dbe);
+                    diep.setActionListener(this);
+                    CanRegClientView.showAndPositionInternalFrame(dtp, diep);
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,

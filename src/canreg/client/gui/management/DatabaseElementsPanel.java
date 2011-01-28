@@ -26,7 +26,7 @@ import org.jdesktop.application.Action;
 public abstract class DatabaseElementsPanel extends javax.swing.JPanel implements ActionListener {
 
     private ActionListener listener;
-    public static String UPDATED = "database_Elements_panel_updated";
+    public static String UPDATED = "database_elements_panel_updated";
     protected TreeSet<DatabaseElementPanel> elementPanelsSet;
     // private List<DatabaseElement> databaseElementsList;
 

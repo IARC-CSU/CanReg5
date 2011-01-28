@@ -35,7 +35,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="generalPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="editorsScrollPane" pref="713" max="32767" attributes="0"/>
+              <Component id="editorsScrollPane" pref="721" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -625,19 +625,19 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseIndexPanel1" alignment="0" pref="544" max="32767" attributes="0"/>
+                      <Component id="databaseIndexPanel" alignment="0" pref="544" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseIndexPanel1" min="-2" max="-2" attributes="0"/>
+                      <Component id="databaseIndexPanel" min="-2" max="-2" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="canreg.client.gui.management.DatabaseIndexPanel" name="databaseIndexPanel1">
+                <Component class="canreg.client.gui.management.DatabaseIndexPanel" name="databaseIndexPanel">
                   <Properties>
-                    <Property name="name" type="java.lang.String" value="databaseIndexPanel1" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="databaseIndexPanel" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
