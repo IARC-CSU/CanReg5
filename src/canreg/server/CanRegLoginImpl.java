@@ -27,6 +27,7 @@ public class CanRegLoginImpl extends UnicastRemoteObject
         this.theServer = server;
     }
 
+    @Override
     public CanRegServerInterface login(String username, String password)
             throws java.rmi.RemoteException, LoginException {
 
@@ -46,6 +47,7 @@ public class CanRegLoginImpl extends UnicastRemoteObject
      * @return
      * @throws java.rmi.RemoteException
      */
+    @Override
     public String getSystemName() throws RemoteException {
         return theServer.getCanRegSystemName();
     }
@@ -55,6 +57,7 @@ public class CanRegLoginImpl extends UnicastRemoteObject
      * @return
      * @throws java.rmi.RemoteException
      */
+    @Override
     public String getSystemVersion() throws RemoteException {
         return theServer.getCanRegVersion();
     }

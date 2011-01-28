@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  *
  * @author ervikm
  */
-public class SystemSettings {
+public final class SystemSettings {
 
     // Programming related
     private String settingsFileName;

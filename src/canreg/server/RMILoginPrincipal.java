@@ -38,10 +38,11 @@ public class RMILoginPrincipal
         }
         this.username = username;
         if( DEBUG )
-            Logger.getLogger(RMILoginPrincipal.class.getName()).log(Level.INFO, "Principal " + username + " successfully created.");
+            Logger.getLogger(RMILoginPrincipal.class.getName()).log(Level.INFO, "Principal {0} successfully created.", username);
    }
    
    /** Returns the username of the user. @return The username. */
+    @Override
    public String getName()
    {
       return username;

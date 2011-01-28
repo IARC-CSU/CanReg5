@@ -21,8 +21,8 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import javax.security.auth.Subject;
 import org.w3c.dom.Document;
 
@@ -176,7 +176,7 @@ public interface CanRegServerInterface extends Remote {
     public String[] listCurrentUsers()
             throws RemoteException, SecurityException;
 
-    public Vector<User> listUsers() throws RemoteException, SecurityException;
+    public List<User> listUsers() throws RemoteException, SecurityException;
 
     public int saveUser(User user) throws RemoteException, SecurityException;
 

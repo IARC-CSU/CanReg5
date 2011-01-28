@@ -35,11 +35,11 @@ import java.sql.SQLException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.security.auth.Subject;
 import org.apache.derby.drda.NetworkServerControl;
 import java.net.InetAddress;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
@@ -275,7 +275,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     @Override
-    public Vector<User> listUsers() throws RemoteException, SecurityException {
+    public List<User> listUsers() throws RemoteException, SecurityException {
         return userManager.listUsers();
     }
 

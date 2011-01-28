@@ -44,6 +44,7 @@ public class CanRegLoginModule implements LoginModule {
      * @param options options specified in the login Configuration for this particular LoginModule 
      *   (in the java.security.auth.login.config file).
      */
+    @Override
     public void initialize(Subject subject, CallbackHandler callbackHandler,
             Map sharedState, Map options) {
 
@@ -78,6 +79,7 @@ public class CanRegLoginModule implements LoginModule {
      * @return true in all cases since this LoginModule should not be ignored.
      * @exception LoginException if this LoginModule is unable to perform the authentication.
      */
+    @Override
     public boolean login() throws LoginException {
 
         if (callbackHandler == null) {
@@ -165,6 +167,7 @@ public class CanRegLoginModule implements LoginModule {
      * @return true if this LoginModule's own .login() and .commit()
      *		attempts succeeded, false otherwise.
      */
+    @Override
     public boolean commit() throws LoginException {
         if (status == NOT || subject == null) {
             return false;
@@ -207,6 +210,7 @@ public class CanRegLoginModule implements LoginModule {
      * @return false if this LoginModule's own login and/or commit attempts
      *		failed, true otherwise.
      */
+    @Override
     public boolean abort() throws LoginException {
         if (status == NOT) {
             return false;
@@ -233,6 +237,7 @@ public class CanRegLoginModule implements LoginModule {
      * @exception LoginException if the logout fails.
      * @return true in all cases since this LoginModule should not be ignored.
      */
+    @Override
     public boolean logout() throws LoginException {
 
         subject.getPrincipals().remove(entity);
