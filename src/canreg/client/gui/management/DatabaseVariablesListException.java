@@ -6,7 +6,7 @@ import canreg.common.DatabaseVariablesListElement;
  *
  * @author ervikm
  */
-class DatabaseVariablesListException extends Exception {
+final class DatabaseVariablesListException extends Exception {
 
     DatabaseVariablesListElement dbvle = null;
     String error = null;
