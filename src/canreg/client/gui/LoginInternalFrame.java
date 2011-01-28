@@ -33,7 +33,7 @@ import org.jdesktop.application.Task;
  *
  * @author  morten
  */
-public class LoginInternalFrame extends javax.swing.JInternalFrame {
+public final class LoginInternalFrame extends javax.swing.JInternalFrame {
 
     private static boolean debug = true;
     private javax.swing.JLabel externalFeedbackLabel;
@@ -586,7 +586,7 @@ public class LoginInternalFrame extends javax.swing.JInternalFrame {
     // End of variables declaration//GEN-END:variables
 
     /**
-     * Simple console trace to system.out for debug purposes only.&Ltp>
+     * Simple console trace to system.out for debug purposes only.
      *
      * @param msg the message to be printed to the console
      */
