@@ -27,24 +27,23 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
         super(parent);
         InputStream in = null;
         appInfoProperties = new Properties();
-        //
-        // load properties file
-        //
         try {
+
+            //
+            // load properties file
+            //
             //
             // get Application information
             //
             in = getClass().getResourceAsStream(Globals.APPINFO_PROPERTIES_PATH);
             appInfoProperties.load(in);
             in.close();
-
+            initComponents();
+            getRootPane().setDefaultButton(closeButton);
+            aboutEditorPane.addHyperlinkListener(this);
         } catch (IOException ex) {
-            ex.printStackTrace();
-        } // end-try-catch
-
-        initComponents();
-        getRootPane().setDefaultButton(closeButton);
-        aboutEditorPane.addHyperlinkListener(this);
+            Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

@@ -26,6 +26,7 @@ public class CheckAgeMorphology extends CheckInterface {
      * 
      * @return
      */
+    @Override
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }
@@ -35,6 +36,7 @@ public class CheckAgeMorphology extends CheckInterface {
      * @param variables
      * @return
      */
+    @Override
     public CheckResult performCheck(Map<Globals.StandardVariableNames, Object> variables) {
 
         CheckResult result = new CheckResult();
@@ -105,6 +107,7 @@ public class CheckAgeMorphology extends CheckInterface {
      * 
      * @return
      */
+    @Override
     public CheckNames getCheckName() {
         return checkName;
     }

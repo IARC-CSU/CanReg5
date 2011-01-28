@@ -83,6 +83,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         // Add a listener for changing the active tab
         ChangeListener tabbedPaneChangeListener = new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 initializeVariableMappingTab();
                 changeTab(tabbedPane.getSelectedIndex());
@@ -606,6 +607,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         importTask = new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
         importTask.addPropertyChangeListener(new PropertyChangeListener() {
 
+            @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 if (Import.PROGRESS.equals(evt.getPropertyName())) {
                     progressBar.setValue((Integer) evt.getNewValue());
@@ -630,6 +632,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         return importTask;
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(PreviewFilePanel.FILE_CHANGED_ACTION)) {
             needToRebuildVariableMap = true;

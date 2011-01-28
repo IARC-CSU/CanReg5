@@ -20,8 +20,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -236,8 +236,8 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         } else {
             DictionaryEntry[] possibleValuesArray;
 
-            Vector<DictionaryEntry> possibleValuesVector = new Vector<DictionaryEntry>();
-            Vector<DictionaryEntry> allValuesVector = new Vector<DictionaryEntry>();
+            LinkedList<DictionaryEntry> possibleValuesVector = new LinkedList<DictionaryEntry>();
+            LinkedList<DictionaryEntry> allValuesVector = new LinkedList<DictionaryEntry>();
 
             Iterator<String> it = possibleValuesMap.keySet().iterator();
             DictionaryEntry tempentry;
@@ -525,6 +525,7 @@ private void codeTextFieldActionPerformed1(java.awt.event.ActionEvent evt) {//GE
         listener = null;
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equalsIgnoreCase(MaxLengthDocument.MAX_LENGTH_ACTION_STRING)) {
             try {

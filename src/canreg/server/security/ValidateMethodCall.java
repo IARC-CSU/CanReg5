@@ -26,6 +26,7 @@ public class ValidateMethodCall implements PrivilegedExceptionAction {
        priveledgedMethodName = methodName;
     }
 
+    @Override
     public Object run() throws Exception {
         // Only has to check if the appropriate ServerPermission is owned by
         // the user. If not an exception is thrown.

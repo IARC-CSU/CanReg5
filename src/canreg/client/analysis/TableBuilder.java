@@ -817,7 +817,7 @@ public abstract class TableBuilder {
         try {
             FileReader descriptionFile = new FileReader(descriptionFileName);
             FieldDescriptionReader fdr = new FieldDescriptionReader();
-            return fdr.readFile(descriptionFile);
+            return FieldDescriptionReader.readFile(descriptionFile);
         } catch (IOException e) {
             System.out.println("Description-File " + descriptionFileName +
                     " not found.");

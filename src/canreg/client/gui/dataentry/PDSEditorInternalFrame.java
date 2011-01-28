@@ -32,7 +32,7 @@ import org.w3c.dom.Document;
  *
  * @author  ervikm
  */
-public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implements ActionListener {
+public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame implements ActionListener {
 
     private FastFilterInternalFrame filterWizardInternalFrame;
     private JDesktopPane dtp;
@@ -138,7 +138,7 @@ public class PDSEditorInternalFrame extends javax.swing.JInternalFrame implement
                 if (pdse.getAgeGroup() < pdsTableData.length && pdse.getSex() <= 2) {
                     pdsTableData[pdse.getAgeGroup()][pdse.getSex() - 1] = pdse.getCount();
                 } else {
-                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("OUTSIDE_SKOPE:_") + pdse.getAgeGroup() + " " + pdse.getSex());
+                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "{0}{1} {2}", new Object[]{java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("OUTSIDE_SKOPE:_"), pdse.getAgeGroup(), pdse.getSex()});
                 }
             }
         }
@@ -615,6 +615,7 @@ private void lockedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
         refreshPopulationDataSetTable();
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().getClass() == FastFilterInternalFrame.class) {
             filterTextField.setText(e.getActionCommand());

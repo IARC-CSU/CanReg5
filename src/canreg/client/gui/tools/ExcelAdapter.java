@@ -2,8 +2,11 @@ package canreg.client.gui.tools;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import java.awt.datatransfer.*;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -57,9 +60,10 @@ public class ExcelAdapter implements ActionListener {
      * Paste is done by aligning the upper left corner of the selection with the
      * 1st element in the current selection of the JTable.
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().compareTo("Copy") == 0) {
-            StringBuffer sbf = new StringBuffer();
+            StringBuilder sbf = new StringBuilder();
             // Check to ensure we have selected only a contiguous block of
             // cells
             int numcols = jTable1.getSelectedColumnCount();
@@ -89,10 +93,10 @@ public class ExcelAdapter implements ActionListener {
             system.setContents(stsel, stsel);
         }
         if (e.getActionCommand().compareTo("Paste") == 0) {
-            // System.out.println("Trying to Paste");
-            int startRow = (jTable1.getSelectedRows())[0];
-            int startCol = (jTable1.getSelectedColumns())[0];
             try {
+                // System.out.println("Trying to Paste");
+                int startRow = (jTable1.getSelectedRows())[0];
+                int startCol = (jTable1.getSelectedColumns())[0];
                 String trstring = (String) (system.getContents(this).getTransferData(DataFlavor.stringFlavor));
                 // System.out.println("String is:" + trstring);
                 StringTokenizer st1 = new StringTokenizer(trstring, "\n");
@@ -101,16 +105,18 @@ public class ExcelAdapter implements ActionListener {
                     StringTokenizer st2 = new StringTokenizer(rowstring, "\t");
                     for (int j = 0; st2.hasMoreTokens(); j++) {
                         value = (String) st2.nextToken();
-                        if (startRow + i < jTable1.getRowCount() &&
-                                startCol + j < jTable1.getColumnCount()) {
+                        if (startRow + i < jTable1.getRowCount() && startCol + j < jTable1.getColumnCount()) {
                             jTable1.setValueAt(value, startRow + i, startCol + j);
                         }
                         // System.out.println("Putting " + value + "at row=" + startRow + i + "column=" + startCol + j);
                     }
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (UnsupportedFlavorException ex) {
+                Logger.getLogger(ExcelAdapter.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(ExcelAdapter.class.getName()).log(Level.SEVERE, null, ex);
             }
+
         }
     }
 }

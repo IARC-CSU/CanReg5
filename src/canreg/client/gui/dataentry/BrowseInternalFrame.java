@@ -285,7 +285,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         editTableRecordButton.setVisible(false);
         createNextButton.setVisible(false);
 
-        resultScrollPane = canreg.common.LazyViewport.createLazyScrollPaneFor(resultTable);
+        resultScrollPane = canreg.common.gui.LazyViewport.createLazyScrollPaneFor(resultTable);
 
         javax.swing.GroupLayout resultPanelLayout = new javax.swing.GroupLayout(resultPanel);
         resultPanel.setLayout(resultPanelLayout);
@@ -439,7 +439,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             // setProgress(0, 0, 4);
             setMessage(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("INITIATING QUERY..."));
             // setProgress(1, 0, 4);
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
         }
 
         @Override
@@ -486,7 +486,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 tableDatadescription = newTableDatadescription;
                 highlightedColumnNumber = Tools.findInArray(tableDatadescription.getColumnNames(), sortByVariableName);
 
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
 
                 if (tableDatadescription != null) {
                     try {
@@ -494,7 +494,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                     } catch (Exception ex) {
                         Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
                 }
 
                 if (tableDataSource != null) {
@@ -504,7 +504,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                         Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     // tableDataModel = new PagingTableModel(tableDataSource);
-                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
                     // setProgress(2, 0, 4);
                 }
 
@@ -520,7 +520,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 tableColumnModel = new XTableColumnModel();
                 resultTable.setColumnModel(tableColumnModel);
                 resultTable.createDefaultColumnsFromModel();
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
 
                 // setProgress(4, 0, 4);
                 setMessage("Finished");

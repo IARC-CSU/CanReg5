@@ -44,7 +44,7 @@ public class Globals {
     /**
      *
      */
-    static public String FILE_SEPARATOR = System.getProperty("file.separator", ".");
+    static final public String FILE_SEPARATOR = System.getProperty("file.separator", ".");
     static private String CANREG_USER_FOLDER = System.getProperty("user.home", ".");
     static private String CANREG_SERVER_FOLDER_NAME = ".CanRegServer";
     static private String CANREG_CLIENT_FOLDER_NAME = ".CanRegClient";
@@ -75,16 +75,13 @@ public class Globals {
     /**
      * 
      */
-    static public String CANREG_SERVER_FOLDER = Globals.CANREG_USER_FOLDER + Globals.FILE_SEPARATOR + Globals.CANREG_SERVER_FOLDER_NAME;
-    /**
-     * 
-     */
-    static public String CANREG_CLIENT_FOLDER = Globals.CANREG_USER_FOLDER + Globals.FILE_SEPARATOR + Globals.CANREG_CLIENT_FOLDER_NAME;
-    static private String CANREG_SERVER_SYSTEM_CONFIG_FOLDER_NAME = "System";
-    static private String CANREG_SERVER_DATABASE_FOLDER_NAME = "Database";
-    static private String CANREG_BACKUP_FOLDER_NAME = "Backup";
-    static public String CANREG_PASSWORD_FILE_NAME = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + "passwords.properties";
-    static public String CANREG_LEVELS_FILE_NAME = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + "levels.properties";
+    static final public String CANREG_SERVER_FOLDER = Globals.CANREG_USER_FOLDER + Globals.FILE_SEPARATOR + Globals.CANREG_SERVER_FOLDER_NAME;
+    static final public String CANREG_CLIENT_FOLDER = Globals.CANREG_USER_FOLDER + Globals.FILE_SEPARATOR + Globals.CANREG_CLIENT_FOLDER_NAME;
+    static final private String CANREG_SERVER_SYSTEM_CONFIG_FOLDER_NAME = "System";
+    static final private String CANREG_SERVER_DATABASE_FOLDER_NAME = "Database";
+    static final private String CANREG_BACKUP_FOLDER_NAME = "Backup";
+    static public String CANREG_PASSWORD_FILE_NAME = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "passwords.properties";
+    static public String CANREG_LEVELS_FILE_NAME = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "levels.properties";
     static public String CANREG_INSTRUCTIONS_URL = "http://www.iacr.com.fr/CanReg5/CanReg5-instructions.pdf";
     static public String CANREG_INSTRUCTIONS_LOCAL_FILE = CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + "CanReg5-instructions.pdf";
     /**
@@ -118,14 +115,14 @@ public class Globals {
     /**
      * 
      */
-    public static String TUMOUR_TABLE_NAME = "Tumour";
-    public static String PATIENT_TABLE_NAME = "Patient";
-    public static String SOURCE_TABLE_NAME = "Source";
-    public static String USERS_TABLE_NAME = "USERS";
-    static public String TUMOUR_AND_PATIENT_JOIN_TABLE_NAME = TUMOUR_TABLE_NAME + "+" + PATIENT_TABLE_NAME;
-    static public String SOURCE_AND_TUMOUR_JOIN_TABLE_NAME = SOURCE_TABLE_NAME + "+" + TUMOUR_TABLE_NAME;
-    public static String SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME = SOURCE_TABLE_NAME + "+" + TUMOUR_TABLE_NAME + "+" + PATIENT_TABLE_NAME;
-    static public String[] DEFAULT_TABLE_CHOOSER_TABLE_LIST = {
+    public final static String TUMOUR_TABLE_NAME = "Tumour";
+    public final static String PATIENT_TABLE_NAME = "Patient";
+    public final static String SOURCE_TABLE_NAME = "Source";
+    public final static String USERS_TABLE_NAME = "USERS";
+    static final public String TUMOUR_AND_PATIENT_JOIN_TABLE_NAME = TUMOUR_TABLE_NAME + "+" + PATIENT_TABLE_NAME;
+    static final public String SOURCE_AND_TUMOUR_JOIN_TABLE_NAME = SOURCE_TABLE_NAME + "+" + TUMOUR_TABLE_NAME;
+    public final static String SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME = SOURCE_TABLE_NAME + "+" + TUMOUR_TABLE_NAME + "+" + PATIENT_TABLE_NAME;
+    static final public String[] DEFAULT_TABLE_CHOOSER_TABLE_LIST = {
         TUMOUR_TABLE_NAME,
         PATIENT_TABLE_NAME,
         TUMOUR_AND_PATIENT_JOIN_TABLE_NAME,

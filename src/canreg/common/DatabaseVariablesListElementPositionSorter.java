@@ -8,6 +8,7 @@ import java.util.Comparator;
  */
 public class DatabaseVariablesListElementPositionSorter implements Comparator<DatabaseVariablesListElement> {
 
+    @Override
     public int compare(DatabaseVariablesListElement o1, DatabaseVariablesListElement o2) {
         if (o1.getYPos() > o2.getYPos()) {
             return 1;

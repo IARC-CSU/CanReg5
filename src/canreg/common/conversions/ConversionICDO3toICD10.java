@@ -77,6 +77,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
      * 
      * @return
      */
+    @Override
     public StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }
@@ -85,6 +86,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
      * 
      * @return
      */
+    @Override
     public StandardVariableNames[] getVariablesCreated() {
         return variablesCreated;
     }
@@ -94,6 +96,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
      * @param variables
      * @return
      */
+    @Override
     public ConversionResult[] performConversion(Map<StandardVariableNames, Object> variables) {
 
         ICD10Male = "?????";
@@ -390,6 +393,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
      * 
      * @return
      */
+    @Override
     public ConversionName getConversionName() {
         return conversionName;
     }

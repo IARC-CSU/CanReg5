@@ -13,23 +13,24 @@ import java.util.logging.Logger;
  */
 public class Migrator {
     private String newVersion;
-    private CanRegDAO db;
+    private CanRegDAO canRegDAO;
 
-    public Migrator(String newVersion, CanRegDAO db){
+    public Migrator(String newVersion, CanRegDAO canRegDAO){
         this.newVersion = newVersion;
-        this.db=db;
+        this.canRegDAO=canRegDAO;
     }
 
     public void migrate() {
-        String databaseVersion = db.getSystemPropery("DATABASE_VERSION");
+        String databaseVersion = canRegDAO.getSystemPropery("DATABASE_VERSION");
 
         if (databaseVersion==null) databaseVersion = "4.99.0";
 
         if (!databaseVersion.equalsIgnoreCase(newVersion)) {
             if (databaseVersion.compareTo("4.99.5") < 0) {
-                migrateTo_4_99_5(db);
+                migrateTo_4_99_5(canRegDAO);
             }
         }
+        canRegDAO.setSystemPropery("DATABASE_VERSION", newVersion);
     }
 
     private void migrateTo_4_99_5(CanRegDAO db) {

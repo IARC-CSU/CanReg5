@@ -31,7 +31,7 @@ public class Backup {
         cs.setString(1, backupdirectory);
         cs.execute();
         cs.close();
-        Logger.getLogger(Backup.class.getName()).log(Level.INFO, "Backed up database to " + backupdirectory);
+        Logger.getLogger(Backup.class.getName()).log(Level.INFO, "Backed up database to {0}", backupdirectory);
 
         System.out.println();
         return backupdirectory;

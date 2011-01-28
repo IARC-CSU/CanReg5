@@ -276,7 +276,7 @@ public class SystemDefinitionConverter {
                 root.appendChild(generalParentElement);
 
                 // Read and add the 3 letter code
-                registryCode = new String(readBytes(3));
+                registryCode = readBytes(3);
                 if (codeTextField != null) {
                     codeTextField.setText(registryCode);
                 }
@@ -284,7 +284,7 @@ public class SystemDefinitionConverter {
                 // Read the region code
                 generalParentElement.appendChild(createElement(namespace + "region_code", readBytes(1)));
                 // Read the Registry name
-                registryName = new String(readText().replace('|', ' '));
+                registryName = readText().replace('|', ' ');
                 if (nameTextField != null) {
                     nameTextField.setText(registryName);
                 }
@@ -951,7 +951,7 @@ public class SystemDefinitionConverter {
      * @param b
      * @return
      */
-    public static final int byteArrayToIntHL(byte[] b) {
+    public static int byteArrayToIntHL(byte[] b) {
         int value = 0;
         for (int i = 0; i < b.length; i++) {
             if (i == (b.length - 1)) {
@@ -971,7 +971,7 @@ public class SystemDefinitionConverter {
      * @param b
      * @return
      */
-    public static final int byteArrayToIntLH(byte[] b) {
+    public static int byteArrayToIntLH(byte[] b) {
         int value = 0;
         for (int i = 0; i < b.length; i++) {
             if (i == 0) {

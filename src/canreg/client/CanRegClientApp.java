@@ -53,7 +53,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Vector;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -195,7 +194,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             in.close();
 
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         } // end-try-catch
 
         canRegSystemVersionString = "";
@@ -206,7 +205,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         String versionString = canRegSystemVersionString;
         versionString += "b" + appInfoProperties.getProperty("program.BUILDNUM");
         versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
-        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, "CanReg version: " + versionString);
+        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, "CanReg version: {0}", versionString);
 
         canRegClientView = new CanRegClientView(this);
 
@@ -886,8 +885,14 @@ public class CanRegClientApp extends SingleFrameApplication {
         } catch (Throwable t) {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnsupportedLookAndFeelException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -1008,7 +1013,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         return canRegSystemVersionString;
     }
 
-    public Vector<User> listUsers() throws SecurityException, RemoteException {
+    public List<User> listUsers() throws SecurityException, RemoteException {
         return server.listUsers();
     }
 

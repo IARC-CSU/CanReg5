@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package canreg.server.database;
 
 import cachingtableapi.DistributedTableDataSource;
@@ -237,8 +233,8 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         }
         try {
             return Class.forName(cname);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException cnfe) {
+            Logger.getLogger(DistributedTableDataSourceResultSetImpl.class.getName()).log(Level.SEVERE, null, cnfe);
             return Object.class;
         }
 

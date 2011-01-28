@@ -172,7 +172,7 @@ public class PopulationDataSetHelper {
      * @param b
      * @return
      */
-    public static final int byteArrayToIntHL(byte[] b) {
+    public static int byteArrayToIntHL(byte[] b) {
         int value = 0;
         for (int i = 0; i < b.length; i++) {
             if (i == (b.length - 1)) {
@@ -192,7 +192,7 @@ public class PopulationDataSetHelper {
      * @param b
      * @return
      */
-    public static final int byteArrayToIntLH(byte[] b) {
+    public static int byteArrayToIntLH(byte[] b) {
         int value = 0;
         for (int i = 0; i < b.length; i++) {
             if (i == 0) {

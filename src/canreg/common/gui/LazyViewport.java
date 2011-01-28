@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package canreg.common;
+package canreg.common.gui;
 
 import javax.swing.JViewport;
 import javax.swing.JScrollPane;

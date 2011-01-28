@@ -98,7 +98,7 @@ public class Soundex {
     // Algorithm works on uppercase (mainframe era).
     String t = s.toUpperCase();
 
-    StringBuffer res = new StringBuffer();
+    StringBuilder res = new StringBuilder();
     char c, prev = '?';
 
     // Main loop: find up to 4 chars that map.

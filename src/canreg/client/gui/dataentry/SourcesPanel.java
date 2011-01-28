@@ -38,6 +38,7 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
         // Add a listener for changing the active tab
         ChangeListener tabbedPaneChangeListener = new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 setScrollPaneSize();
             }

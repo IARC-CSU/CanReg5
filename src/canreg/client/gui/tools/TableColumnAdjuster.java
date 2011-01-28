@@ -24,7 +24,7 @@ import javax.swing.table.*;
  *
  *  (ref: http://tips4java.wordpress.com/2008/11/10/table-column-adjuster/ )
  */
-public class TableColumnAdjuster implements PropertyChangeListener, TableModelListener
+public final class TableColumnAdjuster implements PropertyChangeListener, TableModelListener
 {
 	private JTable table;
 	private int spacing;

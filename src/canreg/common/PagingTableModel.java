@@ -39,6 +39,7 @@ public class PagingTableModel extends AbstractTableModel {
         this.tableDescription = tableDataSource.getTableDescription();
     }
 
+    @Override
     public int getColumnCount() {
         return tableDescription.getColumnCount();
     }
@@ -52,6 +53,7 @@ public class PagingTableModel extends AbstractTableModel {
         }
     }
 
+    @Override
     public int getRowCount() {
         return tableDescription.getRowCount();
     }
@@ -68,19 +70,20 @@ public class PagingTableModel extends AbstractTableModel {
         }
     }
 
+    @Override
     public Object getValueAt(int row, int col) {
         // check if row is in current page, schedule if not
         ArrayList<Object[]> page = data;
         int pageIndex = row - dataOffset;
         if (pageIndex < 0 || pageIndex >= page.size()) {
             // not loaded
-            Logger.getLogger(PagingTableModel.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory()+" free memory.\nobject at " + row + " isn't loaded yet");
+            Logger.getLogger(PagingTableModel.class.getName()).log(Level.INFO, "{0} free memory.\nobject at {1} isn''t loaded yet", new Object[]{Runtime.getRuntime().freeMemory(), row});
             schedule(row);
             return "..";
         }
         Object rowObject = page.get(pageIndex)[col];
         // for this simulation just return the whole rowObject
-           Logger.getLogger(PagingTableModel.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory()+" free memory.");
+           Logger.getLogger(PagingTableModel.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
         return rowObject;
     }
 
@@ -124,6 +127,7 @@ public class PagingTableModel extends AbstractTableModel {
         // set up code to run in another thread
         Runnable fetch = new Runnable() {
 
+            @Override
             public void run() {
                 Object[][] dataObject;
                 try {
@@ -141,8 +145,9 @@ public class PagingTableModel extends AbstractTableModel {
                 // done loading -- make available on the event dispatch thread
                 SwingUtilities.invokeLater(new Runnable() {
 
+                    @Override
                     public void run() {
-                        Logger.getLogger(PagingTableModel.class.getName()).log(Level.WARNING, "** loaded " + startOffset + " through " + (startOffset + length - 1));
+                        Logger.getLogger(PagingTableModel.class.getName()).log(Level.WARNING, "** loaded {0} through {1}", new Object[]{startOffset, startOffset + length - 1});
                         setData(startOffset, page);
                         pending.remove(seg);
                     }
@@ -203,7 +208,15 @@ public class PagingTableModel extends AbstractTableModel {
             return o instanceof Segment && base == ((Segment) o).base && length == ((Segment) o).length;
         }
 
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 29 * hash + this.base;
+            hash = 29 * hash + this.length;
+            return hash;
+        }
 
+        @Override
         public int compareTo(Segment other) {
             //return negative/zero/positive as this object is less-than/equal-to/greater-than other
             int d = base - other.base;

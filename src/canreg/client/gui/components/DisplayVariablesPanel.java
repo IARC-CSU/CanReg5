@@ -195,13 +195,13 @@ public class DisplayVariablesPanel extends javax.swing.JPanel {
         variablesPanel.setLayout(variablesPanelLayout);
         variablesPanelLayout.setHorizontalGroup(
             variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(personalizedRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-            .addComponent(keyRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-            .addComponent(mandatoryRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-            .addComponent(allRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+            .addComponent(personalizedRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(keyRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+            .addComponent(mandatoryRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+            .addComponent(allRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
             .addGroup(variablesPanelLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addComponent(jComboBox1, 0, 124, Short.MAX_VALUE))
+                .addComponent(jComboBox1, 0, 64, Short.MAX_VALUE))
         );
         variablesPanelLayout.setVerticalGroup(
             variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

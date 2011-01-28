@@ -14,8 +14,8 @@ import canreg.server.database.DictionaryEntry;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -259,8 +259,8 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         } else {
             DictionaryEntry[] possibleValuesArray;
 
-            Vector<DictionaryEntry> possibleValuesVector = new Vector<DictionaryEntry>();
-            Vector<DictionaryEntry> allValuesVector = new Vector<DictionaryEntry>();
+            LinkedList<DictionaryEntry> possibleValuesVector = new LinkedList<DictionaryEntry>();
+            LinkedList<DictionaryEntry> allValuesVector = new LinkedList<DictionaryEntry>();
 
             Iterator<String> it = possibleValuesMap.keySet().iterator();
             DictionaryEntry tempentry;
@@ -349,20 +349,12 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
     private void refreshVariableList() {
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
             variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length + tumourVariablesInDB.length];
-            for (int position = 0; position < patientVariablesInDB.length; position++) {
-                variablesInTable[position] = patientVariablesInDB[position];
-            }
-            for (int position = 0; position < tumourVariablesInDB.length; position++) {
-                variablesInTable[position + patientVariablesInDB.length] = tumourVariablesInDB[position];
-            }
+            System.arraycopy(patientVariablesInDB, 0, variablesInTable, 0, patientVariablesInDB.length);
+            System.arraycopy(tumourVariablesInDB, 0, variablesInTable, patientVariablesInDB.length, tumourVariablesInDB.length);
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
             variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length + tumourVariablesInDB.length];
-            for (int position = 0; position < sourceVariablesInDB.length; position++) {
-                variablesInTable[position] = sourceVariablesInDB[position];
-            }
-            for (int position = 0; position < tumourVariablesInDB.length; position++) {
-                variablesInTable[position + sourceVariablesInDB.length] = tumourVariablesInDB[position];
-            }
+            System.arraycopy(sourceVariablesInDB, 0, variablesInTable, 0, sourceVariablesInDB.length);
+            System.arraycopy(tumourVariablesInDB, 0, variablesInTable, sourceVariablesInDB.length, tumourVariablesInDB.length);
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length];
             variablesInTable = patientVariablesInDB;

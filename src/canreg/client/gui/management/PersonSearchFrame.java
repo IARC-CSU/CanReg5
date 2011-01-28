@@ -514,6 +514,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     private javax.swing.JTable resultTable;
     // End of variables declaration//GEN-END:variables
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.INFO, command);
@@ -645,6 +646,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 idColumnNumber--;
                 TreeSet<DatabaseRecord> set = new TreeSet<DatabaseRecord>(new Comparator<DatabaseRecord>() {
 
+                    @Override
                     public int compare(DatabaseRecord o1, DatabaseRecord o2) {
                         return (o1.getVariable(tumourIDlookupVariable).toString().compareTo(o2.getVariable(tumourIDlookupVariable).toString()));
                     }

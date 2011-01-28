@@ -25,6 +25,7 @@ public class PersonSearchListener implements ActionListener, Serializable {
         this.actionListener = actionListener;
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         Logger.getLogger(PersonSearchListener.class.getName()).log(Level.INFO, command);

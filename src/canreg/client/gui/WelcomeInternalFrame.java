@@ -10,6 +10,8 @@ import canreg.common.Globals;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
@@ -28,35 +30,30 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
      */
     public WelcomeInternalFrame(FrameView fv) {
         this.fv = fv;
-        
         appInfoProperties = new Properties();
         InputStream in = null;
-        //
-        // load properties file
-        //
         try {
+            //
+            // load properties file
+            //
             //
             // get Application information
             //
             in = getClass().getResourceAsStream(Globals.APPINFO_PROPERTIES_PATH);
             appInfoProperties.load(in);
             in.close();
-
+            initComponents();
+            // set version
+            String versionString = "";
+            for (String part : Globals.versionStringParts) {
+                versionString += appInfoProperties.getProperty(part);
+            }
+            versionString += "b" + appInfoProperties.getProperty("program.BUILDNUM");
+            versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
+            versionLabel.setText(versionLabel.getText() + " " + versionString);
         } catch (IOException ex) {
-            ex.printStackTrace();
-        } // end-try-catch
-
-        initComponents();
-        // set version
-
-        String versionString = "";
-        for (String part : Globals.versionStringParts) {
-            versionString += appInfoProperties.getProperty(part);
+            Logger.getLogger(WelcomeInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        versionString += "b" + appInfoProperties.getProperty("program.BUILDNUM");
-        versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
-        versionLabel.setText(versionLabel.getText() + " " + versionString);
-
     }
 
     /** This method is called from within the constructor to
@@ -241,7 +238,6 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         internalFrame.setLocation(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2);
         internalFrame.setVisible(true);
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane aboutEditorPane;
     private javax.swing.JScrollPane aboutScrollPane;

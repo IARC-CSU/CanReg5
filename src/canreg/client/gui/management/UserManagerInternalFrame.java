@@ -18,7 +18,7 @@ import canreg.server.database.User;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -32,7 +32,7 @@ import org.jdesktop.application.Action;
  */
 public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
 
-    private Vector<User> users;
+    private List<User> users;
     private DefaultListModel usersListModel;
 
     /** Creates new form UserManagerInternalFrame */

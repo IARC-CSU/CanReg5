@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * LatestNewsInternalFrame.java
  *
  * Created on 19-Jan-2011, 09:22:43
@@ -141,10 +136,10 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
                 } catch (ParseException ex) {
                     Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                newsStringBuilder.append("<h5>" + calString + ": </h5>");
+                newsStringBuilder.append("<h5>").append(calString).append(": </h5>");
                 newsStringBuilder.append(description);
                 newsStringBuilder.append("<br>");
-                newsStringBuilder.append("<a href = \""+link.getText()+"\">Link</a>");
+                newsStringBuilder.append("<a href = \"").append(link.getText()).append("\">Link</a>");
                 newsStringBuilder.append("<br><br>");
             }
             jEditorPane1.setText(newsStringBuilder.toString());

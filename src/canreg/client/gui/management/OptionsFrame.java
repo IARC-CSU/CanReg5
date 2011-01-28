@@ -40,24 +40,23 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
      * @param crcv 
      */
     public OptionsFrame(CanRegClientView crcv) {
-        this.crcv = crcv;
-        InputStream in = null;
-        appInfoProperties = new Properties();
-        //
-        // load properties file
-        //
         try {
+            this.crcv = crcv;
+            InputStream in = null;
+            appInfoProperties = new Properties();
+            //
+            // load properties file
             //
             // get Application information
             //
             in = getClass().getResourceAsStream(Globals.APPINFO_PROPERTIES_PATH);
             appInfoProperties.load(in);
             in.close();
+            initComponents();
+            initValues();
         } catch (IOException ex) {
-            ex.printStackTrace();
-        } // end-try-catch
-        initComponents();
-        initValues();
+            Logger.getLogger(OptionsFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -499,6 +498,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JTextField versionInstalledTextField;
     private javax.swing.JPanel versionPanel;
     // End of variables declaration//GEN-END:variables
+
     private void initValues() {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
         // Languages
@@ -539,7 +539,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         showOutlineCheckBox.setSelected(localSettings.isOutlineDragMode());
         // CanReg verison
         String versionString = "";
-        for (String part:Globals.versionStringParts){
+        for (String part : Globals.versionStringParts) {
             versionString += appInfoProperties.getProperty(part);
         }
         versionInstalledTextField.setText(versionString);

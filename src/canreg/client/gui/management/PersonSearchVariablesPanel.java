@@ -218,6 +218,7 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
     private javax.swing.JPanel variablesListPanel;
     // End of variables declaration//GEN-END:variables
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if ("remove".equalsIgnoreCase(command)) {

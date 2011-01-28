@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -149,8 +150,8 @@ public class DictionaryHelper {
         return server.saveDictionaryEntry(dictionaryEntry);
     }
 
-    private static Vector<DictionaryEntry> parseDictionaryText(int dictionaryID, String str) {
-        Vector dictionaryEntries = new Vector<DictionaryEntry>();
+    private static LinkedList<DictionaryEntry> parseDictionaryText(int dictionaryID, String str) {
+        LinkedList dictionaryEntries = new LinkedList<DictionaryEntry>();
         String[] stringArray = str.split("[\\n|\\r]");
         if (stringArray[0].trim().length() > 0) {
             for (String string : stringArray) {
@@ -177,7 +178,7 @@ public class DictionaryHelper {
         }
     }
 
-    private static Map<Integer, String> testDictionary(DatabaseDictionaryListElement dictionary, Vector<DictionaryEntry> contents) {
+    private static Map<Integer, String> testDictionary(DatabaseDictionaryListElement dictionary, LinkedList<DictionaryEntry> contents) {
         Map<Integer, String> errors = new LinkedHashMap<Integer, String>();
         Set<String> codes = new LinkedHashSet();
         int codeLength = 0;
@@ -215,7 +216,7 @@ public class DictionaryHelper {
      * @throws java.rmi.RemoteException
      */
     public static void replaceDictionary(int dictionaryID, String str, CanRegClientApp app) throws RemoteException {
-        Vector<DictionaryEntry> dictionaryEntries = parseDictionaryText(dictionaryID, str);
+        LinkedList<DictionaryEntry> dictionaryEntries = parseDictionaryText(dictionaryID, str);
         // Map<String, String> dictionaryEntriesMap = new LinkedHashMap<String, String>();
 
         boolean removed = clearDictionary(dictionaryID, app);
@@ -227,13 +228,13 @@ public class DictionaryHelper {
     }
 
     public static DictionaryEntry[] getDictionaryEntriesStartingWith(String start, DictionaryEntry[] dictionaryEntries) {
-        Vector<DictionaryEntry> entriesVector = new Vector<DictionaryEntry>();
+        LinkedList<DictionaryEntry> entriesList = new LinkedList<DictionaryEntry>();
         for (DictionaryEntry entry : dictionaryEntries) {
             String code = entry.getCode();
             if (code.startsWith(start) && code.length() > start.length()) {
-                entriesVector.add(entry);
+                entriesList.add(entry);
             }
         }
-        return entriesVector.toArray(new DictionaryEntry[0]);
+        return entriesList.toArray(new DictionaryEntry[0]);
     }
 }

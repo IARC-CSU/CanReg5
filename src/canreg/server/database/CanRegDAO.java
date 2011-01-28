@@ -136,7 +136,7 @@ public class CanRegDAO {
                 dic.addDictionaryEntry(code, new DictionaryEntry(id, code, desc));
             }
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return dictionaryMap;
     }
@@ -162,7 +162,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return nameSexMap;
     }
@@ -295,7 +295,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return usersMap;
     }
@@ -347,7 +347,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
 
         try {
@@ -371,7 +371,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
 
         return populationDatasetMap;
@@ -516,7 +516,7 @@ public class CanRegDAO {
         try {
             Class.forName(driverName);
         } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -527,7 +527,7 @@ public class CanRegDAO {
         try {
             dbProperties.load(dbPropInputStream);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return dbProperties;
     }
@@ -584,7 +584,7 @@ public class CanRegDAO {
 
             bCreatedTables = true;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return bCreatedTables;
@@ -639,7 +639,7 @@ public class CanRegDAO {
         }
         if (!shutdownSuccess) {
             dbProperties.remove("shutdown");
-            ex.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
             // ((DonMan) parent).signalError("Error during shutdown for RESTORE: ", ex,
             //        "in: DonDao.restore", false);
             return "shutdown failed";
@@ -650,8 +650,8 @@ public class CanRegDAO {
             dbProperties.put("restoreFrom", path + "/" + systemCode);
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
             bRestored = true;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex2) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex2);
             //((DonMan) parent).signalError("Error during RESTORE: ", e,
             //       "in: DonDao.restore", false);
         }
@@ -745,7 +745,7 @@ public class CanRegDAO {
             debugOut("Next patient ID = " + getNextPatientID());
         } catch (SQLException ex) {
             debugOut("SQLerror... ");
-            ex.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
             isConnected = false;
             // CanRegDAO now throws database mismatch exceptions if the database structure doesn't match the prepared queries.
             throw new RemoteException("Database desciption mismatch...");
@@ -974,7 +974,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return id;
     }
@@ -1015,7 +1015,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return id;
     }
@@ -1065,7 +1065,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return populationDataSet.getPopulationDatasetID();
 
@@ -1093,7 +1093,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return id;
     }
@@ -1128,7 +1128,7 @@ public class CanRegDAO {
 
         } catch (SQLException sqle) {
             System.out.println(nameSexRecord.getName());
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return id;
     }
@@ -1146,7 +1146,7 @@ public class CanRegDAO {
             success = true;
 
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return success;
     }
@@ -1166,7 +1166,7 @@ public class CanRegDAO {
             success = true;
 
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return success;
     }
@@ -1182,7 +1182,7 @@ public class CanRegDAO {
             stmtDeletePatientRecord.executeUpdate();
             success = true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return success;
     }
@@ -1198,7 +1198,7 @@ public class CanRegDAO {
             stmtDeleteTumourRecord.executeUpdate();
             success = true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return success;
     }
@@ -1214,7 +1214,7 @@ public class CanRegDAO {
             stmtDeleteSourceRecord.executeUpdate();
             success = true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return success;
     }
@@ -1231,7 +1231,7 @@ public class CanRegDAO {
             statement = dbConnection.createStatement();
             statement.execute("DELETE FROM " + Globals.SCHEMA_NAME + "." + tableName + " WHERE " + idString + " = " + recordID);
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return success;
     }
@@ -1253,7 +1253,7 @@ public class CanRegDAO {
             stmtDeletePopoulationDataset.executeUpdate();
             success = true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return success;
     }
@@ -1302,14 +1302,14 @@ public class CanRegDAO {
             NodeList nodes = doc.getElementsByTagName(Globals.NAMESPACE + "variables");
             Element variablesElement = (Element) nodes.item(0);
 
-            NodeList variables = variablesElement.getElementsByTagName(Globals.NAMESPACE + "variable");
+            NodeList variablesNodeList = variablesElement.getElementsByTagName(Globals.NAMESPACE + "variable");
 
             int variableNumber = 0;
 
             // Go through all the variable definitions
-            for (int i = 0; i < variables.getLength(); i++) {
+            for (int i = 0; i < variablesNodeList.getLength(); i++) {
                 // Get element
-                Element element = (Element) variables.item(i);
+                Element element = (Element) variablesNodeList.item(i);
 
                 // Create line
                 String tableNameDB = element.getElementsByTagName(Globals.NAMESPACE + "table").item(0).getTextContent();
@@ -1393,7 +1393,7 @@ public class CanRegDAO {
             bEdited = true;
 
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
 
         return bEdited;
@@ -1524,7 +1524,7 @@ public class CanRegDAO {
             }
             result = null;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
 
         return record;
@@ -1582,7 +1582,7 @@ public class CanRegDAO {
             result = null;
 
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return record;
     }
@@ -1618,7 +1618,7 @@ public class CanRegDAO {
             }
             result = null;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return record;
     }
@@ -2199,7 +2199,7 @@ public class CanRegDAO {
         System.out.println("filterString: " + filterString);
         System.out.println("getterString: " + getterString);
         System.out.println("counterString: " + counterString);
-        */
+         */
 
         ResultSet countRowSet;
         try {

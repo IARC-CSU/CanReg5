@@ -33,10 +33,13 @@ public class NavigationPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         navigatePanel = new javax.swing.JPanel();
-        topButton = new javax.swing.JButton();
-        topButton1 = new javax.swing.JButton();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jSplitPane2 = new javax.swing.JSplitPane();
         topButton2 = new javax.swing.JButton();
         topButton3 = new javax.swing.JButton();
+        jSplitPane3 = new javax.swing.JSplitPane();
+        topButton = new javax.swing.JButton();
+        topButton1 = new javax.swing.JButton();
 
         setName("Form"); // NOI18N
 
@@ -44,52 +47,52 @@ public class NavigationPanel extends javax.swing.JPanel {
         navigatePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("navigatePanel.border.title"))); // NOI18N
         navigatePanel.setName("navigatePanel"); // NOI18N
 
+        jSplitPane1.setResizeWeight(0.5);
+        jSplitPane1.setName("jSplitPane1"); // NOI18N
+
+        jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane2.setResizeWeight(0.5);
+        jSplitPane2.setName("jSplitPane2"); // NOI18N
+
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(NavigationPanel.class, this);
-        topButton.setAction(actionMap.get("goToTopAction")); // NOI18N
-        topButton.setToolTipText(resourceMap.getString("topButton.toolTipText")); // NOI18N
-        topButton.setName("topButton"); // NOI18N
-
-        topButton1.setAction(actionMap.get("goToBottomAction")); // NOI18N
-        topButton1.setToolTipText(resourceMap.getString("topButton1.toolTipText")); // NOI18N
-        topButton1.setName("topButton1"); // NOI18N
-
         topButton2.setAction(actionMap.get("goOneUpAction")); // NOI18N
         topButton2.setText(resourceMap.getString("topButton2.text")); // NOI18N
         topButton2.setToolTipText(resourceMap.getString("topButton2.toolTipText")); // NOI18N
         topButton2.setName("topButton2"); // NOI18N
+        jSplitPane2.setTopComponent(topButton2);
 
         topButton3.setAction(actionMap.get("goOneDownAction")); // NOI18N
         topButton3.setToolTipText(resourceMap.getString("topButton3.toolTipText")); // NOI18N
         topButton3.setName("topButton3"); // NOI18N
+        jSplitPane2.setRightComponent(topButton3);
+
+        jSplitPane1.setLeftComponent(jSplitPane2);
+
+        jSplitPane3.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane3.setResizeWeight(0.5);
+        jSplitPane3.setName("jSplitPane3"); // NOI18N
+
+        topButton.setAction(actionMap.get("goToTopAction")); // NOI18N
+        topButton.setToolTipText(resourceMap.getString("topButton.toolTipText")); // NOI18N
+        topButton.setName("topButton"); // NOI18N
+        jSplitPane3.setTopComponent(topButton);
+
+        topButton1.setAction(actionMap.get("goToBottomAction")); // NOI18N
+        topButton1.setToolTipText(resourceMap.getString("topButton1.toolTipText")); // NOI18N
+        topButton1.setName("topButton1"); // NOI18N
+        jSplitPane3.setRightComponent(topButton1);
+
+        jSplitPane1.setRightComponent(jSplitPane3);
 
         javax.swing.GroupLayout navigatePanelLayout = new javax.swing.GroupLayout(navigatePanel);
         navigatePanel.setLayout(navigatePanelLayout);
         navigatePanelLayout.setHorizontalGroup(
             navigatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(navigatePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(navigatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(navigatePanelLayout.createSequentialGroup()
-                        .addComponent(topButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(topButton2, 0, 0, Short.MAX_VALUE))
-                    .addGroup(navigatePanelLayout.createSequentialGroup()
-                        .addComponent(topButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(topButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jSplitPane1)
         );
         navigatePanelLayout.setVerticalGroup(
             navigatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(navigatePanelLayout.createSequentialGroup()
-                .addGroup(navigatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(topButton)
-                    .addComponent(topButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(navigatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(topButton3)
-                    .addComponent(topButton1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jSplitPane1)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -140,6 +143,9 @@ public class NavigationPanel extends javax.swing.JPanel {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JSplitPane jSplitPane3;
     private javax.swing.JPanel navigatePanel;
     private javax.swing.JButton topButton;
     private javax.swing.JButton topButton1;

@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package canreg.client.analysis;
 
 /**
@@ -11,7 +10,9 @@ package canreg.client.analysis;
  */
 public class NotCompatibleDataException extends Exception {
 
-    public void setMessage(String message){
+    private String message;
 
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

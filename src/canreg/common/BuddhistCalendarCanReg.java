@@ -18,6 +18,7 @@ public class BuddhistCalendarCanReg extends BuddhistCalendar implements Calendar
     /**
      * @return the unkownMonth
      */
+    @Override
     public boolean isUnknownMonth() {
         return unkownMonth;
     }
@@ -25,6 +26,7 @@ public class BuddhistCalendarCanReg extends BuddhistCalendar implements Calendar
     /**
      * @param unkownMonth the unkownMonth to set
      */
+    @Override
     public void setUnkownMonth(boolean unkownMonth) {
         this.unkownMonth = unkownMonth;
     }
@@ -32,6 +34,7 @@ public class BuddhistCalendarCanReg extends BuddhistCalendar implements Calendar
     /**
      * @return the unknownDay
      */
+    @Override
     public boolean isUnknownDay() {
         return unknownDay;
     }
@@ -39,6 +42,7 @@ public class BuddhistCalendarCanReg extends BuddhistCalendar implements Calendar
     /**
      * @param unknownDay the unknownDay to set
      */
+    @Override
     public void setUnknownDay(boolean unknownDay) {
         this.unknownDay = unknownDay;
     }
@@ -46,6 +50,7 @@ public class BuddhistCalendarCanReg extends BuddhistCalendar implements Calendar
     /**
      * @return the unknownYear
      */
+    @Override
     public boolean isUnknownYear() {
         return unknownYear;
     }
@@ -53,6 +58,7 @@ public class BuddhistCalendarCanReg extends BuddhistCalendar implements Calendar
     /**
      * @param unknownYear the unknownYear to set
      */
+    @Override
     public void setUnknownYear(boolean unknownYear) {
         this.unknownYear = unknownYear;
     }

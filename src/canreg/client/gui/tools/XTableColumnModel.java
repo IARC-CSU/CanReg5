@@ -1,5 +1,6 @@
 package canreg.client.gui.tools;
 
+import java.util.ArrayList;
 import javax.swing.table.*;
 import java.util.Vector;
 import java.util.Enumeration;

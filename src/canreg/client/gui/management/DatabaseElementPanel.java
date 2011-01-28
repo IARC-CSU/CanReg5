@@ -172,7 +172,7 @@ public class DatabaseElementPanel extends javax.swing.JPanel {
     /**
      * @param databaseElement the databaseElement to set
      */
-    public void setDatabaseElement(DatabaseElement databaseElement) {
+    public final void setDatabaseElement(DatabaseElement databaseElement) {
         this.databaseElement = databaseElement;
         refresh();
     }

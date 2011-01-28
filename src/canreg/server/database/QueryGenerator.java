@@ -27,7 +27,7 @@ public class QueryGenerator {
      * @param doc
      * @return
      */
-    public static final String strCreateVariableTable(String tableName, Document doc) {
+    public static String strCreateVariableTable(String tableName, Document doc) {
 
         String recordIDVariableName = new String();
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
@@ -137,7 +137,7 @@ public class QueryGenerator {
      * @param doc
      * @return
      */
-    public static final String strCreateTablesOfDictionaries(Document doc) {
+    public static String strCreateTablesOfDictionaries(Document doc) {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".DICTIONARIES"
                 + " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
                 + "DICTIONARYID INT, "
@@ -157,7 +157,7 @@ public class QueryGenerator {
      * @param doc
      * @return
      */
-    public static final String strCreateDictionaryTable(Document doc) {
+    public static String strCreateDictionaryTable(Document doc) {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".DICTIONARY"
                 + " ( ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
                 + "DICTIONARY INT, "
@@ -171,7 +171,7 @@ public class QueryGenerator {
      * 
      * @return
      */
-    public static final String strSaveDictionary() {
+    public static String strSaveDictionary() {
         String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".DICTIONARIES "
                 + "   (DICTIONARYID, NAME, FONT, TYPE, CODELENGTH, CATEGORYDESCLENGTH, "
                 + "    FULLDICTCODELENGTH, FULLDICTDESCLENGTH) "
@@ -183,7 +183,7 @@ public class QueryGenerator {
      * 
      * @return
      */
-    public static final String strSaveDictionaryEntry() {
+    public static String strSaveDictionaryEntry() {
         String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".DICTIONARY "
                 + "   (DICTIONARY, CODE, DESCRIPTION) "
                 + "VALUES (?, ?, ?)";
@@ -194,7 +194,7 @@ public class QueryGenerator {
      *
      * @return
      */
-    public static final String strSaveUser() {
+    public static String strSaveUser() {
         String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".USERS "
                 + "   (USERNAME, PASSWORD, USER_LEVEL, EMAIL, REAL_NAME) "
                 + "VALUES (?, ?, ?, ?, ?)";
@@ -205,7 +205,7 @@ public class QueryGenerator {
      *
      * @return
      */
-    public static final String strEditUser() {
+    public static String strEditUser() {
         String queryLine = "UPDATE " + Globals.SCHEMA_NAME + ".USERS "
                 + "   SET USERNAME = ?, PASSWORD = ?, USER_LEVEL = ?, EMAIL = ?, REAL_NAME = ? "
                 + "WHERE ID = ?";
@@ -216,7 +216,7 @@ public class QueryGenerator {
      * 
      * @return
      */
-    public static final String strSavePopoulationDataset() {
+    public static String strSavePopoulationDataset() {
         String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".PDSETS "
                 + "   (PDS_ID, PDS_NAME, FILTER, DATE, SOURCE,AGE_GROUP_STRUCTURE, "
                 + "DESCRIPTION, WORLD_POPULATION_ID, WORLD_POPULATION_BOOL) "
@@ -228,7 +228,7 @@ public class QueryGenerator {
      * 
      * @return
      */
-    public static final String strSavePopoulationDatasetsEntry() {
+    public static String strSavePopoulationDatasetsEntry() {
         String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + ".PDSET "
                 + "   (PDS_ID, AGE_GROUP, SEX, COUNT) "
                 + "VALUES (?, ?, ?, ?)";
@@ -239,7 +239,7 @@ public class QueryGenerator {
      * 
      * @return
      */
-    public static final String strCreatePopulationDatasetTable() {
+    public static String strCreatePopulationDatasetTable() {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".PDSETS ("
                 + "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
                 + "PDS_ID INT not null unique,"
@@ -259,7 +259,7 @@ public class QueryGenerator {
      * 
      * @return
      */
-    public static final String strCreatePopulationDatasetsTable() {
+    public static String strCreatePopulationDatasetsTable() {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".PDSET ("
                 + "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
                 + "PDS_ID INT not null,"
@@ -274,7 +274,7 @@ public class QueryGenerator {
      * 
      * @return
      */
-    public static final String strCreateUsersTable() {
+    public static String strCreateUsersTable() {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".USERS ("
                 + "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
                 + "USERNAME VARCHAR(255),"
@@ -290,7 +290,7 @@ public class QueryGenerator {
      * 
      * @return
      */
-    public static final String strCreateSystemPropertiesTable() {
+    public static String strCreateSystemPropertiesTable() {
         String queryLine = "create table " + Globals.SCHEMA_NAME + ".SYSTEM ("
                 + "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
                 + "LOOKUP VARCHAR(255) NOT NULL UNIQUE,"
@@ -299,7 +299,7 @@ public class QueryGenerator {
         return queryLine;
     }
 
-    static String strCreateNameSexTable() {
+    public static String strCreateNameSexTable() {
         String queryLine = "create table " + Globals.SCHEMA_NAME + "." + Globals.NAMESEX_TABLE_NAME + " ("
                 + "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
                 + "NAME VARCHAR(255) NOT NULL UNIQUE,"
@@ -312,7 +312,7 @@ public class QueryGenerator {
      * 
      * @return
      */
-    public static final String strSaveNameSexEntry() {
+    public static String strSaveNameSexEntry() {
         String queryLine = "INSERT INTO " + Globals.SCHEMA_NAME + "." + Globals.NAMESEX_TABLE_NAME + " "
                 + "   (" + Globals.NAMESEX_TABLE_FIRST_NAME_VARIABLE_NAME + ", "
                 + Globals.NAMESEX_TABLE_SEX_VARIABLE_NAME + ") "
@@ -324,7 +324,7 @@ public class QueryGenerator {
      * 
      * @return
      */
-    public static final String strDeleteNameSexEntry() {
+    public static String strDeleteNameSexEntry() {
         String queryLine = "DELETE FROM APP." + Globals.NAMESEX_TABLE_NAME + " "
                 + "WHERE " + Globals.NAMESEX_TABLE_FIRST_NAME_VARIABLE_NAME + " = ?";
         return queryLine;
@@ -335,7 +335,7 @@ public class QueryGenerator {
      * @param doc
      * @return
      */
-    public static final String strSavePatient(Document doc) {
+    public static String strSavePatient(Document doc) {
         return strSaveRecord(doc, "patient");
     }
 
@@ -344,7 +344,7 @@ public class QueryGenerator {
      * @param doc
      * @return
      */
-    public static final String strSaveTumour(Document doc) {
+    public static String strSaveTumour(Document doc) {
         return strSaveRecord(doc, "tumour");
     }
 
@@ -353,7 +353,7 @@ public class QueryGenerator {
      * @param doc
      * @return
      */
-    public static final String strSaveSource(Document doc) {
+    public static String strSaveSource(Document doc) {
         return strSaveRecord(doc, "source");
     }
 
@@ -425,7 +425,7 @@ public class QueryGenerator {
                 + "APP.TUMOUR." + patientRecordIDVariableNameTumourTable + " = APP.PATIENT." + patientRecordIDVariableNamePatientTable;
     }
 
-    private static final String strSaveRecord(Document doc, String tableName) {
+    private static String strSaveRecord(Document doc, String tableName) {
         String variableNamesPart = "INSERT INTO " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase();
         String valuesPart = "VALUES ";
         // Get the variables node in the XML
@@ -554,7 +554,7 @@ public class QueryGenerator {
         return variableNamesPart;
     }
 
-    private static final String createVariable(Element element, Document doc) {
+    private static String createVariable(Element element, Document doc) {
         String queryLine = "";
 
         //Get the variable name for the database

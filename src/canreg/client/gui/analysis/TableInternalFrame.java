@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * TableInternalFrame.java
  *
  * Created on 06-Jul-2009, 10:59:02

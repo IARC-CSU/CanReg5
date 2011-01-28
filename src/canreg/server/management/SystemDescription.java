@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  *
  * @author ervikm
  */
-public class SystemDescription {
+public final class SystemDescription {
 
     private static boolean debug = Globals.DEBUG;
     private Document doc;

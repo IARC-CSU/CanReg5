@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * DictionaryElementChooser.java
  *
  * Created on 16-Nov-2010, 15:08:21

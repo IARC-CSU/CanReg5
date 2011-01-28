@@ -316,7 +316,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
             dictionaryString = editorTextArea.getText().trim();
             dbdle = (DatabaseDictionaryListElement) chooseDictionaryComboBox.getSelectedItem();
             errors = canreg.client.dataentry.DictionaryHelper.testDictionary(dbdle, dictionaryString);
-            if (errors.size() == 0) {
+            if (errors.isEmpty()) {
                 testOK = true;
             } else {
                 testOK = false;
@@ -349,7 +349,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                     Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                return new String("Error.");
+                return "Error.";
             }
             return null;  // return your result
         }
@@ -389,7 +389,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
 
             while (iterator.hasNext() && numberOfLinesShown < Globals.MAX_DICTIONARY_DISPLAY_SIZE) {
                 DictionaryEntry entry = iterator.next().getValue();
-                b.append(entry.getCode() + "\t" + entry.getDescription() + "\n");
+                b.append(entry.getCode()).append("\t").append(entry.getDescription()).append("\n");
                 numberOfLinesShown++;
             }
             if (map.size() > Globals.MAX_DICTIONARY_DISPLAY_SIZE) {

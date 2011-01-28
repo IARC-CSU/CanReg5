@@ -204,7 +204,7 @@ public class UserManagerNew {
 
     public boolean removeUser(User user) {
         boolean success = false;
-
+        // TODO: Why is this empty? And it seems to work... Aie.
         return success;
     }
 }

@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * IndexedVariablePanel.java
  *
  * Created on 27-Jan-2011, 15:29:55
