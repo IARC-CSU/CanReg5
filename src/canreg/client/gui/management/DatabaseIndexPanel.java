@@ -2,6 +2,8 @@ package canreg.client.gui.management;
 
 import canreg.common.DatabaseElement;
 import canreg.common.DatabaseIndexesListElement;
+import canreg.common.DatabaseVariablesListElement;
+import canreg.common.Globals;
 import java.awt.Color;
 import org.jdesktop.application.Action;
 
@@ -12,10 +14,15 @@ import org.jdesktop.application.Action;
 public class DatabaseIndexPanel extends DatabaseElementsPanel {
 
     @Action
+    @Override
     public void addAction() {
-        add(new DatabaseIndexesListElement("New Index"));
+        DatabaseIndexesListElement dile = new DatabaseIndexesListElement("New Index");
+        dile.setDatabaseTableName(Globals.PATIENT_TABLE_NAME);
+        dile.setVariablesInIndex(new DatabaseVariablesListElement[0]);
+        add(dile);
     }
 
+    @Override
     public boolean removable(DatabaseElement dbe) {
         return true;
     }
