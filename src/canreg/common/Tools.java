@@ -688,7 +688,7 @@ public class Tools {
     }
 
     public static String toUpperCaseStandardized(String string){
-        return string.toUpperCase(Locale.ROOT);
+        return string.toUpperCase(Locale.ENGLISH);
     }
 
     public static Charset getStandardCharset(Document doc, String namespace) {
@@ -724,7 +724,6 @@ public class Tools {
                 standardEncoding = Charset.forName(Globals.CHARSET_RUSSIAN);
             }
         }
-
         return standardEncoding;
     }
 }
