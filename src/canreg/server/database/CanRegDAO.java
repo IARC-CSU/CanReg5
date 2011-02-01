@@ -2215,7 +2215,9 @@ public class CanRegDAO {
         // feed it to the garbage dump
         countRowSet = null;
         if (filter.getSortByVariable() != null) {
-            filterString += " ORDER BY \"" + filter.getSortByVariable().toUpperCase() + "\"";
+            filterString += " ORDER BY \"" +
+                    canreg.common.Tools.toUpperCaseStandardized(
+                    filter.getSortByVariable()) + "\"";
         }
         try {
             result = statement.executeQuery(getterString + filterString);

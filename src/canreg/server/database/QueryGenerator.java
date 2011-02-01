@@ -39,7 +39,8 @@ public class QueryGenerator {
         }
 
         // Common for all tables
-        String query = "create table " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase()
+        String query = "create table " + Globals.SCHEMA_NAME + "."
+                + canreg.common.Tools.toUpperCaseStandardized(tableName)
                 + // Add the system variables
                 // ID is just a variable for the database
                 " ( " + recordIDVariableName + " INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)"
@@ -122,7 +123,7 @@ public class QueryGenerator {
                     if (j > 0) {
                         query += ", ";
                     }
-                    query += "\"" + indexedVariables.get(j).toUpperCase() + "\"";
+                    query += "\"" + canreg.common.Tools.toUpperCaseStandardized(indexedVariables.get(j)) + "\"";
                 }
                 query += ") ";
                 debugOut(query);
@@ -362,7 +363,7 @@ public class QueryGenerator {
         // drop the current primary key
         commands.add("ALTER TABLE APP.PATIENT DROP PRIMARY KEY");
         // create primary key
-        commands.add("ALTER TABLE APP.PATIENT ADD PRIMARY KEY ( " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " , " + databaseVariableName.toUpperCase() + ") ");
+        commands.add("ALTER TABLE APP.PATIENT ADD PRIMARY KEY ( " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " , " + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + ") ");
         return commands.toArray(new String[0]);
     }
 
@@ -370,8 +371,10 @@ public class QueryGenerator {
         // set variables unique
         LinkedList<String> commands = new LinkedList<String>();
         // create foreign key
-        commands.add("ALTER TABLE APP.TUMOUR ADD FOREIGN KEY (" + tumourDatabaseVariableNames.toUpperCase() + ") "
-                + "REFERENCES APP.PATIENT (" + patientDatabaseVariableNames.toUpperCase() + ") ");
+        commands.add("ALTER TABLE APP.TUMOUR ADD FOREIGN KEY ("
+                + canreg.common.Tools.toUpperCaseStandardized(tumourDatabaseVariableNames) + ") "
+                + "REFERENCES APP.PATIENT ("
+                + canreg.common.Tools.toUpperCaseStandardized(patientDatabaseVariableNames) + ") ");
         return commands.toArray(new String[0]);
     }
 
@@ -426,7 +429,8 @@ public class QueryGenerator {
     }
 
     private static String strSaveRecord(Document doc, String tableName) {
-        String variableNamesPart = "INSERT INTO " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase();
+        String variableNamesPart = "INSERT INTO " + Globals.SCHEMA_NAME + "."
+                + canreg.common.Tools.toUpperCaseStandardized(tableName);
         String valuesPart = "VALUES ";
         // Get the variables node in the XML
         NodeList nodes = doc.getElementsByTagName(namespace + "variables");
@@ -453,7 +457,8 @@ public class QueryGenerator {
                         variableNamesPart += ", ";
                         valuesPart += ", ";
                     }
-                    variableNamesPart += "\"" + element.getElementsByTagName(namespace + "short_name").item(0).getTextContent().toUpperCase() + "\"";
+                    variableNamesPart += "\""
+                            + canreg.common.Tools.toUpperCaseStandardized(element.getElementsByTagName(namespace + "short_name").item(0).getTextContent()) + "\"";
                     valuesPart += "?";
                 }
             }
@@ -478,19 +483,19 @@ public class QueryGenerator {
 
     static String strGetHighestPatientID(GlobalToolBox globalToolBox) {
         String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
-        return "SELECT max(\"" + patientIDVariableNamePatientTable.toUpperCase() + "\") FROM APP.PATIENT";
+        return "SELECT max(\"" + canreg.common.Tools.toUpperCaseStandardized(patientIDVariableNamePatientTable) + "\") FROM APP.PATIENT";
     }
 
     static String strGetHighestTumourID(GlobalToolBox globalToolBox) {
         String tumourIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         String patientRecordIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
-        return "SELECT max(\"" + tumourIDVariableNameTumourTable.toUpperCase() + "\") FROM APP.TUMOUR WHERE " + patientRecordIDVariableNameTumourTable.toUpperCase() + " = ?";
+        return "SELECT max(\"" + canreg.common.Tools.toUpperCaseStandardized(tumourIDVariableNameTumourTable) + "\") FROM APP.TUMOUR WHERE " + canreg.common.Tools.toUpperCaseStandardized(patientRecordIDVariableNameTumourTable) + " = ?";
     }
 
     static String strGetHighestPatientRecordID(GlobalToolBox globalToolBox) {
         String patientRecordIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
         String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
-        return "SELECT max(\"" + patientRecordIDVariableNamePatientTable.toUpperCase() + "\") FROM APP.PATIENT WHERE " + patientIDVariableNamePatientTable.toUpperCase() + " = ?";
+        return "SELECT max(\"" + canreg.common.Tools.toUpperCaseStandardized(patientRecordIDVariableNamePatientTable) + "\") FROM APP.PATIENT WHERE " + canreg.common.Tools.toUpperCaseStandardized(patientIDVariableNamePatientTable) + " = ?";
     }
 
     static String strGetHighestSourceRecordID(GlobalToolBox globalToolBox) {
@@ -499,7 +504,7 @@ public class QueryGenerator {
         if (le != null) {
             String sourceRecordIDVariableName = le.getDatabaseVariableName();
             String tumourIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
-            returnString = "SELECT max(\"" + sourceRecordIDVariableName.toUpperCase() + "\") FROM APP.SOURCE WHERE " + tumourIDVariableNameSourceTable.toUpperCase() + " = ?";
+            returnString = "SELECT max(\"" + canreg.common.Tools.toUpperCaseStandardized(sourceRecordIDVariableName) + "\") FROM APP.SOURCE WHERE " + canreg.common.Tools.toUpperCaseStandardized(tumourIDVariableNameSourceTable) + " = ?";
         }
         return returnString;
     }
@@ -507,7 +512,7 @@ public class QueryGenerator {
     /* We don't use tumour record ID...
     static String strGetHighestTumourRecordID(GlobalToolBox globalToolBox){
     String tumourRecordIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordID.toString()).getDatabaseVariableName();
-    return "SELECT max(\""+tumourRecordIDVariableNamePatientTable.toUpperCase()+"\") FROM APP.TUMOUR";
+    return "SELECT max(\""+canreg.common.Tools.toUpperCaseStandardized(tumourRecordIDVariableNamePatientTable)+"\") FROM APP.TUMOUR";
     }
      */
     private static String strEditRecord(Document doc, String tableName) {
@@ -521,7 +526,8 @@ public class QueryGenerator {
             recordIDVariableName = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
         }
 
-        String variableNamesPart = "UPDATE " + Globals.SCHEMA_NAME + "." + tableName.toUpperCase();
+        String variableNamesPart = "UPDATE " + Globals.SCHEMA_NAME + "."
+                + canreg.common.Tools.toUpperCaseStandardized(tableName);
         // Get the variables node in the XML
         NodeList nodes = doc.getElementsByTagName(namespace + "variables");
         Element variablesElement = (Element) nodes.item(0);
@@ -545,7 +551,8 @@ public class QueryGenerator {
                     } else {
                         variableNamesPart += "\n, ";
                     }
-                    variableNamesPart += "\"" + element.getElementsByTagName(namespace + "short_name").item(0).getTextContent().toUpperCase() + "\" = ?";
+                    variableNamesPart += "\""
+                            + canreg.common.Tools.toUpperCaseStandardized(element.getElementsByTagName(namespace + "short_name").item(0).getTextContent()) + "\" = ?";
                 }
             }
         }
@@ -558,7 +565,8 @@ public class QueryGenerator {
         String queryLine = "";
 
         //Get the variable name for the database
-        queryLine = "\"" + element.getElementsByTagName("ns3:short_name").item(0).getTextContent().toUpperCase() + "\"";
+        queryLine = "\""
+                + canreg.common.Tools.toUpperCaseStandardized(element.getElementsByTagName("ns3:short_name").item(0).getTextContent()) + "\"";
 
         //Get the variable type
         String variableType = element.getElementsByTagName("ns3:variable_type").item(0).getTextContent();

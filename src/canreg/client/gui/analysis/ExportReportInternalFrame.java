@@ -669,7 +669,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
             // build the map of column names and checked variables boxes
             for (int column = 0; column < resultTable.getColumnCount(); column++) {
-                String columnName = resultTable.getColumnName(column).toUpperCase();
+                String columnName =
+                        canreg.common.Tools.toUpperCaseStandardized(resultTable.getColumnName(column));
                 VariablesExportDetailsPanel vedp = variableChooserPanel.getVariablesExportDetailsPanelByName(columnName);
                 variablesToExport.put(columnName, vedp.getCheckboxes());
             }

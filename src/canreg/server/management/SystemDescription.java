@@ -392,7 +392,7 @@ public final class SystemDescription {
     private TreeMap<String, DatabaseVariablesListElement> getVariablesMap() {
         TreeMap<String, DatabaseVariablesListElement> variablesMap = new TreeMap<String, DatabaseVariablesListElement>();
         for (DatabaseVariablesListElement variable : variableListElements) {
-            variablesMap.put(variable.getDatabaseVariableName().toUpperCase(), variable);
+            variablesMap.put(canreg.common.Tools.toUpperCaseStandardized(variable.getDatabaseVariableName()), variable);
         }
         return variablesMap;
     }

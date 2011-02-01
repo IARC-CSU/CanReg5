@@ -185,7 +185,7 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
                 e.replaceChild(newChildElement, oldChildElement);
                 tableName = panel.getDble().getDatabaseTableName();
             }
-            variablesToTableMap.put(shortName.toUpperCase(), tableName);
+            variablesToTableMap.put(canreg.common.Tools.toUpperCaseStandardized(shortName), tableName);
         }
 
         // Update the Indexes part
@@ -211,7 +211,8 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
 
             LinkedList<String> variablesInThisIndex = indexMap.get(indexName).getVariableNamesInIndex();
 
-            String tableOfThisIndex = variablesToTableMap.get(variablesInThisIndex.getFirst().toUpperCase());
+            String tableOfThisIndex = variablesToTableMap.get(
+                    canreg.common.Tools.toUpperCaseStandardized(variablesInThisIndex.getFirst()));
             childElement = createElement(Globals.NAMESPACE + "table", tableOfThisIndex);
             element.appendChild(childElement);
             for (String variableName : variablesInThisIndex) {

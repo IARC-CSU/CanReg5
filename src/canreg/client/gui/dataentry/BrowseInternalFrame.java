@@ -374,7 +374,8 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 lookUpVariable = patientIDlookupVariable;
                 referenceTable = Globals.PATIENT_TABLE_NAME;
             }
-            columnNumber = tableColumnModel.getColumnIndex(lookUpVariable.toUpperCase(), false);
+            columnNumber = tableColumnModel.getColumnIndex(
+                    canreg.common.Tools.toUpperCaseStandardized(lookUpVariable), false);
             editRecord("" + tableDataModel.getValueAt(rowNumber,
                     columnNumber), referenceTable);
         }
@@ -435,7 +436,8 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             filter.setFilterString(rangeFilterPanel.getFilter().trim());
             filter.setSortByVariable(rangeFilterPanel.getSortByVariable());
             filter.setRange(rangeFilterPanel.getRange());
-            sortByVariableName = rangeFilterPanel.getSortByVariable().toUpperCase();
+            sortByVariableName = canreg.common.Tools.toUpperCaseStandardized(
+                    rangeFilterPanel.getSortByVariable());
             // setProgress(0, 0, 4);
             setMessage(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("INITIATING QUERY..."));
             // setProgress(1, 0, 4);

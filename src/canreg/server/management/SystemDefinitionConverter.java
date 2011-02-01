@@ -375,7 +375,7 @@ public class SystemDefinitionConverter {
                     String nameInDatabase = readText();
 
                     if (canreg.server.database.Tools.isReservedWord(nameInDatabase)) {
-                        System.out.println("Warning: " + nameInDatabase.toUpperCase() + " is a reserverd word.");
+                        System.out.println("Warning: " + canreg.common.Tools.toUpperCaseStandardized(nameInDatabase) + " is a reserverd word.");
                         System.out.println("Please revise the XML file manually before building CanReg5 database...");
                     }
 
@@ -459,7 +459,7 @@ public class SystemDefinitionConverter {
                         }
                     }
                     element.appendChild(createElement(namespace + "table", tableName));
-                    variableToTableMap.put(nameInDatabase.toUpperCase(), tableName);
+                    variableToTableMap.put(canreg.common.Tools.toUpperCaseStandardized(nameInDatabase), tableName);
                 }
                 variablesMap = Tools.buildVariablesMap(Tools.getVariableListElements(doc, namespace));
                 // Read the indexes part
@@ -478,7 +478,7 @@ public class SystemDefinitionConverter {
                         if (variableIndex >= 0) {
                             Element variableElement = (Element) doc.getElementsByTagName(namespace + "variable").item(variableIndex);
                             String variableName = variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent();
-                            variables.add(variablesMap.get(variableName.toUpperCase()));
+                            variables.add(variablesMap.get(canreg.common.Tools.toUpperCaseStandardized(variableName)));
                         }
                     }
                     DatabaseIndexesListElement index = new DatabaseIndexesListElement(indexName);
@@ -660,8 +660,8 @@ public class SystemDefinitionConverter {
 
                 // Patient ID in tumour table index
                 tempIndexList = new LinkedList<DatabaseVariablesListElement>();
-                tempIndexList.add(variablesMap.get(Globals.StandardVariableNames.PatientIDTumourTable.toString().toUpperCase()));
-                tempIndexList.add(variablesMap.get(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString().toUpperCase()));
+                tempIndexList.add(variablesMap.get(canreg.common.Tools.toUpperCaseStandardized(Globals.StandardVariableNames.PatientIDTumourTable.toString())));
+                tempIndexList.add(variablesMap.get(canreg.common.Tools.toUpperCaseStandardized(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString())));
                 DatabaseIndexesListElement patientIDindex = new DatabaseIndexesListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString());
                 patientIDindex.setDatabaseTableName(Globals.TUMOUR_TABLE_NAME);
                 patientIDindex.setVariablesInIndex(tempIndexList.toArray(new DatabaseVariablesListElement[0]));
@@ -669,8 +669,8 @@ public class SystemDefinitionConverter {
 
                 // Tumour ID in tumour table index
                 tempIndexList = new LinkedList<DatabaseVariablesListElement>();
-                tempIndexList.add(variablesMap.get(Globals.StandardVariableNames.TumourID.toString().toUpperCase()));
-                tempIndexList.add(variablesMap.get(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString().toUpperCase()));
+                tempIndexList.add(variablesMap.get(canreg.common.Tools.toUpperCaseStandardized(Globals.StandardVariableNames.TumourID.toString())));
+                tempIndexList.add(variablesMap.get(canreg.common.Tools.toUpperCaseStandardized(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString())));
                 DatabaseIndexesListElement tumourIDindex = new DatabaseIndexesListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString());
                 tumourIDindex.setDatabaseTableName(Globals.TUMOUR_TABLE_NAME);
                 tumourIDindex.setVariablesInIndex(tempIndexList.toArray(new DatabaseVariablesListElement[0]));
@@ -690,7 +690,7 @@ public class SystemDefinitionConverter {
 
                     LinkedList<String> variablesInThisIndex = indexMap.get(indexName).getVariableNamesInIndex();
 
-                    String tableOfThisIndex = variableToTableMap.get(variablesInThisIndex.getFirst().toUpperCase());
+                    String tableOfThisIndex = variableToTableMap.get(canreg.common.Tools.toUpperCaseStandardized(variablesInThisIndex.getFirst()));
                     childElement = createElement(namespace + "table", tableOfThisIndex);
                     element.appendChild(childElement);
                     for (String variableName : variablesInThisIndex) {
@@ -888,7 +888,7 @@ public class SystemDefinitionConverter {
         }
         // Place variable in the right table
         element.appendChild(createElement(namespace + "table", table));
-        variableToTableMap.put(shortName.toUpperCase(), table);
+        variableToTableMap.put(canreg.common.Tools.toUpperCaseStandardized(shortName), table);
         element.appendChild(createElement(namespace + "standard_variable_name", standardVariableName));
         return element;
     }

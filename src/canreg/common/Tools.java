@@ -14,6 +14,7 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -304,7 +305,7 @@ public class Tools {
     public static TreeMap<String, DatabaseVariablesListElement> buildVariablesMap(DatabaseVariablesListElement[] variableListElements) {
         TreeMap<String, DatabaseVariablesListElement> variablesMap = new TreeMap<String, DatabaseVariablesListElement>();
         for (DatabaseVariablesListElement elem : variableListElements) {
-            variablesMap.put(elem.getDatabaseVariableName().toUpperCase(), elem);
+            variablesMap.put(canreg.common.Tools.toUpperCaseStandardized(elem.getDatabaseVariableName()), elem);
         }
         return variablesMap;
     }
@@ -317,7 +318,7 @@ public class Tools {
         TreeMap<String, DatabaseVariablesListElement> variablesMap = new TreeMap<String, DatabaseVariablesListElement>();
         for (DatabaseVariablesListElement elem : variableListElements) {
             if (elem.getStandardVariableName() != null) {
-                variablesMap.put(elem.getStandardVariableName().toUpperCase(), elem);
+                variablesMap.put(canreg.common.Tools.toUpperCaseStandardized(elem.getStandardVariableName()), elem);
             }
         }
         return variablesMap;
@@ -342,7 +343,7 @@ public class Tools {
             Element element = (Element) indexes.item(i);
 
             // Create line
-            String tableNameDB = element.getElementsByTagName(namespace + "table").item(0).getTextContent().toUpperCase();
+            String tableNameDB = canreg.common.Tools.toUpperCaseStandardized(element.getElementsByTagName(namespace + "table").item(0).getTextContent());
 
             if (tableNameDB.equalsIgnoreCase(tableName)) {
                 String nameDB = element.getElementsByTagName(namespace + "name").item(0).getTextContent();
@@ -360,7 +361,7 @@ public class Tools {
                         DatabaseVariablesListElement variable =
                                 variablesMap.get(variableName);
                         if (variable == null) {
-                            variable = variablesMap.get(variableName.toUpperCase());
+                            variable = variablesMap.get(canreg.common.Tools.toUpperCaseStandardized(variableName));
                         }
                         if (variable != null) {
                             variableLinkedList.add(variable);
@@ -686,7 +687,11 @@ public class Tools {
         }
     }
 
-    static Charset getStandardCharset(Document doc, String namespace) {
+    public static String toUpperCaseStandardized(String string){
+        return string.toUpperCase(Locale.ROOT);
+    }
+
+    public static Charset getStandardCharset(Document doc, String namespace) {
         Charset standardEncoding = Charset.defaultCharset();
         NodeList nl = doc.getElementsByTagName(namespace + "data_entry_language");
         if (nl.getLength() > 0) {

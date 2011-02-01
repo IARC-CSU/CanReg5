@@ -387,9 +387,9 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         String filterString = "INCID >= '" + year * 10000 + "' AND INCID <'" + (year + 1) * 10000 + "'";
 
         for (DatabaseVariablesListElement dvle : chosenVariables) {
-            int columnNumber = tableColumnModel.getColumnIndex(dvle.getDatabaseVariableName().toUpperCase());
+            int columnNumber = tableColumnModel.getColumnIndex(canreg.common.Tools.toUpperCaseStandardized(dvle.getDatabaseVariableName()));
             String value = tableModel.getValueAt(rowNumber, columnNumber).toString();
-            filterString += " AND " + dvle.getDatabaseVariableName().toUpperCase() + " = " + dvle.getSQLqueryFormat(value);
+            filterString += " AND " + canreg.common.Tools.toUpperCaseStandardized(dvle.getDatabaseVariableName()) + " = " + dvle.getSQLqueryFormat(value);
         }
         DatabaseFilter filter = new DatabaseFilter();
         filter.setFilterString(filterString);

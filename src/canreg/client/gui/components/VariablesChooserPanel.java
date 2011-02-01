@@ -104,7 +104,7 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
         for (DatabaseVariablesListElement variable : variablesInTable) {
             VariablesExportDetailsPanel ved = new VariablesExportDetailsPanel();
             ved.setDictionary(dictionary.get(variable.getDictionaryID()));
-            panelMap.put(variable.getDatabaseVariableName().toUpperCase(), ved);
+            panelMap.put(canreg.common.Tools.toUpperCaseStandardized(variable.getDatabaseVariableName()), ved);
             ved.setVariable(variable);
             // ved.setVariableType(variable.getVariableType());
             panel.add(ved);
@@ -152,8 +152,8 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
             //Take into account all the checkboxes when returning the checked variables.
             if (checkBoxes[0] || checkBoxes[1] || checkBoxes[2]) {
                 element = ved.getVariable();
-                if (tableName.toUpperCase().contains(element.getDatabaseTableName().toUpperCase())) {
-                    variables.add(element.getDatabaseVariableName().toUpperCase());
+                if (canreg.common.Tools.toUpperCaseStandardized(tableName).contains(canreg.common.Tools.toUpperCaseStandardized(element.getDatabaseTableName()))) {
+                    variables.add(canreg.common.Tools.toUpperCaseStandardized(element.getDatabaseVariableName()));
                 }
             }
         }
@@ -161,7 +161,7 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
     }
 
     public VariablesExportDetailsPanel getVariablesExportDetailsPanelByName(String name) {
-        return panelMap.get(name.toUpperCase());
+        return panelMap.get(canreg.common.Tools.toUpperCaseStandardized(name));
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox allVariablesCheckBox;

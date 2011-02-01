@@ -270,7 +270,7 @@ public class Import {
                     String[] firstNamesArray = firstNames.split(" ");
                     for (String firstName : firstNamesArray) {
                         if (firstName != null && firstName.trim().length() > 0) {
-                            firstName = firstName.toUpperCase();
+                            // here we use the locale specific toUpperCase
                             Integer registeredSexCode = nameSexTable.get(firstName);
                             if (registeredSexCode == null) {
                                 NameSexRecord nsr = new NameSexRecord();
