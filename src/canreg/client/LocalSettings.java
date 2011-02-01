@@ -312,9 +312,9 @@ public final class LocalSettings {
         } else if (key.equalsIgnoreCase(LOCALE_KEY)) {
             property = Locale.getDefault().getLanguage();
             // turkish small i capitalizes to big i with dot, which we don't support yet, so we default it to english...
-            if (property.equalsIgnoreCase("tr")) {
-                property = Locale.ENGLISH.getLanguage();
-            }
+            //if (property.equalsIgnoreCase("tr")) {
+            //    property = Locale.ENGLISH.getLanguage();
+            //}
         } else if (key.equalsIgnoreCase(REMEMBER_PASSWORD_KEY)) {
             property = FALSE_PROPERTY;
         } else if (key.equalsIgnoreCase(WORKING_DIR_PATH_KEY)) {
