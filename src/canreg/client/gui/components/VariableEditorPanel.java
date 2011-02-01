@@ -78,7 +78,11 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
     public boolean isFilledOK() {
         boolean filledOK = true;
         if (mandatory) {
-            filledOK = codeTextField.getText().trim().length() > 0;
+            if (databaseListElement.getDictionary() != null && codeTextField.getText().trim().length() < databaseListElement.getDictionary().getFullDictionaryCodeLength()) {
+                filledOK = false;
+            } else {
+                filledOK = codeTextField.getText().trim().length() > 0;
+            }
         }
         return filledOK;
     }
@@ -331,7 +335,6 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
 private void codeTextFieldActionPerformed1(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codeTextFieldActionPerformed1
     // TODO add your handling code here:
 }//GEN-LAST:event_codeTextFieldActionPerformed1
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JTextField categoryTextField;
     protected javax.swing.JTextField codeTextField;
@@ -373,6 +376,8 @@ private void codeTextFieldActionPerformed1(java.awt.event.ActionEvent evt) {//GE
     }
 
     private void lookUpAndSetDescription() throws NullPointerException {
+        descriptionTextField.setText("");
+        categoryTextField.setText("");
         if (codeTextField.getText().trim().length() > 0) {
             if (possibleValuesMap != null) {
                 try {
@@ -380,14 +385,17 @@ private void codeTextFieldActionPerformed1(java.awt.event.ActionEvent evt) {//GE
                         categoryTextField.setText(possibleValuesMap.get(
                                 codeTextField.getText().substring(0, dictionary.getCodeLength())).getDescription());
                     }
-                    descriptionTextField.setText(possibleValuesMap.get(codeTextField.getText()).getDescription());
+                    if (dictionary.isCompoundDictionary()) {
+                        if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) {
+                            descriptionTextField.setText(possibleValuesMap.get(codeTextField.getText()).getDescription());
+                        }
+                    } else {
+                        descriptionTextField.setText(possibleValuesMap.get(codeTextField.getText()).getDescription());
+                    }
                 } catch (NullPointerException e) {
                     throw e;
                 }
             }
-        } else {
-            categoryTextField.setText("");
-            descriptionTextField.setText("");
         }
     }
 
