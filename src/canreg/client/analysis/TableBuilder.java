@@ -104,18 +104,18 @@ public abstract class TableBuilder {
     String v7RegistryDictionary = v7Path + "CI5V7.TXT";
     String v8RegistryDictionary = libPath + "Ci5V8.dic";
     String v8PublishedRegistryDictionary = v8Path + "Ci5Viii.dic";
-    String v7IncidenceDataDescriptionFilename = libPath +
-            "ci5-vii-incidence.dct";
-    String v7PopulationDataDescriptionFilename = libPath +
-            "ci5-vii-population.dct";
-    String v7MortalityDataDescriptionFilename = libPath +
-            "ci5-vii-mortality.dct";
-    String v8IncidenceDataDescriptionFilename = libPath +
-            "ci5-viii-incidence.dct";
-    String v8PopulationDataDescriptionFilename = libPath +
-            "ci5-viii-population.dct";
-    String v8MortalityDataDescriptionFilename = libPath +
-            "ci5-viii-mortality.dct";
+    String v7IncidenceDataDescriptionFilename = libPath
+            + "ci5-vii-incidence.dct";
+    String v7PopulationDataDescriptionFilename = libPath
+            + "ci5-vii-population.dct";
+    String v7MortalityDataDescriptionFilename = libPath
+            + "ci5-vii-mortality.dct";
+    String v8IncidenceDataDescriptionFilename = libPath
+            + "ci5-viii-incidence.dct";
+    String v8PopulationDataDescriptionFilename = libPath
+            + "ci5-viii-population.dct";
+    String v8MortalityDataDescriptionFilename = libPath
+            + "ci5-viii-mortality.dct";
     // foundAgeGroups always corresponds to "our" age group numbering
     boolean[] foundAgeGroups = new boolean[numberOfAgeGroups];
     String ageLabel[] = {"0", "1-", "5-", "10-", "15-", "20-", "25-", "30-",
@@ -205,8 +205,8 @@ public abstract class TableBuilder {
 
                 icdString = getContentOfField(fieldDescriptionList,
                         "icd", line).trim();
-                if (icdString.length() > 0 &&
-                        icdString.trim().substring(0, 1).equals("C")) {
+                if (icdString.length() > 0
+                        && icdString.trim().substring(0, 1).equals("C")) {
                     icdString = icdString.trim().substring(1);
                     icdNumber = Integer.parseInt(icdString);
                     if (icdString.length() < 3) {
@@ -216,8 +216,8 @@ public abstract class TableBuilder {
                     if (icdIndex == -1) {
                         icdIndex = -1;
                     }
-                } else if (icdString.length() > 0 &&
-                        icdString.trim().substring(0, 1).equals("D")) {
+                } else if (icdString.length() > 0
+                        && icdString.trim().substring(0, 1).equals("D")) {
                     icdString = icdString.trim().substring(1);
                     icdNumber = Integer.parseInt(icdString);
                     if (icdNumber == 90 || icdNumber == 414) {
@@ -232,10 +232,10 @@ public abstract class TableBuilder {
                         "age_group", line);
                 ageGroup = Integer.parseInt(ageGroupString);
 
-                if (sex <= numberOfSexes && icdIndex >= 0 &&
-                        icdIndex <= cancerGroups.length &&
-                        year <= years[1] &&
-                        year >= years[0]) {
+                if (sex <= numberOfSexes && icdIndex >= 0
+                        && icdIndex <= cancerGroups.length
+                        && year <= years[1]
+                        && year >= years[0]) {
                     // Generate statistics
                     casesArray[icdIndex][sex - 1][ageGroup]++;
                 } else {
@@ -397,8 +397,8 @@ public abstract class TableBuilder {
                 }
                 mortalityArray[sex][allCancerGroupsIndex] += cases;
 
-                if (skinCancerGroupIndex > 0 &&
-                        icdGroup != skinCancerGroupIndex) {
+                if (skinCancerGroupIndex > 0
+                        && icdGroup != skinCancerGroupIndex) {
                     mortalityArray[sex][allCancerGroupsButSkinIndex] += cases;
                 }
 
@@ -423,8 +423,8 @@ public abstract class TableBuilder {
 
     public int findLowestAgeGroup(boolean[] foundAgeGroups) {
         int lowest = 0; // start at 0 - group 19 is unknown age
-        while (lowest < foundAgeGroups.length && lowest < unknownAgeGroupIndex &&
-                !foundAgeGroups[lowest]) {
+        while (lowest < foundAgeGroups.length && lowest < unknownAgeGroupIndex
+                && !foundAgeGroups[lowest]) {
             lowest++;
         }
         return lowest;
@@ -537,9 +537,9 @@ public abstract class TableBuilder {
                     yearIndex = 0;
                     firstLine = false;
                 } else if (populationCodeString.equalsIgnoreCase(
-                        firstPopulationCode) &&
-                        sexString.equalsIgnoreCase(firstSex) &&
-                        ageGroupString.equalsIgnoreCase(firstAgeGroup)) {
+                        firstPopulationCode)
+                        && sexString.equalsIgnoreCase(firstSex)
+                        && ageGroupString.equalsIgnoreCase(firstAgeGroup)) {
                     yearIndex++;
                     if (yearIndex >= numberOfYearsInFile) {
                         yearIndex = 0;
@@ -661,9 +661,9 @@ public abstract class TableBuilder {
                     firstPopulationCode = popString;
                     numberOfYearsInFile++;
                     firstLine = false;
-                } else if (sexString.equalsIgnoreCase(firstSex) &&
-                        ageGroupString.equalsIgnoreCase(firstAgeGroup) &&
-                        popString.equalsIgnoreCase(firstPopulationCode)) {
+                } else if (sexString.equalsIgnoreCase(firstSex)
+                        && ageGroupString.equalsIgnoreCase(firstAgeGroup)
+                        && popString.equalsIgnoreCase(firstPopulationCode)) {
                     numberOfYearsInFile++;
                 }
                 // Read next line
@@ -710,13 +710,13 @@ public abstract class TableBuilder {
         while (!found && m < fieldDescriptionList.size()) {
             // As always; Not the safest to force the linked list to be of a certain type maybe...
             fieldDescription = fieldDescriptionList.get(m++);
-            found = name.equalsIgnoreCase(fieldDescription.name);
+            found = name.equalsIgnoreCase(fieldDescription.getName());
         }
         if (found) {
             char[] caIn = line.toCharArray();
-            char[] caOut = new char[fieldDescription.characters];
-            for (int n = 0; n < fieldDescription.characters; n++) {
-                caOut[n] = caIn[fieldDescription.offset + n - 1];
+            char[] caOut = new char[fieldDescription.getCharacters()];
+            for (int n = 0; n < fieldDescription.getCharacters(); n++) {
+                caOut[n] = caIn[fieldDescription.getOffset() + n - 1];
             }
             str = new String(caOut);
         } else {
@@ -803,7 +803,7 @@ public abstract class TableBuilder {
         FieldDescription tmpDesc;
         while (pointer < fil.size()) {
             tmpDesc = fil.get(pointer++);
-            elements.add(getContentOfField(fil, tmpDesc.name, line));
+            elements.add(getContentOfField(fil, tmpDesc.getName(), line));
         }
         String[] elementArray = new String[elements.size()];
         for (int i = 0; i < elementArray.length; i++) {
@@ -819,8 +819,8 @@ public abstract class TableBuilder {
             FieldDescriptionReader fdr = new FieldDescriptionReader();
             return FieldDescriptionReader.readFile(descriptionFile);
         } catch (IOException e) {
-            System.out.println("Description-File " + descriptionFileName +
-                    " not found.");
+            System.out.println("Description-File " + descriptionFileName
+                    + " not found.");
             return null;
         }
     }
@@ -910,23 +910,23 @@ public abstract class TableBuilder {
         if (outLine) {
             boxCode += "newpath\n";
 
-            boxCode += xy1[0] + " " + xy1[1] + " MT " + xy1[0] + " " + xy2[1] +
-                    " LT\n";
-            boxCode += xy1[0] + " " + xy2[1] + " MT " + xy2[0] + " " + xy2[1] +
-                    " LT\n";
-            boxCode += xy2[0] + " " + xy2[1] + " MT " + xy2[0] + " " + xy1[1] +
-                    " LT\n";
-            boxCode += xy2[0] + " " + xy1[1] + " MT " + xy1[0] + " " + xy1[1] +
-                    " LT\n";
+            boxCode += xy1[0] + " " + xy1[1] + " MT " + xy1[0] + " " + xy2[1]
+                    + " LT\n";
+            boxCode += xy1[0] + " " + xy2[1] + " MT " + xy2[0] + " " + xy2[1]
+                    + " LT\n";
+            boxCode += xy2[0] + " " + xy2[1] + " MT " + xy2[0] + " " + xy1[1]
+                    + " LT\n";
+            boxCode += xy2[0] + " " + xy1[1] + " MT " + xy1[0] + " " + xy1[1]
+                    + " LT\n";
             boxCode += "closepath\n";
         }
         if (fill >= 0) {
             boxCode += "gsave\n";
             boxCode += fill + " setgray\n";
-            boxCode += Math.min(xy1[0], xy2[0]) + " " + Math.min(xy1[1], xy2[1]) +
-                    " " + (Math.max(xy1[0], xy2[0]) - Math.min(xy1[0], xy2[0])) +
-                    " " + (Math.max(xy1[1], xy2[1]) - Math.min(xy1[1], xy2[1])) +
-                    " rectfill\n";
+            boxCode += Math.min(xy1[0], xy2[0]) + " " + Math.min(xy1[1], xy2[1])
+                    + " " + (Math.max(xy1[0], xy2[0]) - Math.min(xy1[0], xy2[0]))
+                    + " " + (Math.max(xy1[1], xy2[1]) - Math.min(xy1[1], xy2[1]))
+                    + " rectfill\n";
             boxCode += "grestore\n";
         }
         boxCode += "stroke\n";
@@ -965,12 +965,12 @@ public abstract class TableBuilder {
 
         boxCode += "newpath\n";
 
-        boxCode += xy1[0] + " " + xy1[1] + " MT " + xy2[0] + " " + xy2[1] +
-                " LT\n";
-        boxCode += xy2[0] + " " + xy2[1] + " MT " + xy3[0] + " " + xy3[1] +
-                " LT\n";
-        boxCode += xy3[0] + " " + xy3[1] + " MT " + xy1[0] + " " + xy1[1] +
-                " LT\n";
+        boxCode += xy1[0] + " " + xy1[1] + " MT " + xy2[0] + " " + xy2[1]
+                + " LT\n";
+        boxCode += xy2[0] + " " + xy2[1] + " MT " + xy3[0] + " " + xy3[1]
+                + " LT\n";
+        boxCode += xy3[0] + " " + xy3[1] + " MT " + xy1[0] + " " + xy1[1]
+                + " LT\n";
         boxCode += "closepath\n";
         if (fill >= 0) {
             boxCode += fill + " setgray\n";
@@ -1070,8 +1070,8 @@ public abstract class TableBuilder {
         LinkedList<Integer> cancerGroup = new LinkedList();
         boolean finished = false;
         // First the special cases of all and other&unidentified we just return the empty list
-        if (group.equalsIgnoreCase("ALL") || group.equalsIgnoreCase("O&U") ||
-                group.equalsIgnoreCase("ALLb") || group.equalsIgnoreCase("ALLbC44")) {
+        if (group.equalsIgnoreCase("ALL") || group.equalsIgnoreCase("O&U")
+                || group.equalsIgnoreCase("ALLb") || group.equalsIgnoreCase("ALLbC44")) {
             return cancerGroup;
         } else if (group.equals("MES") || group.equals("KAP") || group.equals("MPD") || group.equals("MDS")) {
             return cancerGroup;
@@ -1083,8 +1083,8 @@ public abstract class TableBuilder {
             Integer i = Integer.parseInt(group.substring(offset, offset + 2));
             cancerGroup.add(i);
             offset = offset + 2;
-            if ((group.length() > offset) &&
-                    group.substring(offset, offset + 1).equals("-")) {
+            if ((group.length() > offset)
+                    && group.substring(offset, offset + 1).equals("-")) {
                 offset = offset + 1;
                 Integer j = Integer.parseInt(group.substring(offset, offset + 2));
                 for (int n = i; n < j; n++) {
@@ -1092,8 +1092,8 @@ public abstract class TableBuilder {
                 }
                 offset = offset + 2;
             }
-            if ((offset == group.length()) ||
-                    !group.substring(offset, offset + 1).equals(",")) {
+            if ((offset == group.length())
+                    || !group.substring(offset, offset + 1).equals(",")) {
                 finished = true;
             }
             offset = offset + 1;
@@ -1105,8 +1105,8 @@ public abstract class TableBuilder {
         LinkedList<Integer> cancerGroup = new LinkedList();
         boolean finished = false;
         // First the special cases of all and other&unidentified we just return the empty list
-        if (group.equalsIgnoreCase("ALL") || group.equalsIgnoreCase("O&U") ||
-                group.equalsIgnoreCase("ALLb") || group.equalsIgnoreCase("ALLbC44")) {
+        if (group.equalsIgnoreCase("ALL") || group.equalsIgnoreCase("O&U")
+                || group.equalsIgnoreCase("ALLb") || group.equalsIgnoreCase("ALLbC44")) {
             return cancerGroup;
         } else if (group.equals("MES") || group.equals("KAP") || group.equals("MPD") || group.equals("MDS")) {
             return cancerGroup;
@@ -1118,14 +1118,14 @@ public abstract class TableBuilder {
             Integer i = Integer.parseInt(group.substring(offset, offset + 2));
             offset = offset + 2;
             i = i * 10;
-            if ((group.length() > offset) &&
-                    group.substring(offset, offset + 1).equals(".")) {
+            if ((group.length() > offset)
+                    && group.substring(offset, offset + 1).equals(".")) {
                 offset = offset + 1;
                 i = i + Integer.parseInt(group.substring(offset, offset + 1));
                 cancerGroup.add(i);
                 offset = offset + 1;
-                if ((group.length() > offset) &&
-                        group.substring(offset, offset + 1).equals("-")) {
+                if ((group.length() > offset)
+                        && group.substring(offset, offset + 1).equals("-")) {
                     offset = offset + 1;
                     Integer j = Integer.parseInt(group.substring(offset,
                             offset + 1));
@@ -1140,8 +1140,8 @@ public abstract class TableBuilder {
                 for (int n = i + 10; i < n; i++) {
                     cancerGroup.add(i);
                 }
-                if ((group.length() > offset) &&
-                        group.substring(offset, offset + 1).equals("-")) {
+                if ((group.length() > offset)
+                        && group.substring(offset, offset + 1).equals("-")) {
                     offset = offset + 1;
                     int j = Integer.parseInt(group.substring(offset,
                             offset + 2));
@@ -1152,8 +1152,8 @@ public abstract class TableBuilder {
                     offset = offset + 2;
                 }
             }
-            if ((offset == group.length()) ||
-                    !group.substring(offset, offset + 1).equals(",")) {
+            if ((offset == group.length())
+                    || !group.substring(offset, offset + 1).equals(",")) {
                 finished = true;
             }
             offset = offset + 1;
@@ -1170,8 +1170,8 @@ public abstract class TableBuilder {
         LinkedList<Integer> cancerGroup = new LinkedList();
         boolean finished = false;
         // First the special cases of all and other&unidentified we just return the empty list
-        if (group.equalsIgnoreCase("ALL") || group.equalsIgnoreCase("ALLb") ||
-                group.equalsIgnoreCase("O&U")) {
+        if (group.equalsIgnoreCase("ALL") || group.equalsIgnoreCase("ALLb")
+                || group.equalsIgnoreCase("O&U")) {
             return cancerGroup;
         } else if (group.equals("MES")) {
             return cancerGroup;
@@ -1183,13 +1183,13 @@ public abstract class TableBuilder {
                 Integer i = Integer.parseInt(group.substring(offset, offset + 3));
                 offset = offset + 3;
                 i = i * 10;
-                if ((group.length() > offset) &&
-                        group.substring(offset, offset + 1).equals(".")) {
+                if ((group.length() > offset)
+                        && group.substring(offset, offset + 1).equals(".")) {
                     offset = offset + 1;
                     i = i + Integer.parseInt(group.substring(offset, offset + 1));
                     cancerGroup.add(i);
-                    if ((group.length() > offset) &&
-                            group.substring(offset, offset + 1).equals("-")) {
+                    if ((group.length() > offset)
+                            && group.substring(offset, offset + 1).equals("-")) {
                         offset = offset + 2;
                         Integer j = Integer.parseInt(group.substring(offset,
                                 offset + 1));
@@ -1203,8 +1203,8 @@ public abstract class TableBuilder {
                     for (int n = i + 10; i < n; i++) {
                         cancerGroup.add(i);
                     }
-                    if ((group.length() > offset) &&
-                            group.substring(offset, offset + 1).equals("-")) {
+                    if ((group.length() > offset)
+                            && group.substring(offset, offset + 1).equals("-")) {
                         offset = offset + 1;
                         int j = Integer.parseInt(group.substring(offset,
                                 offset + 3));
@@ -1215,8 +1215,8 @@ public abstract class TableBuilder {
                         offset = offset + 2;
                     }
                 }
-                if ((offset == group.length()) ||
-                        !group.substring(offset, offset + 1).equals(",")) {
+                if ((offset == group.length())
+                        || !group.substring(offset, offset + 1).equals(",")) {
                     finished = true;
                 }
                 offset = offset + 1;
@@ -1353,8 +1353,8 @@ public abstract class TableBuilder {
     public void grayed(int Y, int H, FileWriter pf) {
         try {
             pf.write("0.90 SG\n");
-            pf.write("20 " + Y + " MT 580 " + Y + " LT 580 " + (Y - H) +
-                    " LT 20 " + (Y - H) + " LT CP fill\n");
+            pf.write("20 " + Y + " MT 580 " + Y + " LT 580 " + (Y - H)
+                    + " LT 20 " + (Y - H) + " LT CP fill\n");
             pf.write("0 SG\n");
         } catch (Exception e) {
             System.out.println("FileOut error...");
@@ -1445,22 +1445,22 @@ public abstract class TableBuilder {
 
     public boolean mortalityIncidenceTest(double D8, double C8, double D9,
             double C9) {
-        double Z = (Math.log(D8 / C8) - Math.log(D9 / C9)) /
-                Math.sqrt(1 / D8 + 1 / C8 + 1 / D9 + 1 / C9);
-        return !(Z >= (-mortallityIncidenceTestTreshold) &&
-                Z <= (mortallityIncidenceTestTreshold));
+        double Z = (Math.log(D8 / C8) - Math.log(D9 / C9))
+                / Math.sqrt(1 / D8 + 1 / C8 + 1 / D9 + 1 / C9);
+        return !(Z >= (-mortallityIncidenceTestTreshold)
+                && Z <= (mortallityIncidenceTestTreshold));
     }
 
     public boolean microscopicallyVerifiedTest(double MV8, double C8,
             double MV9, double C9) {
         double odd8 = MV8 / (C8 - MV8);
         double odd9 = MV9 / (C9 - MV9);
-        double Z = (Math.log(odd9) - Math.log(odd8)) /
-                Math.sqrt(1 / MV8 + 1 / (C8 - MV8) + 1 / MV9 + 1 / (C9 - MV9));
+        double Z = (Math.log(odd9) - Math.log(odd8))
+                / Math.sqrt(1 / MV8 + 1 / (C8 - MV8) + 1 / MV9 + 1 / (C9 - MV9));
         // System.out.println("MV8: " + MV8 + " C8: " + C8 + " MV9: " + MV9 +
         //                    " C9: " + C9 + " Z: " + Z);
-        return !(Z >= (-microscopicallyVerifiedTestTreshold) &&
-                Z <= (microscopicallyVerifiedTestTreshold));
+        return !(Z >= (-microscopicallyVerifiedTestTreshold)
+                && Z <= (microscopicallyVerifiedTestTreshold));
     }
 
     //MB-tests
@@ -1549,22 +1549,22 @@ public abstract class TableBuilder {
 
     public boolean mortalityIncidenceTestMB(double D8, double C8, double D9,
             double C9) {
-        double Z = (Math.log(D8 / C8) - Math.log(D9 / C9)) /
-                Math.sqrt(1 / D8 + 1 / C8 + 1 / D9 + 1 / C9);
-        return !(Z >= (-mortallityIncidenceTestTreshold) &&
-                Z <= (mortallityIncidenceTestTreshold));
+        double Z = (Math.log(D8 / C8) - Math.log(D9 / C9))
+                / Math.sqrt(1 / D8 + 1 / C8 + 1 / D9 + 1 / C9);
+        return !(Z >= (-mortallityIncidenceTestTreshold)
+                && Z <= (mortallityIncidenceTestTreshold));
     }
 
     public boolean microscopicallyVerifiedTestMB(double MV8, double C8,
             double MV9, double C9) {
         double odd8 = MV8 / (C8 - MV8);
         double odd9 = MV9 / (C9 - MV9);
-        double Z = (Math.log(odd9) - Math.log(odd8)) /
-                Math.sqrt(1 / MV8 + 1 / (C8 - MV8) + 1 / MV9 + 1 / (C9 - MV9));
+        double Z = (Math.log(odd9) - Math.log(odd8))
+                / Math.sqrt(1 / MV8 + 1 / (C8 - MV8) + 1 / MV9 + 1 / (C9 - MV9));
         // System.out.println("MV8: " + MV8 + " C8: " + C8 + " MV9: " + MV9 +
         //                    " C9: " + C9 + " Z: " + Z);
-        return !(Z >= (-microscopicallyVerifiedTestTreshold) &&
-                Z <= (microscopicallyVerifiedTestTreshold));
+        return !(Z >= (-microscopicallyVerifiedTestTreshold)
+                && Z <= (microscopicallyVerifiedTestTreshold));
     }
 
     public String[] breakDownString(char separatingCharacter, String line) {

@@ -109,7 +109,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                 configList);
         // sexLabel = ConfigFieldsReader.findConfig("sex_label", configList);
 
-        sexLabel = new String[] {java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("MALE"),java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("FEMALE")};
+        sexLabel = new String[]{java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("MALE"), java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("FEMALE")};
 
         icdLabel = ConfigFieldsReader.findConfig("ICD_groups_labels",
                 configList);
@@ -651,7 +651,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
         // Make PS-file
 
         for (int sexNumber = 0; sexNumber < numberOfSexes - 1; sexNumber++) {
-            String psFileName = reportFileName + "-"+ sexLabel[sexNumber] + ".ps";
+            String psFileName = reportFileName + "-" + sexLabel[sexNumber] + ".ps";
             generatedFiles.add(psFileName);
             try {
                 FileWriter fw = new FileWriter(psFileName);

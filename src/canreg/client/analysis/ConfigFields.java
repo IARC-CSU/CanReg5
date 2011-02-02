@@ -31,7 +31,7 @@ public class ConfigFields {
         return listOfValues;
     }
 
-    public void addValue(String value){
+    public void addValue(String value) {
         listOfValues.add(value);
     }
 

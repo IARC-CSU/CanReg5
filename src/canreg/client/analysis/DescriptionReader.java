@@ -12,7 +12,6 @@ package canreg.client.analysis;
  * @author Morten Johannes Ervik
  * @version 1.0
  */
-
 import java.io.FileReader;
 
 public class DescriptionReader {
@@ -95,5 +94,4 @@ public class DescriptionReader {
         }
         return c;
     }
-
 }

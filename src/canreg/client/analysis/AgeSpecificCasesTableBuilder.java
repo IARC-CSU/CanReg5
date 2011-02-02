@@ -655,7 +655,7 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
         // Make PS-file
 
         for (int sexNumber = 0; sexNumber < numberOfSexes - 1; sexNumber++) {
-            String psFileName = reportFileName + "-"+ sexLabel[sexNumber] + ".ps";
+            String psFileName = reportFileName + "-" + sexLabel[sexNumber] + ".ps";
             generatedFiles.add(psFileName);
             try {
                 FileWriter fw = new FileWriter(psFileName);

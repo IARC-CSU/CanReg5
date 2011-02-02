@@ -7,6 +7,7 @@ import java.util.LinkedList;
  * @author ervikm
  */
 public class TableBuilderListElement {
+
     private String name;
     private String description;
     private String engineName;
@@ -26,7 +27,7 @@ public class TableBuilderListElement {
         this.configFields = configFields;
     }
 
-    public LinkedList<ConfigFields> getConfigFields(){
+    public LinkedList<ConfigFields> getConfigFields() {
         return configFields;
     }
 
@@ -105,7 +106,7 @@ public class TableBuilderListElement {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return name;
     }
 }

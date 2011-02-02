@@ -49,11 +49,11 @@ class FieldDescriptionReader extends DescriptionReader {
                 // Do nothing
             } else {
                 FieldDescription field = new FieldDescription(readWord(file));
-                field.contentType = word;
-                field.characters = extractInteger(readWord(file));
-                field.description = readWord(file);
-                field.offset = offsetCounter;
-                offsetCounter += field.characters;
+                field.setContentType(word);
+                field.setCharacters(extractInteger(readWord(file)));
+                field.setDescription(readWord(file));
+                field.setOffset(offsetCounter);
+                offsetCounter += field.getCharacters();
                 list.add(field);
             }
         }

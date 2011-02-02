@@ -1579,6 +1579,7 @@ public class QualityIndicatorsTableBuilder extends TableBuilder {
     /**
      * @return the variablesNeeded
      */
+    @Override
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }
