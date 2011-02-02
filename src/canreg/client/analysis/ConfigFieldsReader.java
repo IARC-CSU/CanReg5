@@ -52,7 +52,7 @@ public class ConfigFieldsReader extends DescriptionReader {
             } else {
                 String trans = new String();
                 trans = word;
-                fieldDesc.listOfValues.add(trans);
+                fieldDesc.addValue(trans);
             }
         }
         return fieldDesc;
@@ -65,15 +65,13 @@ public class ConfigFieldsReader extends DescriptionReader {
         int m = 0;
         while (!found && m < list.size()) {
             cf = list.get(m++);
-            if (cf.fieldName.equals(name)) {
-                found = true;
-            }
+            found = cf.getFieldName().equals(name);
         }
         if (found) {
-            Object[] oa = cf.listOfValues.toArray();
+            Object[] oa = cf.getListOfValues().toArray();
             sa = new String[oa.length];
             for (int n = 0; n < oa.length; n++) {
-                sa[n] = cf.listOfValues.get(n);
+                sa[n] = cf.getListOfValues().get(n);
             }
         }
         return sa;

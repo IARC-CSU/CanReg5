@@ -16,10 +16,35 @@ import java.util.LinkedList;
 
 public class ConfigFields {
 
-    String fieldName;
-    LinkedList<String> listOfValues;
+    private String fieldName;
+    private LinkedList<String> listOfValues;
+
     public ConfigFields(String name) {
         fieldName = name;
         listOfValues = new LinkedList();
+    }
+
+    /**
+     * @return the listOfValues
+     */
+    public LinkedList<String> getListOfValues() {
+        return listOfValues;
+    }
+
+    public void addValue(String value){
+        listOfValues.add(value);
+    }
+
+    public boolean containsValue(String name) {
+        for (String fieldNameString : listOfValues) {
+            if (fieldNameString.equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String getFieldName() {
+        return fieldName;
     }
 }
