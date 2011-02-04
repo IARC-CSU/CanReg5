@@ -248,7 +248,7 @@ public class Tools {
             Object value2;
 
             while (noNewInfo && pos < variableNames.length) {
-                if (variablesToSkip.contains(variableNames[pos].toLowerCase())) {
+                if (variablesToSkip.contains(canreg.common.Tools.toLowerCaseStandardized(variableNames[pos]))) {
                     // skip this variable
                 } else {
                     // compare

@@ -687,8 +687,12 @@ public class Tools {
         }
     }
 
-    public static String toUpperCaseStandardized(String string){
+    public static String toUpperCaseStandardized(String string) {
         return string.toUpperCase(Locale.ENGLISH);
+    }
+
+    public static String toLowerCaseStandardized(String string) {
+        return string.toLowerCase(Locale.ENGLISH);
     }
 
     public static Charset getStandardCharset(Document doc, String namespace) {

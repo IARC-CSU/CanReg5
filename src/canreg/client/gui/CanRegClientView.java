@@ -57,7 +57,7 @@ import javax.swing.JOptionPane;
 /**
  * The application's main frame.
  */
-public class CanRegClientView extends FrameView {
+public final class CanRegClientView extends FrameView {
 
     /**
      * 

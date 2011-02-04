@@ -65,8 +65,8 @@ public class Import {
         boolean success = false;
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
 
-        noNeedToLookAtPatientVariables.add(io.getPatientIDVariableName().toLowerCase());
-        noNeedToLookAtPatientVariables.add(io.getPatientRecordIDVariableName().toLowerCase());
+        noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientIDVariableName()));
+        noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientRecordIDVariableName()));
 
         String firstNameVariableName = io.getFirstNameVariableName();
         String sexVariableName = io.getSexVariableName();
@@ -360,8 +360,8 @@ public class Import {
         }
         boolean success = false;
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
-        noNeedToLookAtPatientVariables.add(io.getPatientIDVariableName().toLowerCase());
-        noNeedToLookAtPatientVariables.add(io.getPatientRecordIDVariableName().toLowerCase());
+        noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientIDVariableName()));
+        noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientRecordIDVariableName()));
         HashMap mpCodes = new HashMap();
         int numberOfLinesRead = 0;
         BufferedReader bufferedReader = null;

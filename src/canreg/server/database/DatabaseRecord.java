@@ -24,7 +24,7 @@ public class DatabaseRecord implements Serializable {
      * @param value
      */
     public void setVariable(String variableName, Object value){
-        variables.put(variableName.toLowerCase(), value);
+        variables.put(canreg.common.Tools.toLowerCaseStandardized(variableName), value);
     }
     
     /**
@@ -33,7 +33,7 @@ public class DatabaseRecord implements Serializable {
      * @return
      */
     public Object getVariable(String variableName){
-        return variables.get(variableName.toLowerCase());
+        return variables.get(canreg.common.Tools.toLowerCaseStandardized(variableName));
     }
 
     /**

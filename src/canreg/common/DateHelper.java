@@ -142,7 +142,7 @@ public class DateHelper {
         String returnString = "";
 
         // Case insensitive
-        filter = filter.toLowerCase();
+        filter = canreg.common.Tools.toLowerCaseStandardized(filter);
 
         for (int i = 0; i < string.length() && i < filter.length(); i++) {
             if (filter.charAt(i) == lookFor) {
@@ -167,7 +167,7 @@ public class DateHelper {
     private static String setPartOfStringBasedOnFilter(String string, String filter, char lookFor, String replacementString) {
         // Case insensitive
         String newString = "";
-        filter = filter.toLowerCase();
+        filter = canreg.common.Tools.toLowerCaseStandardized(filter);
         int placeInReplacementString = 0;
         for (int i = 0; i < string.length() && i < filter.length(); i++) {
             if (filter.charAt(filter.length() - 1 - i) == lookFor) {
