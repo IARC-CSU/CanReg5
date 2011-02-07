@@ -6,7 +6,6 @@
 package canreg.client.gui.components;
 
 import canreg.client.CanRegClientApp;
-import canreg.client.dataentry.DictionaryHelper;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.dataentry.RecordEditorPanel;
 import canreg.client.gui.tools.MaxLengthDocument;
@@ -21,8 +20,6 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -243,7 +240,11 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         } else {
             String oldValue = getValue().toString();
             DictionaryEntry oldSelection = possibleValuesMap.get(oldValue);
-            dictionaryElementChooser = new DictionaryElementChooser(this);
+            if (dictionaryElementChooser==null){
+                dictionaryElementChooser = new DictionaryElementChooser(this);
+            } else {
+                dictionaryElementChooser.setFirstPass();
+            }
             dictionaryElementChooser.setDictionary(dictionary);
             dictionaryElementChooser.setSelectedElement(oldSelection);
 

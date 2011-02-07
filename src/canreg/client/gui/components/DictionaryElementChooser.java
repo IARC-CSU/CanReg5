@@ -64,6 +64,10 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
         }
     }
 
+    public void setFirstPass(){
+        firstPass = true;
+    }
+
     public void setDictionary(Dictionary dictionary) {
         DictionaryEntry selected = (DictionaryEntry) jList1.getSelectedValue();
         this.dictionary = dictionary;
