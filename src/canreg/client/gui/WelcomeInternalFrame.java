@@ -5,6 +5,7 @@
  */
 package canreg.client.gui;
 
+import canreg.client.CanRegClientApp;
 import canreg.client.gui.management.InstallNewSystemInternalFrame;
 import canreg.common.Globals;
 import java.io.IOException;
@@ -13,6 +14,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
 
@@ -22,13 +25,15 @@ import org.jdesktop.application.FrameView;
  */
 public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
 
-    FrameView fv;
-    Properties appInfoProperties;
+    private FrameView fv;
+    private Properties appInfoProperties;
+    private JDialog aboutBox;
 
     /** Creates new form WelcomeInternalFrame
      * @param fv 
      */
     public WelcomeInternalFrame(FrameView fv) {
+
         this.fv = fv;
         appInfoProperties = new Properties();
         InputStream in = null;
@@ -72,6 +77,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         loginButton = new javax.swing.JButton();
         restoreBackupButton = new javax.swing.JButton();
         versionLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         setClosable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(WelcomeInternalFrame.class);
@@ -141,14 +147,23 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(buttonPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(restoreBackupButton, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                .addComponent(restoreBackupButton, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         versionLabel.setText(resourceMap.getString("versionLabel.text")); // NOI18N
         versionLabel.setName("versionLabel"); // NOI18N
+
+        jLabel1.setForeground(resourceMap.getColor("jLabel1.foreground")); // NOI18N
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -158,9 +173,12 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(versionLabel)
-                            .addComponent(aboutScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(aboutScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(mainPanelLayout.createSequentialGroup()
+                                .addComponent(versionLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel1)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -178,9 +196,11 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(logoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                        .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(versionLabel)))
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(versionLabel)
+                            .addComponent(jLabel1))))
                 .addContainerGap())
         );
 
@@ -203,20 +223,27 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         this.toFront();
     }//GEN-LAST:event_formFocusLost
 
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+        // TODO add your handling code here:
+        if (aboutBox == null) {
+            JFrame mainFrame = CanRegClientApp.getApplication().getMainFrame();
+            aboutBox = new CanRegClientAboutBox(mainFrame);
+            aboutBox.setLocationRelativeTo(mainFrame);
+        }
+        CanRegClientApp.getApplication().show(aboutBox);
+    }//GEN-LAST:event_jLabel1MouseClicked
+
     /**
      * 
      */
     @Action
     public void showLoginFrame() {
-
         this.dispose();
         LoginInternalFrame loginInternalFrame = new LoginInternalFrame(fv, desktopPane);
         desktopPane.add(loginInternalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
         //JFrame mainFrame = CanRegClientApp.getApplication().getMainFrame();
         loginInternalFrame.setLocation(desktopPane.getWidth() / 2 - loginInternalFrame.getWidth() / 2, desktopPane.getHeight() / 2 - loginInternalFrame.getHeight() / 2);
-
         loginInternalFrame.setVisible(true);
-
     }
 
     /**
@@ -242,6 +269,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JEditorPane aboutEditorPane;
     private javax.swing.JScrollPane aboutScrollPane;
     private javax.swing.JPanel buttonPanel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JButton loginButton;
     private javax.swing.JButton logoButton;
     private javax.swing.JPanel mainPanel;
