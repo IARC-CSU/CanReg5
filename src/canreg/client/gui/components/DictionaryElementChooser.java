@@ -5,6 +5,13 @@
  */
 package canreg.client.gui.components;
 
+import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.FilterList;
+import ca.odell.glazedlists.SortedList;
+import ca.odell.glazedlists.matchers.MatcherEditor;
+import ca.odell.glazedlists.swing.EventListModel;
+import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 import canreg.client.dataentry.DictionaryHelper;
 import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
@@ -12,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
 import org.jdesktop.application.Action;
 
@@ -78,7 +86,7 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
                     Arrays.asList(
                     DictionaryHelper.getDictionaryEntriesStartingWith(
                     value, dictionary.getDictionaryEntries().values().toArray(new DictionaryEntry[0]))));
-            if (selected != null && oldElement!=null
+            if (selected != null && oldElement != null
                     && oldElement.getCode().startsWith(selected.getCode())) {
                 selected = oldElement;
             }
@@ -86,7 +94,13 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
             possibleValuesCollection.addAll(dictionary.getDictionaryEntries().values());
             selected = oldElement;
         }
-        jList1.setListData(possibleValuesCollection.toArray());
+
+        EventList<DictionaryEntry> possibleValuesEventList = new BasicEventList<DictionaryEntry>();
+        possibleValuesEventList.addAll(possibleValuesCollection);
+        MatcherEditor<DictionaryEntry> textMatcherEditor = new TextComponentMatcherEditor<DictionaryEntry>(filterEdit, new DictionaryElementTextFilterator());
+        FilterList<DictionaryEntry> textFilteredDictioaryEntries = new FilterList<DictionaryEntry>(possibleValuesEventList, textMatcherEditor);
+        EventListModel<DictionaryEntry> eventListModel = new EventListModel<DictionaryEntry>(textFilteredDictioaryEntries);
+        jList1.setModel(eventListModel);
         jList1.setSelectedValue(selected, true);
     }
 
@@ -104,6 +118,8 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        filterEdit = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
         jButton1 = new javax.swing.JButton();
@@ -122,27 +138,39 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
         jButton4.setAction(actionMap.get("sortByCodeSelected")); // NOI18N
         jButton4.setName("jButton4"); // NOI18N
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
+
+        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
+        jLabel2.setName("jLabel2"); // NOI18N
+
+        filterEdit.setText(resourceMap.getString("filterEdit.text")); // NOI18N
+        filterEdit.setName("filterEdit"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3))
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(filterEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jButton3)
+                .addComponent(jLabel1)
                 .addComponent(jButton4)
-                .addComponent(jLabel1))
+                .addComponent(jButton3)
+                .addComponent(jLabel2)
+                .addComponent(filterEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
@@ -174,13 +202,13 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(215, Short.MAX_VALUE)
+                        .addContainerGap(217, Short.MAX_VALUE)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -248,11 +276,13 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JTextField filterEdit;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
