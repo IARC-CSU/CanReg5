@@ -5,7 +5,9 @@
  */
 package canreg.client.gui.components;
 
+import canreg.client.CanRegClientApp;
 import canreg.client.dataentry.DictionaryHelper;
+import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.dataentry.RecordEditorPanel;
 import canreg.client.gui.tools.MaxLengthDocument;
 import canreg.common.DatabaseVariablesListElement;
@@ -59,6 +61,7 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
     private boolean hasChanged = false;
     protected ActionListener listener;
     public static String CHANGED_STRING = "Changed";
+    DictionaryElementChooser dictionaryElementChooser;
 
     /** Creates new form VariableEditorPanel */
     public VariableEditorPanel(ActionListener listener) {
@@ -238,72 +241,15 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         if (possibleValuesMap == null) {
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Empty_dictionary."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Warning"), JOptionPane.WARNING_MESSAGE);
         } else {
-            DictionaryEntry[] possibleValuesArray;
-
-            LinkedList<DictionaryEntry> possibleValuesVector = new LinkedList<DictionaryEntry>();
-            LinkedList<DictionaryEntry> allValuesVector = new LinkedList<DictionaryEntry>();
-
-            Iterator<String> it = possibleValuesMap.keySet().iterator();
-            DictionaryEntry tempentry;
-            int firstLevelLength = -1;
-
-            while (it.hasNext()) {
-                tempentry = possibleValuesMap.get(it.next());
-
-                allValuesVector.add(tempentry);
-
-                if (dictionary.isCompoundDictionary()) {
-                    if (tempentry.getCode().length() < maxLength) {
-                        possibleValuesVector.add(tempentry);
-                        firstLevelLength = tempentry.getCode().length();
-                    }
-                } else {
-                    possibleValuesVector.add(tempentry);
-                }
-            }
-            possibleValuesArray = possibleValuesVector.toArray(new DictionaryEntry[0]);
-
             String oldValue = getValue().toString();
             DictionaryEntry oldSelection = possibleValuesMap.get(oldValue);
-            DictionaryEntry defaultSelection = possibleValuesArray[0];
-            if (oldSelection != null) {
-                if (dictionary.isCompoundDictionary()) {
-                    defaultSelection = possibleValuesMap.get(oldValue.substring(0, firstLevelLength));
-                } else {
-                    defaultSelection = oldSelection;
-                }
-            }
+            dictionaryElementChooser = new DictionaryElementChooser(this);
+            dictionaryElementChooser.setDictionary(dictionary);
+            dictionaryElementChooser.setSelectedElement(oldSelection);
 
-            // todo: implement sort by code or label
-
-            DictionaryEntry selectedValue = (DictionaryEntry) JOptionPane.showInternalInputDialog(this,
-                    java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Choose_one"), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Input"),
-                    JOptionPane.INFORMATION_MESSAGE, null,
-                    possibleValuesArray, defaultSelection);
-
-            if (selectedValue != null) {
-                String value = selectedValue.getCode();
-                while (dictionary.isCompoundDictionary() && value.length() < maxLength) {
-                    possibleValuesArray = DictionaryHelper.getDictionaryEntriesStartingWith(value, allValuesVector.toArray(new DictionaryEntry[0]));
-                    if (possibleValuesArray.length > 0) {
-                        oldSelection = possibleValuesMap.get(oldValue);
-                        if (oldSelection != null) {
-                            defaultSelection = oldSelection;
-                        } else {
-                            defaultSelection = possibleValuesArray[0];
-                        }
-                        selectedValue = (DictionaryEntry) JOptionPane.showInternalInputDialog(this,
-                                java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Choose_one"), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Input"),
-                                JOptionPane.INFORMATION_MESSAGE, null,
-                                possibleValuesArray, defaultSelection);
-                        value = selectedValue.getCode();
-                    } else {
-                        value = value + "9";
-                    }
-                }
-                setValue(value);
-                descriptionTextField.setText(selectedValue.getDescription());
-            }
+            CanRegClientView.showAndPositionInternalFrame(
+                    CanRegClientApp.getApplication().getDesktopPane(),
+                    dictionaryElementChooser);
         }
     } else {
         // Do nothing
@@ -552,6 +498,15 @@ private void codeTextFieldActionPerformed1(java.awt.event.ActionEvent evt) {//GE
                 }
             } catch (NullPointerException ne) {
                 // descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
+            }
+            updateFilledInStatusColor();
+        }
+        if (e.getActionCommand().equalsIgnoreCase(DictionaryElementChooser.OK_ACTION)) {
+            codeTextField.setText(dictionaryElementChooser.getSelectedElement().getCode());
+            try {
+                lookUpAndSetDescription();
+            } catch (NullPointerException ne) {
+                descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
             }
             updateFilledInStatusColor();
         }

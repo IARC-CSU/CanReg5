@@ -5,9 +5,14 @@
  */
 package canreg.client.gui.components;
 
-import canreg.common.DatabaseDictionaryListElement;
+import canreg.client.dataentry.DictionaryHelper;
+import canreg.server.database.Dictionary;
+import canreg.server.database.DictionaryEntry;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.TreeSet;
 import org.jdesktop.application.Action;
 
 /**
@@ -17,30 +22,72 @@ import org.jdesktop.application.Action;
 public class DictionaryElementChooser extends javax.swing.JInternalFrame {
 
     private ActionListener listener;
+    protected Dictionary dictionary = null;
+    boolean firstPass = true;
+    private DictionaryEntry oldElement;
+    public static String OK_ACTION = "DICTIONARY_CHOSEN";
 
     /** Creates new form DictionaryElementChooser */
-    public DictionaryElementChooser() {
+    public DictionaryElementChooser(ActionListener listener) {
+        this.listener = listener;
         initComponents();
-    }
-
-    public void setList(DatabaseDictionaryListElement[] list){
-
     }
 
     public void setActionListener(ActionListener listener) {
         this.listener = listener;
     }
 
-    public DatabaseDictionaryListElement getSelectedElement() {
+    public DictionaryEntry getSelectedElement() {
         if (jList1.getSelectedValue() != null) {
-            return (DatabaseDictionaryListElement) jList1.getSelectedValue();
+            return (DictionaryEntry) jList1.getSelectedValue();
         } else {
             return null;
         }
     }
 
-    public void setSelectedElement(DatabaseDictionaryListElement ddle) {
-        jList1.setSelectedValue(ddle, true);
+    public void setSelectedElement(DictionaryEntry ddle) {
+        oldElement = ddle;
+        if (ddle != null && dictionary.isCompoundDictionary() && firstPass) {
+            jList1.setSelectedValue(
+                    dictionary.getDictionaryEntries().
+                    get(ddle.getCode().substring(0, dictionary.getCodeLength())), true);
+        } else {
+            jList1.setSelectedValue(ddle, true);
+        }
+    }
+
+    public void setDictionary(Dictionary dictionary) {
+        DictionaryEntry selected = (DictionaryEntry) jList1.getSelectedValue();
+        this.dictionary = dictionary;
+        setTitle(dictionary.getName());
+        DictionaryEntry tempentry;
+        TreeSet<DictionaryEntry> possibleValuesCollection = new TreeSet<DictionaryEntry>();
+        // todo: populate list with possible values
+        if (dictionary.isCompoundDictionary() && firstPass) {
+            possibleValuesCollection = new TreeSet<DictionaryEntry>();
+            Iterator<String> it = dictionary.getDictionaryEntries().keySet().iterator();
+            while (it.hasNext()) {
+                tempentry = dictionary.getDictionaryEntries().get(it.next());
+                if (tempentry.getCode().length() < dictionary.getFullDictionaryCodeLength()) {
+                    possibleValuesCollection.add(tempentry);
+                }
+            }
+        } else if (dictionary.isCompoundDictionary() && !firstPass) {
+            String value = getSelectedElement().getCode();
+            possibleValuesCollection.addAll(
+                    Arrays.asList(
+                    DictionaryHelper.getDictionaryEntriesStartingWith(
+                    value, dictionary.getDictionaryEntries().values().toArray(new DictionaryEntry[0]))));
+            if (selected != null && oldElement!=null
+                    && oldElement.getCode().startsWith(selected.getCode())) {
+                selected = oldElement;
+            }
+        } else {
+            possibleValuesCollection.addAll(dictionary.getDictionaryEntries().values());
+            selected = oldElement;
+        }
+        jList1.setListData(possibleValuesCollection.toArray());
+        jList1.setSelectedValue(selected, true);
     }
 
     /** This method is called from within the constructor to
@@ -54,46 +101,49 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
-        jRadioButtonCode = new javax.swing.JRadioButton();
-        jRadioButtonLabel = new javax.swing.JRadioButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(DictionaryElementChooser.class);
+        setTitle(resourceMap.getString("Form.title")); // NOI18N
         setName("Form"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(DictionaryElementChooser.class);
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
         jPanel1.setName("jPanel1"); // NOI18N
 
-        jRadioButtonCode.setSelected(true);
-        jRadioButtonCode.setText(resourceMap.getString("jRadioButtonCode.text")); // NOI18N
-        jRadioButtonCode.setName("jRadioButtonCode"); // NOI18N
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(DictionaryElementChooser.class, this);
+        jButton3.setAction(actionMap.get("sortByDescriptionSelected")); // NOI18N
+        jButton3.setName("jButton3"); // NOI18N
 
-        jRadioButtonLabel.setText(resourceMap.getString("jRadioButtonLabel.text")); // NOI18N
-        jRadioButtonLabel.setName("jRadioButtonLabel"); // NOI18N
+        jButton4.setAction(actionMap.get("sortByCodeSelected")); // NOI18N
+        jButton4.setName("jButton4"); // NOI18N
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jRadioButtonLabel)
-                    .addComponent(jRadioButtonCode))
-                .addContainerGap(288, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jRadioButtonCode)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jRadioButtonLabel))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jButton3)
+                .addComponent(jButton4)
+                .addComponent(jLabel1))
         );
-
-        buttonGroup1.add(jRadioButtonCode);
-        buttonGroup1.add(jRadioButtonLabel);
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
@@ -103,9 +153,13 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
             public Object getElementAt(int i) { return strings[i]; }
         });
         jList1.setName("jList1"); // NOI18N
+        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jList1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jList1);
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(DictionaryElementChooser.class, this);
         jButton1.setAction(actionMap.get("okAction")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
@@ -117,14 +171,16 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(215, Short.MAX_VALUE)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                        .addComponent(jButton1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -133,7 +189,7 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -144,26 +200,61 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
+        // TODO add your handling code here:
+        if (evt.getClickCount() == 2) {
+            okAction();
+        }
+    }//GEN-LAST:event_jList1MouseClicked
+
     @Action
     public void okAction() {
-        //send ok
-        listener.actionPerformed(new ActionEvent(this, 0, "OK"));
-        //then dispose
-        this.dispose();
+        // TODO: check compound
+        String value = getSelectedElement().getCode();
+        // if compoud change list and redo once
+        if (dictionary.isCompoundDictionary() && value.length() < dictionary.getFullDictionaryCodeLength()) {
+            // change the list
+            firstPass = false;
+            setDictionary(dictionary);
+        } else {
+            //send ok
+            listener.actionPerformed(new ActionEvent(this, 0, OK_ACTION));
+            //then dispose
+            firstPass = true;
+            this.dispose();
+        }
     }
 
     @Action
     public void cancelAction() {
+        firstPass = true;
         this.dispose();
+    }
+
+    @Action
+    public void sortByCodeSelected() {
+        for (DictionaryEntry de : dictionary.getDictionaryEntries().values()) {
+            de.setSortByCode();
+        }
+        setDictionary(dictionary);
+    }
+
+    @Action
+    public void sortByDescriptionSelected() {
+        for (DictionaryEntry de : dictionary.getDictionaryEntries().values()) {
+            de.setSortByDescription();
+        }
+        setDictionary(dictionary);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JRadioButton jRadioButtonCode;
-    private javax.swing.JRadioButton jRadioButtonLabel;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
