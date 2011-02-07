@@ -678,6 +678,10 @@ public final class CanRegClientView extends FrameView {
         internalFrame.setBounds(leftX, topY, width, height);
     }
 
+    public JDesktopPane getDesktopPane() {
+        return desktopPane;
+    }
+
     private class OpenICDO3ManualTask extends org.jdesktop.application.Task<Object, Void> {
 
         OpenICDO3ManualTask(org.jdesktop.application.Application app) {

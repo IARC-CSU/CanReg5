@@ -58,6 +58,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
+import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -1083,6 +1084,10 @@ public class CanRegClientApp extends SingleFrameApplication {
             numberOfRecords += lockSet.size();
         }
         return numberOfRecords;
+    }
+
+    public JDesktopPane getDesktopPane(){
+        return canRegClientView.getDesktopPane();
     }
 
     private synchronized void releaseAllRecordsHeldByThisClient() {
