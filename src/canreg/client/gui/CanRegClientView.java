@@ -1120,6 +1120,7 @@ public final class CanRegClientView extends FrameView {
         internalFrame.setLocation(posX, posY);
         //CanRegClientApp.getApplication().getMainFrame();
         internalFrame.setVisible(true);
+        internalFrame.toFront();
     }
 
     /**
