@@ -119,15 +119,14 @@
                         <Property name="name" type="java.lang.String" value="jSeparator15" noResource="true"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JButton" name="helpButton">
+                    <Component class="javax.swing.JButton" name="jButton1">
                       <Properties>
                         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                          <action class="canreg.client.gui.CanRegClientView" id="showCanRegHelpFile" methodName="showCanRegHelpFile"/>
+                          <action class="canreg.client.gui.CanRegClientView" id="openCanReg5Instructions" methodName="openCanReg5Instructions"/>
                         </Property>
-                        <Property name="toolTipText" type="java.lang.String" resourceKey="helpButton.toolTipText"/>
                         <Property name="focusable" type="boolean" value="false"/>
                         <Property name="horizontalTextPosition" type="int" value="0"/>
-                        <Property name="name" type="java.lang.String" value="helpButton" noResource="true"/>
+                        <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
                         <Property name="verticalTextPosition" type="int" value="3"/>
                       </Properties>
                     </Component>
@@ -485,7 +484,6 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="helpMenu">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="helpMenu.text"/>
             <Property name="name" type="java.lang.String" value="helpMenu" noResource="true"/>
           </Properties>
           <AuxValues>

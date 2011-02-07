@@ -192,7 +192,7 @@ public final class CanRegClientView extends FrameView {
         jSeparator13 = new javax.swing.JToolBar.Separator();
         optionsButton = new javax.swing.JButton();
         jSeparator15 = new javax.swing.JToolBar.Separator();
-        helpButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         logInMenuItem = new javax.swing.JMenuItem();
@@ -314,13 +314,12 @@ public final class CanRegClientView extends FrameView {
         jSeparator15.setName("jSeparator15"); // NOI18N
         toolBar.add(jSeparator15);
 
-        helpButton.setAction(actionMap.get("showCanRegHelpFile")); // NOI18N
-        helpButton.setToolTipText(resourceMap.getString("helpButton.toolTipText")); // NOI18N
-        helpButton.setFocusable(false);
-        helpButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        helpButton.setName("helpButton"); // NOI18N
-        helpButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(helpButton);
+        jButton1.setAction(actionMap.get("openCanReg5Instructions")); // NOI18N
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setName("jButton1"); // NOI18N
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(jButton1);
 
         toolBar.setBounds(0, 0, 800, -1);
         desktopPane.add(toolBar, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -527,7 +526,6 @@ public final class CanRegClientView extends FrameView {
 
         menuBar.add(toolsMenu);
 
-        helpMenu.setText(resourceMap.getString("helpMenu.text")); // NOI18N
         helpMenu.setName("helpMenu"); // NOI18N
 
         canReg5HelpMenuItem.setAction(actionMap.get("showCanRegHelpFile")); // NOI18N
@@ -1446,11 +1444,11 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem exportDataReportsMenuItem;
     private javax.swing.JMenuItem frequenciesMenuItem;
     private javax.swing.JMenuItem garbleDatabaseMenuItem;
-    private javax.swing.JButton helpButton;
     private javax.swing.JMenuItem iacrWebsiteMenuItem;
     private javax.swing.JMenuItem icdo3DocumentationWebsiteMenuItem;
     private javax.swing.JMenuItem importDataMenuItem;
     private javax.swing.JMenuItem incidenceTablesMenuItem;
+    private javax.swing.JButton jButton1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
