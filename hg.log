@@ -1,5 +1,235 @@
-changeset:   535:cf806feeef22
+changeset:   581:a2b93a650777
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Feb 01 18:10:14 2011 +0100
+summary:     Fixed a bug where the compound dictionaries did not detect faulty (truncated) codes.
+
+changeset:   580:8bb08203c9fd
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Feb 01 18:09:14 2011 +0100
+summary:     Turkish bug fixed?
+
+changeset:   579:bdf3d06bb417
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Feb 01 18:08:42 2011 +0100
+summary:     Default upper case locale set to ENGLISH.
+
+changeset:   578:bf622ef2e613
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Feb 01 17:12:40 2011 +0100
+summary:     Turkish bug fixed? Changed all calls to toUpperCase to a standardized static toUpperCaseStandardize in the Tool class.
+
+changeset:   577:dcde1d685724
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 17:49:18 2011 +0100
+summary:     Performance improvements and code tidying.
+
+changeset:   576:01f65cda6ca4
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 15:38:53 2011 +0100
+summary:     Performance improvements.
+
+changeset:   575:edc76500c485
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 15:34:49 2011 +0100
+summary:     Improved the layout of the ExportFrame.
+
+changeset:   574:9c2a5ced6ac9
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 15:05:18 2011 +0100
+summary:     DictionaryImporter: Fixed a bug that added a space to the label of dictioanries imported from CR4.
+
+changeset:   573:0ad0619bdf24
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 14:02:49 2011 +0100
+summary:     Tidied code. Performance improvements.
+
+changeset:   572:c6de198b453c
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 14:02:06 2011 +0100
+summary:     Tidied code. Performance improvements. Added override annotations.
+
+changeset:   571:c399d0fae1fb
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 13:53:35 2011 +0100
+summary:     Renamed DatabaseVariablesEditorPanel for consitency.
+
+changeset:   570:5cb430655a83
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 13:52:57 2011 +0100
+summary:     GUI for the Index-editor implemented. Fixed an update-bug in the database structure editor. Tidied code.
+
+changeset:   569:3725e6e59422
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 13:49:37 2011 +0100
+summary:     GUI for the Index-editor implemented.
+
+changeset:   568:313f3b500c69
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 13:49:21 2011 +0100
+summary:     Renamed DatabaseVariablesEditorPanel for consitency.
+
+changeset:   567:2ce50917e84b
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 13:48:59 2011 +0100
+summary:     Renamed DatabaseVariablesEditorPanel for consitency.
+
+changeset:   566:088685fc3c7f
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 13:46:28 2011 +0100
+summary:     Made DatabaseVariablesListException final
+
+changeset:   565:fbf290ba015a
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 13:46:00 2011 +0100
+summary:     GUI for the Index-editor implemented.
+
+changeset:   564:63dec5090124
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 13:41:16 2011 +0100
+summary:     Group name now shows up in group editor. Tidied code.
+
+changeset:   563:ce0a82028045
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 12:18:28 2011 +0100
+summary:     Tools: Performance fixes and tidied some code.
+
+changeset:   562:710b9f06c75e
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 12:17:31 2011 +0100
+summary:     RecordEditor: Tidied some code.
+
+changeset:   561:75ec04a30d5a
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 12:17:16 2011 +0100
+summary:     LoginFrame: Tidied some code.
+
+changeset:   560:f35d9827efc1
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 12:15:56 2011 +0100
+summary:     Test: Tidied some code.
+
+changeset:   559:61c27828318d
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jan 28 12:15:34 2011 +0100
+summary:     Import: performance fixes and tidied some code.
+
+changeset:   558:5b5b69af981c
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Jan 27 17:34:22 2011 +0100
+summary:     Fixed some potential null-pointer errors.
+
+changeset:   557:59e62d6e7a90
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Jan 27 17:34:01 2011 +0100
+summary:     Added an easy access list of tables.
+
+changeset:   556:0aef6009ab58
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Jan 27 17:02:53 2011 +0100
+summary:     Added override annotations.
+
+changeset:   555:24e89cead249
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Jan 27 11:20:09 2011 +0100
+summary:     Updated the welcome frame.
+
+changeset:   554:880e82d4acb5
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Jan 26 16:47:05 2011 +0100
+summary:     Updated the about box. Added GLP license document.
+
+changeset:   553:3199d8edc315
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Jan 26 16:46:04 2011 +0100
+summary:     Added links to news items in the "latest news" browser.
+
+changeset:   552:74e469f203a6
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Jan 25 18:03:47 2011 +0100
+summary:     Fixed a bug in the conversion from ICD O 3 to ICD10 where no ICD10 would be generated for some rare morphologies.
+
+changeset:   551:590e59737187
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Jan 25 17:55:13 2011 +0100
+summary:     Fixed a bug in the conversion from ICD O 3 to ICD10 where no ICD10 would be generated for some rare morphologies.
+
+changeset:   550:46fc075a6f07
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Jan 25 17:48:35 2011 +0100
+summary:     Fixed a bug in the conversion from ICD O 3 to ICD10 where no ICD10 would be generated for some rare morphologies.
+
+changeset:   549:9d2861391e02
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Jan 25 15:30:29 2011 +0100
+summary:     No longer displays patient record numbers but patent ids as results of the person search.
+
+changeset:   548:891e9b4aa18e
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Jan 25 15:30:12 2011 +0100
+summary:     Implemented the GUI to let the user select types of algorithms for each variable in the person search, like alpha, number and date as well as soundex.
+
+changeset:   547:0634e99b9922
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Jan 25 15:29:03 2011 +0100
+summary:     Improved the database structure editor.
+
+changeset:   546:5380b42726f3
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Jan 25 15:28:30 2011 +0100
+summary:     Implemented user selectable types of algorithms for each variable in the person search, like alpha, number and date as well as soundex.
+
+changeset:   545:89efdd7d19fa
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Jan 25 15:26:56 2011 +0100
+summary:     Implemented a better way to store the person searcher in an XML.
+
+changeset:   544:4a385a7f6b6b
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Jan 19 14:40:59 2011 +0100
+summary:     Updated the about.html.
+
+changeset:   543:1d352f227226
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Jan 19 14:40:26 2011 +0100
+summary:     Latest News: Added OK button.
+
+changeset:   542:9bb890de4486
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Jan 19 14:40:16 2011 +0100
+summary:     Latest News: Added OK button.
+
+changeset:   541:7e2d7218361b
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Jan 19 10:37:31 2011 +0100
+summary:     Latest News menu option: Added functionality to read the CanReg Twitter/RSS feed directly from the program.
+
+changeset:   540:577f27fa9a01
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Jan 13 17:57:58 2011 +0100
+summary:     Check to see if a standard variable is already mappe to a variable in the database during system setup/tailoring.
+
+changeset:   539:7725d5d60203
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Jan 13 17:57:37 2011 +0100
+summary:     Check to see if a standard variable is already mappe to a variable in the database during system setup/tailoring.
+
+changeset:   538:0c26c29d8a48
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Jan 13 17:56:05 2011 +0100
+summary:     Check to see if a standard variable is already mappe to a variable in the database during system setup/tailoring.
+
+changeset:   537:f792b16bd7c5
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Jan 13 11:46:47 2011 +0100
+summary:     Improved the GUI of the database variable editor screen.
+
+changeset:   536:85744985625d
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Jan 05 14:32:10 2011 +0100
+summary:     5.00.02
+
+changeset:   535:cf806feeef22
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Wed Jan 05 11:48:57 2011 +0100
 summary:     CanReg5 instructions. Updated FAQ.

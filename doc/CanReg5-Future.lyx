@@ -1,4 +1,4 @@
-#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.8 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -144,9 +144,22 @@ Analysis related
 
 \begin_layout Itemize
 Implement all the analysis tables proposed.
- (And others?)
+ 
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Others:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Table of rates by year with the same groups as the curernt incidence table?
+ (DF)
+\end_layout
+
+\end_deeper
+\end_deeper
 \begin_layout Itemize
 Write Frequencies by year tables to file
 \end_layout
@@ -161,7 +174,7 @@ Quality control
 \end_layout
 
 \begin_layout Itemize
-First name sex properly implemented
+First name sex improved
 \end_layout
 
 \begin_layout Itemize
@@ -185,14 +198,13 @@ compare
 Highlight differences between records
 \end_layout
 
+\begin_layout Itemize
+Accept all (without looking) after a search run?
+\end_layout
+
 \end_deeper
 \begin_layout Itemize
 Optimize code.
- 
-\end_layout
-
-\begin_layout Itemize
-Implement Soundex.
 \end_layout
 
 \begin_layout Section*
@@ -203,16 +215,38 @@ Management related
 Streamline the restore from backup-function on a new install.
 \end_layout
 
+\begin_layout Itemize
+Better detection of missing mandatory variables
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Database workings
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Source ID etc
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Registry workings
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Topo, Morpho, Address etc.
+\end_layout
+
+\end_deeper
+\end_deeper
 \begin_layout Section*
 Pending bugs
 \end_layout
 
 \begin_layout Itemize
 Bug that drops the result set being browsed.
-\end_layout
-
-\begin_layout Itemize
-Turkish character set bug.
 \end_layout
 
 \begin_layout Part*
@@ -224,6 +258,10 @@ Proposals for CanReg 5.2
 
 \begin_layout Section*
 General
+\end_layout
+
+\begin_layout Itemize
+Improved printing functionality.
 \end_layout
 
 \begin_layout Itemize
@@ -248,6 +286,10 @@ Person Search Status.
 \end_layout
 
 \end_deeper
+\begin_layout Itemize
+The possibility to select premade dictionaries during set up?
+\end_layout
+
 \begin_layout Section*
 Data Entry related
 \end_layout
@@ -270,6 +312,10 @@ Other? Chinese?
 Improve workflow during data entry.
 \end_layout
 
+\begin_layout Itemize
+Import excel files using http://jexcelapi.sourceforge.net/
+\end_layout
+
 \begin_layout Section*
 Database related
 \end_layout
@@ -286,6 +332,28 @@ Analysis related
 Use of mortality data in analysis
 \end_layout
 
+\begin_layout Itemize
+Export excel files using http://jexcelapi.sourceforge.net/
+\end_layout
+
+\begin_layout Itemize
+Export to EpiInfo? What version?
+\end_layout
+
+\begin_layout Itemize
+Export as html with help of graph libraries?
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+http://cyberpython.github.com/AwesomeChartJS/
+\end_layout
+
+\begin_layout Itemize
+http://code.google.com/p/flot/
+\end_layout
+
+\end_deeper
 \begin_layout Section*
 Management related
 \end_layout
@@ -313,6 +381,23 @@ Streamline the setup of new systems
 New system wizard
 \end_layout
 
+\end_deeper
+\begin_layout Itemize
+Implement other algorithms for names sounding alike during person search
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Double Metaphone (http://commons.apache.org/codec/apidocs/org/apache/commons/codec
+/language/DoubleMetaphone.html)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Limitations: only A-Z
+\end_layout
+
+\end_deeper
 \end_deeper
 \end_body
 \end_document

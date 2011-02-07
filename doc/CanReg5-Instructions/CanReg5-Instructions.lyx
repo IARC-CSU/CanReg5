@@ -1,4 +1,4 @@
-#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.8 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -114,9 +114,23 @@ today
 \end_layout
 
 \begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset CommandInset toc
 LatexCommand tableofcontents
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
 \end_inset
 
 
@@ -575,7 +589,7 @@ Example log-file:
 \end_layout
 
 \begin_layout Section
-Installing and running CanReg 5
+Installing and running CanReg5
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:Installing-and-running"
@@ -609,15 +623,15 @@ Java Runtime Environment
 
 \begin_layout Standard
 \align left
-Install the latest Java Runtime environment (May 2010: Version 6 Update
- 20 ) You can get that from here:
+Install the latest Java Runtime environment (Febraury 2011: Version 6 Update
+ 23 ) You can get that from here:
 \begin_inset CommandInset href
 LatexCommand href
 target "http://java.com/en/download/manual.jsp"
 
 \end_inset
 
-
+(You can safely disable the Yahoo! toolbar that comes with the installation.)
 \end_layout
 
 \begin_layout Subsubsection
@@ -743,7 +757,7 @@ If, at this point, CanReg5 does not start you might have to update your
 
 \begin_layout Standard
 \align left
-CanReg 5 Welcome window:
+CanReg5 Welcome window:
 \end_layout
 
 \begin_layout Standard
@@ -855,7 +869,7 @@ If you have a CanReg4 system you can use tools built into CanReg to help
 
 \begin_layout Standard
 \align left
-First import the variables of CanReg 4 to CanReg 5 - the system definition
+First import the variables of CanReg4 to CanReg5 - the system definition
  of CanReg4.
  
 \end_layout
@@ -903,7 +917,7 @@ Browse
 \begin_inset Quotes erd
 \end_inset
 
- to find your CanReg 4 system definition file.
+ to find your CanReg4 system definition file.
  (This is a file located in the folder 
 \backslash
 
@@ -4381,7 +4395,7 @@ Go to “Tool” in CanReg5 menu and click “Convert system definition”.
 
 \end_deeper
 \begin_layout Enumerate
-Do “Browse” to find your CanReg 4 system definition file.
+Do “Browse” to find your CanReg4 system definition file.
  (This is a file located in the folder 
 \backslash
 CR4SHARE

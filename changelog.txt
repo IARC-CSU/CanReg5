@@ -1,5 +1,59 @@
 Changelog
 
+5.00.03
+
+- Turkish bug fixed. Changed all calls to toUpperCase() to a standardized static toUpperCaseStandardize() located in the Tool class.
+
+- Default upper case locale set to ENGLISH.
+
+- Improved the layout of the ExportFrame.
+
+- DictionaryImporter: Fixed a bug that added a space to the label of dictioanries imported from CR4.
+
+- GUI for the Index-editor implemented. Fixed an update-bug in the database structure editor.
+
+- Group name now shows up in group editor.
+
+- Import: performance fixes and tidied some code.
+
+- Fixed some potential null-pointer errors.
+
+- Added an easy access list of tables.
+
+- Added links to news items in the "latest news" browser.
+
+- Fixed a bug in the conversion from ICD O 3 to ICD10 where no ICD10 would be generated for some rare morphologies.
+
+- No longer displays patient record numbers but patent ids as results of the person search.
+
+- Implemented the GUI to let the user select types of algorithms for each variable in the person search, like alpha, number and date as well as soundex.
+
+- Improved the database structure editor.
+
+- Implemented user selectable types of algorithms for each variable in the person search, like alpha, number and date as well as soundex. This can be stored in the system definition XML file.
+
+- Implemented a better way to store the person searcher in an XML.
+
+- Updated the about.html.
+
+- Latest News menu option: Added functionality to read the CanReg Twitter/RSS feed directly from the program.
+
+- Check to see if a standard variable is already mappe to a variable in the database during system setup/tailoring.
+
+- Improved the GUI of the database variable editor screen.
+
+- Code: Added override annotations.
+
+- Fixed a bug where the compound dictionaries did not detect faulty (truncated) codes.
+
+- Updated the welcome frame.
+
+- Performance improvements.
+
+- Updated the about box.
+
+
+
 5.00.02
 
 - Fixed a bug when the standard variable is a string of 0 lenght.
