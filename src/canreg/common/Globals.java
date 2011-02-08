@@ -82,8 +82,9 @@ public class Globals {
     static final private String CANREG_BACKUP_FOLDER_NAME = "Backup";
     static public String CANREG_PASSWORD_FILE_NAME = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "passwords.properties";
     static public String CANREG_LEVELS_FILE_NAME = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "levels.properties";
-    static public String CANREG_INSTRUCTIONS_URL = "http://www.iacr.com.fr/CanReg5/CanReg5-instructions.pdf";
-    static public String CANREG_INSTRUCTIONS_LOCAL_FILE = CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + "CanReg5-instructions.pdf";
+    static public String CANREG_UPDATED_INSTRUCTIONS_URL = "http://www.iacr.com.fr/CanReg5/CanReg5-instructions.pdf";
+    static public String CANREG_UPDATED_INSTRUCTIONS_LOCAL_FILE = CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + "CanReg5-instructions.pdf";
+    static public String CANREG_INSTRUCTIONS_LOCAL_FILE = "CanReg5-instructions.pdf";
     /**
      * 
      */
@@ -169,7 +170,7 @@ public class Globals {
     public static String LOG_LEVEL = "FINEST";
     public static String DEFAULT_BACK_UP_EVERY = "7";
     public static int GLOBAL_PERSON_SEARCH_STEP_SIZE = 1;
-    public static String CANREG_HELP_FILE_NAME = "CanReg5-functionality.html";
+    // public static String CANREG_HELP_FILE_NAME = "CanReg5-functionality.html";
     public static String RECORD_STATUS_PENDING_CODE = "0";
     public static int UNDUPLICATION_NOT_DONE_CODE = 0;
     public static int MAX_POPULATION_DATASETS_IN_TABLE = 50;

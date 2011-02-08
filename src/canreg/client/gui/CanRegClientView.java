@@ -192,7 +192,7 @@ public final class CanRegClientView extends FrameView {
         jSeparator13 = new javax.swing.JToolBar.Separator();
         optionsButton = new javax.swing.JButton();
         jSeparator15 = new javax.swing.JToolBar.Separator();
-        jButton1 = new javax.swing.JButton();
+        handbookButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         logInMenuItem = new javax.swing.JMenuItem();
@@ -235,10 +235,8 @@ public final class CanRegClientView extends FrameView {
         setUpDatabaseMenuItem = new javax.swing.JMenuItem();
         garbleDatabaseMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
-        canReg5HelpMenuItem = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
-        jSeparator4 = new javax.swing.JPopupMenu.Separator();
         jMenuItem7 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
         linksMenu = new javax.swing.JMenu();
@@ -247,7 +245,6 @@ public final class CanRegClientView extends FrameView {
         jSeparator12 = new javax.swing.JPopupMenu.Separator();
         jMenuItem5 = new javax.swing.JMenuItem();
         icdo3DocumentationWebsiteMenuItem = new javax.swing.JMenuItem();
-        jSeparator2 = new javax.swing.JSeparator();
         jMenuItem8 = new javax.swing.JMenuItem();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
         statusPanel = new javax.swing.JPanel();
@@ -314,12 +311,12 @@ public final class CanRegClientView extends FrameView {
         jSeparator15.setName("jSeparator15"); // NOI18N
         toolBar.add(jSeparator15);
 
-        jButton1.setAction(actionMap.get("openCanReg5Instructions")); // NOI18N
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setName("jButton1"); // NOI18N
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(jButton1);
+        handbookButton.setAction(actionMap.get("openCanReg5Instructions")); // NOI18N
+        handbookButton.setFocusable(false);
+        handbookButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        handbookButton.setName("handbookButton"); // NOI18N
+        handbookButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(handbookButton);
 
         toolBar.setBounds(0, 0, 800, -1);
         desktopPane.add(toolBar, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -526,23 +523,18 @@ public final class CanRegClientView extends FrameView {
 
         menuBar.add(toolsMenu);
 
+        helpMenu.setText(resourceMap.getString("helpMenu.text")); // NOI18N
         helpMenu.setName("helpMenu"); // NOI18N
 
-        canReg5HelpMenuItem.setAction(actionMap.get("showCanRegHelpFile")); // NOI18N
-        canReg5HelpMenuItem.setText(resourceMap.getString("helpMenuItem.text")); // NOI18N
-        canReg5HelpMenuItem.setName("helpMenuItem"); // NOI18N
-        helpMenu.add(canReg5HelpMenuItem);
-
         jMenuItem3.setAction(actionMap.get("openCanReg5Instructions")); // NOI18N
+        jMenuItem3.setText(resourceMap.getString("jMenuItem3.text")); // NOI18N
         jMenuItem3.setName("jMenuItem3"); // NOI18N
         helpMenu.add(jMenuItem3);
 
         jMenuItem4.setAction(actionMap.get("downloadLatestInstructions")); // NOI18N
+        jMenuItem4.setText(resourceMap.getString("jMenuItem4.text")); // NOI18N
         jMenuItem4.setName("jMenuItem4"); // NOI18N
         helpMenu.add(jMenuItem4);
-
-        jSeparator4.setName("jSeparator4"); // NOI18N
-        helpMenu.add(jSeparator4);
 
         jMenuItem7.setAction(actionMap.get("openReportBug")); // NOI18N
         jMenuItem7.setName("jMenuItem7"); // NOI18N
@@ -576,9 +568,6 @@ public final class CanRegClientView extends FrameView {
         linksMenu.add(icdo3DocumentationWebsiteMenuItem);
 
         helpMenu.add(linksMenu);
-
-        jSeparator2.setName("jSeparator2"); // NOI18N
-        helpMenu.add(jSeparator2);
 
         jMenuItem8.setAction(actionMap.get("openLatestNews")); // NOI18N
         jMenuItem8.setText(resourceMap.getString("jMenuItem8.text")); // NOI18N
@@ -990,7 +979,7 @@ public final class CanRegClientView extends FrameView {
     @Action
     public void showCanRegHelpFile() {
         File file = new File("doc");
-        BareBonesBrowserLaunch.openURL("file:" + file.getAbsolutePath() + Globals.FILE_SEPARATOR + Globals.CANREG_HELP_FILE_NAME);
+        BareBonesBrowserLaunch.openURL("file:" + file.getAbsolutePath() + Globals.FILE_SEPARATOR + Globals.CANREG_INSTRUCTIONS_LOCAL_FILE);
     }
 
     /**
@@ -1339,20 +1328,17 @@ public final class CanRegClientView extends FrameView {
 
     @Action
     public void openCanReg5Instructions() {
-        File file = new File(Globals.CANREG_INSTRUCTIONS_LOCAL_FILE);
-        if (!file.exists()) {
-            int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DO YOU WANT TO DOWNLOAD THE LATEST VERSION OF THE HANDBOOK?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("HANDBOOK NOT FOUND"), JOptionPane.YES_NO_OPTION);
-            if (i == JOptionPane.YES_OPTION) {
-                Task task = downloadLatestInstructions();
-                task.run();
-                while (!task.isDone()) {
-                    //wait for the file to be downloaded...
-                }
-                openCanReg5Instructions();
+        // first try to load the updated instructions
+        File file = new File("doc");
+        String docPath = file.getAbsolutePath();
+        String URL = "file:" + docPath + Globals.FILE_SEPARATOR + Globals.CANREG_INSTRUCTIONS_LOCAL_FILE;
+        file = new File(Globals.CANREG_UPDATED_INSTRUCTIONS_LOCAL_FILE);
+        if (file.exists()) {
+            if (file.lastModified() > new File(docPath + Globals.FILE_SEPARATOR + Globals.CANREG_INSTRUCTIONS_LOCAL_FILE).lastModified()) {
+                URL = file.getPath();
             }
-        } else {
-            BareBonesBrowserLaunch.openURL(Globals.CANREG_INSTRUCTIONS_LOCAL_FILE);
         }
+        BareBonesBrowserLaunch.openURL(URL);
     }
 
     @Action
@@ -1377,7 +1363,7 @@ public final class CanRegClientView extends FrameView {
         @Override
         protected Object doInBackground() {
             try {
-                canreg.common.Tools.downloadFile(Globals.CANREG_INSTRUCTIONS_URL, Globals.CANREG_INSTRUCTIONS_LOCAL_FILE);
+                canreg.common.Tools.downloadFile(Globals.CANREG_UPDATED_INSTRUCTIONS_URL, Globals.CANREG_INSTRUCTIONS_LOCAL_FILE);
             } catch (IOException ex) {
                 Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1407,6 +1393,7 @@ public final class CanRegClientView extends FrameView {
     }
 
     private class OpenLatestNewsTask extends org.jdesktop.application.Task<Object, Void> {
+
         OpenLatestNewsTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
@@ -1415,13 +1402,17 @@ public final class CanRegClientView extends FrameView {
             LatestNewsInternalFrame internalFrame = new LatestNewsInternalFrame();
             showAndPositionInternalFrame(desktopPane, internalFrame);
         }
-        @Override protected Object doInBackground() {
+
+        @Override
+        protected Object doInBackground() {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
             return null;  // return your result
         }
-        @Override protected void succeeded(Object result) {
+
+        @Override
+        protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
         }
@@ -1432,7 +1423,6 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem backupMenuItem;
     private javax.swing.JButton browseEditButton;
     private javax.swing.JMenuItem browseEditMenuItem;
-    private javax.swing.JMenuItem canReg5HelpMenuItem;
     private javax.swing.JMenuItem convertCR4SystDefMenuItem;
     private javax.swing.JButton createNewRecordButton;
     private javax.swing.JMenu dataEntryMenu;
@@ -1444,11 +1434,11 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem exportDataReportsMenuItem;
     private javax.swing.JMenuItem frequenciesMenuItem;
     private javax.swing.JMenuItem garbleDatabaseMenuItem;
+    private javax.swing.JButton handbookButton;
     private javax.swing.JMenuItem iacrWebsiteMenuItem;
     private javax.swing.JMenuItem icdo3DocumentationWebsiteMenuItem;
     private javax.swing.JMenuItem importDataMenuItem;
     private javax.swing.JMenuItem incidenceTablesMenuItem;
-    private javax.swing.JButton jButton1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
@@ -1468,9 +1458,7 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JToolBar.Separator jSeparator13;
     private javax.swing.JToolBar.Separator jSeparator14;
     private javax.swing.JToolBar.Separator jSeparator15;
-    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
