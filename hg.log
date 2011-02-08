@@ -1,5 +1,85 @@
-changeset:   581:a2b93a650777
+changeset:   597:6c9345225f1c
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Feb 08 17:42:59 2011 +0100
+summary:     Merged the handbook and the manual into one PDF that can be updated independent of the CanReg releases.
+
+changeset:   596:4960fde3f30a
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Feb 08 17:37:46 2011 +0100
+summary:     Merged the handbook and the manual into one PDF that can be updated independent of the CanReg releases.
+
+changeset:   595:7d1756b2e401
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Feb 07 18:10:52 2011 +0100
+summary:     Replaced link to outdated manual with link to handbook.
+
+changeset:   594:f99c6573f9e3
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Feb 07 17:54:04 2011 +0100
+summary:     The variable editor panel can only have one dictionary element chooser associated.
+
+changeset:   593:78c838fb963b
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Feb 07 17:53:18 2011 +0100
+summary:     Newly added internal frames are put to front.
+
+changeset:   592:aef8ebf5ada9
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Feb 07 17:35:26 2011 +0100
+summary:     Checked in some library jars.
+
+changeset:   591:fdfb921928dc
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Feb 07 17:34:02 2011 +0100
+summary:     Updated some properties files, instructions and future.
+
+changeset:   590:7e046ee90e57
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Feb 07 17:30:44 2011 +0100
+summary:     More info button added to the welcome frame.
+
+changeset:   589:71e4c9b7a5e7
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Feb 07 17:18:27 2011 +0100
+summary:     Updated the about.html.
+
+changeset:   588:abdecea00e57
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Feb 07 17:16:50 2011 +0100
+summary:     Implemented a filter for the dictionary element chooser using the Glazed Lists library http://sites.google.com/site/glazedlists/
+
+changeset:   587:fadf0a136282
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Feb 07 16:27:04 2011 +0100
+summary:     The CanReg application instance can now return the desktop pane.
+
+changeset:   586:eda630cb2b23
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Feb 07 16:26:22 2011 +0100
+summary:     The dictionary chooser put in place. Users can now sort dictionary codes by either description or code.
+
+changeset:   585:5abac5eed5e5
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Feb 07 16:24:48 2011 +0100
+summary:     DictionaryEntry can now be added to a tree to be sorted by either code or description.
+
+changeset:   584:4d62915593bf
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Feb 04 11:11:08 2011 +0100
+summary:     Default lower case locale set to ENGLISH.
+
+changeset:   583:751c9e77a2ea
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Feb 02 17:47:56 2011 +0100
+summary:     Tidied some code.
+
+changeset:   582:cda81e746a82
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Feb 02 17:36:40 2011 +0100
+summary:     Encapsulated some variables and tidied some code.
+
+changeset:   581:a2b93a650777
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Tue Feb 01 18:10:14 2011 +0100
 summary:     Fixed a bug where the compound dictionaries did not detect faulty (truncated) codes.

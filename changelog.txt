@@ -4,9 +4,17 @@ Changelog
 
 - Turkish bug fixed. Changed all calls to toUpperCase() to a standardized static toUpperCaseStandardize() located in the Tool class.
 
-- Default upper case locale set to ENGLISH.
+- Default upper case and lower case locale set to ENGLISH.
+
+- Merged the handbook and the manual into one PDF that can be updated independent of the CanReg releases.
 
 - Improved the layout of the ExportFrame.
+
+- DictionaryEntry can now be added to a tree to be sorted by either code or description.
+
+- The dictionary chooser put in place. Users can now sort dictionary codes by either description or code.
+
+- Implemented a filter for the dictionary element chooser using the Glazed Lists library http://sites.google.com/site/glazedlists/
 
 - DictionaryImporter: Fixed a bug that added a space to the label of dictioanries imported from CR4.
 
@@ -34,7 +42,9 @@ Changelog
 
 - Implemented a better way to store the person searcher in an XML.
 
-- Updated the about.html.
+- Updated the about.html. 
+
+- More info button added to the welcome frame.
 
 - Latest News menu option: Added functionality to read the CanReg Twitter/RSS feed directly from the program.
 

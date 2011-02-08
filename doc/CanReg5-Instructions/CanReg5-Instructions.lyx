@@ -5090,6 +5090,20 @@ Not yet implemented.
  
 \end_layout
 
+\begin_layout Standard
+This option is mainly useful for people working in a network environment.
+\end_layout
+
+\begin_layout Standard
+The "List" button allows you to see what other records are being edited
+ and by whom.
+\end_layout
+
+\begin_layout Standard
+The "Clear" button allows a supervisor to reset this list of users (in case
+ of error, for example if the computer was switched off during data entry)
+\end_layout
+
 \begin_layout Subsubsection
 
 \series bold
@@ -5103,6 +5117,22 @@ User manager
 If you are logged in with Supervisor rights you have access to the User
  manager part of the user manager.
  This allows you to add and delete users.
+ Each user has their own login name, password and permission level.
+\end_layout
+
+\begin_layout Itemize
+A Supervisor can use all options;
+\end_layout
+
+\begin_layout Itemize
+A Registrar can perform most of data entry except to confirm rare cases
+ or possible duplicates.
+ Changing the Dictionary and User Administration are also prohibited.
+\end_layout
+
+\begin_layout Itemize
+An Analyst cannot make any changes to the database.
+ Only browsing or analysis options are available.
 \end_layout
 
 \begin_layout Standard
@@ -5119,8 +5149,186 @@ If you are logged in with Supervisor rights you have access to the User
 
 \begin_layout Standard
 \align left
-The default password of any user is its user name.
+To add a new user, click “Add user” fill in the user's login name.
+ This will create a default user with registrar permissions.
+ To change this select the user and pick a suitable user right level and
+ click “Update user”.
+\end_layout
+
+\begin_layout Standard
+\align left
+You can change a permission level for a user and hit "Update user", or delete
+ a user by selecting the user and then clicking the "Delete" button.
+ The default password of any user is its user name.
  This should of course be changed at first login by the user himself.
+\end_layout
+
+\begin_layout Subsection
+Quality control
+\end_layout
+
+\begin_layout Subsubsection
+Name and sex
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename nameandsex.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Click the button "Show First names by Sex" to view all the names used in
+ your registry:
+\end_layout
+
+\begin_layout Itemize
+Male names
+\end_layout
+
+\begin_layout Itemize
+Female names
+\end_layout
+
+\begin_layout Itemize
+Unisex names (used by both sexes)
+\end_layout
+
+\begin_layout Standard
+You should periodically review these lists to check for obvious errors.
+\end_layout
+
+\begin_layout Standard
+New names are automatically added to the lists.
+\end_layout
+
+\begin_layout Standard
+However, if you have made corrections and some names are in the wrong category,
+ the supervisor can recreate the lists by clicking the second button.
+ In a network environment, only do this when nobody else is using the program.
+\end_layout
+
+\begin_layout Subsubsection
+Duplicate search
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename duplicatesearch.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Minimum match
+\end_layout
+
+\begin_layout Standard
+Registration number - range start and end.
+\end_layout
+
+\begin_layout Standard
+Show Multiple Primary pairs
+\end_layout
+
+\begin_layout Standard
+Test for previous cases only
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename advancedduplicatesearch.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Advanced
+\end_layout
+
+\begin_layout Standard
+Change weights and variables.
+\end_layout
+
+\begin_layout Subsection
+Options
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename options1.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Language
+\end_layout
+
+\begin_layout Standard
+Change language of CanReg5
+\end_layout
+
+\begin_layout Subsubsection
+Screen/Font size
+\end_layout
+
+\begin_layout Standard
+Change font size (Not yet implemented.)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename options12.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Periodic backup
+\end_layout
+
+\begin_layout Standard
+Reminder backup options
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename options3.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+CanReg version
+\end_layout
+
+\begin_layout Standard
+Let the program check to see if the latest version of CanReg is installed.
+ This access the internet to find the most recent version.
+\end_layout
+
+\begin_layout Subsubsection
+Look & Feel
+\end_layout
+
+\begin_layout Standard
+The “Show only outline of windows while moving” will increase the performance
+ of the user interface of CanReg.
+ Tick this if moving windows around the screen is slow.
 \end_layout
 
 \begin_layout Standard
