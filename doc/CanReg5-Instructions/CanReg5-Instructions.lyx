@@ -136,11 +136,15 @@ LatexCommand tableofcontents
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Part
 
 \family sans
 \series bold
 Introduction
+\end_layout
+
+\begin_layout Section
+What is CanReg?
 \end_layout
 
 \begin_layout Standard
@@ -588,7 +592,7 @@ Example log-file:
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Part
 Installing and running CanReg5
 \begin_inset CommandInset label
 LatexCommand label
@@ -597,6 +601,10 @@ name "sec:Installing-and-running"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+Software installation
 \end_layout
 
 \begin_layout Subsection
@@ -664,7 +672,7 @@ To run GS View you need to install Ghostscript first.
  This can be for example be downloaded from here: 
 \begin_inset CommandInset href
 LatexCommand href
-target "http://pages.cs.wisc.edu/~ghost/doc/GPL/gpl864.htm"
+target "http://pages.cs.wisc.edu/~ghost/doc/GPL/gpl900.htm"
 
 \end_inset
 
@@ -673,14 +681,14 @@ target "http://pages.cs.wisc.edu/~ghost/doc/GPL/gpl864.htm"
 \begin_inset Quotes eld
 \end_inset
 
-GPL Ghostscript 8.64 for 32-bit Windows (the common variety)
+GPL Ghostscript 9.00 for 32-bit Windows (the common variety)
 \begin_inset Quotes erd
 \end_inset
 
  (
 \begin_inset CommandInset href
 LatexCommand href
-target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe"
+target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs900/gs900w32.exe"
 
 \end_inset
 
@@ -733,6 +741,47 @@ CanReg5 is distributed as a zip-archive.
  your desktop.
  (It is important to keep the same directory structure as inside the zip-file.)
  
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Un-install CanReg5
+\end_layout
+
+\begin_layout Standard
+\align left
+If you wish to un-install CanReg5, delete the following folders (or rename
+ if you have anything valuable in them):
+\begin_inset Newline newline
+\end_inset
+
+
+\backslash
+
+\backslash
+Documents and Settings
+\backslash
+<your username>
+\backslash
+.CanRegClient
+\begin_inset Newline newline
+\end_inset
+
+
+\backslash
+
+\backslash
+Documents and Settings
+\backslash
+<your username>
+\backslash
+.CanRegServer
+\end_layout
+
+\begin_layout Section
+First launch
 \end_layout
 
 \begin_layout Subsection
@@ -817,6 +866,13 @@ Import complete dictionary from a file
 \family sans
 \series bold
 Install a new CanReg5 system
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Install-a-new"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1783,6 +1839,13 @@ Yes
 \family sans
 \series bold
 Login
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Login"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2268,6 +2331,13 @@ Edit dictionary
 \family sans
 \series bold
 Import the data from CanReg4
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Import-the-data"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2674,41 +2744,68 @@ The data can either be in a single file as the example for CanReg4, or in
  
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Working with CanReg5
+\end_layout
+
+\begin_layout Section
+Start
+\end_layout
+
 \begin_layout Subsection
 
 \family sans
 \series bold
-Un-install CanReg5
+Welcome screen
 \end_layout
 
 \begin_layout Standard
 \align left
-If you wish to un-install CanReg5, delete the following folders (or rename
- if you have anything valuable in them):
-\begin_inset Newline newline
+There are two options in this CanReg5 welcome screen: "Login to CanReg"
+ and "Install New System"
+\end_layout
+
+\begin_layout Subsubsection
+Login to CanReg
+\end_layout
+
+\begin_layout Standard
+If CanReg5 has already been setup on this computer for your cancer registry,
+ then click on this option to pass to the "Login/Password" panel.
+ (See 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:Login"
+
 \end_inset
 
+ for more information.)
+\end_layout
 
-\backslash
+\begin_layout Subsubsection
+Install New System
+\end_layout
 
-\backslash
-Documents and Settings
-\backslash
-<your username>
-\backslash
-.CanRegClient
-\begin_inset Newline newline
+\begin_layout Standard
+The CanReg5 program has been installed but you wish to add the Registry
+ definition for a particular Cancer Registry.
+ To install a new system you can use this module.
+ Click browse and choose the XML-file that corresponds to your system.
+ (See 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:Install-a-new"
+
 \end_inset
 
-
-\backslash
-
-\backslash
-Documents and Settings
-\backslash
-<your username>
-\backslash
-.CanRegServer
+ for more information.)
 \begin_inset Newpage newpage
 \end_inset
 
@@ -2716,163 +2813,618 @@ Documents and Settings
 \end_layout
 
 \begin_layout Section
-Working with CanReg5
-\end_layout
-
-\begin_layout Subsection
 
 \family sans
 \series bold
-Back up and restore
+Data entry
 \end_layout
 
 \begin_layout Standard
-\align left
-Backup-functionality can be found under the Management menu.
- 
-\end_layout
-
-\begin_layout Subsubsection
-
-\series bold
-Perform backup
-\series default
- 
-\end_layout
-
-\begin_layout Standard
-\align left
-Under 
-\begin_inset Quotes eld
-\end_inset
-
-Management
-\begin_inset Quotes erd
-\end_inset
-
- click 
-\begin_inset Quotes eld
-\end_inset
-
-Backup
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename 22.png
-	width 4.22917in
-	height 2.47917in
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\align left
-Then click 
-\begin_inset Quotes eld
-\end_inset
-
-Perform backup
-\begin_inset Quotes erd
-\end_inset
-
-.
- This creates the backup of the CanReg5 database on the server machine.
- If you are on the server machine, you can see the files you created by
- clicking 
-\begin_inset Quotes eld
-\end_inset
-
-Open folder containing Backup
-\begin_inset Quotes erd
-\end_inset
-
-.
- It is stored in the 
-\series bold
-CanReg server
-\series default
- folder under Backup and 3 digit code of the registry and then the date
- of the backup.
- On my machine, for example, it is 
-\begin_inset Quotes eld
-\end_inset
-
-C:
-\backslash
-Documents and Settings
-\backslash
-morten
-\backslash
-.CanRegServer
-\backslash
-Backup
-\backslash
-TRN
-\backslash
-2009-01-14
-\begin_inset Quotes erd
-\end_inset
-
-.
- 
-\end_layout
-
-\begin_layout Subsubsection
-
-\series bold
-Restore from backup
-\series default
- 
-\end_layout
-
-\begin_layout Standard
-\align left
-If you are on the server machine you can restore the backup you created
- above by clicking 
-\begin_inset Quotes eld
-\end_inset
-
-Restore
-\begin_inset Quotes erd
-\end_inset
-
- in the 
-\begin_inset Quotes eld
-\end_inset
-
-Management
-\begin_inset Quotes erd
-\end_inset
-
--menu and choose the folder with the date of the backup you want to restore
- - either by entering it or by browsing for it.
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename 23.png
-	width 4.63542in
-	height 1.22917in
-
-\end_inset
-
-
+From the data entry menu you can open the Browse/edit data view, edit dictionary
+ view, edit population datasets view or import data view.
 \end_layout
 
 \begin_layout Subsection
+Browse/edit
+\end_layout
 
-\family sans
-\series bold
-Enter cases
+\begin_layout Standard
+This part of CanReg5 allows you to view and edit the database records.
+\end_layout
+
+\begin_layout Standard
+For Data Entry purposes, you can use this Browse part to look for a particular
+ record to Edit, or to see if a particular person has a cancer notification
+ already stored.
+\end_layout
+
+\begin_layout Standard
+The table below shows the data - move (with the "Scroll Bars") horizontally
+ to see other variables, or vertically to view other records.
+\end_layout
+
+\begin_layout Standard
+You can use the Filter, Index and Ranges to select which records to show,
+ and the Variables radio buttons to select the variables columns.
+\end_layout
+
+\begin_layout Standard
+Use these buttons to go to the Edit Form:
+\end_layout
+
+\begin_layout Standard
+- Create next record: If you have checked that the patient has no record
+ already, use this option to create a new blank edit form.
+ The next available registration number will be assigned when you save the
+ record.
+\end_layout
+
+\begin_layout Standard
+- Edit Table record: to edit the record highlighted by the blue bar in the
+ data table.
+\end_layout
+
+\begin_layout Standard
+- Edit/create Patient ID: Before clicking this button, fill in the Registration
+ number of the record you wish to edit.
+ If the record exists already, you can edit it; if not, this number will
+ be assigned to a new blank record.
+ USE THIS OPTION TO SET THE REGISTRATION NUMBER FOR YOUR FIRST RECORD.
+\end_layout
+
+\begin_layout Standard
+- Re-draw table:
+\end_layout
+
+\begin_layout Standard
+If you have made changes to the database, use this button to update the
+ table displayed.
+\end_layout
+
+\begin_layout Subsubsection
+Table
+\end_layout
+
+\begin_layout Standard
+This lets you select the table to look at.
+\end_layout
+
+\begin_layout Subsubsection
+Sorty by
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Sorty-by"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The records will be ordered (or sorted) by the variable chosen.
+\end_layout
+
+\begin_layout Subsubsection
+Range
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Range"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename range.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can specify the Range start and end values for that sequenced variable.
+\end_layout
+
+\begin_layout Standard
+Example of how to use:
+\end_layout
+
+\begin_layout Itemize
+Sort by Date of Incidence,
+\end_layout
+
+\begin_layout Itemize
+show records of years 2000 and 2001 only:
+\end_layout
+
+\begin_layout Itemize
+Range = Incidence Date
+\end_layout
+
+\begin_layout Itemize
+Range Start = 2000
+\end_layout
+
+\begin_layout Itemize
+Range End = 20019999
+\end_layout
+
+\begin_layout Subsubsection
+Filter
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Filter"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename filter.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To select records.
+ (Use "Range" as primary selection - it is quicker)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="10" columns="2">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Operator
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+=
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Equal
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+<> 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Not equal
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+>
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Greater than
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+<
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Less than
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+>=
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Greater than or equal
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+<=
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Less than or equal
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+BETWEEN
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Between an inclusive range
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+LIKE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Search for a pattern (use % as wildcard)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+IN
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+If you know the exact value you want to return for at least one of the columns.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="2">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Logical Operator
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+AND
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+records mathces both criterias
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OR
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+records mathces one of the criterias
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Examples of how to use:
+\end_layout
+
+\begin_layout Itemize
+sex = ’1’ (all male cases.)
+\end_layout
+
+\begin_layout Itemize
+age >= 60 (cases aged 60 and more.)
+\end_layout
+
+\begin_layout Itemize
+sex = ’2’ and age < 60 (female cases aged more than 60.)
+\end_layout
+
+\begin_layout Itemize
+age BETWEEN 45 AND 60 (cases from patients aged from 45 to 60 (inclusive))
+\end_layout
+
+\begin_layout Itemize
+age <15 OR age>60 (patients aged less than 15 and more than 60)
+\end_layout
+
+\begin_layout Itemize
+name = 'Smith' (Name is “Smith”)
+\end_layout
+
+\begin_layout Itemize
+name LIKE 'Sm%' (Name begins with “Sm”.)
+\end_layout
+
+\begin_layout Itemize
+basis = ’7’ or Basis = ’5’ (Basis is 7 or 5.)
+\end_layout
+
+\begin_layout Itemize
+topog LIKE '50%' (for all Breast cases.)
+\end_layout
+
+\begin_layout Subsubsection
+Filter wizard
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename filterwizard.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fast method to specify filter, or selection, criteria.
+\end_layout
+
+\begin_layout Standard
+For example, to select
+\end_layout
+
+\begin_layout Standard
+Females over 60 years old....
+ (make sure you have selected Tumour+Patient table)
+\end_layout
+
+\begin_layout Standard
+Click on ...
+\end_layout
+
+\begin_layout Itemize
+Variable - "Sex"
+\end_layout
+
+\begin_layout Itemize
+Operator - "="
+\end_layout
+
+\begin_layout Itemize
+Value - "Female" (from Dictionary)
+\end_layout
+
+\begin_layout Itemize
+Logical Operator - "And"
+\end_layout
+
+\begin_layout Itemize
+"Add"
+\end_layout
+
+\begin_layout Itemize
+Variable - "Age"
+\end_layout
+
+\begin_layout Itemize
+Operator - ">"
+\end_layout
+
+\begin_layout Itemize
+Value - type "60"
+\end_layout
+
+\begin_layout Itemize
+"Add"
+\end_layout
+
+\begin_layout Itemize
+"OK"
+\end_layout
+
+\begin_layout Standard
+For some combinations using "AND" and "OR" you may need to add brackets
+ after.
+\end_layout
+
+\begin_layout Standard
+e.g.
+\end_layout
+
+\begin_layout Standard
+Topog = ‘220’ AND (Basis=’1’ OR Basis=’2’)
+\end_layout
+
+\begin_layout Subsubsection
+Display variables
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename displayvariables.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Click on a "radio button" above to display either:
+\end_layout
+
+\begin_layout Standard
+- All variables
+\end_layout
+
+\begin_layout Standard
+- Mandatory variables (those that MUST be filled in the Edit form)
+\end_layout
+
+\begin_layout Standard
+- Key variables (Names, Age, Date Incidence, Topog etc)
+\end_layout
+
+\begin_layout Subsubsection
+Navigate buttons
+\end_layout
+
+\begin_layout Standard
+Click on the Navigation buttons below to move record: Top, Bottom, Up, Down.
+\end_layout
+
+\begin_layout Subsection
+Edit record
 \end_layout
 
 \begin_layout Standard
@@ -2919,25 +3471,6 @@ Edit Patient ID:
 \end_layout
 
 \begin_layout Standard
-\align left
-This should resemble your CanReg4 data entry form, except that it is split
- in a patient part and a tumour part with a source part.
- Another thing to notice is the 
-\begin_inset Quotes eld
-\end_inset
-
-Obsolete
-\begin_inset Quotes erd
-\end_inset
-
- button.
- This will flag the record as obsolete, so that it will not show up in analysis.
- It is a way to keep duplicate records that might contain valuable information.
- Pink fields are the mandatory ones.
- (Date format is still set to yyyyMMdd, but this will be improved later.)
-\end_layout
-
-\begin_layout Standard
 \align center
 \begin_inset Graphics
 	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/DataEntryExample.png
@@ -2948,24 +3481,198 @@ Obsolete
 
 \end_layout
 
+\begin_layout Standard
+You can move around the Data Entry form in the following ways:
+\end_layout
+
+\begin_layout Standard
+- Tab and shift-tab to move to the next or previous variable;
+\end_layout
+
+\begin_layout Standard
+With the mouse, simply click on the variable you wish to edit, or on the
+ dictionary box to select from the popup of the valid dictionary codes.
+\end_layout
+
+\begin_layout Standard
+\align left
+The Pink fields are the mandatory ones.
+ (Date format is still set to yyyyMMdd, but this will be improved later.)
+\end_layout
+
+\begin_layout Standard
+When you have finished entering the data, you must perform the checks as
+ described in the system variables help below.
+\end_layout
+
+\begin_layout Subsubsection
+System variables
+\end_layout
+
+\begin_layout Standard
+After data entry, you must perform the following steps:
+\end_layout
+
+\begin_layout Subparagraph
+Person Search
+\end_layout
+
+\begin_layout Standard
+Searches for any records that might belong to the same person.
+\end_layout
+
+\begin_layout Subparagraph
+Check
+\end_layout
+
+\begin_layout Standard
+Performs various consistency checks (
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:Check"
+
+\end_inset
+
+)on the data you have entered.
+\end_layout
+
+\begin_layout Subparagraph
+Record Status
+\end_layout
+
+\begin_layout Standard
+All new records are set to "Pending" and cannot be "Confirmed" until the
+ "Check" and the "Person search" have been successfully performed.
+ Only confirmed cases are used for analysis.
+ Only a user with "Supervisor" permission level can confirm rare or multiple
+ primary cases, or delete records.
+\end_layout
+
+\begin_layout Subparagraph
+Save
+\end_layout
+
+\begin_layout Standard
+Save record to the database
+\end_layout
+
+\begin_layout Standard
+The "Updated" box shows the date that the record was last edited and by
+ whom.
+\end_layout
+
+\begin_layout Subsubsection
+Obsolete button.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+This will flag the record as obsolete, so that it will not show up in analysis.
+ It is a way to keep duplicate records that might contain valuable information.
+\end_layout
+
+\begin_layout Subsubsection
+Check
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Check"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename check.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Any variables found in error or query will be marked in red in the data
+ entry form.
+\end_layout
+
+\begin_layout Standard
+There are three sections to the checks:
+\end_layout
+
+\begin_layout Subparagraph
+Mandatory variables
+\end_layout
+
+\begin_layout Standard
+Indicates any variables, defined as mandatory for your Registry, that have
+ not been filled in.
+ If the value is really not available, then fill in "9" or "99" etc.
+ - the code for "Unknown".
+\end_layout
+
+\begin_layout Subparagraph
+First Name and Sex
+\end_layout
+
+\begin_layout Standard
+Checks the combination of First Name and Sex.
+ e.g.
+ "Mary", "male" would probably be an error! A name that is really used by
+ both sexes can be defined as "Unisex".
+\end_layout
+
+\begin_layout Subparagraph
+Cross checks
+\end_layout
+
+\begin_layout Standard
+These are the same consistency checks as in the IARC Tools "Check" program.
+ Some combinations would be marked as errors:
+\end_layout
+
+\begin_layout Standard
+e.g.
+ Sex = Female and Topography = Prostate, while others could be marked as
+ "Rare".
+ Only a Supervisor can confirm a Rare case.
+\end_layout
+
+\begin_layout Standard
+As well as performing these checks, this function also determines the ICD-10
+ code derived from the ICD-O Topography and Morphology.
+\end_layout
+
+\begin_layout Subsubsection
+Person search
+\end_layout
+
+\begin_layout Standard
+The whole database is searched using "Probability Matching" for any records
+ that might belong to the same person.
+ All personal data such as Date of Birth, Place of Residence, Id Number,
+ plus a phonetically simplified form of the name are used in this search.
+ Any other record with a percentage match higher than the "Minimum Match"
+ is displayed.
+\end_layout
+
+\begin_layout Standard
+If no match is found, a message will be displayed to that effect.
+\end_layout
+
+\begin_layout Standard
+Otherwise, the computer only displays possibilities - YOU must decide if
+ it really is the same person.
+\end_layout
+
 \begin_layout Subsection
-
-\family sans
-\series bold
-Export data
+Dictionary editor
 \end_layout
 
 \begin_layout Standard
-\align left
-To export your data go to Analysis -- Export Data/Reports:
-\end_layout
-
-\begin_layout Standard
-\align center
 \begin_inset Graphics
-	filename 27.png
-	width 4.0625in
-	height 1.52083in
+	filename dictionaryeditor.png
 
 \end_inset
 
@@ -2973,143 +3680,57 @@ To export your data go to Analysis -- Export Data/Reports:
 \end_layout
 
 \begin_layout Standard
-\align left
-You will be presented with a screen that resembles the browse-screen:
+The dictionary editor lets the supervisor users edit the coding schemes
+ of the various variables in CanReg5.
+\end_layout
+
+\begin_layout Subsubsection
+Export Dictionary to file
 \end_layout
 
 \begin_layout Standard
-\align center
+Export the current set of CanReg5 dictionaries to a tab-separated file for
+ editing in for example Excel.
+\end_layout
+
+\begin_layout Subsubsection
+Display/edit … Select
+\end_layout
+
+\begin_layout Standard
+This will display any dictionary picked by the user for editing directly
+ in CanReg.
+ The format will be standard tab-separated values so that the user can also
+ copy and paste this into general spreadsheet applications.
+\end_layout
+
+\begin_layout Subsubsection
+Update
+\end_layout
+
+\begin_layout Standard
+This will import the dictionary picked by the user from the text area.
+ The format must be tab-separated values.
+ This means that the users can copy and paste directly form general spreadsheet
+ applications (i.e.
+ Excel).
+\end_layout
+
+\begin_layout Subsubsection
+Import Dictionary from file
+\end_layout
+
+\begin_layout Standard
+Import a complete set of CanReg5 dictionaries from a tab-separated file.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Graphics
-	filename 28.png
-	width 5.4785in
-	height 4.0292in
+	filename importdictionary.png
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-\align left
-Now you can select some variables, and tables and sort method and export
- (some of) your data.
- Please note that some of the functionality, like the ability to store export-se
-tups is not yet implemented.
- 
-\end_layout
-
-\begin_layout Standard
-\align left
-If you export data to a 
-\begin_inset Quotes eld
-\end_inset
-
-Tab Separated
-\begin_inset Quotes erd
-\end_inset
-
- file you can open this in general spreadsheets (like Excel).
- 
-\end_layout
-
-\begin_layout Subsection
-
-\family sans
-\series bold
-Manage users
-\end_layout
-
-\begin_layout Standard
-\align left
-The user manager is located under management -- users:
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename 29.png
-	width 4.10417in
-	height 2.17708in
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\align left
-
-\series bold
-Change your own password
-\series default
- 
-\end_layout
-
-\begin_layout Standard
-\align left
-To change your own password, go to the Current user tab in the user manager
- and enter your new password twice:
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename 30.png
-	width 5.4785in
-	height 2.6764in
-
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Standard
-\align left
-
-\series bold
-Locked records
-\series default
- 
-\end_layout
-
-\begin_layout Standard
-\align left
-Not yet implemented.
- 
-\end_layout
-
-\begin_layout Standard
-\align left
-
-\series bold
-User manager
-\series default
- 
-\end_layout
-
-\begin_layout Standard
-\align left
-If you are logged in with Supervisor rights you have access to the User
- manager part of the user manager.
- This allows you to add and delete users.
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename 31.png
-	width 4.64583in
-	height 3.70833in
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\align left
-The default password of any user is its user name.
- 
 \end_layout
 
 \begin_layout Subsection
@@ -3185,13 +3806,16 @@ A name for the dataset
 
 \begin_layout Itemize
 \align left
-A filter if it does not cover your entire area of your database.
- 
+"Filter" or selection criteria, so the program only selects records correspondin
+g to the population (e.g.
+ Address code >= 10 and Address code <= 19) (Basically if it does not cover
+ your entire area of your database.)
 \end_layout
 
 \begin_layout Itemize
 \align left
-A source 
+A source of this data (e.g.
+ whether Goverment Census, or Estimation).
 \end_layout
 
 \begin_layout Itemize
@@ -3207,7 +3831,7 @@ Choose the age group structure.
 
 \begin_layout Itemize
 \align left
-Set the date of the population dataset.
+Set the date when the population was at this amount.
  (In the example above it is mid 1992) 
 \end_layout
 
@@ -3215,6 +3839,22 @@ Set the date of the population dataset.
 \align left
 The Standard population used for ASRs when building tables with this set.
  
+\end_layout
+
+\begin_layout Standard
+"Age Standardised" rates are calculated in order to compare rates from different
+ countries that have different age profiles.
+ Normally the "Standard" population is the World standard included here.
+ (If you wish to change this, choose another standard population (or click
+ on the standard pop.
+\begin_inset Quotes erd
+\end_inset
+
+Edit
+\begin_inset Quotes erd
+\end_inset
+
+ button.)
 \end_layout
 
 \begin_layout Standard
@@ -3363,6 +4003,538 @@ Locked
 \end_layout
 
 \begin_layout Subsection
+Import
+\end_layout
+
+\begin_layout Standard
+The import function lets you import data from other CanReg systems or other
+ programs.
+\end_layout
+
+\begin_layout Standard
+(For a detailed walk through of how to get the data from CanReg4 to 5 see
+ 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:Import-the-data"
+
+\end_inset
+
+.)
+\end_layout
+
+\begin_layout Standard
+Data in an external file may be added to the CanReg database by importing.
+ It should be of the following format:
+\end_layout
+
+\begin_layout Itemize
+Tab delimited
+\end_layout
+
+\begin_layout Itemize
+Comma Separated Variables
+\end_layout
+
+\begin_layout Itemize
+Character delimited
+\end_layout
+
+\begin_layout Standard
+The easiest way is to have the variable names at the top of each column.
+\end_layout
+
+\begin_layout Standard
+There are four main steps to importing a data file.
+\end_layout
+
+\begin_layout Standard
+1) Choose the file.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename importfilechooser.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+2) Identify the variables.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename importfileidentifyvariable.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+3) Choose the various options - see specific helps.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename importfileoptions.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+4) Import the file (maybe in "test only" mode first)
+\end_layout
+
+\begin_layout Subsubsection
+Discrepancies
+\end_layout
+
+\begin_layout Standard
+A discrepancy is when a record is found with the same registration number
+ as one in the database, but there are differences in some of the data.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename importoptionsdiscrepancies.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Click on a "radio button" to either:
+\end_layout
+
+\begin_layout Itemize
+Reject these discrepancies (they will not be imported)
+\end_layout
+
+\begin_layout Itemize
+Update them (any new data will be copied over to the database record)
+\end_layout
+
+\begin_layout Itemize
+Overwrite (ALL variables will be copied over, even empty ones)
+\end_layout
+
+\begin_layout Subsubsection
+Max.
+ Lines / Test only
+\end_layout
+
+\begin_layout Standard
+For testing purposes, you may wish to specify how many lines of the import
+ file to read.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename importoptionsmaxlines.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+With "Test only" ticked, NO data is actually added to your database; only
+ a report is generated showing what WOULD happen.
+ It lists discrepancies, possible matches, rare or error cases etc.
+\end_layout
+
+\begin_layout Subsubsection
+CanReg DATA
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename importoptionscanregdata.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Perform Checks
+\end_layout
+
+\begin_layout Standard
+If the data to import was not created using CanReg, or if it is a Pending
+ case, then the Checks must and will be performed.
+\end_layout
+
+\begin_layout Standard
+If however, the case has already passed the Checks, the Checks will NOT
+ be performed again unless specified by ticking this option.
+\end_layout
+
+\begin_layout Paragraph
+Perform Person Search
+\end_layout
+
+\begin_layout Standard
+Normally, when importing CanReg data, the Person Search will still be performed
+ even if already done.
+ If this option is NOT ticked, then the Person Search will NOT be repeated
+ in this case.
+ This is only advisable is the case of having no original data.
+\end_layout
+
+\begin_layout Paragraph
+Query New First Name
+\end_layout
+
+\begin_layout Standard
+For data that has not already passed the checks, the First Name and Sex
+ combination will be checked and updated.
+ Tick this option if you wish all NEW names to be set as pending.
+\end_layout
+
+\begin_layout Standard
+If you are starting a new registry then you probably don't want all new
+ names to be set as pending, however, if you have several years of data
+ already, then it would be advisable to query names not already known.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Analysis
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Export data
+\end_layout
+
+\begin_layout Standard
+To export (write out) all, or part of, your CanReg5 data to an external
+ text file.
+\end_layout
+
+\begin_layout Standard
+There are two main reasons for doing this:
+\end_layout
+
+\begin_layout Itemize
+To be able to Import the file into another computer program (e.g.
+ Microsoft's "Excel" or "Access") for further analysis.
+\end_layout
+
+\begin_layout Itemize
+To produce a report, or case listing, that could be read into "Word" and
+ printed out.
+\end_layout
+
+\begin_layout Standard
+\align left
+To export your data go to Analysis -- Export Data/Reports:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 27.png
+	width 4.0625in
+	height 1.52083in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+You will be presented with a screen that resembles the browse-screen:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename export.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following steps need to be taken:
+\end_layout
+
+\begin_layout Itemize
+Specify the records you want to be selected by using the Filter(
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:Filter"
+
+\end_inset
+
+) and Range(
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:Range"
+
+\end_inset
+
+) options, and the order in which they will be written using the Sort by(
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:Sorty-by"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Itemize
+Select the Variables(
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:ExportVariablesSelector"
+
+\end_inset
+
+) to display.
+\end_layout
+
+\begin_layout Itemize
+Tick the Titles(?)/Variable headers to include.
+\end_layout
+
+\begin_layout Itemize
+Choose the File Style(
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:Export-file-style"
+
+\end_inset
+
+) suitable for your needs.
+\end_layout
+
+\begin_layout Standard
+\align left
+Please note that some of the functionality, like the ability to store export-set
+ups is not yet implemented.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Options
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename exportoptions.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Export file style
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Export-file-style"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+All file styles produce text files, with a new line at the end of each case.
+\end_layout
+
+\begin_layout Standard
+They all have default extension .TXT except for "Comma Separated Variable",
+ which has .CSV.
+\end_layout
+
+\begin_layout Standard
+"Tab Delimited" writes each variable separated by the TAB character.
+\end_layout
+
+\begin_layout Standard
+"Comma Separated Variables" encloses each variable in quotes, and separates
+ by a comma.
+\end_layout
+
+\begin_layout Standard
+\align left
+If you export data to a 
+\begin_inset Quotes eld
+\end_inset
+
+Tab Separated
+\begin_inset Quotes erd
+\end_inset
+
+ file you can open this in general spreadsheets (like Excel).
+\end_layout
+
+\begin_layout Subsubsection
+Titles, variable names
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename exporttitles.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Titles 
+\end_layout
+
+\begin_layout Standard
+will write at the top of your export file:
+\end_layout
+
+\begin_layout Standard
+the filter criteria, index and ranges used,
+\end_layout
+
+\begin_layout Standard
+today's date.
+\end_layout
+
+\begin_layout Standard
+This option is useful is you are writing a report, or case listing.
+\end_layout
+
+\begin_layout Paragraph
+Short variable name 
+\end_layout
+
+\begin_layout Standard
+puts the abbreviated names of the variables at the top of each column.
+\end_layout
+
+\begin_layout Standard
+If this file were imported into "Microsoft Access" then these would automaticall
+y become the names of the variables in Access.
+\end_layout
+
+\begin_layout Paragraph
+Long Variable name 
+\end_layout
+
+\begin_layout Standard
+writes the full name of the variable at the top of each column.
+\end_layout
+
+\begin_layout Subsubsection
+Variables
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:ExportVariablesSelector"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename exportvariables.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Select the variables to export.
+\end_layout
+
+\begin_layout Standard
+Click on the variable name to select (or deselect).
+\end_layout
+
+\begin_layout Standard
+They will appear in the data grid after you have clicked refresh table.
+\end_layout
+
+\begin_layout Standard
+You can drag the grid columns to change the order of the variables.
+\end_layout
+
+\begin_layout Standard
+Click on "All variables" to select them all.
+\end_layout
+
+\begin_layout Subsubsection
+Date Format
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename exportdateformat.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Tick "Format Date", for example, to export "21/04/2001" instead of numeric
+ form "20010421".
+\end_layout
+
+\begin_layout Standard
+Tick "Correct Unknown" so that unknown day will be written as "01" and unknown
+ month as "07".
+\end_layout
+
+\begin_layout Standard
+This is necessary if you wish to import the data into Excel, or any other
+ software that will reject invalid dates.
+\end_layout
+
+\begin_layout Subsubsection
+Export setup
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename exportsetup.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This module is used to load previously made export settings or save the
+ current settings.
+ This includes the filter, the sequence, the variables to export and the
+ various options.
+\end_layout
+
+\begin_layout Subsection
 
 \family sans
 \series bold
@@ -3393,8 +4565,17 @@ The Table builder lets you build incidence tables etc in CanReg.
 When you start it you first choose the type of table you want to produce.
  (Please note that it is only the Incidence per 100,000 by age group (period)
  and the Population pyramid that is implemented so far\SpecialChar \ldots{}
-) Pick Incidence per
- 100,000 by age group (Period): 
+) 
+\end_layout
+
+\begin_layout Standard
+\align left
+Example
+\end_layout
+
+\begin_layout Standard
+\align left
+Pick Incidence per 100,000 by age group (Period): 
 \end_layout
 
 \begin_layout Standard
@@ -3410,10 +4591,26 @@ When you start it you first choose the type of table you want to produce.
 \end_layout
 
 \begin_layout Standard
+The incidence rate is defined as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{incidence\: cases\: per\: year}{population\: at\: risk}\times10000$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This gives an idea of the risk of getting each type of cancer - the tables
+ consist of Incidence Rates by Sex, Age group and ICD10 cancer type.
+\end_layout
+
+\begin_layout Standard
 \align left
-Then click on range to set the range of your analysis and set it to match
- the analysis you want to do, for example here we want to look at Karma
- City, 1991 to 1993: 
+Click on range to set the range of your analysis and set it to match the
+ analysis you want to do, for example here we want to look at Karma City,
+ 1991 to 1993: 
 \end_layout
 
 \begin_layout Standard
@@ -3430,7 +4627,23 @@ Then click on range to set the range of your analysis and set it to match
 
 \begin_layout Standard
 \align left
-Click Population Data Set.
+In order to create tables of incidence rates, we need to know the size of
+ the population at risk.
+ Therefore, a "Population Data Set" is needed.
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+Population Data Set
+\begin_inset Quotes erd
+\end_inset
+
+.
  Pick one population data set per year.
  This can be the same for all three if that year is representative of the
  period: 
@@ -3564,9 +4777,7 @@ If you click Refresh table with no filter and no selected variables you
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename 48.png
-	width 5.4785in
-	height 4.8181in
+	filename frequenciesbyyear.png
 
 \end_inset
 
@@ -3600,18 +4811,6 @@ You can filter the result by adding a filter like for example on incidence
 \end_layout
 
 \begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename 50.png
-	width 5.4785in
-	height 4.8042in
-
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Standard
 \align left
 This table can be selected and copied and pasted into Excel, for example.
  (No right-click shortcut for that is implemented yet, but you can select
@@ -3625,7 +4824,318 @@ This table can be selected and copied and pasted into Excel, for example.
 \end_layout
 
 \begin_layout Section
+Management
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Back up and restore
+\end_layout
+
+\begin_layout Standard
+\align left
+Backup-functionality can be found under the Management menu.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Perform backup
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Under 
+\begin_inset Quotes eld
+\end_inset
+
+Management
+\begin_inset Quotes erd
+\end_inset
+
+ click 
+\begin_inset Quotes eld
+\end_inset
+
+Backup
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 22.png
+	width 4.22917in
+	height 2.47917in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+Then click 
+\begin_inset Quotes eld
+\end_inset
+
+Perform backup
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This creates the backup of the CanReg5 database on the server machine.
+ If you are on the server machine, you can see the files you created by
+ clicking 
+\begin_inset Quotes eld
+\end_inset
+
+Open folder containing Backup
+\begin_inset Quotes erd
+\end_inset
+
+.
+ It is stored in the 
+\series bold
+CanReg server
+\series default
+ folder under Backup and 3 digit code of the registry and then the date
+ of the backup.
+ On my machine, for example, it is 
+\begin_inset Quotes eld
+\end_inset
+
+C:
+\backslash
+Documents and Settings
+\backslash
+morten
+\backslash
+.CanRegServer
+\backslash
+Backup
+\backslash
+TRN
+\backslash
+2009-01-14
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Restore from backup
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+If you are on the server machine you can restore the backup you created
+ above by clicking 
+\begin_inset Quotes eld
+\end_inset
+
+Restore
+\begin_inset Quotes erd
+\end_inset
+
+ in the 
+\begin_inset Quotes eld
+\end_inset
+
+Management
+\begin_inset Quotes erd
+\end_inset
+
+-menu restore your Registry definition, population dataset, dictionary codes
+ and any data from a CanReg5 backup.
+\end_layout
+
+\begin_layout Standard
+You will probably perform this either:
+\end_layout
+
+\begin_layout Itemize
+at first installation, or
+\end_layout
+
+\begin_layout Itemize
+if re-installing on a new computer, or
+\end_layout
+
+\begin_layout Itemize
+recovering from a lost or damaged computer situation!
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 23.png
+	width 4.63542in
+	height 1.22917in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Simply choose the folder corresponding to the backup you want to restore
+ using the 
+\begin_inset Quotes eld
+\end_inset
+
+Browse
+\begin_inset Quotes erd
+\end_inset
+
+ button or enter the path manually and the click 
+\begin_inset Quotes eld
+\end_inset
+
+Restore
+\begin_inset Quotes erd
+\end_inset
+
+.
+ You need to specify the folder containing a folder with a folder named
+ your registry code.
+ That is most of the time the date of backup.
+ In the example above we restore a backup from january 2009.
+ If you select the folder within this 
+\begin_inset Quotes eld
+\end_inset
+
+date
+\begin_inset Quotes erd
+\end_inset
+
+ folder you will get an error message and the restore will not be performed.
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Manage users
+\end_layout
+
+\begin_layout Standard
+\align left
+The user manager is located under management -- users:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 29.png
+	width 4.10417in
+	height 2.17708in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Change your own password
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+To change your own password, go to the Current user tab in the user manager
+ and enter your new password twice:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 30.png
+	width 5.4785in
+	height 2.6764in
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Locked records
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Not yet implemented.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+User manager
+\series default
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+If you are logged in with Supervisor rights you have access to the User
+ manager part of the user manager.
+ This allows you to add and delete users.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 31.png
+	width 4.64583in
+	height 3.70833in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
+The default password of any user is its user name.
+ This should of course be changed at first login by the user himself.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part*
 \start_of_appendix
+Appendix
+\end_layout
+
+\begin_layout Section
 
 \family sans
 \series bold
@@ -4428,6 +5938,7 @@ The program will then ask you if you want to add this server to your favourites.
 \begin_layout Enumerate
 \begin_inset Graphics
 	filename 5.png
+	scale 50
 
 \end_inset
 
