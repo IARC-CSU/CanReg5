@@ -87,11 +87,11 @@ public class Tools {
 
         } catch (TransformerConfigurationException e) {
             // this is fatal, just dump the stack and throw a runtime exception
-            e.printStackTrace();
+            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, e);
             // throw new RuntimeException(e);
         } catch (TransformerException e) {
             // this is fatal, just dump the stack and throw a runtime exception
-            e.printStackTrace();
+            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, e);
             // throw new RuntimeException(e);
         } catch (NullPointerException npe) {
             try {
@@ -103,7 +103,7 @@ public class Tools {
             } catch (IOException ex) {
                 Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
             }
-            npe.printStackTrace();
+            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, npe);
             // throw new RuntimeException(npe);
         } finally {
             try {
