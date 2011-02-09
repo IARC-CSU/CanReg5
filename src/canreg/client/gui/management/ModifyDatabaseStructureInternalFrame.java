@@ -12,12 +12,14 @@ import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.Tools;
 import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.server.management.SystemDescription;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
@@ -568,6 +570,21 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
 
     @Action
     public void saveXML() {
+        // first check to see if all minimum required variables are present
+        Set<String> missingStandardVariables = Tools.getMissingStandardVariables((DatabaseVariablesListElement[]) databaseVariablePanel.getDatabaseElements());
+        // In this editor we only warn - during database boot we will stop if not all variables are there...
+        if (!missingStandardVariables.isEmpty()) {
+            String warning = "Warning! The following variables are missing from the minimum required set of variables:";
+            for (String variable : missingStandardVariables) {
+                warning += "\n" + variable;
+            }
+            warning += "\n\nDo you still want to save?";
+            int option = JOptionPane.showConfirmDialog(this, warning, "Warning!", JOptionPane.YES_NO_OPTION);
+            if (option == JOptionPane.NO_OPTION) {
+                return;
+            }
+        }
+
         // refresh the doc
         // set the system stuff
         systemDescription.setSystemName(registryNameTextField.getText());
@@ -598,6 +615,9 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         }
         JOptionPane.showMessageDialog(this, message, "Title", JOptionPane.INFORMATION_MESSAGE);
     }
+
+   
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox basisCodesCheckBox;
     private javax.swing.JButton checkIfUniqueButton;
@@ -646,25 +666,41 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(DatabaseElementsPanel.UPDATED)) {
             databaseVariablePanel.redrawTable();
+
+
         } else if (e.getActionCommand().equals(DatabaseVariableEditorInternalFrame.STANDARDVARIABLEMAPPINGCHANGED)) {
             DatabaseVariableEditorPanel dbve = (DatabaseVariableEditorPanel) e.getSource();
             DatabaseVariablesListElement variable = databaseVariablePanel.isThisStandardVariableAlreadyMapped(dbve.getStandardVariable());
-            if (variable!=null && variable != dbve.getDatabaseVariablesListElement()) {
+
+
+            if (variable != null && variable != dbve.getDatabaseVariablesListElement()) {
                 JOptionPane.showInternalMessageDialog(dbve,
-                        "This standard variable is already mapped to "+variable.getFullName()+". Please revise.");
+                        "This standard variable is already mapped to " + variable.getFullName() + ". Please revise.");
+
+
             }
         } else if (e.getActionCommand().equals(DatabaseVariableEditorInternalFrame.UPDATED)) {
             databaseVariablePanel.redrawTable();
+
+
         } else if (e.getActionCommand().equals(DatabaseGroupEditorInternalFrame.UPDATED)) {
             databaseGroupPanel.redrawTable();
+
+
         } else if (e.getActionCommand().equals(DatabaseDictionaryEditorInternalFrame.UPDATED)) {
             databaseDictionaryPanel.redrawTable();
+
+
         } else if (e.getActionCommand().equals(DatabaseIndexEditorInternalFrame.UPDATED)) {
             databaseIndexPanel.redrawTable();
+
+
         } else if (e.getActionCommand().equals(DatabaseElementPanel.EDIT_ACTION)) {
             if (systemDescription != null) {
                 DatabaseElementPanel ep = (DatabaseElementPanel) e.getSource();
                 DatabaseElement dbe = ep.getDatabaseElement();
+
+
                 if (dbe instanceof DatabaseVariablesListElement) {
                     DatabaseVariableEditorInternalFrame dveif = new DatabaseVariableEditorInternalFrame();
                     dveif.setDictionaries(databaseDictionaryPanel.getDatabaseElements());
@@ -672,26 +708,36 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                     dveif.setDatabaseVariablesListElement((DatabaseVariablesListElement) dbe);
                     dveif.setActionListener(this);
                     CanRegClientView.showAndPositionInternalFrame(dtp, dveif);
+
+
                 } else if (dbe instanceof DatabaseDictionaryListElement) {
                     DatabaseDictionaryEditorInternalFrame dveif = new DatabaseDictionaryEditorInternalFrame();
                     dveif.setDatabaseDictionaryListElement((DatabaseDictionaryListElement) dbe);
                     dveif.setActionListener(this);
                     CanRegClientView.showAndPositionInternalFrame(dtp, dveif);
+
+
                 } else if (dbe instanceof DatabaseGroupsListElement) {
                     DatabaseGroupEditorInternalFrame dveif = new DatabaseGroupEditorInternalFrame();
                     dveif.setDatabaseGroupsListElement((DatabaseGroupsListElement) dbe);
                     dveif.setActionListener(this);
                     CanRegClientView.showAndPositionInternalFrame(dtp, dveif);
+
+
                 } else if (dbe instanceof DatabaseIndexesListElement) {
                     DatabaseIndexEditorInternalFrame diep = new DatabaseIndexEditorInternalFrame();
                     diep.setVariablesInDatabase((DatabaseVariablesListElement[]) databaseVariablePanel.getDatabaseElements());
                     diep.setDatabaseIndexesListElement((DatabaseIndexesListElement) dbe);
                     diep.setActionListener(this);
                     CanRegClientView.showAndPositionInternalFrame(dtp, diep);
+
+
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
                         "Please load a system definition XML first.");
+
+
             }
         }
     }

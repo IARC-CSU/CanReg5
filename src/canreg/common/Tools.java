@@ -1,5 +1,6 @@
 package canreg.common;
 
+import canreg.common.Globals.StandardVariableNames;
 import canreg.common.qualitycontrol.PersonSearcher.CompareAlgorithms;
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -14,8 +15,10 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -729,5 +732,80 @@ public class Tools {
             }
         }
         return standardEncoding;
+    }
+
+    public static Set<String> getMissingStandardVariables(DatabaseVariablesListElement[] elements) {
+        /*
+         * Table 1. Basic information for cancer registries
+        Name According to local usage
+        Sex
+        Date of birth or age Estimate if not known
+        Demographic
+        Address Usual residence
+        Ethnic groupb When population consists of two or more groups
+        Incidence date
+        Most valid basis of diagnosis
+        Topography (site) Primary tumour
+        Morphology (histology)
+        Behaviour
+        Source of information E.g., hospital record no., name of physician
+        - - - -
+         */
+        String NAMES_STRING = "Name (According to local usage)";
+        String SEX_STRING = "Sex";
+        String DOB_OR_AGE_STRING = "Date of birth or age (Estimate if not known)";
+        String ADDRESS_STRING = "Address";
+        String INC_DATE_STRING = "Incidence date";
+        String BASIS_STRING = "Most valid basis of diagnosis";
+        String TOPOGRAPHY_STRING = "Topography (site)";
+        String MORPHO_STRING = "Morphology (histology)";
+        String BEHAVIOUR_STRING = "Behaviour";
+        String SOURCE_STRING = "Source of information (E.g., hospital record no., name of physician)";
+
+        Set<String> missingStandardVariableNames = new HashSet<String>();
+
+        missingStandardVariableNames.add(NAMES_STRING);
+        missingStandardVariableNames.add(SEX_STRING);
+        missingStandardVariableNames.add(DOB_OR_AGE_STRING);
+        missingStandardVariableNames.add(ADDRESS_STRING);
+        missingStandardVariableNames.add(INC_DATE_STRING);
+        missingStandardVariableNames.add(BASIS_STRING);
+        missingStandardVariableNames.add(TOPOGRAPHY_STRING);
+        missingStandardVariableNames.add(MORPHO_STRING);
+        missingStandardVariableNames.add(BEHAVIOUR_STRING);
+        missingStandardVariableNames.add(SOURCE_STRING);
+
+        //
+        for (DatabaseVariablesListElement element : elements) {
+            String standardVariable = element.getStandardVariableName();
+            if (standardVariable != null) {
+                // if we find a name we remove the name element
+                if (standardVariable.equalsIgnoreCase(StandardVariableNames.FirstName.toString())
+                        || standardVariable.equalsIgnoreCase(StandardVariableNames.Surname.toString())) {
+                    missingStandardVariableNames.remove(NAMES_STRING);
+                    // etc
+                } else if (standardVariable.equalsIgnoreCase(StandardVariableNames.Sex.toString())) {
+                    missingStandardVariableNames.remove(SEX_STRING);
+                } else if (standardVariable.equalsIgnoreCase(StandardVariableNames.BirthDate.toString())
+                        || standardVariable.equalsIgnoreCase(StandardVariableNames.Age.toString())) {
+                    missingStandardVariableNames.remove(DOB_OR_AGE_STRING);
+                } else if (standardVariable.equalsIgnoreCase(StandardVariableNames.AddressCode.toString())) {
+                    missingStandardVariableNames.remove(ADDRESS_STRING);
+                } else if (standardVariable.equalsIgnoreCase(StandardVariableNames.IncidenceDate.toString())) {
+                    missingStandardVariableNames.remove(INC_DATE_STRING);
+                } else if (standardVariable.equalsIgnoreCase(StandardVariableNames.BasisDiagnosis.toString())) {
+                    missingStandardVariableNames.remove(BASIS_STRING);
+                } else if (standardVariable.equalsIgnoreCase(StandardVariableNames.Topography.toString())) {
+                    missingStandardVariableNames.remove(TOPOGRAPHY_STRING);
+                } else if (standardVariable.equalsIgnoreCase(StandardVariableNames.Morphology.toString())) {
+                    missingStandardVariableNames.remove(MORPHO_STRING);
+                } else if (standardVariable.equalsIgnoreCase(StandardVariableNames.Behaviour.toString())) {
+                    missingStandardVariableNames.remove(BEHAVIOUR_STRING);
+                } else if (standardVariable.equalsIgnoreCase(StandardVariableNames.Source1.toString())) {
+                    missingStandardVariableNames.remove(SOURCE_STRING);
+                }
+            }
+        }
+        return missingStandardVariableNames;
     }
 }
