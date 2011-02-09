@@ -484,7 +484,7 @@ public class CanRegDAO {
         if (ts != null) {
             return ts.retrieveRows(from, to);
         } else {
-            return null;
+            return null;            
         }
     }
     // TODO: This only works for Embedded databases - will look into it!
@@ -2187,7 +2187,7 @@ public class CanRegDAO {
 
         // Add the range part
         if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-            if (filterString.isEmpty()) {
+            if (filterString.isEmpty()&&!joinedTables) {
                 filterString = " WHERE " + filterString;
             } else {
                 filterString += " AND ";
