@@ -78,7 +78,7 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
     @Override
     public synchronized Object[][] retrieveRows(int from, int to) throws DistributedTableDescriptionException {
         LinkedList<Object[]> rows = new LinkedList<Object[]>();
-        
+
         try {
             int pos;
             pos = resultSet.getRow();
@@ -86,7 +86,7 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
             resultSet.relative(from - pos);
             boolean hasMore = resultSet.next();
 
-            while (hasMore && rows.size() < (to - from + 1)) {
+            while (hasMore && rows.size() < (to - from)) {
                 Object[] row = new Object[columnCount];
                 for (int i = 0; i < columnCount; i++) {
                     row[i] = resultSet.getObject(i + 1);
@@ -94,8 +94,8 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
                 rows.add(row);
                 hasMore = resultSet.next();
                 if (!hasMore) {
-                    // set pointer to last so that we can keep using resultset
-                    resultSet.last();
+                    // set pointer to first so that we can keep using resultset
+                    resultSet.first();
                     // Logger.getLogger(DistributedTableDataSourceResultSetImpl.class.getName()).log(Level.INFO, "last record reached");
                 }
             }
