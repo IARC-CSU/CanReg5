@@ -416,13 +416,6 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             }
         });
 
-        path = localSettings.getProperty("export_data_path");
-
-        if (path == null) {
-            chooser = new JFileChooser();
-        } else {
-            chooser = new JFileChooser(path);
-        }
         exportSourceInformationCheckBox.setVisible(false);
     }
 
@@ -604,13 +597,39 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
      */
     @Action
     public Task writeFileAction() {
+        if (chooser == null) {
+            path = localSettings.getProperty("export_data_path");
+            if (path == null) {
+                chooser = new JFileChooser();
+            } else {
+                chooser = new JFileChooser(path);
+            }
+        }
         // Get filename
         int returnVal = chooser.showSaveDialog(this);
         String fileName = "";
+        String separatingString = "\t";
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 //set the file name
                 fileName = chooser.getSelectedFile().getCanonicalPath();
+
+                // TODO: Make this dynamic
+                if (fileFormatComboBox.getSelectedIndex() == 1) {
+                    separatingString = ",";
+                    // append standard file extension
+                    if (!(fileName.endsWith(".csv") || fileName.endsWith(".CSV"))) {
+                        fileName += ".csv";
+                    }
+                } else {
+                    separatingString = "\t";
+                    // append standard file extension
+                    if (!(fileName.endsWith(".tsv") || fileName.endsWith(".TSV"))
+                            && !(fileName.endsWith(".txt") || fileName.endsWith(".TXT"))) {
+                        fileName += ".txt";
+                    }
+                }
+
                 File file = new File(fileName);
                 if (file.exists()) {
                     int choice = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/ExportReportInternalFrame").getString("FILE_EXISTS") + ": " + fileName + ".\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/ExportReportInternalFrame").getString("OVERWRITE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/ExportReportInternalFrame").getString("FILE_EXISTS") + ".", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -625,8 +644,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             } catch (IOException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } else {
+            return null;
         }
-        return new WriteFileActionTask(fileName, org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+        return new WriteFileActionTask(fileName, org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class), separatingString);
     }
 
     private class WriteFileActionTask extends org.jdesktop.application.Task<Object, Void> {
@@ -642,8 +663,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         private int tumourIDcolumn;
         private Set<String> sourceVariableNames;
 
-        WriteFileActionTask(String fileName, org.jdesktop.application.Application app) {
+        WriteFileActionTask(String fileName, org.jdesktop.application.Application app, String separatingString) {
             super(app);
+            this.separatingString = separatingString;
 
             Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
             setCursor(hourglassCursor);
@@ -673,12 +695,6 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                         canreg.common.Tools.toUpperCaseStandardized(resultTable.getColumnName(column));
                 VariablesExportDetailsPanel vedp = variableChooserPanel.getVariablesExportDetailsPanelByName(columnName);
                 variablesToExport.put(columnName, vedp.getCheckboxes());
-            }
-
-            if (fileFormatComboBox.getSelectedIndex() == 1) {
-                separatingString = ",";
-            } else {
-                separatingString = "\t";
             }
 
             try {
