@@ -736,4 +736,8 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
     public DatabaseVariablesListElement[] getArrayOfVariablesInSelectedTables(){
         return variablesInTable;
     }
+
+    public void setSelectedTable(String table) {
+        tableChooserComboBox.setSelectedItem(table);
+    }
 }
