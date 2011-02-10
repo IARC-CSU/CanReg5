@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -65,10 +66,23 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
     public void setDatabaseDescription(Document doc) {
         this.doc = doc;
         indexesInDB = canreg.common.Tools.getIndexesListElements(doc, Globals.NAMESPACE);
+
         rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(indexesInDB));
         patientVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
         tumourVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
         sourceVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
+
+        Comparator comparator = new Comparator<DatabaseVariablesListElement>() {
+            @Override
+            public int compare(DatabaseVariablesListElement object1, DatabaseVariablesListElement o2) {
+                return object1.toString().compareToIgnoreCase(o2.toString());
+            }
+        };
+
+        Arrays.sort(patientVariablesInDB, comparator);
+        Arrays.sort(tumourVariablesInDB, comparator);
+        Arrays.sort(sourceVariablesInDB, comparator);
+
         refreshVariableList();
         refreshFilterComboBox();
         refreshIndexList();
@@ -733,7 +747,7 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
         tableChooserComboBox.setModel(new javax.swing.DefaultComboBoxModel(tables));
     }
 
-    public DatabaseVariablesListElement[] getArrayOfVariablesInSelectedTables(){
+    public DatabaseVariablesListElement[] getArrayOfVariablesInSelectedTables() {
         return variablesInTable;
     }
 

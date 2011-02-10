@@ -13,6 +13,8 @@ import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -38,9 +40,10 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
     private int maxLength;
     private boolean dictionaryPopUp = true;
     private boolean currentSelectionAdded = false;
-    private DatabaseVariablesListElement[] patientVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
-    private DatabaseVariablesListElement[] tumourVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
-    private DatabaseVariablesListElement[] sourceVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
+    private DatabaseVariablesListElement[] patientVariablesInDB; // = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
+    private DatabaseVariablesListElement[] tumourVariablesInDB; // = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
+    private DatabaseVariablesListElement[] sourceVariablesInDB; // = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
+    private Comparator comparator;
 
     /** Creates new form FastFilterInternalFrame */
     public FastFilterInternalFrame() {
@@ -343,6 +346,23 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
         operationComboBox.setModel(new DefaultComboBoxModel(operators));
         operationComboBox.setSelectedIndex(0);
         // Get the system description
+
+        patientVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
+        tumourVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
+        sourceVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
+
+        comparator = new Comparator<DatabaseVariablesListElement>() {
+
+            @Override
+            public int compare(DatabaseVariablesListElement object1, DatabaseVariablesListElement o2) {
+                return object1.toString().compareToIgnoreCase(o2.toString());
+            }
+        };
+
+        Arrays.sort(patientVariablesInDB, comparator);
+        Arrays.sort(tumourVariablesInDB, comparator);
+        Arrays.sort(sourceVariablesInDB, comparator);
+
         refreshVariableList();
     }
 
@@ -365,6 +385,7 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
             variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length];
             variablesInTable = sourceVariablesInDB;
         }
+        Arrays.sort(variablesInTable, comparator);
         variableComboBox.setModel(new DefaultComboBoxModel(variablesInTable));
         variableComboBox.setSelectedItem(0);
         updatePossibleValues();
