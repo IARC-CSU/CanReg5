@@ -183,8 +183,15 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
-   
+
     public void setVariablesInTable(DatabaseVariablesListElement[] arrayOfVariablesInSelectedTables) {
         variablesInTable = arrayOfVariablesInSelectedTables;
+    }
+
+    // useful for the frequency by year tool... for now.
+    public void showOnlyDataColumn() {
+        for (VariablesExportDetailsPanel ved : panelMap.values()) {
+            ved.showOnlyDataColumn();
+        }
     }
 }
