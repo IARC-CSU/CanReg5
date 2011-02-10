@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.Vector;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -31,7 +31,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
     private Document doc;
     // private DatabaseVariablesListElement[] variablesInDB;
     private DatabaseIndexesListElement[] indexesInDB;
-    private Vector filterCollection;
+    private List<String> filterCollection;
     private JDesktopPane dtp;
     private FastFilterInternalFrame filterWizardInternalFrame;
     private ActionListener actionListener;
@@ -82,7 +82,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         if (useFilterCheckBox.isSelected()) {
             return filterComboBox.getSelectedItem().toString().trim();
         } else {
-            return new String("");
+            return "";
         }
     }
 
@@ -545,7 +545,7 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
      *
      */
     public void initValues() {
-        filterCollection = new Vector();
+        filterCollection = new LinkedList<String>();
         // Get the system description
 
         filterWizardInternalFrame = new FastFilterInternalFrame();
