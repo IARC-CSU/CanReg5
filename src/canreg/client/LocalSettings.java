@@ -61,10 +61,14 @@ public final class LocalSettings {
      * 
      */
     public static String OUTLINE_DRAG_MODE_KEY = "outline_drag_mode";
+     /**
+     *
+     */
+    public static final String TABLES_PATH_KEY = "tables_path";
     /**
      * 
      */
-    public static String WORKING_DIR_PATH_KEY = "working_path";
+    public static String WORKING_DIR_PATH_KEY = TABLES_PATH_KEY;
     /**
      * 
      */
