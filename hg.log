@@ -1,5 +1,90 @@
-changeset:   597:6c9345225f1c
+changeset:   614:80c914185e86
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 13:18:52 2011 +0100
+summary:     Export now appends the .csv/.txt if the user does not specify this.
+
+changeset:   613:cfc7c139f96e
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 13:17:09 2011 +0100
+summary:     Frequencies by Year table can now be written to CSV file and it appends the .csv if the user does not specify this.
+
+changeset:   612:7e55f2e661b0
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 11:53:21 2011 +0100
+summary:     Added an icon to the dictionary element chooser.
+
+changeset:   611:1b83a9f8a89e
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 11:23:05 2011 +0100
+summary:     Tweeked the distributedtabledatasourceresultset implementation.
+
+changeset:   610:657424094108
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 11:17:34 2011 +0100
+summary:     VariablesChooserPanel can now hide the columns Dictionary category and Dictionary description.
+
+changeset:   609:97defd698679
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 11:17:22 2011 +0100
+summary:     VariablesChooserPanel can now hide the columns Dictionary category and Dictionary description.
+
+changeset:   608:47291db311a1
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 11:16:19 2011 +0100
+summary:     Tidied some code.
+
+changeset:   607:627fde69d8ad
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 11:15:57 2011 +0100
+summary:     Local settings key for the path of last built table implemented and working directory is pointing to that.
+
+changeset:   606:f56a746c5b75
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 11:15:03 2011 +0100
+summary:     Table builder now launches faster.
+
+changeset:   605:89f8f8c8340b
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 11:14:41 2011 +0100
+summary:     Frequencies by Year table can now be written to CSV file.
+
+changeset:   604:7ea9e6cddaa3
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 11:11:19 2011 +0100
+summary:     RangeFilterPanel replaced vectors with lists. Tidied some code.
+
+changeset:   603:15bd3f469712
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 11:07:16 2011 +0100
+summary:     RangeFilterPanel has now a setter for the selected table.
+
+changeset:   602:3b60414e6702
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Feb 09 18:00:39 2011 +0100
+summary:     Fixed a bug where the range sometimes did not work when a join of two tables were accessed.
+
+changeset:   601:ec7a711b0147
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Feb 09 17:11:30 2011 +0100
+summary:     Fixed a bug in the calculating of age in the "database garbler".
+
+changeset:   600:aadad8b2961c
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Feb 09 10:55:01 2011 +0100
+summary:     Replaced some printstacktraces with proper logging of errors.
+
+changeset:   599:dcf07e36eacb
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Feb 09 10:51:27 2011 +0100
+summary:     DatabaseStructure editor now displays a warning message if minimum required variables are not in place.
+
+changeset:   598:0c6c7bc1f72a
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Feb 08 18:01:44 2011 +0100
+summary:     5.00.03 RC1
+
+changeset:   597:6c9345225f1c
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Tue Feb 08 17:42:59 2011 +0100
 summary:     Merged the handbook and the manual into one PDF that can be updated independent of the CanReg releases.

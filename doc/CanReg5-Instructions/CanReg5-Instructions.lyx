@@ -2769,7 +2769,18 @@ Welcome screen
 \begin_layout Standard
 \align left
 There are two options in this CanReg5 welcome screen: "Login to CanReg"
- and "Install New System"
+ and "Install New System".
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegWelcomeScreen.png
+	scale 50
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -3495,6 +3506,15 @@ With the mouse, simply click on the variable you wish to edit, or on the
 \end_layout
 
 \begin_layout Standard
+\begin_inset Graphics
+	filename dictionaryelementchooser.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \align left
 The Pink fields are the mandatory ones.
  (Date format is still set to yyyyMMdd, but this will be improved later.)
@@ -3502,7 +3522,7 @@ The Pink fields are the mandatory ones.
 
 \begin_layout Standard
 When you have finished entering the data, you must perform the checks as
- described in the system variables help below.
+ described in the system variables part below.
 \end_layout
 
 \begin_layout Subsubsection
@@ -3649,12 +3669,12 @@ Person search
 \end_layout
 
 \begin_layout Standard
-The whole database is searched using "Probability Matching" for any records
+The whole database is searched using probability matching for any records
  that might belong to the same person.
  All personal data such as Date of Birth, Place of Residence, Id Number,
  plus a phonetically simplified form of the name are used in this search.
- Any other record with a percentage match higher than the "Minimum Match"
- is displayed.
+ (This can be tailored by the administrator of the CanReg5 system.) Any other
+ record with a percentage match higher than the "Minimum Match" is displayed.
 \end_layout
 
 \begin_layout Standard
@@ -4532,6 +4552,7 @@ This module is used to load previously made export settings or save the
  current settings.
  This includes the filter, the sequence, the variables to export and the
  various options.
+ (Not yet implemented.)
 \end_layout
 
 \begin_layout Subsection
@@ -4771,7 +4792,6 @@ es by year.
 \align left
 If you click Refresh table with no filter and no selected variables you
  get a table of cases per year.
- 
 \end_layout
 
 \begin_layout Standard
@@ -4811,8 +4831,14 @@ You can filter the result by adding a filter like for example on incidence
 \end_layout
 
 \begin_layout Standard
+With the save table button you can write the table to a comma separated
+ file (.CSV) that can be opened in most porgrams (Excel, Stata, R...) for further
+ analysis.
+\end_layout
+
+\begin_layout Standard
 \align left
-This table can be selected and copied and pasted into Excel, for example.
+The table can also be selected and copied and pasted into Excel, for example.
  (No right-click shortcut for that is implemented yet, but you can select
  the lines you want and press Ctrl-C (on Windows and Linux) or Apple-C (on
  Mac) and paste it into other programs.
@@ -5225,19 +5251,15 @@ Duplicate search
 \end_layout
 
 \begin_layout Standard
-Minimum match
-\end_layout
-
-\begin_layout Standard
 Registration number - range start and end.
 \end_layout
 
-\begin_layout Standard
-Show Multiple Primary pairs
+\begin_layout Paragraph
+Advanced
 \end_layout
 
 \begin_layout Standard
-Test for previous cases only
+Change weights and variables.
 \end_layout
 
 \begin_layout Standard
@@ -5250,11 +5272,20 @@ Test for previous cases only
 \end_layout
 
 \begin_layout Paragraph
-Advanced
+Results
 \end_layout
 
 \begin_layout Standard
-Change weights and variables.
+Results from the search appears here as potential duplicates are found.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename personsearchresults.png
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -5497,7 +5528,7 @@ A:
  TCP/IP so you can tunnel this through secure channels (SSH/VPN etc) to
  do remote registration.
  (This is not "officially" supported, as we haven't been able to test it
- enough locally (yet).) 
+ enough (yet).) 
 \end_layout
 
 \begin_layout Subsection
@@ -5593,7 +5624,7 @@ Try exporting your data with a comma separated variables instead of the
 \series bold
 Q: 
 \series default
-In canreg5, how do you clear previous data and import fresh ones from canreg4.
+In CanReg5, how do you clear previous data and import fresh ones from canreg4.
  
 \end_layout
 
@@ -5661,7 +5692,7 @@ name "sub:Tables"
 
 \end_inset
 
-Tables
+Analysis/tables
 \end_layout
 
 \begin_layout Description
@@ -5882,6 +5913,42 @@ source
  table you store all information about the sources of information of any
  given tumour.
  (Source name (preferably coded), source type, date etc.)
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+Q: 
+\series default
+After adding a new/removing an old variable to collect in the database what
+ do I need to do?
+\end_layout
+
+\begin_layout Description
+\align left
+
+\series bold
+A: 
+\series default
+First of all, before adding or removing variables using the built in tool
+ or editing the underlying XML file you should take a backup of your old
+ database.
+ Then you need to export all the data - one table at a time from CanReg5
+ - so that you have 3 files.
+ One for the patient table, one for the tumour table and one for the source
+ table.
+ Then you need to export the dictionaries.
+ After editing the database structure you will have to delete the old database
+ files, relaunch CanReg5 and import these files to the empty database.
+ Basically what CanReg does when you launch the server is first to load
+ the XML describing the database, then checks to see if the database files
+ exist in the Database folder.
+ If this does exist it checks to see if it corresponds with the XML.
+ If it does not it will not be able to launch the server.
+ (I'll look into creating a better set of error messages.) If it does not
+ find a database folder with the registry code found in the XML it will
+ generate an empty one.
 \begin_inset Newpage newpage
 \end_inset
 
@@ -5994,45 +6061,6 @@ Priority: Low
 \begin_layout Itemize
 \align left
 Category: Database/Browser 
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-\align left
-Server does not start if language is set to Turkish due to special rules
- in Turkish regarding 
-\begin_inset Quotes eld
-\end_inset
-
-upper casing
-\begin_inset Quotes erd
-\end_inset
-
- of letters.
- 
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-\align left
-Temporary solution: set the language of the server to any other language
- than Turkish.
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-Severity: Does not cause information loss 
-\end_layout
-
-\begin_layout Itemize
-\align left
-Priority: Medium 
-\end_layout
-
-\begin_layout Itemize
-\align left
-Category: Server 
 \end_layout
 
 \end_deeper

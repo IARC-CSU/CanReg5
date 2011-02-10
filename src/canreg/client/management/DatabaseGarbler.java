@@ -194,7 +194,7 @@ public class DatabaseGarbler {
                                                 DateHelper.parseGregorianCalendarCanRegToDateString(incidenceDateCalendar, Globals.DATE_FORMAT_STRING));
                                     }
                                     if (incidenceDateCalendar != null && birthDateCalendar != null) {
-                                        int age = (int) DateHelper.yearsBetween(birthDateCalendar, incidenceDateCalendar);
+                                        int age = (int) DateHelper.yearsBetween(birthDateCalendar, incidenceDateCalendar) + 1;
                                         tumor.setVariable(ageVariableListElement.getDatabaseVariableName(), age);
                                     }
                                 }
