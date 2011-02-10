@@ -5,10 +5,12 @@
  */
 package canreg.client.gui.analysis;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import cachingtableapi.DistributedTableDescription;
 import cachingtableapi.DistributedTableModel;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
+import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
@@ -18,6 +20,9 @@ import java.awt.MenuItem;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
@@ -26,6 +31,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
@@ -48,11 +54,12 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     private JDesktopPane dtp;
     private TableColumnModel tableColumnModel;
     private Set<DatabaseVariablesListElement> chosenVariables;
-    private String tableName = null;
     private DistributedTableDescription tableDatadescriptionPopUp;
     private static int MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK = 20;
     private TableInternalFrame tableInternalFrame;
     private final Map<Integer, canreg.server.database.Dictionary> dictionary;
+    private JFileChooser chooser = null;
+    private final LocalSettings localSettings;
 
     /** Creates new form FrequenciesByYearInternalFrame
      * @param dtp 
@@ -63,6 +70,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         initComponents();
         initOtherComponents();
 
+        localSettings = CanRegClientApp.getApplication().getLocalSettings();
         addInternalFrameListener(new InternalFrameAdapter() {
 
             @Override
@@ -93,6 +101,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         resultScrollPane = new javax.swing.JScrollPane();
         resultTable = new javax.swing.JTable();
         popOutTableButton = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -136,15 +145,19 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 558, Short.MAX_VALUE)
+            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
         );
 
         popOutTableButton.setAction(actionMap.get("popOutTableAction")); // NOI18N
         popOutTableButton.setName("popOutTableButton"); // NOI18N
+
+        jButton2.setAction(actionMap.get("saveTableAction")); // NOI18N
+        jButton2.setToolTipText(resourceMap.getString("jButton2.toolTipText")); // NOI18N
+        jButton2.setName("jButton2"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -159,10 +172,12 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(popOutTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
-                            .addComponent(variablesChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))))
+                                .addComponent(popOutTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE))
+                            .addComponent(variablesChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -176,7 +191,8 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1)
-                            .addComponent(popOutTableButton))))
+                            .addComponent(popOutTableButton)
+                            .addComponent(jButton2))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(resultPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -189,6 +205,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton popOutTableButton;
     private canreg.client.gui.components.RangeFilterPanel rangeFilterPanel;
     private javax.swing.JPanel resultPanel;
@@ -212,6 +229,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
 
         DatabaseFilter filter = new DatabaseFilter();
         DistributedTableDescription newTableDatadescription = null;
+        String tableName;
 
         RefreshTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
@@ -329,10 +347,11 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         rangeFilterPanel.setRecordPanelvisible(false);
         rangeFilterPanel.setSortByVariableShown(false);
         rangeFilterPanel.setTablesToChooseFrom(Globals.DEFAULT_TABLE_CHOOSER_TABLE_LIST);
+        rangeFilterPanel.setSelectedTable(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME);
         resultScrollPane.setVisible(false);
-        variablesChooserPanel.setTableName(rangeFilterPanel.getSelectedTable());
-        variablesChooserPanel.setVariablesInTable(rangeFilterPanel.getArrayOfVariablesInSelectedTables());
-        variablesChooserPanel.initPanel(dictionary);
+
+        setTable(rangeFilterPanel.getSelectedTable());
+
         tableInternalFrame = new TableInternalFrame();
 
         resultTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -395,7 +414,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         filter.setFilterString(filterString);
         Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, "FilterString: {0}", filterString);
         try {
-            tableDatadescriptionPopUp = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
+            tableDatadescriptionPopUp = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, rangeFilterPanel.getSelectedTable());
             Object[][] rows = canreg.client.CanRegClientApp.getApplication().retrieveRows(tableDatadescriptionPopUp.getResultSetID(), 0, MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK);
             String[] variableNames = tableDatadescriptionPopUp.getColumnNames();
             for (Object[] row : rows) {
@@ -428,17 +447,21 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         jpm.show(target, evt.getX(), evt.getY());
     }
 
+    private void setTable(String tableName) {
+        variablesChooserPanel.setTableName(tableName);
+        variablesChooserPanel.setVariablesInTable(rangeFilterPanel.getArrayOfVariablesInSelectedTables());
+        variablesChooserPanel.initPanel(dictionary);
+        variablesChooserPanel.showOnlyDataColumn();
+        resultPanel.setVisible(false);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if ("refresh".equalsIgnoreCase(e.getActionCommand())) {
             Task refreshTask = refresh();
             refreshTask.execute();
         } else if ("tableChanged".equalsIgnoreCase(e.getActionCommand())) {
-            tableName = rangeFilterPanel.getSelectedTable();
-            variablesChooserPanel.setTableName(tableName);
-            variablesChooserPanel.setVariablesInTable(rangeFilterPanel.getArrayOfVariablesInSelectedTables());
-            variablesChooserPanel.initPanel(dictionary);
-            resultPanel.setVisible(false);
+            setTable(rangeFilterPanel.getSelectedTable());
         }
     }
 
@@ -464,5 +487,64 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         resultScrollPane = tableInternalFrame.setResultTable(resultTable);
         CanRegClientView.showAndPositionInternalFrame(dtp, tableInternalFrame);
         popOutTableButton.setEnabled(false);
+    }
+
+    @Action
+    public void saveTableAction() {
+        if (!resultTable.isVisible()) {
+            refresh();
+        }
+
+        Writer writer = null;
+        try {
+            String fileName = null;
+            if (chooser == null) {
+                String path = localSettings.getProperty(LocalSettings.TABLES_PATH_KEY);
+                if (path == null) {
+                    chooser = new JFileChooser();
+                } else {
+                    chooser = new JFileChooser(path);
+                }
+            }
+            int returnVal = chooser.showSaveDialog(this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                try {
+                    localSettings.setProperty(LocalSettings.TABLES_PATH_KEY, chooser.getSelectedFile().getParentFile().getCanonicalPath());
+                    fileName = chooser.getSelectedFile().getAbsolutePath();
+                } catch (IOException ex) {
+                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                // cancelled
+                return;
+            }
+            writer = new FileWriter(fileName);
+            CSVWriter csvwriter = new CSVWriter(writer, ',');
+            String[] nextLine = new String[resultTable.getColumnCount()];
+
+            // Write the column names
+            for (int j = 0; j < nextLine.length; j++) {
+                nextLine[j] = resultTable.getColumnName(j);
+            }
+            csvwriter.writeNext(nextLine);
+            // write the rows
+            for (int i = 0; i < resultTable.getRowCount(); i++) {
+                for (int j = 0; j < nextLine.length; j++) {
+                    nextLine[j] = resultTable.getValueAt(i, j).toString();
+                }
+                csvwriter.writeNext(nextLine);
+            }
+            csvwriter.flush();
+            JOptionPane.showMessageDialog(this, "File written.", "OK", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "File NOT written.\n"+ex.getLocalizedMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                writer.close();
+            } catch (IOException ex) {
+                Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

@@ -38,11 +38,13 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
+                              <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="popOutTableButton" pref="122" max="32767" attributes="0"/>
+                              <Component id="popOutTableButton" pref="193" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="variablesChooserPanel" alignment="0" pref="211" max="32767" attributes="0"/>
+                          <Component id="variablesChooserPanel" alignment="0" pref="371" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -62,6 +64,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="popOutTableButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -102,12 +105,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="resultScrollPane" alignment="0" pref="564" max="32767" attributes="0"/>
+              <Component id="resultScrollPane" alignment="0" pref="724" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="resultScrollPane" alignment="0" pref="159" max="32767" attributes="0"/>
+              <Component id="resultScrollPane" alignment="0" pref="167" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -145,6 +148,15 @@
           <action class="canreg.client.gui.analysis.FrequenciesByYearInternalFrame" id="popOutTableAction" methodName="popOutTableAction"/>
         </Property>
         <Property name="name" type="java.lang.String" value="popOutTableButton" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButton2">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="canreg.client.gui.analysis.FrequenciesByYearInternalFrame" id="saveTableAction" methodName="saveTableAction"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" resourceKey="jButton2.toolTipText"/>
+        <Property name="name" type="java.lang.String" value="jButton2" noResource="true"/>
       </Properties>
     </Component>
   </SubComponents>
