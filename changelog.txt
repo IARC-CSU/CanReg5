@@ -30,6 +30,8 @@ Changelog
 
 - Fixed some potential null-pointer errors.
 
+- Fixed some localization issue.
+
 - Added an easy access list of tables.
 
 - Added links to news items in the "latest news" browser.
@@ -64,12 +66,13 @@ Changelog
 
 - Fixed a bug where the compound dictionaries did not detect faulty (truncated) codes.
 
+- Variable names are sorted in the rangefilter and the fastfilter.
+
 - Updated the welcome frame.
 
 - Performance improvements.
 
 - Updated the about box.
-
 
 
 5.00.02

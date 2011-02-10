@@ -1,5 +1,66 @@
-changeset:   614:80c914185e86
+changeset:   626:16d7728d540c
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 14:09:37 2011 +0100
+summary:     Tidied some code.
+
+changeset:   625:3d98677b3d5c
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 14:09:20 2011 +0100
+summary:     Fixed a localization issue.
+
+changeset:   624:caadd6752c01
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 14:08:01 2011 +0100
+summary:     Variable names are sorted in the rangefilter and the fastfilter.
+
+changeset:   623:01c831c28ee8
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 14:06:28 2011 +0100
+summary:     DatabaseVariableListElement now also shows Table name in the toString() function.
+
+changeset:   622:ecef8f66bc11
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 13:25:39 2011 +0100
+summary:     Added tag 5.00.00 for changeset e4685a46597d
+
+changeset:   621:3d22ba2b5911
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 13:25:24 2011 +0100
+summary:     Added tag 5.00.01 for changeset 7aa69505606c
+
+changeset:   620:3e96ff4820e7
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 13:25:06 2011 +0100
+summary:     Added tag 5.00.02 for changeset 85744985625d
+
+changeset:   619:793131ab896b
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 13:24:45 2011 +0100
+summary:     Added tag 5.00.03 RC1 for changeset 0c6c7bc1f72a
+
+changeset:   618:8c7a2f554577
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 13:24:14 2011 +0100
+summary:     Added tag 5.00.03 RC2 for changeset 05541c98ea28
+
+changeset:   617:8456a1e3a8c8
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 13:23:52 2011 +0100
+summary:     Removed tag 5.00.02 RC2
+
+changeset:   616:05db927a366b
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 13:23:27 2011 +0100
+summary:     Added tag 5.00.02 RC2 for changeset 05541c98ea28
+
+changeset:   615:05541c98ea28
+tag:         5.00.03 RC2
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 13:22:05 2011 +0100
+summary:     5.00.03 RC2
+
+changeset:   614:80c914185e86
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Thu Feb 10 13:18:52 2011 +0100
 summary:     Export now appends the .csv/.txt if the user does not specify this.
@@ -80,6 +141,7 @@ date:        Wed Feb 09 10:51:27 2011 +0100
 summary:     DatabaseStructure editor now displays a warning message if minimum required variables are not in place.
 
 changeset:   598:0c6c7bc1f72a
+tag:         5.00.03 RC1
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Tue Feb 08 18:01:44 2011 +0100
 summary:     5.00.03 RC1
@@ -390,6 +452,7 @@ date:        Thu Jan 13 11:46:47 2011 +0100
 summary:     Improved the GUI of the database variable editor screen.
 
 changeset:   536:85744985625d
+tag:         5.00.02
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Wed Jan 05 14:32:10 2011 +0100
 summary:     5.00.02
@@ -435,6 +498,7 @@ date:        Fri Nov 12 17:33:46 2010 +0100
 summary:     Updated instructions and future.
 
 changeset:   527:7aa69505606c
+tag:         5.00.01
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Tue Nov 09 15:52:57 2010 +0100
 summary:     5.00.01
@@ -470,6 +534,7 @@ date:        Fri Oct 08 10:03:45 2010 +0200
 summary:     Updated handbook.
 
 changeset:   520:e4685a46597d
+tag:         5.00.00
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Fri Oct 08 09:53:06 2010 +0200
 summary:     Version 5.00
