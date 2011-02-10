@@ -511,6 +511,10 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                 try {
                     localSettings.setProperty(LocalSettings.TABLES_PATH_KEY, chooser.getSelectedFile().getParentFile().getCanonicalPath());
                     fileName = chooser.getSelectedFile().getAbsolutePath();
+                    // we force the .csv ending to the file
+                    if (!(fileName.endsWith(".csv")||fileName.endsWith(".CSV"))){
+                        fileName += ".csv";
+                    }
                 } catch (IOException ex) {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
