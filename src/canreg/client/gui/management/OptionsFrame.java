@@ -504,7 +504,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         // Languages
         locales = Locale.getAvailableLocales();
         Arrays.sort(locales, new Comparator<Locale>() {
-
+            @Override
             public int compare(Locale o1, Locale o2) {
                 return o1.getDisplayName(o1).compareToIgnoreCase(o2.getDisplayName(o2));
             }
