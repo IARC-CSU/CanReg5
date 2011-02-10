@@ -35,7 +35,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
     public LatestNewsInternalFrame() {
         initComponents();
         initContent();
-        jEditorPane1.addHyperlinkListener(this);
+        newsEditorPane.addHyperlinkListener(this);
     }
 
     /** This method is called from within the constructor to
@@ -49,7 +49,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jEditorPane1 = new javax.swing.JEditorPane();
+        newsEditorPane = new javax.swing.JEditorPane();
         jButton1 = new javax.swing.JButton();
 
         setClosable(true);
@@ -63,10 +63,10 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        jEditorPane1.setEditable(false);
-        jEditorPane1.setName("jEditorPane1"); // NOI18N
-        jEditorPane1.setRequestFocusEnabled(false);
-        jScrollPane1.setViewportView(jEditorPane1);
+        newsEditorPane.setEditable(false);
+        newsEditorPane.setName("newsEditorPane"); // NOI18N
+        newsEditorPane.setRequestFocusEnabled(false);
+        jScrollPane1.setViewportView(newsEditorPane);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -76,7 +76,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
         );
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(LatestNewsInternalFrame.class, this);
@@ -142,8 +142,8 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
                 newsStringBuilder.append("<a href = \"").append(link.getText()).append("\">Link</a>");
                 newsStringBuilder.append("<br><br>");
             }
-            jEditorPane1.setText(newsStringBuilder.toString());
-            jEditorPane1.setCaretPosition(0);
+            newsEditorPane.setText(newsStringBuilder.toString());
+            newsEditorPane.setCaretPosition(0);
         }
 
         //Iterate over categories if we are provided with any
@@ -161,21 +161,21 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JEditorPane newsEditorPane;
     // End of variables declaration//GEN-END:variables
 
     private void initContent() {
-        jEditorPane1.setContentType("text/html");
+        newsEditorPane.setContentType("text/html");
         try {
             readRSSDocument();
         } catch (RssParserException ex) {
             Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.INFO, null, ex);
-            jEditorPane1.setText("<h2>No current news found. Please check your internet connection.</h2>");
+            newsEditorPane.setText("<h2>No current news found. Please check your internet connection.</h2>");
 
         } catch (IOException ex) {
-            jEditorPane1.setText("<h2>No current news found. Please check your internet connection.</h2>");
+            newsEditorPane.setText("<h2>No current news found. Please check your internet connection.</h2>");
             Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.INFO, null, ex);
         }
     }

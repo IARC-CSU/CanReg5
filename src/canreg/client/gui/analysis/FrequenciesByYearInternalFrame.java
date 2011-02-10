@@ -96,12 +96,12 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
 
         rangeFilterPanel = new canreg.client.gui.components.RangeFilterPanel();
         variablesChooserPanel = new canreg.client.gui.components.VariablesChooserPanel();
-        jButton1 = new javax.swing.JButton();
+        printTableButton = new javax.swing.JButton();
         resultPanel = new javax.swing.JPanel();
         resultScrollPane = new javax.swing.JScrollPane();
         resultTable = new javax.swing.JTable();
         popOutTableButton = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        saveTableButton = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -118,8 +118,8 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         variablesChooserPanel.setName("variablesChooserPanel"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(FrequenciesByYearInternalFrame.class, this);
-        jButton1.setAction(actionMap.get("printTableAction")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
+        printTableButton.setAction(actionMap.get("printTableAction")); // NOI18N
+        printTableButton.setName("printTableButton"); // NOI18N
 
         resultPanel.setName("resultPanel"); // NOI18N
 
@@ -145,55 +145,56 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
+            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 665, Short.MAX_VALUE)
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+            .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
         );
 
         popOutTableButton.setAction(actionMap.get("popOutTableAction")); // NOI18N
         popOutTableButton.setName("popOutTableButton"); // NOI18N
 
-        jButton2.setAction(actionMap.get("saveTableAction")); // NOI18N
-        jButton2.setToolTipText(resourceMap.getString("jButton2.toolTipText")); // NOI18N
-        jButton2.setName("jButton2"); // NOI18N
+        saveTableButton.setAction(actionMap.get("saveTableAction")); // NOI18N
+        saveTableButton.setToolTipText(resourceMap.getString("saveTableButton.toolTipText")); // NOI18N
+        saveTableButton.setName("saveTableButton"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(resultPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(resultPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton2)
+                                .addGap(375, 375, 375)
+                                .addComponent(saveTableButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1)
+                                .addComponent(printTableButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(popOutTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE))
-                            .addComponent(variablesChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE))))
+                                .addComponent(popOutTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(variablesChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(variablesChooserPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(17, 17, 17)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
+                            .addComponent(printTableButton)
                             .addComponent(popOutTableButton)
-                            .addComponent(jButton2))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(saveTableButton)))
+                    .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
                 .addComponent(resultPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -204,13 +205,13 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         pack();
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton popOutTableButton;
+    private javax.swing.JButton printTableButton;
     private canreg.client.gui.components.RangeFilterPanel rangeFilterPanel;
     private javax.swing.JPanel resultPanel;
     private javax.swing.JScrollPane resultScrollPane;
     private javax.swing.JTable resultTable;
+    private javax.swing.JButton saveTableButton;
     private canreg.client.gui.components.VariablesChooserPanel variablesChooserPanel;
     // End of variables declaration//GEN-END:variables
 

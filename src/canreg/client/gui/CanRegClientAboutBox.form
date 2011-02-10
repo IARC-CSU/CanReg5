@@ -79,11 +79,11 @@
                           <Component id="appHomepageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="aboutScrollPane" pref="160" max="32767" attributes="0"/>
+                      <Component id="aboutScrollPane" pref="182" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="closeButton" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="imageLabel" alignment="0" pref="333" max="32767" attributes="0"/>
+                  <Component id="imageLabel" alignment="0" pref="355" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>

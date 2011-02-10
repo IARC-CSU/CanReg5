@@ -287,7 +287,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
                 String headers = new String();
                 // String dataText = new String();
                 Vector<Vector<String>> data = new Vector<Vector<String>>();
-
+                
                 while (i < Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW && line != null) {
                     if (i == 0) {
                         headers = line;

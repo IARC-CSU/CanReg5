@@ -452,7 +452,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             // setProgress(0, 0, 4);
             setMessage("Initiating query...");
             // setProgress(1, 0, 4);
-            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
         }
 
         @Override
@@ -500,7 +500,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
                 tableDatadescription = newTableDatadescription;
 
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
 
                 if (tableDatadescription != null) {
                     try {
@@ -508,7 +508,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     } catch (Exception ex) {
                         Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
                 }
 
                 if (tableDataSource != null) {
@@ -518,7 +518,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                         Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     // tableDataModel = new PagingTableModel(tableDataSource);
-                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
                     // setProgress(2, 0, 4);
                 }
 
@@ -534,7 +534,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 tableColumnModel = new XTableColumnModel();
                 resultTable.setColumnModel(tableColumnModel);
                 resultTable.createDefaultColumnsFromModel();
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, Runtime.getRuntime().freeMemory() + " free memory.");
+                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
 
                 // setProgress(4, 0, 4);
                 setMessage("Finished");

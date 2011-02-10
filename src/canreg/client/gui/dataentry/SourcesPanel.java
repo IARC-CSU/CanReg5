@@ -159,6 +159,7 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
     private javax.swing.JTabbedPane sourcesTabbedPane;
     // End of variables declaration//GEN-END:variables
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         // forward the event...
         listener.actionPerformed(e);

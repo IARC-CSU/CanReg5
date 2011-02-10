@@ -29,23 +29,26 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="resultPanel" alignment="0" max="32767" attributes="0"/>
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="resultPanel" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="-2" pref="375" max="-2" attributes="0"/>
+                              <Component id="saveTableButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                              <Component id="printTableButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="popOutTableButton" pref="193" max="32767" attributes="0"/>
+                              <Component id="popOutTableButton" pref="112" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="variablesChooserPanel" alignment="0" pref="371" max="32767" attributes="0"/>
                       </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="rangeFilterPanel" min="-2" pref="357" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="variablesChooserPanel" pref="312" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -55,20 +58,19 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="rangeFilterPanel" alignment="0" min="-2" pref="288" max="-2" attributes="1"/>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <Component id="variablesChooserPanel" min="-2" pref="249" max="-2" attributes="1"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="printTableButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="popOutTableButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="saveTableButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
+                  <Component id="rangeFilterPanel" min="-2" pref="288" max="-2" attributes="1"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
               <Component id="resultPanel" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -89,12 +91,12 @@
         <Property name="name" type="java.lang.String" value="variablesChooserPanel" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="printTableButton">
       <Properties>
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
           <action class="canreg.client.gui.analysis.FrequenciesByYearInternalFrame" id="printTableAction" methodName="printTableAction"/>
         </Property>
-        <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="printTableButton" noResource="true"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JPanel" name="resultPanel">
@@ -105,12 +107,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="resultScrollPane" alignment="0" pref="724" max="32767" attributes="0"/>
+              <Component id="resultScrollPane" alignment="0" pref="665" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="resultScrollPane" alignment="0" pref="167" max="32767" attributes="0"/>
+              <Component id="resultScrollPane" alignment="0" pref="171" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -150,13 +152,13 @@
         <Property name="name" type="java.lang.String" value="popOutTableButton" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="saveTableButton">
       <Properties>
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
           <action class="canreg.client.gui.analysis.FrequenciesByYearInternalFrame" id="saveTableAction" methodName="saveTableAction"/>
         </Property>
-        <Property name="toolTipText" type="java.lang.String" resourceKey="jButton2.toolTipText"/>
-        <Property name="name" type="java.lang.String" value="jButton2" noResource="true"/>
+        <Property name="toolTipText" type="java.lang.String" resourceKey="saveTableButton.toolTipText"/>
+        <Property name="name" type="java.lang.String" value="saveTableButton" noResource="true"/>
       </Properties>
     </Component>
   </SubComponents>
