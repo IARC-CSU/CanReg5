@@ -160,4 +160,9 @@ public class VariablesExportDetailsPanel extends javax.swing.JPanel {
     public Dictionary getDictionary() {
         return dictionary;
     }
+
+    public void showOnlyDataColumn() {
+        dictionaryCategoryCheckBox.setVisible(false);
+        dictionaryDescriptionCheckBox.setVisible(false);
+    }
 }
