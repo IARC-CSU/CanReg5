@@ -124,7 +124,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
 
     @Override
     public String toString() {
-        return getFullName();
+        return getFullName() + " ("+getTable()+")";
     }
 
     /**
