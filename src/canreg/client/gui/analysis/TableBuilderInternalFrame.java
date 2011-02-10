@@ -68,17 +68,11 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         initData();
 
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
-        path = localSettings.getProperty("tables_path");
-
-        if (path == null) {
-            chooser = new JFileChooser();
-        } else {
-            chooser = new JFileChooser(path);
-        }
 
         // Add a listener for changing the active tab
         ChangeListener tabbedPaneChangeListener = new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 // initializeVariableMappingTab();
                 changeTab(tabbedPane.getSelectedIndex());
@@ -107,7 +101,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         return heading;
     }
 
-    protected void changeTab(int tabNumber) {
+    protected final void changeTab(int tabNumber) {
         tabbedPane.setSelectedIndex(tabNumber);
         nextButton.setEnabled(tabNumber < tabbedPane.getTabCount() - 1);
         backButton.setEnabled(tabNumber > 0);
@@ -678,6 +672,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         File dir = new File(Globals.TABLES_CONF_PATH);
         FilenameFilter filter = new FilenameFilter() {
 
+            @Override
             public boolean accept(File dir, String name) {
                 return (name.endsWith(".conf"));
             }
@@ -774,10 +769,18 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             if (tableBuilder.areThesePopulationDatasetsOK(populations)) {
                 String fileName = null;
                 // Choose file name;
+                if (chooser == null) {
+                    path = localSettings.getProperty(LocalSettings.TABLES_PATH_KEY);
+                    if (path == null) {
+                        chooser = new JFileChooser();
+                    } else {
+                        chooser = new JFileChooser(path);
+                    }
+                }
                 int returnVal = chooser.showSaveDialog(this);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     try {
-                        localSettings.setProperty("tables_path", chooser.getSelectedFile().getCanonicalPath());
+                        localSettings.setProperty(LocalSettings.TABLES_PATH_KEY, chooser.getSelectedFile().getParentFile().getCanonicalPath());
                         fileName = chooser.getSelectedFile().getAbsolutePath();
                     } catch (IOException ex) {
                         Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -840,13 +843,13 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     LinkedList<String> filesGenerated = tableBuilder.buildTable(heading, fileName, startYear, endYear, incidenceData, populations, standardPopulations, tble.getConfigFields(), tble.getEngineParameters());
 
                     String filesGeneratedList = new String();
-                    for (String fileN:filesGenerated){
-                        filesGeneratedList+="\n"+fileN;
+                    for (String fileN : filesGenerated) {
+                        filesGeneratedList += "\n" + fileN;
                     }
 
                     setCursor(normalCursor);
 
-                    JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT.")+filesGeneratedList, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."), JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT.") + filesGeneratedList, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."), JOptionPane.INFORMATION_MESSAGE);
 
                     // Opening the resulting files...
                     for (String resultFileName : filesGenerated) {
@@ -854,7 +857,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     }
 
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, "Something wrong with the SQL query: \n"+ ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Something wrong with the SQL query: \n" + ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (RemoteException ex) {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
