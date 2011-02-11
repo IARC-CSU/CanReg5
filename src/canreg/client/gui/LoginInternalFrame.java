@@ -636,7 +636,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                 }
             } catch (AlreadyBoundException ex) {
                 result = "running";
-                // Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.INFO, null, ex);
             }
             // Return your result... 
             return result;
