@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.5" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <Properties>
@@ -38,7 +38,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="nextButton" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="tabbedPane" alignment="0" pref="525" max="32767" attributes="0"/>
+                  <Component id="tabbedPane" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -48,7 +48,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="293" max="32767" attributes="0"/>
+              <Component id="tabbedPane" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -89,28 +89,29 @@
                           <Component id="previewPanel" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="fileEncodingLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="charsetsComboBox" pref="150" max="32767" attributes="0"/>
-                                      <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                                      <Component id="separatingCharacterLabel" min="-2" max="-2" attributes="0"/>
-                                  </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="fileLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="fileNameTextField" pref="310" max="32767" attributes="0"/>
+                                      <Component id="fileNameTextField" pref="365" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="fileEncodingLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="charsetsComboBox" min="-2" pref="117" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="autodetectButton" min="-2" max="-2" attributes="1"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="separatingCharacterLabel" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="browseButton" alignment="0" max="32767" attributes="1"/>
-                                  <Component id="separatingCharacterComboBox" alignment="0" min="0" pref="0" max="32767" attributes="1"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="previewButton" max="32767" attributes="1"/>
-                                  <Component id="autodetectButton" alignment="1" max="32767" attributes="1"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="separatingCharacterComboBox" alignment="0" max="32767" attributes="1"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="browseButton" min="-2" max="-2" attributes="1"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="previewButton" min="-2" max="-2" attributes="1"/>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
@@ -130,11 +131,11 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="autodetectButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="separatingCharacterComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="separatingCharacterLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="fileEncodingLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="charsetsComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="separatingCharacterComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="autodetectButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="separatingCharacterLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="previewPanel" max="32767" attributes="0"/>
@@ -183,9 +184,9 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="numberOfRecordsShownLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="numberOfRecordsShownTextField" pref="63" max="32767" attributes="0"/>
+                          <Component id="numberOfRecordsShownTextField" pref="102" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="previewTableScrollPane" alignment="0" pref="484" max="32767" attributes="0"/>
+                      <Component id="previewTableScrollPane" alignment="0" pref="523" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -198,7 +199,7 @@
                               <Component id="numberOfRecordsShownTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="previewTableScrollPane" pref="129" max="32767" attributes="0"/>
+                          <Component id="previewTableScrollPane" pref="146" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -296,7 +297,7 @@
             <Component class="javax.swing.JButton" name="autodetectButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.dataentry.ImportView" id="autodetectSeparatingCharacterAction" methodName="autodetectSeparatingCharacterAction"/>
+                  <action class="canreg.client.gui.dataentry.ImportView" id="autodetectFileEncodingAction" methodName="autodetectFileEncodingAction"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="autodetectButton.text"/>
                 <Property name="toolTipText" type="java.lang.String" resourceKey="autodetectButton.toolTipText"/>
@@ -342,9 +343,9 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jSplitPane1" alignment="0" pref="500" max="32767" attributes="1"/>
+                          <Component id="jSplitPane1" alignment="0" pref="539" max="32767" attributes="1"/>
                           <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="variablesScrollPane" alignment="0" pref="500" max="32767" attributes="1"/>
+                          <Component id="variablesScrollPane" alignment="0" pref="539" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -358,7 +359,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jSplitPane1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variablesScrollPane" pref="215" max="32767" attributes="0"/>
+                      <Component id="variablesScrollPane" pref="232" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -575,7 +576,7 @@
                               <Component id="queryNewNameCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="previousCanRegDataCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="55" max="32767" attributes="0"/>
+                          <EmptySpace pref="94" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -695,7 +696,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="progressBar" alignment="0" pref="484" max="32767" attributes="0"/>
+                      <Component id="progressBar" alignment="0" pref="523" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
