@@ -896,7 +896,7 @@ public final class CanRegClientView extends FrameView {
 
         //toolbar buttons        
         // a bit too drastic : toolBar.setVisible(loggedIn);
-        browseEditButton.setEnabled(analysis);
+        browseEditButton.setEnabled(dataEntry);
         createNewRecordButton.setEnabled(dataEntry);
         tableBuilderButton.setEnabled(analysis);
 
