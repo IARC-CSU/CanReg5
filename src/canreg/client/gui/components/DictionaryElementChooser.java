@@ -16,9 +16,13 @@ import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.TreeSet;
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
 import org.jdesktop.application.Action;
 
 /**
@@ -31,12 +35,38 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
     protected Dictionary dictionary = null;
     boolean firstPass = true;
     private DictionaryEntry oldElement;
+    private String categoryCode = null;
     public static String OK_ACTION = "DICTIONARY_CHOSEN";
+    private javax.swing.Action upAction;
+    private javax.swing.Action downAction;
 
     /** Creates new form DictionaryElementChooser */
     public DictionaryElementChooser(ActionListener listener) {
         this.listener = listener;
         initComponents();
+
+        KeyStroke up = KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0);
+        KeyStroke down = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0);
+        KeyStroke pgup = KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0);
+        KeyStroke pgdown = KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0);
+
+        upAction = new UpAction("Go up", null,
+                "",
+                new Integer(KeyEvent.VK_UP));
+        downAction = new DownAction("Go down", null,
+                "",
+                new Integer(KeyEvent.VK_DOWN));
+        
+        /* Not working yet, so we remove it...
+        this.registerKeyboardAction(upAction, "lineup", up,
+        JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        this.registerKeyboardAction(downAction, "linedown", down,
+        JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+         */
+        // filterEdit.requestFocusInWindow();
+
+        descriptionButton.setSelected(true);
     }
 
     public void setActionListener(ActionListener listener) {
@@ -44,8 +74,8 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
     }
 
     public DictionaryEntry getSelectedElement() {
-        if (jList1.getSelectedValue() != null) {
-            return (DictionaryEntry) jList1.getSelectedValue();
+        if (dictionaryEntryList.getSelectedValue() != null) {
+            return (DictionaryEntry) dictionaryEntryList.getSelectedValue();
         } else {
             return null;
         }
@@ -54,27 +84,26 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
     public void setSelectedElement(DictionaryEntry ddle) {
         oldElement = ddle;
         if (ddle != null && dictionary.isCompoundDictionary() && firstPass) {
-            jList1.setSelectedValue(
+            dictionaryEntryList.setSelectedValue(
                     dictionary.getDictionaryEntries().
                     get(ddle.getCode().substring(0, dictionary.getCodeLength())), true);
         } else {
-            jList1.setSelectedValue(ddle, true);
+            dictionaryEntryList.setSelectedValue(ddle, true);
         }
     }
 
-    public void setFirstPass(){
+    public void setFirstPass() {
         firstPass = true;
     }
 
     public void setDictionary(Dictionary dictionary) {
-        DictionaryEntry selected = (DictionaryEntry) jList1.getSelectedValue();
+        DictionaryEntry selected = (DictionaryEntry) dictionaryEntryList.getSelectedValue();
         this.dictionary = dictionary;
         setTitle(dictionary.getName());
         DictionaryEntry tempentry;
         TreeSet<DictionaryEntry> possibleValuesCollection = new TreeSet<DictionaryEntry>();
         // todo: populate list with possible values
         if (dictionary.isCompoundDictionary() && firstPass) {
-            possibleValuesCollection = new TreeSet<DictionaryEntry>();
             Iterator<String> it = dictionary.getDictionaryEntries().keySet().iterator();
             while (it.hasNext()) {
                 tempentry = dictionary.getDictionaryEntries().get(it.next());
@@ -83,11 +112,25 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
                 }
             }
         } else if (dictionary.isCompoundDictionary() && !firstPass) {
-            String value = getSelectedElement().getCode();
-            possibleValuesCollection.addAll(
-                    Arrays.asList(
-                    DictionaryHelper.getDictionaryEntriesStartingWith(
-                    value, dictionary.getDictionaryEntries().values().toArray(new DictionaryEntry[0]))));
+            if (getSelectedElement() != null) {
+                categoryCode = getSelectedElement().getCode();
+            }
+            if (categoryCode != null) {
+                possibleValuesCollection.addAll(
+                        Arrays.asList(
+                        DictionaryHelper.getDictionaryEntriesStartingWith(
+                        categoryCode, dictionary.getDictionaryEntries().values().toArray(new DictionaryEntry[0]))));
+
+            } else // we're on the second pass with no starts with selected, so we show all codes
+            {
+                Iterator<String> it = dictionary.getDictionaryEntries().keySet().iterator();
+                while (it.hasNext()) {
+                    tempentry = dictionary.getDictionaryEntries().get(it.next());
+                    if (tempentry.getCode().length() == dictionary.getFullDictionaryCodeLength()) {
+                        possibleValuesCollection.add(tempentry);
+                    }
+                }
+            }
             if (selected != null && oldElement != null
                     && oldElement.getCode().startsWith(selected.getCode())) {
                 selected = oldElement;
@@ -102,8 +145,8 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
         MatcherEditor<DictionaryEntry> textMatcherEditor = new TextComponentMatcherEditor<DictionaryEntry>(filterEdit, new DictionaryElementTextFilterator());
         FilterList<DictionaryEntry> textFilteredDictioaryEntries = new FilterList<DictionaryEntry>(possibleValuesEventList, textMatcherEditor);
         EventListModel<DictionaryEntry> eventListModel = new EventListModel<DictionaryEntry>(textFilteredDictioaryEntries);
-        jList1.setModel(eventListModel);
-        jList1.setSelectedValue(selected, true);
+        dictionaryEntryList.setModel(eventListModel);
+        dictionaryEntryList.setSelectedValue(selected, true);
     }
 
     /** This method is called from within the constructor to
@@ -117,13 +160,13 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        sortByLabel = new javax.swing.JLabel();
+        filterLabel = new javax.swing.JLabel();
         filterEdit = new javax.swing.JTextField();
+        descriptionButton = new javax.swing.JButton();
+        codeButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        dictionaryEntryList = new javax.swing.JList();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
@@ -134,62 +177,78 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
 
         jPanel1.setName("jPanel1"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(DictionaryElementChooser.class, this);
-        jButton3.setAction(actionMap.get("sortByDescriptionSelected")); // NOI18N
-        jButton3.setName("jButton3"); // NOI18N
+        sortByLabel.setText(resourceMap.getString("sortByLabel.text")); // NOI18N
+        sortByLabel.setName("sortByLabel"); // NOI18N
 
-        jButton4.setAction(actionMap.get("sortByCodeSelected")); // NOI18N
-        jButton4.setName("jButton4"); // NOI18N
-
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
-
-        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
-        jLabel2.setName("jLabel2"); // NOI18N
+        filterLabel.setText(resourceMap.getString("filterLabel.text")); // NOI18N
+        filterLabel.setName("filterLabel"); // NOI18N
 
         filterEdit.setText(resourceMap.getString("filterEdit.text")); // NOI18N
         filterEdit.setName("filterEdit"); // NOI18N
+        filterEdit.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                filterEditKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                filterEditKeyTyped(evt);
+            }
+        });
+
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(DictionaryElementChooser.class, this);
+        descriptionButton.setAction(actionMap.get("sortByDescriptionSelected")); // NOI18N
+        descriptionButton.setName("descriptionButton"); // NOI18N
+
+        codeButton.setAction(actionMap.get("sortByCodeSelected")); // NOI18N
+        codeButton.setName("codeButton"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(filterLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
+                .addComponent(filterEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(sortByLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(codeButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(filterEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE))
+                .addComponent(descriptionButton))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jLabel1)
-                .addComponent(jButton4)
-                .addComponent(jButton3)
-                .addComponent(jLabel2)
-                .addComponent(filterEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(filterEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(descriptionButton)
+                .addComponent(codeButton)
+                .addComponent(sortByLabel)
+                .addComponent(filterLabel))
         );
+
+        filterEdit.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "downAction");
+        filterEdit.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "upAction");
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
+        dictionaryEntryList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jList1.setName("jList1"); // NOI18N
-        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+        dictionaryEntryList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        dictionaryEntryList.setName("dictionaryEntryList"); // NOI18N
+        dictionaryEntryList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jList1MouseClicked(evt);
+                dictionaryEntryListMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jList1);
+        dictionaryEntryList.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dictionaryEntryListKeyPressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(dictionaryEntryList);
 
         jButton1.setAction(actionMap.get("okAction")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
@@ -202,16 +261,14 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(217, Short.MAX_VALUE)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -220,7 +277,7 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -231,12 +288,52 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
+    private void dictionaryEntryListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dictionaryEntryListMouseClicked
         // TODO add your handling code here:
         if (evt.getClickCount() == 2) {
             okAction();
         }
-    }//GEN-LAST:event_jList1MouseClicked
+    }//GEN-LAST:event_dictionaryEntryListMouseClicked
+
+    private void filterEditKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_filterEditKeyTyped
+        if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_ENTER) {
+            enterKeyPressed();
+        } else if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_ESCAPE) {
+            escapeKeyPressed();
+        }
+    }//GEN-LAST:event_filterEditKeyTyped
+
+    private void filterEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_filterEditKeyPressed
+        if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_DOWN) {
+        } else if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_UP) {
+            int position = dictionaryEntryList.getFirstVisibleIndex();
+            if (position > 0) {
+                dictionaryEntryList.setSelectedIndex(position - 1);
+            } else {
+                dictionaryEntryList.setSelectedIndex(dictionaryEntryList.getMaxSelectionIndex());
+            }
+        }
+    }//GEN-LAST:event_filterEditKeyPressed
+
+    private void dictionaryEntryListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dictionaryEntryListKeyPressed
+        if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_ENTER) {
+            enterKeyPressed();
+        } else if (evt.getKeyChar() == java.awt.event.KeyEvent.VK_ESCAPE) {
+            escapeKeyPressed();
+        }
+    }//GEN-LAST:event_dictionaryEntryListKeyPressed
+
+    private void enterKeyPressed() {
+        if (!dictionaryEntryList.isSelectionEmpty()) {
+            okAction();
+        } else {
+            int position = dictionaryEntryList.getFirstVisibleIndex();
+            if (position > -1) {
+                dictionaryEntryList.setSelectedIndex(position);
+                okAction();
+            }
+        }
+    }
 
     @Action
     public void okAction() {
@@ -267,6 +364,8 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
         for (DictionaryEntry de : dictionary.getDictionaryEntries().values()) {
             de.setSortByCode();
         }
+        codeButton.setSelected(true);
+        descriptionButton.setSelected(false);
         setDictionary(dictionary);
     }
 
@@ -275,19 +374,78 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
         for (DictionaryEntry de : dictionary.getDictionaryEntries().values()) {
             de.setSortByDescription();
         }
+        codeButton.setSelected(false);
+        descriptionButton.setSelected(true);
         setDictionary(dictionary);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton codeButton;
+    private javax.swing.JButton descriptionButton;
+    private javax.swing.JList dictionaryEntryList;
     private javax.swing.JTextField filterEdit;
+    private javax.swing.JLabel filterLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel sortByLabel;
     // End of variables declaration//GEN-END:variables
+
+    private void escapeKeyPressed() {
+        if (firstPass) {
+            this.dispose();
+        } else {
+            setFirstPass();
+            setDictionary(dictionary);
+        }
+    }
+
+    private class DownAction extends AbstractAction {
+
+        public DownAction(String text, ImageIcon icon,
+                String desc, Integer mnemonic) {
+            super(text, icon);
+            putValue(SHORT_DESCRIPTION, desc);
+            putValue(MNEMONIC_KEY, mnemonic);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("Down!");
+            int position = dictionaryEntryList.getSelectedIndex();
+            if (position < 0) {
+                dictionaryEntryList.getFirstVisibleIndex();
+            }
+            if (position > -1 && position < dictionaryEntryList.getMaxSelectionIndex() - 1) {
+                dictionaryEntryList.setSelectedIndex(position + 1);
+            } else {
+                dictionaryEntryList.setSelectedIndex(0);
+            }
+        }
+    }
+
+    private class UpAction extends AbstractAction {
+
+        public UpAction(String text, ImageIcon icon,
+                String desc, Integer mnemonic) {
+            super(text, icon);
+            putValue(SHORT_DESCRIPTION, desc);
+            putValue(MNEMONIC_KEY, mnemonic);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("Up!");
+            int position = dictionaryEntryList.getSelectedIndex();
+            if (position < 0) {
+                dictionaryEntryList.getLastVisibleIndex();
+            }
+            if (position > 0) {
+                dictionaryEntryList.setSelectedIndex(position - 1);
+            } else {
+                dictionaryEntryList.setSelectedIndex(dictionaryEntryList.getMaxSelectionIndex());
+            }
+        }
+    }
 }
