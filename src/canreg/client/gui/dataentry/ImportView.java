@@ -124,7 +124,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         needToRebuildVariableMap = true;
         try {
             numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath()) - 1));
-            autodetectFileEncodingAction();
+            // autodetectFileEncodingAction();
         } catch (IOException ex) {
             Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
         }

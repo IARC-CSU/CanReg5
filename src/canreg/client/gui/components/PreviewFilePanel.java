@@ -317,7 +317,9 @@ public class PreviewFilePanel extends javax.swing.JPanel {
             Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                br.close();
+                if (br != null) {
+                    br.close();
+                }
             } catch (IOException ex) {
                 Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -332,8 +334,9 @@ public class PreviewFilePanel extends javax.swing.JPanel {
             charsetsComboBox.setSelectedItem(charset);
             // System.out.println("Detected encoding = " + encoding);
         } else {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("NO_ENCODING_DETECTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-            // System.out.println("No encoding detected.");
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "No encoding detected.", "Error.", JOptionPane.ERROR_MESSAGE);
+
+            // JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/PreviewFilePanel").getString("NO_ENCODING_DETECTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/components/PreviewFilePanel").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
         }
         return;
     }
@@ -361,7 +364,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         if (fileNameTextField.getText().trim().length() > 0) {
             inFile = new File(fileNameTextField.getText().trim());
             try {
-                autoDetectAction();
+                // autoDetectAction();
                 listener.actionPerformed(new ActionEvent(this, 0, FILE_CHANGED_ACTION));
                 numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getCanonicalPath()) - 1));
             } catch (IOException ex) {
