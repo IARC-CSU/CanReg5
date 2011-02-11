@@ -101,6 +101,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             public void internalFrameClosing(InternalFrameEvent e) {
                 int option = JOptionPane.NO_OPTION;
                 // Go through all panels and ask if any changes has been done
+                // TODO improve the detection of changes...
                 boolean changesDone = false;
                 for (Component component : patientTabbedPane.getComponents()) {
                     RecordEditorPanel panel = (RecordEditorPanel) component;
@@ -111,7 +112,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     changesDone = changesDone || panel.isSaveNeeded();
                 }
                 if (changesDone) {
-                    option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("REALLY CLOSE?CHANGES MADE WILL BE LOST."));
+                    option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("REALLY CLOSE?CHANGES MADE WILL BE LOST."), "Warning!", JOptionPane.YES_NO_OPTION);
                     if (option == JOptionPane.YES_OPTION) {
                         releaseRecords();
                         close();
