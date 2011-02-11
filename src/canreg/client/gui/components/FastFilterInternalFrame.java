@@ -6,7 +6,7 @@
 package canreg.client.gui.components;
 
 import canreg.client.CanRegClientApp;
-import canreg.client.dataentry.DictionaryHelper;
+import canreg.client.gui.CanRegClientView;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.server.database.Dictionary;
@@ -15,8 +15,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -28,7 +26,7 @@ import org.w3c.dom.Document;
  *
  * @author  morten
  */
-public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
+public class FastFilterInternalFrame extends javax.swing.JInternalFrame implements ActionListener {
 
     private DatabaseVariablesListElement[] variablesInTable;
     private Document doc;
@@ -44,11 +42,15 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame {
     private DatabaseVariablesListElement[] tumourVariablesInDB; // = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
     private DatabaseVariablesListElement[] sourceVariablesInDB; // = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
     private Comparator comparator;
+    private DictionaryElementChooser dictionaryElementChooser = null;
+    private JTextField dictionaryElementChooserAssignedTextField = null;
 
     /** Creates new form FastFilterInternalFrame */
     public FastFilterInternalFrame() {
         initComponents();
         initValues();
+        dictionaryElementChooser = new DictionaryElementChooser(this);
+        dictionaryElementChooserAssignedTextField = valueTextField;
     }
 
     /** This method is called from within the constructor to
@@ -260,52 +262,21 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         if (possibleValuesMap == null) {
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/FastFilterInternalFrame").getString("EMPTY_DICTIONARY"), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/FastFilterInternalFrame").getString("WARNING"), JOptionPane.WARNING_MESSAGE);
         } else {
-            DictionaryEntry[] possibleValuesArray;
-
-            LinkedList<DictionaryEntry> possibleValuesVector = new LinkedList<DictionaryEntry>();
-            LinkedList<DictionaryEntry> allValuesVector = new LinkedList<DictionaryEntry>();
-
-            Iterator<String> it = possibleValuesMap.keySet().iterator();
-            DictionaryEntry tempentry;
-
-            while (it.hasNext()) {
-                tempentry = possibleValuesMap.get(it.next());
-
-                allValuesVector.add(tempentry);
-
-                if (dictionary.isCompoundDictionary()) {
-                    if (tempentry.getCode().length() < maxLength) {
-                        possibleValuesVector.add(tempentry);
-                    }
-                } else {
-                    possibleValuesVector.add(tempentry);
-                }
+            // String oldValue = getValue().toString();
+            // DictionaryEntry oldSelection = possibleValuesMap.get(oldValue);
+            if (dictionaryElementChooser == null) {
+                dictionaryElementChooser = new DictionaryElementChooser(this);
+            } else {
+                dictionaryElementChooser.setFirstPass();
             }
-            possibleValuesArray = possibleValuesVector.toArray(new DictionaryEntry[0]);
+            dictionaryElementChooser.setDictionary(dictionary);
+            // dictionaryElementChooser.setSelectedElement(oldSelection);
 
-            DictionaryEntry selectedValue = (DictionaryEntry) JOptionPane.showInternalInputDialog(this,
-                    java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Choose_one"), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Input"),
-                    JOptionPane.INFORMATION_MESSAGE, null,
-                    possibleValuesArray, possibleValuesArray[0]);
-
-            if (selectedValue != null) {
-                String value = selectedValue.getCode();
-                while (dictionary.isCompoundDictionary() && value.length() < maxLength) {
-                    possibleValuesArray = DictionaryHelper.getDictionaryEntriesStartingWith(value, allValuesVector.toArray(new DictionaryEntry[0]));
-                    if (possibleValuesArray.length > 0) {
-                        selectedValue = (DictionaryEntry) JOptionPane.showInternalInputDialog(this,
-                                java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Choose_one"), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Input"),
-                                JOptionPane.INFORMATION_MESSAGE, null,
-                                possibleValuesArray, possibleValuesArray[0]);
-                        value = selectedValue.getCode();
-                    } else {
-                        value = value + "9";
-                    }
-                }
-                // setValue(value);
-                JTextField field = (JTextField) evt.getSource();
-                field.setText(value);
-            }
+            // safe to cast as we check it in the first if-statement
+            dictionaryElementChooserAssignedTextField = (JTextField) evt.getSource();
+            CanRegClientView.showAndPositionInternalFrame(
+                    CanRegClientApp.getApplication().getDesktopPane(),
+                    dictionaryElementChooser);
         }
     } else {
         // Do nothing
@@ -555,6 +526,13 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
     public void operatorAction() {
         if (currentSelectionIsNotAdded()) {
             addAction();
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equalsIgnoreCase(DictionaryElementChooser.OK_ACTION)) {
+            dictionaryElementChooserAssignedTextField.setText(dictionaryElementChooser.getSelectedElement().getCode());
         }
     }
 }
