@@ -88,24 +88,9 @@ Improve detection of changes to a record.
 \end_layout
 
 \begin_layout Itemize
-Improve dictionary chooser.
- 
+Build a dictionary chooser into the record editor? 
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-Build it into the record editor? 
-\end_layout
-
-\begin_layout Itemize
-Lookup as you type?
-\end_layout
-
-\begin_layout Itemize
-Sort by either code or label.
-\end_layout
-
-\end_deeper
 \begin_layout Itemize
 Let user enter dates in the format they wish
 \end_layout
@@ -175,10 +160,6 @@ Table of rates by year with the same groups as the curernt incidence table?
 \end_deeper
 \end_deeper
 \begin_layout Itemize
-Write Frequencies by year tables to file
-\end_layout
-
-\begin_layout Itemize
 Group by other meta variables for frequencies by year (age group, 2 digit
  icd10 etc)
 \end_layout
@@ -216,8 +197,7 @@ Highlight differences between records
 Accept all (without looking) after a search run?
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Itemize
 A table is displayed, where the top line contains the original record you
  are editing, and other lines contain possible matches.
  You must tick the corresponding box on the left if you are sure it is the
@@ -232,7 +212,6 @@ A table is displayed, where the top line contains the original record you
  total boxes are automatically filled in.
 \end_layout
 
-\end_deeper
 \end_deeper
 \begin_layout Itemize
 Optimize code.
@@ -352,7 +331,7 @@ Database related
 \end_layout
 
 \begin_layout Itemize
-Mortality data
+Mortality data?
 \end_layout
 
 \begin_layout Section*
@@ -360,7 +339,7 @@ Analysis related
 \end_layout
 
 \begin_layout Itemize
-Use of mortality data in analysis
+Use of mortality data in analysis?
 \end_layout
 
 \begin_layout Itemize
@@ -368,9 +347,19 @@ Export excel files using http://jexcelapi.sourceforge.net/
 \end_layout
 
 \begin_layout Itemize
-Export to EpiInfo? What version?
+Export to EpiInfo? 
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+What version? 
+\end_layout
+
+\begin_layout Itemize
+Format?
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Export as html with help of graph libraries?
 \end_layout
@@ -394,10 +383,6 @@ Changing some user rights levels
 \end_layout
 
 \begin_deeper
-\begin_layout Itemize
-Hiding the browser for the analyst user
-\end_layout
-
 \begin_layout Itemize
 Hiding the browser for a user-level between analyst and registrar?
 \end_layout

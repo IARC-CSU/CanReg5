@@ -1,5 +1,45 @@
-changeset:   626:16d7728d540c
+changeset:   634:69b8a5a40933
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Feb 11 17:14:56 2011 +0100
+summary:     Logging more info if something goes wrong during login.
+
+changeset:   633:75ab05712678
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Feb 11 17:14:03 2011 +0100
+summary:     Fixed some localization issues.
+
+changeset:   632:80ba70fb41e7
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Feb 11 16:15:35 2011 +0100
+summary:     Removed the cancel option from "do you want to close"...
+
+changeset:   631:9decfb7333ff
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Feb 11 16:14:52 2011 +0100
+summary:     FastFilter now uses the new dictionary element chooser.
+
+changeset:   630:e463ae8abeb5
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Feb 11 16:14:24 2011 +0100
+summary:     Updated the layout of the DictionaryElementChooser and implemented some key-strokes.
+
+changeset:   629:9507731d2f16
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Feb 11 11:44:20 2011 +0100
+summary:     Auto detection of file encoding now works.
+
+changeset:   628:e598c4b5f14a
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Feb 11 09:16:20 2011 +0100
+summary:     The analyst can no longer browse records. He has just access to the analytical menu.
+
+changeset:   627:3e7682f3fb22
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 10 14:20:42 2011 +0100
+summary:     5.00.03 RC3
+
+changeset:   626:16d7728d540c
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Thu Feb 10 14:09:37 2011 +0100
 summary:     Tidied some code.

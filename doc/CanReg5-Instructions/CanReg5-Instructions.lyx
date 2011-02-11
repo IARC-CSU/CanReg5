@@ -444,6 +444,10 @@ take it
 \end_inset
 
  just after, for example, your error occurs.
+\end_layout
+
+\begin_layout Standard
+\align left
 \begin_inset Box Frameless
 position "t"
 hor_pos "c"
@@ -2267,9 +2271,7 @@ CanReg4 Format
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename 19.png
-	width 4.95833in
-	height 3.82292in
+	filename dictionaryimport.png
 
 \end_inset
 
@@ -3742,11 +3744,13 @@ Import Dictionary from file
 
 \begin_layout Standard
 Import a complete set of CanReg5 dictionaries from a tab-separated file.
+ (Or a two-space-separated CanReg4 dictionary.)
 \end_layout
 
 \begin_layout Standard
+\align center
 \begin_inset Graphics
-	filename importdictionary.png
+	filename dictionaryimport.png
 
 \end_inset
 
@@ -3900,7 +3904,7 @@ Then fill the population dataset itself:
 
 \begin_layout Standard
 \align left
-Click save to save your population dataset.
+Click save to save your population dataset to the database.
  
 \end_layout
 
@@ -4066,10 +4070,13 @@ The easiest way is to have the variable names at the top of each column.
 
 \begin_layout Standard
 There are four main steps to importing a data file.
+ (If you don't have all your data in one file, but rather one file per table
+ you need to repeat the first two steps for each file.)
 \end_layout
 
 \begin_layout Standard
-1) Choose the file.
+1) Choose the file(s).
+ 
 \end_layout
 
 \begin_layout Standard
@@ -4079,6 +4086,13 @@ There are four main steps to importing a data file.
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Here you also might need to specify the character encoding of your file
+ as well as the separating chacter used, if CanReg does not detect it automatica
+lly.
+ Please verify using preview.
 \end_layout
 
 \begin_layout Standard
@@ -6105,13 +6119,14 @@ Migrating from CanReg4 - Step by Step
 
 \begin_layout Standard
 Install CanReg5.
+ (See
 \begin_inset CommandInset ref
-LatexCommand eqref
+LatexCommand vref
 reference "sec:Installing-and-running"
 
 \end_inset
 
-Start CanReg5 and it presents you the Welcome window.
+) Start CanReg5 and it presents you the Welcome window.
  Do NOT click anything here just yet.
 \end_layout
 
@@ -6344,6 +6359,12 @@ Browse and select the dictionary from you CanReg4 work folder or elsewhere.
 \end_layout
 
 \begin_layout Enumerate
+If CanReg does not detect the encoding of the file automatically, please
+ select it from the drop down list.
+ 
+\end_layout
+
+\begin_layout Enumerate
 Click 
 \begin_inset Quotes eld
 \end_inset
@@ -6353,6 +6374,7 @@ Preview
 \end_inset
 
  to take a look at the dictionary.
+ (Please note that only the first hundred lines or so are shown.)
 \end_layout
 
 \begin_layout Enumerate

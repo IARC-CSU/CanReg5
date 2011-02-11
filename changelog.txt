@@ -32,6 +32,14 @@ Changelog
 
 - Fixed some localization issue.
 
+- Auto detection of file encoding now works.
+
+- FastFilter now uses the new dictionary element chooser.
+
+- Removed the cancel option from "do you want to close"...
+
+- Logging more info if something goes wrong during login.
+
 - Added an easy access list of tables.
 
 - Added links to news items in the "latest news" browser.
