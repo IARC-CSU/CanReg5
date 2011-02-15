@@ -1,0 +1,22 @@
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>.\CanReg.jar</jar>
+  <outfile>C:\Documents and Settings\ervikm\Desktop\CanReg5\CanReg.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <customProcName>true</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon>C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\src\canreg\client\gui\resources\LogoBetaNew64x64.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.6.0_17</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+  </jre>
+</launch4jConfig>
