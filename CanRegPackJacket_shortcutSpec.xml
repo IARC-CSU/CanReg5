@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<shortcuts>
+    <skipIfNotSupported/>
+    <programGroup defaultName="CanReg5" location="applications"/>
+    <shortcut applications="yes" description="CanReg5" desktop="yes"
+        iconFile="$INSTALL_PATH/conf/LogoBetaNew64x64.ico" iconIndex="0"
+        initialState="noShow" name="CanReg5" programGroup="no"
+        startMenu="no" startup="no" target="$INSTALL_PATH/CanReg.jar"/>
+    <shortcut applications="no" description="CanReg5 Handbook"
+        desktop="no" initialState="noShow" name="CanReg5 Handbook"
+        programGroup="yes" startMenu="no" startup="no" target="$INSTALL_PATH/doc/CanReg5-instructions.pdf"/>
+</shortcuts>
