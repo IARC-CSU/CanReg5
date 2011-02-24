@@ -43,6 +43,9 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
     private static int CASES_COLUMN = 7;
     private double[][] standardPopulationArray;
     private String populationString;
+    private static FileTypes[] fileTypesGenerated = {
+        FileTypes.ps
+    };
 
     @Override
     public LinkedList<String> buildTable(String tableHeader,
@@ -1107,5 +1110,10 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
             OK = OK && pds.getAgeGroupStructure().getSizeOfGroups() == 5;
         }
         return OK;
+    }
+
+    @Override
+    public FileTypes[] getFileTypesGenerated() {
+        return fileTypesGenerated;
     }
 }

@@ -12,6 +12,7 @@ package canreg.client.analysis;
  * @author Morten Johannes Ervik
  * @version 1.0
  */
+import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.server.database.PopulationDataset;
 import java.io.FileReader;
@@ -25,19 +26,27 @@ import java.text.NumberFormat;
 
 public abstract class TableBuilder {
 
-    double estdPop18[] = {0.08, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07,
+    public enum FileTypes {
+
+        ps,
+        pdf,
+        csv,
+        html,
+        txt
+    };
+    protected double estdPop18[] = {0.08, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07,
         0.07, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01, 0.01};
-    double wstdPopNormalized[] = {0, 0.12, 0.10, 0.09, 0.09, 0.08, 0.08, 0.06,
+    protected double wstdPopNormalized[] = {0, 0.12, 0.10, 0.09, 0.09, 0.08, 0.08, 0.06,
         0.06, 0.06,
         0.06, 0.05, 0.04, 0.04, 0.03, 0.02, 0.01,
         0.005, 0.005, 0, 1};
-    double cumPop18[] = {5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0,
+    protected double cumPop18[] = {5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0,
         5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0};
-    double wstdPop[] = {0, 12000, 10000, 9000, 9000, 8000, 8000, 6000, 6000,
+    protected double wstdPop[] = {0, 12000, 10000, 9000, 9000, 8000, 8000, 6000, 6000,
         6000,
         6000, 5000, 4000, 4000, 3000, 2000, 1000, 500, 500, 0,
         100000};
-    static String[] continentLabels = {java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("AFRICA"),
+    protected static String[] continentLabels = {java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("AFRICA"),
         java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("AMERICA"),
         java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("AMERICA"),
         java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("ASIA"),
@@ -125,6 +134,8 @@ public abstract class TableBuilder {
     LinkedList lineBreaks = null;
 
     public abstract StandardVariableNames[] getVariablesNeeded();
+
+    public abstract FileTypes[] getFileTypesGenerated();
 
     public abstract LinkedList<String> buildTable(String tableHeader,
             String reportFileName,

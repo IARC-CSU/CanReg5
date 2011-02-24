@@ -33,6 +33,9 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
         Globals.StandardVariableNames.Morphology,
         Globals.StandardVariableNames.Behaviour,
         Globals.StandardVariableNames.BasisDiagnosis};
+    private static FileTypes[] fileTypesGenerated = {
+        FileTypes.ps
+    };
     private static int YEAR_COLUMN = 0;
     private static int SEX_COLUMN = 1;
     private static int AGE_COLUMN = 2;
@@ -1111,5 +1114,10 @@ public class AgeSpecificCasesTableBuilder extends TableBuilder {
             OK = OK && pds.getAgeGroupStructure().getSizeOfGroups() == 5;
         }
         return OK;
+    }
+
+    @Override
+    public FileTypes[] getFileTypesGenerated() {
+        return fileTypesGenerated;
     }
 }

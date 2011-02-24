@@ -1,5 +1,6 @@
 package canreg.client.analysis;
 
+import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.server.database.AgeGroupStructure;
 import canreg.server.database.PopulationDataset;
@@ -23,10 +24,12 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
     int between = 30;
     private String[] tableLabel;
     private String[] sexLabel;
+    private Globals.StandardVariableNames[] variablesNeeded = null;
+    private FileTypes[] fileTypesGenerated = new FileTypes[]{FileTypes.ps};
 
-    @Override
-    public StandardVariableNames[] getVariablesNeeded() {
-        return null;
+    public PopulationPyramidTableBuilder() {
+        super();
+        fileTypesGenerated = new FileTypes[]{FileTypes.ps};
     }
 
     @Override
@@ -203,67 +206,67 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
 
                         fw.write(drawBox(center - between / 2,
                                 offset,
-                                (int) (center - between / 2 -
-                                maxlength *
-                                populationArray[0][i] /
-                                highest),
+                                (int) (center - between / 2
+                                - maxlength
+                                * populationArray[0][i]
+                                / highest),
                                 offset + height));
                         fw.write(drawBox(center + between / 2, offset,
-                                (int) (center + between / 2 +
-                                maxlength *
-                                populationArray[1][i] /
-                                highest),
+                                (int) (center + between / 2
+                                + maxlength
+                                * populationArray[1][i]
+                                / highest),
                                 offset + height));
                     } else {
                         fw.write(drawTriangle(center - between / 2,
                                 offset,
-                                (int) (center - between / 2 -
-                                maxlength *
-                                (2 * populationArray[0][i] /
-                                ((100 / 5) - highestPopulationAgeGroup)) /
-                                highest),
+                                (int) (center - between / 2
+                                - maxlength
+                                * (2 * populationArray[0][i]
+                                / ((100 / 5) - highestPopulationAgeGroup))
+                                / highest),
                                 offset,
                                 center - between / 2,
                                 baseline + height * (100 / 5)));
                         fw.write(drawTriangle(center + between / 2,
                                 offset,
-                                (int) (center + between / 2 +
-                                maxlength *
-                                (2 * populationArray[1][i] /
-                                ((100 / 5) - highestPopulationAgeGroup)) /
-                                highest),
+                                (int) (center + between / 2
+                                + maxlength
+                                * (2 * populationArray[1][i]
+                                / ((100 / 5) - highestPopulationAgeGroup))
+                                / highest),
                                 offset,
                                 center + between / 2,
                                 baseline + height * (100 / 5)));
 
                     }
-                    fw.write((center - maxlength - 50) + " " +
-                            (offset + height / 4) + " MT (" +
-                            (int) populationArray[0][i] + ") RS\n");
+                    fw.write((center - maxlength - 50) + " "
+                            + (offset + height / 4) + " MT ("
+                            + (int) populationArray[0][i] + ") RS\n");
 
-                    fw.write((center - between / 2) + " " +
-                            (offset + height / 4) + " MT (" +
-                            ageLabel[i] + ") RS\n");
+                    fw.write((center - between / 2) + " "
+                            + (offset + height / 4) + " MT ("
+                            + ageLabel[i] + ") RS\n");
 
-                    fw.write((center + maxlength + 25) + " " +
-                            (offset + height / 4) + " MT (" +
-                            (int) populationArray[1][i] + ") show\n");
+                    fw.write((center + maxlength + 25) + " "
+                            + (offset + height / 4) + " MT ("
+                            + (int) populationArray[1][i] + ") show\n");
                 }
                 offset += height;
             }
 
             // totals new data
-            fw.write((center - maxlength - 50) + " " +
-                    (baseline - 30) + " MT (" +
-                    (int) populationArray[0][allAgeGroupsIndex] + ") RS\n");
+            fw.write((center - maxlength - 50) + " "
+                    + (baseline - 30) + " MT ("
+                    + (int) populationArray[0][allAgeGroupsIndex] + ") RS\n");
 
             //   fw.write((center - between / 2) + " " +
             //            (baseline - 30) + " MT (" +
             //            ageLabel[allAgeGroupsIndex] + ") RS\n");
 
-            fw.write((center + maxlength + 25) + " " +
-                    (baseline - 30) + " MT (" +
-                    (int) populationArray[1][allAgeGroupsIndex] + ") show\n");
+            fw.write((center + maxlength + 25) + " "
+                    + (baseline - 30) + " MT ("
+                    + (int) populationArray[1][allAgeGroupsIndex] + ") show\n");
 
 
             // draw the frame
@@ -273,20 +276,20 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
             center + maxlength + 20,
             baseline + height * numberOfAgeGroups));
              */
-            fw.write("0 " + (baseline - 15) +
-                    " MT (" + sexLabel[0] + "                            " +
-                    sexLabel[1] + ") CS\n");
+            fw.write("0 " + (baseline - 15)
+                    + " MT (" + sexLabel[0] + "                            "
+                    + sexLabel[1] + ") CS\n");
 
             String filterString;
 
-            if (populations[0].getFilter().length()>0){
+            if (populations[0].getFilter().length() > 0) {
                 filterString = "Filter associated with this dataset: " + populations[0].getFilter();
             } else {
                 filterString = "No filter associated with this dataset.";
             }
 
-            fw.write("0 " + (baseline - 30) +
-                    " MT ( " + filterString + " ) CS\n");
+            fw.write("0 " + (baseline - 30)
+                    + " MT ( " + filterString + " ) CS\n");
 
             fw.write("0 setlinewidth\n");
 
@@ -298,10 +301,10 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
                     center + between / 2 + maxlength / 2,
                     baseline + height * numberOfAgeGroups));
 
-            fw.write((center - between / 2 - 5 - maxlength / 2) + " " +
-                    (baseline - 7) + " MT (50%) show\n");
-            fw.write((center + between / 2 - 5 + maxlength / 2) + " " +
-                    (baseline - 7) + " MT (50%) show\n");
+            fw.write((center - between / 2 - 5 - maxlength / 2) + " "
+                    + (baseline - 7) + " MT (50%) show\n");
+            fw.write((center + between / 2 - 5 + maxlength / 2) + " "
+                    + (baseline - 7) + " MT (50%) show\n");
 
             fw.write(drawBox(center - between / 2, baseline,
                     center + between / 2,
@@ -329,5 +332,15 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
             OK = OK && pds.getAgeGroupStructure().getSizeOfGroups() == 5;
         }
         return OK;
+    }
+
+    @Override
+    public StandardVariableNames[] getVariablesNeeded() {
+        return null;
+    }
+
+    @Override
+    public FileTypes[] getFileTypesGenerated() {
+        return fileTypesGenerated;
     }
 }
