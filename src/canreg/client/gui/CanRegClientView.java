@@ -913,6 +913,8 @@ public final class CanRegClientView extends FrameView {
         dataEntryMenu.setEnabled(dataEntry);
         logOutMenuItem.setEnabled(loggedIn);
 
+        importDataMenuItem.setEnabled(management);
+
         // If we are accessing a remote CanReg system not all things are available to us...
         if (!CanRegClientApp.getApplication().isCanRegServerRunningOnThisMachine()) {
             toolsMenu.setEnabled(!loggedIn);
