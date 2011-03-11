@@ -316,7 +316,10 @@ public final class SystemDescription {
         element.appendChild(createElement(namespace + "multiple_primary_copy", variable.getMultiplePrimaryCopy()));
         element.appendChild(createElement(namespace + "variable_type", variable.getVariableType()));
         // Varb Type  (0 number, 1 alpha, 2 date, 3 dict, 4 asian text)
-        if (variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) || variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME) || variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME)) {
+        if (variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME)
+                || variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)
+                || variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME)
+                || variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
             element.appendChild(createElement(namespace + "variable_length", "" + variable.getVariableLength()));
         } else if (variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)) {
             element.appendChild(createElement(namespace + "variable_length", "" + Globals.DATE_FORMAT_STRING.length()));
