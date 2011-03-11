@@ -1,4 +1,4 @@
-package cachingtableapi;
+package other.cachingtableapi;
 
 /**
  *

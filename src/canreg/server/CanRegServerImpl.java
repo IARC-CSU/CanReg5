@@ -2,8 +2,8 @@ package canreg.server;
 
 import canreg.server.database.User;
 import canreg.server.management.UserManagerNew;
-import cachingtableapi.DistributedTableDescription;
-import cachingtableapi.DistributedTableDescriptionException;
+import other.cachingtableapi.DistributedTableDescription;
+import other.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.GlobalToolBox;

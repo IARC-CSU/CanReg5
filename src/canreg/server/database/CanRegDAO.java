@@ -4,9 +4,9 @@ package canreg.server.database;
  *
  * @author ervikm
  */
-import cachingtableapi.DistributedTableDataSource;
-import cachingtableapi.DistributedTableDescription;
-import cachingtableapi.DistributedTableDescriptionException;
+import other.cachingtableapi.DistributedTableDataSource;
+import other.cachingtableapi.DistributedTableDescription;
+import other.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;

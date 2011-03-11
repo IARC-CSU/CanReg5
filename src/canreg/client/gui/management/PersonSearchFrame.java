@@ -6,7 +6,7 @@
 package canreg.client.gui.management;
 
 import canreg.client.gui.*;
-import cachingtableapi.DistributedTableDescription;
+import other.cachingtableapi.DistributedTableDescription;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;

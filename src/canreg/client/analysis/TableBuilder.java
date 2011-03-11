@@ -319,6 +319,8 @@ public abstract class TableBuilder {
                         "icd_group", line);
                 icdGroup = Integer.parseInt(icdString.trim());
 
+                // sfdjiwesgsg
+
                 casesString = getContentOfField(mortalityFieldDescriptionList,
                         "cases", line);
                 cases = Integer.parseInt(casesString.trim());

@@ -1,7 +1,7 @@
 package canreg.common;
 
-import cachingtableapi.DistributedTableDataSource;
-import cachingtableapi.DistributedTableDescription;
+import other.cachingtableapi.DistributedTableDataSource;
+import other.cachingtableapi.DistributedTableDescription;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -1,4 +1,4 @@
-package cachingtableapi;
+package other.cachingtableapi;
 
 /**
  * Interface that isolates all of the remote method calls necessary to

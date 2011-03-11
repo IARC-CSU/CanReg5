@@ -3,8 +3,8 @@
  */
 package canreg.client;
 
-import cachingtableapi.DistributedTableDescription;
-import cachingtableapi.DistributedTableDescriptionException;
+import other.cachingtableapi.DistributedTableDescription;
+import other.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.dataentry.ImportOptions;

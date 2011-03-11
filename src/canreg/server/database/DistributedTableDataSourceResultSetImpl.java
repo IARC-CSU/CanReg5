@@ -1,8 +1,8 @@
 package canreg.server.database;
 
-import cachingtableapi.DistributedTableDataSource;
-import cachingtableapi.DistributedTableDescription;
-import cachingtableapi.DistributedTableDescriptionException;
+import other.cachingtableapi.DistributedTableDataSource;
+import other.cachingtableapi.DistributedTableDescription;
+import other.cachingtableapi.DistributedTableDescriptionException;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

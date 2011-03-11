@@ -6,8 +6,8 @@
 package canreg.client.gui.analysis;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import cachingtableapi.DistributedTableDescription;
-import cachingtableapi.DistributedTableModel;
+import other.cachingtableapi.DistributedTableDescription;
+import other.cachingtableapi.DistributedTableModel;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.LocalSettings;

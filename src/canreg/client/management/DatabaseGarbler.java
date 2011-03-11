@@ -1,7 +1,7 @@
 package canreg.client.management;
 
-import cachingtableapi.DistributedTableDescription;
-import cachingtableapi.DistributedTableDescriptionException;
+import other.cachingtableapi.DistributedTableDescription;
+import other.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;

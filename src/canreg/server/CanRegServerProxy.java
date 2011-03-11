@@ -1,8 +1,8 @@
 package canreg.server;
 
 import canreg.server.database.User;
-import cachingtableapi.DistributedTableDescription;
-import cachingtableapi.DistributedTableDescriptionException;
+import other.cachingtableapi.DistributedTableDescription;
+import other.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals.UserRightLevels;
 import canreg.common.qualitycontrol.PersonSearcher;
