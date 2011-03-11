@@ -113,6 +113,8 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
 
         revalidate();
         repaint();
+
+        exportAllVariablesAction();
     }
 
     /**
