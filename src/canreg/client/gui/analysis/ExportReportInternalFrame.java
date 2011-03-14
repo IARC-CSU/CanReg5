@@ -830,7 +830,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 if (exportSources) {
                     for (int i = 0; i < maxNumberOfSourcesPerTumour; i++) {
                         for (String header : sourceVariableNames) {
-                            line += separatingString + header;
+                            if (maxNumberOfSourcesPerTumour > 1) {
+                                line += separatingString + header+(i+1);
+                            } else {
+                                line += separatingString + header;
+                            }
                         }
                     }
                 }
@@ -909,20 +913,22 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     // if we should export the sources we do that here...
                     if (exportSources) {
                         Object tumourIDobj = resultTable.getValueAt(row, tumourIDcolumn);
-                        String tumourID = null;
-                        int count = 0;
-                        int stopCount = 500;
-                        // try 500 times before giving up...
-                        while (tumourIDobj==null&&count<stopCount){
-                            //try {
-                                // wait(5);
-                                count++;
-                                tumourIDobj = resultTable.getValueAt(row, tumourIDcolumn);
-                            //  catch (InterruptedException ex) {
-                            //    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                            // }
-                        }
 
+                        /* int count = 0;
+                        int stopCount = 500;
+                        try 500 times before giving up...
+                        while (tumourIDobj==null&&count<stopCount){
+                        try {
+                        wait(5);
+                        count++;
+                        tumourIDobj = resultTable.getValueAt(row, tumourIDcolumn);
+                        catch (InterruptedException ex) {
+                        Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        }
+                         */
+
+                        String tumourID = null;
                         if (tumourIDobj != null) {
                             tumourID = tumourIDobj.toString();
                             Tumour tumour;
