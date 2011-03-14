@@ -81,9 +81,8 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
 
         try {
             int pos;
-            pos = resultSet.getRow();
-
-            resultSet.relative(from - pos);
+            // pos = resultSet.getRow();
+            resultSet.absolute(from);
             boolean hasMore = resultSet.next();
 
             while (hasMore && rows.size() < (to - from)) {
@@ -249,5 +248,9 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         }
 
         return columns;
+    }
+
+    public void releaseResultSet() throws SQLException{
+        resultSet.close();
     }
 }
