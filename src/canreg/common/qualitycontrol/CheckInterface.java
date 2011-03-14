@@ -14,12 +14,12 @@ public abstract class CheckInterface {
 
     /**
      * 
-     * @return
+     * @return the variables needed to perform this check.
      */
     public abstract Globals.StandardVariableNames[] getVariablesNeeded();
 
     /**
-     *
+     *  This is just a mapping from the standard variable names to the names used in the CanReg database.
      */
     public void setVariableListElementsMap(Map<Globals.StandardVariableNames, DatabaseVariablesListElement> variableListElementMap) {
         this.variableListElementMap = variableListElementMap;
@@ -27,7 +27,7 @@ public abstract class CheckInterface {
 
     /**
      * 
-     * @return
+     * @return a standard name of this check.
      */
     public abstract Checker.CheckNames getCheckName();
     /**
