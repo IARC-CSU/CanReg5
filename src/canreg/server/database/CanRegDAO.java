@@ -428,8 +428,9 @@ public class CanRegDAO {
      * 
      * @param resultSetID
      */
-    public synchronized void releaseResultSet(String resultSetID) {
-        // DistributedTableDataSource dataSource = distributedDataSources.get(resultSetID);
+    public synchronized void releaseResultSet(String resultSetID) throws SQLException {
+        DistributedTableDataSourceResultSetImpl dataSource = (DistributedTableDataSourceResultSetImpl) distributedDataSources.get(resultSetID);
+        dataSource.releaseResultSet();
         distributedDataSources.remove(resultSetID);
     }
 
