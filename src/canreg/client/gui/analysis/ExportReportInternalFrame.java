@@ -5,7 +5,9 @@
  */
 package canreg.client.gui.analysis;
 
+import canreg.server.database.UnknownTableException;
 import other.cachingtableapi.DistributedTableDescription;
+import other.cachingtableapi.DistributedTableDescriptionException;
 import other.cachingtableapi.DistributedTableModel;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
@@ -73,6 +75,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private int VARIABLE_NAME_SHORT_INDEX = 0;
     private int VARIABLE_NAME_FULL_INDEX = 2;
     private int VARIABLE_NAME_STANDARD_INDEX = 3;
+    private DatabaseVariablesListElement tumourIDdbvle;
+    private String fileName;
 
     /** Creates new form ExportFrame
      * @param dtp is a pointer to the current desktop pane.
@@ -108,6 +112,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         jPanel1 = new javax.swing.JPanel();
         rangeFilterPanel = new canreg.client.gui.components.RangeFilterPanel();
         variableChooserPanel = new canreg.client.gui.components.VariablesChooserPanel();
+        exportSourceInformationCheckBox = new javax.swing.JCheckBox();
         settingsPanel = new javax.swing.JPanel();
         setupPanel = new javax.swing.JPanel();
         loadSetupButton = new javax.swing.JButton();
@@ -121,7 +126,6 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         formatDateCheckBox = new javax.swing.JCheckBox();
         correctUnknownCheckBox = new javax.swing.JCheckBox();
         dateFormatComboBox = new javax.swing.JComboBox();
-        exportSourceInformationCheckBox = new javax.swing.JCheckBox();
         exportPanel = new javax.swing.JPanel();
         writeFileButton = new javax.swing.JButton();
 
@@ -147,11 +151,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 534, Short.MAX_VALUE)
+            .addGap(0, 774, Short.MAX_VALUE)
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 154, Short.MAX_VALUE)
+            .addGap(0, 158, Short.MAX_VALUE)
         );
 
         jTabbedPane1.setName("jTabbedPane1"); // NOI18N
@@ -162,6 +166,12 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
         variableChooserPanel.setName("variableChooserPanel"); // NOI18N
 
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ExportReportInternalFrame.class, this);
+        exportSourceInformationCheckBox.setAction(actionMap.get("exportSourceInformationTickBoxUpdated")); // NOI18N
+        exportSourceInformationCheckBox.setText(resourceMap.getString("exportSourceInformationCheckBox.text")); // NOI18N
+        exportSourceInformationCheckBox.setToolTipText(resourceMap.getString("exportSourceInformationCheckBox.toolTipText")); // NOI18N
+        exportSourceInformationCheckBox.setName("exportSourceInformationCheckBox"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -169,7 +179,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variableChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))
+                .addComponent(variableChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(exportSourceInformationCheckBox))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,7 +190,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(variableChooserPanel, javax.swing.GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
                     .addComponent(rangeFilterPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(exportSourceInformationCheckBox))
         );
 
         rangeFilterPanel.setDeskTopPane(dtp);
@@ -235,7 +249,6 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         fileFormatComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tab Separated Values", "Comma Separated" }));
         fileFormatComboBox.setName("fileFormatComboBox"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ExportReportInternalFrame.class, this);
         formatDateCheckBox.setAction(actionMap.get("formatDateCheckBoxChanged")); // NOI18N
         formatDateCheckBox.setText(resourceMap.getString("formatDateCheckBox.text")); // NOI18N
         formatDateCheckBox.setToolTipText(resourceMap.getString("formatDateCheckBox.toolTipText")); // NOI18N
@@ -252,10 +265,6 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         dateFormatComboBox.setEnabled(false);
         dateFormatComboBox.setName("dateFormatComboBox"); // NOI18N
 
-        exportSourceInformationCheckBox.setText(resourceMap.getString("exportSourceInformationCheckBox.text")); // NOI18N
-        exportSourceInformationCheckBox.setToolTipText(resourceMap.getString("exportSourceInformationCheckBox.toolTipText")); // NOI18N
-        exportSourceInformationCheckBox.setName("exportSourceInformationCheckBox"); // NOI18N
-
         javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
         optionsPanel.setLayout(optionsPanelLayout);
         optionsPanelLayout.setHorizontalGroup(
@@ -266,17 +275,16 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                         .addComponent(variableNamesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(variableNamesLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 267, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 507, Short.MAX_VALUE)
                         .addComponent(headingCheckBox))
                     .addGroup(optionsPanelLayout.createSequentialGroup()
                         .addComponent(fileFormatLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(fileFormatComboBox, 0, 454, Short.MAX_VALUE))
+                        .addComponent(fileFormatComboBox, 0, 694, Short.MAX_VALUE))
                     .addGroup(optionsPanelLayout.createSequentialGroup()
                         .addComponent(formatDateCheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dateFormatComboBox, 0, 432, Short.MAX_VALUE))
-                    .addComponent(exportSourceInformationCheckBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE)
+                        .addComponent(dateFormatComboBox, 0, 672, Short.MAX_VALUE))
                     .addComponent(correctUnknownCheckBox))
                 .addContainerGap())
         );
@@ -297,8 +305,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     .addComponent(dateFormatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(correctUnknownCheckBox)
-                .addGap(5, 5, 5)
-                .addComponent(exportSourceInformationCheckBox))
+                .addGap(28, 28, 28))
         );
 
         exportPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("exportPanel.border.title"))); // NOI18N
@@ -311,7 +318,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         exportPanel.setLayout(exportPanelLayout);
         exportPanelLayout.setHorizontalGroup(
             exportPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(writeFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
+            .addComponent(writeFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
         );
         exportPanelLayout.setVerticalGroup(
             exportPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -333,7 +340,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         settingsPanelLayout.setVerticalGroup(
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsPanelLayout.createSequentialGroup()
-                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(exportPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -347,7 +354,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 790, Short.MAX_VALUE)
             .addComponent(resultPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -400,6 +407,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         rangeFilterPanel.setDeskTopPane(dtp);
         rangeFilterPanel.setActionListener(this);
         rangeFilterPanel.setTablesToChooseFrom(Globals.DEFAULT_TABLE_CHOOSER_TABLE_LIST);
+        rangeFilterPanel.setSelectedTable(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME);
+        tumourIDdbvle = CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString());
     }
 
     private void initOtherComponents() {
@@ -432,7 +441,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             }
         });
 
-        exportSourceInformationCheckBox.setVisible(false);
+        // exportSourceInformationCheckBox.setVisible(false);
     }
 
     /**
@@ -600,9 +609,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)
                     || tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
                 exportSourceInformationCheckBox.setEnabled(false);
+                exportSourceInformationCheckBox.setSelected(false);
             } else {
                 // disable the export source information tool...
-                exportSourceInformationCheckBox.setEnabled(false);
+                exportSourceInformationCheckBox.setEnabled(true);
             }
         }
     }
@@ -623,7 +633,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         }
         // Get filename
         int returnVal = chooser.showSaveDialog(this);
-        String fileName = "";
+        fileName = "";
         String separatingString = "\t";
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
@@ -731,8 +741,6 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     maxNumberOfSourcesPerTumour = CanRegClientApp.getApplication().getDatabaseStats().getMaxNumberOfSourcesPerTumourRecord();
                     Enumeration<TableColumn> columns = tableColumnModel.getColumns(false);
                     boolean found = false;
-
-                    DatabaseVariablesListElement tumourIDdbvle = CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString());
 
                     while (tumourIDdbvle != null && !found && columns.hasMoreElements()) {
                         TableColumn column = columns.nextElement();
@@ -900,27 +908,58 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     }
                     // if we should export the sources we do that here...
                     if (exportSources) {
-                        String tumourID = resultTable.getValueAt(row, tumourIDcolumn) + "";
-                        Tumour tumour;
-                        try {
-                            tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false);
-                            for (Source source : tumour.getSources()) {
-                                for (String variableName : sourceVariableNames) {
-                                    line += separatingString + source.getVariable(variableName);
-                                }
-                            }
-                        } catch (RemoteException ex) {
-                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (SecurityException ex) {
-                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (SQLException ex) {
-                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (RecordLockedException ex) {
-                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (Exception ex) {
-                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        Object tumourIDobj = resultTable.getValueAt(row, tumourIDcolumn);
+                        String tumourID = null;
+                        int count = 0;
+                        int stopCount = 500;
+                        // try 500 times before giving up...
+                        while (tumourIDobj==null&&count<stopCount){
+                            //try {
+                                // wait(5);
+                                count++;
+                                tumourIDobj = resultTable.getValueAt(row, tumourIDcolumn);
+                            //  catch (InterruptedException ex) {
+                            //    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            // }
                         }
 
+                        if (tumourIDobj != null) {
+                            tumourID = tumourIDobj.toString();
+                            Tumour tumour;
+                            int numberOfSourcesWritten = 0;
+                            try {
+                                tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false);
+                                if (tumour != null && tumour.getSources() != null) {
+                                    for (Source source : tumour.getSources()) {
+                                        for (String variableName : sourceVariableNames) {
+                                            line += separatingString + source.getVariable(variableName);
+                                        }
+                                        numberOfSourcesWritten++;
+                                    }
+                                }
+                            } catch (DistributedTableDescriptionException ex) {
+                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (UnknownTableException ex) {
+                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (RemoteException ex) {
+                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (SecurityException ex) {
+                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (SQLException ex) {
+                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (RecordLockedException ex) {
+                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            } finally {
+                                for (; numberOfSourcesWritten < maxNumberOfSourcesPerTumour;) {
+                                    for (String variableName : sourceVariableNames) {
+                                        line += separatingString + "";
+                                    }
+                                    numberOfSourcesWritten++;
+                                }
+                            }
+                        } else {
+                            return false;
+                        }
                     }
                     setProgress(100 * row / rowCount);
                     bw.write(line + "\n");
@@ -928,14 +967,17 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
             }
-            return null;  // return your result
+            return true;  // return your result
         }
 
         @Override
         protected void succeeded(Object result) {
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
             setCursor(normalCursor);
+
+            boolean success = (Boolean) result;
 
             try {
                 // Runs on the EDT.  Update the GUI based on
@@ -947,7 +989,13 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 resultPanel.setVisible(true);
                 writeFileButton.setEnabled(true);
 
-                localSettings.writeSettings();
+                if (success) {
+                    JOptionPane.showMessageDialog(dtp, "Data exported to : " + fileName, "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                    localSettings.writeSettings();
+                } else {
+                    JOptionPane.showMessageDialog(dtp, "Something went wrong while exporting to : " + fileName, "Error", JOptionPane.ERROR_MESSAGE);
+                }
 
             } catch (IOException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -960,5 +1008,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     public void formatDateCheckBoxChanged() {
         correctUnknownCheckBox.setEnabled(formatDateCheckBox.isSelected());
         dateFormatComboBox.setEnabled(formatDateCheckBox.isSelected());
+    }
+
+    @Action
+    public void exportSourceInformationTickBoxUpdated() {
+        variableChooserPanel.setVariableDataSelected(tumourIDdbvle.getDatabaseVariableName(), true);
     }
 }

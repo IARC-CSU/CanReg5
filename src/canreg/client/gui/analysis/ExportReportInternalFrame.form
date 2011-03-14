@@ -32,7 +32,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jTabbedPane1" alignment="0" pref="550" max="32767" attributes="0"/>
+          <Component id="jTabbedPane1" alignment="0" pref="790" max="32767" attributes="0"/>
           <Component id="resultPanel" alignment="0" max="32767" attributes="1"/>
       </Group>
     </DimensionLayout>
@@ -62,12 +62,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="534" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="774" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="154" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="158" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -97,7 +97,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variableChooserPanel" pref="192" max="32767" attributes="0"/>
+                      <Component id="variableChooserPanel" pref="432" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="exportSourceInformationCheckBox" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -108,7 +112,8 @@
                           <Component id="variableChooserPanel" alignment="0" min="0" pref="0" max="32767" attributes="1"/>
                           <Component id="rangeFilterPanel" alignment="0" max="32767" attributes="1"/>
                       </Group>
-                      <EmptySpace pref="25" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="exportSourceInformationCheckBox" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -125,6 +130,16 @@
             <Component class="canreg.client.gui.components.VariablesChooserPanel" name="variableChooserPanel">
               <Properties>
                 <Property name="name" type="java.lang.String" value="variableChooserPanel" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="exportSourceInformationCheckBox">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.analysis.ExportReportInternalFrame" id="exportSourceInformationTickBoxUpdated" methodName="exportSourceInformationTickBoxUpdated"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="exportSourceInformationCheckBox.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="exportSourceInformationCheckBox.toolTipText"/>
+                <Property name="name" type="java.lang.String" value="exportSourceInformationCheckBox" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -155,7 +170,7 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="optionsPanel" min="-2" max="-2" attributes="0"/>
+                      <Component id="optionsPanel" min="-2" pref="156" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="exportPanel" max="32767" attributes="1"/>
@@ -239,20 +254,19 @@
                                   <Component id="variableNamesComboBox" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="variableNamesLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="267" max="32767" attributes="0"/>
+                                  <EmptySpace pref="507" max="32767" attributes="0"/>
                                   <Component id="headingCheckBox" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="fileFormatLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="fileFormatComboBox" pref="454" max="32767" attributes="0"/>
+                                  <Component id="fileFormatComboBox" pref="694" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="formatDateCheckBox" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dateFormatComboBox" pref="432" max="32767" attributes="0"/>
+                                  <Component id="dateFormatComboBox" pref="672" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="exportSourceInformationCheckBox" alignment="1" pref="519" max="32767" attributes="0"/>
                               <Component id="correctUnknownCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -279,8 +293,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="correctUnknownCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                          <Component id="exportSourceInformationCheckBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -363,13 +376,6 @@
                     <Property name="name" type="java.lang.String" value="dateFormatComboBox" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JCheckBox" name="exportSourceInformationCheckBox">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="exportSourceInformationCheckBox.text"/>
-                    <Property name="toolTipText" type="java.lang.String" resourceKey="exportSourceInformationCheckBox.toolTipText"/>
-                    <Property name="name" type="java.lang.String" value="exportSourceInformationCheckBox" noResource="true"/>
-                  </Properties>
-                </Component>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="exportPanel">
@@ -387,7 +393,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="writeFileButton" alignment="0" pref="385" max="32767" attributes="0"/>
+                      <Component id="writeFileButton" alignment="0" pref="625" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
