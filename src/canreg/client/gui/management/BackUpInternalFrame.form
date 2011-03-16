@@ -109,6 +109,7 @@
             <Component class="javax.swing.JTextArea" name="textArea">
               <Properties>
                 <Property name="columns" type="int" value="20"/>
+                <Property name="editable" type="boolean" value="false"/>
                 <Property name="rows" type="int" value="5"/>
                 <Property name="name" type="java.lang.String" value="textArea" noResource="true"/>
               </Properties>

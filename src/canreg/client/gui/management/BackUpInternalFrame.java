@@ -70,6 +70,7 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
         scrollPane.setName("scrollPane"); // NOI18N
 
         textArea.setColumns(20);
+        textArea.setEditable(false);
         textArea.setRows(5);
         textArea.setName("textArea"); // NOI18N
         textArea.addMouseListener(new java.awt.event.MouseAdapter() {
