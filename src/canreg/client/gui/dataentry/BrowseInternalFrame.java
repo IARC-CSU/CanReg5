@@ -386,6 +386,8 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
         if (tableDatadescription != null) {
             try {
                 CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
+            } catch (SQLException ex) {
+                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
@@ -479,10 +481,14 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 if (tableDatadescription != null) {
                     try {
                         CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
-                        tableDataSource = null;
-                    } catch (SecurityException securityException) {
-                    } catch (RemoteException remoteException) {
+                    } catch (SecurityException ex) {
+                        Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    tableDataSource = null;
                 }
 
                 tableDatadescription = newTableDatadescription;
