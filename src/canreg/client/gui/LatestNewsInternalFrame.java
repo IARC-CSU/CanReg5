@@ -10,6 +10,7 @@ package canreg.client.gui;
  * @author ervikm
  */
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import com.sun.cnpi.rss.elements.Category;
 import com.sun.cnpi.rss.elements.Item;
 import com.sun.cnpi.rss.elements.Link;
@@ -66,6 +67,14 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
         newsEditorPane.setEditable(false);
         newsEditorPane.setName("newsEditorPane"); // NOI18N
         newsEditorPane.setRequestFocusEnabled(false);
+        newsEditorPane.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                newsEditorPaneMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                newsEditorPaneMouseReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(newsEditorPane);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -76,7 +85,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
         );
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(LatestNewsInternalFrame.class, this);
@@ -104,6 +113,14 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void newsEditorPaneMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newsEditorPaneMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(newsEditorPane, evt);
+    }//GEN-LAST:event_newsEditorPaneMousePressed
+
+    private void newsEditorPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newsEditorPaneMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(newsEditorPane, evt);
+    }//GEN-LAST:event_newsEditorPaneMouseReleased
 
     public void readRSSDocument() throws RssParserException, IOException {
 

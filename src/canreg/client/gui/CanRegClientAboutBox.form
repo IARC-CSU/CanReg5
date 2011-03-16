@@ -128,6 +128,10 @@
             <Property name="text" type="java.lang.String" resourceKey="aboutEditorPane.text"/>
             <Property name="name" type="java.lang.String" value="aboutEditorPane" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="aboutEditorPaneMousePressed"/>
+            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="aboutEditorPaneMouseReleased"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="URL url = this.getClass().getResource(&quot;/canreg/client/gui/resources/about.html&quot;);&#xa;try{&#xa;    aboutEditorPane.setPage(url);&#xa;} &#xa;catch (Exception e)&#xa;{&#xa;    Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.INFO, &quot;Problem setting about page&quot;, e);&#xa;}"/>
           </AuxValues>

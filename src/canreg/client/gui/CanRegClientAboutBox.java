@@ -4,6 +4,7 @@
 package canreg.client.gui;
 
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.Globals;
 import java.io.IOException;
 import java.io.InputStream;
@@ -95,6 +96,14 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
         aboutEditorPane.setEditable(false);
         aboutEditorPane.setText(resourceMap.getString("aboutEditorPane.text")); // NOI18N
         aboutEditorPane.setName("aboutEditorPane"); // NOI18N
+        aboutEditorPane.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                aboutEditorPaneMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                aboutEditorPaneMouseReleased(evt);
+            }
+        });
         aboutScrollPane.setViewportView(aboutEditorPane);
         URL url = this.getClass().getResource("/canreg/client/gui/resources/about.html");
         try{
@@ -206,6 +215,15 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
 private void homepageLabelMouseClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homepageLabelMouseClick
     BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientAboutBox").getString("http://canreg.iarc.fr/"));
 }//GEN-LAST:event_homepageLabelMouseClick
+
+private void aboutEditorPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aboutEditorPaneMouseReleased
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(aboutEditorPane, evt);
+}//GEN-LAST:event_aboutEditorPaneMouseReleased
+
+private void aboutEditorPaneMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aboutEditorPaneMousePressed
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(aboutEditorPane, evt);
+}//GEN-LAST:event_aboutEditorPaneMousePressed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane aboutEditorPane;
     private javax.swing.JScrollPane aboutScrollPane;
