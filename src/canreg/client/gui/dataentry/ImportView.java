@@ -12,6 +12,7 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.client.dataentry.Import;
 import canreg.client.dataentry.ImportOptions;
 import canreg.client.dataentry.Relation;
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.Tools;
@@ -207,6 +208,14 @@ public class ImportView extends javax.swing.JInternalFrame {
         chooseFilePanel.setName("chooseFilePanel"); // NOI18N
 
         fileNameTextField.setName("fileNameTextField"); // NOI18N
+        fileNameTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                fileNameTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                fileNameTextFieldMouseReleased(evt);
+            }
+        });
         fileNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 fileNameTextFieldFocusLost(evt);
@@ -278,7 +287,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                     .addComponent(numberOfRecordsShownLabel)
                     .addComponent(numberOfRecordsShownTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previewTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE))
+                .addComponent(previewTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
         );
 
         previewButton.setAction(actionMap.get("previewAction")); // NOI18N
@@ -406,7 +415,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -513,6 +522,14 @@ public class ImportView extends javax.swing.JInternalFrame {
 
         maxLinesTextField.setToolTipText(resourceMap.getString("maxLinesTextField.toolTipText")); // NOI18N
         maxLinesTextField.setName("maxLinesTextField"); // NOI18N
+        maxLinesTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                maxLinesTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                maxLinesTextFieldMouseReleased(evt);
+            }
+        });
 
         testOnlyCheckBox.setText(resourceMap.getString("testOnlyCheckBox.text")); // NOI18N
         testOnlyCheckBox.setToolTipText(resourceMap.getString("testOnlyCheckBox.toolTipText")); // NOI18N
@@ -617,7 +634,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -631,6 +648,22 @@ public class ImportView extends javax.swing.JInternalFrame {
     private void fileNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fileNameTextFieldFocusLost
         changeFile();
     }//GEN-LAST:event_fileNameTextFieldFocusLost
+
+    private void fileNameTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileNameTextFieldMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(fileNameTextField, evt);
+    }//GEN-LAST:event_fileNameTextFieldMousePressed
+
+    private void fileNameTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileNameTextFieldMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(fileNameTextField, evt);
+    }//GEN-LAST:event_fileNameTextFieldMouseReleased
+
+    private void maxLinesTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maxLinesTextFieldMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(maxLinesTextField, evt);
+    }//GEN-LAST:event_maxLinesTextFieldMousePressed
+
+    private void maxLinesTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maxLinesTextFieldMouseReleased
+         MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(maxLinesTextField, evt);
+    }//GEN-LAST:event_maxLinesTextFieldMouseReleased
 
     /**
      * 

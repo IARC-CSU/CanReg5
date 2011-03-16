@@ -14,6 +14,7 @@ import canreg.client.dataentry.ImportOptions;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.components.PreviewFilePanel;
 import canreg.client.gui.components.VariableMappingAlternativePanel;
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.server.database.RecordLockedException;
@@ -314,6 +315,14 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 
         maxLinesTextField.setToolTipText(resourceMap.getString("maxLinesTextField.toolTipText")); // NOI18N
         maxLinesTextField.setName("maxLinesTextField"); // NOI18N
+        maxLinesTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                maxLinesTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                maxLinesTextFieldMouseReleased(evt);
+            }
+        });
 
         testOnlyCheckBox.setText(resourceMap.getString("testOnlyCheckBox.text")); // NOI18N
         testOnlyCheckBox.setToolTipText(resourceMap.getString("testOnlyCheckBox.toolTipText")); // NOI18N
@@ -346,6 +355,14 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         browseButton.setName("browseButton"); // NOI18N
 
         reportFileNameTextField.setName("reportFileNameTextField"); // NOI18N
+        reportFileNameTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                reportFileNameTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                reportFileNameTextFieldMouseReleased(evt);
+            }
+        });
         reportFileNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 reportFileNameTextFieldFocusLost(evt);
@@ -519,7 +536,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -536,6 +553,22 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     private void reportFileNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_reportFileNameTextFieldFocusLost
         reportFileNameSet = true;
 }//GEN-LAST:event_reportFileNameTextFieldFocusLost
+
+    private void maxLinesTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maxLinesTextFieldMousePressed
+         MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(maxLinesTextField, evt);
+    }//GEN-LAST:event_maxLinesTextFieldMousePressed
+
+    private void maxLinesTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maxLinesTextFieldMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(maxLinesTextField, evt);
+    }//GEN-LAST:event_maxLinesTextFieldMouseReleased
+
+    private void reportFileNameTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportFileNameTextFieldMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(reportFileNameTextField, evt);
+    }//GEN-LAST:event_reportFileNameTextFieldMousePressed
+
+    private void reportFileNameTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportFileNameTextFieldMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(reportFileNameTextField, evt);
+    }//GEN-LAST:event_reportFileNameTextFieldMouseReleased
 
     /**
      * 

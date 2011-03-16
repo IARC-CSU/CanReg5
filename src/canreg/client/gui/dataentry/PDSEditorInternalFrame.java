@@ -9,6 +9,7 @@ import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.components.FastFilterInternalFrame;
 import canreg.client.gui.tools.ExcelAdapter;
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.Globals;
 import canreg.server.database.AgeGroupStructure;
 import canreg.server.database.PopulationDataset;
@@ -335,6 +336,14 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         dateLabel.setName("dateLabel"); // NOI18N
 
         dateChooser.setName("dateChooser"); // NOI18N
+        dateChooser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                dateChooserMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                dateChooserMouseReleased(evt);
+            }
+        });
 
         ageGroupStructureComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         ageGroupStructureComboBox.setName("ageGroupStructureComboBox"); // NOI18N
@@ -353,6 +362,14 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setRows(5);
         descriptionTextArea.setName("descriptionTextArea"); // NOI18N
+        descriptionTextArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                descriptionTextAreaMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                descriptionTextAreaMouseReleased(evt);
+            }
+        });
         descriptionScrollPane.setViewportView(descriptionTextArea);
 
         descriptionLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -365,9 +382,25 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
 
         sourceTextField.setText(resourceMap.getString("sourceTextField.text")); // NOI18N
         sourceTextField.setName("sourceTextField"); // NOI18N
+        sourceTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                sourceTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                sourceTextFieldMouseReleased(evt);
+            }
+        });
 
         filterTextField.setText(resourceMap.getString("filterTextField.text")); // NOI18N
         filterTextField.setName("filterTextField"); // NOI18N
+        filterTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                filterTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                filterTextFieldMouseReleased(evt);
+            }
+        });
 
         filterWizardButton.setAction(actionMap.get("filterWizardAction")); // NOI18N
         filterWizardButton.setName("filterWizardButton"); // NOI18N
@@ -375,6 +408,14 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         nameTextField.setText(resourceMap.getString("nameTextField.text")); // NOI18N
         nameTextField.setToolTipText(resourceMap.getString("nameTextField.toolTipText")+Globals.PDS_DATABASE_NAME_LENGTH);
         nameTextField.setName("nameTextField"); // NOI18N
+        nameTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                nameTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                nameTextFieldMouseReleased(evt);
+            }
+        });
 
         nameLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         nameLabel.setText(resourceMap.getString("nameLabel.text")); // NOI18N
@@ -464,7 +505,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                     .addComponent(editStandardPopulationButton)
                     .addComponent(standardPopulationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(standardPopulationLabel))
-                .addContainerGap(176, Short.MAX_VALUE))
+                .addContainerGap(180, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("detailsPanel.TabConstraints.tabTitle"), detailsPanel); // NOI18N
@@ -717,7 +758,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         );
         dataSetPanelLayout.setVerticalGroup(
             dataSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(resourceMap.getString("dataSetPanel.TabConstraints.tabTitle"), dataSetPanel); // NOI18N
@@ -757,7 +798,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
             .addGroup(pyramidPanelLayout.createSequentialGroup()
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pyramidLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE))
+                .addComponent(pyramidLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("pyramidPanel.TabConstraints.tabTitle"), pyramidPanel); // NOI18N
@@ -1260,7 +1301,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
@@ -1270,9 +1311,9 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 255, Short.MAX_VALUE)
+                    .addGap(0, 257, Short.MAX_VALUE)
                     .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 255, Short.MAX_VALUE)))
+                    .addGap(0, 257, Short.MAX_VALUE)))
         );
 
         pack();
@@ -1356,6 +1397,46 @@ private void pdsTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:ev
                 evt.getX(), evt.getY());
     }
 }//GEN-LAST:event_pdsTableMousePressed
+
+private void nameTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nameTextFieldMousePressed
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(nameTextField, evt);
+}//GEN-LAST:event_nameTextFieldMousePressed
+
+private void nameTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nameTextFieldMouseReleased
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(nameTextField, evt);
+}//GEN-LAST:event_nameTextFieldMouseReleased
+
+private void filterTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filterTextFieldMousePressed
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(filterTextField, evt);
+}//GEN-LAST:event_filterTextFieldMousePressed
+
+private void filterTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filterTextFieldMouseReleased
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(filterTextField, evt);
+}//GEN-LAST:event_filterTextFieldMouseReleased
+
+private void sourceTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourceTextFieldMousePressed
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(sourceTextField, evt);
+}//GEN-LAST:event_sourceTextFieldMousePressed
+
+private void sourceTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourceTextFieldMouseReleased
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(sourceTextField, evt);
+}//GEN-LAST:event_sourceTextFieldMouseReleased
+
+private void descriptionTextAreaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_descriptionTextAreaMousePressed
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(descriptionTextArea, evt);
+}//GEN-LAST:event_descriptionTextAreaMousePressed
+
+private void descriptionTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_descriptionTextAreaMouseReleased
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(descriptionTextArea, evt);
+}//GEN-LAST:event_descriptionTextAreaMouseReleased
+
+private void dateChooserMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dateChooserMousePressed
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(dateTextField, evt);
+}//GEN-LAST:event_dateChooserMousePressed
+
+private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dateChooserMouseReleased
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(dateTextField, evt);
+}//GEN-LAST:event_dateChooserMouseReleased
 
     /**
      *

@@ -52,7 +52,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="383" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="387" max="32767" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -406,6 +406,10 @@
                     <Property name="toolTipText" type="java.lang.String" resourceKey="maxLinesTextField.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="maxLinesTextField" noResource="true"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="maxLinesTextFieldMousePressed"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="maxLinesTextFieldMouseReleased"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="testOnlyCheckBox">
                   <Properties>
@@ -467,6 +471,8 @@
                     <Property name="name" type="java.lang.String" value="reportFileNameTextField" noResource="true"/>
                   </Properties>
                   <Events>
+                    <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="reportFileNameTextFieldMousePressed"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="reportFileNameTextFieldMouseReleased"/>
                     <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="reportFileNameTextFieldFocusLost"/>
                   </Events>
                 </Component>

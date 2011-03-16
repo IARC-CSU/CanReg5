@@ -6,6 +6,7 @@
 
 package canreg.client.gui.dataentry;
 
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import org.jdesktop.application.Action;
 
 /**
@@ -132,6 +133,14 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
         mandatoryVariablesTextArea.setRows(5);
         mandatoryVariablesTextArea.setText(resourceMap.getString("mandatoryVariablesTextArea.text")); // NOI18N
         mandatoryVariablesTextArea.setName("mandatoryVariablesTextArea"); // NOI18N
+        mandatoryVariablesTextArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                mandatoryVariablesTextAreaMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                mandatoryVariablesTextAreaMouseReleased(evt);
+            }
+        });
         mandatoryVariablesScrollPane.setViewportView(mandatoryVariablesTextArea);
 
         javax.swing.GroupLayout mandatoryVariablesPanelLayout = new javax.swing.GroupLayout(mandatoryVariablesPanel);
@@ -155,6 +164,14 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
         crossChecksTextArea.setRows(5);
         crossChecksTextArea.setText(resourceMap.getString("crossChecksTextArea.text")); // NOI18N
         crossChecksTextArea.setName("crossChecksTextArea"); // NOI18N
+        crossChecksTextArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                crossChecksTextAreaMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                crossChecksTextAreaMouseReleased(evt);
+            }
+        });
         crossChecksScrollPane.setViewportView(crossChecksTextArea);
 
         javax.swing.GroupLayout crossChecksPanelLayout = new javax.swing.GroupLayout(crossChecksPanel);
@@ -165,7 +182,7 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
         );
         crossChecksPanelLayout.setVerticalGroup(
             crossChecksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(crossChecksScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
+            .addComponent(crossChecksScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
         );
 
         nameSexPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("nameSexPanel.border.title"))); // NOI18N
@@ -178,6 +195,14 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
         nameSexTextArea.setRows(5);
         nameSexTextArea.setText(resourceMap.getString("nameSexTextArea.text")); // NOI18N
         nameSexTextArea.setName("nameSexTextArea"); // NOI18N
+        nameSexTextArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                nameSexTextAreaMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                nameSexTextAreaMouseReleased(evt);
+            }
+        });
         nameSexScrollPane.setViewportView(nameSexTextArea);
 
         javax.swing.GroupLayout nameSexPanelLayout = new javax.swing.GroupLayout(nameSexPanel);
@@ -203,6 +228,14 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
         localChecksTextArea.setEnabled(false);
         localChecksTextArea.setName("localChecksTextArea"); // NOI18N
         localChecksTextArea.setOpaque(false);
+        localChecksTextArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                localChecksTextAreaMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                localChecksTextAreaMouseReleased(evt);
+            }
+        });
         localChecksScrollPane.setViewportView(localChecksTextArea);
 
         javax.swing.GroupLayout localChecksPanelLayout = new javax.swing.GroupLayout(localChecksPanel);
@@ -225,6 +258,14 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
         ICD10TextField.setEditable(false);
         ICD10TextField.setText(resourceMap.getString("ICD10TextField.text")); // NOI18N
         ICD10TextField.setName("ICD10TextField"); // NOI18N
+        ICD10TextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                ICD10TextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                ICD10TextFieldMouseReleased(evt);
+            }
+        });
 
         ICCCLabel.setText(resourceMap.getString("ICCCLabel.text")); // NOI18N
         ICCCLabel.setName("ICCCLabel"); // NOI18N
@@ -232,6 +273,14 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
         ICCCTextField.setEditable(false);
         ICCCTextField.setText(resourceMap.getString("ICCCTextField.text")); // NOI18N
         ICCCTextField.setName("ICCCTextField"); // NOI18N
+        ICCCTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                ICCCTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                ICCCTextFieldMouseReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -265,6 +314,14 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
         resultTextField.setEditable(false);
         resultTextField.setText(resourceMap.getString("resultTextField.text")); // NOI18N
         resultTextField.setName("resultTextField"); // NOI18N
+        resultTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                resultTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                resultTextFieldMouseReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout resultPanelLayout = new javax.swing.GroupLayout(resultPanel);
         resultPanel.setLayout(resultPanelLayout);
@@ -326,6 +383,62 @@ public class EditChecksInternalFrame extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void mandatoryVariablesTextAreaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mandatoryVariablesTextAreaMousePressed
+         MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(mandatoryVariablesTextArea, evt);
+    }//GEN-LAST:event_mandatoryVariablesTextAreaMousePressed
+
+    private void mandatoryVariablesTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mandatoryVariablesTextAreaMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(mandatoryVariablesTextArea, evt);
+    }//GEN-LAST:event_mandatoryVariablesTextAreaMouseReleased
+
+    private void nameSexTextAreaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nameSexTextAreaMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(nameSexTextArea, evt);
+    }//GEN-LAST:event_nameSexTextAreaMousePressed
+
+    private void nameSexTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nameSexTextAreaMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(nameSexTextArea, evt);
+    }//GEN-LAST:event_nameSexTextAreaMouseReleased
+
+    private void crossChecksTextAreaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_crossChecksTextAreaMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(crossChecksTextArea, evt);
+    }//GEN-LAST:event_crossChecksTextAreaMousePressed
+
+    private void crossChecksTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_crossChecksTextAreaMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(crossChecksTextArea, evt);
+    }//GEN-LAST:event_crossChecksTextAreaMouseReleased
+
+    private void localChecksTextAreaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_localChecksTextAreaMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(localChecksTextArea, evt);
+    }//GEN-LAST:event_localChecksTextAreaMousePressed
+
+    private void localChecksTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_localChecksTextAreaMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(localChecksTextArea, evt);
+    }//GEN-LAST:event_localChecksTextAreaMouseReleased
+
+    private void ICD10TextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ICD10TextFieldMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(ICD10TextField, evt);
+    }//GEN-LAST:event_ICD10TextFieldMousePressed
+
+    private void ICD10TextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ICD10TextFieldMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(ICD10TextField, evt);
+    }//GEN-LAST:event_ICD10TextFieldMouseReleased
+
+    private void ICCCTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ICCCTextFieldMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(ICCCTextField, evt);
+    }//GEN-LAST:event_ICCCTextFieldMousePressed
+
+    private void ICCCTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ICCCTextFieldMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(ICCCTextField, evt);
+    }//GEN-LAST:event_ICCCTextFieldMouseReleased
+
+    private void resultTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultTextFieldMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(resultTextField, evt);
+    }//GEN-LAST:event_resultTextFieldMousePressed
+
+    private void resultTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultTextFieldMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(resultTextField, evt);
+    }//GEN-LAST:event_resultTextFieldMouseReleased
 
     /**
      * 

@@ -301,19 +301,11 @@ private void codeTextFieldActionPerformed1(java.awt.event.ActionEvent evt) {//GE
 }//GEN-LAST:event_codeTextFieldActionPerformed1
 
 private void codeTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_codeTextFieldMousePressed
-    if (evt.isPopupTrigger()) {
-        Point pt = SwingUtilities.convertPoint(evt.getComponent(), evt.getPoint(), codeTextField);
-        JPopupMenu menu = new MyPopUpMenu(codeTextField);
-        menu.show(codeTextField, pt.x, pt.y);
-    }
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(codeTextField, evt);
 }//GEN-LAST:event_codeTextFieldMousePressed
 
 private void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_codeTextFieldMouseReleased
-    if (evt.isPopupTrigger()) {
-        Point pt = SwingUtilities.convertPoint(evt.getComponent(), evt.getPoint(), codeTextField);
-        JPopupMenu menu = new MyPopUpMenu(codeTextField);
-        menu.show(codeTextField, pt.x, pt.y);
-    }
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(codeTextField, evt);
 }//GEN-LAST:event_codeTextFieldMouseReleased
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JTextField categoryTextField;

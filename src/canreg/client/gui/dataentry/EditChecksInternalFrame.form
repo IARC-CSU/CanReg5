@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.5" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <Properties>
@@ -116,6 +116,10 @@
                 <Property name="text" type="java.lang.String" resourceKey="mandatoryVariablesTextArea.text"/>
                 <Property name="name" type="java.lang.String" value="mandatoryVariablesTextArea" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="mandatoryVariablesTextAreaMousePressed"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="mandatoryVariablesTextAreaMouseReleased"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -141,7 +145,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="crossChecksScrollPane" alignment="0" max="32767" attributes="0"/>
+              <Component id="crossChecksScrollPane" alignment="0" pref="100" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -164,6 +168,10 @@
                 <Property name="text" type="java.lang.String" resourceKey="crossChecksTextArea.text"/>
                 <Property name="name" type="java.lang.String" value="crossChecksTextArea" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="crossChecksTextAreaMousePressed"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="crossChecksTextAreaMouseReleased"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -212,6 +220,10 @@
                 <Property name="text" type="java.lang.String" resourceKey="nameSexTextArea.text"/>
                 <Property name="name" type="java.lang.String" value="nameSexTextArea" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="nameSexTextAreaMousePressed"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="nameSexTextAreaMouseReleased"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -262,6 +274,10 @@
                 <Property name="name" type="java.lang.String" value="localChecksTextArea" noResource="true"/>
                 <Property name="opaque" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="localChecksTextAreaMousePressed"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="localChecksTextAreaMouseReleased"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -325,6 +341,10 @@
             <Property name="text" type="java.lang.String" resourceKey="ICD10TextField.text"/>
             <Property name="name" type="java.lang.String" value="ICD10TextField" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ICD10TextFieldMousePressed"/>
+            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ICD10TextFieldMouseReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="ICCCLabel">
           <Properties>
@@ -338,6 +358,10 @@
             <Property name="text" type="java.lang.String" resourceKey="ICCCTextField.text"/>
             <Property name="name" type="java.lang.String" value="ICCCTextField" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ICCCTextFieldMousePressed"/>
+            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ICCCTextFieldMouseReleased"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -375,6 +399,10 @@
             <Property name="text" type="java.lang.String" resourceKey="resultTextField.text"/>
             <Property name="name" type="java.lang.String" value="resultTextField" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="resultTextFieldMousePressed"/>
+            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="resultTextFieldMouseReleased"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

@@ -526,19 +526,19 @@ private void filterComboBoxMouseReleased(java.awt.event.MouseEvent evt) {//GEN-F
 }//GEN-LAST:event_filterComboBoxMouseReleased
 
 private void rangeStartTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rangeStartTextFieldMouseReleased
-    potentiallyShowPopUpMenuTextBox(rangeStartTextField, evt);
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(rangeStartTextField, evt);
 }//GEN-LAST:event_rangeStartTextFieldMouseReleased
 
 private void rangeStartTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rangeStartTextFieldMousePressed
-    potentiallyShowPopUpMenuTextBox(rangeStartTextField, evt);
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(rangeStartTextField, evt);
 }//GEN-LAST:event_rangeStartTextFieldMousePressed
 
 private void rangeEndTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rangeEndTextFieldMousePressed
-    potentiallyShowPopUpMenuTextBox(rangeEndTextField, evt);
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(rangeEndTextField, evt);
 }//GEN-LAST:event_rangeEndTextFieldMousePressed
 
 private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rangeEndTextFieldMouseReleased
-    potentiallyShowPopUpMenuTextBox(rangeEndTextField, evt);
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(rangeEndTextField, evt);
 }//GEN-LAST:event_rangeEndTextFieldMouseReleased
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel andLabel;
@@ -819,13 +819,5 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
 
     public void setSelectedTable(String table) {
         tableChooserComboBox.setSelectedItem(table);
-    }
-
-    private void potentiallyShowPopUpMenuTextBox(JTextField textField, MouseEvent evt) {
-        if (evt.isPopupTrigger()) {
-            Point pt = SwingUtilities.convertPoint(evt.getComponent(), evt.getPoint(), textField);
-            JPopupMenu menu = new MyPopUpMenu(textField);
-            menu.show(textField, pt.x, pt.y);
-        }
     }
 }

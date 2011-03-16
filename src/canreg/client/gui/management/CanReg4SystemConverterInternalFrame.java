@@ -250,7 +250,7 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
                 localSettings.writeSettings();
             }
 
-            EditDatabaseVariableInternalFrame edvif = new EditDatabaseVariableInternalFrame();
+            EditDatabaseVariableTableAssociationInternalFrame edvif = new EditDatabaseVariableTableAssociationInternalFrame();
             try {
                 edvif.loadSystemDefinition(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + codeField.getText() + ".xml");
                 edvif.setDesktopPane(dtp);

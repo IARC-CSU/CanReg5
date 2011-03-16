@@ -1,5 +1,6 @@
 package canreg.client.gui.components;
 
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import java.awt.event.ActionListener;
@@ -53,6 +54,19 @@ public class TextFieldVariableEditorPanel extends VariableEditorPanel {
             @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 componentFocusLost(evt);
+            }
+        });
+
+        textArea.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(textArea, evt);
+            }
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(textArea, evt);
             }
         });
     }

@@ -5,6 +5,7 @@
  */
 package canreg.client.gui.management;
 
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.Globals;
 import java.awt.Cursor;
 import java.io.File;
@@ -71,6 +72,14 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
         textArea.setColumns(20);
         textArea.setRows(5);
         textArea.setName("textArea"); // NOI18N
+        textArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textAreaMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                textAreaMouseReleased(evt);
+            }
+        });
         scrollPane.setViewportView(textArea);
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -89,7 +98,7 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(feedbackLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(openFolderButton))
         );
@@ -113,6 +122,14 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void textAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textAreaMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(textArea, evt);
+    }//GEN-LAST:event_textAreaMouseReleased
+
+    private void textAreaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textAreaMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(textArea, evt);
+    }//GEN-LAST:event_textAreaMousePressed
 
     /**
      * 

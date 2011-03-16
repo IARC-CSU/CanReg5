@@ -8,6 +8,7 @@ package canreg.client.gui.dataentry;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.Globals;
 import canreg.server.database.Dictionary;
@@ -135,6 +136,14 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         editorTextArea.setColumns(20);
         editorTextArea.setRows(5);
         editorTextArea.setName("editorTextArea"); // NOI18N
+        editorTextArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                editorTextAreaMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                editorTextAreaMouseReleased(evt);
+            }
+        });
         displayScrollPane.setViewportView(editorTextArea);
 
         updateButton.setAction(actionMap.get("updateDictionaryAction")); // NOI18N
@@ -165,7 +174,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(displayEditLabel)
                     .addComponent(chooseDictionaryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(displayScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+                .addComponent(displayScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(oneFieldPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(updateButton)
@@ -195,6 +204,15 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void editorTextAreaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editorTextAreaMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(editorTextArea, evt);
+    }//GEN-LAST:event_editorTextAreaMousePressed
+
+    private void editorTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editorTextAreaMouseReleased
+         MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(editorTextArea, evt);
+    }//GEN-LAST:event_editorTextAreaMouseReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel allFieldsPanel;
     private javax.swing.JComboBox chooseDictionaryComboBox;

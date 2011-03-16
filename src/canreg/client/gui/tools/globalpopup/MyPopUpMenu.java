@@ -1,6 +1,9 @@
 package canreg.client.gui.tools.globalpopup;
 
+import java.awt.Point;
+import java.awt.event.MouseEvent;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
 /**
@@ -17,5 +20,13 @@ public class MyPopUpMenu extends JPopupMenu {
         add(new DeleteAction(tc));
         addSeparator();
         add(new SelectAllAction(tc));
+    }
+
+    public static void potentiallyShowPopUpMenuTextComponent(JTextComponent textComponent, MouseEvent evt) {
+        if (evt.isPopupTrigger()) {
+            Point pt = SwingUtilities.convertPoint(evt.getComponent(), evt.getPoint(), textComponent);
+            JPopupMenu menu = new MyPopUpMenu(textComponent);
+            menu.show(textComponent, pt.x, pt.y);
+        }
     }
 }

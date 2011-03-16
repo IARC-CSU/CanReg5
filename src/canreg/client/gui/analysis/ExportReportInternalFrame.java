@@ -155,7 +155,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 147, Short.MAX_VALUE)
+            .addGap(0, 151, Short.MAX_VALUE)
         );
 
         jTabbedPane1.setName("jTabbedPane1"); // NOI18N
@@ -267,6 +267,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         dateFormatComboBox.setToolTipText(resourceMap.getString("dateFormatComboBox.toolTipText")); // NOI18N
         dateFormatComboBox.setEnabled(false);
         dateFormatComboBox.setName("dateFormatComboBox"); // NOI18N
+        dateFormatComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                dateFormatComboBoxMousePressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
         optionsPanel.setLayout(optionsPanelLayout);
@@ -343,7 +348,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         settingsPanelLayout.setVerticalGroup(
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsPanelLayout.createSequentialGroup()
-                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(exportPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -370,6 +375,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void dateFormatComboBoxMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dateFormatComboBoxMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dateFormatComboBoxMousePressed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox correctUnknownCheckBox;
     private javax.swing.JComboBox dateFormatComboBox;

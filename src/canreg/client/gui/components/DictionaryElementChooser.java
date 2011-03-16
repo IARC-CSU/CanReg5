@@ -12,6 +12,7 @@ import ca.odell.glazedlists.matchers.MatcherEditor;
 import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 import canreg.client.dataentry.DictionaryHelper;
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.server.database.Dictionary;
 import canreg.server.database.DictionaryEntry;
 import java.awt.event.ActionEvent;
@@ -185,6 +186,14 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
 
         filterEdit.setText(resourceMap.getString("filterEdit.text")); // NOI18N
         filterEdit.setName("filterEdit"); // NOI18N
+        filterEdit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                filterEditMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                filterEditMouseReleased(evt);
+            }
+        });
         filterEdit.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 filterEditKeyPressed(evt);
@@ -277,7 +286,7 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -322,6 +331,14 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
             escapeKeyPressed();
         }
     }//GEN-LAST:event_dictionaryEntryListKeyPressed
+
+    private void filterEditMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filterEditMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(filterEdit, evt);
+    }//GEN-LAST:event_filterEditMousePressed
+
+    private void filterEditMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filterEditMouseReleased
+       MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(filterEdit, evt);
+    }//GEN-LAST:event_filterEditMouseReleased
 
     private void enterKeyPressed() {
         if (!dictionaryEntryList.isSelectionEmpty()) {

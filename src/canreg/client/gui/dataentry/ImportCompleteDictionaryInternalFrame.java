@@ -7,6 +7,7 @@ package canreg.client.gui.dataentry;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.Tools;
@@ -97,6 +98,14 @@ public class ImportCompleteDictionaryInternalFrame extends javax.swing.JInternal
         jLabel1.setName("jLabel1"); // NOI18N
 
         fileNameTextField.setName("fileNameTextField"); // NOI18N
+        fileNameTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                fileNameTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                fileNameTextFieldMouseReleased(evt);
+            }
+        });
         fileNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 fileNameTextFieldFocusLost(evt);
@@ -123,6 +132,14 @@ public class ImportCompleteDictionaryInternalFrame extends javax.swing.JInternal
         previewTextArea.setEditable(false);
         previewTextArea.setRows(5);
         previewTextArea.setName("previewTextArea"); // NOI18N
+        previewTextArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                previewTextAreaMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                previewTextAreaMouseReleased(evt);
+            }
+        });
         previewScrollPane.setViewportView(previewTextArea);
 
         javax.swing.GroupLayout previewPanelLayout = new javax.swing.GroupLayout(previewPanel);
@@ -133,7 +150,7 @@ public class ImportCompleteDictionaryInternalFrame extends javax.swing.JInternal
         );
         previewPanelLayout.setVerticalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(previewScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+            .addComponent(previewScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
         );
 
         previewButton.setAction(actionMap.get("previewAction")); // NOI18N
@@ -233,6 +250,22 @@ private void fileNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FI
 private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 // TODO add your handling code here:
 }//GEN-LAST:event_browseButtonActionPerformed
+
+private void fileNameTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileNameTextFieldMousePressed
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(fileNameTextField, evt);
+}//GEN-LAST:event_fileNameTextFieldMousePressed
+
+private void fileNameTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileNameTextFieldMouseReleased
+     MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(fileNameTextField, evt);
+}//GEN-LAST:event_fileNameTextFieldMouseReleased
+
+private void previewTextAreaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_previewTextAreaMousePressed
+     MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(previewTextArea, evt);
+}//GEN-LAST:event_previewTextAreaMousePressed
+
+private void previewTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_previewTextAreaMouseReleased
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(previewTextArea, evt);
+}//GEN-LAST:event_previewTextAreaMouseReleased
 
     /**
      *

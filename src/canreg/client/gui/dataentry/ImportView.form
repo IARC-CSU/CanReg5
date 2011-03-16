@@ -48,7 +48,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="371" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="375" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -150,6 +150,8 @@
                 <Property name="name" type="java.lang.String" value="fileNameTextField" noResource="true"/>
               </Properties>
               <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fileNameTextFieldMousePressed"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fileNameTextFieldMouseReleased"/>
                 <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="fileNameTextFieldFocusLost"/>
               </Events>
             </Component>
@@ -199,7 +201,7 @@
                               <Component id="numberOfRecordsShownTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="previewTableScrollPane" pref="207" max="32767" attributes="0"/>
+                          <Component id="previewTableScrollPane" pref="211" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -359,7 +361,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jSplitPane1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variablesScrollPane" pref="293" max="32767" attributes="0"/>
+                      <Component id="variablesScrollPane" pref="297" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -672,6 +674,10 @@
                     <Property name="toolTipText" type="java.lang.String" resourceKey="maxLinesTextField.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="maxLinesTextField" noResource="true"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="maxLinesTextFieldMousePressed"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="maxLinesTextFieldMouseReleased"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="testOnlyCheckBox">
                   <Properties>

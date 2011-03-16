@@ -71,30 +71,22 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
 
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                codeTextFieldMousePressed(evt);
+                MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(dateField, evt);
             }
 
             @Override
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                codeTextFieldMouseReleased(evt);
+                MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(dateField, evt);
             }
         });
     }
 
     private void codeTextFieldMousePressed(java.awt.event.MouseEvent evt) {
-        if (evt.isPopupTrigger()) {
-            Point pt = SwingUtilities.convertPoint(evt.getComponent(), evt.getPoint(), dateField);
-            JPopupMenu menu = new MyPopUpMenu(dateField);
-            menu.show(dateField, pt.x, pt.y);
-        }
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(dateField, evt);
     }
 
     private void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {
-        if (evt.isPopupTrigger()) {
-            Point pt = SwingUtilities.convertPoint(evt.getComponent(), evt.getPoint(), dateField);
-            JPopupMenu menu = new MyPopUpMenu(dateField);
-            menu.show(dateField, pt.x, pt.y);
-        }
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(dateField, evt);
     }
 
     /**

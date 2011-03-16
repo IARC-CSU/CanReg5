@@ -13,6 +13,7 @@ import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.tools.TableColumnAdjuster;
 import canreg.client.gui.tools.XTableColumnModel;
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
@@ -25,8 +26,10 @@ import canreg.server.database.UnknownTableException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -40,6 +43,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -163,6 +168,14 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
 
         patientNumberTextField.setText(resourceMap.getString("patientNumberTextField.text")); // NOI18N
         patientNumberTextField.setName("patientNumberTextField"); // NOI18N
+        patientNumberTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                patientNumberTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                patientNumberTextFieldMouseReleased(evt);
+            }
+        });
         patientNumberTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 editPatientIDKeyTyped(evt);
@@ -175,6 +188,14 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         editPatientNumberButton.setName("editPatientNumberButton"); // NOI18N
 
         tumourNumberTextField.setName("tumourNumberTextField"); // NOI18N
+        tumourNumberTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tumourNumberTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tumourNumberTextFieldMouseReleased(evt);
+            }
+        });
         tumourNumberTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 editTumourRecordKeyTyped(evt);
@@ -225,11 +246,11 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 714, Short.MAX_VALUE)
+            .addGap(0, 735, Short.MAX_VALUE)
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 56, Short.MAX_VALUE)
+            .addGap(0, 68, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -241,7 +262,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(resultPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
+                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(variablesPanel, 0, 0, Short.MAX_VALUE)
@@ -353,6 +374,22 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
         editTumourID();
     }
 }//GEN-LAST:event_editTumourRecordKeyTyped
+
+private void patientNumberTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_patientNumberTextFieldMouseReleased
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(patientNumberTextField, evt);
+}//GEN-LAST:event_patientNumberTextFieldMouseReleased
+
+private void patientNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_patientNumberTextFieldMousePressed
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(patientNumberTextField, evt);
+}//GEN-LAST:event_patientNumberTextFieldMousePressed
+
+private void tumourNumberTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tumourNumberTextFieldMouseReleased
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(tumourNumberTextField, evt);
+}//GEN-LAST:event_tumourNumberTextFieldMouseReleased
+
+private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tumourNumberTextFieldMousePressed
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(tumourNumberTextField, evt);
+}//GEN-LAST:event_tumourNumberTextFieldMousePressed
 
     private void rowClicked(java.awt.event.MouseEvent evt) {
         String referenceTable;
@@ -851,6 +888,7 @@ private void editTumourRecordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             editPatientID(idString);
         }
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JPanel buttonsPanel;

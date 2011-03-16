@@ -7,6 +7,7 @@ package canreg.client.gui.components;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.server.database.Dictionary;
@@ -203,6 +204,11 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame implemen
 
         textPane.setToolTipText(resourceMap.getString("textPane.toolTipText")); // NOI18N
         textPane.setName("textPane"); // NOI18N
+        textPane.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textPaneMousePressed(evt);
+            }
+        });
         scrollPane.setViewportView(textPane);
 
         javax.swing.GroupLayout filterPanelLayout = new javax.swing.GroupLayout(filterPanel);
@@ -213,7 +219,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame implemen
         );
         filterPanelLayout.setVerticalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
         );
 
         cancelButton.setAction(actionMap.get("cancelAction")); // NOI18N
@@ -287,6 +293,11 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
 private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_valueTextField2mouseClickHandler
     this.mouseClickHandler(evt);
 }//GEN-LAST:event_valueTextField2mouseClickHandler
+
+private void textPaneMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textPaneMousePressed
+    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(textPane, evt);
+}//GEN-LAST:event_textPaneMousePressed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JPanel filterPanel;

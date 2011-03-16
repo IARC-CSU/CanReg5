@@ -140,7 +140,7 @@
                       <Component id="chooseDictionaryComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="displayScrollPane" pref="414" max="32767" attributes="0"/>
+                  <Component id="displayScrollPane" pref="418" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="updateButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -188,6 +188,10 @@
                 <Property name="rows" type="int" value="5"/>
                 <Property name="name" type="java.lang.String" value="editorTextArea" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="editorTextAreaMousePressed"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="editorTextAreaMouseReleased"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

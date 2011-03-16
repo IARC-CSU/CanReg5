@@ -6,6 +6,7 @@
 package canreg.client.gui.components;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.Globals;
 import canreg.common.Tools;
 import java.awt.event.ActionEvent;
@@ -86,6 +87,14 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         chooseFilePanel.setName("chooseFilePanel"); // NOI18N
 
         fileNameTextField.setName("fileNameTextField"); // NOI18N
+        fileNameTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                fileNameTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                fileNameTextFieldMouseReleased(evt);
+            }
+        });
         fileNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 fileNameTextFieldFocusLost(evt);
@@ -254,6 +263,14 @@ public class PreviewFilePanel extends javax.swing.JPanel {
     private void fileNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fileNameTextFieldFocusLost
         // TODO add your handling code here:
 }//GEN-LAST:event_fileNameTextFieldFocusLost
+
+    private void fileNameTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileNameTextFieldMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(fileNameTextField, evt);
+    }//GEN-LAST:event_fileNameTextFieldMouseReleased
+
+    private void fileNameTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileNameTextFieldMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(fileNameTextField, evt);
+    }//GEN-LAST:event_fileNameTextFieldMousePressed
 
     @Action
     public void browseAction() {

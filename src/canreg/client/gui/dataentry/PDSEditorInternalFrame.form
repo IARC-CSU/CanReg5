@@ -115,7 +115,7 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="jTabbedPane1" pref="470" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="474" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -127,9 +127,9 @@
           </Group>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="0" pref="255" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="257" max="32767" attributes="0"/>
                   <Component id="jInternalFrame1" min="-2" pref="0" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="255" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="257" max="32767" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -238,7 +238,7 @@
                           <Component id="standardPopulationComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="standardPopulationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="176" max="32767" attributes="0"/>
+                      <EmptySpace pref="180" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -255,6 +255,10 @@
               <Properties>
                 <Property name="name" type="java.lang.String" value="dateChooser" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="dateChooserMousePressed"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="dateChooserMouseReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JComboBox" name="ageGroupStructureComboBox">
               <Properties>
@@ -295,6 +299,10 @@
                     <Property name="rows" type="int" value="5"/>
                     <Property name="name" type="java.lang.String" value="descriptionTextArea" noResource="true"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="descriptionTextAreaMousePressed"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="descriptionTextAreaMouseReleased"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -317,12 +325,20 @@
                 <Property name="text" type="java.lang.String" resourceKey="sourceTextField.text"/>
                 <Property name="name" type="java.lang.String" value="sourceTextField" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="sourceTextFieldMousePressed"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="sourceTextFieldMouseReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="filterTextField">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="filterTextField.text"/>
                 <Property name="name" type="java.lang.String" value="filterTextField" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="filterTextFieldMousePressed"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="filterTextFieldMouseReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="filterWizardButton">
               <Properties>
@@ -340,6 +356,10 @@
                 </Property>
                 <Property name="name" type="java.lang.String" value="nameTextField" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="nameTextFieldMousePressed"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="nameTextFieldMouseReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="nameLabel">
               <Properties>
@@ -423,7 +443,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="412" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="416" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -781,7 +801,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="pyramidLabel" pref="413" max="32767" attributes="0"/>
+                      <Component id="pyramidLabel" pref="417" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
