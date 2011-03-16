@@ -1,15 +1,19 @@
 package canreg.client.gui.components;
 
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DateHelper;
 import canreg.common.Globals;
 import canreg.common.GregorianCalendarCanReg;
 import com.toedter.calendar.JDateChooser;
+import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -62,6 +66,35 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                 componentFocusLost(evt);
             }
         });
+
+        dateField.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                codeTextFieldMousePressed(evt);
+            }
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                codeTextFieldMouseReleased(evt);
+            }
+        });
+    }
+
+    private void codeTextFieldMousePressed(java.awt.event.MouseEvent evt) {
+        if (evt.isPopupTrigger()) {
+            Point pt = SwingUtilities.convertPoint(evt.getComponent(), evt.getPoint(), dateField);
+            JPopupMenu menu = new MyPopUpMenu(dateField);
+            menu.show(dateField, pt.x, pt.y);
+        }
+    }
+
+    private void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {
+        if (evt.isPopupTrigger()) {
+            Point pt = SwingUtilities.convertPoint(evt.getComponent(), evt.getPoint(), dateField);
+            JPopupMenu menu = new MyPopUpMenu(dateField);
+            menu.show(dateField, pt.x, pt.y);
+        }
     }
 
     /**
