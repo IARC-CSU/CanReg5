@@ -25,25 +25,20 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
+              <EmptySpace pref="162" max="32767" attributes="0"/>
+              <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="380" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="okButton" min="-2" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
+              <Component id="okButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
+          <Component id="jScrollPane1" alignment="0" pref="290" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="342" max="32767" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jScrollPane1" pref="169" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="okButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -57,7 +52,7 @@
     <Component class="javax.swing.JButton" name="okButton">
       <Properties>
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-          <action class="canreg.client.gui.management.DatabaseVariableEditorInternalFrame" id="okAction" methodName="okAction"/>
+          <action class="canreg.client.gui.management.DatabaseDictionaryEditorInternalFrame" id="okAction" methodName="okAction"/>
         </Property>
         <Property name="name" type="java.lang.String" value="okButton" noResource="true"/>
       </Properties>
@@ -65,7 +60,7 @@
     <Component class="javax.swing.JButton" name="cancelButton">
       <Properties>
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-          <action class="canreg.client.gui.management.DatabaseVariableEditorInternalFrame" id="cancelAction" methodName="cancelAction"/>
+          <action class="canreg.client.gui.management.DatabaseDictionaryEditorInternalFrame" id="cancelAction" methodName="cancelAction"/>
         </Property>
         <Property name="name" type="java.lang.String" value="cancelButton" noResource="true"/>
       </Properties>
@@ -77,9 +72,9 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="canreg.client.gui.management.DatabaseVariableEditorPanel" name="databaseVariableEditor">
+        <Component class="canreg.client.gui.management.systemeditor.DatabaseDictionaryEditorPanel" name="databaseDictionaryEditorPanel1">
           <Properties>
-            <Property name="name" type="java.lang.String" value="databaseVariableEditor" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="databaseDictionaryEditorPanel1" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

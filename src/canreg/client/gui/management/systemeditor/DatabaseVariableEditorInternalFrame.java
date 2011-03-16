@@ -3,7 +3,7 @@
  *
  * Created on 21-Jan-2010, 11:18:02
  */
-package canreg.client.gui.management;
+package canreg.client.gui.management.systemeditor;
 
 import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.DatabaseGroupsListElement;
@@ -42,7 +42,7 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        databaseVariableEditor = new canreg.client.gui.management.DatabaseVariableEditorPanel();
+        databaseVariableEditor = new canreg.client.gui.management.systemeditor.DatabaseVariableEditorPanel();
 
         setResizable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(DatabaseVariableEditorInternalFrame.class);
@@ -126,7 +126,7 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
-    private canreg.client.gui.management.DatabaseVariableEditorPanel databaseVariableEditor;
+    private canreg.client.gui.management.systemeditor.DatabaseVariableEditorPanel databaseVariableEditor;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton okButton;
     // End of variables declaration//GEN-END:variables

@@ -3,7 +3,7 @@
  *
  * Created on 20-Jan-2010, 16:09:34
  */
-package canreg.client.gui.management;
+package canreg.client.gui.management.systemeditor;
 
 import canreg.common.TranslatableListElement;
 import canreg.common.DatabaseDictionaryListElement;

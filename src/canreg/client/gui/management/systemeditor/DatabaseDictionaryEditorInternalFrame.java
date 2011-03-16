@@ -4,7 +4,7 @@
  * Created on 26-Jan-2010, 11:15:23
  */
 
-package canreg.client.gui.management;
+package canreg.client.gui.management.systemeditor;
 
 import canreg.common.DatabaseDictionaryListElement;
 import java.awt.event.ActionEvent;
@@ -36,7 +36,7 @@ public class DatabaseDictionaryEditorInternalFrame extends javax.swing.JInternal
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        databaseDictionaryEditorPanel1 = new canreg.client.gui.management.DatabaseDictionaryEditorPanel();
+        databaseDictionaryEditorPanel1 = new canreg.client.gui.management.systemeditor.DatabaseDictionaryEditorPanel();
 
         setResizable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(DatabaseDictionaryEditorInternalFrame.class);
@@ -99,7 +99,7 @@ public class DatabaseDictionaryEditorInternalFrame extends javax.swing.JInternal
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
-    private canreg.client.gui.management.DatabaseDictionaryEditorPanel databaseDictionaryEditorPanel1;
+    private canreg.client.gui.management.systemeditor.DatabaseDictionaryEditorPanel databaseDictionaryEditorPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton okButton;
     // End of variables declaration//GEN-END:variables

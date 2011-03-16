@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
@@ -19,39 +19,39 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <Component id="variableNameLabel" pref="164" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Component id="nameLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jComboBox1" min="-2" pref="98" max="-2" attributes="0"/>
+              <Component id="nameTextField" pref="346" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="103" groupAlignment="3" attributes="0">
-              <Component id="variableNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-              <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="nameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="nameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JComboBox" name="jComboBox1">
+    <Component class="javax.swing.JTextField" name="nameTextField">
       <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="3">
-            <StringItem index="0" value="Patient"/>
-            <StringItem index="1" value="Tumour"/>
-            <StringItem index="2" value="Source"/>
-          </StringArray>
-        </Property>
-        <Property name="name" type="java.lang.String" value="jComboBox1" noResource="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="nameTextField.text"/>
+        <Property name="name" type="java.lang.String" value="nameTextField" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="variableNameLabel">
+    <Component class="javax.swing.JLabel" name="nameLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" resourceKey="variableNameLabel.text"/>
-        <Property name="name" type="java.lang.String" value="variableNameLabel" noResource="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="nameLabel.text"/>
+        <Property name="name" type="java.lang.String" value="nameLabel" noResource="true"/>
       </Properties>
     </Component>
   </SubComponents>

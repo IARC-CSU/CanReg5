@@ -8,7 +8,7 @@
  *
  * Created on 27-Jan-2011, 16:05:32
  */
-package canreg.client.gui.management;
+package canreg.client.gui.management.systemeditor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,7 +39,7 @@ public class DatabaseIndexEditorInternalFrame extends javax.swing.JInternalFrame
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        databaseIndexEditorPanel1 = new canreg.client.gui.management.DatabaseIndexEditorPanel();
+        databaseIndexEditorPanel1 = new canreg.client.gui.management.systemeditor.DatabaseIndexEditorPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
@@ -82,7 +82,7 @@ public class DatabaseIndexEditorInternalFrame extends javax.swing.JInternalFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private canreg.client.gui.management.DatabaseIndexEditorPanel databaseIndexEditorPanel1;
+    private canreg.client.gui.management.systemeditor.DatabaseIndexEditorPanel databaseIndexEditorPanel1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     // End of variables declaration//GEN-END:variables

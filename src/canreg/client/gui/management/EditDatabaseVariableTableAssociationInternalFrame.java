@@ -1,5 +1,5 @@
 /*
- * EditDatabaseVariableInternalFrame.java
+ * EditDatabaseVariableTableAssociationInternalFrame.java
  *
  * Created on 06-Jan-2009, 16:19:01
  */
@@ -29,15 +29,15 @@ import org.xml.sax.SAXException;
  *
  * @author ervikm
  */
-public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFrame {
+public class EditDatabaseVariableTableAssociationInternalFrame extends javax.swing.JInternalFrame {
 
     private Document doc;
     private JDesktopPane dtp;
-    private TreeMap<String, EditDatabaseVariableJPanel> map;
+    private TreeMap<String, EditDatabaseVariableTableAssociationJPanel> map;
     private String fileName;
 
-    /** Creates new form EditDatabaseVariableInternalFrame */
-    public EditDatabaseVariableInternalFrame() {
+    /** Creates new form EditDatabaseVariableTableAssociationInternalFrame */
+    public EditDatabaseVariableTableAssociationInternalFrame() {
         initComponents();
         variablesScrollPane.getVerticalScrollBar().setUnitIncrement(16);
     }
@@ -53,11 +53,11 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
         doc = db.parse(new File(fileName));
         boolean success = false;
         variablesAndTableEditorsPanel.removeAll();
-        map = new TreeMap<String, EditDatabaseVariableJPanel>();
+        map = new TreeMap<String, EditDatabaseVariableTableAssociationJPanel>();
         DatabaseVariablesListElement[] dbles = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
         for (DatabaseVariablesListElement dble : dbles) {
             if (dble.getGroupID() > 0) {
-                EditDatabaseVariableJPanel edvjp = new EditDatabaseVariableJPanel();
+                EditDatabaseVariableTableAssociationJPanel edvjp = new EditDatabaseVariableTableAssociationJPanel();
                 edvjp.setDble(dble);
                 map.put(dble.getShortName(), edvjp);
                 variablesAndTableEditorsPanel.add(edvjp);
@@ -89,12 +89,12 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(EditDatabaseVariableInternalFrame.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(EditDatabaseVariableTableAssociationInternalFrame.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(EditDatabaseVariableInternalFrame.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(EditDatabaseVariableTableAssociationInternalFrame.class, this);
         saveButton.setAction(actionMap.get("saveAction")); // NOI18N
         saveButton.setText(resourceMap.getString("saveButton.text")); // NOI18N
         saveButton.setName("saveButton"); // NOI18N
@@ -131,7 +131,7 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
                     .addComponent(variablesLabel)
                     .addComponent(tableLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
+                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
         );
 
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
@@ -179,7 +179,7 @@ public class EditDatabaseVariableInternalFrame extends javax.swing.JInternalFram
             Element oldChildElement = null;
             oldChildElement = (Element) e.getElementsByTagName(Globals.NAMESPACE + "table").item(0);
             Element newChildElement = doc.createElement(Globals.NAMESPACE + "table");
-            EditDatabaseVariableJPanel panel = map.get(shortName);
+            EditDatabaseVariableTableAssociationJPanel panel = map.get(shortName);
             if (panel != null) {
                 newChildElement.appendChild(doc.createTextNode(panel.getDble().getDatabaseTableName()));
                 e.replaceChild(newChildElement, oldChildElement);

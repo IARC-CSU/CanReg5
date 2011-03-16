@@ -8,7 +8,7 @@
  *
  * Created on 21-Jan-2010, 17:51:08
  */
-package canreg.client.gui.management;
+package canreg.client.gui.management.systemeditor;
 
 import canreg.common.DatabaseElement;
 import java.awt.Color;

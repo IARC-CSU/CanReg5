@@ -9,7 +9,7 @@
  * Created on 26-Jan-2010, 15:26:01
  */
 
-package canreg.client.gui.management;
+package canreg.client.gui.management.systemeditor;
 
 import canreg.common.DatabaseGroupsListElement;
 import java.awt.event.ActionEvent;
@@ -42,7 +42,7 @@ public class DatabaseGroupEditorInternalFrame extends javax.swing.JInternalFrame
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        databaseGroupEditorPanel = new canreg.client.gui.management.DatabaseGroupEditorPanel();
+        databaseGroupEditorPanel = new canreg.client.gui.management.systemeditor.DatabaseGroupEditorPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
@@ -100,7 +100,7 @@ public class DatabaseGroupEditorInternalFrame extends javax.swing.JInternalFrame
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private canreg.client.gui.management.DatabaseGroupEditorPanel databaseGroupEditorPanel;
+    private canreg.client.gui.management.systemeditor.DatabaseGroupEditorPanel databaseGroupEditorPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     // End of variables declaration//GEN-END:variables

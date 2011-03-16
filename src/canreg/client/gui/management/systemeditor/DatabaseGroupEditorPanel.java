@@ -4,7 +4,7 @@
  * Created on 26-Jan-2010, 15:23:47
  */
 
-package canreg.client.gui.management;
+package canreg.client.gui.management.systemeditor;
 
 import canreg.common.DatabaseGroupsListElement;
 

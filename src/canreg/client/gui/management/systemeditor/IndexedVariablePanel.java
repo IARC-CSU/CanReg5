@@ -4,7 +4,7 @@
  * Created on 27-Jan-2011, 15:29:55
  */
 
-package canreg.client.gui.management;
+package canreg.client.gui.management.systemeditor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

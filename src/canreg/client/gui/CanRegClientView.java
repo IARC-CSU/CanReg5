@@ -23,7 +23,7 @@ import canreg.client.gui.management.CanReg4PDSImporterInternalFrame;
 import canreg.client.gui.management.RestoreInternalFrame;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.management.CanReg4SystemConverterInternalFrame;
-import canreg.client.gui.management.ModifyDatabaseStructureInternalFrame;
+import canreg.client.gui.management.systemeditor.ModifyDatabaseStructureInternalFrame;
 import canreg.client.gui.management.UserManagerInternalFrame;
 import canreg.client.gui.tools.WaitFrame;
 import canreg.client.management.DatabaseGarbler;

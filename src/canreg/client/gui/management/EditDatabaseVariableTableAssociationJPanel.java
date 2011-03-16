@@ -1,5 +1,5 @@
 /*
- * EditDatabaseVariableJPanel.java
+ * EditDatabaseVariableTableAssociationJPanel.java
  *
  * Created on 06-Jan-2009, 16:15:30
  */
@@ -12,11 +12,11 @@ import canreg.common.DatabaseVariablesListElement;
  *
  * @author ervikm
  */
-public class EditDatabaseVariableJPanel extends javax.swing.JPanel {
+public class EditDatabaseVariableTableAssociationJPanel extends javax.swing.JPanel {
     private DatabaseVariablesListElement dble;
 
-    /** Creates new form EditDatabaseVariableJPanel */
-    public EditDatabaseVariableJPanel() {
+    /** Creates new form EditDatabaseVariableTableAssociationJPanel */
+    public EditDatabaseVariableTableAssociationJPanel() {
         initComponents();
     }
     /**
@@ -45,7 +45,7 @@ public class EditDatabaseVariableJPanel extends javax.swing.JPanel {
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Patient", "Tumour", "Source" }));
         jComboBox1.setName("jComboBox1"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(EditDatabaseVariableJPanel.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(EditDatabaseVariableTableAssociationJPanel.class);
         variableNameLabel.setText(resourceMap.getString("variableNameLabel.text")); // NOI18N
         variableNameLabel.setName("variableNameLabel"); // NOI18N
 

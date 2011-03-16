@@ -3,7 +3,7 @@
  *
  * Created on 20-Jan-2010, 14:15:41
  */
-package canreg.client.gui.management;
+package canreg.client.gui.management.systemeditor;
 
 import canreg.client.gui.CanRegClientView;
 import canreg.common.DatabaseDictionaryListElement;
@@ -114,11 +114,11 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         searchVariablesPanel = new javax.swing.JPanel();
         personSearchVariablesPanel = new canreg.client.gui.management.PersonSearchVariablesPanel();
         dictionariesPanel = new javax.swing.JPanel();
-        databaseDictionaryPanel = new canreg.client.gui.management.DatabaseDictionariesPanel();
+        databaseDictionaryPanel = new canreg.client.gui.management.systemeditor.DatabaseDictionariesPanel();
         variablesPanel = new javax.swing.JPanel();
-        databaseVariablePanel = new canreg.client.gui.management.DatabaseVariablesPanel();
+        databaseVariablePanel = new canreg.client.gui.management.systemeditor.DatabaseVariablesPanel();
         groupsPanel = new javax.swing.JPanel();
-        databaseGroupPanel = new canreg.client.gui.management.DatabaseGroupsPanel();
+        databaseGroupPanel = new canreg.client.gui.management.systemeditor.DatabaseGroupsPanel();
         codingPanel = new javax.swing.JPanel();
         maleCodeLabel = new javax.swing.JLabel();
         maleCodeTextField = new javax.swing.JTextField();
@@ -139,7 +139,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         specialRegistryCheckBox = new javax.swing.JCheckBox();
         strictPasswordModeCheckBox = new javax.swing.JCheckBox();
         searchVariablesPanel1 = new javax.swing.JPanel();
-        databaseIndexPanel = new canreg.client.gui.management.DatabaseIndexPanel();
+        databaseIndexPanel = new canreg.client.gui.management.systemeditor.DatabaseIndexPanel();
 
         setClosable(true);
         setResizable(true);
@@ -622,10 +622,10 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     private javax.swing.JCheckBox basisCodesCheckBox;
     private javax.swing.JButton checkIfUniqueButton;
     private javax.swing.JPanel codingPanel;
-    private canreg.client.gui.management.DatabaseDictionariesPanel databaseDictionaryPanel;
-    private canreg.client.gui.management.DatabaseGroupsPanel databaseGroupPanel;
-    private canreg.client.gui.management.DatabaseIndexPanel databaseIndexPanel;
-    private canreg.client.gui.management.DatabaseVariablesPanel databaseVariablePanel;
+    private canreg.client.gui.management.systemeditor.DatabaseDictionariesPanel databaseDictionaryPanel;
+    private canreg.client.gui.management.systemeditor.DatabaseGroupsPanel databaseGroupPanel;
+    private canreg.client.gui.management.systemeditor.DatabaseIndexPanel databaseIndexPanel;
+    private canreg.client.gui.management.systemeditor.DatabaseVariablesPanel databaseVariablePanel;
     private javax.swing.JComboBox dateFormatComboBox;
     private javax.swing.JLabel dateFormatLabel;
     private javax.swing.JLabel dateSeparatorLabel;

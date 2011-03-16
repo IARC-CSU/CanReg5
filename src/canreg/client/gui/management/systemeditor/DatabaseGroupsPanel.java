@@ -1,4 +1,4 @@
-package canreg.client.gui.management;
+package canreg.client.gui.management.systemeditor;
 
 import canreg.common.DatabaseElement;
 import canreg.common.DatabaseGroupsListElement;

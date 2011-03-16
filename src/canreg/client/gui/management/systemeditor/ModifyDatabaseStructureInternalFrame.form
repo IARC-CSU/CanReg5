@@ -284,7 +284,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="canreg.client.gui.management.DatabaseDictionariesPanel" name="databaseDictionaryPanel">
+                <Component class="canreg.client.gui.management.systemeditor.DatabaseDictionariesPanel" name="databaseDictionaryPanel">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="databaseDictionaryPanel" noResource="true"/>
                   </Properties>
@@ -316,7 +316,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="canreg.client.gui.management.DatabaseVariablesPanel" name="databaseVariablePanel">
+                <Component class="canreg.client.gui.management.systemeditor.DatabaseVariablesPanel" name="databaseVariablePanel">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="databaseVariablePanel" noResource="true"/>
                   </Properties>
@@ -348,7 +348,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="canreg.client.gui.management.DatabaseGroupsPanel" name="databaseGroupPanel">
+                <Component class="canreg.client.gui.management.systemeditor.DatabaseGroupsPanel" name="databaseGroupPanel">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="databaseGroupPanel" noResource="true"/>
                   </Properties>
@@ -635,7 +635,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="canreg.client.gui.management.DatabaseIndexPanel" name="databaseIndexPanel">
+                <Component class="canreg.client.gui.management.systemeditor.DatabaseIndexPanel" name="databaseIndexPanel">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="databaseIndexPanel" noResource="true"/>
                   </Properties>
