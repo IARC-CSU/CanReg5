@@ -2,21 +2,61 @@
 
 <Form version="1.6" maxVersion="1.6" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <NonVisualComponents>
-    <Container class="javax.swing.JPopupMenu" name="jPopupMenu1">
+    <Container class="javax.swing.JPopupMenu" name="saveGraphicsPopupMenu">
       <Properties>
-        <Property name="name" type="java.lang.String" value="jPopupMenu1" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="saveGraphicsPopupMenu" noResource="true"/>
       </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
         <Property name="useNullLayout" type="boolean" value="true"/>
       </Layout>
       <SubComponents>
-        <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+        <MenuItem class="javax.swing.JMenuItem" name="saveMenuItem">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.dataentry.PDSEditorInternalFrame" id="saveGraphicsAction" methodName="saveGraphicsAction"/>
             </Property>
-            <Property name="name" type="java.lang.String" value="jMenuItem1" noResource="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="saveMenuItem.text"/>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="saveMenuItem.toolTipText"/>
+            <Property name="name" type="java.lang.String" value="saveMenuItem" noResource="true"/>
+          </Properties>
+        </MenuItem>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPopupMenu" name="tablePopupMenu">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="tablePopupMenu" noResource="true"/>
+      </Properties>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="true"/>
+      </Layout>
+      <SubComponents>
+        <MenuItem class="javax.swing.JMenuItem" name="copyMenuItem">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.dataentry.PDSEditorInternalFrame" id="copyTableAction" methodName="copyTableAction"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="copyMenuItem.text"/>
+            <Property name="name" type="java.lang.String" value="copyMenuItem" noResource="true"/>
+          </Properties>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="pasteMenuItem">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.dataentry.PDSEditorInternalFrame" id="pasteTableAction" methodName="pasteTableAction"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="pasteMenuItem.text"/>
+            <Property name="name" type="java.lang.String" value="pasteMenuItem" noResource="true"/>
+          </Properties>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="selectAllMenuItem">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.dataentry.PDSEditorInternalFrame" id="selectAllTableAction" methodName="selectAllTableAction"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="selectAllMenuItem.text"/>
+            <Property name="name" type="java.lang.String" value="selectAllMenuItem" noResource="true"/>
           </Properties>
         </MenuItem>
       </SubComponents>
@@ -75,7 +115,7 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="jTabbedPane1" pref="466" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="470" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -87,9 +127,9 @@
           </Group>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="0" pref="253" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="255" max="32767" attributes="0"/>
                   <Component id="jInternalFrame1" min="-2" pref="0" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="253" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="255" max="32767" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -198,7 +238,7 @@
                           <Component id="standardPopulationComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="standardPopulationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="172" max="32767" attributes="0"/>
+                      <EmptySpace pref="176" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -383,7 +423,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="408" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="412" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -532,7 +572,7 @@
                                 </Column>
                               </Table>
                             </Property>
-                            <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor" postCode="ExcelAdapter myAd = new ExcelAdapter(pdsTable);">
+                            <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor" postCode="myAd = new ExcelAdapter(pdsTable);">
                               <TableColumnModel selectionModel="2">
                                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                                   <Title resourceKey="pdsTable.columnModel.title1"/>
@@ -556,6 +596,8 @@
                             </Property>
                           </Properties>
                           <Events>
+                            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pdsTableMousePressed"/>
+                            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pdsTableMouseReleased"/>
                             <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="pdsTablePropertyChange"/>
                           </Events>
                         </Component>
@@ -739,7 +781,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="pyramidLabel" pref="409" max="32767" attributes="0"/>
+                      <Component id="pyramidLabel" pref="413" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -762,6 +804,7 @@
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pyramidLabelMouseClicked"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pyramidLabelMouseReleased"/>
               </Events>
             </Component>
           </SubComponents>

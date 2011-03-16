@@ -13,6 +13,9 @@ import canreg.common.Globals;
 import canreg.server.database.AgeGroupStructure;
 import canreg.server.database.PopulationDataset;
 import canreg.server.database.PopulationDatasetsEntry;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -51,7 +54,8 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
     private PopulationDataset pds;
     private JTextField dateTextField;
     private PopulationDataset[] worldPopulations;
-    JFreeChart chart;
+    private JFreeChart chart;
+    private ExcelAdapter myAd;
 
     /** Creates new form PDSEditorInternalFrame
      * @param dtp
@@ -190,8 +194,12 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPopupMenu1 = new javax.swing.JPopupMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        saveGraphicsPopupMenu = new javax.swing.JPopupMenu();
+        saveMenuItem = new javax.swing.JMenuItem();
+        tablePopupMenu = new javax.swing.JPopupMenu();
+        copyMenuItem = new javax.swing.JMenuItem();
+        pasteMenuItem = new javax.swing.JMenuItem();
+        selectAllMenuItem = new javax.swing.JMenuItem();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         detailsPanel = new javax.swing.JPanel();
         dateLabel = new javax.swing.JLabel();
@@ -274,17 +282,36 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         lockedToggleButton1 = new javax.swing.JToggleButton();
         deleteButton1 = new javax.swing.JButton();
 
-        jPopupMenu1.setName("jPopupMenu1"); // NOI18N
+        saveGraphicsPopupMenu.setName("saveGraphicsPopupMenu"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(PDSEditorInternalFrame.class, this);
-        jMenuItem1.setAction(actionMap.get("saveGraphicsAction")); // NOI18N
-        jMenuItem1.setName("jMenuItem1"); // NOI18N
-        jPopupMenu1.add(jMenuItem1);
+        saveMenuItem.setAction(actionMap.get("saveGraphicsAction")); // NOI18N
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PDSEditorInternalFrame.class);
+        saveMenuItem.setText(resourceMap.getString("saveMenuItem.text")); // NOI18N
+        saveMenuItem.setToolTipText(resourceMap.getString("saveMenuItem.toolTipText")); // NOI18N
+        saveMenuItem.setName("saveMenuItem"); // NOI18N
+        saveGraphicsPopupMenu.add(saveMenuItem);
+
+        tablePopupMenu.setName("tablePopupMenu"); // NOI18N
+
+        copyMenuItem.setAction(actionMap.get("copyTableAction")); // NOI18N
+        copyMenuItem.setText(resourceMap.getString("copyMenuItem.text")); // NOI18N
+        copyMenuItem.setName("copyMenuItem"); // NOI18N
+        tablePopupMenu.add(copyMenuItem);
+
+        pasteMenuItem.setAction(actionMap.get("pasteTableAction")); // NOI18N
+        pasteMenuItem.setText(resourceMap.getString("pasteMenuItem.text")); // NOI18N
+        pasteMenuItem.setName("pasteMenuItem"); // NOI18N
+        tablePopupMenu.add(pasteMenuItem);
+
+        selectAllMenuItem.setAction(actionMap.get("selectAllTableAction")); // NOI18N
+        selectAllMenuItem.setText(resourceMap.getString("selectAllMenuItem.text")); // NOI18N
+        selectAllMenuItem.setName("selectAllMenuItem"); // NOI18N
+        tablePopupMenu.add(selectAllMenuItem);
 
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PDSEditorInternalFrame.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
@@ -437,7 +464,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                     .addComponent(editStandardPopulationButton)
                     .addComponent(standardPopulationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(standardPopulationLabel))
-                .addContainerGap(172, Short.MAX_VALUE))
+                .addContainerGap(176, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("detailsPanel.TabConstraints.tabTitle"), detailsPanel); // NOI18N
@@ -512,6 +539,14 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         pdsTable.setName("pdsTable"); // NOI18N
         pdsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         pdsTable.getTableHeader().setReorderingAllowed(false);
+        pdsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                pdsTableMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                pdsTableMouseReleased(evt);
+            }
+        });
         pdsTable.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 pdsTablePropertyChange(evt);
@@ -583,7 +618,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         pdsTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         pdsTable.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title1")); // NOI18N
         pdsTable.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title2")); // NOI18N
-        ExcelAdapter myAd = new ExcelAdapter(pdsTable);
+        myAd = new ExcelAdapter(pdsTable);
         totalsTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         totalsTable.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title1")); // NOI18N
         totalsTable.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title2")); // NOI18N
@@ -682,7 +717,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         );
         dataSetPanelLayout.setVerticalGroup(
             dataSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(resourceMap.getString("dataSetPanel.TabConstraints.tabTitle"), dataSetPanel); // NOI18N
@@ -705,6 +740,9 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 pyramidLabelMouseClicked(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                pyramidLabelMouseReleased(evt);
+            }
         });
 
         javax.swing.GroupLayout pyramidPanelLayout = new javax.swing.GroupLayout(pyramidPanel);
@@ -719,7 +757,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
             .addGroup(pyramidPanelLayout.createSequentialGroup()
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pyramidLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE))
+                .addComponent(pyramidLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("pyramidPanel.TabConstraints.tabTitle"), pyramidPanel); // NOI18N
@@ -1222,7 +1260,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
@@ -1232,9 +1270,9 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 253, Short.MAX_VALUE)
+                    .addGap(0, 255, Short.MAX_VALUE)
                     .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 253, Short.MAX_VALUE)))
+                    .addGap(0, 255, Short.MAX_VALUE)))
         );
 
         pack();
@@ -1286,9 +1324,38 @@ private void dataSetPanelFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
 }//GEN-LAST:event_dataSetPanelFocusLost
 
 private void pyramidLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pyramidLabelMouseClicked
-    jPopupMenu1.show(evt.getComponent(),
-            evt.getX(), evt.getY());
+    if (evt.isPopupTrigger()) {
+        saveGraphicsPopupMenu.show(evt.getComponent(),
+                evt.getX(), evt.getY());
+    }
 }//GEN-LAST:event_pyramidLabelMouseClicked
+
+private void pyramidLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pyramidLabelMouseReleased
+    if (evt.isPopupTrigger()) {
+        saveGraphicsPopupMenu.show(evt.getComponent(),
+                evt.getX(), evt.getY());
+    }
+}//GEN-LAST:event_pyramidLabelMouseReleased
+
+private void pdsTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pdsTableMouseReleased
+    if (evt.isPopupTrigger()) {
+        copyMenuItem.setEnabled(!pdsTable.getSelectionModel().isSelectionEmpty());
+        Transferable contents = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this);
+        pasteMenuItem.setEnabled(contents.isDataFlavorSupported(DataFlavor.stringFlavor));
+        tablePopupMenu.show(evt.getComponent(),
+                evt.getX(), evt.getY());
+    }
+}//GEN-LAST:event_pdsTableMouseReleased
+
+private void pdsTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pdsTableMousePressed
+    if (evt.isPopupTrigger()) {
+        copyMenuItem.setEnabled(!pdsTable.getSelectionModel().isSelectionEmpty());
+        Transferable contents = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this);
+        pasteMenuItem.setEnabled(contents.isDataFlavorSupported(DataFlavor.stringFlavor));
+        tablePopupMenu.show(evt.getComponent(),
+                evt.getX(), evt.getY());
+    }
+}//GEN-LAST:event_pdsTableMousePressed
 
     /**
      *
@@ -1483,9 +1550,9 @@ private void pyramidLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private void buildPyramid() {
         DefaultKeyedValues2DDataset dataset = getDataset();
         chart = ChartFactory.createStackedBarChart(
-                null,
+                nameTextField.getText(),
                 "Age Group", // domain axis label
-                "Population", // range axis label
+                sourceTextField.getText(), // range axis label
                 dataset, // data
                 PlotOrientation.HORIZONTAL, //orientation
                 true, // include legend
@@ -1544,6 +1611,7 @@ private void pyramidLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JLabel ageGroupStructureLabel1;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton cancelButton1;
+    private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JPanel dataSetPanel;
     private javax.swing.JPanel dataSetPanel1;
     private com.toedter.calendar.JDateChooser dateChooser;
@@ -1579,13 +1647,11 @@ private void pyramidLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
@@ -1602,6 +1668,7 @@ private void pyramidLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JTextField nameTextField1;
     private javax.swing.JButton otherAgeGroupStructureButton;
     private javax.swing.JButton otherAgeGroupStructureButton1;
+    private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JTable pdsTable;
     private javax.swing.JTable pdsTable1;
     private javax.swing.JLabel pyramidLabel;
@@ -1609,6 +1676,9 @@ private void pyramidLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JPanel pyramidPanel;
     private javax.swing.JButton saveButton;
     private javax.swing.JButton saveButton1;
+    private javax.swing.JPopupMenu saveGraphicsPopupMenu;
+    private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JMenuItem selectAllMenuItem;
     private javax.swing.JLabel sourceLabel;
     private javax.swing.JLabel sourceLabel1;
     private javax.swing.JTextField sourceTextField;
@@ -1617,6 +1687,7 @@ private void pyramidLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JComboBox standardPopulationComboBox1;
     private javax.swing.JLabel standardPopulationLabel;
     private javax.swing.JLabel standardPopulationLabel1;
+    private javax.swing.JPopupMenu tablePopupMenu;
     private javax.swing.JTable totalsTable;
     private javax.swing.JTable totalsTable1;
     // End of variables declaration//GEN-END:variables
@@ -1673,8 +1744,8 @@ private void pyramidLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRS
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
                     File file = chooser.getSelectedFile();
-                    if (!file.getName().toLowerCase().endsWith("png")){
-                        file = new File(file.getAbsolutePath()+".png");
+                    if (!file.getName().toLowerCase().endsWith("png")) {
+                        file = new File(file.getAbsolutePath() + ".png");
                     }
                     ChartUtilities.saveChartAsPNG(file, chart, pyramidLabel.getWidth(), pyramidLabel.getHeight());
                 } catch (IOException ex) {
@@ -1682,5 +1753,21 @@ private void pyramidLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRS
                 }
             }
         }
+    }
+
+    @Action
+    public void copyTableAction() {
+        myAd.actionPerformed(new ActionEvent(this, 0, "Copy"));
+    }
+
+    @Action
+    public void pasteTableAction() {
+        myAd.actionPerformed(new ActionEvent(this, 0, "Paste"));
+        updateTotals();
+    }
+
+    @Action
+    public void selectAllTableAction() {
+        pdsTable.selectAll();
     }
 }
