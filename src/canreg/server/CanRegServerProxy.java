@@ -214,7 +214,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException {
+    public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException, SQLException {
         checkPermission("retrieveRows:" + resultSetID);
         theServer.releaseResultSet(resultSetID);
     }

@@ -311,7 +311,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException;
+    public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException, SQLException;
 
     public void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException;
 

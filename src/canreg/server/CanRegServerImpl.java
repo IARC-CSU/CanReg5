@@ -447,7 +447,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, UnknownTableException, DistributedTableDescriptionException {
-        return db.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, tableName,db.generateResultSetID());
+        return db.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, tableName, db.generateResultSetID());
     }
 
     /**
@@ -530,7 +530,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.lang.SecurityException
      */
     @Override
-    public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException {
+    public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException, SQLException {
         db.releaseResultSet(resultSetID);
     }
 
@@ -699,6 +699,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         try {
             releaseResultSet(idString);
             activePersonSearchers.remove(idString);
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {
