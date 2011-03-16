@@ -72,9 +72,9 @@
     <propertyfile file="appinfo.properties"
       comment="Everything can be manually updated except buildnum and builddate.">
     <entry key="program.PROGNAME" default="CanReg" />
-    <entry key="program.AUTHOR" default="Morten Johannes Ervik, Maria-Paula Curado, Lydia Voti, Andy Cooke" />
+    <entry key="program.AUTHOR" default="Morten Johannes Ervik, CIN/IARC" />
     <entry key="program.COMPANY" default="International Agency for Research on Cancer" />
-    <entry key="program.COPYRIGHT" default="now" type="date" pattern="yyyy" />
+    <entry key="program.COPYRIGHT" default="now" type="date" pattern="2008-yyyy" />
     <entry key="program.DESCRIPTION" default="" />
     <entry key="program.VERSION" default="4.99.0" />
     <entry key="program.BUILDNUM" value="${build.number}" />
