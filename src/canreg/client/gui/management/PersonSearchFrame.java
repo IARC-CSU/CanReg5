@@ -6,6 +6,8 @@
 package canreg.client.gui.management;
 
 import canreg.client.gui.*;
+import canreg.server.database.RecordLockedException;
+import canreg.server.database.UnknownTableException;
 import other.cachingtableapi.DistributedTableDescription;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
@@ -40,6 +42,7 @@ import javax.swing.table.TableColumn;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
+import other.cachingtableapi.DistributedTableDescriptionException;
 
 /**
  *
@@ -583,8 +586,6 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                     editPatientID("" + target.getValueAt(rowNumber, columnNumber));
                 } catch (SecurityException ex) {
                     Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (Exception ex) {
-                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -680,13 +681,17 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             } else {
                 JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD_NOT_FOUND"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             }
+        } catch (RecordLockedException ex) {
+            Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DistributedTableDescriptionException ex) {
+            Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknownTableException ex) {
+            Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             setCursor(normalCursor);
