@@ -283,18 +283,26 @@ public class CanRegClientApp extends SingleFrameApplication {
     public static void init() {
         // Testing the environment - disabled
         // canreg.common.Tools.testEnvironment();
-        // Initialize the user settings
+
+        // Initialize logger
         try {
-            localSettings = new LocalSettings("settings.xml");
-            initializeLookAndFeels();
-            // Locale.setDefault(localSettings.getLocale());
-            // Initialize logger
             Handler fh = new FileHandler(Globals.LOGFILE_PATTERN);
             Logger.getLogger("").addHandler(fh);
             Logger.getLogger("canreg").setLevel(Level.parse(Globals.LOG_LEVEL));
-        } catch (IOException ioe) {
-            debugOut(ioe.getLocalizedMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        try {
+            // Initialize the user settings
+            localSettings = new LocalSettings("settings.xml");
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        initializeLookAndFeels();
+        // Locale.setDefault(localSettings.getLocale());
     }
 
     /**
@@ -1086,7 +1094,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         return numberOfRecords;
     }
 
-    public JDesktopPane getDesktopPane(){
+    public JDesktopPane getDesktopPane() {
         return canRegClientView.getDesktopPane();
     }
 
