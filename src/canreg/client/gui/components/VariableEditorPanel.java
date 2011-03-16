@@ -9,6 +9,7 @@ import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.dataentry.RecordEditorPanel;
 import canreg.client.gui.tools.MaxLengthDocument;
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
@@ -24,6 +25,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentListener;
 
 /**
@@ -206,6 +209,14 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
 
         codeTextField.setText(resourceMap.getString("codeTextField.text")); // NOI18N
         codeTextField.setName("codeTextField"); // NOI18N
+        codeTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                codeTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                codeTextFieldMouseReleased(evt);
+            }
+        });
         codeTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 codeTextFieldActionPerformed1(evt);
@@ -240,7 +251,7 @@ private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         } else {
             String oldValue = getValue().toString();
             DictionaryEntry oldSelection = possibleValuesMap.get(oldValue);
-            if (dictionaryElementChooser==null){
+            if (dictionaryElementChooser == null) {
                 dictionaryElementChooser = new DictionaryElementChooser(this);
             } else {
                 dictionaryElementChooser.setFirstPass();
@@ -265,10 +276,16 @@ private void categoryTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
 private void codeTextFieldActionPerformed(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_codeTextFieldActionPerformed
     try {
         lookUpAndSetDescription();
+        updateFilledInStatusColor();
     } catch (NullPointerException e) {
-        JOptionPane.showInternalMessageDialog(this, codeTextField.getText() + " " + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("_is_not_a_valid_dictionary_code."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Error"), JOptionPane.ERROR_MESSAGE);
+        codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
+        descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Error")
+                + ": "
+                + codeTextField.getText()
+                + " "
+                + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("_is_not_a_valid_dictionary_code."));
+        // JOptionPane.showInternalMessageDialog(this, codeTextField.getText() + " " + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("_is_not_a_valid_dictionary_code."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Error"), JOptionPane.ERROR_MESSAGE);
     }
-    updateFilledInStatusColor();
 }//GEN-LAST:event_codeTextFieldActionPerformed
 
 private void descriptionTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_descriptionTextFieldActionPerformed
@@ -282,6 +299,22 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
 private void codeTextFieldActionPerformed1(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codeTextFieldActionPerformed1
     // TODO add your handling code here:
 }//GEN-LAST:event_codeTextFieldActionPerformed1
+
+private void codeTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_codeTextFieldMousePressed
+    if (evt.isPopupTrigger()) {
+        Point pt = SwingUtilities.convertPoint(evt.getComponent(), evt.getPoint(), codeTextField);
+        JPopupMenu menu = new MyPopUpMenu(codeTextField);
+        menu.show(codeTextField, pt.x, pt.y);
+    }
+}//GEN-LAST:event_codeTextFieldMousePressed
+
+private void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_codeTextFieldMouseReleased
+    if (evt.isPopupTrigger()) {
+        Point pt = SwingUtilities.convertPoint(evt.getComponent(), evt.getPoint(), codeTextField);
+        JPopupMenu menu = new MyPopUpMenu(codeTextField);
+        menu.show(codeTextField, pt.x, pt.y);
+    }
+}//GEN-LAST:event_codeTextFieldMouseReleased
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JTextField categoryTextField;
     protected javax.swing.JTextField codeTextField;
