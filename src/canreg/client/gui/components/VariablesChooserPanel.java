@@ -190,6 +190,13 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
         variablesInTable = arrayOfVariablesInSelectedTables;
     }
 
+    public void setVariableDataSelected(String variableName, boolean selected) {
+        VariablesExportDetailsPanel ved = panelMap.get(canreg.common.Tools.toUpperCaseStandardized(variableName));
+        if (ved!=null){
+            ved.setDataCheckBox(selected);
+        }
+    }
+
     // useful for the frequency by year tool... for now.
     public void showOnlyDataColumn() {
         for (VariablesExportDetailsPanel ved : panelMap.values()) {
