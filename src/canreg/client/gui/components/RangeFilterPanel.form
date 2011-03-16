@@ -147,6 +147,10 @@
               <Dimension value="[70, 20]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="rangeStartTextFieldMousePressed"/>
+            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="rangeStartTextFieldMouseReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="rangeEndTextField">
           <Properties>
@@ -159,6 +163,10 @@
               <Dimension value="[70, 20]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="rangeEndTextFieldMousePressed"/>
+            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="rangeEndTextFieldMouseReleased"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -208,6 +216,10 @@
             <Property name="toolTipText" type="java.lang.String" resourceKey="filterComboBox.toolTipText"/>
             <Property name="name" type="java.lang.String" value="filterComboBox" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="filterComboBoxMousePressed"/>
+            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="filterComboBoxMouseReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="useFilterCheckBox">
           <Properties>

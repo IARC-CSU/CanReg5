@@ -5,12 +5,15 @@
  */
 package canreg.client.gui.components;
 
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.common.Tools;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -20,6 +23,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDesktopPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.text.JTextComponent;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -73,6 +80,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         sourceVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
 
         Comparator comparator = new Comparator<DatabaseVariablesListElement>() {
+
             @Override
             public int compare(DatabaseVariablesListElement object1, DatabaseVariablesListElement o2) {
                 return object1.toString().compareToIgnoreCase(o2.toString());
@@ -200,11 +208,27 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         rangeStartTextField.setMinimumSize(new java.awt.Dimension(50, 20));
         rangeStartTextField.setName("rangeStartTextField"); // NOI18N
         rangeStartTextField.setPreferredSize(new java.awt.Dimension(70, 20));
+        rangeStartTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                rangeStartTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                rangeStartTextFieldMouseReleased(evt);
+            }
+        });
 
         rangeEndTextField.setToolTipText(resourceMap.getString("rangeEndTextField.toolTipText")); // NOI18N
         rangeEndTextField.setMinimumSize(new java.awt.Dimension(50, 20));
         rangeEndTextField.setName("rangeEndTextField"); // NOI18N
         rangeEndTextField.setPreferredSize(new java.awt.Dimension(70, 20));
+        rangeEndTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                rangeEndTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                rangeEndTextFieldMouseReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout rangePanelLayout = new javax.swing.GroupLayout(rangePanel);
         rangePanel.setLayout(rangePanelLayout);
@@ -240,6 +264,14 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         filterComboBox.setEditable(true);
         filterComboBox.setToolTipText(resourceMap.getString("filterComboBox.toolTipText")); // NOI18N
         filterComboBox.setName("filterComboBox"); // NOI18N
+        filterComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                filterComboBoxMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                filterComboBoxMouseReleased(evt);
+            }
+        });
 
         useFilterCheckBox.setText(resourceMap.getString("useFilterCheckBox.text")); // NOI18N
         useFilterCheckBox.setToolTipText(resourceMap.getString("useFilterCheckBox.toolTipText")); // NOI18N
@@ -474,6 +506,40 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
 private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortByChooserComboBoxActionPerformed
     actionListener.actionPerformed(new ActionEvent(this, 0, "sortby"));
 }//GEN-LAST:event_sortByChooserComboBoxActionPerformed
+
+private void filterComboBoxMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filterComboBoxMousePressed
+    if (evt.isPopupTrigger()) {
+        // this does not work...
+        // Point pt = SwingUtilities.convertPoint(evt.getComponent(), evt.getPoint(), filterComboBox);
+        // JPopupMenu menu = new MyPopUpMenu(comp);
+        // menu.show(filterComboBox, pt.x, pt.y);
+    }
+}//GEN-LAST:event_filterComboBoxMousePressed
+
+private void filterComboBoxMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filterComboBoxMouseReleased
+    if (evt.isPopupTrigger()) {
+        // this does not work...
+        // Point pt = SwingUtilities.convertPoint(evt.getComponent(), evt.getPoint(), filterComboBox);
+        // JPopupMenu menu = new MyPopUpMenu(comp);
+        // menu.show(filterComboBox, pt.x, pt.y);
+    }
+}//GEN-LAST:event_filterComboBoxMouseReleased
+
+private void rangeStartTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rangeStartTextFieldMouseReleased
+    potentiallyShowPopUpMenuTextBox(rangeStartTextField, evt);
+}//GEN-LAST:event_rangeStartTextFieldMouseReleased
+
+private void rangeStartTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rangeStartTextFieldMousePressed
+    potentiallyShowPopUpMenuTextBox(rangeStartTextField, evt);
+}//GEN-LAST:event_rangeStartTextFieldMousePressed
+
+private void rangeEndTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rangeEndTextFieldMousePressed
+    potentiallyShowPopUpMenuTextBox(rangeEndTextField, evt);
+}//GEN-LAST:event_rangeEndTextFieldMousePressed
+
+private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rangeEndTextFieldMouseReleased
+    potentiallyShowPopUpMenuTextBox(rangeEndTextField, evt);
+}//GEN-LAST:event_rangeEndTextFieldMouseReleased
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel andLabel;
     private javax.swing.JComboBox filterComboBox;
@@ -753,5 +819,13 @@ private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt
 
     public void setSelectedTable(String table) {
         tableChooserComboBox.setSelectedItem(table);
+    }
+
+    private void potentiallyShowPopUpMenuTextBox(JTextField textField, MouseEvent evt) {
+        if (evt.isPopupTrigger()) {
+            Point pt = SwingUtilities.convertPoint(evt.getComponent(), evt.getPoint(), textField);
+            JPopupMenu menu = new MyPopUpMenu(textField);
+            menu.show(textField, pt.x, pt.y);
+        }
     }
 }
