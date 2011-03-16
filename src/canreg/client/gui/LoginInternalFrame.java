@@ -9,6 +9,7 @@ import canreg.client.gui.tools.WaitFrame;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.ServerDescription;
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.exceptions.WrongCanRegVersionException;
 import java.awt.Cursor;
 import java.beans.PropertyChangeSupport;
@@ -128,7 +129,6 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
-        canRegSystemComboBox.setToolTipText(resourceMap.getString("canRegSystemComboBox.toolTipText")); // NOI18N
         canRegSystemComboBox.setAction(actionMap.get("serverComboboxChanged")); // NOI18N
         canRegSystemComboBox.setName("canRegSystemComboBox"); // NOI18N
 
@@ -177,9 +177,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                         .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(rememberPasswordCheckBox))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, systemPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(usernameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)))
+                    .addComponent(usernameTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
                 .addContainerGap())
         );
         systemPanelLayout.setVerticalGroup(
@@ -197,7 +195,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(passwordLabel)
                     .addComponent(rememberPasswordCheckBox)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(117, Short.MAX_VALUE))
+                .addContainerGap(133, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("systemPanel.TabConstraints.tabTitle"), systemPanel); // NOI18N
@@ -214,6 +212,14 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         serverURLTextField.setText(resourceMap.getString("serverURLTextField.text")); // NOI18N
         serverURLTextField.setName("serverURLTextField"); // NOI18N
         serverURLTextField.setNextFocusableComponent(portField);
+        serverURLTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                serverURLTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                serverURLTextFieldMouseReleased(evt);
+            }
+        });
         serverURLTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 enterKeyTyped(evt);
@@ -341,7 +347,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(launchServerButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(advancedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("settingsPanel.TabConstraints.tabTitle"), settingsPanel); // NOI18N
@@ -366,7 +372,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(loginButton)
@@ -453,6 +459,14 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
     private void usernameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameTextFieldKeyTyped
         // TODO add your handling code here:
     }//GEN-LAST:event_usernameTextFieldKeyTyped
+
+    private void serverURLTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_serverURLTextFieldMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(serverURLTextField, evt);
+    }//GEN-LAST:event_serverURLTextFieldMouseReleased
+
+    private void serverURLTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_serverURLTextFieldMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(serverURLTextField, evt);
+    }//GEN-LAST:event_serverURLTextFieldMousePressed
 
     /**
      * 
