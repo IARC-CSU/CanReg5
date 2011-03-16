@@ -57,14 +57,16 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
     private PopulationDataset[] worldPopulations;
     private JFreeChart chart;
     private ExcelAdapter myAd;
+    private final ActionListener listener;
 
     /** Creates new form PDSEditorInternalFrame
      * @param dtp
      * @param worldPopulations 
      */
-    public PDSEditorInternalFrame(JDesktopPane dtp, PopulationDataset[] worldPopulations) {
+    public PDSEditorInternalFrame(JDesktopPane dtp, PopulationDataset[] worldPopulations, ActionListener listener) {
         this.dtp = dtp;
         this.worldPopulations = worldPopulations;
+        this.listener = listener;
         initComponents();
         initValues();
     }
@@ -1516,6 +1518,9 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         } catch (RemoteException ex) {
             Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (listener != null) {
+            listener.actionPerformed(new ActionEvent(this, 1, "refresh"));
+        }
     }
 
     private void buildPDSfromTable() {
@@ -1564,7 +1569,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
      */
     @Action
     public void editWorldPopulation() {
-        PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulations);
+        PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulations, listener);
         populationDatasetEditorInternalFrame.setPopulationDataset((PopulationDataset) standardPopulationComboBox.getSelectedItem());
         CanRegClientView.showAndPositionInternalFrame(dtp, populationDatasetEditorInternalFrame);
     }
@@ -1618,6 +1623,9 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
             try {
                 CanRegClientApp.getApplication().deletePopulationDataset(pds.getPopulationDatasetID());
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_SAVED_PDS:_") + pds.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
+                if (listener != null) {
+                    listener.actionPerformed(new ActionEvent(this, 1, "refresh"));
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
@@ -1810,6 +1818,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         if (chart != null) {
             JFileChooser chooser = new JFileChooser();
             FileFilter filter = new FileFilter() {
+
                 @Override
                 public boolean accept(File f) {
                     return f.getName().toLowerCase().endsWith("png");

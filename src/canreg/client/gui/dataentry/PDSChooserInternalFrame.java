@@ -6,10 +6,16 @@
 
 package canreg.client.gui.dataentry;
 
+import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
 import canreg.server.database.PopulationDataset;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -19,7 +25,7 @@ import org.jdesktop.application.Action;
  *
  * @author  ervikm
  */
-public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
+public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implements ActionListener {
     Map<Integer, PopulationDataset> populationDatasetsMap;
     PopulationDataset[] populationDatasets;
     PopulationDataset[] worldPopulationDatasets;
@@ -29,9 +35,9 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
      * @param dtp
      * @param populationDatasets 
      */
-    public PDSChooserInternalFrame(JDesktopPane dtp, Map<Integer, PopulationDataset> populationDatasets) {
+    public PDSChooserInternalFrame(JDesktopPane dtp) throws SecurityException, RemoteException {
         this.dtp = dtp;
-        this.populationDatasetsMap = populationDatasets;
+        populationDatasetsMap = CanRegClientApp.getApplication().getPopulationDatasets();
         initComponents();
         initValues();
     }
@@ -185,7 +191,7 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
      */
     @Action
     public void editAction() {
-        PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulationDatasets);
+        PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulationDatasets, this);
         populationDatasetEditorInternalFrame.setPopulationDataset((PopulationDataset) populationDataSetsList.getSelectedValue());
         CanRegClientView.showAndPositionInternalFrame(dtp, populationDatasetEditorInternalFrame);
     }
@@ -262,8 +268,22 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame {
      */
     @Action
     public void newPDSAction() {
-        PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulationDatasets);
+        PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulationDatasets, this);
         // populationDatasetEditorInternalFrame.setPopulationDataset(new PopulationDataset());
         CanRegClientView.showAndPositionInternalFrame(dtp, populationDatasetEditorInternalFrame);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("refresh")){
+            try {
+                populationDatasetsMap = CanRegClientApp.getApplication().getPopulationDatasets();
+                initValues();
+            } catch (SecurityException ex) {
+                Logger.getLogger(PDSChooserInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {
+                Logger.getLogger(PDSChooserInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

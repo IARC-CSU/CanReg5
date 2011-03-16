@@ -1205,7 +1205,7 @@ public final class CanRegClientView extends FrameView {
     public void editPopulationDataSets() {
         JInternalFrame internalFrame;
         try {
-            internalFrame = new PDSChooserInternalFrame(desktopPane, CanRegClientApp.getApplication().getPopulationDatasets());
+            internalFrame = new PDSChooserInternalFrame(desktopPane);
             showAndPositionInternalFrame(desktopPane, internalFrame);
         } catch (SecurityException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);

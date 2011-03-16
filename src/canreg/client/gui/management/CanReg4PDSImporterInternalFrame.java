@@ -211,7 +211,7 @@ public class CanReg4PDSImporterInternalFrame extends javax.swing.JInternalFrame 
         try {
             pds = PopulationDataSetHelper.readCanReg4PDS(fileNameTextField.getText());
 
-            PDSEditorInternalFrame pdseif = new PDSEditorInternalFrame(dtp, worldPopulations);
+            PDSEditorInternalFrame pdseif = new PDSEditorInternalFrame(dtp, worldPopulations, null);
             pdseif.setPopulationDataset(pds);
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("POPULATION DATASET LOADED:") + pds.getPopulationDatasetName() + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("PLEASE VERIFY AND SAVE IT TO THE CANREG DATABASE."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("SUCCESS"), JOptionPane.INFORMATION_MESSAGE);
 
