@@ -818,7 +818,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         return records;
     }
 
-    public Tumour getTumourRecordBasedOnTumourID(String idString, boolean lock) throws RemoteException, SecurityException, SQLException, RecordLockedException, Exception {
+    public Tumour getTumourRecordBasedOnTumourID(String idString, boolean lock) throws RemoteException, SecurityException, SQLException, RecordLockedException, DistributedTableDescriptionException, UnknownTableException {
         Tumour[] records = null;
         Tumour tumourToReturn = null;
         String lookUpTableName = "";
@@ -936,7 +936,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
-    public void releaseResultSet(String resultSetID) throws SecurityException, RemoteException {
+    public void releaseResultSet(String resultSetID) throws SecurityException, RemoteException, SQLException {
         server.releaseResultSet(resultSetID);
     }
 
