@@ -6,9 +6,9 @@
 package canreg.client.gui.analysis;
 
 import canreg.server.database.UnknownTableException;
-import other.cachingtableapi.DistributedTableDescription;
-import other.cachingtableapi.DistributedTableDescriptionException;
-import other.cachingtableapi.DistributedTableModel;
+import canreg.common.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
+import canreg.common.cachingtableapi.DistributedTableModel;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.LocalSettings;
@@ -155,7 +155,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 151, Short.MAX_VALUE)
+            .addGap(0, 155, Short.MAX_VALUE)
         );
 
         jTabbedPane1.setName("jTabbedPane1"); // NOI18N

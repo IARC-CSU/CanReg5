@@ -1,4 +1,4 @@
-package other.cachingtableapi;
+package canreg.common.cachingtableapi;
 
 import java.io.Serializable;
 

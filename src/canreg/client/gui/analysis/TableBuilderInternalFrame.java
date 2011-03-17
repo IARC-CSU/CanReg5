@@ -5,7 +5,7 @@
  */
 package canreg.client.gui.analysis;
 
-import other.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.LocalSettings;

@@ -5,7 +5,7 @@
  */
 package canreg.client.gui.dataentry;
 
-import other.cachingtableapi.DistributedTableDescriptionException;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.tools.PrintUtilities;

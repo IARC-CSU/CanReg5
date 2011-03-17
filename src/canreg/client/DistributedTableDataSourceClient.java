@@ -1,8 +1,8 @@
 package canreg.client;
 
-import other.cachingtableapi.DistributedTableDataSource;
-import other.cachingtableapi.DistributedTableDescription;
-import other.cachingtableapi.DistributedTableDescriptionException;
+import canreg.common.cachingtableapi.DistributedTableDataSource;
+import canreg.common.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

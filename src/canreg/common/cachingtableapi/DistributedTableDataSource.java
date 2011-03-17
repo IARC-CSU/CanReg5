@@ -1,4 +1,4 @@
-package other.cachingtableapi;
+package canreg.common.cachingtableapi;
 
 /**
  * Interface that isolates all of the remote method calls necessary to

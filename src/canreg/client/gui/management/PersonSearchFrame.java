@@ -8,7 +8,7 @@ package canreg.client.gui.management;
 import canreg.client.gui.*;
 import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
-import other.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
@@ -42,7 +42,7 @@ import javax.swing.table.TableColumn;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
-import other.cachingtableapi.DistributedTableDescriptionException;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 
 /**
  *

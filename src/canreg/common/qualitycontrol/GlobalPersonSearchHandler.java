@@ -1,6 +1,6 @@
 package canreg.common.qualitycontrol;
 
-import other.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescription;
 
 /**
  *

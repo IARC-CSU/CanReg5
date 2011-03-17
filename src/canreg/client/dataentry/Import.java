@@ -1,7 +1,7 @@
 package canreg.client.dataentry;
 
 import au.com.bytecode.opencsv.CSVReader;
-import other.cachingtableapi.DistributedTableDescriptionException;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.common.Globals;
 import canreg.common.qualitycontrol.CheckResult;
