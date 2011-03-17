@@ -4,9 +4,9 @@ package canreg.server.database;
  *
  * @author ervikm
  */
-import other.cachingtableapi.DistributedTableDataSource;
-import other.cachingtableapi.DistributedTableDescription;
-import other.cachingtableapi.DistributedTableDescriptionException;
+import canreg.common.cachingtableapi.DistributedTableDataSource;
+import canreg.common.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
@@ -430,7 +430,9 @@ public class CanRegDAO {
      */
     public synchronized void releaseResultSet(String resultSetID) throws SQLException {
         DistributedTableDataSourceResultSetImpl dataSource = (DistributedTableDataSourceResultSetImpl) distributedDataSources.get(resultSetID);
-        dataSource.releaseResultSet();
+        if (dataSource != null) {
+            dataSource.releaseResultSet();
+        }
         distributedDataSources.remove(resultSetID);
     }
 
@@ -485,7 +487,7 @@ public class CanRegDAO {
         if (ts != null) {
             return ts.retrieveRows(from, to);
         } else {
-            return null;            
+            return null;
         }
     }
     // TODO: This only works for Embedded databases - will look into it!
@@ -2188,7 +2190,7 @@ public class CanRegDAO {
 
         // Add the range part
         if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-            if (filterString.isEmpty()&&!joinedTables) {
+            if (filterString.isEmpty() && !joinedTables) {
                 filterString = " WHERE " + filterString;
             } else {
                 filterString += " AND ";
@@ -2216,8 +2218,8 @@ public class CanRegDAO {
         // feed it to the garbage dump
         countRowSet = null;
         if (filter.getSortByVariable() != null) {
-            filterString += " ORDER BY \"" +
-                    canreg.common.Tools.toUpperCaseStandardized(
+            filterString += " ORDER BY \""
+                    + canreg.common.Tools.toUpperCaseStandardized(
                     filter.getSortByVariable()) + "\"";
         }
         try {
