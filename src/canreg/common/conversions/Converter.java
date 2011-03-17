@@ -15,7 +15,6 @@ import java.util.Map;
  * @author ervikm
  */
 public class Converter {
-    private GlobalToolBox toolBox;
     private LinkedList<DatabaseVariablesListElement> standardVariables;
     
     /**
@@ -42,9 +41,8 @@ public class Converter {
      * 
      * @param toolBox
      */
-    public Converter(GlobalToolBox toolBox) {
-        this.toolBox = toolBox;
-        standardVariables = toolBox.getStandardVariables();
+    public Converter(LinkedList<DatabaseVariablesListElement> standardVariables) {
+        this.standardVariables = standardVariables;
         
         conversions = new LinkedHashMap<ConversionName, ConversionInterface>();
 

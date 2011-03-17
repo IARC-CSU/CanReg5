@@ -375,8 +375,8 @@ public class CanRegClientApp extends SingleFrameApplication {
             Globals.UserRightLevels i = getUserRightLevel();
             canRegClientView.setUserRightsLevel(i);
 
-            checker = new Checker(globalToolBox);
-            converter = new Converter(globalToolBox);
+            checker = new Checker(globalToolBox.getStandardVariables());
+            converter = new Converter(globalToolBox.getStandardVariables());
 
             return systemName;
         } else {

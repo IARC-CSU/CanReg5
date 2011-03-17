@@ -18,7 +18,6 @@ import java.util.TreeMap;
  */
 public class Checker {
 
-    private GlobalToolBox toolBox;
     private LinkedList<DatabaseVariablesListElement> standardVariables;
 
     /**
@@ -81,9 +80,8 @@ public class Checker {
      * 
      * @param toolBox
      */
-    public Checker(GlobalToolBox toolBox) {
-        this.toolBox = toolBox;
-        standardVariables = toolBox.getStandardVariables();
+    public Checker(LinkedList<DatabaseVariablesListElement> standardVariables) {
+        this.standardVariables = standardVariables;
         // Create a set of all standard variables in this database
         Set<StandardVariableNames> variableExistSet = getVariableExistSet(standardVariables);
         Map<StandardVariableNames, DatabaseVariablesListElement> standardVariablesMap = buildStandardVariablesMap(standardVariables);
