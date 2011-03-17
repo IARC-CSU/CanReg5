@@ -609,9 +609,9 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             file.renameTo(oldFile.getAbsoluteFile());
         }
         systemDescription.saveSystemDescriptionXML(fileName);
-        String message = java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/ModifyDatabaseStructureInternalFrame").getString("SYSTEM_DEFINITION_SAVED_AS_") + fileName + ".";
+        String message = java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame").getString("SYSTEM_DEFINITION_SAVED_AS_") + fileName + ".";
         if (oldFile != null) {
-            message += "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/ModifyDatabaseStructureInternalFrame").getString("OLD_FILE_BACKED_UP_AS_") + oldFile.getAbsolutePath();
+            message += "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame").getString("OLD_FILE_BACKED_UP_AS_") + oldFile.getAbsolutePath();
         }
         JOptionPane.showMessageDialog(this, message, "Title", JOptionPane.INFORMATION_MESSAGE);
     }

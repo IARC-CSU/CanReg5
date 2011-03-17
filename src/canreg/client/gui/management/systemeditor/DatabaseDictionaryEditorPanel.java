@@ -194,7 +194,7 @@ public class DatabaseDictionaryEditorPanel extends javax.swing.JPanel {
             int fullLength = Integer.parseInt(fullCodeLengthTextField.getText());
             if (length >= fullLength || length <= 0) {
                 JOptionPane.showInternalMessageDialog(this,
-                        java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/DatabaseDictionaryEditorPanel").getString("CODE_LENGTH_SHOULD_BE_LESS..."));
+                        java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/DatabaseDictionaryEditorPanel").getString("CODE_LENGTH_SHOULD_BE_LESS..."));
             }
         } catch (NumberFormatException nfe) {
             JOptionPane.showInternalMessageDialog(this, nfe);
