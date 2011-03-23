@@ -72,7 +72,8 @@ public class Checker {
         /**
          *
          */
-        DateOfLastContact
+        DateOfLastContact,
+        TopographyMorphology
     }
     LinkedList<CheckInterface> checks;
 
@@ -139,6 +140,12 @@ public class Checker {
         }
         // Add topography - DEPedits #6
         check = new CheckTopography();
+        if (canPerformThisCheck(check, variableExistSet)) {
+            check.setVariableListElementsMap(standardVariablesMap);
+            checks.add(check);
+        }
+        // Add topography and morphology - DEPedits #18
+        check = new CheckTopographyMorphology();
         if (canPerformThisCheck(check, variableExistSet)) {
             check.setVariableListElementsMap(standardVariablesMap);
             checks.add(check);

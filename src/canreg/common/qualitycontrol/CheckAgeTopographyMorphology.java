@@ -20,7 +20,7 @@ public class CheckAgeTopographyMorphology extends CheckInterface {
     public static Globals.StandardVariableNames[] variablesNeeded = new Globals.StandardVariableNames[]{
         Globals.StandardVariableNames.Age,
         Globals.StandardVariableNames.Topography,
-        Globals.StandardVariableNames.Morphology,};
+        Globals.StandardVariableNames.Morphology};
 
     /**
      * 
