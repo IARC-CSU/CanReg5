@@ -1,5 +1,253 @@
-changeset:   634:69b8a5a40933
+changeset:   683:d267d2c0edfd
 tag:         tip
+user:        ervikm@X90164
+date:        Thu Mar 17 16:13:06 2011 +0100
+summary:     Fixed some errors introduced while refactoring...
+
+changeset:   682:02da5a908306
+user:        ervikm@X90164
+date:        Thu Mar 17 16:11:21 2011 +0100
+summary:     Fixed some errors introduced while refactoring...
+
+changeset:   681:8e2b8cb4e62f
+user:        ervikm@X90164
+date:        Thu Mar 17 16:10:47 2011 +0100
+summary:     Refactored the postscriptviewer.
+
+changeset:   680:39060cf1a6b8
+user:        ervikm@X90164
+date:        Thu Mar 17 16:09:23 2011 +0100
+summary:     Converter and checker now only depends on the standardvariablenames.
+
+changeset:   679:3d74f1821ff0
+user:        ervikm@X90164
+date:        Thu Mar 17 15:48:19 2011 +0100
+summary:     Implemented a calculate age conversion.
+
+changeset:   678:cf06529b7e23
+user:        ervikm@X90164
+date:        Thu Mar 17 13:43:47 2011 +0100
+summary:     Refactored the distributedtable-api.
+
+changeset:   677:9b673c5826fa
+user:        ervikm@X90164
+date:        Thu Mar 17 13:43:06 2011 +0100
+summary:     Fixed a potential null-pointer error.
+
+changeset:   676:002128053d40
+user:        ervikm@X90164
+date:        Wed Mar 16 18:18:15 2011 +0100
+summary:     Tidied some logfile use.
+
+changeset:   675:47428b9b85fe
+user:        ervikm@X90164
+date:        Wed Mar 16 17:04:02 2011 +0100
+summary:     Updated the handbook.
+
+changeset:   674:d2f800810b0a
+user:        ervikm@X90164
+date:        Wed Mar 16 17:03:28 2011 +0100
+summary:     Tweaked the build.xml.
+
+changeset:   673:5d25e8f0fae6
+user:        ervikm@X90164
+date:        Wed Mar 16 16:17:06 2011 +0100
+summary:     The list of Population Data Sets are now updated in real time if entries are added/updated or deleted.
+
+changeset:   672:88c135579a7f
+user:        ervikm@X90164
+date:        Wed Mar 16 16:16:10 2011 +0100
+summary:     TextArea of backupframe no longer editable.
+
+changeset:   671:6029a9f73295
+user:        ervikm@X90164
+date:        Wed Mar 16 15:40:06 2011 +0100
+summary:     Refactored some code.
+
+changeset:   670:650360f0207b
+user:        ervikm@X90164
+date:        Wed Mar 16 15:39:31 2011 +0100
+summary:     Copy and paste menu for text fields implemented.
+
+changeset:   669:3475763bd8ef
+user:        ervikm@X90164
+date:        Wed Mar 16 15:39:22 2011 +0100
+summary:     Copy and paste menu for text fields implemented.
+
+changeset:   668:b1162f6a1d9d
+user:        ervikm@X90164
+date:        Wed Mar 16 15:38:18 2011 +0100
+summary:     Copy and paste menu for text fields implemented.
+
+changeset:   667:7fd1590b53e4
+user:        ervikm@X90164
+date:        Wed Mar 16 11:28:24 2011 +0100
+summary:     Tidied some exception handling.
+
+changeset:   666:596c6a231371
+user:        ervikm@X90164
+date:        Wed Mar 16 11:27:46 2011 +0100
+summary:     Tidied some exception handling.
+
+changeset:   665:3fcd59919466
+user:        ervikm@X90164
+date:        Wed Mar 16 11:26:32 2011 +0100
+summary:     Copy and paste menu for text fields implemented.
+
+changeset:   664:76dc53eb955e
+user:        ervikm@X90164
+date:        Wed Mar 16 11:26:12 2011 +0100
+summary:     Copy and paste menu for text fields implemented.
+
+changeset:   663:5b30fbd823ce
+user:        ervikm@X90164
+date:        Wed Mar 16 11:19:39 2011 +0100
+summary:     Copy and paste menu for text fields implemented.
+
+changeset:   662:fbce43b8918f
+user:        ervikm@X90164
+date:        Wed Mar 16 09:55:47 2011 +0100
+summary:     Added code to select a specific data element from the variableschooserpanel.
+
+changeset:   661:36f824c475f2
+user:        ervikm@X90164
+date:        Wed Mar 16 09:55:04 2011 +0100
+summary:     Tidied some exception handling.
+
+changeset:   660:16c5ab9e59cd
+user:        ervikm@X90164
+date:        Wed Mar 16 09:54:42 2011 +0100
+summary:     Copy and paste menu for the population data set implemented.
+
+changeset:   659:6939a02ad52d
+user:        ervikm@X90164
+date:        Wed Mar 16 09:53:56 2011 +0100
+summary:     Tidied some exception handling.
+
+changeset:   658:3b70f0a3fd21
+user:        ervikm@X90164
+date:        Wed Mar 16 09:53:04 2011 +0100
+summary:     Tidied some exception handling.
+
+changeset:   657:924ee0bfbf3b
+user:        ervikm@X90164
+date:        Wed Mar 16 09:50:19 2011 +0100
+summary:     A general popup menu for text components implemented.
+
+changeset:   656:4e08beff0a13
+user:        ervikm@X90164
+date:        Mon Mar 14 18:30:26 2011 +0100
+summary:     Sources are now numbered if more than 2.
+
+changeset:   655:9871707ee948
+user:        ervikm@X90164
+date:        Mon Mar 14 18:16:59 2011 +0100
+summary:     Export of sources attached to a tumour table is now implemented.
+
+changeset:   654:e6afd5445540
+user:        ervikm@X90164
+date:        Mon Mar 14 18:15:32 2011 +0100
+summary:     Make sure old resultsets are dropped.
+
+changeset:   653:ec7c0aac9d63
+user:        ervikm@X90164
+date:        Mon Mar 14 18:14:50 2011 +0100
+summary:     Have I fixed the long standing "dropped result set" bug?
+
+changeset:   652:770bffd7feff
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Mar 14 11:57:02 2011 +0100
+summary:     Import complete dictionary no longer shows message as error but warning when no encoding is detected.
+
+changeset:   651:6870a91bd567
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Mar 14 10:24:23 2011 +0100
+summary:     Comments added.
+
+changeset:   650:804003853bee
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 11 18:09:03 2011 +0100
+summary:     5.00.04rc1
+
+changeset:   649:eb13cffcc31a
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 11 18:08:37 2011 +0100
+summary:     Population Pyramids in the PDS editor can now be saved as PNGs.
+
+changeset:   648:ab92b8312cd6
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 11 17:18:18 2011 +0100
+summary:     Population data set editor improved. Also added pyramids directly in the editor for immediate feedback.
+
+changeset:   647:d0973eaf4e3a
+parent:      644:0ff4302cf034
+parent:      646:fc7186689def
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 11 14:35:38 2011 +0100
+summary:     Merged.
+
+changeset:   646:fc7186689def
+user:        ervikm@X70245.iarc.lan
+date:        Fri Mar 11 11:40:08 2011 +0100
+summary:     Back from India.
+
+changeset:   645:30043b8ad7d9
+parent:      638:baee45f6fc91
+user:        ervikm@X70245.iarc.lan
+date:        Fri Mar 11 11:24:24 2011 +0100
+summary:     CanReg future updated...
+
+changeset:   644:0ff4302cf034
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 11 11:37:01 2011 +0100
+summary:     Refactored the cachingtableapi out of the main canreg-tree.
+
+changeset:   643:103c47d34cde
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 11 11:24:29 2011 +0100
+summary:     Improved layout of Export/report frame.
+
+changeset:   642:4d8592c73b0e
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 11 11:22:28 2011 +0100
+summary:     Fixed bug in system description affecting text areas.
+
+changeset:   641:d128478809de
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 11 11:20:37 2011 +0100
+summary:     Integrated postcript-viewer test...
+
+changeset:   640:85e5dfcbb64b
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 11 11:17:41 2011 +0100
+summary:     Improved the layout of the import screen.
+
+changeset:   639:1c27e0106bad
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Mar 09 17:46:16 2011 +0100
+summary:     Registrar can no longer import files.
+
+changeset:   638:baee45f6fc91
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 24 17:49:14 2011 +0100
+summary:     Started refactoring and updating tables and table builders.
+
+changeset:   637:8e863298f833
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Feb 15 16:12:06 2011 +0100
+summary:     CanReg launch4j project created to facilitate launch on Windows machines.
+
+changeset:   636:8d3574c13de0
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Feb 15 11:38:01 2011 +0100
+summary:     CanReg launch4j project created to facilitate launch on Windows machines.
+
+changeset:   635:c2fd133726e3
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Feb 11 17:45:10 2011 +0100
+summary:     5.00.03 RC4
+
+changeset:   634:69b8a5a40933
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Fri Feb 11 17:14:56 2011 +0100
 summary:     Logging more info if something goes wrong during login.

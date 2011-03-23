@@ -1,699 +1,397 @@
 Changelog
 
+5.00.04
+- Fixed the "dropped result set while browsing" bug
+- Population data set editor improved.
+- Added pyramids directly in the editor for immediate feedback.
+- Population Pyramids in the PDS editor can now be saved as PNGs.
+- Copy and paste menu for the population data set implemented.
+- Improved layout of Export/report frame.
+- Improved the layout of the import screen. (Added a scrollbar.)
+- Registrar can no longer import files.
+- Copy and paste menu for (most) text fields implemented.
+- Fixed bug in system description affecting text areas.
+- CanReg launch4j project created to facilitate launch on Windows machines.
+- Started refactoring and updating tables and table builders.
+- Refactored the cachingtableapi out of the main canreg-tree.
+- Made sure old resultsets are properly dropped.
+- Import complete dictionary no longer shows message as error but warning when no encoding is detected.
+- The list of Population Data Sets are now updated in real time if entries are added/updated or deleted.
+- Export of sources attached to a tumour table is now (properly) implemented. 
+- Sources' variable names are now numbered if more than 2.
+- Integrated postcript-viewer test.
+- TextArea of backupframe no longer editable.
+- Tidied some exception handling.
+- Tweaked the build.xml.
+- Implemented a calculate age conversion.
+- Converter and checker now only depends on the standardvariablenames.
+- Added code to select a specific data element from the variableschooserpanel.
+- Comments added.
+- Varions fixes.
+
 5.00.03
-
 - Turkish bug fixed. Changed all calls to toUpperCase() to a standardized static toUpperCaseStandardize() located in the Tool class. Default upper case and lower case locale set to ENGLISH.
-
 - Merged the handbook and the manual into one PDF that can be updated independent of the CanReg releases.
-
 - Frequencies by Year table can now be written to CSV file.
-
 - Improved the layout of the ExportFrame.
-
 - Export/report and Frequencies by year and now appends the .csv/.txt if the user does not specify this.
-
 - DictionaryEntry can now be added to a tree to be sorted by either code or description.
-
 - The dictionary chooser put in place. Users can now sort dictionary codes by either description or code.
-
 - Implemented a filter for the dictionary element chooser using the Glazed Lists library http://sites.google.com/site/glazedlists/
-
 - DictionaryImporter: Fixed a bug that added a space to the label of dictioanries imported from CR4.
-
 - GUI for the Index-editor implemented. Fixed an update-bug in the database structure editor.
-
 - Fixed a bug where the range sometimes did not work when a join of two tables were accessed.
-
 - Group name now shows up in group editor.
-
 - Import: performance fixes and tidied some code.
-
 - Fixed some potential null-pointer errors.
-
 - Fixed some localization issue.
-
 - Auto detection of file encoding now works.
-
 - FastFilter now uses the new dictionary element chooser.
-
 - Removed the cancel option from "do you want to close"...
-
 - Logging more info if something goes wrong during login.
-
 - Added an easy access list of tables.
-
 - Added links to news items in the "latest news" browser.
-
 - Fixed a bug in the conversion from ICD O 3 to ICD10 where no ICD10 would be generated for some rare morphologies.
-
 - No longer displays patient record numbers but patent ids as results of the person search.
-
 - Implemented the GUI to let the user select types of algorithms for each variable in the person search, like alpha, number and date as well as soundex.
-
 - Improved the database structure editor.
-
 - Implemented user selectable types of algorithms for each variable in the person search, like alpha, number and date as well as soundex. This can be stored in the system definition XML file.
-
 - Implemented a better way to store the person searcher in an XML.
-
 - Updated the about.html. 
-
 - Table builder and export/report now launches faster.
-
 - More info button added to the welcome frame.
-
 - Latest News menu option: Added functionality to read the CanReg Twitter/RSS feed directly from the program.
-
 - Check to see if a standard variable is already mappe to a variable in the database during system setup/tailoring.
-
 - DatabaseStructure editor now displays a warning message if minimum required variables are not in place.
-
 - Improved the GUI of the database variable editor screen.
-
 - Code: Added override annotations, replaced some printstacktraces with proper logging of errors, replaced vectors with lists
-
 - Fixed a bug where the compound dictionaries did not detect faulty (truncated) codes.
-
 - Variable names are sorted in the rangefilter and the fastfilter.
-
 - Updated the welcome frame.
-
 - Performance improvements.
-
 - Updated the about box.
 
-
 5.00.02
-
 - Fixed a bug when the standard variable is a string of 0 lenght.
-
 - Tidied some code.
-
 - Added a menu option to file bug/issue reports.
-
 - Dictionary Editor: Now uses StringBuilder to improve performance and allow for editing of bigger dictionaries.
-
 - Handbook: Updated FAQ
 
-
 5.00.01
-
 - Database: fixed a bug where some filters didn't work when joining two (or more) tables.
-
 - Import: handles better errors when one line does not have enough elements, the apache licenced csvreader now used to parse the infile.
-
 - Database: fixed a memory leak issue, improved efficiency of import function, improved error handling
 
-
 5.00
-
 - No changes since 4.99.32
 
-
 4.99.32 (5.0 RC17)
-
 - Fixed some internationalization of the table builders.
-
 - Improved error-messages during login.
-
 - Improved error-messages during analysis.
-
 - Updated the translations.
-
 - Other minor bug fixes 
 
-
 4.99.31 (5.0 RC16)
-
 - Modified the main window to work better on small screens.
-
 - Moved the data entry menu to a menu of it's own.
-
 - Record Editor: Added a toggle patient/tumour view button.
-
 - Hid the "local checks" and "name sex checks" result panel and "add patient record" button for now.
-
 - Generate resultsets are separated from the initiate query part as a start towards possibility to interrupt a query.
-
 - Only one browser per client.
-
 - Updated the welcome screen and the about.html
-
 - PDS updated message box added.
-
 - Refresh button is now not possible to click while waiting for respons from server. Hour glass implemented.
-
 - Started adding the migration guide to the handbook.
-
 - Tidied some code.
-
 
 4.99.30 (5.0 RC15)
-
 - Found and fixed a bug in the convert to ICD10-part for certain combinations T/M. 
-
 - Updated the table of Morphologies.
-
 - Other bugfixes.
-
 
 4.99.29 (5.0 RC14)
-
 - Updated jlooks to 2.3.1 and jcalendar to 1.3.3
 
-
 4.99.28 (5.0 RC13)
-
 - Searches and sorts in the database are now case insensitive using the primary component of the letters (i.e. '�' equals 'A', '�' equals 'E')
-
 - Updated database engine to Apache Derby 10.6.1.0. (Needed for case insensitive searches. Plus security fixes, performance issues etc.)
-
 - When Turkish language is detected default to english for now to avoid problems with capitalization.
-
 - Other bugfixes.
-
 
 4.99.27 (5.0 RC12)
-
 - Set up new CanReg system: Fixed a bug where varaibles removed were not removed.
-
 - Set up new database: Indexes are now updated properly in XML.
-
 - Improved russian translation.
-
 - Other bugfixes.
 
-
 4.99.26 (5.0 RC11)
-
 - Disabled some debug code from the release build.
 
-
 4.99.25 (5.0 RC10)
-
 - First draft of the Russian translation ready.
-
 - Created a jsmooth file to build .exe's for CanReg5 on windows.
-
 - Fixed a bug in the merge two patient-function.
-
 - CanRegDAO save record now truncates variables if needed.
-
 - CanRegClientView removed ICD-O-3 manual link.
-
 - CanRegDAO save rumour now harmonizes tumour record ids better.
-
 - Improved exception handling.
-
 - Work on internationalization.
-
 - Updated the handbook.
 
-
 4.99.24 (5.0 RC9)
-
 - Internationalized strings that were hardcoded before.
-
 - Improved layout of the RangeFilter.
-
 - Updated the about.html
-
 - Changed the XML parser. Now using the standard javax.xml.parsers instead of the apache one.
-
 - Handbook now in Latex (Lyx) under version control.
 
-
 4.99.23 (5.0 RC8)
-
 - Improved the export of the sources.
-
 - Range in Global Person Search implemented. Double click now works.
-
 - Improved error-handling of the person search module.
-
 - Minor fixes and updates.
-
 - Tidied the source.
 
-
 4.99.22 Build 858 (5.0 RC7)
-
 - Database engine switched to Java DB 10.5.3.0
-
 - RangeFilter now adds 's if needed by each variable.
-
 - Other bug fixes.
-
 
 4.99.21 Build 848 (5.0 RC6)
-
 - Access to handbook, possibility to download latest version.
-
 - DatabaseVariableEditor now throws error messages if somethings not right with the variable definition during system setup.
-
 - ICCC3 converter implemented.
 
-
 4.99.20
-
 - Internationalization work. Portugese translation started. French translation continued.
 
-
 4.99.19 Build 829 (5.0 RC5)
-
 - Hourglass feedback added for longish operations.
-
 - Problem with truncated dictionary labels solved.
-
 - Fixed a bug where all checks show up in the result message, even though they are OK.
-
 - TableBuilder: Fixed a nullpointer error that could occur if no cases in table.
-
 - Improved the layout of certain screens.
-
 - French translation started.
 
-
 4.99.18 Build 821 (5.0 RC4)
-
 - Better handling of malformed date strings.
-
 - Date of last contact check implemented.
-
 - Better handling of check results.
-
 - AutoFillHelper: auto age calculation implemented...
-
 - RecordEditor and RecordEditorPanel: Improved the way check status is handled.
 
-
 4.99.17 Build 818 (5.0 RC3)
-
 - DateHelper: difference in dates in days calculated properly.
-
 - RecordEditor: Better error handling
-
 - AutoFillHelper: Added comments
-
 - VariableEditorPanel: Better handling of null-pointers, number no longer defaults to -1.
-
 - ModifyDatabaseStructureIF: GUI fixes
-
 - UserManagerInternalFrame: Better error handling
-
 - Tools.buildIndexMap: better handling of indexes with missing variables
-
 - DateVariableEditorPanel: Better error handling
-
 - ExportReportInternalFrame: Better error handling
-
 - CanRegClientView: display set up new system-menu
-
 - CheckAgeIncidence: better error message
-
 - DateHelper: fixed a one-off error when birthday,month=incidenceday,month
 
-
 4.99.16 Build 806 (5.0 RC2)
-
 - Set up new database now in the menu
-
 - Deleting records can now throw SQLexceptions.
 
-
 4.99.15 Build 804 (5.0 RC1)
-
 - Import from multiple files now implemented.
-
 - DatabaseStructure editor implemented with a default XML.
-
 - InternalFrames/windows better positioned on various screen-sizes.
-
 - RangeFilterPanel now handles source tables and empty index lists better, fires table changed events.
-
 - VariablesChooserPanel now only displays the variables from valid table(s).
-
 - Browser: Fixed a bug where you could not open records by double clicking on them if looking at source or source+tumour tables.
-
 - Tooltip texts updated.
-
 - TranslateListElement: A simple way to translate list elements implemented
-
 - EditDictionaryInternalFrame: Fixed a bug that occured if a dictionary had more errors than possible to display.
-
 - QueryGenerator improved.
-
 - Improved the display of variable names (FastFilter, RangeFilter, Browser.)
-
 - SystemDescription: Changes to accomodate the changes in DatabaseListElements, added setters to change the database's doc.
-
 - DateHelper: fixed a bug that occured when date was not set and was read. Buddhist Calendar work started.
-
 - Handles better locked tumour records.
-
 - FirstNameSexInternalFrame: better handling of unisex names.
-
 - Checks: now support better unknown codes.
-
 - Performance fixes.
-
 - Other stability and bug fixes.
 
-
-
 4.99.14 Build 764
-
 - ExportReport now lets you export category and description of dictionary elements and output long variable names, format dates and correct unknown dates.
-
 - SystemDefinitionConverter strips blanks from database variable names.
-
 - DateHelper: Dates are now transformed "backwards" so that a two digit year contains the last two digits...
-
 - Updated the xsd of the system XML.
-
 - Import function now generates record IDs if none are specified.
-
 - Import: fixed a bug where the import would brake down if the IDs where defined in the import file.
-
 - FastFilter: reworked the logic and text on screen
-
 - BrowseInternalFrame: Sort by column is now highlighted, layout improved
 
-
-
 4.99.13 Build 749
-
 - Source table implemented.
-
 - Sources now imported.
-
 - Proper record locking now implemented.
-
 - Dictionary locking implemented.
-
 - General GUI improvements: Groups are now sorted, more strings are internationalised.
-
 - BrowseInternalFrame now asks you to confirm before creating a new record, enter works to load patient or tumour, now enforces new record IDs to have the correct length, some internationalization done.
-
 - AutofillHelper started and fills in age and behaviour when set to Automatic.
-
 - CanRegDAO now throws database mismatch exceptions if the database structure doesn't match the prepared queries.
-
 - Record editor now shows last update date and user. Improved the layout, internationalized some strings.
-
 - System Definition Converter taking into account source table, better system to put the variables in the right tables, takes into other character sets, standard naming of data entry languages, dictionaries of topography and morphology are flagged as locked by default.
-
 - Login: added message to perform backup if this never has been performed.
-
 - Import: MP patients that are 100% identical as a record already in the database are no longer imported.
-
 - Dictionary Editor: Import Complete dictionary no longer closes the internal window during import. Only dispays the 5000 first codes in each dictionary for performance issues. Export function improved.
-
 - Dictinary importer now checks for duplicate codes, possibility to set characterset of file to import, other improvements.
-
 - TableBuilder: Removed filter tab.
-
 - EditChecks: works now with longer than 4 digits morphology codes.
-
 - SystemDefinitionConverter: If morph code is 5 digits, behaviour should be generated automatically, groups now have a position.
-
 - UserManager now lets the user know if the username is longer than allowed lenght. (16 digits.)
-
 - CanRegClientApp: API extended with a method to get patient records by ID.
-
 - DictionaryHelper: improved stability of Test Dictionary.
-
 - CanRegDAO: first Patient ID is now set to YYYY00...01
-
 - Bugfixes.
 
-
 4.99.12 Build 707
-
 - PDSEditorInternalFrame: Improved GUI
-
 - Minor changes.
 
-
 4.99.11 Build 703
-
 - Eliminated a bug where records where set to pending while saving. 
-
 - Improved the "Do you really want to close this record" dialog box to appear only when the user has done actual changes to a record.
-
 - PopulationDataSetEditor: cut and paste from general spreadsheets now work.
-
 - PDSEditorInternalFrame: Fixed a bug where the population dataset would not be saved if the name was longer than 40 characters. Now it cuts it at 100.
-
 - Made some more views more compact to fit better smaller screens.
-
 - Updated the about page.
-
 
 4.99.10 Build 688
-
 - FrequenciesByYear: Fixed a bug where the table did not show up. 
-
 - FrequenciesByYear: Printing now works.
-
 - Querygenerator: fixed a bug where numbers where stored as VARCHAR instead of INTEGER in the database.
-
 - Browse, ExportReport, FrequenciesByYear: fixed bug that froze the GUI if an invalid filter was used.
-
 - TableBuilder: Disabled the filter tab.
-
 - Import preview is now shown in a table.
-
 - Updated the about page.
 
-
 4.99.9 Build 680
-
 - RecordEditor: Hid the tumour record number and patient record number.
-
 - Improved the FastFilterInternalFrame to deal better with keywords BETWEEN and LIKE.
-
 - Tidied the Record Editor.
-
 - Date-related fixes.
-
 - Changed the way certain variables are stored in the database.
-
 - FrequenciesByYear, Fixed a bug where the program froze when the filter was not accepted.
-
 - BrowseInternalFrame, Fixed a bug where the program froze when the filter was not accepted.
-
 - SystemDefinitionConverter, Update-date set to date instead of Number.
-
 - FrequenciesByYear: Table can now be popped out to a separate window.
-
 - Started a system of meta-variables to take care of registries using different coding schemes, like 5 digit morphology...
-
 - Distributed table returns null if a row is for some reason missing.
-
 - Tidied some code.
-
 - Disabled table builder icon when not logged in.
-
 - Distributed table returns null if a row is for some reason missing.
-
 - Tablebuilder: Filter shows up in report. Possibility to change name of table.
-
 - Population Data Set Editor: fixed the bug that did not allow a PDS to be updated (eg the filter).
-
 - Fixed the layout of most windows to fit better on smaller screens.
-
 - Global Person Search: removed "already matched" column.
-
 - Frequencies/export variables selection box re-look
-
 - Frequencies/export variables selection box scrolls faster, variables closer
-
 - TextFields (fields spanning multiple lines) added as option in record editor
-
 - Range now works properly when making frequency by year tables as well.
-
 - Various bug fixes.
-
 
 4.99.8 Build 661
-
 - Added functionality to import Population data sets from CanReg4.
-
 - Added functionality to merge patients.
-
 - Fixed memory "leak" occurring when editing/importing dictionaries.
-
 - TableBuilder: max number of population data sets added
-
 - Tables: age specific tables split in number of cases and rates, functionality to see if a population dataset is compatible with a table added.
-
 - RecordEditorPanel: Order of groups now follow the order in the XML file.
-
 - RecordEditor: tidied the GUI.
-
 - Usermanager: obligatory with one supervisor account.
-
 - Minor changes, documentation updated, trn-dictionary improved, TRN.xml improved.
-
 - CanRegServer: person search related changes.
-
 - DatabaseFilter: Range implemented.
-
 - MaxLengthDocument: Fires "changed" events.
-
 - Various bug fixes.
 
-
 4.99.7 Build 656
-
 - Global person search implemented.
-
 - Range filtering implemented.
-
 - FastFilterInternalFrame: added operators IN and BETWEEN.
-
 - Minor changes, documentation updated, trn-dictionary improved, TRN.xml improved.
 
-
 4.99.6 Build 648
-
 - Fixed a bug in the way the server addresses were handled on machines with multiple network interfaces.
-
 - Changed default coding schemes for various languages during import of old data to fix bug found by the Jordanian cancer registry on Arabic letters not imported properly.
 
-
 4.99.5 Build 645
-
 - User manager implemented. 
-
 - Migrator function implemented for situations where we need to change database structure between releases of CanReg5.
-
 - Better handling of the menus available for the different users. 
-
 - The login module updated. Passwords and user levels now stored in the database.
-
 - ClientView: table builder now starts as a backgroupd task to make GUI more responsive.
-
 - Tables: incidence rates (period), population pyramid implemented, tablebuilder now has a nice file selector that remembers last path
-
 - PDSEditor: delete now possible.
-
 - Common Tools: implemented a method to open files on Mac, Linux and Windows.
-
 - PDS: fixed a bug in the calculation of totals and detection of found age groups.
-
 - Table configs updated. Now states if the engine is implemented or not.
-
 - Automatic resizing of the columns in the Export browser implemented.
-
 - Automatic resizing of the columns in the Browser implemented. Some speed improvements.
-
 - Fixed a bug in the population dataset editor where the last age group, female was sometimes set to 0.
-
 - Table builder GUI implemented. First table almost up and running.
-
 - Synchronized more functions in the database access to resolve some issues with the browser.
-
 - Fixed bug that blocked when "back up every... days" was not set.
-
 - Various fixes.
 
-
 4.99.4 Build 624
-
 - Fixed bug that flagged all opened cases as pending.
-
 - Started work on detection of changes.
-
 - Fixed bug in person search. Removed check button from Patient. Added error message if tumour record is not found in browser.
-
 - Added classes to deal with unknown dates.
-
 - Multiple primary tests added.
-
 - Age check added.
-
 - Unknown dates handled better.
-
 - Better treatment of dictionaries, default selection
-
 - Compound dictionaries handled better.
-
 - Disabled some buttons not yet implemented.
-
 - Only Supervisor can now confirm rare cases.
-
 - Various small fixes and improvements.
 
-
 4.99.3 Build 612
-
 - Browser: It should now be possible to sort results on variables with ?.? in the name. (ie. ?RegNo.? or similar).
-
 - Import: Fixed bugs during import of a file. The correct number of records read. 
-
 - Import: Log more information when something goes wrong during import.
-
 - Other bug fixes.
 
-
 4.99.2 Build 607
-
 - Show/hide obsolete records implemented.
-
 - Obsolete-button implemented to toggle obsolete-flag. 
-
 - Added GUI-elements to move a tumour from one patient record to another.
-
 - Log information redirected to Logger-object (log-file) for all output.
-
 - Tools: break down line no longer crashes if quotes are not closed at the end of a line.
-
 - Record editor no longer crashes if the record status dictionary has no entries.
-
 - Edit checks now default to "not done".
-
 - Edit checks now color variables that might be inflicted. Person search feedback improved.
-
 - Changed download link.
-
 - Other bug fixes
 
-
 4.99.1 Build 598
-
 - Improved handling and error reporting of record ids.
-
 - RangeFilterPanel: Tumour table now default table, sort by variables only the ones in the table selected.
-
 - Improvemnts in perfomance of SQL queries. Some other more minor changes.
-
 - Install new system internal frame now checks to see if the file about to be installed is already in the right folder...
-
 - CanReg5 takes into account the CanReg4  fileformat when importing files, thus allowing the import of files of other charactersets.
-
 - Fixed bugs in the record editor. Record status is now saved.
-
 - DictionaryHelper: fails more gracefully if something goes wrong while retreiving the dictionary ID.
-
 - CanRegServerImpl: now handles better when connection to DB fails for some reason...
-
 - SystemDefinitionConverter: Fixed bugs dealing with the length of record IDs different than 8. Added some system variables.
-
 - CanRegDAO: Added functionality to generate next patient record ID. Squashed some bugs.
-
 - QueryGenerator: added functionality to get highest patient record id.
-
 - RecordEditor: Fixed a nullpointer error when "setting active record".
-
 - Record status is only shown if the variable is in the system definition.
-
 - Fixed bug in Frequencies by Year. Didn't redraw table properly.
-
 - Fixed bug #1: Filter with OR not working.
 
-
 4.99.0 Build 590
-
 - First beta release
