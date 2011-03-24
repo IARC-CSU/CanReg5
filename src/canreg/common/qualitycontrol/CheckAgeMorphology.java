@@ -79,12 +79,12 @@ public class CheckAgeMorphology extends CheckInterface {
             return result;
         }
         if (ageNumber <= 25 &&
-                (morphologyNumber == 9730 || morphologyNumber == 9823 || morphologyNumber == 9890)) {
+                (morphologyNumber == 9730 
+                || morphologyNumber == 9823
+                || morphologyNumber == 9890)) {
             ok = false;
         }
-        if (ageNumber <= 15 && morphologyNumber == 9863) {
-            ok = false;
-        }
+
         if (ageNumber >= 15 &&
                 (morphologyNumber == 8910 || morphologyNumber == 8960 || morphologyNumber == 8961 ||
                 morphologyNumber == 8962 || morphologyNumber == 8970 || morphologyNumber == 8981 ||
