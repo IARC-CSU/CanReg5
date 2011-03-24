@@ -300,6 +300,10 @@ public class QueryGenerator {
         return queryLine;
     }
 
+    /**
+     *
+     * @return
+     */
     public static String strCreateNameSexTable() {
         String queryLine = "create table " + Globals.SCHEMA_NAME + "." + Globals.NAMESEX_TABLE_NAME + " ("
                 + "ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"

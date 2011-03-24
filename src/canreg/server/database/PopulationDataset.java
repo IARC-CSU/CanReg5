@@ -40,6 +40,11 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
         ageGroups = new LinkedList<PopulationDatasetsEntry>();
     }
 
+    /**
+     *
+     * @param sex
+     * @param count
+     */
     public void addUnkownAgeGroup(int sex, int count) {
         ageGroups.add(new PopulationDatasetsEntry(UNKNOWN_AGE_GROUP_CODE, sex, count));
     }
@@ -216,10 +221,21 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
         return ageGroups.toArray(new PopulationDatasetsEntry[0]);
     }
 
+    /**
+     *
+     * @param age
+     * @return
+     */
     public int getAgeGroupIndex(int age) {
         return ageGroupStructure.whatAgeGroupIsThisAge(age);
     }
 
+    /**
+     *
+     * @param populationArray
+     * @param foundAgeGroups
+     * @param targetAgeGroupStructure
+     */
     public void addPopulationDataToArrayForTableBuilder(double[][] populationArray, boolean[] foundAgeGroups, AgeGroupStructure targetAgeGroupStructure) {
 
         // load population data

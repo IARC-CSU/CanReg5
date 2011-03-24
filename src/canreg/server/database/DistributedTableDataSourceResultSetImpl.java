@@ -29,7 +29,7 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
      * 
      * @param resultSet
      * @throws java.sql.SQLException
-     * @throws java.lang.Exception
+     * @throws DistributedTableDescriptionException
      */
     public DistributedTableDataSourceResultSetImpl(ResultSet resultSet) throws SQLException, DistributedTableDescriptionException {
         super();
@@ -55,7 +55,7 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
      * @param rowCount
      * @param resultSet
      * @throws java.sql.SQLException
-     * @throws java.lang.Exception
+     * @throws DistributedTableDescriptionException
      */
     public DistributedTableDataSourceResultSetImpl(int rowCount, ResultSet resultSet) throws SQLException, DistributedTableDescriptionException {
         super();
@@ -250,6 +250,10 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         return columns;
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     public void releaseResultSet() throws SQLException{
         resultSet.close();
     }

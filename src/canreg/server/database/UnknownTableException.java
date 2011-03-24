@@ -6,6 +6,10 @@ package canreg.server.database;
  */
 public class UnknownTableException extends Exception {
 
+    /**
+     *
+     * @param string
+     */
     public UnknownTableException(String string) {
         super(string);
     }

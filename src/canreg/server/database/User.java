@@ -117,14 +117,26 @@ public class User implements Serializable {
         this.ID = ID;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getUserRightLevelIndex() {
         return userRightLevel.ordinal();
     }
 
+    /**
+     *
+     * @param ordinal
+     */
     public void setUserRightLevelIndex(int ordinal){
         userRightLevel = Globals.UserRightLevels.values()[ordinal];
     }
 
+    /**
+     *
+     * @param userLevel
+     */
     public void setUserRightLevel(String userLevel) {
         this.userRightLevel = Globals.UserRightLevels.valueOf(userLevel);
     }

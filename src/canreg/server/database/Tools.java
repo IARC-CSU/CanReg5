@@ -236,6 +236,13 @@ public class Tools {
         return found;
     }
 
+    /**
+     *
+     * @param newRecord
+     * @param oldRecord
+     * @param variablesToSkip
+     * @return
+     */
     static public boolean newRecordContainsNewInfo(DatabaseRecord newRecord, DatabaseRecord oldRecord, Set<String> variablesToSkip) {
         boolean noNewInfo = true;
         // First check if the records are the same class

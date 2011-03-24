@@ -167,6 +167,11 @@ public class CanRegDAO {
         return nameSexMap;
     }
 
+    /**
+     *
+     * @param lookup
+     * @return
+     */
     public synchronized String getSystemPropery(String lookup) {
         String value = null;
         try {
@@ -185,6 +190,11 @@ public class CanRegDAO {
         return value;
     }
 
+    /**
+     *
+     * @param lookup
+     * @param value
+     */
     public synchronized void setSystemPropery(String lookup, String value) {
         try {
             String query = "DELETE FROM " + Globals.SCHEMA_NAME + ".SYSTEM WHERE LOOKUP = '" + lookup + "'";
@@ -204,6 +214,11 @@ public class CanRegDAO {
         }
     }
 
+    /**
+     *
+     * @param user
+     * @return
+     */
     public synchronized int saveUser(User user) {
         int ID = user.getID();
 
@@ -269,6 +284,10 @@ public class CanRegDAO {
         return ID;
     }
 
+    /**
+     *
+     * @return
+     */
     public synchronized Map<String, User> getUsers() {
         Map<String, User> usersMap = new LinkedHashMap<String, User>();
         Statement queryStatement = null;
@@ -377,6 +396,10 @@ public class CanRegDAO {
         return populationDatasetMap;
     }
 
+    /**
+     *
+     * @return
+     */
     public String generateResultSetID() {
         // generate resultSetID
         boolean foundPlace = false;
@@ -394,9 +417,11 @@ public class CanRegDAO {
      * 
      * @param filter
      * @param tableName
+     * @param resultSetID
      * @return
      * @throws java.sql.SQLException
-     * @throws java.lang.Exception
+     * @throws UnknownTableException
+     * @throws DistributedTableDescriptionException
      */
     public synchronized DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(DatabaseFilter filter, String tableName, String resultSetID)
             throws SQLException, UnknownTableException, DistributedTableDescriptionException {
@@ -427,6 +452,7 @@ public class CanRegDAO {
     /**
      * 
      * @param resultSetID
+     * @throws SQLException
      */
     public synchronized void releaseResultSet(String resultSetID) throws SQLException {
         DistributedTableDataSourceResultSetImpl dataSource = (DistributedTableDataSourceResultSetImpl) distributedDataSources.get(resultSetID);
@@ -440,7 +466,9 @@ public class CanRegDAO {
      * 
      * @param recordID
      * @param tableName
+     * @param lock 
      * @return
+     * @throws RecordLockedException
      */
     public synchronized DatabaseRecord getRecord(int recordID, String tableName, boolean lock) throws RecordLockedException {
         DatabaseRecord returnRecord = null;
@@ -480,7 +508,7 @@ public class CanRegDAO {
      * @param from
      * @param to
      * @return
-     * @throws java.lang.Exception
+     * @throws DistributedTableDescriptionException
      */
     public Object[][] retrieveRows(String resultSetID, int from, int to) throws DistributedTableDescriptionException {
         DistributedTableDataSource ts = distributedDataSources.get(resultSetID);
@@ -676,7 +704,8 @@ public class CanRegDAO {
 
     /**
      * 
-     * @return 
+     * @return
+     * @throws RemoteException
      */
     public boolean connect() throws RemoteException {
         String dbUrl = getDatabaseUrl();
@@ -864,6 +893,7 @@ public class CanRegDAO {
      * 
      * @param patient
      * @return
+     * @throws SQLException
      */
     public synchronized int savePatient(Patient patient) throws SQLException {
         DatabaseVariablesListElement patientIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
@@ -895,6 +925,8 @@ public class CanRegDAO {
      * 
      * @param tumour
      * @return
+     * @throws SQLException
+     * @throws RecordLockedException
      */
     public synchronized int saveTumour(Tumour tumour) throws SQLException, RecordLockedException {
         String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
@@ -1104,6 +1136,7 @@ public class CanRegDAO {
     /**
      * 
      * @param nameSexRecord
+     * @param replace
      * @return
      */
     public synchronized int saveNameSexRecord(NameSexRecord nameSexRecord, boolean replace) {
@@ -1174,6 +1207,13 @@ public class CanRegDAO {
         return success;
     }
 
+    /**
+     *
+     * @param patientRecordID
+     * @return
+     * @throws RecordLockedException
+     * @throws SQLException
+     */
     public synchronized boolean deletePatientRecord(int patientRecordID) throws RecordLockedException, SQLException {
         boolean success = false;
         if (isRecordLocked(patientRecordID, Globals.PATIENT_TABLE_NAME)) {
@@ -1190,6 +1230,12 @@ public class CanRegDAO {
         return success;
     }
 
+    /**
+     *
+     * @param tumourRecordID
+     * @return
+     * @throws RecordLockedException
+     */
     public synchronized boolean deleteTumourRecord(int tumourRecordID) throws RecordLockedException {
         boolean success = false;
         if (isRecordLocked(tumourRecordID, Globals.TUMOUR_TABLE_NAME)) {
@@ -1206,6 +1252,12 @@ public class CanRegDAO {
         return success;
     }
 
+    /**
+     *
+     * @param sourceRecordID
+     * @return
+     * @throws RecordLockedException
+     */
     public synchronized boolean deleteSourceRecord(int sourceRecordID) throws RecordLockedException {
         boolean success = false;
         if (isRecordLocked(sourceRecordID, Globals.SOURCE_TABLE_NAME)) {
@@ -1222,6 +1274,13 @@ public class CanRegDAO {
         return success;
     }
 
+    /**
+     *
+     * @param recordID
+     * @param tableName
+     * @return
+     * @throws RecordLockedException
+     */
     public synchronized boolean deleteRecord(int recordID, String tableName) throws RecordLockedException {
         boolean success = false;
         if (isRecordLocked(recordID, tableName)) {
@@ -1239,6 +1298,11 @@ public class CanRegDAO {
         return success;
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public synchronized boolean deletePopulationDataSet(int id) {
         boolean success = false;
         // if (isRecordLocked(id, Globals.POPULATION_DATASET_TABLE_NAME)) {
@@ -1265,6 +1329,7 @@ public class CanRegDAO {
      * 
      * @param patient
      * @return
+     * @throws RecordLockedException
      */
     public synchronized boolean editPatient(Patient patient) throws RecordLockedException {
         return editRecord("Patient", patient, stmtEditPatient);
@@ -1274,6 +1339,7 @@ public class CanRegDAO {
      * 
      * @param tumour
      * @return
+     * @throws RecordLockedException
      */
     public synchronized boolean editTumour(Tumour tumour) throws RecordLockedException {
         return editRecord("Tumour", tumour, stmtEditTumour);
@@ -1281,8 +1347,9 @@ public class CanRegDAO {
 
     /**
      *
-     * @param tumour
+     * @param source
      * @return
+     * @throws RecordLockedException
      */
     public synchronized boolean editSource(Source source) throws RecordLockedException {
         return editRecord("Source", source, stmtEditSource);
@@ -1294,6 +1361,7 @@ public class CanRegDAO {
      * @param record
      * @param stmtEditRecord
      * @return
+     * @throws RecordLockedException
      */
     public synchronized boolean editRecord(String tableName, DatabaseRecord record, PreparedStatement stmtEditRecord) throws RecordLockedException {
         boolean bEdited = false;
@@ -1626,6 +1694,10 @@ public class CanRegDAO {
         return record;
     }
 
+    /**
+     *
+     * @return
+     */
     public synchronized String getNextPatientID() {
         String patientID = null;
         try {
@@ -1651,6 +1723,11 @@ public class CanRegDAO {
         return patientID;
     }
 
+    /**
+     *
+     * @param patientRecordID
+     * @return
+     */
     public synchronized String getNextTumourID(String patientRecordID) {
         String tumourID = null;
         try {
@@ -1677,6 +1754,11 @@ public class CanRegDAO {
         return tumourID;
     }
 
+    /**
+     *
+     * @param patientID
+     * @return
+     */
     public synchronized String getNextPatientRecordID(String patientID) {
         String patientRecordID = null;
         try {
@@ -1703,6 +1785,11 @@ public class CanRegDAO {
         return patientRecordID;
     }
 
+    /**
+     *
+     * @param tumourRecordID
+     * @return
+     */
     public synchronized String getNextSourceID(String tumourRecordID) {
         String sourceID = null;
         try {
@@ -1729,6 +1816,10 @@ public class CanRegDAO {
         return sourceID;
     }
 
+    /**
+     *
+     * @return
+     */
     public synchronized String getNextTumourRecordID() {
         String tumourRecordID = null;
         try {
@@ -1746,6 +1837,9 @@ public class CanRegDAO {
         return tumourRecordID;
     }
 
+    /**
+     *
+     */
     protected synchronized void dropAndRebuildUsersTable() {
         try {
             Statement statement = null;
@@ -1973,6 +2067,11 @@ public class CanRegDAO {
     }
 
     // release a locked record
+    /**
+     *
+     * @param recordID
+     * @param tableName
+     */
     public synchronized void releaseRecord(int recordID, String tableName) {
         // release a locked record
         Set lockSet = locksMap.get(tableName);
@@ -1999,6 +2098,10 @@ public class CanRegDAO {
         return lock;
     }
 
+    /**
+     *
+     * @return
+     */
     public DatabaseStats getDatabaseStats() {
         DatabaseStats dbs = new DatabaseStats();
         try {
@@ -2013,6 +2116,12 @@ public class CanRegDAO {
         return dbs;
     }
 
+    /**
+     *
+     * @param resultSetID
+     * @return
+     * @throws SQLException
+     */
     public boolean interruptQuery(String resultSetID) throws SQLException {
         Statement statement = activeStatements.get(resultSetID);
         if (statement != null) {

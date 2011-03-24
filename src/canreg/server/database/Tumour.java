@@ -20,10 +20,17 @@ public class Tumour extends DatabaseRecord implements Serializable {
      */
     Set<Source> sources;
 
+    /**
+     *
+     */
     public Tumour() {
         super();
     }
 
+    /**
+     *
+     * @return
+     */
     public Set<Source> getSources() {
         if (sources == null) {
             sources = Collections.synchronizedSet(new LinkedHashSet<Source>());
@@ -31,6 +38,10 @@ public class Tumour extends DatabaseRecord implements Serializable {
         return sources;
     }
 
+    /**
+     *
+     * @param sources
+     */
     public void setSources(Set<Source> sources) {
         this.sources = sources;
     }

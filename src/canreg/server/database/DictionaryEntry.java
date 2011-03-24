@@ -99,10 +99,16 @@ public class DictionaryEntry implements Serializable, Comparable {
         return hash;
     }
 
+    /**
+     *
+     */
     public void setSortByCode() {
         sortByCode = true;
     }
 
+    /**
+     *
+     */
     public void setSortByDescription() {
         sortByCode = false;
     }

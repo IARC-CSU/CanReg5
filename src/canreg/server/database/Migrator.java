@@ -15,11 +15,19 @@ public class Migrator {
     private String newVersion;
     private CanRegDAO canRegDAO;
 
+    /**
+     *
+     * @param newVersion
+     * @param canRegDAO
+     */
     public Migrator(String newVersion, CanRegDAO canRegDAO){
         this.newVersion = newVersion;
         this.canRegDAO=canRegDAO;
     }
 
+    /**
+     *
+     */
     public void migrate() {
         String databaseVersion = canRegDAO.getSystemPropery("DATABASE_VERSION");
 
