@@ -89,7 +89,7 @@ public class CheckAgeMorphology extends CheckInterface {
                 (morphologyNumber == 8910 || morphologyNumber == 8960 || morphologyNumber == 8961 ||
                 morphologyNumber == 8962 || morphologyNumber == 8970 || morphologyNumber == 8981 ||
                 morphologyNumber == 8991 || morphologyNumber == 9072 || morphologyNumber == 9470 ||
-                morphologyNumber == 9687 || morphologyNumber == 9750)) {
+                morphologyNumber == 9687)) {
             ok = false;
         }
         if (ok) {
