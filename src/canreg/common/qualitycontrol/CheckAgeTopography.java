@@ -76,7 +76,7 @@ public class CheckAgeTopography extends CheckInterface {
         if (ageNumber < 20 &&
                 (topographyGroup == 15 || topographyGroup == 19 || topographyGroup == 20 ||
                 topographyGroup == 21 || topographyGroup == 23 || topographyGroup == 24 ||
-                topographyGroup == 25 || topographyNumber == 384 || topographyGroup == 50 ||
+                topographyNumber == 384 || topographyGroup == 50 ||
                 topographyGroup == 53 || topographyGroup == 54 || topographyGroup == 55)) {
             result.setMessage(ageCode + ", " + topographyCode);
             result.setResultCode(CheckResult.ResultCode.Rare);
