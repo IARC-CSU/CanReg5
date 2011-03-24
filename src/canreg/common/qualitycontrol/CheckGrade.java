@@ -139,7 +139,7 @@ public class CheckGrade extends CheckInterface {
             }
 
             //-----------------< T cell lymphomas
-            if ((morphologyNumber == 9702 || morphologyNumber == 9705 || morphologyNumber == 9708 || morphologyNumber == 9709 || morphologyNumber == 9714 || morphologyNumber == 9717 || morphologyNumber == 9718 || morphologyNumber == 9719 || morphologyNumber == 9729 || morphologyNumber == 9827 || morphologyNumber == 9834 || morphologyNumber == 9837) && (gradeNumber != 5)) {
+            if ((morphologyNumber == 9702 || morphologyNumber == 9705 || morphologyNumber == 9708 || morphologyNumber == 9709 || morphologyNumber == 9717 || morphologyNumber == 9718 || morphologyNumber == 9719 || morphologyNumber == 9729 || morphologyNumber == 9827 || morphologyNumber == 9834 || morphologyNumber == 9837) && (gradeNumber != 5)) {
                 graderesult = false;            
             }
 
