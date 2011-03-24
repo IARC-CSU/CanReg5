@@ -10,6 +10,10 @@ public class DatabaseStats implements Serializable {
 
     private int maxNumberOfSourcesPerTumourRecord = 0;
 
+    /**
+     *
+     * @param maxNumberOfSourcesPerTumourRecord
+     */
     public void setMaxNumberOfSourcesPerTumourRecord(int maxNumberOfSourcesPerTumourRecord) {
         this.maxNumberOfSourcesPerTumourRecord = maxNumberOfSourcesPerTumourRecord;
     }

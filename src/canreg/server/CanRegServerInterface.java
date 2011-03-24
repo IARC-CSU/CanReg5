@@ -32,6 +32,13 @@ import org.w3c.dom.Document;
  */
 public interface CanRegServerInterface extends Remote {
 
+    /**
+     *
+     * @param populationDatasetID
+     * @return
+     * @throws RemoteException
+     * @throws SecurityException
+     */
     public boolean deletePopulationDataset(int populationDatasetID) throws RemoteException, SecurityException;
 
     /**
@@ -39,7 +46,7 @@ public interface CanRegServerInterface extends Remote {
      * have permissions for executing this method.
      * @param patient
      * @throws java.rmi.RemoteException
-     * @throws java.lang.SecurityException
+     * @throws RecordLockedException
      */
     public void editPatient(Patient patient)
             throws RemoteException, SecurityException, RecordLockedException;
@@ -49,6 +56,7 @@ public interface CanRegServerInterface extends Remote {
      * @param tumour
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
+     * @throws RecordLockedException
      */
     public void editTumour(Tumour tumour)
             throws RemoteException, SecurityException, RecordLockedException;
@@ -116,6 +124,7 @@ public interface CanRegServerInterface extends Remote {
      * @return a DatabaseRecord
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
+     * @throws RecordLockedException
      */
     public DatabaseRecord getRecord(int recordID, String tableName, boolean lock)
             throws RemoteException, SecurityException, RecordLockedException ;
@@ -123,7 +132,7 @@ public interface CanRegServerInterface extends Remote {
     // administrative tools
     /**
      * 
-     * @param username
+     * @param user
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -132,7 +141,7 @@ public interface CanRegServerInterface extends Remote {
 
     /**
      * 
-     * @param username
+     * @param user
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -142,12 +151,23 @@ public interface CanRegServerInterface extends Remote {
     /**
      * 
      * @param username
+     * @param password
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     public void setUserPassword(String username, String password)
             throws RemoteException, SecurityException;
 
+    /**
+     *
+     * @param id
+     * @param tableName
+     * @return
+     * @throws RemoteException
+     * @throws SecurityException
+     * @throws RecordLockedException
+     * @throws SQLException
+     */
     public boolean deleteRecord(int id, String tableName)
             throws RemoteException, SecurityException, RecordLockedException, SQLException;
 
@@ -176,8 +196,21 @@ public interface CanRegServerInterface extends Remote {
     public String[] listCurrentUsers()
             throws RemoteException, SecurityException;
 
+    /**
+     *
+     * @return
+     * @throws RemoteException
+     * @throws SecurityException
+     */
     public List<User> listUsers() throws RemoteException, SecurityException;
 
+    /**
+     *
+     * @param user
+     * @return
+     * @throws RemoteException
+     * @throws SecurityException
+     */
     public int saveUser(User user) throws RemoteException, SecurityException;
 
     /**
@@ -204,6 +237,8 @@ public interface CanRegServerInterface extends Remote {
      * @return database id of the patient
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
+     * @throws SQLException
+     * @throws RecordLockedException
      */
     public int savePatient(Patient patient) throws RemoteException, SecurityException, SQLException, RecordLockedException;
 
@@ -213,6 +248,8 @@ public interface CanRegServerInterface extends Remote {
      * @return
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
+     * @throws SQLException
+     * @throws RecordLockedException
      */
     public int saveTumour(Tumour tumour) throws RemoteException, SecurityException, SQLException, RecordLockedException;
 
@@ -287,7 +324,8 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.sql.SQLException
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
-     * @throws java.lang.Exception
+     * @throws UnknownTableException
+     * @throws DistributedTableDescriptionException
      */
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, UnknownTableException, DistributedTableDescriptionException ;
 
@@ -299,7 +337,6 @@ public interface CanRegServerInterface extends Remote {
      * @return a 2D array of objects containing the row data
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
-     * @throws java.lang.Exception
      */
     public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException;
 
@@ -310,9 +347,17 @@ public interface CanRegServerInterface extends Remote {
      * @param resultSetID id of the resultset to be released
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
+     * @throws SQLException
      */
     public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException, SQLException;
 
+    /**
+     *
+     * @param recordID
+     * @param tableName
+     * @throws RemoteException
+     * @throws SecurityException
+     */
     public void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException;
 
     /**
@@ -334,6 +379,7 @@ public interface CanRegServerInterface extends Remote {
     /**
      * 
      * @param nameSexRecord
+     * @param replace
      * @return
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -361,15 +407,37 @@ public interface CanRegServerInterface extends Remote {
     /**
      * Perform global person search
      * @param searcher 
+     * @param rangeStart
+     * @param rangeEnd
      * @return
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     public String initiateGlobalPersonSearch(PersonSearcher searcher, String rangeStart, String rangeEnd) throws RemoteException, SecurityException;
 
+    /**
+     *
+     * @param idString
+     * @return
+     * @throws SecurityException
+     * @throws RemoteException
+     * @throws Exception
+     */
     public Map<String, Map<String, Float>> nextStepGlobalPersonSearch(String idString) throws SecurityException, RemoteException, Exception;
 
+    /**
+     *
+     * @param idString
+     * @throws RemoteException
+     * @throws SecurityException
+     */
     public void interuptGlobalPersonSearch(String idString) throws RemoteException, SecurityException;
 
+    /**
+     *
+     * @return
+     * @throws RemoteException
+     * @throws SecurityException
+     */
     public DatabaseStats getDatabaseStats() throws RemoteException, SecurityException;
 }
