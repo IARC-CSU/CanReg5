@@ -70,6 +70,7 @@ public final class SystemDescription {
      * @param fileName
      * @throws org.xml.sax.SAXException
      * @throws java.io.IOException
+     * @throws ParserConfigurationException
      */
     public void setSystemDescriptionXML(String fileName) throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -182,18 +183,34 @@ public final class SystemDescription {
         return element;
     }
 
+    /**
+     *
+     * @return
+     */
     public DatabaseVariablesListElement[] getDatabaseVariableListElements() {
         return variableListElements;
     }
 
+    /**
+     *
+     * @return
+     */
     public DatabaseDictionaryListElement[] getDatabaseDictionaryListElements() {
         return dictionaryListElements;
     }
 
+    /**
+     *
+     * @return
+     */
     public DatabaseGroupsListElement[] getDatabaseGroupsListElements() {
         return groupListElements;
     }
 
+    /**
+     *
+     * @return
+     */
     public DatabaseIndexesListElement[] getDatabaseIndexesListElements() {
         return indexListElements;
     }
@@ -213,6 +230,10 @@ public final class SystemDescription {
         return element;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDateFormat() {
         Element element = null;
         String dateFormat = null;
@@ -234,6 +255,11 @@ public final class SystemDescription {
         return dateFormat;
     }
 
+    /**
+     *
+     * @param elementName
+     * @return
+     */
     public String getTextContentFromElement(String elementName) {
         Element element = null;
         String elementContent = null;
@@ -247,6 +273,11 @@ public final class SystemDescription {
         return elementContent;
     }
 
+    /**
+     *
+     * @param elementName
+     * @param content
+     */
     public void setTextContentForExistingElement(String elementName, String content) {
         if (doc != null) {
             NodeList nl = doc.getElementsByTagName(namespace + "elementName");
@@ -257,6 +288,10 @@ public final class SystemDescription {
         }
     }
 
+    /**
+     *
+     * @param variables
+     */
     public void setVariables(DatabaseVariablesListElement[] variables) {
         Element variablesParentElement = (Element) doc.getElementsByTagName(namespace + "variables").item(0);
         if (variablesParentElement == null) {
@@ -273,6 +308,10 @@ public final class SystemDescription {
         }
     }
 
+    /**
+     *
+     * @param dictionaries
+     */
     public void setDictionaries(DatabaseDictionaryListElement[] dictionaries) {
         Element parentElement = (Element) doc.getElementsByTagName(namespace + "dictionaries").item(0);
         if (parentElement == null) {
@@ -289,6 +328,10 @@ public final class SystemDescription {
         }
     }
 
+    /**
+     *
+     * @param groups
+     */
     public void setGroups(DatabaseGroupsListElement[] groups) {
         Element parentElement = (Element) doc.getElementsByTagName(namespace + "groups").item(0);
         if (parentElement == null) {
@@ -368,6 +411,10 @@ public final class SystemDescription {
         }
     }
 
+    /**
+     *
+     * @param path
+     */
     public void saveSystemDescriptionXML(String path) {
         File file = new File(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER); // Check to see it the canreg system folder exists
         if (!file.exists()) {
@@ -408,6 +455,10 @@ public final class SystemDescription {
         return element;
     }
 
+    /**
+     *
+     * @param registryCode
+     */
     public void setRegistryCode(String registryCode) {
         if (doc != null) {
             NodeList nl = doc.getElementsByTagName(namespace + "registry_code");
@@ -418,6 +469,10 @@ public final class SystemDescription {
         }
     }
 
+    /**
+     *
+     * @param regionCode
+     */
     public void setRegionCode(int regionCode) {
         if (doc != null) {
             NodeList nl = doc.getElementsByTagName(namespace + "region_code");
@@ -428,6 +483,10 @@ public final class SystemDescription {
         }
     }
 
+    /**
+     *
+     * @param databaseIndexesListElement
+     */
     public void setIndexes(DatabaseIndexesListElement[] databaseIndexesListElement) {
         Element parentElement = (Element) doc.getElementsByTagName(namespace + "indexes").item(0);
         if (parentElement == null) {
@@ -456,6 +515,10 @@ public final class SystemDescription {
         return element;
     }
 
+    /**
+     *
+     * @param personSearcher
+     */
     public void setPersonSearcher(PersonSearcher personSearcher) {
         Element parentElement = (Element) doc.getElementsByTagName(namespace + "search_variables").item(0);
         if (parentElement == null) {

@@ -37,6 +37,10 @@ public class UserManagerNew {
     LinkedList fClients = new LinkedList();
     CanRegDAO db;
 
+    /**
+     *
+     * @param db
+     */
     public UserManagerNew(CanRegDAO db) {
         this.db = db;
         Map<String, User> userMap = db.getUsers();
@@ -45,10 +49,18 @@ public class UserManagerNew {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public int getNumberOfUsersLoggedIn() {
         return fClients.size();
     }
 
+    /**
+     *
+     * @return
+     */
     public List<User> listUsers() {
         Map<String, User> userMap = db.getUsers();
         LinkedList<User> users = new LinkedList<User>();
@@ -65,11 +77,19 @@ public class UserManagerNew {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean writePasswordsToFile(){
         return writePasswordFile() && writeLevelsFile();
     }
 
 
+    /**
+     *
+     * @return
+     */
     public boolean writePasswordFile() {
         boolean success = false;
         OutputStream propOutputStream = null;
@@ -107,6 +127,10 @@ public class UserManagerNew {
         return success;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean writeLevelsFile() {
         boolean success = false;
         OutputStream propOutputStream = null;
@@ -177,14 +201,26 @@ public class UserManagerNew {
         return users;
     }
 
+    /**
+     *
+     * @param userName
+     */
     public void userLoggedIn(String userName) {
         fClients.add(userName);
     }
 
+    /**
+     *
+     * @param userName
+     */
     public void userLoggedOut(String userName) {
         fClients.remove(fClients.indexOf(userName));
     }
 
+    /**
+     *
+     * @return
+     */
     public String[] listCurrentUsers() {
         String[] users = new String[fClients.size()];
         int i = 0;
@@ -196,12 +232,22 @@ public class UserManagerNew {
         return users;
     }
 
+    /**
+     *
+     * @param user
+     * @return
+     */
     public boolean addUser(User user) {
         boolean success = false;
         db.saveUser(user);
         return success;
     }
 
+    /**
+     *
+     * @param user
+     * @return
+     */
     public boolean removeUser(User user) {
         boolean success = false;
         // TODO: Why is this empty? And it seems to work... Aie.

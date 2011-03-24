@@ -991,6 +991,10 @@ public class SystemDefinitionConverter {
         }
     }
 
+    /**
+     *
+     * @param charset
+     */
     public void setFileEncoding(Charset charset) {
         // this.charset = charset;
         if (charset != null) {
