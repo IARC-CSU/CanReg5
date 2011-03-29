@@ -6,14 +6,11 @@ import canreg.common.DateHelper;
 import canreg.common.Globals;
 import canreg.common.GregorianCalendarCanReg;
 import com.toedter.calendar.JDateChooser;
-import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -139,7 +136,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
     @Override
     public Object getValue() {
         String valueString = codeTextField.getText().trim();
-        String valueObjectString = "";
+        String valueObjectString = null;
         if (valueString.length() > 0) {
             try {
                 String dateFormatString = dateChooser.getDateFormatString();
