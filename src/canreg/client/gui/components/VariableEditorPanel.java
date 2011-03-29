@@ -7,7 +7,7 @@ package canreg.client.gui.components;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
-import canreg.client.gui.dataentry.RecordEditorPanel;
+import canreg.client.gui.dataentry.RecordEditor;
 import canreg.client.gui.tools.MaxLengthDocument;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseVariablesListElement;
@@ -21,11 +21,11 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentListener;
 
@@ -33,7 +33,7 @@ import javax.swing.event.DocumentListener;
  *
  * @author  ervikm
  */
-public class VariableEditorPanel extends javax.swing.JPanel implements ActionListener {
+public class VariableEditorPanel extends javax.swing.JPanel implements ActionListener, VariableEditorPanelInterface {
 
     /**
      * 
@@ -50,17 +50,11 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
     /**
      * 
      */
-    protected java.awt.Color MANDATORY_VARIABLE_MISSING_COLOR = java.awt.Color.PINK;
-    protected java.awt.Color VARIABLE_INVALID_COLOR = java.awt.Color.PINK;
-    protected java.awt.Color VARIABLE_QUERY_COLOR = java.awt.Color.GREEN;
-    protected java.awt.Color VARIABLE_RARE_COLOR = java.awt.Color.YELLOW;
-    protected java.awt.Color VARIABLE_OK_COLOR = java.awt.SystemColor.text;
     private Dictionary dictionary;
     Object initialValue = null;
     private boolean mandatory;
     private boolean hasChanged = false;
     protected ActionListener listener;
-    public static String CHANGED_STRING = "Changed";
     DictionaryElementChooser dictionaryElementChooser;
 
     /** Creates new form VariableEditorPanel */
@@ -74,22 +68,29 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
      * 
      * @return
      */
+    @Override
     public String getKey() {
         return databaseListElement.getDatabaseVariableName();
     }
 
+    @Override
     public boolean isFilledOK() {
-        boolean filledOK = true;
+        boolean filledOK = false;
         if (mandatory) {
             if (databaseListElement.getDictionary() != null && codeTextField.getText().trim().length() < databaseListElement.getDictionary().getFullDictionaryCodeLength()) {
                 filledOK = false;
+            } else if (getValue() != null) {
+                filledOK = getValue().toString().trim().length() > 0;
             } else {
-                filledOK = codeTextField.getText().trim().length() > 0;
+                filledOK = false;
             }
+        } else {
+            filledOK = true;
         }
         return filledOK;
     }
 
+    @Override
     public boolean hasChanged() {
         return hasChanged;
     }
@@ -98,18 +99,21 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
      * 
      * @param aThis
      */
-    public void setPropertyChangeListener(RecordEditorPanel aThis) {
-        codeTextField.addPropertyChangeListener(aThis);
+    @Override
+    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+        codeTextField.addPropertyChangeListener(propertyChangeListener);
     }
 
     /**
      * 
      * @param listener
      */
+    @Override
     public void setDocumentListener(DocumentListener listener) {
         codeTextField.getDocument().addDocumentListener(listener);
     }
 
+    @Override
     public void setResultCode(ResultCode resultCode) {
         switch (resultCode) {
             case Missing:
@@ -131,6 +135,7 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
         codeTextField.setToolTipText(resultCode.toString());
     }
 
+    @Override
     public void setSaved() {
         initialValue = getValue();
         hasChanged = false;
@@ -227,6 +232,11 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
                 codeTextFieldActionPerformed(evt);
             }
         });
+        codeTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                codeTextFieldKeyTyped(evt);
+            }
+        });
         splitPane1.setLeftComponent(codeTextField);
 
         jSplitPane1.setRightComponent(splitPane1);
@@ -245,28 +255,9 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
 
 private void mouseClickHandler(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseClickHandler
 
-    if (databaseListElement.getVariableType().equalsIgnoreCase("dict")) {
-        if (possibleValuesMap == null) {
-            JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Empty_dictionary."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Warning"), JOptionPane.WARNING_MESSAGE);
-        } else {
-            String oldValue = getValue().toString();
-            DictionaryEntry oldSelection = possibleValuesMap.get(oldValue);
-            if (dictionaryElementChooser == null) {
-                dictionaryElementChooser = new DictionaryElementChooser(this);
-            } else {
-                dictionaryElementChooser.setFirstPass();
-            }
-            dictionaryElementChooser.setDictionary(dictionary);
-            dictionaryElementChooser.setSelectedElement(oldSelection);
+    showDictionaryChooser();
 
-            CanRegClientView.showAndPositionInternalFrame(
-                    CanRegClientApp.getApplication().getDesktopPane(),
-                    dictionaryElementChooser);
-        }
-    } else {
-        // Do nothing
-        // This should never happen...
-    }
+
 }//GEN-LAST:event_mouseClickHandler
 
 private void categoryTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryTextFieldActionPerformed
@@ -297,7 +288,7 @@ private void descriptionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//
 }//GEN-LAST:event_descriptionTextFieldMouseClicked
 
 private void codeTextFieldActionPerformed1(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codeTextFieldActionPerformed1
-    // TODO add your handling code here:
+    //
 }//GEN-LAST:event_codeTextFieldActionPerformed1
 
 private void codeTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_codeTextFieldMousePressed
@@ -307,6 +298,12 @@ private void codeTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIR
 private void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_codeTextFieldMouseReleased
     MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(codeTextField, evt);
 }//GEN-LAST:event_codeTextFieldMouseReleased
+
+private void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codeTextFieldKeyTyped
+    if (dictionary != null && evt.getKeyChar() == '?') {
+        showDictionaryChooser();
+    }
+}//GEN-LAST:event_codeTextFieldKeyTyped
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JTextField categoryTextField;
     protected javax.swing.JTextField codeTextField;
@@ -325,7 +322,8 @@ private void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FI
         variableNameLabel.setText(variableName);
     }
 
-    public synchronized void setInitialValue(String value) {
+    @Override
+    public void setInitialValue(String value) {
         ActionListener tempListener = listener;
         listener = null;
         setValue(value);
@@ -337,6 +335,7 @@ private void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FI
      * 
      * @param value
      */
+    @Override
     public synchronized void setValue(String value) {
         codeTextField.setText(value);
         try {
@@ -371,6 +370,7 @@ private void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FI
         }
     }
 
+    @Override
     public void updateFilledInStatusColor() {
         if (!isFilledOK()) {
             codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
@@ -383,6 +383,7 @@ private void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FI
      * 
      * @return
      */
+    @Override
     public synchronized Object getValue() {
         Object valueObject = null;
         String valueString = codeTextField.getText();
@@ -407,6 +408,7 @@ private void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FI
      * 
      * @param databaseListElement
      */
+    @Override
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseListElement) {
         this.databaseListElement = databaseListElement;
         setVariableName(databaseListElement.getFullName());
@@ -501,6 +503,7 @@ private void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FI
         // }
     }
 
+    @Override
     public void removeListener() {
         listener = null;
     }
@@ -535,6 +538,57 @@ private void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FI
                 descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
             }
             updateFilledInStatusColor();
+            listener.actionPerformed(new ActionEvent(this, 0, RecordEditor.REQUEST_FOCUS));
+            // setFocus();
+            transferFocusToNext();
         }
+    }
+
+    private void showDictionaryChooser() {
+        if (databaseListElement.getVariableType().equalsIgnoreCase("dict")) {
+            if (possibleValuesMap == null) {
+                JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Empty_dictionary."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Warning"), JOptionPane.WARNING_MESSAGE);
+            } else {
+                String oldValue = getValue().toString();
+                DictionaryEntry oldSelection = possibleValuesMap.get(oldValue);
+                if (dictionaryElementChooser == null) {
+                    dictionaryElementChooser = new DictionaryElementChooser(this);
+                } else {
+                    dictionaryElementChooser.setFirstPass();
+                }
+                dictionaryElementChooser.setDictionary(dictionary);
+                dictionaryElementChooser.setSelectedElement(oldSelection);
+
+                CanRegClientView.showAndPositionInternalFrame(
+                        CanRegClientApp.getApplication().getDesktopPane(),
+                        dictionaryElementChooser);
+            }
+        } else {
+            // Do nothing
+            // This should never happen...
+        }
+    }
+
+    private void setFocus() {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                codeTextField.setRequestFocusEnabled(true);
+                codeTextField.requestFocus();
+            }
+        });
+    }
+
+    private void transferFocusToNext() {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                codeTextField.setRequestFocusEnabled(true);
+                codeTextField.requestFocus();
+                codeTextField.transferFocus();
+            }
+        });
     }
 }

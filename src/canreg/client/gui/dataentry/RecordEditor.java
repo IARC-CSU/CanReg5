@@ -8,6 +8,7 @@ package canreg.client.gui.dataentry;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
+import canreg.client.gui.components.VariableEditorPanelInterface;
 import canreg.client.gui.tools.PrintUtilities;
 import canreg.client.gui.tools.WaitFrame;
 import canreg.common.DatabaseVariablesListElement;
@@ -29,6 +30,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.LinkedHashSet;
@@ -64,6 +66,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     public static final String CALC_AGE = "calcAge";
     public static final String AUTO_FILL = "autoFill";
     public static final String PERSON_SEARCH = "person search";
+    public static String REQUEST_FOCUS = "request focus";
     private Document doc;
     private Map<Integer, Dictionary> dictionary;
     private Set<DatabaseRecord> patientRecords;
@@ -579,7 +582,13 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         Object source = e.getSource();
         DatabaseRecord tumourRecord;
 
-        if (source instanceof RecordEditorPanel) {
+        if (e.getActionCommand().equalsIgnoreCase(REQUEST_FOCUS)) {
+            try {
+                this.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.WARNING, null, ex);
+            }
+        } else if (source instanceof RecordEditorPanel) {
             if (e.getActionCommand().equalsIgnoreCase(CHANGED)) {
                 changesDone();
             } else if (e.getActionCommand().equalsIgnoreCase(DELETE)) {
@@ -1088,16 +1097,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         for (DatabaseRecord record : patientRecords) {
             try {
                 Object idObj = record.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
-
-
-
-
-
-
                 if (idObj != null) {
                     int id = (Integer) idObj;
                     canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME);
-
                 }
 
             } catch (RemoteException ex) {
