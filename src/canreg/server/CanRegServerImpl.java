@@ -1,5 +1,6 @@
 package canreg.server;
 
+import canreg.client.gui.CanRegClientView;
 import canreg.server.database.User;
 import canreg.server.management.UserManagerNew;
 import canreg.common.cachingtableapi.DistributedTableDescription;
@@ -26,6 +27,11 @@ import canreg.server.database.RecordLockedException;
 import canreg.server.database.Tumour;
 import canreg.server.database.UnknownTableException;
 import canreg.server.management.SystemDescription;
+import java.awt.AWTException;
+import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
@@ -43,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import javax.swing.ImageIcon;
 import org.w3c.dom.Document;
 
 /**
@@ -63,6 +70,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private Map<String, GlobalPersonSearchHandler> activePersonSearchers;
     private String patientRecordIDvariableName;
     private GlobalToolBox serverToolbox;
+    private TrayIcon trayIcon;
 
     /**
      * 
@@ -71,6 +79,22 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     public CanRegServerImpl(String systemCode) throws RemoteException {
         this.systemCode = systemCode;
+
+        // If we can we add a tray icon to show that the CanReg server is running.
+        if (SystemTray.isSupported()) {
+            SystemTray tray = SystemTray.getSystemTray();
+            java.net.URL imageURL = CanRegServerImpl.class.getResource("resources/LogoBetaNew32x32.png");
+            if (imageURL != null) {
+                Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
+                trayIcon = new TrayIcon(image, "CanReg5 server running", null);
+                trayIcon.setImageAutoSize(true);
+                try {
+                    tray.add(trayIcon);
+                } catch (AWTException ex) {
+                    Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
 
         appInfoProperties = new Properties();
         InputStream in = null;
