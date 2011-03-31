@@ -3,7 +3,6 @@
  */
 package canreg.client.gui;
 
-import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.Globals;
 import java.io.IOException;
@@ -213,7 +212,11 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
     }// </editor-fold>//GEN-END:initComponents
 
 private void homepageLabelMouseClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homepageLabelMouseClick
-    BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientAboutBox").getString("http://canreg.iarc.fr/"));
+    try {
+        canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientAboutBox").getString("http://canreg.iarc.fr/"));
+    } catch (IOException ex) {
+        Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.SEVERE, null, ex);
+    }
 }//GEN-LAST:event_homepageLabelMouseClick
 
 private void aboutEditorPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aboutEditorPaneMouseReleased
@@ -223,7 +226,6 @@ private void aboutEditorPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-
 private void aboutEditorPaneMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aboutEditorPaneMousePressed
     MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(aboutEditorPane, evt);
 }//GEN-LAST:event_aboutEditorPaneMousePressed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane aboutEditorPane;
     private javax.swing.JScrollPane aboutScrollPane;
@@ -233,7 +235,11 @@ private void aboutEditorPaneMousePressed(java.awt.event.MouseEvent evt) {//GEN-F
     @Override
     public void hyperlinkUpdate(HyperlinkEvent event) {
         if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            BareBonesBrowserLaunch.openURL(event.getURL().toString());
+            try {
+                canreg.common.Tools.browse(event.getURL().toString());
+            } catch (IOException ex) {
+                Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 }

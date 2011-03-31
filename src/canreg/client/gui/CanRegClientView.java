@@ -21,7 +21,7 @@ import canreg.client.gui.dataentry.PDSChooserInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
 import canreg.client.gui.management.CanReg4PDSImporterInternalFrame;
 import canreg.client.gui.management.RestoreInternalFrame;
-import canreg.client.gui.tools.BareBonesBrowserLaunch;
+// import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.management.CanReg4SystemConverterInternalFrame;
 import canreg.client.gui.management.systemeditor.ModifyDatabaseStructureInternalFrame;
 import canreg.client.gui.management.UserManagerInternalFrame;
@@ -963,8 +963,12 @@ public final class CanRegClientView extends FrameView {
      * @throws java.io.IOException
      */
     @Action
-    public void openIacrWebsite() throws IOException {
-        BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.iacr.com.fr/"));
+    public void openIacrWebsite() {
+        try {
+            canreg.common.Tools.browse((java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.iacr.com.fr/")));
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -972,7 +976,11 @@ public final class CanRegClientView extends FrameView {
      */
     @Action
     public void openICDO3web() {
-        BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://training.seer.cancer.gov/icdo3"));
+        try {
+            canreg.common.Tools.browse((java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://training.seer.cancer.gov/icdo3")));
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -980,8 +988,12 @@ public final class CanRegClientView extends FrameView {
      */
     @Action
     public void showCanRegHelpFile() {
-        File file = new File("doc");
-        BareBonesBrowserLaunch.openURL("file:" + file.getAbsolutePath() + Globals.FILE_SEPARATOR + Globals.CANREG_INSTRUCTIONS_LOCAL_FILE);
+        try {
+            File file = new File("doc");
+            canreg.common.Tools.openFile(file.getAbsolutePath() + Globals.FILE_SEPARATOR + Globals.CANREG_INSTRUCTIONS_LOCAL_FILE);
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -989,7 +1001,11 @@ public final class CanRegClientView extends FrameView {
      */
     @Action
     public void openENCRweb() {
-        BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.encr.com.fr/"));
+        try {
+            canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.encr.com.fr/"));
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -1333,14 +1349,19 @@ public final class CanRegClientView extends FrameView {
         // first try to load the updated instructions
         File file = new File("doc");
         String docPath = file.getAbsolutePath();
-        String URL = "file:" + docPath + Globals.FILE_SEPARATOR + Globals.CANREG_INSTRUCTIONS_LOCAL_FILE;
+        String fileName = docPath + Globals.FILE_SEPARATOR + Globals.CANREG_INSTRUCTIONS_LOCAL_FILE;
+        File instructionsFile = new File(fileName);
         file = new File(Globals.CANREG_UPDATED_INSTRUCTIONS_LOCAL_FILE);
         if (file.exists()) {
             if (file.lastModified() > new File(docPath + Globals.FILE_SEPARATOR + Globals.CANREG_INSTRUCTIONS_LOCAL_FILE).lastModified()) {
-                URL = file.getPath();
+                instructionsFile = file;
             }
         }
-        BareBonesBrowserLaunch.openURL(URL);
+        try {
+            canreg.common.Tools.openFile(instructionsFile.getAbsolutePath());
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Action
@@ -1381,12 +1402,20 @@ public final class CanRegClientView extends FrameView {
 
     @Action
     public void openPubCanWebsite() {
-        BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.pubcan.org"));
+        try {
+            canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.pubcan.org"));
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Action
     public void openReportBug() {
-        BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("BugReportWebsite"));
+        try {
+            canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("BugReportWebsite"));
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Action

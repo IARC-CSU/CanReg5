@@ -8,7 +8,6 @@ package canreg.client.gui.management;
 import canreg.client.gui.*;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
-import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.common.Globals;
 import java.io.IOException;
 import java.io.InputStream;
@@ -614,8 +613,11 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
      */
     @Action
     public void downloadLatestVersionAction() {
-        //  BareBonesBrowserLaunch.openURL(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.iacr.com.fr/"));
-        BareBonesBrowserLaunch.openURL(Globals.downloadCanRegURL);
+        try {
+            canreg.common.Tools.browse(Globals.downloadCanRegURL);
+        } catch (IOException ex) {
+            Logger.getLogger(OptionsFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

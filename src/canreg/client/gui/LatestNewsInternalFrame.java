@@ -9,7 +9,6 @@ package canreg.client.gui;
  *
  * @author ervikm
  */
-import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import com.sun.cnpi.rss.elements.Category;
 import com.sun.cnpi.rss.elements.Item;
@@ -205,7 +204,11 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
     @Override
     public void hyperlinkUpdate(HyperlinkEvent event) {
         if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            BareBonesBrowserLaunch.openURL(event.getURL().toString());
+            try {
+                canreg.common.Tools.browse(event.getURL().toString());
+            } catch (IOException ex) {
+                Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 }
