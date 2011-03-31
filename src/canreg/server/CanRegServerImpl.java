@@ -1,6 +1,5 @@
 package canreg.server;
 
-import canreg.client.gui.CanRegClientView;
 import canreg.server.database.User;
 import canreg.server.management.UserManagerNew;
 import canreg.common.cachingtableapi.DistributedTableDescription;
@@ -38,7 +37,6 @@ import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.derby.drda.NetworkServerControl;
@@ -49,7 +47,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
-import javax.swing.ImageIcon;
 import org.w3c.dom.Document;
 
 /**
@@ -86,7 +83,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             java.net.URL imageURL = CanRegServerImpl.class.getResource("resources/LogoBetaNew32x32.png");
             if (imageURL != null) {
                 Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
-                trayIcon = new TrayIcon(image, "CanReg5 server running", null);
+                trayIcon = new TrayIcon(image, "CanReg5 server starting...", null);
                 trayIcon.setImageAutoSize(true);
                 try {
                     tray.add(trayIcon);
@@ -101,31 +98,36 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         //
         // load properties file
         //
+
+        //
+        // get Application information
+        //
+        in = getClass().getResourceAsStream(Globals.APPINFO_PROPERTIES_PATH);
         try {
-            //
-            // get Application information
-            //
-            in = getClass().getResourceAsStream(Globals.APPINFO_PROPERTIES_PATH);
             appInfoProperties.load(in);
             in.close();
-
         } catch (IOException ex) {
-            ex.printStackTrace();
-        } // end-try-catch
+            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        // end-try-catch
 
         // Step one load the system definition...
         if (!initSystemDefinition()) {
             throw new RemoteException("Faulty system definitions...");
         }
+        setTrayIconToolTip("CanReg5 server " + systemCode + " definitions read and initialized...");
         // Step two: start the database...
         if (!initDataBase()) {
             throw new RemoteException("Cannot initialize database...");
         }
+        setTrayIconToolTip("CanReg5 server " + systemCode + " database initialized...");
         try {
             systemSettings = new SystemSettings(systemCode + "settings.xml");
         } catch (IOException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        setTrayIconToolTip("CanReg5 server " + systemCode + " database initialized...");
         // migrate the database if necessary
         Migrator migrator = new Migrator(getCanRegVersion(), db);
         migrator.migrate();
@@ -139,12 +141,20 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
         activePersonSearchers = new LinkedHashMap<String, GlobalPersonSearchHandler>();
 
+        setTrayIconToolTip("CanReg5 server quality controllers initialized...");
+
         // Step four: start the user manager
         userManager = new UserManagerNew(db);
         userManager.writePasswordsToFile();
+
+        setTrayIconToolTip("CanReg5 server user manager started initialized...");
+
         // Step five: set up some variables
         serverToolbox = new GlobalToolBox(getDatabseDescription());
         patientRecordIDvariableName = serverToolbox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+
+        // Update the tooltip now that everything is up and running...
+        setTrayIconToolTip("CanReg5 server " + systemDescription.getSystemName() + " (" + systemCode + ") running");
     }
 
     // Initialize the database connection
@@ -911,5 +921,11 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     @Override
     public DatabaseStats getDatabaseStats() throws RemoteException, SecurityException {
         return db.getDatabaseStats();
+    }
+
+    private void setTrayIconToolTip(String toolTip) {
+        if (trayIcon != null) {
+            trayIcon.setToolTip(toolTip);
+        }
     }
 }
