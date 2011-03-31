@@ -31,6 +31,7 @@ import java.awt.Image;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
+import java.awt.TrayIcon.MessageType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
@@ -155,6 +156,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
         // Update the tooltip now that everything is up and running...
         setTrayIconToolTip("CanReg5 server " + systemDescription.getSystemName() + " (" + systemCode + ") running");
+        displayTrayIconPopUpMessage("Server running", "CanReg5 server " + systemDescription.getSystemName() + " (" + systemCode + ") running", MessageType.INFO);
     }
 
     // Initialize the database connection
@@ -330,6 +332,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     public void userLoggedIn(String username)
             throws RemoteException, SecurityException {
         userManager.userLoggedIn(username);
+        displayTrayIconPopUpMessage("User logged in", "User " + username + " logged in.", MessageType.INFO);
     }
 
     /**
@@ -342,6 +345,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     public void userLoggedOut(String username)
             throws RemoteException, SecurityException {
         userManager.userLoggedOut(username);
+        displayTrayIconPopUpMessage("User logged out", "User " + username + " logged out.", MessageType.INFO);
     }
 
     // 
@@ -926,6 +930,12 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private void setTrayIconToolTip(String toolTip) {
         if (trayIcon != null) {
             trayIcon.setToolTip(toolTip);
+        }
+    }
+
+    private void displayTrayIconPopUpMessage(String caption, String text, MessageType messageType) {
+        if (trayIcon != null) {
+            trayIcon.displayMessage(caption, text, messageType);
         }
     }
 }
