@@ -10,6 +10,7 @@ import canreg.client.gui.components.DateVariableEditorPanel;
 import canreg.client.gui.components.TextFieldVariableEditorPanel;
 import canreg.client.gui.components.VariableEditorGroupPanel;
 import canreg.client.gui.components.VariableEditorPanel;
+import canreg.client.gui.components.VariableEditorPanelInterface;
 import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DatabaseVariablesListElementPositionSorter;
@@ -59,7 +60,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     private Document doc;
     private panelTypes panelType;
     private DatabaseVariablesListElement[] variablesInTable;
-    private Map<String, VariableEditorPanel> variableEditorPanels;
+    private Map<String, VariableEditorPanelInterface> variableEditorPanels;
     private Map<Integer, Dictionary> dictionary;
     private DatabaseGroupsListElement[] groupListElements;
     private GlobalToolBox globalToolBox;
@@ -86,7 +87,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     boolean areAllVariablesPresent() {
         boolean allPresent = true;
         for (DatabaseVariablesListElement databaseVariablesListElement : variablesInTable) {
-            VariableEditorPanel panel = variableEditorPanels.get(databaseVariablesListElement.getDatabaseVariableName());
+            VariableEditorPanelInterface panel = variableEditorPanels.get(databaseVariablesListElement.getDatabaseVariableName());
             if (panel != null) {
                 boolean filledOK = panel.isFilledOK();
                 if (!filledOK) {
@@ -125,7 +126,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         // hasChanged = false;
 
         for (DatabaseVariablesListElement databaseVariablesListElement : variablesInTable) {
-            VariableEditorPanel panel = variableEditorPanels.get(databaseVariablesListElement.getDatabaseVariableName());
+            VariableEditorPanelInterface panel = variableEditorPanels.get(databaseVariablesListElement.getDatabaseVariableName());
             if (panel != null) {
                 hasChanged = hasChanged || panel.hasChanged();
             }
@@ -148,7 +149,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
      *
      */
     public void setResultCodeOfVariable(String databaseVariableName, ResultCode resultCode) {
-        VariableEditorPanel panel = variableEditorPanels.get(databaseVariableName);
+        VariableEditorPanelInterface panel = variableEditorPanels.get(databaseVariableName);
         panel.setResultCode(resultCode);
     }
 
@@ -221,6 +222,9 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                 changesDone();
                 actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
             }
+        } else {
+            // pass it on
+            actionListener.actionPerformed(e);
         }
     }
 
@@ -508,7 +512,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         dataPanel.removeAll();
 
         if (variableEditorPanels != null) {
-            for (VariableEditorPanel vep : variableEditorPanels.values()) {
+            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) {
                 vep.removeListener();
             }
         }
@@ -1014,17 +1018,17 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     public void saveRecord() {
         buildDatabaseRecord();
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.SAVE));
-        Iterator<VariableEditorPanel> iterator = variableEditorPanels.values().iterator();
+        Iterator<VariableEditorPanelInterface> iterator = variableEditorPanels.values().iterator();
         while (iterator.hasNext()) {
-            VariableEditorPanel vep = iterator.next();
+            VariableEditorPanelInterface vep = iterator.next();
             vep.setSaved();
         }
     }
 
     private void buildDatabaseRecord() {
-        Iterator<VariableEditorPanel> iterator = variableEditorPanels.values().iterator();
+        Iterator<VariableEditorPanelInterface> iterator = variableEditorPanels.values().iterator();
         while (iterator.hasNext()) {
-            VariableEditorPanel vep = iterator.next();
+            VariableEditorPanelInterface vep = iterator.next();
             databaseRecord.setVariable(vep.getKey(), vep.getValue());
         }
 
@@ -1082,7 +1086,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     }
 
     public void setVariable(DatabaseVariablesListElement variable, String value) {
-        VariableEditorPanel vep = variableEditorPanels.get(variable.getDatabaseVariableName());
+        VariableEditorPanelInterface vep = variableEditorPanels.get(variable.getDatabaseVariableName());
         vep.setValue(value);
     }
 
