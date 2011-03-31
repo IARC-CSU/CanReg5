@@ -1,5 +1,6 @@
 package canreg.common;
 
+import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.qualitycontrol.PersonSearcher.CompareAlgorithms;
 import java.awt.AWTException;
@@ -666,16 +667,28 @@ public class Tools {
     }
 
     public static void openFile(String fileName) throws IOException {
-        String osName = System.getProperty("os.name");
-        File file = new File(fileName);
-        if (osName.startsWith("Windows")) {
-            Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL " + file.getAbsolutePath());
-        } else if (osName.startsWith("Mac OS")) {
-            Runtime.getRuntime().exec("open " + file.getAbsolutePath());
-        } else if (osName.startsWith("Lin")) {
-            Runtime.getRuntime().exec("open " + file.getAbsolutePath());
+        if (java.awt.Desktop.isDesktopSupported()) {
+            java.awt.Desktop.getDesktop().open(new File(fileName));
         } else {
-            Runtime.getRuntime().exec("open " + file.getAbsolutePath());
+            String osName = System.getProperty("os.name");
+            File file = new File(fileName);
+            if (osName.startsWith("Windows")) {
+                Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL " + file.getAbsolutePath());
+            } else if (osName.startsWith("Mac OS")) {
+                Runtime.getRuntime().exec("open " + file.getAbsolutePath());
+            } else if (osName.startsWith("Lin")) {
+                Runtime.getRuntime().exec("open " + file.getAbsolutePath());
+            } else {
+                BareBonesBrowserLaunch.openURL(fileName);
+            }
+        }
+    }
+
+    public static void browse(String URL) throws IOException {
+        if (java.awt.Desktop.isDesktopSupported()) {
+            java.awt.Desktop.getDesktop().browse(java.net.URI.create(URL));
+        } else {
+            BareBonesBrowserLaunch.openURL(URL);
         }
     }
 
