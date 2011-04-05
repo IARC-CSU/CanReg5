@@ -184,8 +184,18 @@ name "sub:A-short-introduction"
 \begin_layout Standard
 \align left
 New in CanReg5 is the three level table structure.
- Where CanReg4 stored everything in one big table of tumours, CanReg5 splits
- this information in three tables: Patient, Tumour and Source.
+ Where CanReg4
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+CanReg4
+\end_layout
+
+\end_inset
+
+ stored everything in one big table of tumours, CanReg5 splits this information
+ in three tables: Patient, Tumour and Source.
  For each patient, you can store as many tumour records as you need, and
  for each tumour you can store as many source records as you need.
  This allows us to do more with our databases, for example related to completene
@@ -216,9 +226,19 @@ One way around this is to put all the fields related to the source table
 \begin_layout Standard
 \align left
 The best way, but a more time consuming one, is to set up the source table
- (by editing the system definition XML) to only contain the data you want
- to store per source and then work on the exported file from CanReg4 and
- import additional source information at a later stage.
+ (by editing the system definition XML
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+XML
+\end_layout
+
+\end_inset
+
+) to only contain the data you want to store per source and then work on
+ the exported file from CanReg4 and import additional source information
+ at a later stage.
  (General import of data is not yet functioning adequately in CanReg5 -
  only import & migration of old data.) 
 \end_layout
@@ -235,7 +255,61 @@ You can of course choose not to use the source table, as well - just record
 
 \family sans
 \series bold
-Forum, Issue tracker, community site, twitter
+Forum
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+forum
+\end_layout
+
+\end_inset
+
+, Issue tracker
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+issue tracker
+\end_layout
+
+\end_inset
+
+, community site
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+community
+\family sans
+\series bold
+ 
+\family default
+\series medium
+site
+\end_layout
+
+\end_inset
+
+, twitter
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+twitter
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -274,10 +348,34 @@ If you encounter any problems please provide a description of it along with
  speed etc.) Also it would be very useful if you can precise the 
 \series bold
 version
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+version
+\end_layout
+
+\end_inset
+
+
 \series default
  and the
 \series bold
  build code
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+build code
+\end_layout
+
+\end_inset
+
+
 \series default
  of your CanReg5.
  This can be found on the bottom left of the welcome screen and on the 
@@ -346,7 +444,19 @@ target "http://twitter.com/canreg"
 
 \family sans
 \series bold
-Getting hold of the latest version of CanReg
+Getting hold of the latest version
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+latest version
+\end_layout
+
+\end_inset
+
+ of CanReg
 \end_layout
 
 \begin_layout Standard
@@ -369,7 +479,7 @@ Advanced
 \end_inset
 
  tab.
- There you see your current version, i.e.
+ (See There you see your current version, i.e.
  4.99.1.
  If you click 
 \begin_inset Quotes eld
@@ -393,6 +503,13 @@ Download latest version
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
 \align center
 \begin_inset Graphics
 	filename 1.png
@@ -404,10 +521,40 @@ Download latest version
 
 \end_layout
 
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Checking if you have the latest version of CanReg installed.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 \align left
-If you have version 4.99.0 or no CanReg5 at all you can download the newest
- version from here: 
+If you have version 4.99.0 or no CanReg5 at all you can 
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+download
+\end_layout
+
+\end_inset
+
+download the newest version from here: 
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.iacr.com.fr/CanReg5/CanReg5.zip"
@@ -426,9 +573,29 @@ Logfile
 
 \begin_layout Standard
 \align left
-CanReg generates a logfile when you run it.
- This file is called canreg5client.log and is located in your home folder
- (on windows it is most probably under C:
+CanReg generates a 
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+logfile
+\end_layout
+
+\end_inset
+
+logfile when you run it.
+ This file is called 
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+canreg5client.log
+\end_layout
+
+\end_inset
+
+canreg5client.log and is located in your home folder (on windows it is most
+ probably under C:
 \backslash
 Documents and Settings
 \backslash
@@ -609,13 +776,57 @@ name "sec:Installing-and-running"
 
 \begin_layout Section
 Software installation
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+installation
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+software
+\series default
+ 
+\series medium
+installation
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
 
 \family sans
 \series bold
-Install necessary helper applications
+Install necessary 
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+helper
+\series default
+ 
+\series medium
+applications
+\end_layout
+
+\end_inset
+
+helper applications
 \end_layout
 
 \begin_layout Standard
@@ -629,8 +840,40 @@ Before you install and run CanReg5 for the first time it is recommended
 
 \series bold
 Java Runtime Environment
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+Java
+\series bold
+ 
+\series medium
+Runtime
+\series bold
+ 
+\series medium
+Environment
+\end_layout
+
+\end_inset
+
+
 \series default
  
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+JRE
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -650,13 +893,55 @@ target "http://java.com/en/download/manual.jsp"
 
 \series bold
 PostScript Viewer
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+postscript
+\series bold
+ 
+\series medium
+viewer
+\end_layout
+
+\end_inset
+
+
 \series default
  
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+PS
+\series default
+ 
+\series medium
+files
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 \align left
-Some of the tables generated by CanReg5 are PostScipt files.
+Some of the tables generated by CanReg5 are PostScipt files
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+postscipt files
+\end_layout
+
+\end_inset
+
+.
  PostScript is an open standard, so you can use many different tools to
  view them.
  (You can in many cases even send them directly to a printer.) Mac OS X and
@@ -666,13 +951,33 @@ Some of the tables generated by CanReg5 are PostScipt files.
 
 \begin_layout Standard
 \align left
-On Windows, the tool I recommend is the open sourced and free GSview.
+On Windows, the tool I recommend is the open sourced and free GSview
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+GSview
+\end_layout
+
+\end_inset
+
+.
  
 \end_layout
 
 \begin_layout Standard
 \align left
-To run GS View you need to install Ghostscript first.
+To run GS View you need to install 
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+Ghostscript
+\end_layout
+
+\end_inset
+
+Ghostscript first.
  This can be for example be downloaded from here: 
 \begin_inset CommandInset href
 LatexCommand href
@@ -735,6 +1040,12 @@ Run this file to install GS View.
 
 \family sans
 \series bold
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Install-CanReg5"
+
+\end_inset
+
 Install CanReg5
 \end_layout
 
@@ -751,7 +1062,19 @@ CanReg5 is distributed as a zip-archive.
 
 \family sans
 \series bold
-Un-install CanReg5
+Un-install
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+un-install
+\end_layout
+
+\end_inset
+
+ CanReg5
 \end_layout
 
 \begin_layout Standard
@@ -761,27 +1084,53 @@ If you wish to un-install CanReg5, delete the following folders (or rename
 \begin_inset Newline newline
 \end_inset
 
-
-\backslash
-
-\backslash
-Documents and Settings
-\backslash
-<your username>
-\backslash
 .CanRegClient
-\begin_inset Newline newline
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+.CanRegClient
+\end_layout
+
 \end_inset
 
+ and .CanRegServer
+\begin_inset Index
+status open
 
-\backslash
-
-\backslash
-Documents and Settings
-\backslash
-<your username>
-\backslash
+\begin_layout Plain Layout
 .CanRegServer
+\end_layout
+
+\end_inset
+
+ in your user folder.
+\end_layout
+
+\begin_layout Standard
+(On Windows you can get to your user folder
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+user folder
+\end_layout
+
+\end_inset
+
+ by pressing Windows Key + R and then entering %UserProfile% and click OK.
+ See http://en.wikipedia.org/wiki/Home_directory for more information.)
+\end_layout
+
+\begin_layout Standard
+Afterwards you can delete the folder from 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Install-CanReg5"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
@@ -792,7 +1141,20 @@ First launch
 
 \family sans
 \series bold
-Run CanReg5
+Run
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\family sans
+\series bold
+run
+\end_layout
+
+\end_inset
+
+ CanReg5
 \end_layout
 
 \begin_layout Standard
@@ -828,6 +1190,17 @@ CanReg5 Welcome window:
 
 \family sans
 \series bold
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+demo system
+\end_layout
+
+\end_inset
+
 Demo system
 \end_layout
 
@@ -882,7 +1255,17 @@ name "sub:Install-a-new"
 \begin_layout Standard
 \align left
 If you want to install an already provided system definition (for example
- the demo system TRN) please click 
+ the demo system
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+demo system
+\end_layout
+
+\end_inset
+
+ TRN) please click 
 \begin_inset Quotes eld
 \end_inset
 
@@ -922,8 +1305,27 @@ Convert the CanReg4 system definitions
 
 \begin_layout Standard
 \align left
-If you have a CanReg4 system you can use tools built into CanReg to help
- you migrate this to CanReg5.
+If you have a CanReg4
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+CanReg4
+\end_layout
+
+\end_inset
+
+ system you can use tools built into CanReg to help you migrate
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+migrate
+\end_layout
+
+\end_inset
+
+ this to CanReg5.
  
 \end_layout
 
@@ -1090,7 +1492,17 @@ Save
 \end_inset
 
 .
- You have now created an XML file that describes your CanReg5 system.
+ You have now created an XML
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+XML
+\end_layout
+
+\end_inset
+
+ file that describes your CanReg5 system.
  
 \end_layout
 
@@ -1119,7 +1531,31 @@ System.)
 
 \family sans
 \series bold
-Setting up or modifying a CanReg system using the built in editor
+Setting up or modifying a CanReg system
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+modifying a CanReg system
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+setting up a CanReg system
+\end_layout
+
+\end_inset
+
+ using the built in editor
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:Setting-up-or-modifying"
@@ -1197,8 +1633,18 @@ Set up new database
 
 \begin_layout Standard
 \align left
-Please click Load XML and either pick your own XML or, if you start from
- scratch, the TRN.xml or DEF.xml found in the CanReg installation.
+Please click Load XML
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+XML
+\end_layout
+
+\end_inset
+
+ and either pick your own XML or, if you start from scratch, the TRN.xml
+ or DEF.xml found in the CanReg installation.
  (You will need to load an existing XML to be able to create a working XML
  for your CanReg system.) 
 \end_layout
@@ -1222,10 +1668,48 @@ Please note that certain modifications done using this tool will impact
 \begin_layout Standard
 \align left
 When this has loaded you'll see all the info specifying this CanReg system.
- On the top you can specify the registry name, registry code and region
- of the registry.
- Below you have a list of the Dictionaries, then the Groups and then the
- Variables.
+ On the top you can specify the registry name, registry code
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+registry code
+\end_layout
+
+\end_inset
+
+ and region of the registry.
+ Below you have a list of the Dictionaries
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+dictionary
+\end_layout
+
+\end_inset
+
+, then the Group
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+group
+\end_layout
+
+\end_inset
+
+s and then the Variable
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+variable
+\end_layout
+
+\end_inset
+
+s.
  
 \end_layout
 
@@ -1260,6 +1744,18 @@ Clicking edit on any button related to a dictionary, group or variable brings
 
 \series bold
 Modifying a dictionary
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+dictionary
+\end_layout
+
+\end_inset
+
+
 \series default
  
 \end_layout
@@ -1278,7 +1774,17 @@ Modifying a dictionary
 
 \begin_layout Standard
 \align left
-Using the dictionary editor you can modify any dictionary in CanReg5.
+Using the dictionary editor
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+dictionary editor
+\end_layout
+
+\end_inset
+
+ you can modify any dictionary in CanReg5.
  The fields are as follows: 
 \end_layout
 
@@ -1372,6 +1878,18 @@ Locked:
 
 \series bold
 Modifying a group
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+group
+\end_layout
+
+\end_inset
+
+
 \series default
  
 \end_layout
@@ -1390,7 +1908,17 @@ Modifying a group
 
 \begin_layout Standard
 \align left
-Using the group editor you can modify any group in CanReg5.
+Using the group editor
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+group editor
+\end_layout
+
+\end_inset
+
+ you can modify any group in CanReg5.
  
 \end_layout
 
@@ -1407,6 +1935,18 @@ Name:
 
 \series bold
 Modifying a variable
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+variable
+\end_layout
+
+\end_inset
+
+
 \series default
  
 \end_layout
@@ -1425,8 +1965,17 @@ Modifying a variable
 
 \begin_layout Standard
 \align left
-Using the dictionary editor you can modify any variable stored in the CanReg5
- database.
+Using the variable editor
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+variable editor
+\end_layout
+
+\end_inset
+
+ you can modify any variable stored in the CanReg5 database.
  The fields are as follows: 
 \end_layout
 
@@ -1627,7 +2176,17 @@ Dictionary
 \begin_inset Quotes erd
 \end_inset
 
- as type of variable you'll have to choose a dictionary here.
+ as type of variable you'll have to choose a dictionary
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+dictionary
+\end_layout
+
+\end_inset
+
+ here.
  
 \end_layout
 
@@ -1654,7 +2213,7 @@ Table:
 \begin_layout Subsubsection
 
 \series bold
-Set up search variables
+Set up person search variables
 \series default
  
 \end_layout
@@ -1674,7 +2233,36 @@ Set up search variables
 \begin_layout Standard
 \align left
 Using this editor you can change the variables that come into play during
- person search in CanReg5, and their respective weights and minimum match
+ person search
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+person search
+\end_layout
+
+\end_inset
+
+ in CanReg5, and their respective weights
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+weights
+\end_layout
+
+\end_inset
+
+ and minimum match
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+minimum match
+\end_layout
+
+\end_inset
+
  criteria.
  
 \end_layout
@@ -1701,7 +2289,17 @@ Coding
 
 \begin_layout Standard
 \align left
-Here you can change some coding settings of your CanReg system.
+Here you can change some coding
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+coding
+\end_layout
+
+\end_inset
+
+ settings of your CanReg system.
  (Not yet implemented.) 
 \end_layout
 
@@ -1727,7 +2325,17 @@ Settings
 
 \begin_layout Standard
 \align left
-Here you can change some settings of your CanReg system.
+Here you can change some settings
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+settings
+\end_layout
+
+\end_inset
+
+ of your CanReg system.
  (Not yet implemented.) 
 \end_layout
 
@@ -1741,8 +2349,18 @@ Saving the system
 
 \begin_layout Standard
 \align left
-By clicking Save XML the system XML will be saved to the system folder of
- CanReg under the name 
+By clicking Save XML
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+XML
+\end_layout
+
+\end_inset
+
+ the system XML will be saved to the system folder of CanReg under the name
+ 
 \begin_inset Formula $<$
 \end_inset
 
@@ -1759,6 +2377,18 @@ your system code
 \family sans
 \series bold
 Launching the CanReg server
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+server
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1772,7 +2402,17 @@ Login
 \end_inset
 
  on the welcome screen of CanReg you get the login screen.
- To launch the CanReg server click 
+ To launch the CanReg server
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+launch the CanReg server
+\end_layout
+
+\end_inset
+
+ click 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1807,8 +2447,18 @@ Launch Server
 
 \begin_layout Standard
 \align left
-If you get a java firewall query, please confirm that it is OK that java
- can comunicate through you firewall by clicking 
+If you get a java firewall
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+firewall
+\end_layout
+
+\end_inset
+
+ query, please confirm that it is OK that java can comunicate through you
+ firewall by clicking 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1838,11 +2488,49 @@ Yes
  
 \end_layout
 
+\begin_layout Standard
+When the CanReg5 server is running on your machine you should see an icon
+ in your notification area
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+notification area
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename notificationarea.png
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 
 \family sans
 \series bold
 Login
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\family sans
+\series bold
+login
+\end_layout
+
+\end_inset
+
+
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:Login"
@@ -1868,8 +2556,17 @@ Locally
 
 \begin_layout Standard
 \align left
-If you want to log in to a CanReg server running on your local machine,
- after either installing a CanReg5 system XML or converted your CanReg4
+If you want to log in to a CanReg server running on your local machine
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+local machine
+\end_layout
+
+\end_inset
+
+, after either installing a CanReg5 system XML or converted your CanReg4
  system definition files you go to the 
 \begin_inset Quotes eld
 \end_inset
@@ -1959,8 +2656,38 @@ In a network
 \begin_layout Standard
 \align left
 If you want to log on to a CanReg server running on another machine in your
- network you need to know the address of that machine.
- (Either it's IP address or name on the network.) 
+ network
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+network
+\end_layout
+
+\end_inset
+
+ you need to know the address of that machine.
+ (Either it's IP address
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+IP address
+\end_layout
+
+\end_inset
+
+ or name on the network
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+name on the network
+\end_layout
+
+\end_inset
+
+.) 
 \end_layout
 
 \begin_layout Standard
@@ -2142,6 +2869,18 @@ Login
 \family sans
 \series bold
 Import the dictionaries
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+import dictionaries
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2332,7 +3071,19 @@ Edit dictionary
 
 \family sans
 \series bold
-Import the data from CanReg4
+Import the data
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+import data from CanReg4
+\end_layout
+
+\end_inset
+
+ from CanReg4
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:Import-the-data"
@@ -2344,7 +3095,17 @@ name "sub:Import-the-data"
 
 \begin_layout Standard
 \align left
-Make sure to export the most updated data from your CanReg4 system.
+Make sure to export the most updated data from your 
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+CanReg4
+\end_layout
+
+\end_inset
+
+CanReg4 system.
  
 \end_layout
 
@@ -2553,6 +3314,16 @@ Open
 \end_inset
 
 File encoding
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+file encoding
+\end_layout
+
+\end_inset
+
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -2569,6 +3340,22 @@ Set
 \end_inset
 
 Separating character
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+separating
+\series bold
+ 
+\series medium
+character
+\end_layout
+
+\end_inset
+
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -2705,6 +3492,18 @@ Refresh Table
 \family sans
 \series bold
 Import data from other programs
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+import data from other programs
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2770,8 +3569,17 @@ Welcome screen
 
 \begin_layout Standard
 \align left
-There are two options in this CanReg5 welcome screen: "Login to CanReg"
- and "Install New System".
+There are two options in this CanReg5 welcome screen
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+welcome screen
+\end_layout
+
+\end_inset
+
+: "Login to CanReg" and "Install New System".
 \end_layout
 
 \begin_layout Standard
@@ -2829,6 +3637,17 @@ reference "sub:Install-a-new"
 
 \family sans
 \series bold
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+data entry
+\end_layout
+
+\end_inset
+
 Data entry
 \end_layout
 
@@ -2896,6 +3715,18 @@ If you have made changes to the database, use this button to update the
 
 \begin_layout Subsubsection
 Table
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+table
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2904,6 +3735,18 @@ This lets you select the table to look at.
 
 \begin_layout Subsubsection
 Sorty by
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+sorty by
+\end_layout
+
+\end_inset
+
+
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:Sorty-by"
@@ -2919,6 +3762,18 @@ The records will be ordered (or sorted) by the variable chosen.
 
 \begin_layout Subsubsection
 Range
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+range
+\end_layout
+
+\end_inset
+
+
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:Range"
@@ -2967,6 +3822,18 @@ Range End = 20019999
 
 \begin_layout Subsubsection
 Filter
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+filter
+\end_layout
+
+\end_inset
+
+
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:Filter"
@@ -2995,13 +3862,23 @@ To select records.
 <lyxtabular version="3" rows="10" columns="2">
 <features>
 <column alignment="center" valignment="top" width="0">
-<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="75line%">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 Operator
+\begin_inset Index
+status collapsed
+
+\begin_layout Plain Layout
+operator
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -3207,14 +4084,24 @@ If you know the exact value you want to return for at least one of the columns.
 \begin_inset Tabular
 <lyxtabular version="3" rows="3" columns="2">
 <features>
-<column alignment="center" valignment="top" width="0">
-<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="75line%">
+<column alignment="center" valignment="top" width="75col%">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 Logical Operator
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+logical operator
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -3318,6 +4205,22 @@ topog LIKE '50%' (for all Breast cases.)
 
 \begin_layout Subsubsection
 Filter wizard
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+filter
+\series default
+ 
+\series medium
+wizard
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3401,6 +4304,22 @@ Topog = ‘220’ AND (Basis=’1’ OR Basis=’2’)
 
 \begin_layout Subsubsection
 Display variables
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+display
+\series default
+ 
+\series medium
+variables
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3430,6 +4349,22 @@ Click on a "radio button" above to display either:
 
 \begin_layout Subsubsection
 Navigate buttons
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+navigate
+\series default
+ 
+\series medium
+buttons
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3438,12 +4373,37 @@ Click on the Navigation buttons below to move record: Top, Bottom, Up, Down.
 
 \begin_layout Subsection
 Edit record
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+edit
+\series default
+ 
+\series medium
+record
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 \align left
-To get to a data entry form either press Create New Record from the menu
- bar
+To get to a data entry form either press Create New Record
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+create new record
+\end_layout
+
+\end_inset
+
+ from the menu bar
 \end_layout
 
 \begin_layout Standard
@@ -3484,6 +4444,10 @@ Edit Patient ID:
 \end_layout
 
 \begin_layout Standard
+or double click on any record in the browser.
+\end_layout
+
+\begin_layout Standard
 \align center
 \begin_inset Graphics
 	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/DataEntryExample.png
@@ -3518,7 +4482,27 @@ With the mouse, simply click on the variable you wish to edit, or on the
 
 \begin_layout Standard
 \align left
-The Pink fields are the mandatory ones.
+The pink fields
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+pink fields
+\end_layout
+
+\end_inset
+
+ are the mandatory
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+mandatory variables
+\end_layout
+
+\end_inset
+
+ ones.
  (Date format is still set to yyyyMMdd, but this will be improved later.)
 \end_layout
 
@@ -3529,6 +4513,22 @@ When you have finished entering the data, you must perform the checks as
 
 \begin_layout Subsubsection
 System variables
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+system
+\series default
+ 
+\series medium
+variables
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3537,6 +4537,22 @@ After data entry, you must perform the following steps:
 
 \begin_layout Subparagraph
 Person Search
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+person
+\series default
+ 
+\series medium
+search
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3545,6 +4561,18 @@ Searches for any records that might belong to the same person.
 
 \begin_layout Subparagraph
 Check
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+check
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3560,6 +4588,22 @@ reference "sub:Check"
 
 \begin_layout Subparagraph
 Record Status
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+record
+\series default
+ 
+\series medium
+Status
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3572,6 +4616,22 @@ All new records are set to "Pending" and cannot be "Confirmed" until the
 
 \begin_layout Subparagraph
 Save
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+save
+\series default
+ 
+\series medium
+record
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3590,12 +4650,54 @@ Obsolete button.
 
 \begin_layout Standard
 \align left
-This will flag the record as obsolete, so that it will not show up in analysis.
- It is a way to keep duplicate records that might contain valuable information.
+This will flag the record as obsolete
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+obsolete
+\end_layout
+
+\end_inset
+
+, so that it will not show up in analysis
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+analysis
+\end_layout
+
+\end_inset
+
+.
+ It is a way to keep duplicate records
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+duplicate records
+\end_layout
+
+\end_inset
+
+ that might contain valuable information.
 \end_layout
 
 \begin_layout Subsubsection
 Check
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+check
+\end_layout
+
+\end_inset
+
+
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:Check"
@@ -3624,7 +4726,23 @@ There are three sections to the checks:
 \end_layout
 
 \begin_layout Subparagraph
-Mandatory variables
+Mandatory variable
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+mandatory
+\series default
+ 
+\series medium
+variable
+\end_layout
+
+\end_inset
+
+s
 \end_layout
 
 \begin_layout Standard
@@ -3635,7 +4753,31 @@ Indicates any variables, defined as mandatory for your Registry, that have
 \end_layout
 
 \begin_layout Subparagraph
-First Name and Sex
+First Name
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+name
+\end_layout
+
+\end_inset
+
+ and Sex
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+sex
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3647,6 +4789,34 @@ Checks the combination of First Name and Sex.
 
 \begin_layout Subparagraph
 Cross checks
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+cross
+\series default
+ 
+\series medium
+checks
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+checks
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3668,6 +4838,22 @@ As well as performing these checks, this function also determines the ICD-10
 
 \begin_layout Subsubsection
 Person search
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+person
+\series default
+ 
+\series medium
+search
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3690,6 +4876,22 @@ Otherwise, the computer only displays possibilities - YOU must decide if
 
 \begin_layout Subsection
 Dictionary editor
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+dictionary
+\series default
+ 
+\series medium
+editor
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3707,7 +4909,19 @@ The dictionary editor lets the supervisor users edit the coding schemes
 \end_layout
 
 \begin_layout Subsubsection
-Export Dictionary to file
+Export Dictionary
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+export dictionary
+\end_layout
+
+\end_inset
+
+ to file
 \end_layout
 
 \begin_layout Standard
@@ -3739,7 +4953,23 @@ This will import the dictionary picked by the user from the text area.
 \end_layout
 
 \begin_layout Subsubsection
-Import Dictionary from file
+Import Dictionary
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+import
+\series default
+ 
+\series medium
+dictionary
+\end_layout
+
+\end_inset
+
+ from file
 \end_layout
 
 \begin_layout Standard
@@ -3766,8 +4996,37 @@ Population Dataset Editor
 
 \begin_layout Standard
 \align left
-The Population Dataset editor lets you edit population data set to be used
- in the table builder.
+The Population Dataset
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+population dataset editor
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+population dataset
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+PDS
+\end_layout
+
+\end_inset
+
+editor lets you edit population data set to be used in the table builder.
  This is located under File -- Data Entry Edit Population Dataset: 
 \end_layout
 
@@ -3845,7 +5104,17 @@ Some description (less than 255 characters)
 
 \begin_layout Itemize
 \align left
-Choose the age group structure.
+Choose the age group structure
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+age group structure
+\end_layout
+
+\end_inset
+
+.
  
 \end_layout
 
@@ -3857,13 +5126,43 @@ Set the date when the population was at this amount.
 
 \begin_layout Itemize
 \align left
-The Standard population used for ASRs when building tables with this set.
+The Standard population
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+standard population
+\end_layout
+
+\end_inset
+
+ used for ASR
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+ASR
+\end_layout
+
+\end_inset
+
+s when building tables with this set.
  
 \end_layout
 
 \begin_layout Standard
-"Age Standardised" rates are calculated in order to compare rates from different
- countries that have different age profiles.
+"Age Standardised" rates
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+age standardised rates
+\end_layout
+
+\end_inset
+
+ are calculated in order to compare rates from different countries that
+ have different age profiles.
  Normally the "Standard" population is the World standard included here.
  (If you wish to change this, choose another standard population (or click
  on the standard pop.
@@ -3905,8 +5204,17 @@ Click save to save your population dataset to the database.
 \end_layout
 
 \begin_layout Standard
-You can also take a look at the population pyramid of the current population
- data set by going to the Pyramid tab.
+You can also take a look at the population pyramid
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+population pyramid
+\end_layout
+
+\end_inset
+
+ of the current population data set by going to the Pyramid tab.
 \end_layout
 
 \begin_layout Standard
@@ -3947,14 +5255,48 @@ And choosing a proper file name.
 \begin_layout Subsubsection
 
 \series bold
-Import population data set from CanReg4
+Import population data set
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+import
+\series bold
+ 
+\series medium
+population
+\series bold
+ 
+\series medium
+data
+\series bold
+ 
+\series medium
+set
+\end_layout
+
+\end_inset
+
+ from CanReg4
 \series default
  
 \end_layout
 
 \begin_layout Standard
 \align left
-Alternatively you can import population data sets from CanReg4.
+Alternatively you can import population data sets from CanReg4
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+CanReg4
+\end_layout
+
+\end_inset
+
+.
  To do this you go to the Tools menu and choose 
 \begin_inset Quotes eld
 \end_inset
@@ -4064,6 +5406,18 @@ Locked
 
 \begin_layout Subsection
 Import
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+import
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4090,14 +5444,44 @@ Data in an external file may be added to the CanReg database by importing.
 
 \begin_layout Itemize
 Tab delimited
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+tab delimited
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
 Comma Separated Variables
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+comma separated variables
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
 Character delimited
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+character delimited
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4163,6 +5547,18 @@ lly.
 
 \begin_layout Subsubsection
 Discrepancies
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+discrepancies
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4239,7 +5635,17 @@ Perform Checks
 
 \begin_layout Standard
 If the data to import was not created using CanReg, or if it is a Pending
- case, then the Checks must and will be performed.
+ case, then the Checks
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+checks
+\end_layout
+
+\end_inset
+
+ must and will be performed.
 \end_layout
 
 \begin_layout Standard
@@ -4252,8 +5658,17 @@ Perform Person Search
 \end_layout
 
 \begin_layout Standard
-Normally, when importing CanReg data, the Person Search will still be performed
- even if already done.
+Normally, when importing CanReg data, the Person Search
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+person search
+\end_layout
+
+\end_inset
+
+ will still be performed even if already done.
  If this option is NOT ticked, then the Person Search will NOT be repeated
  in this case.
  This is only advisable is the case of having no original data.
@@ -4264,7 +5679,26 @@ Query New First Name
 \end_layout
 
 \begin_layout Standard
-For data that has not already passed the checks, the First Name and Sex
+For data that has not already passed the checks, the First Name
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+name
+\end_layout
+
+\end_inset
+
+ and Sex
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+sex
+\end_layout
+
+\end_inset
+
  combination will be checked and updated.
  Tick this option if you wish all NEW names to be set as pending.
 \end_layout
@@ -4283,6 +5717,17 @@ If you are starting a new registry then you probably don't want all new
 \end_layout
 
 \begin_layout Section
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+analysis
+\end_layout
+
+\end_inset
+
 Analysis
 \end_layout
 
@@ -4291,6 +5736,24 @@ Analysis
 \family sans
 \series bold
 Export data
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+export
+\family sans
+\series bold
+ 
+\family default
+\series medium
+data
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4422,6 +5885,18 @@ Options
 
 \begin_layout Subsubsection
 Export file style
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+export file style
+\end_layout
+
+\end_inset
+
+
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:Export-file-style"
@@ -4463,7 +5938,35 @@ Tab Separated
 \end_layout
 
 \begin_layout Subsubsection
-Titles, variable names
+Titles
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+titles
+\end_layout
+
+\end_inset
+
+, variable names
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+variable
+\series default
+ 
+\series medium
+names
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4537,7 +6040,17 @@ name "sub:ExportVariablesSelector"
 \end_layout
 
 \begin_layout Standard
-Select the variables to export.
+Select the variables to export
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+variables to export
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -4570,13 +6083,31 @@ Date Format
 \end_layout
 
 \begin_layout Standard
-Tick "Format Date", for example, to export "21/04/2001" instead of numeric
- form "20010421".
+Tick "Format Date
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+format date
+\end_layout
+
+\end_inset
+
+", for example, to export "21/04/2001" instead of numeric form "20010421".
 \end_layout
 
 \begin_layout Standard
-Tick "Correct Unknown" so that unknown day will be written as "01" and unknown
- month as "07".
+Tick "Correct Unknown
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+correct unknown
+\end_layout
+
+\end_inset
+
+" so that unknown day will be written as "01" and unknown month as "07".
 \end_layout
 
 \begin_layout Standard
@@ -4610,11 +6141,39 @@ This module is used to load previously made export settings or save the
 \family sans
 \series bold
 Table builder
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+table
+\family sans
+\series bold
+ 
+\family default
+\series medium
+builder
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 \align left
-The Table builder lets you build incidence tables etc in CanReg.
+The Table builder lets you build incidence tables
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+incidence tables
+\end_layout
+
+\end_inset
+
+ etc in CanReg.
  You find it under analysis -- table builder.
  
 \end_layout
@@ -4635,7 +6194,17 @@ The Table builder lets you build incidence tables etc in CanReg.
 \align left
 When you start it you first choose the type of table you want to produce.
  (Please note that it is only the Incidence per 100,000 by age group (period)
- and the Population pyramid that is implemented so far\SpecialChar \ldots{}
+ and the Population pyramid
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+population pyramid
+\end_layout
+
+\end_inset
+
+ that is implemented so far\SpecialChar \ldots{}
 ) 
 \end_layout
 
@@ -4674,7 +6243,17 @@ The incidence rate is defined as
 
 \begin_layout Standard
 This gives an idea of the risk of getting each type of cancer - the tables
- consist of Incidence Rates by Sex, Age group and ICD10 cancer type.
+ consist of Incidence Rates by Sex, Age group and ICD10
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+ICD10
+\end_layout
+
+\end_inset
+
+ cancer type.
 \end_layout
 
 \begin_layout Standard
@@ -4711,21 +6290,85 @@ Click
 \end_inset
 
 Population Data Set
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+population data set
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+PDS
+\end_layout
+
+\end_inset
+
+
 \begin_inset Quotes erd
 \end_inset
 
 .
  Pick one population data set per year.
- This can be the same for all three if that year is representative of the
- period: 
+ (Please note that this can be the same for all three if that year is representa
+tive of the period.
+ See figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:The-population-dataset"
+
+\end_inset
+
+.
+ 
 \end_layout
 
 \begin_layout Standard
+\align center
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
 \align center
 \begin_inset Graphics
 	filename 43.png
 	width 5in
 	height 4.11458in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:The-population-dataset"
+
+\end_inset
+
+The population dataset chooser.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \end_inset
 
@@ -4740,6 +6383,16 @@ Then you can go to the Make tables tab to generate the actual tables.
 \end_inset
 
 Generate post script files
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+postscript files
+\end_layout
+
+\end_inset
+
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -4816,13 +6469,39 @@ reference "sub:Tables"
 \family sans
 \series bold
 Frequency distributions
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+frequency
+\series default
+ 
+\series medium
+distributions
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 \align left
 Frequencies distributions let you look at the data in your database as frequenci
 es by year.
- You can cross-tabulate several variables.
+ You can cross-tabulate
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+cross-tabulate
+\end_layout
+
+\end_inset
+
+ several variables.
  To start this module go to Analysis -- Frequencies Distributions: 
 \end_layout
 
@@ -4840,8 +6519,17 @@ es by year.
 
 \begin_layout Standard
 \align left
-If you click Refresh table with no filter and no selected variables you
- get a table of cases per year.
+If you click Refresh table with no filter
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+filter
+\end_layout
+
+\end_inset
+
+ and no selected variables you get a table of cases per year.
 \end_layout
 
 \begin_layout Standard
@@ -4881,14 +6569,82 @@ You can filter the result by adding a filter like for example on incidence
 \end_layout
 
 \begin_layout Standard
-With the save table button you can write the table to a comma separated
- file (.CSV) that can be opened in most porgrams (Excel, Stata, R...) for further
- analysis.
+With the save table
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+save table
+\end_layout
+
+\end_inset
+
+ button you can write the table to a comma separated file
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+comma separated file
+\end_layout
+
+\end_inset
+
+ (.CSV
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+CSV
+\end_layout
+
+\end_inset
+
+) that can be opened in most porgrams (Excel
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+Excel
+\end_layout
+
+\end_inset
+
+, Stata
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+Stata
+\end_layout
+
+\end_inset
+
+, R
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+R
+\end_layout
+
+\end_inset
+
+...) for further analysis.
 \end_layout
 
 \begin_layout Standard
 \align left
-The table can also be selected and copied and pasted into Excel, for example.
+The table can also be selected and copied and pasted into Excel
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+Excel
+\end_layout
+
+\end_inset
+
+, for example.
  (No right-click shortcut for that is implemented yet, but you can select
  the lines you want and press Ctrl-C (on Windows and Linux) or Apple-C (on
  Mac) and paste it into other programs.
@@ -4901,6 +6657,18 @@ The table can also be selected and copied and pasted into Excel, for example.
 
 \begin_layout Section
 Management
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+management
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -4912,7 +6680,17 @@ Back up and restore
 
 \begin_layout Standard
 \align left
-Backup-functionality can be found under the Management menu.
+Backup
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+backup
+\end_layout
+
+\end_inset
+
+-functionality can be found under the Management menu.
  
 \end_layout
 
@@ -4975,6 +6753,16 @@ Perform backup
 \end_inset
 
 Open folder containing Backup
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+folder containing backup
+\end_layout
+
+\end_inset
+
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -4983,8 +6771,17 @@ Open folder containing Backup
 \series bold
 CanReg server
 \series default
- folder under Backup and 3 digit code of the registry and then the date
- of the backup.
+ folder under Backup and 3 digit code
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+3 digit code
+\end_layout
+
+\end_inset
+
+ of the registry and then the date of the backup.
  On my machine, for example, it is 
 \begin_inset Quotes eld
 \end_inset
@@ -5013,6 +6810,18 @@ TRN
 
 \series bold
 Restore from backup
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+restore from backup
+\end_layout
+
+\end_inset
+
+
 \series default
  
 \end_layout
@@ -5053,7 +6862,7 @@ if re-installing on a new computer, or
 \end_layout
 
 \begin_layout Itemize
-recovering from a lost or damaged computer situation!
+recovering from a lost or damaged computer situation.
 \end_layout
 
 \begin_layout Standard
@@ -5107,11 +6916,39 @@ date
 \family sans
 \series bold
 Manage users
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+manage
+\family sans
+\series bold
+ 
+\family default
+\series medium
+users
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 \align left
-The user manager is located under management -- users:
+The user manager
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+user manager
+\end_layout
+
+\end_inset
+
+ is located under management -- users:
 \end_layout
 
 \begin_layout Standard
@@ -5136,8 +6973,18 @@ Change your own password
 
 \begin_layout Standard
 \align left
-To change your own password, go to the Current user tab in the user manager
- and enter your new password twice:
+To change your own password
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+password
+\end_layout
+
+\end_inset
+
+, go to the Current user tab in the user manager and enter your new password
+ twice:
 \end_layout
 
 \begin_layout Standard
@@ -5156,6 +7003,22 @@ To change your own password, go to the Current user tab in the user manager
 
 \series bold
 Locked records
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+locked
+\series bold
+ 
+\series medium
+records
+\end_layout
+
+\end_inset
+
+
 \series default
  
 \end_layout
@@ -5184,31 +7047,125 @@ The "Clear" button allows a supervisor to reset this list of users (in case
 
 \series bold
 User manager
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+user
+\series bold
+ 
+\series medium
+manager
+\end_layout
+
+\end_inset
+
+
 \series default
  
 \end_layout
 
 \begin_layout Standard
 \align left
-If you are logged in with Supervisor rights you have access to the User
- manager part of the user manager.
+If you are logged in with Supervisor
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+supervisor
+\end_layout
+
+\end_inset
+
+ rights you have access to the User manager part of the user manager.
  This allows you to add and delete users.
- Each user has their own login name, password and permission level.
+ Each user has their own login name
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+login name
+\end_layout
+
+\end_inset
+
+, password
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+password
+\end_layout
+
+\end_inset
+
+ and permission level
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+permission level
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
-A Supervisor can use all options;
+A Supervisor
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+supervisor
+\end_layout
+
+\end_inset
+
+ can use all options;
 \end_layout
 
 \begin_layout Itemize
-A Registrar can perform most of data entry except to confirm rare cases
+A Registrar
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+registrar
+\end_layout
+
+\end_inset
+
+ can perform most of data entry except to confirm rare cases
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+rare cases
+\end_layout
+
+\end_inset
+
  or possible duplicates.
  Changing the Dictionary and User Administration are also prohibited.
 \end_layout
 
 \begin_layout Itemize
-An Analyst cannot make any changes to the database.
- Only browsing or analysis options are available.
+An Analyst
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+analyst
+\end_layout
+
+\end_inset
+
+ cannot make any changes to the database.
+ Only analysis options are available.
 \end_layout
 
 \begin_layout Standard
@@ -5225,22 +7182,87 @@ An Analyst cannot make any changes to the database.
 
 \begin_layout Standard
 \align left
-To add a new user, click “Add user” fill in the user's login name.
- This will create a default user with registrar permissions.
+To add a new user, click “Add user
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+add user
+\end_layout
+
+\end_inset
+
+” fill in the user's login name.
+ This will create a default user with registrar permissions
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+permissions
+\end_layout
+
+\end_inset
+
+.
  To change this select the user and pick a suitable user right level and
  click “Update user”.
 \end_layout
 
 \begin_layout Standard
 \align left
-You can change a permission level for a user and hit "Update user", or delete
- a user by selecting the user and then clicking the "Delete" button.
- The default password of any user is its user name.
+You can change a permission level for a user and hit "Update user
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+update user
+\end_layout
+
+\end_inset
+
+", or delete a user
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+delete user
+\end_layout
+
+\end_inset
+
+ by selecting the user and then clicking the "Delete" button.
+ The default password
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+default password
+\end_layout
+
+\end_inset
+
+ of any user is its user name.
  This should of course be changed at first login by the user himself.
 \end_layout
 
 \begin_layout Subsection
 Quality control
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+quality
+\series default
+ 
+\series medium
+control
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -5257,8 +7279,27 @@ Name and sex
 \end_layout
 
 \begin_layout Standard
-Click the button "Show First names by Sex" to view all the names used in
- your registry:
+Click the button "Show First name
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+name
+\end_layout
+
+\end_inset
+
+s by Sex
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+sex
+\end_layout
+
+\end_inset
+
+" to view all the names used in your registry:
 \end_layout
 
 \begin_layout Itemize
@@ -5288,7 +7329,19 @@ However, if you have made corrections and some names are in the wrong category,
 \end_layout
 
 \begin_layout Subsubsection
-Duplicate search
+Person search
+\series medium
+
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+person search
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5309,7 +7362,27 @@ Advanced
 \end_layout
 
 \begin_layout Standard
-Change weights and variables.
+Change weights
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+weights
+\end_layout
+
+\end_inset
+
+ and search variables
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+search variables
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -5340,6 +7413,18 @@ Results from the search appears here as potential duplicates are found.
 
 \begin_layout Subsection
 Options
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+options
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5353,6 +7438,18 @@ Options
 
 \begin_layout Subsubsection
 Language
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+language
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5378,6 +7475,18 @@ Change font size (Not yet implemented.)
 
 \begin_layout Subsubsection
 Periodic backup
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+backup
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5395,20 +7504,72 @@ Reminder backup options
 
 \begin_layout Subsubsection
 CanReg version
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+CanReg
+\series default
+ 
+\series medium
+version
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Let the program check to see if the latest version of CanReg is installed.
+Let the program check to see if the latest version
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+latest version
+\end_layout
+
+\end_inset
+
+ of CanReg is installed.
  This access the internet to find the most recent version.
 \end_layout
 
 \begin_layout Subsubsection
 Look & Feel
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+look
+\series default
+ 
+\series medium
+& feel
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-The “Show only outline of windows while moving” will increase the performance
- of the user interface of CanReg.
+The “Show only outline
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+only outline
+\end_layout
+
+\end_inset
+
+ of windows while moving” will increase the performance of the user interface
+ of CanReg.
  Tick this if moving windows around the screen is slow.
 \end_layout
 
@@ -5428,13 +7589,61 @@ Appendix
 
 \family sans
 \series bold
-Frequently asked questions (FAQ)
+Frequently asked questions
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+frequently
+\family sans
+\series bold
+ 
+\family default
+\series medium
+asked
+\family sans
+\series bold
+ 
+\family default
+\series medium
+questions
+\end_layout
+
+\end_inset
+
+ (FAQ
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+FAQ
+\end_layout
+
+\end_inset
+
+)
 \end_layout
 
 \begin_layout Subsection
 
 \series bold
 Server
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+server
+\end_layout
+
+\end_inset
+
+
 \series default
  
 \end_layout
@@ -5450,6 +7659,16 @@ When I click the
 \end_inset
 
 Launch Server
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+launch server
+\end_layout
+
+\end_inset
+
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -5543,6 +7762,16 @@ When I try to log on to the CanReg server I get the message:
 
 Exception creating connection to: aaa.bbb.ccc.ddd; nested exception is: java.net.Sock
 etException: Malformed reply from SOCKS server
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+SOCKS server
+\end_layout
+
+\end_inset
+
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -5565,6 +7794,15 @@ A:
 Q: 
 \series default
 Is CanReg5 only designed for local networks or does it allow remote registration
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+remote registration
+\end_layout
+
+\end_inset
+
 ? 
 \end_layout
 
@@ -5575,8 +7813,47 @@ Is CanReg5 only designed for local networks or does it allow remote registration
 A:
 \series default
  CanReg5 is designed for local networks, yes, but traffic is over standard
- TCP/IP so you can tunnel this through secure channels (SSH/VPN etc) to
- do remote registration.
+ TCP/IP
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+TCP/IP
+\end_layout
+
+\end_inset
+
+ so you can tunnel
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+tunnel
+\end_layout
+
+\end_inset
+
+ this through secure channels (SSH
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+SSH
+\end_layout
+
+\end_inset
+
+/VPN
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+VPN
+\end_layout
+
+\end_inset
+
+ etc) to do remote registration.
  (This is not "officially" supported, as we haven't been able to test it
  enough (yet).) 
 \end_layout
@@ -5584,7 +7861,31 @@ A:
 \begin_layout Subsection
 
 \series bold
-Conversion CanReg4 to CanReg5
+Conversion CanReg4
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+CanReg4
+\end_layout
+
+\end_inset
+
+ to CanReg5
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+conversion CanReg4 to CanReg5
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Description
@@ -5593,7 +7894,17 @@ Conversion CanReg4 to CanReg5
 \series bold
 Q:
 \series default
- In what table should the variable age be stored?
+ In what table should the variable age
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+age
+\end_layout
+
+\end_inset
+
+ be stored?
 \end_layout
 
 \begin_layout Description
@@ -5641,7 +7952,26 @@ install
 \begin_inset Quotes erd
 \end_inset
 
- it afterwards as the XML file is automatically copied to your system folder
+ it afterwards as the XML
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+XML
+\end_layout
+
+\end_inset
+
+ file is automatically copied to your system folder
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+system folder
+\end_layout
+
+\end_inset
+
  during conversion.
  
 \end_layout
@@ -5652,7 +7982,17 @@ install
 \series bold
 Q: 
 \series default
-I get errors during import of the data from CanReg4.
+I get errors during import
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+errors during import
+\end_layout
+
+\end_inset
+
+ of the data from CanReg4.
  The process stops after a certain percentage every time.
  
 \end_layout
@@ -5663,8 +8003,18 @@ I get errors during import of the data from CanReg4.
 \series bold
 A: 
 \series default
-Try exporting your data with a comma separated variables instead of the
- default tab-separated ones (or vice versa) and see if that helps.
+Try exporting your data with a comma separated variables
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+comma separated variables
+\end_layout
+
+\end_inset
+
+ instead of the default tab-separated ones (or vice versa) and see if that
+ helps.
  
 \end_layout
 
@@ -5684,9 +8034,28 @@ In CanReg5, how do you clear previous data and import fresh ones from canreg4.
 \series bold
 A: 
 \series default
-To clear the previous data from CanReg5 you need to delete the database
- files.
- These can be found in your user folder under .CanRegServer
+To clear the previous data
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+clear the previous data
+\end_layout
+
+\end_inset
+
+ from CanReg5 you need to delete the database files.
+ These can be found in your user folder
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+user folder
+\end_layout
+
+\end_inset
+
+ under .CanRegServer
 \backslash
 Database (On my machine it is under C:
 \backslash
@@ -5710,6 +8079,18 @@ Database ).
 
 \series bold
 Dictionary
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+dictionary
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Description
@@ -5718,7 +8099,17 @@ Dictionary
 \series bold
 Q:
 \series default
- Can I import dictionaries from other CanReg systems to my own? 
+ Can I import dictionaries
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+import dictionaries
+\end_layout
+
+\end_inset
+
+ from other CanReg systems to my own? 
 \end_layout
 
 \begin_layout Description
@@ -5742,7 +8133,31 @@ name "sub:Tables"
 
 \end_inset
 
-Analysis/tables
+Analysis
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+analysis
+\end_layout
+
+\end_inset
+
+/tables
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+tables
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Description
@@ -5751,7 +8166,17 @@ Analysis/tables
 \series bold
 Q:
 \series default
- What program can I use to view the postscript files with? 
+ What program can I use to view the post script files
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+postscript files
+\end_layout
+
+\end_inset
+
+ with? 
 \end_layout
 
 \begin_layout Description
@@ -5765,7 +8190,17 @@ A:
  (You can in many cases even send them directly to a printer.) Apple's OSX
  and most Linux-distributions (Ubuntu, RedHat, SuSE etc) come with a tool
  to view them by default.
- On Windows the tool I recommend is the open sourced and free GSview.
+ On Windows the tool I recommend is the open sourced and free GSview
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+GSview
+\end_layout
+
+\end_inset
+
+.
  (Available from: 
 \begin_inset CommandInset href
 LatexCommand href
@@ -5773,7 +8208,17 @@ target "http://pages.cs.wisc.edu/~ghost/gsview/"
 
 \end_inset
 
- ) To run GS View you need to install Ghostscript first.
+ ) To run GS View you need to install Ghostscript
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+Ghostscript
+\end_layout
+
+\end_inset
+
+ first.
  This can be downloaded from here: 
 \begin_inset CommandInset href
 LatexCommand href
@@ -5799,7 +8244,7 @@ target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe"
 \end_inset
 
 ) Run this file to install Ghostscript.
- Then you can get GS View from here: 
+ Then you can get GSView from here: 
 \begin_inset CommandInset href
 LatexCommand href
 name "http://pages.cs.wisc.edu/~ghost/gsview/get49.htm"
@@ -5817,7 +8262,7 @@ target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe"
 
 \end_inset
 
-) Run this file to install GS View.
+) Run this file to install GSView.
  
 \end_layout
 
@@ -5825,6 +8270,18 @@ target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe"
 
 \series bold
 Import
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+import
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Description
@@ -5845,11 +8302,31 @@ A:
 \series default
 If the data is from a program that does not code the data using Unicode
  (for example previous versions of CanReg) you need to specify the coding
- scheme/
+ scheme
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+coding scheme
+\end_layout
+
+\end_inset
+
+/
 \begin_inset Quotes eld
 \end_inset
 
 codepage
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+codepage
+\end_layout
+
+\end_inset
+
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -5888,6 +8365,18 @@ First of all make sure that you have the latest version of CanReg installed,
 
 \begin_layout Subsection
 Database design
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+database design
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Description
@@ -5896,7 +8385,17 @@ Database design
 \series bold
 Q: 
 \series default
-What is the minimum data set that one would collect?
+What is the minimum data set
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+minimum data set
+\end_layout
+
+\end_inset
+
+ that one would collect?
 \end_layout
 
 \begin_layout Description
@@ -5923,7 +8422,172 @@ target "http://www.iarc.fr./en/publications/pdfs-online/epi/sp95/sp95-chap6.pdf"
 \end_inset
 
 , for example.
- ) 
+ ) The bare minimum are detailed in Figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:Minimum-variables."
+
+\end_inset
+
+.
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Itemize
+Name
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+name
+\end_layout
+
+\end_inset
+
+(s): 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+String, According to local usage, but at least one, eg First name, Middle
+ name, Last Name, Father's name, Grandfather's name, Maiden Name.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Gender/Sex
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+sex
+\end_layout
+
+\end_inset
+
+: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Coded, 1 Male; 2 Female; 9 Unknown; (Some registries use 3 for Other.)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Birth date: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+String, Stored in the database as yyyyMMdd (but can, in principle, be entered
+ in any format), Allows 99 for unknown day and 99 for unknown month.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Incidence date: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+String, Stored in the database as yyyyMMdd (but can, in principle, be entered
+ in any format), Allows 99 for unknown day and 99 for unknown month.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Address: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Coded, According to local usage/needs.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Ethnic group (optional, but in some cases encouraged): 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Coded, According to local usage/needs.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Age: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Integer (For legacy reasons this is input as 3 digits, with 999 as unknown.
+ Some registries collect only two digits so unknown age is coded as 99 and
+ 98 and greater is coded 98.)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+(Most valid) Basis of diagnosis: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Coded, (1,2,3,4) Non-microscopic, (5,6,7,8) Microscopic, 9 Unknown, 0 Death
+ certificate only.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Source of information: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Coded, According to local usage, eg hospital number.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Source of information - additional information: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+String, According to local usage, eg hospital record number, name of physician.
+\end_layout
+
+\end_deeper
+\begin_layout Plain Layout
+Note: Registries can choose to collect Date of Birth OR Age, but most choose
+ to collect both.
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Minimum-variables."
+
+\end_inset
+
+Minimum variables.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Description
@@ -5932,7 +8596,17 @@ target "http://www.iarc.fr./en/publications/pdfs-online/epi/sp95/sp95-chap6.pdf"
 \series bold
 Q:
 \series default
- In what table should the variable X be stored?
+ In what database table
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+database table
+\end_layout
+
+\end_inset
+
+ should the variable X be stored?
 \end_layout
 
 \begin_layout Description
@@ -5945,16 +8619,56 @@ In the
 \series bold
 patient
 \series default
- table you store the information about the patient that never changes (or
- at least very seldom) in the patient table.
+ table
+\series bold
+
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+patient
+\series bold
+ 
+\series medium
+table
+\end_layout
+
+\end_inset
+
+
+\series default
+ you store the information about the patient that never changes (or at least
+ very seldom) in the patient table.
  (That is birth date, sex, names etc.) You also store follow up information
  in the patient table.
  (Vital status, current address, etc.) In the 
 \series bold
 tumour
 \series default
- table you store all data that can potentially differ between two tumours
- of the same patient.
+ table
+\series bold
+
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+tumour
+\series bold
+ 
+\series medium
+table
+\end_layout
+
+\end_inset
+
+
+\series default
+ you store all data that can potentially differ between two tumours of the
+ same patient.
  (Topography, morphology, age, address at the time of the tumour (coded)
  etc.) Finally, in the 
 \series bold
@@ -6013,12 +8727,78 @@ Known issues
 
 \family sans
 \series bold
-Known bugs (errors)
+Known bugs
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+bugs
+\end_layout
+
+\end_inset
+
+ (errors
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+errors
+\end_layout
+
+\end_inset
+
+)
 \end_layout
 
 \begin_layout Standard
 \align left
-Some known bugs: 
+There are no known bugs as of now.
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\series bold
+Known limitations
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+limitations
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\align left
+Not all edit checks are in place? 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Date fields not yet properly formatted.
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+You need a population dataset with 5 years age groups for many of the tables
+ to work properly\SpecialChar \ldots{}
+ 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Age can not yet be calculated automatically.
 \end_layout
 
 \begin_layout Itemize
@@ -6030,8 +8810,8 @@ The result set in the browser is sometimes very slow to scroll around in.
 \begin_deeper
 \begin_layout Itemize
 \align left
-Temporary solution: Use filters to minimize the number of records shown
- at any time or only browse the 
+Solution: Use filters to minimize the number of records shown at any time
+ or only browse the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -6064,46 +8844,39 @@ Priority: Low
 \begin_layout Itemize
 \align left
 Category: Database/Browser 
-\end_layout
-
-\end_deeper
-\begin_layout Subsection
-
-\family sans
-\series bold
-Known limitations
-\end_layout
-
-\begin_layout Itemize
-\align left
-Not all edit checks are in place? 
-\end_layout
-
-\begin_layout Itemize
-\align left
-Date fields not yet properly formatted.
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-You need a population dataset with 5 years age groups for many of the tables
- to work properly\SpecialChar \ldots{}
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
-Age can not yet be calculated automatically.
- 
 \begin_inset Newpage newpage
 \end_inset
 
 
 \end_layout
 
+\end_deeper
 \begin_layout Section
-Migrating from CanReg4 - Step by Step
+Migrating
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+migrate
+\end_layout
+
+\end_inset
+
+ from CanReg4
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+CanReg4
+\end_layout
+
+\end_inset
+
+ - Step by Step
 \end_layout
 
 \begin_layout Standard
@@ -6120,7 +8893,31 @@ reference "sec:Installing-and-running"
 \end_layout
 
 \begin_layout Subsection
-Step 1 - Import the variable definitions of CanReg4 to CanReg5
+Step 1 - Import the variable definitions
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+import variable definitions
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+variable definitions
+\end_layout
+
+\end_inset
+
+ of CanReg4 to CanReg5
 \end_layout
 
 \begin_layout Standard
@@ -6224,7 +9021,17 @@ The program presents an initial proposal that you might agree with, but
 \end_deeper
 \begin_layout Enumerate
 Click “Save”.
- You have now created an XML file that describes your CanReg5 system.
+ You have now created an XML
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+XML
+\end_layout
+
+\end_inset
+
+ file that describes your CanReg5 system.
  
 \end_layout
 
@@ -6300,7 +9107,43 @@ Click “Login”.
 
 \end_deeper
 \begin_layout Subsection
-Step 2 - Import the dictionary from your CanReg4 installation
+Step 2 - Import the dictionary
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+import dictionary
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+dictionary
+\end_layout
+
+\end_inset
+
+ from your CanReg4
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+CanReg4
+\end_layout
+
+\end_inset
+
+ installation
 \end_layout
 
 \begin_layout Standard
@@ -6400,7 +9243,43 @@ ies have been imported.
 \end_layout
 
 \begin_layout Subsection
-Step 3 - Import the data from your CanReg4 installation
+Step 3 - Import the data
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+import data from CanReg4
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+import data
+\end_layout
+
+\end_inset
+
+ from your CanReg4
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+CanReg4
+\end_layout
+
+\end_inset
+
+ installation
 \end_layout
 
 \begin_layout Standard
@@ -6536,10 +9415,34 @@ Here's a list of useful third party tools to use with CanReg5.
 
 \begin_layout Subsection
 For data cleaning
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+data cleaning
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
 Google Refine
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+Google Refine
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -6563,6 +9466,18 @@ target "http://code.google.com/p/google-refine/"
 
 \begin_layout Subsubsection
 Talend Open Studio
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+Talend Open Studio
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -6591,7 +9506,287 @@ target "http://www.talend.com/"
 
 \family sans
 \series bold
+About
+\end_layout
+
+\begin_layout Subsection
+Copyright
+\end_layout
+
+\begin_layout Standard
+© 2008-2011 International Agency for Research on Cancer World Health Organizatio
+n All rights reserved.
+\end_layout
+
+\begin_layout Subsection
+Credits
+\end_layout
+
+\begin_layout Subsubsection
+Lead developement and design: 
+\end_layout
+
+\begin_layout Itemize
+Morten Johannes Ervik, IARC/DEP
+\end_layout
+
+\begin_layout Subsubsection
+Additional developement
+\end_layout
+
+\begin_layout Itemize
+Andy Cooke (Original quality control module) 
+\end_layout
+
+\begin_layout Itemize
+Jacques Ferlay (Original PostScript code, conversion tables and original
+ quality control module)
+\end_layout
+
+\begin_layout Subsubsection
+Additional design
+\end_layout
+
+\begin_layout Itemize
+Andy Cooke 
+\end_layout
+
+\begin_layout Itemize
+Maria Paula Curado 
+\end_layout
+
+\begin_layout Itemize
+Lydia Voti
+\end_layout
+
+\begin_layout Subsubsection
+Consultants: 
+\end_layout
+
+\begin_layout Itemize
+Philippe Autier, IARC/BIO 
+\end_layout
+
+\begin_layout Itemize
+Hoda Anton-Culver, University of California Irvine, USA
+\end_layout
+
+\begin_layout Itemize
+Joe Harford, NCI, USA
+\end_layout
+
+\begin_layout Itemize
+Hai-Rim Shin, IARC/DEA 
+\end_layout
+
+\begin_layout Itemize
+John Young, Emory University, USA
+\end_layout
+
+\begin_layout Subsubsection
+Technical consultants
+\end_layout
+
+\begin_layout Itemize
+Michel Smans, IARC/ITS 
+\end_layout
+
+\begin_layout Itemize
+Lucile Alteyrac, IARC/BIO
+\end_layout
+
+\begin_layout Subsubsection
+Thanks
+\end_layout
+
+\begin_layout Itemize
+Kai Toedter (JCalendar) 
+\end_layout
+
+\begin_layout Itemize
+Jeremy Dickson (CachingTableAPI) 
+\end_layout
+
+\begin_layout Itemize
+Alexandre Moore (Icons) 
+\end_layout
+
+\begin_layout Itemize
+Brian Cole (PagingTableModel) 
+\end_layout
+
+\begin_layout Itemize
+Stephen Kelvin (XTableColumnModel) 
+\end_layout
+
+\begin_layout Itemize
+Ashok Banerjee and Jignesh Mehta (ExcelAdapter) 
+\end_layout
+
+\begin_layout Itemize
+Glen Smith et al (opencsv) 
+\end_layout
+
+\begin_layout Itemize
+Dem Pilafian (Bare Bones Browser Launch) 
+\end_layout
+
+\begin_layout Itemize
+Jesse Wilson (Glazed Lists) 
+\end_layout
+
+\begin_layout Itemize
+juniversalchardet
+\end_layout
+
+\begin_layout Subsubsection
+Alpha-testers
+\end_layout
+
+\begin_layout Itemize
+Mathieu Mazuir, IARC/DEP 
+\end_layout
+
+\begin_layout Itemize
+Antoine Buemi, Registre des Cancers du Haut-Rhin
+\end_layout
+
+\begin_layout Subsubsection
+Beta-testers
+\end_layout
+
+\begin_layout Itemize
+Xenios Anastassiades, Ministry of Health, Cyprus 
+\end_layout
+
+\begin_layout Itemize
+Deborah Bringman, University of California Irvine, USA 
+\end_layout
+
+\begin_layout Itemize
+Amr Ebeid, Gharbiah Cancer Registry, Egypt 
+\end_layout
+
+\begin_layout Itemize
+Ibrahim Abd-Elbar Seif Eldin, Gharbiah Cancer Registry, Egypt 
+\end_layout
+
+\begin_layout Itemize
+Sarah Marshall, University of California Irvine, USA 
+\end_layout
+
+\begin_layout Itemize
+Omar Nimri, Jordan Cancer Registry, Jordan 
+\end_layout
+
+\begin_layout Itemize
+M.
+ Ramadan, Gharbiah Cancer Registry, Egypt 
+\end_layout
+
+\begin_layout Itemize
+Kevin Ward, Emory University, USA 
+\end_layout
+
+\begin_layout Itemize
+Cankut Yakut, Izmir Cancer Registry, Turkey
+\end_layout
+
+\begin_layout Subsubsection
+Translators
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+French:
+\series default
+ Joannie Lortet-Tieulent, IARC, France 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Portugese: 
+\series default
+Edesio Martins, Goiania Cancer Registry, Brazil 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Russian: 
+\series default
+Evgeniya Ostroumova, IARC, France
+\end_layout
+
+\begin_layout Subsection
+References
+\end_layout
+
+\begin_layout Itemize
+Ferlay et al, Check and Conversion Programs for Cancer Registries (IARC/IACR
+ Tools for Cancer Registries), IARC Technical Report No.
+ 42, Lyon, 2005 (Available at: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.iacr.com.fr/TR42.htm"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+O.M.
+ Jensen et al, Cancer Registration: Principles and Methods, IARC Scientific
+ Publication No.
+ 95, Lyon, 1991 (Available online at 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.iarc.fr./en/publications/pdfs-online/epi/sp95/index.php"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Steliarova-Foucher et al, Childhood Classification, Third Edition, CANCER
+ Volume 103, 1457-1467
+\end_layout
+
+\begin_layout Subsection
+Licenses 
+\end_layout
+
+\begin_layout Itemize
+The RSSutils library is copyright 2003 Sun Microsystems, Inc.
+ ALL RIGHTS RESERVED 
+\end_layout
+
+\begin_layout Itemize
+The Soundex library is copyright 1996-2002 Ian F.
+ Darwin, http://www.darwinsys.com/, ALL RIGHTS RESERVED
+\end_layout
+
+\begin_layout Section
+
+\family sans
+\series bold
 Changelog
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+changelog
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -6599,6 +9794,15 @@ Changelog
 LatexCommand lstinputlisting
 filename "../../changelog.txt"
 lstparams "basicstyle={\\small},breaklines=true,lineskip=0pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset index_print
+LatexCommand printindex
 
 \end_inset
 
