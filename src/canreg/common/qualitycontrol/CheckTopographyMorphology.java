@@ -25,7 +25,6 @@ public class CheckTopographyMorphology extends CheckInterface {
     private Map<String, String> lookUpMustMap6 = null;
     private Map<String, String> lookUpMustNotMap5 = null;
     private Map<String, String> lookUpMustNotMap6 = null;
-    
     /**
      *
      */
@@ -83,6 +82,12 @@ public class CheckTopographyMorphology extends CheckInterface {
             result.setResultCode(CheckResult.ResultCode.Invalid);
             return result;
         }
+        if (topographyCode.length() < 3) {
+            System.out.println("SHOULDN'T HAVE BEEN CALLED WHEN INVALID - topo");
+            result.setMessage(topographyCode);
+            result.setResultCode(CheckResult.ResultCode.Invalid);
+            return result;
+        }
 
         String MustLookupResult = "";
         String MustNotLookupResult = "";
@@ -91,7 +96,7 @@ public class CheckTopographyMorphology extends CheckInterface {
         String familyString = morphologyFamilyString.substring(1, 3);
         try {
             familyInt = Integer.parseInt(familyString);
-        } catch (java.lang.NumberFormatException nfe){
+        } catch (java.lang.NumberFormatException nfe) {
             familyInt = -999;
         }
         String look = familyString + "C" + topographyCode;
@@ -137,7 +142,7 @@ public class CheckTopographyMorphology extends CheckInterface {
             case '-': //----------------------< must not file
             {
                 MustNotLookupResult = lookUpMustNotMap5.get(look.substring(0, 5));
-                if (MustNotLookupResult!=null && MustNotLookupResult.length() > 5) {
+                if (MustNotLookupResult != null && MustNotLookupResult.length() > 5) {
                     if (MustNotLookupResult.charAt(5) == '*'
                             || MustLookupResult.charAt(5) == topographyCode.charAt(2)) {
                         result.setMessage(topographyCode + ", " + morphologyCode);
@@ -148,9 +153,9 @@ public class CheckTopographyMorphology extends CheckInterface {
                     MustNotLookupResult = lookUpMustNotMap6.get(look.substring(0, 6));
                     if (MustNotLookupResult.length() > 5) {
                         if (MustLookupResult.charAt(5) == topographyCode.charAt(2)) {
-                        result.setMessage(topographyCode + ", " + morphologyCode);
-                        result.setResultCode(CheckResult.ResultCode.Rare);
-                        return result;
+                            result.setMessage(topographyCode + ", " + morphologyCode);
+                            result.setResultCode(CheckResult.ResultCode.Rare);
+                            return result;
                         }
                     }
                 }
