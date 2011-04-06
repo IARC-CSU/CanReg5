@@ -88,10 +88,6 @@ Improve detection of changes to a record.
 \end_layout
 
 \begin_layout Itemize
-Build a dictionary chooser into the record editor? 
-\end_layout
-
-\begin_layout Itemize
 Let user enter dates in the format they wish
 \end_layout
 
@@ -106,10 +102,6 @@ Implement shortcuts in the data entry form:
 \begin_deeper
 \begin_layout Standard
 - "Home, "End" keys for the first, last variable.
-\end_layout
-
-\begin_layout Standard
-- Type "?" to see a Dictionary popup.
 \end_layout
 
 \end_deeper
@@ -245,7 +237,7 @@ xml (variables needed, values accepted: ...
 \end_deeper
 \begin_layout Itemize
 Standard view of completeness of a certain variable.
- (42% of cases has stage.)
+ (Fex: 42% of cases has stage.)
 \end_layout
 
 \begin_layout Itemize
@@ -289,6 +281,21 @@ Topo, Morpho, Address etc.
 \end_layout
 
 \end_deeper
+\end_deeper
+\begin_layout Itemize
+Possibility to run the server separately
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Batch mode?
+\end_layout
+
+\begin_layout Itemize
+System tray notifications? ( http://java.sun.com/developer/technicalArticles/J2SE/
+Desktop/javase6/systemtray/ )
+\end_layout
+
 \end_deeper
 \begin_layout Section*
 Pending bugs
@@ -359,6 +366,10 @@ Other? Chinese?
 \end_deeper
 \begin_layout Itemize
 Improve workflow during data entry.
+\end_layout
+
+\begin_layout Itemize
+Build a dictionary chooser into the record editor? 
 \end_layout
 
 \begin_layout Itemize
