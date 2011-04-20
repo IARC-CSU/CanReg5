@@ -72,6 +72,7 @@ public class Globals {
     static public String TABLES_PREVIEW_PATH = "./conf/tables/previews";
     static public String DEFAULT_PREVIEW_FILENAME = "blanc.png";
     static public String DEFAULT_SYSTEM_XML = "./conf/database/TRN.xml";
+    public static String DEFAULT_DICTIONARIES_FOLDER = "/canreg/common/resources/dictionaries";
     /**
      * 
      */

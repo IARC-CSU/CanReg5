@@ -1,0 +1,401 @@
+00	LIP
+01	TONGUE - BASE
+02	TONGUE - OTHER
+03	GUM
+04	MOUTH - FLOOR
+05	MOUTH - PALATE
+06	MOUTH - OTHER
+07	MOUTH - PAROTID
+08	MOUTH - GLANDS
+09	TONSILS
+10	OROPHARYNX
+11	NASOPHARYNX
+12	SINUS - PYRIFORM
+13	HYPOPHARYNX
+14	PHARYNX
+15	ESOPHAGUS
+16	STOMACH
+17	SMALL INTESTINE
+18	COLON
+19	RECTOSIGMOID
+20	RECTUM
+21	ANUS
+22	LIVER
+23	GALL BLADDER
+24	BILE TRACT
+25	PANCREAS
+26	GASTROINTESTINAL
+30	EAR/NOSE
+31	ACCESSORY SINUSES
+32	GLOTTIS
+33	TRACHEA
+34	BRONCHUS
+37	THYMUS
+38	HEART
+39	RESPIRATORY TRACT
+40	BONES - LIMBS
+41	BONES - SKULL
+42	BLOOD
+44	SKIN
+47	NERVES
+48	PERITONEUM
+49	SOFT TISSUES
+50	BREAST
+51	VULVA
+52	VAGINA
+53	CERVIX
+54	UTERI
+55	UTERUS
+56	OVARY
+57	FEMALE GEN.- OTHER
+58	PLACENTA
+60	PENIS
+61	PROSTATE
+62	TESTIS
+63	MALE GEN.- OTHER
+64	KIDNEY
+65	PELVIS
+66	URETER
+67	BLADDER
+68	URETHRA
+69	EYE
+70	MENINGES
+71	BRAIN
+72	NERVOUS SYSTEM
+73	THYROID
+74	ADRENAL GLAND
+75	GLANDS - OTHER
+76	NOS
+77	LYMPH NODES
+80	UNKNOWN
+000	External upper lip
+001	External lower lip
+002	External lip, NOS
+003	Mucosa of upper lip
+004	Mucosa of lower lip
+005	Mucosa of lip, NOS
+006	Commissure of lip
+008	Overl. lesion of lip
+009	Lip, NOS
+019	Base of tongue, NOS
+020	Dorsal surface of tongue, NO
+021	Border of tongue
+022	Ventral surface of tongue, N
+023	Anterior 2/3 of tongue, NOS
+024	Lingual tonsil
+028	Overl. lesion of tongue
+029	Tongue, NOS
+030	Upper gum
+031	Lower gum
+039	Gum, NOS
+040	Anterior floor of mouth
+041	Lateral floor of mouth
+048	Overl. lesion of floor of mo
+049	Floor of mouth, NOS
+050	Hard palate
+051	Soft palate, NOS
+052	Uvula
+058	Overl. lesion of palate
+059	Palate, NOS
+060	Cheek mucosa
+061	Vestibule of mouth
+062	Retromolar area
+068	Overl. lesion of other/unspe
+069	Mouth, NOS
+079	Parotid gland
+080	Submandibular gland
+081	Sublingual gland
+088	Overl. lesion of major saliv
+089	Major salivary gland, NOS
+090	Tonsillar fossa
+091	Tonsillar pillar
+098	Overl. lesion of tonsil
+099	Tonsil, NOS
+100	Vallecula
+101	Anterior surface of epiglott
+102	Lateral wall of oropharynx
+103	Posterior wall of oropharynx
+104	Branchial cleft
+108	Overl. lesion of oropharynx
+109	Oropharynx, NOS
+110	Superior wall of nasopharynx
+111	Posterior wall of nasopharyn
+112	Lateral wall of nasopharynx
+113	Anterior wall of nasopharynx
+118	Overl. lesion of nasopharynx
+119	Nasopharynx, NOS
+129	Pyriform sinus
+130	Postcricoid region
+131	Aryepiglottic fold
+132	Posterior wall of hypopharyn
+138	Overl. lesion of hypopharynx
+139	Laryngopharynx, Hypopharynx 
+140	Pharynx, NOS
+141	Laryngopharynx (OLD CODE, NO
+142	Waldeyer's ring, NOS
+148	Overl. lesion of lip, oral c
+150	Cervical esophagus
+151	Thoracic esophagus
+152	Abdominal esophagus
+153	Upper third of esophagus
+154	Middle third of esophagus
+155	Lower third of esophagus
+158	Overl. lesion of esophagus
+159	Oesophagus, NOS
+160	Cardia, NOS
+161	Fundus of stomach
+162	Body of stomach
+163	Gastric antrum
+164	Pylorus
+165	Lesser curvature of stomach,
+166	Greater curvature of stomach
+168	Overl. lesion of stomach
+169	Stomach, NOS
+170	Duodenum
+171	Jejunum
+172	Ileum
+173	Meckel's diverticulum
+178	Overl. lesion of small intes
+179	Small intestine
+180	Cecum
+181	Appendix
+182	Ascending colon
+183	Hepatic flexure of colon
+184	Transverse colon
+185	Splenic flexure of colon
+186	Descending colon
+187	Sigmoid colon
+188	Overl. lesion of colon
+189	Colon, NOS
+199	Rectosigmoid junction
+209	Rectum, NOS
+210	Anus, NOS
+211	Anal canal
+212	Cloacogenic zone
+218	Overl. lesion rectum, anal c
+220	Liver
+221	Intrahepatic bile duct
+239	Gallbladder
+240	Extrahepatic bile duct
+241	Ampulla of Vater
+248	Overl. lesion of biliary tra
+249	Biliary tract, NOS
+250	Head of pancreas
+251	Body of pancreas
+252	Tail of pancreas
+253	Pancreatic duct
+254	Islets of Langerhans
+257	Other specified parts of pan
+258	Overl. lesion of pancreas
+259	Pancreas, NOS
+260	Intestinal tract, NOS
+268	Overl. lesion of digestive s
+269	Gastrointestinal tract, NOS
+300	Nasal cavity
+301	Middle ear
+310	Maxillary sinus
+311	Ethmoid sinus
+312	Frontal sinus
+313	Sphenoid sinus
+318	Overl. lesion of accessory s
+319	Accessory sinus, NOS
+320	Glottis
+321	Supraglottis
+322	Subglottis
+323	Laryngeal cartilage
+328	Overl. lesion of larynx
+329	Larynx, NOS
+339	Trachea
+340	Main bronchus
+341	Upper lobe, lung
+342	Middle lobe, lung
+343	Lower lobe, lung
+348	Overl. lesion of lung
+349	Lung, NOS
+379	Thymus
+380	Heart
+381	Anterior mediastinum
+382	Posterior mediastinum
+383	Mediastinum, NOS
+384	Pleura, NOS
+388	Overl. lesion of heart, medi
+390	Upper respiratory tract
+398	Overl. lesion of respiratory
+399	Ill-defined sites within res
+400	Long bones of upper limb, sc
+401	Short bones of upper limb
+402	Long bones of lower limb
+403	Short bones of lower limb
+408	Overl. lesion of bones of li
+409	Bone of limb, NOS
+410	Bones of skull and face
+411	Mandible
+412	Vertebral column
+413	Rib, Sternum, Clavicle
+414	Pelvic bones, Sacrum, Coccyx
+418	Overl. lesion of bones
+419	Bone, NOS
+420	Blood
+421	Bone marrow
+422	Spleen
+423	Reticuloendothelial system, 
+424	Hematopoietic system, NOS
+440	Skin of lip, NOS
+441	Eyelid
+442	External ear
+443	Skin, other & unspec parts o
+444	Skin of scalp and neck
+445	Skin of trunk
+446	Skin of upper limb and shoul
+447	Skin of lower limb and hip
+448	Overl. lesion of skin
+449	Skin, NOS
+470	Per. nerves & A.N.S. of head
+471	Per. nerves & A.N.S. of uppe
+472	Per. nerves & A.N.S. of lowe
+473	Per. nerves & A.N.S. of thor
+474	Per. nerves & A.N.S. of abdo
+475	Per. nerves & A.N.S. of pelv
+476	Per. nerves & A.N.S. of trun
+478	Overl. lesion of peripheral 
+479	Autonomic nervous system, NO
+480	Retroperitoneum
+481	Specified parts of peritoneu
+482	Peritoneum, NOS
+488	Overl. lesion of retroperito
+490	Soft tissues of head, face, 
+491	Soft tissues of upper limb, 
+492	Soft tissues of lower limb a
+493	Soft tissues of thorax
+494	Soft tissues of abdomen
+495	Soft tissues of pelvis
+496	Soft tissues of trunk
+498	Overl. lesion of soft tissue
+499	Other soft tissues
+500	Nipple
+501	Central portion of breast
+502	Upper-inner quadrant of brea
+503	Lower-inner quadrant of brea
+504	Upper-outer quadrant of brea
+505	Lower-outer quadrant of brea
+506	Axillary tail of breast
+508	Overl. lesion of breast
+509	Breast, NOS
+510	Labium majus
+511	Labium minus
+512	Clitoris
+518	Overl. lesion of vulva
+519	Vulva, NOS
+529	Vagina, NOS
+530	Endocervix
+531	Exocervix
+538	Overl. lesion of cervix uter
+539	Cervix uteri
+540	Isthmus uteri
+541	Endometrium
+542	Myometrium
+543	Fundus uteri
+548	Overl. lesion of corpus uter
+549	Corpus uteri
+559	Uterus, NOS
+569	Ovary
+570	Fallopian tube
+571	Broad ligament
+572	Round ligament
+573	Parametrium
+574	Uterine adnexa
+577	Other parts of female genita
+578	Overl. lesion of female geni
+579	Female genital tract, NOS
+589	Placenta
+600	Prepuce
+601	Glans penis
+602	Body of penis
+608	Overl. lesion of penis
+609	Penis, NOS
+619	Prostate gland
+620	Undescended testis
+621	Descended testis
+629	Testis, NOS
+630	Epididymis
+631	Spermatic cord
+632	Scrotum, NOS
+637	Other parts of male genital 
+638	Overl. lesion of male genita
+639	Male genital organs, NOS
+649	Kidney, NOS
+659	Renal pelvis
+669	Ureter
+670	Trigone of urinary bladder
+671	Dome of urinary bladder
+672	Lateral wall of urinary blad
+673	Anterior wall of urinary bla
+674	Posterior wall of urinary bl
+675	Bladder neck
+676	Ureteric orifice
+677	Urachus
+678	Overl. lesion of bladder
+679	Urinary bladder, NOS
+680	Urethra
+681	Paraurethral gland
+688	Overl. lesion of urinary org
+689	Urinary system, NOS
+690	Conjunctiva
+691	Cornea, NOS
+692	Retina
+693	Choroid
+694	Ciliary body
+695	Lacrimal gland, NOS
+696	Orbit, NOS
+698	Overl. lesion of eye, adnexa
+699	Eye, NOS
+700	Cerebral meninges
+701	Spinal meninges
+709	Meninges, NOS
+710	Cerebrum
+711	Frontal lobe
+712	Temporal lobe
+713	Parietal lobe
+714	Occipital lobe
+715	Ventricle, NOS
+716	Cerebellum, NOS
+717	Brain stem
+718	Overl. lesion of brain
+719	Brain, NOS
+720	Spinal cord
+721	Cauda equina
+722	Olfactory nerve
+723	Optic nerve
+724	Acoustic nerve
+725	Cranial nerve
+728	Overl. lesion of brain and C
+729	Nervous system, NOS
+739	Thyroid gland
+740	Cortex of adrenal gland
+741	Medulla of adrenal gland
+749	Adrenal gland, NOS
+750	Parathyroid gland
+751	Pituitary gland
+752	Craniopharyngeal duct
+753	Pineal gland
+754	Carotid body
+755	Aortic body and other paraga
+758	Overl. lesion of endocrine g
+759	Endocrine gland, NOS
+760	Head, face or neck, NOS
+761	Thorax, NOS
+762	Abdomen, NOS
+763	Pelvis, NOS
+764	Upper limb, NOS
+765	Lower limb, NOS
+767	Other ill-defined sites
+768	Overl. lesion of ill-defined
+770	Lymph nodes of head, face an
+771	Intrathoracic lymph nodes
+772	Intra-abdominal lymph nodes
+773	Lymph nodes of axilla or arm
+774	Lymph nodes, inguinal region
+775	Pelvic lymph nodes
+778	Lymph nodes of multiple regi
+779	Lymph node, NOS
+809	Unknown primary site

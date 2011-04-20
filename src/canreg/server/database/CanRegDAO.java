@@ -4,6 +4,7 @@ package canreg.server.database;
  *
  * @author ervikm
  */
+import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.cachingtableapi.DistributedTableDataSource;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
@@ -12,9 +13,12 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.server.DatabaseStats;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -1531,6 +1535,56 @@ public class CanRegDAO {
         for (Dictionary dic : dictionaryMap.values()) {
             saveDictionary(dic);
         }
+        // fill individual dictionaries with default codes
+        // Record status
+        try {
+            fillDictionary(Globals.StandardVariableNames.TumourRecordStatus, Globals.DEFAULT_DICTIONARIES_FOLDER + "/recordstatus.tsv");
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // Check status
+        try {
+            fillDictionary(Globals.StandardVariableNames.CheckStatus, Globals.DEFAULT_DICTIONARIES_FOLDER + "/checkstatus.tsv");
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // Person search
+        try {
+            fillDictionary(Globals.StandardVariableNames.PersonSearch, Globals.DEFAULT_DICTIONARIES_FOLDER + "/mpstatus.tsv");
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // Topography
+        try {
+            fillDictionary(Globals.StandardVariableNames.Topography, Globals.DEFAULT_DICTIONARIES_FOLDER + "/topography.tsv");
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // Morphology
+        try {
+            fillDictionary(Globals.StandardVariableNames.Morphology, Globals.DEFAULT_DICTIONARIES_FOLDER + "/morphology.tsv");
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // Behaviour
+        try {
+            fillDictionary(Globals.StandardVariableNames.Behaviour, Globals.DEFAULT_DICTIONARIES_FOLDER + "/behaviour.tsv");
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // Basis
+        try {
+            fillDictionary(Globals.StandardVariableNames.BasisDiagnosis, Globals.DEFAULT_DICTIONARIES_FOLDER + "/basis.tsv");
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // Sex
+        try {
+            fillDictionary(Globals.StandardVariableNames.Sex, Globals.DEFAULT_DICTIONARIES_FOLDER + "/sex.tsv");
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         bFilled = true;
 
         return bFilled;
@@ -2348,5 +2402,32 @@ public class CanRegDAO {
             dataSource = new DistributedTableDataSourceResultSetImpl(result);
         }
         return dataSource;
+    }
+
+    private void fillDictionary(Globals.StandardVariableNames standardVariableName, String fileName) throws IOException {
+        DatabaseVariablesListElement element =
+                globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                standardVariableName.toString());
+        if (element != null) {
+            DatabaseDictionaryListElement dictionary = element.getDictionary();
+            InputStream in = getClass().getResourceAsStream(fileName);
+            InputStreamReader isr = new InputStreamReader(in);
+            BufferedReader br = new BufferedReader(isr);
+            String[] elements;
+            try {
+                String line = br.readLine();
+                boolean eof = false;
+                while (line != null) {
+                    elements = line.split("\t");
+                    DictionaryEntry entry = new DictionaryEntry(dictionary.getDictionaryID(), elements[0], elements[1]);
+                    saveDictionaryEntry(entry);
+                    line = br.readLine();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                br.close();
+            }
+        }
     }
 }
