@@ -110,6 +110,10 @@ public class Globals {
      */
     public static int DEFAULT_PORT = 1199;
     /**
+     *
+     */
+    public static String DEFAULT_SERVER_ADDRESS = "localhost";
+    /**
      * 
      */
     public static int NUMBER_OF_LINES_IN_IMPORT_PREVIEW = 100;
