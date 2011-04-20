@@ -185,11 +185,11 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     @Override
     protected void startup() {
-        splashMessage("Applying preferences...", 60);
+        splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("APPLYING PREFERENCES..."), 60);
         applyPreferences();
 
         InputStream in = null;
-        splashMessage("Loading application properties...", 80);
+        splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("LOADING APPLICATION PROPERTIES..."), 80);
         appInfoProperties = new Properties();
         //
         // load properties file
@@ -216,7 +216,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
         Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, "CanReg version: {0}", versionString);
         
-        splashMessage("Building GUI...", 90);
+        splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("BUILDING GUI..."), 90);
         canRegClientView = new CanRegClientView(this);
 
         show(canRegClientView);
@@ -266,7 +266,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         locksMap = new TreeMap<String, Set<Integer>>();
 
         addExitListener(maybeExit);
-        splashMessage("Finished.", 100);
+        splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("FINISHED."), 100);
     }
 
     /**
@@ -296,7 +296,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
         // Initialize logger
         try {
-            splashMessage("Initializing logger...", 20);
+            splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("INITIALIZING LOGGER..."), 20);
             Handler fh = new FileHandler(Globals.LOGFILE_PATTERN);
             Logger.getLogger("").addHandler(fh);
             Logger.getLogger("canreg").setLevel(Level.parse(Globals.LOG_LEVEL));
@@ -307,7 +307,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
 
         try {
-            splashMessage("Loading user settings...", 40);
+            splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("LOADING USER SETTINGS..."), 40);
             // Initialize the user settings
             localSettings = new LocalSettings("settings.xml");
         } catch (IOException ex) {
@@ -1042,7 +1042,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param args
      */
     public static void main(String[] args) {
-        splashMessage("Starting...", 10);
+        splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("STARTING..."), 10);
         init();
         initializeLookAndFeels();
         if (args.length > 0) {
@@ -1050,11 +1050,11 @@ public class CanRegClientApp extends SingleFrameApplication {
             if (splash != null) {
                 Graphics2D g = splash.createGraphics();
                 g.setComposite(AlphaComposite.Clear);
-                g.fill(splash.getBounds());
+                g.fillRect(0,0,splash.getSize().width,splash.getSize().height);
                 g.setPaintMode();
                 g.setColor(Color.BLACK);
                 g.setFont(new Font("SansSerif", Font.BOLD, 20));
-                g.drawString("CanReg5 Server starting...", 35, splash.getSize().height / 2);
+                g.drawString(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("CANREG5 SERVER STARTING..."), 35, splash.getSize().height / 2);
                 splash.update();
             }
             try {
@@ -1062,7 +1062,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 if (splash != null) {
                     splash.close();
                 }
-                JOptionPane.showMessageDialog(null, "CanReg server " + args[0] + " launched.");
+                JOptionPane.showMessageDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("CANREG SERVER ") + args[0] + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString(" LAUNCHED."));
             } catch (AlreadyBoundException ex) {
                 Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
             }
