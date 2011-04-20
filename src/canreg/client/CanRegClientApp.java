@@ -1169,4 +1169,8 @@ public class CanRegClientApp extends SingleFrameApplication {
             }
         }
     }
+
+    public void showLogginFrame() {
+        canRegClientView.showLoginFrame();
+    }
 }

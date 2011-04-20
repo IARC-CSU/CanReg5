@@ -182,6 +182,7 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
                 // and show confirmation
                 if (!backupTried) {
                     JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), systemDescription.getSystemName() + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString(" IS NOW READY. PLEASE LOG IN."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString("MESSAGE."), JOptionPane.INFORMATION_MESSAGE);
+                    CanRegClientApp.getApplication().showLogginFrame();
                 }
                 // this.dispose();
             } catch (IOException ex) {
