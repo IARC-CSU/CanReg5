@@ -33,16 +33,28 @@ public class ServerLauncher {
 
         System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
         System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
-
+        CanRegServerInterface server = null;
         try {
 
-            CanRegServerInterface server = new CanRegServerImpl(systemCode);
+            server = new CanRegServerImpl(systemCode);
             CanRegLoginInterface service = new CanRegLoginImpl(server);
-            Naming.bind("rmi://"+systemURL+":" + port + "/CanRegLogin" + systemCode, service);
+            Naming.bind("rmi://" + systemURL + ":" + port + "/CanRegLogin" + systemCode, service);
             success = true;
 
         } catch (MalformedURLException ex) {
             Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex);
+            success = false;
+        } catch (AlreadyBoundException ex) {
+            Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex);
+            if (server != null) {
+                try {
+                    server.shutDownServer();
+                } catch (RemoteException ex1) {
+                    Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex1);
+                } catch (SecurityException ex1) {
+                    Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
             success = false;
         } catch (RemoteException ex) {
             Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex);
