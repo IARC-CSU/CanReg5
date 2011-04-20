@@ -53,7 +53,7 @@
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="fileNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="10" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -88,7 +88,7 @@
     <Component class="javax.swing.JButton" name="jButton2">
       <Properties>
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-          <action class="canreg.client.gui.InstallNewSystemInternalFrame" id="installAction" methodName="installAction"/>
+          <action class="canreg.client.gui.management.InstallNewSystemInternalFrame" id="installAction" methodName="installAction"/>
         </Property>
         <Property name="name" type="java.lang.String" value="jButton2" noResource="true"/>
       </Properties>
