@@ -30,6 +30,11 @@ import canreg.server.database.Patient;
 import canreg.server.database.PopulationDataset;
 import canreg.server.database.RecordLockedException;
 import canreg.server.database.Tumour;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.SplashScreen;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +42,7 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -179,9 +185,11 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     @Override
     protected void startup() {
+        splashMessage("Applying preferences...", 60);
         applyPreferences();
 
         InputStream in = null;
+        splashMessage("Loading application properties...", 80);
         appInfoProperties = new Properties();
         //
         // load properties file
@@ -207,7 +215,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         versionString += "b" + appInfoProperties.getProperty("program.BUILDNUM");
         versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
         Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, "CanReg version: {0}", versionString);
-
+        
+        splashMessage("Building GUI...", 90);
         canRegClientView = new CanRegClientView(this);
 
         show(canRegClientView);
@@ -257,6 +266,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         locksMap = new TreeMap<String, Set<Integer>>();
 
         addExitListener(maybeExit);
+        splashMessage("Finished.", 100);
     }
 
     /**
@@ -286,6 +296,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
         // Initialize logger
         try {
+            splashMessage("Initializing logger...", 20);
             Handler fh = new FileHandler(Globals.LOGFILE_PATTERN);
             Logger.getLogger("").addHandler(fh);
             Logger.getLogger("canreg").setLevel(Level.parse(Globals.LOG_LEVEL));
@@ -296,12 +307,12 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
 
         try {
+            splashMessage("Loading user settings...", 40);
             // Initialize the user settings
             localSettings = new LocalSettings("settings.xml");
         } catch (IOException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         }
-        initializeLookAndFeels();
         // Locale.setDefault(localSettings.getLocale());
     }
 
@@ -1031,8 +1042,33 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param args
      */
     public static void main(String[] args) {
+        splashMessage("Starting...", 10);
         init();
-        launch(CanRegClientApp.class, args);
+        initializeLookAndFeels();
+        if (args.length > 0) {
+            SplashScreen splash = SplashScreen.getSplashScreen();
+            if (splash != null) {
+                Graphics2D g = splash.createGraphics();
+                g.setComposite(AlphaComposite.Clear);
+                g.fill(splash.getBounds());
+                g.setPaintMode();
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("SansSerif", Font.BOLD, 20));
+                g.drawString("CanReg5 Server starting...", 35, splash.getSize().height / 2);
+                splash.update();
+            }
+            try {
+                canreg.common.ServerLauncher.start(Globals.DEFAULT_SERVER_ADDRESS, args[0], Globals.DEFAULT_PORT);
+                if (splash != null) {
+                    splash.close();
+                }
+                JOptionPane.showMessageDialog(null, "CanReg server " + args[0] + " launched.");
+            } catch (AlreadyBoundException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            launch(CanRegClientApp.class, args);
+        }
     }
 
     private synchronized void lockRecord(int recordID, String tableName) {
@@ -1096,6 +1132,25 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public JDesktopPane getDesktopPane() {
         return canRegClientView.getDesktopPane();
+    }
+
+    private static void splashMessage(String message, int progress) {
+        SplashScreen splash = SplashScreen.getSplashScreen();
+        int maxProgress = 100;
+        if (splash != null) {
+            Graphics2D g = splash.createGraphics();
+            g.setComposite(AlphaComposite.Clear);
+            g.fillRect(0,0,splash.getSize().width,splash.getSize().height);
+            g.setPaintMode();
+            g.setColor(Color.BLACK);
+            g.setFont(new Font("SansSerif", Font.BOLD, 10));
+            g.drawString(message, 35, splash.getSize().height / 2+20);
+            g.drawRect(35, splash.getSize().height/2+30
+                    , splash.getSize().width-70, 9);
+            g.fillRect(37,splash.getSize().height/2+32
+                    ,(progress*(splash.getSize().width-68)/maxProgress),5);
+            splash.update();
+        }
     }
 
     private synchronized void releaseAllRecordsHeldByThisClient() {
