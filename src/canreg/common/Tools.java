@@ -432,7 +432,12 @@ public class Tools {
             int id = -1;
             try {
                 id = Integer.parseInt(e.getElementsByTagName(namespace + "group_id").item(0).getTextContent());
-                position = Integer.parseInt(e.getElementsByTagName(namespace + "group_pos").item(0).getTextContent());
+                NodeList positionNodeList = e.getElementsByTagName(namespace + "group_pos");
+                if (positionNodeList.item(0)!=null) {
+                    position = Integer.parseInt(positionNodeList.item(0).getTextContent());
+                } else {
+                    position = i;
+                }
             } catch (NullPointerException npe) {
                 throw (npe);
             } catch (NumberFormatException nfe) {
