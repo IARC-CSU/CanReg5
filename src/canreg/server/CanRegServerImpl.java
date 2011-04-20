@@ -938,4 +938,12 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             trayIcon.displayMessage(caption, text, messageType);
         }
     }
+
+    @Override
+    public void shutDownServer() throws RemoteException, SecurityException {
+        if (trayIcon != null) {
+            SystemTray tray = SystemTray.getSystemTray();
+            tray.remove(trayIcon);
+        }
+    }
 }

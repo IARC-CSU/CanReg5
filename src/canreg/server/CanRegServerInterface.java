@@ -440,4 +440,6 @@ public interface CanRegServerInterface extends Remote {
      * @throws SecurityException
      */
     public DatabaseStats getDatabaseStats() throws RemoteException, SecurityException;
+
+    public void shutDownServer() throws RemoteException, SecurityException;
 }

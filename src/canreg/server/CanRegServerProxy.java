@@ -321,7 +321,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
 
     @Override
     public void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException {
-        checkPermission("releaseRecord: " + tableName +"-"+ recordID);
+        checkPermission("releaseRecord: " + tableName + "-" + recordID);
         theServer.releaseRecord(recordID, tableName);
     }
 
@@ -329,5 +329,11 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public DatabaseStats getDatabaseStats() throws RemoteException, SecurityException {
         checkPermission("getDatabaseStats");
         return theServer.getDatabaseStats();
+    }
+
+    @Override
+    public void shutDownServer() throws RemoteException, SecurityException {
+        checkPermission("shutDownServer");
+        theServer.shutDownServer();
     }
 }
