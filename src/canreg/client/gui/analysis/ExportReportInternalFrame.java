@@ -796,7 +796,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             // Here we do indeed reference the jtable. However as long as the user does not move the columns it should be ok...
             // TODO: reference the data source instead of the resultTable!
 
-            String line = "";
+            StringBuilder line = new StringBuilder();
             VariablesExportDetailsPanel dvle;
             Object value;
             GregorianCalendarCanReg gregorianCanRegCalendar;
@@ -826,19 +826,20 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
                     // the raw name
                     if (bools[0]) {
-                        line += columnName + separatingString;
+                        line.append(columnName).append(separatingString);
                     }
                     // the category
                     if (bools[1]) {
-                        line += columnName + " (cat)" + separatingString;
+                        line.append(columnName).append(" (cat)").append(separatingString);
                     }
                     // the description
                     if (bools[2]) {
-                        line += columnName + " (desc)" + separatingString;
+                        line.append(columnName).append(" (desc)").append(separatingString);
                     }
                     boolean last = (column == columnCount - 1);
                     if (last) {
-                        line = line.substring(0, line.length() - separatingString.length());
+                        line.replace(line.length()-2,line.length()-1,"");
+                        // line = line.substring(0, line.length() - separatingString.length());
                     }
                 }
                 // add the source bits if needed
@@ -846,16 +847,16 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     for (int i = 0; i < maxNumberOfSourcesPerTumour; i++) {
                         for (String header : sourceVariableNames) {
                             if (maxNumberOfSourcesPerTumour > 1) {
-                                line += separatingString + header+(i+1);
+                                line.append(separatingString).append(header).append(i+1);
                             } else {
-                                line += separatingString + header;
+                                line.append(separatingString).append(header);
                             }
                         }
                     }
                 }
 
                 bw.write(line + "\n");
-                line = "";
+                line = new StringBuilder();
                 for (int row = 0; row < rowCount; row++) {
                     for (int column = 0; column < columnCount; column++) {
                         dvle = variableChooserPanel.getVariablesExportDetailsPanelByName(resultTable.getColumnName(column));
@@ -890,7 +891,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                                     Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.WARNING, "Value: " + value, ex);
                                 }
                             }
-                            line += value + separatingString;
+                            line.append(value).append(separatingString);
                         }
                         // the category
                         if (bools[1]) {
@@ -904,7 +905,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                             } catch (NullPointerException npe) {
                                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, npe);
                             }
-                            line += category + separatingString;
+                            line.append(category).append(separatingString);
                         }
                         // the description
                         if (bools[2]) {
@@ -918,11 +919,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                             } catch (NullPointerException npe) {
                                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, npe);
                             }
-                            line += description + separatingString;
+                            line.append(description).append(separatingString);
                         }
                         boolean last = (column == columnCount - 1);
                         if (last) {
-                            line = line.substring(0, line.length() - separatingString.length());
+                        line.replace(line.length()-2,line.length()-1,"");
                         }
                     }
                     // if we should export the sources we do that here...
@@ -953,7 +954,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                                 if (tumour != null && tumour.getSources() != null) {
                                     for (Source source : tumour.getSources()) {
                                         for (String variableName : sourceVariableNames) {
-                                            line += separatingString + source.getVariable(variableName);
+                                            line.append(separatingString).append(source.getVariable(variableName));
                                         }
                                         numberOfSourcesWritten++;
                                     }
@@ -973,7 +974,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                             } finally {
                                 for (; numberOfSourcesWritten < maxNumberOfSourcesPerTumour;) {
                                     for (String variableName : sourceVariableNames) {
-                                        line += separatingString + "";
+                                        line.append(separatingString);
                                     }
                                     numberOfSourcesWritten++;
                                 }
@@ -984,7 +985,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     }
                     setProgress(100 * row / rowCount);
                     bw.write(line + "\n");
-                    line = "";
+                    line.delete(0, line.length());
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
