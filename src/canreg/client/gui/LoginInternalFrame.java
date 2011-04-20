@@ -10,6 +10,7 @@ import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.ServerDescription;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import canreg.common.Globals;
 import canreg.exceptions.WrongCanRegVersionException;
 import java.awt.Cursor;
 import java.beans.PropertyChangeSupport;
@@ -385,6 +386,8 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loadDefaultValues() {
+        portField.setText(""+Globals.DEFAULT_PORT);
+        serverURLTextField.setText(Globals.DEFAULT_SERVER_ADDRESS);
         // Properties p = localSettings.getProperties();
         String rememberPasswordBooleanString = localSettings.getProperty(LocalSettings.REMEMBER_PASSWORD_KEY);
         boolean rememberPassword = rememberPasswordBooleanString.equalsIgnoreCase(LocalSettings.TRUE_PROPERTY);
@@ -758,7 +761,11 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
      */
     @Action
     public void serverComboboxChanged() {
-        ServerDescription sd = localSettings.getServerDescriptions().get(canRegSystemComboBox.getSelectedIndex());
+        int selected = canRegSystemComboBox.getSelectedIndex();
+        if (selected < 0){
+            selected = 0;
+        }
+        ServerDescription sd = localSettings.getServerDescriptions().get(selected);
         portField.setText(sd.getPort() + "");
         serverURLTextField.setText(sd.getUrl());
         codeField.setText(sd.getCode());
