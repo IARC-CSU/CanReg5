@@ -441,6 +441,7 @@
                 <Property name="name" type="java.lang.String" value="codeField" noResource="true"/>
               </Properties>
               <Events>
+                <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="codeFieldFocusGained"/>
                 <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="enterKeyTyped"/>
               </Events>
             </Component>
