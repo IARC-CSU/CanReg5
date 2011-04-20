@@ -612,6 +612,11 @@ public class CanRegDAO {
                 // debugOut(query);
                 statement.execute(query);
             }
+            LinkedList<String> sourceIndexList = QueryGenerator.strCreateIndexTable("Source", doc);
+            for (String query : sourceIndexList) {
+                // debugOut(query);
+                statement.execute(query);
+            }
 
             bCreatedTables = true;
         } catch (SQLException ex) {
