@@ -80,7 +80,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="logoButton" min="-2" pref="274" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="aboutScrollPane" pref="90" max="32767" attributes="0"/>
+                          <Component id="aboutScrollPane" pref="94" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="versionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -161,9 +161,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="loginButton" pref="178" max="32767" attributes="0"/>
+                      <Component id="loginButton" pref="180" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="restoreBackupButton" pref="178" max="32767" attributes="0"/>
+                      <Component id="restoreBackupButton" pref="180" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

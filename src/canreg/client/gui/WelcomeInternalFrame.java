@@ -264,6 +264,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         //JFrame mainFrame = CanRegClientApp.getApplication().getMainFrame();
         internalFrame.setLocation(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2);
         internalFrame.setVisible(true);
+        this.dispose();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane aboutEditorPane;
