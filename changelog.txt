@@ -1,5 +1,31 @@
 Changelog
 
+5.00.05
+- Translated to Spanish by Graciela Cristina Nicolas.
+- Implemented Topography/Morphology check.
+- Fixed a memory leak during export.
+- Install new system definition frame now detects backups in the same folder as the XML to streamline the initial installation process.
+- Standard dictionaries are now filled with standard codes when the database is created.
+- If you start CanReg with the registry code as argument it launches only this server - not the client.
+- Updated the Age/Morphology, Age/Topography, Grade checks.
+- Fixed a bug where dates would not be reported as missing although flagged as mandatory variables.
+- Implemented system to request focus after pop up menu. 
+- The user can now press '?' to get the dictionary chooser.
+- Browse and openFile updated. Now using java.awt.Desktop if possible - falling back on BareBonesBrowserLaunch if necessary.
+- Updated the BareBonesBrowserLaunch class.
+- The panels are now using the interfaces instead of implementations.
+- Added a tray icon to show that the CanReg server is running.
+- A system for shutting down the server properly put in place.
+- LoginInternalFrame: the Launch server button gets reactivated if you modify the server code.
+- System Tray notifications and popups implemented.
+- Shows login frame after successfully installed system definition.
+- Internationalized the splash screen messages.
+- Updated the demo system, TRN.xml
+- Javadoc expanded.
+- Added some protection from nullpointers.
+- Added some tooltips.
+- Various fixes.
+
 5.00.04
 - Fixed the "dropped result set while browsing" bug
 - Population data set editor improved.

@@ -1,5 +1,225 @@
-changeset:   683:d267d2c0edfd
+changeset:   727:c54365c62fcb
 tag:         tip
+user:        ervikm@X90164
+date:        Thu Apr 21 10:02:47 2011 +0200
+summary:     Translated to Spanish by Graciela Cristina Nicolas.
+
+changeset:   726:168b6f16129a
+user:        ervikm@X90164
+date:        Wed Apr 20 18:22:31 2011 +0200
+summary:     Fixed a memory leak during export.
+
+changeset:   725:fc090fa45cd7
+user:        ervikm@X90164
+date:        Wed Apr 20 18:05:53 2011 +0200
+summary:     Shows login frame after successfully installed system definition.
+
+changeset:   724:d62863398f36
+user:        ervikm@X90164
+date:        Wed Apr 20 17:56:28 2011 +0200
+summary:     Internationalized the splash screen messages.
+
+changeset:   723:f5007ff5b732
+user:        ervikm@X90164
+date:        Wed Apr 20 17:44:42 2011 +0200
+summary:     If you start CanReg with the registry code as argument it launches only this server - not the client.
+
+changeset:   722:06e5597f729f
+user:        ervikm@X90164
+date:        Wed Apr 20 15:57:34 2011 +0200
+summary:     A server that has not been able to start no longer displays a tray icon.
+
+changeset:   721:00ca045bbc56
+user:        ervikm@X90164
+date:        Wed Apr 20 15:56:30 2011 +0200
+summary:     A system for shutting down the server properly put in place.
+
+changeset:   720:e6b181d7056c
+user:        ervikm@X90164
+date:        Wed Apr 20 15:55:43 2011 +0200
+summary:     LoginInternalFrame: the Launch server button gets reactivated if you modify the server code.
+
+changeset:   719:988c45b29641
+user:        ervikm@X90164
+date:        Wed Apr 20 15:27:14 2011 +0200
+summary:     Added some protection from nullpointers.
+
+changeset:   718:0833e07e5a42
+user:        ervikm@X90164
+date:        Wed Apr 20 15:26:42 2011 +0200
+summary:     Updated the demo system, TRN.xml
+
+changeset:   717:754df459efba
+user:        ervikm@X90164
+date:        Wed Apr 20 15:10:02 2011 +0200
+summary:     Standard dictionaries are now filled with standard codes when the database is created.
+
+changeset:   716:63afff83c85a
+user:        ervikm@X90164
+date:        Wed Apr 20 14:18:07 2011 +0200
+summary:     Source table indexed.
+
+changeset:   715:7a14eef143c5
+user:        ervikm@X90164
+date:        Wed Apr 20 12:03:52 2011 +0200
+summary:     Default server address added as a global constant variable.
+
+changeset:   714:bf668e9ff2d1
+user:        ervikm@X90164
+date:        Wed Apr 20 12:02:59 2011 +0200
+summary:     Install new system definition frame now detects backups in the same folder as the XML to streamline the initial installation process.
+
+changeset:   713:867c98c39bca
+user:        ervikm@X90164
+date:        Wed Apr 20 11:48:35 2011 +0200
+summary:     Added tooltip.
+
+changeset:   712:1e6f5bb514b9
+user:        ervikm@X90164
+date:        Wed Apr 20 11:48:15 2011 +0200
+summary:     Removed some old comments.
+
+changeset:   711:07de2761ca06
+user:        ervikm@X90164
+date:        Wed Apr 20 11:47:43 2011 +0200
+summary:     Welcome frame disposes right after user has done her choice.
+
+changeset:   710:a058ac6a3f4e
+user:        ervikm@X90164
+date:        Wed Apr 20 11:46:59 2011 +0200
+summary:     Fixed an error occuring if an invalid selection was read from the server selection combo box.
+
+changeset:   709:243a322d7d90
+user:        ervikm@X90164
+date:        Mon Apr 18 15:43:32 2011 +0200
+summary:     Refactored some code.
+
+changeset:   708:048bc8364874
+user:        ervikm@X90164
+date:        Wed Apr 06 17:50:19 2011 +0200
+summary:     Roadmap document updated.
+
+changeset:   707:bcb1e418119a
+user:        ervikm@X90164
+date:        Wed Apr 06 17:33:56 2011 +0200
+summary:     Fixed a potential string out of bounds error.
+
+changeset:   706:8fe2d0e5d56a
+user:        ervikm@X90164
+date:        Tue Apr 05 17:43:15 2011 +0200
+summary:     Updated instructions file, added index.
+
+changeset:   705:c3786007b41b
+user:        ervikm@X90164
+date:        Thu Mar 31 18:15:00 2011 +0200
+summary:     System Tray server popups implemented.
+
+changeset:   704:2c97461bf20f
+user:        ervikm@X90164
+date:        Thu Mar 31 18:04:24 2011 +0200
+summary:     System Tray notifications implemented.
+
+changeset:   703:7419bb8c0500
+user:        ervikm@X90164
+date:        Thu Mar 31 17:49:49 2011 +0200
+summary:     If we can we add a tray icon to show that the CanReg server is running.
+
+changeset:   702:bc94da5e0d43
+user:        ervikm@X90164
+date:        Thu Mar 31 17:27:16 2011 +0200
+summary:     browse and openFile added or modified. Now using java.awt.Desktop if possible - falling back on BareBonesBrowserLaunch if necessary.
+
+changeset:   701:c5f1301b2fbb
+user:        ervikm@X90164
+date:        Thu Mar 31 17:26:54 2011 +0200
+summary:     The panels are now using the interfaces instead of implementations.
+
+changeset:   700:25d5a4be4218
+user:        ervikm@X90164
+date:        Thu Mar 31 17:26:02 2011 +0200
+summary:     browse and openFile added or modified. Now using java.awt.Desktop if possible - falling back on BareBonesBrowserLaunch if necessary.
+
+changeset:   699:926784aac3cf
+user:        ervikm@X90164
+date:        Thu Mar 31 17:06:40 2011 +0200
+summary:     Updated the BareBonesBrowserLaunch class. (Although it is not used any more in CanReg.)
+
+changeset:   698:30a950cdc69b
+user:        ervikm@X90164
+date:        Tue Mar 29 17:44:55 2011 +0200
+summary:     Implemented system to request focus after pop up menu and the user can now press '?' to get the dictionary chooser.
+
+changeset:   697:776dbb6a5e0a
+user:        ervikm@X90164
+date:        Tue Mar 29 16:23:23 2011 +0200
+summary:     Fixed a bug where dates would not be reported as missing although flagged as mandatory variables.
+
+changeset:   696:17454f02b116
+user:        ervikm@X90164
+date:        Thu Mar 24 17:23:01 2011 +0100
+summary:     Javadoc added.
+
+changeset:   695:7c9ca34aeb65
+user:        ervikm@X90164
+date:        Thu Mar 24 17:22:48 2011 +0100
+summary:     Javadoc added.
+
+changeset:   694:ddd76108fa23
+user:        ervikm@X90164
+date:        Thu Mar 24 17:22:21 2011 +0100
+summary:     Javadoc added.
+
+changeset:   693:bc35377644c9
+user:        ervikm@X90164
+date:        Thu Mar 24 17:04:10 2011 +0100
+summary:     Topography/Morphology: Rare (269, 8240). Correction: this combination is accepted in Family 57. Therefore, all subsites of main site code 26 should be accepted without a query for histology 8240. Note: it might be useful to verify that DEPedits also accepts all subsites of the following main sites in Family 57: 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 34, 37, 56, 73, 80.
+
+changeset:   692:4f4483de7d31
+user:        ervikm@X90164
+date:        Thu Mar 24 16:22:05 2011 +0100
+summary:     Grade Differentiation: Invalid (9714, 7). Correction: grade codes 5 and 7 are acceptable with histology 9714. The rule having identified this ‘error’ should be removed.
+
+changeset:   691:a13a3822350f
+user:        ervikm@X90164
+date:        Thu Mar 24 16:14:35 2011 +0100
+summary:     Updated the TopographyMorphology check.
+
+changeset:   690:5a8149b1719b
+user:        ervikm@X90164
+date:        Thu Mar 24 16:11:11 2011 +0100
+summary:     Topography/Morphology: Rare (269, 8240). Correction: this combination is accepted in Family 57. Therefore, all subsites of main site code 26 should be accepted without a query for histology 8240. Note: it might be useful to verify that DEPedits also accepts all subsites of the following main sites in Family 57: 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 34, 37, 56, 73, 80.
+
+changeset:   689:5280e7f18827
+user:        ervikm@X90164
+date:        Thu Mar 24 15:57:24 2011 +0100
+summary:     Age/Topography: Rare (14, 252). Correction: there should be no age restriction for site 25 (and all its subsites).
+
+changeset:   688:4e8cd248ff5c
+user:        ervikm@X90164
+date:        Thu Mar 24 15:55:55 2011 +0100
+summary:     Age/Morphology: Rare (18, 9750). This was also identified as rare for ages 14, 19, 44, 52. Correction: there should be no age restriction for histology 9750.
+
+changeset:   687:ed9a03663f04
+user:        ervikm@X90164
+date:        Thu Mar 24 15:52:30 2011 +0100
+summary:     Age/Morphology: Rare (10, 9863). This was also identified as rare for ages 2, 8, 11, 12, 15. Correction: there should be no age restriction for histology 9863.
+
+changeset:   686:92f973deb77c
+user:        ervikm@X90164
+date:        Thu Mar 24 09:39:53 2011 +0100
+summary:     Implemented TopographyMorphology check.
+
+changeset:   685:0cbb23ee6b64
+user:        ervikm@X90164
+date:        Wed Mar 23 18:56:10 2011 +0100
+summary:     Implemented TopographyMorphology check.
+
+changeset:   684:e3d625e2e05a
+user:        ervikm@X90164
+date:        Wed Mar 23 12:22:15 2011 +0100
+summary:     5.00.04
+
+changeset:   683:d267d2c0edfd
 user:        ervikm@X90164
 date:        Thu Mar 17 16:13:06 2011 +0100
 summary:     Fixed some errors introduced while refactoring...

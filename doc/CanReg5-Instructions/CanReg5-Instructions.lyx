@@ -594,13 +594,15 @@ canreg5client.log
 
 \end_inset
 
-canreg5client.log and is located in your home folder (on windows it is most
- probably under C:
+canreg5client.log and is located in your home folder.
+ (On windows it is most probably under C:
 \backslash
 Documents and Settings
 \backslash
-<your username> ) If you can attach this to emails with feedback/queries
- it would be very useful.
+<your username> - you can access this by browsing to %HOMEPATH% Depending
+ on how you have configured your computer it might show up as canreg5client.)
+ If you can attach this to emails with feedback/queries it would be very
+ useful.
  Please note that this file is overwritten each time CanReg is started,
  so you need to 
 \begin_inset Quotes eld
@@ -9414,7 +9416,7 @@ Here's a list of useful third party tools to use with CanReg5.
 \end_layout
 
 \begin_layout Subsection
-For data cleaning
+Data cleaning
 \begin_inset Index
 status open
 
@@ -9496,6 +9498,144 @@ target "http://www.talend.com/"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Data security
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+data security
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+GnuPG
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+GnuPG
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Complete and free implementation of the OpenPGP standard.
+ (
+\begin_inset CommandInset href
+LatexCommand href
+target "http://gnupg.org/"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Allows to encrypt and sign your data and communication.
+ 
+\end_layout
+
+\begin_layout Itemize
+Easy to use and set up.
+ 
+\end_layout
+
+\begin_layout Itemize
+OS independant 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Gpg4win on Windows 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.gpg4win.org"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+GPGTools on Mac OS X 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Integrates with email clients 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Enigmail
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection
+TrueCrypt
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+TrueCrypt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Free open-source disk encryption
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+disk encryption
+\end_layout
+
+\end_inset
+
+ software.
+ 
+\end_layout
+
+\begin_layout Itemize
+On-the-fly-encrypted volume (data storage device).
+ 
+\end_layout
+
+\begin_layout Itemize
+For Windows 7/Vista/XP, Mac OS X, and Linux.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.truecrypt.org"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Newpage newpage
 \end_inset
 
@@ -9692,6 +9832,10 @@ Kevin Ward, Emory University, USA
 Cankut Yakut, Izmir Cancer Registry, Turkey
 \end_layout
 
+\begin_layout Itemize
+Antoine Buemi, Registre des Cancers du Haut-Rhin
+\end_layout
+
 \begin_layout Subsubsection
 Translators
 \end_layout
@@ -9725,7 +9869,7 @@ References
 \end_layout
 
 \begin_layout Itemize
-Ferlay et al, Check and Conversion Programs for Cancer Registries (IARC/IACR
+J Ferlay et al, Check and Conversion Programs for Cancer Registries (IARC/IACR
  Tools for Cancer Registries), IARC Technical Report No.
  42, Lyon, 2005 (Available at: 
 \begin_inset CommandInset href
@@ -9752,8 +9896,17 @@ target "http://www.iarc.fr./en/publications/pdfs-online/epi/sp95/index.php"
 \end_layout
 
 \begin_layout Itemize
-Steliarova-Foucher et al, Childhood Classification, Third Edition, CANCER
+E Steliarova-Foucher et al, Childhood Classification, Third Edition, CANCER
  Volume 103, 1457-1467
+\end_layout
+
+\begin_layout Itemize
+K Fogel, Producing Open Source Software, First Edition, O'Reilly, 2005
+\end_layout
+
+\begin_layout Itemize
+J Bloch, Effective Java, Second Edition, Second Edition, Sun Microsystems,
+ 2008
 \end_layout
 
 \begin_layout Subsection

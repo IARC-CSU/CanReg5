@@ -1,0 +1,326 @@
+#LyX 1.6.8 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+CanReg analysis improvements
+\end_layout
+
+\begin_layout Author
+Morten Johannes ERVIK, Freddie BRAY
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+R is a powerfull open source freely available software package that could
+ be coupled with CanReg to improve the analytical capabilites.
+\end_layout
+
+\begin_layout Section
+What data does registries store in CanReg5
+\end_layout
+
+\begin_layout Standard
+Each record store (at least):
+\end_layout
+
+\begin_layout Itemize
+Sex
+\end_layout
+
+\begin_layout Itemize
+Incidence date
+\end_layout
+
+\begin_layout Itemize
+Birth date (or age at the time of tumour)
+\end_layout
+
+\begin_layout Itemize
+Coded address at the time of the tumour
+\end_layout
+
+\begin_layout Itemize
+Topography, Morphology, Behaviour in ICD-O-3
+\end_layout
+
+\begin_layout Itemize
+Most valid basis of diagnosis
+\end_layout
+
+\begin_layout Itemize
+ICD10 and ICCC
+\end_layout
+
+\begin_layout Itemize
+Date of last contact
+\end_layout
+
+\begin_layout Itemize
+Vital status
+\end_layout
+
+\begin_layout Itemize
+Source info:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Type of 
+\end_layout
+
+\begin_layout Itemize
+Number of
+\end_layout
+
+\begin_layout Itemize
+(Dates)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Globally each registry also have population data sets (denominators).
+\end_layout
+
+\begin_layout Section
+What we 
+\emph on
+do
+\emph default
+ with that data now
+\end_layout
+
+\begin_layout Itemize
+Incidence tables (Per 100.000 per cancer group, age group, ASR, CR etc.)
+\end_layout
+
+\begin_layout Itemize
+Number of cases (per cancer group, age group)
+\end_layout
+
+\begin_layout Itemize
+Population pyramids
+\end_layout
+
+\begin_layout Itemize
+Frequencies by year
+\end_layout
+
+\begin_layout Standard
+Otherwise data needs to be exported to be analysed in other software packages.
+\end_layout
+
+\begin_layout Section
+What we 
+\emph on
+could
+\emph default
+ do with that data
+\end_layout
+
+\begin_layout Itemize
+Graphs:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Bar charts by cancer/sex
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+incidence tables
+\end_layout
+
+\begin_layout Itemize
+number of cases
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Time trends
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+ASRs (world) over time
+\end_layout
+
+\begin_layout Itemize
+age spec rates over time
+\end_layout
+
+\begin_layout Itemize
+age spec rates over cohort
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+Quality indicators
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Validity:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+DCO%
+\end_layout
+
+\begin_layout Itemize
+PSU%
+\end_layout
+
+\begin_layout Itemize
+MV%
+\end_layout
+
+\begin_layout Itemize
+Compared with other reg (CI5 IX)
+\end_layout
+
+\begin_layout Itemize
+DCO% over time
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+potentially with graphs
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+Completeness:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Reference childhood incidence comparison
+\end_layout
+
+\begin_layout Itemize
+Stability of rates over time by cancer/sex
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+potentially with graphs
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Age specific rates by cancer/sex
+\end_layout
+
+\begin_layout Itemize
+Sources
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+number of sources per case
+\end_layout
+
+\begin_layout Itemize
+number of notifications per case
+\end_layout
+
+\end_deeper
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+Geographic stuff, maps?
+\end_layout
+
+\begin_layout Section
+What we could do if we linked it to other data
+\end_layout
+
+\begin_layout Standard
+This is more for the future, but might be interesting...
+\end_layout
+
+\begin_layout Itemize
+If linked to mortality data
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+M/I ratios as estimator of completeness
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Technical aspects
+\end_layout
+
+\begin_layout Standard
+Basically two main ways to do it.
+\end_layout
+
+\begin_layout Subsection
+Export the data from CanReg5 to files readable by R and then call R in batch
+ mode
+\end_layout
+
+\begin_layout Standard
+Prefered mehtod - more dynamic and loosely coupled.
+ Easier to potentially reuse R code later.
+\end_layout
+
+\begin_layout Subsection
+Use libraries in Java (a Java to R bridge) to call R functions directly
+\end_layout
+
+\begin_layout Standard
+Alternative method we might want to look into.
+\end_layout
+
+\end_body
+\end_document
