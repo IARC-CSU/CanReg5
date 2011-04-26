@@ -11,8 +11,6 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -167,7 +165,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
         } else if (rule == 7) // conversion dependent on Morphology only
         {
             ICD10Male = morphologyLookUpLine.substring(1, morphologyLookUpLine.length());
-            if (ICD10Male.length() > 3 && ICD10Male.charAt(3) == '*') {
+            if (ICD10Male.length()>3 && ICD10Male.charAt(3) == '*') {
                 ICD10Male = ICD10Male.substring(0, 3) + topographyCode.charAt(2);
             }
             if (morphologyLookUpLine.length() > 5) {
@@ -290,7 +288,6 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
 
         int i1 = 0;
         try {
-            morphologyLookUpLine = removeComments(morphologyLookUpLine).trim();
             i1 = Integer.parseInt(morphologyLookUpLine.substring(2).trim());
         } catch (NumberFormatException numberFormatException) {
             return false;
@@ -336,7 +333,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
 
         int i1 = 0;
         try {
-            morphologyLookUpLine = removeComments(morphologyLookUpLine).trim();
+            morphologyLookUpLine = morphologyLookUpLine.trim();
             i1 = Integer.parseInt(morphologyLookUpLine.substring(2));
         } catch (NumberFormatException numberFormatException) {
             return false;
@@ -383,22 +380,6 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
             i1++;
         } while (true);
         return true;
-    }
-
-    /*__________________________________________________________________
-     *
-     * This method enables to put off the comments when we get the string read in the files 03_10M.txt
-     * If there is comment, the string cannot be converted into an integer.
-     */
-    private String removeComments(String ch) {
-        Pattern pattern = Pattern.compile("/");
-        Matcher matcher = pattern.matcher(ch);
-        if (matcher.find()) {
-            ch.substring(0, matcher.start());
-            return ch.substring(0, matcher.start());
-        } else {
-            return ch;
-        }
     }
 
     private String setStringChar(String theString, char theChar, int i) {
