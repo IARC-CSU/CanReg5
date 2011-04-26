@@ -1298,6 +1298,28 @@ Click browse to find the system definition file.
  TRN.xml and click open and then Install.) 
 \end_layout
 
+\begin_layout Standard
+If the XML file is associated with a backup of CanReg5 the program will
+ ask you if you want to restore from this backup.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename backupdetected.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you click yes CanReg will launch the server with the newly installed
+ system definitions and restore this backup.
+ 
+\end_layout
+
 \begin_layout Subsection
 
 \family sans
@@ -9864,6 +9886,14 @@ Russian:
 Evgeniya Ostroumova, IARC, France
 \end_layout
 
+\begin_layout Itemize
+
+\series bold
+Spanish:
+\series default
+ Graciela Cristina Nicolas, Cordoba, Argentina
+\end_layout
+
 \begin_layout Subsection
 References
 \end_layout
@@ -9905,8 +9935,7 @@ K Fogel, Producing Open Source Software, First Edition, O'Reilly, 2005
 \end_layout
 
 \begin_layout Itemize
-J Bloch, Effective Java, Second Edition, Second Edition, Sun Microsystems,
- 2008
+J Bloch, Effective Java, Second Edition, Sun Microsystems, 2008
 \end_layout
 
 \begin_layout Subsection

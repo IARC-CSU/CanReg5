@@ -1,5 +1,15 @@
-changeset:   727:c54365c62fcb
+changeset:   729:ca838f8f229a
 tag:         tip
+user:        ervikm@X90164
+date:        Thu Apr 21 10:16:34 2011 +0200
+summary:     Fixed a bug in a icon name in the Spanish translation.
+
+changeset:   728:e79c78b89059
+user:        ervikm@X90164
+date:        Thu Apr 21 10:08:45 2011 +0200
+summary:     5.00.05rc3
+
+changeset:   727:c54365c62fcb
 user:        ervikm@X90164
 date:        Thu Apr 21 10:02:47 2011 +0200
 summary:     Translated to Spanish by Graciela Cristina Nicolas.
