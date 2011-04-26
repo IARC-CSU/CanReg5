@@ -247,13 +247,13 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
 
         if ((sexDependent) && (!ICD10Female.substring(0, 3).equals(ICD10Male.substring(0, 3)))) {
             if (sexNumber == maleCode) {
-                result[0].setValue(ICD10);
+                result[0].setValue(tidyICD10code(ICD10));
                 return result;
             } else if (sexNumber == femaleCode) //  overwrite ICD10Code[]
             {
                 ICD10 = ICD10Female;
                 ICD10 = ICD10.trim();
-                result[0].setValue(ICD10);
+                result[0].setValue(tidyICD10code(ICD10));
                 return result;
             } else // SexVal is not MALE or FEMALE, yet conversion is SexDependant
             {
@@ -262,8 +262,15 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
                 return result;
             }
         }
-        result[0].setValue(ICD10);
+        result[0].setValue(tidyICD10code(ICD10));
         return result;
+    }
+
+    private String tidyICD10code(String code){
+        if (code.length()>=4){
+            code = code.substring(0,4);
+        }
+        return code;
     }
 
     private void TopogConv(int rule, String O3_10TLookLine) {
