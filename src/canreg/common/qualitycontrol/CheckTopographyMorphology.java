@@ -1,6 +1,7 @@
 package canreg.common.qualitycontrol;
 
 import canreg.common.Globals;
+import canreg.common.LookUpLoader;
 import canreg.common.qualitycontrol.Checker.CheckNames;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -172,11 +173,11 @@ public class CheckTopographyMorphology extends CheckInterface {
         InputStream lookUpMustNotResourceStream = this.getClass().getResourceAsStream(MustNot_LookupFile);
 
         try {
-            morphologicalFamiliesMap = fr.iarc.cin.iarctools.tools.LookUpLoader.load(morphFamResourceStream, 4);
-            lookUpMustMap5 = fr.iarc.cin.iarctools.tools.LookUpLoader.load(lookUpMustResourceStream, 5);
-            lookUpMustNotMap5 = fr.iarc.cin.iarctools.tools.LookUpLoader.load(lookUpMustNotResourceStream, 5);
-            lookUpMustMap6 = fr.iarc.cin.iarctools.tools.LookUpLoader.load(lookUpMustResourceStream, 6);
-            lookUpMustNotMap6 = fr.iarc.cin.iarctools.tools.LookUpLoader.load(lookUpMustNotResourceStream, 6);
+            morphologicalFamiliesMap = LookUpLoader.load(morphFamResourceStream, 4);
+            lookUpMustMap5 = LookUpLoader.load(lookUpMustResourceStream, 5);
+            lookUpMustNotMap5 = LookUpLoader.load(lookUpMustNotResourceStream, 5);
+            lookUpMustMap6 = LookUpLoader.load(lookUpMustResourceStream, 6);
+            lookUpMustNotMap6 = LookUpLoader.load(lookUpMustNotResourceStream, 6);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
