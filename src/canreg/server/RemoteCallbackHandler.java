@@ -11,9 +11,9 @@ import javax.security.auth.callback.PasswordCallback;
  */
 class RemoteCallbackHandler implements CallbackHandler {
 	private String username;
-	private String password;
+	private char[] password;
 	
-	RemoteCallbackHandler(String username, String password){
+	RemoteCallbackHandler(String username, char[] password){
 		this.username = username;
 		this.password = password;
 	}
@@ -25,7 +25,7 @@ class RemoteCallbackHandler implements CallbackHandler {
 				nc.setName(username);
 			} else if (cb[i] instanceof PasswordCallback){
 				PasswordCallback pc = (PasswordCallback)cb[i];
-				pc.setPassword(password.toCharArray());
+				pc.setPassword(password);
                                 password = null;
 			}
 		}

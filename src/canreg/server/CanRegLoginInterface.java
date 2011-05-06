@@ -30,7 +30,7 @@ public interface CanRegLoginInterface extends java.rmi.Remote{
     * @throws SecurityException If the client is not allowed to login.
     * @throws LoginException 
     */
-   public CanRegServerInterface login(String username, String password)
+   public CanRegServerInterface login(String username, char[] password)
       throws java.rmi.RemoteException, SecurityException, LoginException;
 }
 ;

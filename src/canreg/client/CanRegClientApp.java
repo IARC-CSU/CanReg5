@@ -258,6 +258,15 @@ public class CanRegClientApp extends SingleFrameApplication {
                 if (loggedIn) {
                     logOut();
                 }
+                if (isCanregServerRunningInThisThread()&&server!=null){
+                    try {
+                        server.shutDownServer();
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SecurityException ex) {
+                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         };
 
@@ -367,7 +376,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
         //do the login 
         debugOut("ATTEMPTING LOGIN");
-        server = (CanRegServerInterface) loginServer.login(username, new String(password));
+        server = (CanRegServerInterface) loginServer.login(username, password);
         if (server != null) {
             // See if server version of CanReg matches the 
 
