@@ -2319,62 +2319,74 @@ public class CanRegDAO {
         ResultSet result;
         int rowCount = -1;
         DistributedTableDataSource dataSource;
-        String counterString;
-        String getterString;
+        StringBuilder counterStringBuilder = new StringBuilder();
+        StringBuilder getterStringBuilder = new StringBuilder();
         boolean joinedTables = false;
 
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-            counterString = strCountTumours;
-            getterString = strGetTumours;
+            counterStringBuilder.append(strCountTumours);
+            getterStringBuilder.append(strGetTumours);
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-            counterString = strCountPatients;
-            getterString = strGetPatients;
+            counterStringBuilder.append(strCountPatients);
+            getterStringBuilder.append(strGetPatients);
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
-            counterString = strCountSources;
-            getterString = strGetSources;
+            counterStringBuilder.append(strCountSources);
+            getterStringBuilder.append(strGetSources);
         } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
-            counterString = strCountPatientsAndTumours;
-            getterString = strGetPatientsAndTumours;
+            counterStringBuilder.append(strCountPatientsAndTumours);
+            getterStringBuilder.append(strGetPatientsAndTumours);
             joinedTables = true;
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
-            counterString = strCountSourcesAndTumours;
-            getterString = strGetSourcesAndTumours;
+            counterStringBuilder.append(strCountSourcesAndTumours);
+            getterStringBuilder.append(strGetSourcesAndTumours);
             joinedTables = true;
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
-            counterString = strCountSourcesAndTumoursAndPatients;
-            getterString = strGetSourcesAndTumoursAndPatients;
+            counterStringBuilder.append(strCountSourcesAndTumoursAndPatients);
+            getterStringBuilder.append(strGetSourcesAndTumoursAndPatients);
             joinedTables = true;
         } else {
             throw new UnknownTableException("Unknown table name.");
         }
         String filterString = filter.getFilterString();
+        StringBuilder filterStringBuilder = new StringBuilder();
+        int parentesOverskudd = 0;
         if (!filterString.isEmpty()) {
             if (joinedTables) {
-                filterString = " AND " + filterString;
+                filterStringBuilder.append(" AND ").append("(").append(filterString);
+                parentesOverskudd++;
             } else {
-                filterString = " WHERE " + filterString;
+                filterStringBuilder.append(" WHERE ").append(filterString);
             }
+        } else {
+            filterStringBuilder = filterStringBuilder.append(filter.getFilterString());
         }
 
         // Add the range part
-        if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-            if (filterString.isEmpty() && !joinedTables) {
-                filterString = " WHERE " + filterString;
+        if ((filter.getRangeStart() != null
+                && filter.getRangeStart().length() > 0)
+                || (filter.getRangeEnd()
+                != null && filter.getRangeEnd().length() > 0)) {
+            if (filterStringBuilder.length() == 0 && !joinedTables) {
+                filterStringBuilder = new StringBuilder(" WHERE ").append(filterString);
             } else {
-                filterString += " AND ";
+                filterStringBuilder.append(" AND ");
             }
-            filterString += QueryGenerator.buildRangePart(filter);
+            filterStringBuilder.append(QueryGenerator.buildRangePart(filter));
+        }
+
+        for (int i = 0; i < parentesOverskudd; i++) {
+            filterStringBuilder.append(")");
         }
 
         /* debug stuff
-        System.out.println("filterString: " + filterString);
+        System.out.println("filterString: " + filterStringBuilder);
         System.out.println("getterString: " + getterString);
         System.out.println("counterString: " + counterString);
-         */
-
+        */
+        
         ResultSet countRowSet;
         try {
-            countRowSet = statement.executeQuery(counterString + filterString);
+            countRowSet = statement.executeQuery(counterStringBuilder.toString() +" "+ filterStringBuilder.toString());
         } catch (java.sql.SQLSyntaxErrorException ex) {
             throw ex;
         }
@@ -2386,12 +2398,10 @@ public class CanRegDAO {
         // feed it to the garbage dump
         countRowSet = null;
         if (filter.getSortByVariable() != null) {
-            filterString += " ORDER BY \""
-                    + canreg.common.Tools.toUpperCaseStandardized(
-                    filter.getSortByVariable()) + "\"";
+            filterStringBuilder.append(" ORDER BY \"").append(canreg.common.Tools.toUpperCaseStandardized(filter.getSortByVariable())).append("\"");
         }
         try {
-            result = statement.executeQuery(getterString + filterString);
+            result = statement.executeQuery(getterStringBuilder.toString() +" "+ filterStringBuilder.toString());
         } catch (java.sql.SQLSyntaxErrorException ex) {
             throw ex;
         }
@@ -2416,7 +2426,6 @@ public class CanRegDAO {
             String[] elements;
             try {
                 String line = br.readLine();
-                boolean eof = false;
                 while (line != null) {
                     elements = line.split("\t");
                     DictionaryEntry entry = new DictionaryEntry(dictionary.getDictionaryID(), elements[0], elements[1]);
