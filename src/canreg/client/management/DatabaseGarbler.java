@@ -8,9 +8,9 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DateHelper;
 import canreg.common.Globals;
 import canreg.common.GregorianCalendarCanReg;
-import canreg.server.database.Patient;
+import canreg.common.database.Patient;
 import canreg.server.database.RecordLockedException;
-import canreg.server.database.Tumour;
+import canreg.common.database.Tumour;
 import canreg.server.database.UnknownTableException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -194,7 +194,7 @@ public class DatabaseGarbler {
                                                 DateHelper.parseGregorianCalendarCanRegToDateString(incidenceDateCalendar, Globals.DATE_FORMAT_STRING));
                                     }
                                     if (incidenceDateCalendar != null && birthDateCalendar != null) {
-                                        int age = (int) DateHelper.yearsBetween(birthDateCalendar, incidenceDateCalendar) + 1;
+                                        int age = (int) DateHelper.yearsBetween(birthDateCalendar, incidenceDateCalendar);
                                         tumor.setVariable(ageVariableListElement.getDatabaseVariableName(), age);
                                     }
                                 }
