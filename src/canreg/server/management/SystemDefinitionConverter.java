@@ -374,7 +374,7 @@ public class SystemDefinitionConverter {
                     // short_name is the name that will be used in the database
                     String nameInDatabase = readText();
 
-                    if (canreg.server.database.Tools.isReservedWord(nameInDatabase)) {
+                    if (canreg.common.database.Tools.isReservedWord(nameInDatabase)) {
                         System.out.println("Warning: " + canreg.common.Tools.toUpperCaseStandardized(nameInDatabase) + " is a reserverd word.");
                         System.out.println("Please revise the XML file manually before building CanReg5 database...");
                     }
@@ -675,6 +675,16 @@ public class SystemDefinitionConverter {
                 tumourIDindex.setDatabaseTableName(Globals.TUMOUR_TABLE_NAME);
                 tumourIDindex.setVariablesInIndex(tempIndexList.toArray(new DatabaseVariablesListElement[0]));
                 indexMap.put(tumourIDindex.getIndexName(), tumourIDindex);
+
+                // Source ID in source table index
+                tempIndexList = new LinkedList<DatabaseVariablesListElement>();
+                tempIndexList.add(variablesMap.get(canreg.common.Tools.toUpperCaseStandardized(Globals.StandardVariableNames.SourceRecordID.toString())));
+                tempIndexList.add(variablesMap.get(canreg.common.Tools.toUpperCaseStandardized(Globals.StandardVariableNames.TumourIDSourceTable.toString())));
+                DatabaseIndexesListElement sourceIDindex = new DatabaseIndexesListElement(Globals.StandardVariableNames.SourceRecordID.toString());
+                sourceIDindex.setDatabaseTableName(Globals.SOURCE_TABLE_NAME);
+                sourceIDindex.setVariablesInIndex(tempIndexList.toArray(new DatabaseVariablesListElement[0]));
+                indexMap.put(sourceIDindex.getIndexName(), sourceIDindex);
+
                 // Split the indexes that needs to be split
                 indexMap = splitIndexMapInTumourAndPatient(indexMap, variableToTableMap);
 
