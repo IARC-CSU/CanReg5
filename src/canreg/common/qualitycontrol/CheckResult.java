@@ -125,7 +125,7 @@ public class CheckResult implements Serializable {
 
     @Override
     public String toString() {
-        return resultCode+ " " + checkName + ": " + message;
+        return resultCode + " " + checkName + ": " + message;
     }
 
     /*
@@ -152,7 +152,7 @@ public class CheckResult implements Serializable {
         return result;
     }
 
-        public static ResultCode toResultCode(String resultCode) {
+    public static ResultCode toResultCode(String resultCode) {
         ResultCode result = null;
         if (resultCode.equals("0")) {
             result = ResultCode.NotDone;
@@ -162,19 +162,19 @@ public class CheckResult implements Serializable {
             result = ResultCode.Rare;
         } else if (resultCode.equals("3")) {
             result = ResultCode.Invalid;
-        } 
-        
+        }
+
         /* Never happens
         
-         else if (resultCode.equals("1")) {
-            result = ResultCode.Query;
+        else if (resultCode.equals("1")) {
+        result = ResultCode.Query;
         } else if (resultCode.equals("0")) {
-            result = ResultCode.Missing;
+        result = ResultCode.Missing;
         }
          */
         return result;
     }
-    
+
     public static int compareResultSets(ResultCode resultCodeA, ResultCode resultCodeB) {
         if (resultCodeA == resultCodeB) {
             return 0;
@@ -187,9 +187,9 @@ public class CheckResult implements Serializable {
 
     public static ResultCode decideWorstResultCode(ResultCode resultCodeA, ResultCode resultCodeB) {
         ResultCode worstResultCodeFound = resultCodeB;
-        if (resultCodeA == CheckResult.ResultCode.NotDone){
+        if (resultCodeA == CheckResult.ResultCode.NotDone) {
             worstResultCodeFound = resultCodeB;
-        } else if (resultCodeB == CheckResult.ResultCode.NotDone){
+        } else if (resultCodeB == CheckResult.ResultCode.NotDone) {
             worstResultCodeFound = resultCodeA;
         } else if (resultCodeA == CheckResult.ResultCode.OK) {
             worstResultCodeFound = resultCodeB;
