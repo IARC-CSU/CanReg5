@@ -839,8 +839,14 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     filterString += populationFilterString + " AND ";
                 }
 
+                // add the years to the filter
                 DatabaseVariablesListElement incidenceDate = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.IncidenceDate.toString());
-                filterString += incidenceDate.getDatabaseVariableName() + " >= '" + startYear * 10000 + "' AND " + incidenceDate.getDatabaseVariableName() + " < '" + (endYear + 1) * 10000 + "'";
+                filterString += incidenceDate.getDatabaseVariableName() + " BETWEEN '" + startYear * 10000 + "' AND '" + ((endYear + 1) * 10000 - 1) + "'";
+
+                // filter only the confirmed cases
+                DatabaseVariablesListElement recordStatus = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
+                filterString += " AND " + recordStatus.getDatabaseVariableName() + " <> '0'";
+
                 filter.setFilterString(filterString);
 
                 System.out.println(filterString);
