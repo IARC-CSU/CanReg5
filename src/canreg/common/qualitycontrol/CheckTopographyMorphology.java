@@ -65,7 +65,7 @@ public class CheckTopographyMorphology extends CheckInterface {
         }
 
         if (morphologyCode.length() < 4) {
-            System.out.println("SHOULDN'T HAVE BEEN CALLED WHEN INVALID");
+            //System.out.println("SHOULDN'T HAVE BEEN CALLED WHEN INVALID");
             result.setMessage(morphologyCode + " is too short.");
             result.setResultCode(CheckResult.ResultCode.Invalid);
             return result;
@@ -82,14 +82,14 @@ public class CheckTopographyMorphology extends CheckInterface {
         }
 
         if (morphologyFamilyString.length() < 3) {
-            System.out.println("SHOULDN'T HAVE BEEN CALLED WHEN INVALID - Morph_fam_line");
+            // System.out.println("SHOULDN'T HAVE BEEN CALLED WHEN INVALID - Morph_fam_line");
             result.setMessage(morphologyCode);
             result.setResultCode(CheckResult.ResultCode.Invalid);
             return result;
         }
 
         if (topographyCode.length() < 3) {
-            System.out.println("SHOULDN'T HAVE BEEN CALLED WHEN INVALID - topo");
+            // System.out.println("SHOULDN'T HAVE BEEN CALLED WHEN INVALID - topo");
             result.setMessage(topographyCode);
             result.setResultCode(CheckResult.ResultCode.Invalid);
             return result;
