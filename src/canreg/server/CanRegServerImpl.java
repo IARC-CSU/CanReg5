@@ -1,6 +1,6 @@
 package canreg.server;
 
-import canreg.server.database.User;
+import canreg.common.database.User;
 import canreg.server.management.UserManagerNew;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
@@ -15,15 +15,15 @@ import canreg.common.qualitycontrol.DefaultPersonSearch;
 import canreg.common.qualitycontrol.GlobalPersonSearchHandler;
 import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.server.database.CanRegDAO;
-import canreg.server.database.DatabaseRecord;
-import canreg.server.database.Dictionary;
-import canreg.server.database.DictionaryEntry;
+import canreg.common.database.DatabaseRecord;
+import canreg.common.database.Dictionary;
+import canreg.common.database.DictionaryEntry;
 import canreg.server.database.Migrator;
-import canreg.server.database.NameSexRecord;
-import canreg.server.database.Patient;
-import canreg.server.database.PopulationDataset;
+import canreg.common.database.NameSexRecord;
+import canreg.common.database.Patient;
+import canreg.common.database.PopulationDataset;
 import canreg.server.database.RecordLockedException;
-import canreg.server.database.Tumour;
+import canreg.common.database.Tumour;
 import canreg.server.database.UnknownTableException;
 import canreg.server.management.SystemDescription;
 import java.awt.AWTException;
@@ -129,11 +129,20 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         setTrayIconToolTip("CanReg5 server " + systemCode + " database initialized...");
+
+        // Step three: set up some variables
+        serverToolbox = new GlobalToolBox(getDatabseDescription());
+        patientRecordIDvariableName = serverToolbox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+
+        // temp!
+        db.setSystemPropery("DATABASE_VERSION", "5.00.05");
+
         // migrate the database if necessary
         Migrator migrator = new Migrator(getCanRegVersion(), db);
+        setTrayIconToolTip("Migrating CanReg5 " + systemCode + " database to newest version specification...");
         migrator.migrate();
 
-        // Step three: initiate the quality controllers
+        // Step four: initiate the quality controllers
         personSearcher = new DefaultPersonSearch(
                 Tools.getVariableListElements(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
         PersonSearchVariable[] searchVariables = Tools.getPersonSearchVariables(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE);
@@ -142,17 +151,13 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
         activePersonSearchers = new LinkedHashMap<String, GlobalPersonSearchHandler>();
 
-        setTrayIconToolTip("CanReg5 server quality controllers initialized...");
+        setTrayIconToolTip("CanReg5 " + systemCode + " server quality controllers initialized...");
 
-        // Step four: start the user manager
+        // Step five: start the user manager
         userManager = new UserManagerNew(db);
         userManager.writePasswordsToFile();
 
-        setTrayIconToolTip("CanReg5 server user manager started initialized...");
-
-        // Step five: set up some variables
-        serverToolbox = new GlobalToolBox(getDatabseDescription());
-        patientRecordIDvariableName = serverToolbox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+        setTrayIconToolTip("CanReg5 " + systemCode + " server user manager started initialized...");
 
         // Update the tooltip now that everything is up and running...
         setTrayIconToolTip("CanReg5 server " + systemDescription.getSystemName() + " (" + systemCode + ") running");
@@ -241,7 +246,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.lang.SecurityException
      */
     @Override
-    public Document getDatabseDescription() throws RemoteException, SecurityException {
+    public final Document getDatabseDescription() throws RemoteException, SecurityException {
         return systemDescription.getSystemDescriptionDocument();
     }
 
@@ -422,7 +427,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.lang.SecurityException
      */
     @Override
-    public String getCanRegVersion() throws RemoteException, SecurityException {
+    public final String getCanRegVersion() throws RemoteException, SecurityException {
         String versionString = "";
         for (String part : Globals.versionStringParts) {
             versionString += appInfoProperties.getProperty(part);

@@ -1,6 +1,6 @@
 package canreg.server.management;
 
-import canreg.server.database.User;
+import canreg.common.database.User;
 import canreg.server.*;
 import canreg.common.Globals;
 import canreg.server.database.CanRegDAO;
