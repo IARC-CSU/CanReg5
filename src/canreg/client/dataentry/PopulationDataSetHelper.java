@@ -1,8 +1,8 @@
 package canreg.client.dataentry;
 
-import canreg.server.database.AgeGroupStructure;
-import canreg.server.database.PopulationDataset;
-import canreg.server.database.PopulationDatasetsEntry;
+import canreg.common.database.AgeGroupStructure;
+import canreg.common.database.PopulationDataset;
+import canreg.common.database.PopulationDatasetsEntry;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;

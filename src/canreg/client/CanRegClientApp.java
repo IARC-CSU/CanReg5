@@ -21,15 +21,15 @@ import canreg.server.CanRegLoginInterface;
 import canreg.server.CanRegServerInterface;
 import canreg.server.DatabaseStats;
 import canreg.server.database.UnknownTableException;
-import canreg.server.database.User;
-import canreg.server.database.DatabaseRecord;
-import canreg.server.database.Dictionary;
-import canreg.server.database.DictionaryEntry;
-import canreg.server.database.NameSexRecord;
-import canreg.server.database.Patient;
-import canreg.server.database.PopulationDataset;
+import canreg.common.database.User;
+import canreg.common.database.DatabaseRecord;
+import canreg.common.database.Dictionary;
+import canreg.common.database.DictionaryEntry;
+import canreg.common.database.NameSexRecord;
+import canreg.common.database.Patient;
+import canreg.common.database.PopulationDataset;
 import canreg.server.database.RecordLockedException;
-import canreg.server.database.Tumour;
+import canreg.common.database.Tumour;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -133,7 +133,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
             databaseRecordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
         } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-            recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordID.toString()).getDatabaseVariableName();
+            recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
             databaseRecordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
             recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName();

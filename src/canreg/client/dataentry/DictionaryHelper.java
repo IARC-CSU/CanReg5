@@ -4,7 +4,7 @@ import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.Globals;
 import canreg.server.CanRegServerInterface;
-import canreg.server.database.DictionaryEntry;
+import canreg.common.database.DictionaryEntry;
 import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
