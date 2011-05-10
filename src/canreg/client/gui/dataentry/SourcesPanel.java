@@ -5,8 +5,8 @@
  */
 package canreg.client.gui.dataentry;
 
-import canreg.server.database.Dictionary;
-import canreg.server.database.Source;
+import canreg.common.database.Dictionary;
+import canreg.common.database.Source;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

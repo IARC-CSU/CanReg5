@@ -20,12 +20,12 @@ import canreg.common.GregorianCalendarCanReg;
 import canreg.common.Tools;
 import canreg.common.qualitycontrol.CheckResult;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
-import canreg.server.database.DatabaseRecord;
-import canreg.server.database.Dictionary;
-import canreg.server.database.DictionaryEntry;
-import canreg.server.database.Patient;
-import canreg.server.database.Source;
-import canreg.server.database.Tumour;
+import canreg.common.database.DatabaseRecord;
+import canreg.common.database.Dictionary;
+import canreg.common.database.DictionaryEntry;
+import canreg.common.database.Patient;
+import canreg.common.database.Source;
+import canreg.common.database.Tumour;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -1060,24 +1060,12 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                 databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.NOT_OBSOLETE_VALUE);
             }
         }
-        // TODO: Make dynamic result codes
         if (checkVariableListElement != null) {
             if (resultCode == null) {
                 resultCode = ResultCode.NotDone;
             }
-            if (resultCode.equals(ResultCode.OK)) {
-                databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), "1");
-            } else if (resultCode.equals(ResultCode.Invalid)) {
-                databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), "3");
-            } else if (resultCode.equals(ResultCode.Missing)) {
-                databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), "3");
-            } else if (resultCode.equals(ResultCode.Rare)) {
-                databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), "2");
-            } else if (resultCode.equals(ResultCode.NotDone)) {
-                databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), "0");
-            } else {
-                databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), "0");
-            }
+            databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(),
+                    CheckResult.toDatabaseVariable(resultCode));
         }
     }
 

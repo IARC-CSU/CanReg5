@@ -8,7 +8,7 @@ package canreg.client.gui.dataentry;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
-import canreg.server.database.PopulationDataset;
+import canreg.common.database.PopulationDataset;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;

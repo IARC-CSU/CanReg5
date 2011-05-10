@@ -4,7 +4,7 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DateHelper;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
-import canreg.server.database.DatabaseRecord;
+import canreg.common.database.DatabaseRecord;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.LinkedList;
