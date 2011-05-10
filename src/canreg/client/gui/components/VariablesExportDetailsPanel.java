@@ -7,7 +7,7 @@ package canreg.client.gui.components;
 
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
-import canreg.server.database.Dictionary;
+import canreg.common.database.Dictionary;
 
 /**
  *

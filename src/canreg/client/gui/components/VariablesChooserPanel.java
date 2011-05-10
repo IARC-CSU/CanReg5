@@ -8,7 +8,7 @@ package canreg.client.gui.components;
 import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
-import canreg.server.database.Dictionary;
+import canreg.common.database.Dictionary;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;

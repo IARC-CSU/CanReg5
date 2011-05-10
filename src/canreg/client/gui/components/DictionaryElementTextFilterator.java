@@ -2,7 +2,7 @@ package canreg.client.gui.components;
 
 import java.util.List;
 import ca.odell.glazedlists.TextFilterator;
-import canreg.server.database.DictionaryEntry;
+import canreg.common.database.DictionaryEntry;
 
 /**
  * Get the Strings to filter against for a given Issue.
