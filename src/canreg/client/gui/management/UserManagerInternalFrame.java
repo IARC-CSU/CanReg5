@@ -14,7 +14,7 @@ import canreg.common.Globals;
 import canreg.common.PasswordService;
 import canreg.exceptions.SystemUnavailableException;
 import canreg.server.database.RecordLockedException;
-import canreg.server.database.User;
+import canreg.common.database.User;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Arrays;

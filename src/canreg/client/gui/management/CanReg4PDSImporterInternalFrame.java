@@ -10,7 +10,7 @@ import canreg.client.dataentry.PopulationDataSetHelper;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.dataentry.PDSEditorInternalFrame;
 import canreg.common.Globals;
-import canreg.server.database.PopulationDataset;
+import canreg.common.database.PopulationDataset;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

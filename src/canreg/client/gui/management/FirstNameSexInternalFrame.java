@@ -6,7 +6,7 @@
 package canreg.client.gui.management;
 
 import canreg.client.CanRegClientApp;
-import canreg.server.database.NameSexRecord;
+import canreg.common.database.NameSexRecord;
 import canreg.server.database.RecordLockedException;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
