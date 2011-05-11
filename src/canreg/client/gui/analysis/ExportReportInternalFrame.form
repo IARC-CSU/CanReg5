@@ -67,7 +67,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="155" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="159" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -95,15 +95,15 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Group type="102" attributes="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                              <Component id="exportSourceInformationCheckBox" max="32767" attributes="0"/>
+                              <Component id="exportSourceInformationCheckBox" pref="380" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="rangeFilterPanel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="rangeFilterPanel" min="-2" pref="390" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variableChooserPanel" pref="447" max="32767" attributes="0"/>
+                      <Component id="variableChooserPanel" pref="404" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -175,7 +175,7 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="optionsPanel" min="-2" max="-2" attributes="0"/>
+                      <Component id="optionsPanel" min="-2" pref="156" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="exportPanel" max="32767" attributes="1"/>

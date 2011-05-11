@@ -20,10 +20,10 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DateHelper;
 import canreg.common.Globals;
 import canreg.common.GregorianCalendarCanReg;
-import canreg.server.database.Dictionary;
+import canreg.common.database.Dictionary;
 import canreg.server.database.RecordLockedException;
-import canreg.server.database.Source;
-import canreg.server.database.Tumour;
+import canreg.common.database.Source;
+import canreg.common.database.Tumour;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -155,7 +155,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 155, Short.MAX_VALUE)
+            .addGap(0, 159, Short.MAX_VALUE)
         );
 
         jTabbedPane1.setName("jTabbedPane1"); // NOI18N
@@ -177,13 +177,13 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(exportSourceInformationCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(rangeFilterPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(exportSourceInformationCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
+                    .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variableChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE))
+                .addComponent(variableChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -348,7 +348,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         settingsPanelLayout.setVerticalGroup(
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsPanelLayout.createSequentialGroup()
-                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(exportPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -622,7 +622,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             resultPanel.setVisible(false);
             // We can't add the source info if we don't have tumour info...
             if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)
-                    || tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+                    || tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)
+                    || tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)
+                    || tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
                 exportSourceInformationCheckBox.setEnabled(false);
                 exportSourceInformationCheckBox.setSelected(false);
             } else {
@@ -984,8 +986,13 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                         }
                     }
                     setProgress(100 * row / rowCount);
+                    // Garbage collect every 1000 rows?
+                    if (row%1000==0){
+                        System.gc();
+                    }
                     bw.write(line + "\n");
                     line.delete(0, line.length());
+                    
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
