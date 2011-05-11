@@ -106,6 +106,11 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame implemen
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(FastFilterInternalFrame.class, this);
         variableComboBox.setAction(actionMap.get("varibleChosenAction")); // NOI18N
         variableComboBox.setName("variableComboBox"); // NOI18N
+        variableComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                variableComboBoxActionPerformed(evt);
+            }
+        });
 
         operationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         operationComboBox.setAction(actionMap.get("operatorSelected")); // NOI18N
@@ -219,7 +224,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame implemen
         );
         filterPanelLayout.setVerticalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
         );
 
         cancelButton.setAction(actionMap.get("cancelAction")); // NOI18N
@@ -297,6 +302,20 @@ private void valueTextField2mouseClickHandler(java.awt.event.MouseEvent evt) {//
 private void textPaneMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textPaneMousePressed
     MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(textPane, evt);
 }//GEN-LAST:event_textPaneMousePressed
+
+private void variableComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_variableComboBoxActionPerformed
+    DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
+        if (dbvle.getVariableType().equalsIgnoreCase("dict")) {
+        if (possibleValuesMap == null) {
+            // JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/FastFilterInternalFrame").getString("EMPTY_DICTIONARY"), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/FastFilterInternalFrame").getString("WARNING"), JOptionPane.WARNING_MESSAGE);
+        } else {
+            if (dictionaryElementChooser == null) {
+                dictionaryElementChooser = new DictionaryElementChooser(this);
+            }
+            dictionaryElementChooser.clearFilter();
+        }
+    }
+}//GEN-LAST:event_variableComboBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;

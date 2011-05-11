@@ -418,6 +418,10 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
         }
     }
 
+    void clearFilter() {
+        filterEdit.setText("");
+    }
+
     private class DownAction extends AbstractAction {
 
         public DownAction(String text, ImageIcon icon,
