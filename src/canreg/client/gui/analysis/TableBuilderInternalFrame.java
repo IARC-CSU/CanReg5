@@ -22,7 +22,7 @@ import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
-import canreg.server.database.PopulationDataset;
+import canreg.common.database.PopulationDataset;
 import java.awt.Cursor;
 import java.io.File;
 import java.io.FileNotFoundException;

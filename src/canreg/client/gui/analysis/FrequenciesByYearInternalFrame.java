@@ -15,6 +15,7 @@ import canreg.client.gui.CanRegClientView;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.database.Dictionary;
 import java.awt.Cursor;
 import java.awt.MenuItem;
 import java.awt.Point;
@@ -57,7 +58,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
     private DistributedTableDescription tableDatadescriptionPopUp;
     private static int MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK = 20;
     private TableInternalFrame tableInternalFrame;
-    private final Map<Integer, canreg.server.database.Dictionary> dictionary;
+    private final Map<Integer, Dictionary> dictionary;
     private JFileChooser chooser = null;
     private final LocalSettings localSettings;
 
@@ -145,11 +146,11 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         resultPanel.setLayout(resultPanelLayout);
         resultPanelLayout.setHorizontalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 693, Short.MAX_VALUE)
+            .addComponent(resultScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 732, Short.MAX_VALUE)
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(resultScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+            .addComponent(resultScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
         );
 
         popOutTableButton.setAction(actionMap.get("popOutTableAction")); // NOI18N
@@ -164,7 +165,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -172,8 +173,8 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(printTableButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(popOutTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
-                    .addComponent(variablesChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE))
+                        .addComponent(popOutTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(variablesChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE))
                 .addContainerGap())
             .addComponent(resultPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
