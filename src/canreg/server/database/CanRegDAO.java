@@ -4,6 +4,17 @@ package canreg.server.database;
  *
  * @author ervikm
  */
+import canreg.common.database.User;
+import canreg.common.database.Patient;
+import canreg.common.database.PopulationDatasetsEntry;
+import canreg.common.database.Tumour;
+import canreg.common.database.PopulationDataset;
+import canreg.common.database.Source;
+import canreg.common.database.NameSexRecord;
+import canreg.common.database.Dictionary;
+import canreg.common.database.DictionaryEntry;
+import canreg.common.database.AgeGroupStructure;
+import canreg.common.database.DatabaseRecord;
 import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.cachingtableapi.DistributedTableDataSource;
 import canreg.common.cachingtableapi.DistributedTableDescription;
@@ -13,7 +24,6 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.server.DatabaseStats;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +57,11 @@ import org.w3c.dom.*;
  */
 public class CanRegDAO {
 
+    private static boolean debug = false;
     private final DatabaseVariablesListElement[] variables;
+    StringBuilder counterStringBuilder = new StringBuilder();
+    StringBuilder getterStringBuilder = new StringBuilder();
+    StringBuilder filterStringBuilder = new StringBuilder();
 
     /**
      * 
@@ -593,17 +607,13 @@ public class CanRegDAO {
             statement.execute(QueryGenerator.strCreateSystemPropertiesTable());
 
             // Set primary keys in patient table
-            for (String command : QueryGenerator.strCreatePatientTablePrimaryKey(
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
-                statement.execute(command);
-            }
+            //for (String command : QueryGenerator.strCreatePatientTablePrimaryKey(
+            //        globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
+            //    statement.execute(command);
+            //}
 
-            // Set foreign keys in tumour table
-            for (String command : QueryGenerator.strCreateTumourTableForeignKey(
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName(),
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
-                statement.execute(command);
-            }
+            // Build keys
+            dropAndRebuildKeys(statement);
 
             // Create indexes - do last: least important
             LinkedList<String> tumourIndexList = QueryGenerator.strCreateIndexTable("Tumour", doc);
@@ -621,7 +631,6 @@ public class CanRegDAO {
                 // debugOut(query);
                 statement.execute(query);
             }
-
             bCreatedTables = true;
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -1372,33 +1381,20 @@ public class CanRegDAO {
      * @return
      * @throws RecordLockedException
      */
-    public synchronized boolean editRecord(String tableName, DatabaseRecord record, PreparedStatement stmtEditRecord) throws RecordLockedException {
+    private synchronized boolean editRecord(String tableName, DatabaseRecord record, PreparedStatement stmtEditRecord) throws RecordLockedException {
         boolean bEdited = false;
         int id = -1;
         try {
             stmtEditRecord.clearParameters();
 
-            // Get the dictionaries node in the XML
-            NodeList nodes = doc.getElementsByTagName(Globals.NAMESPACE + "variables");
-            Element variablesElement = (Element) nodes.item(0);
-
-            NodeList variablesNodeList = variablesElement.getElementsByTagName(Globals.NAMESPACE + "variable");
-
             int variableNumber = 0;
 
-            // Go through all the variable definitions
-            for (int i = 0; i < variablesNodeList.getLength(); i++) {
-                // Get element
-                Element element = (Element) variablesNodeList.item(i);
-
-                // Create line
-                String tableNameDB = element.getElementsByTagName(Globals.NAMESPACE + "table").item(0).getTextContent();
-
+            for (DatabaseVariablesListElement variable : variables) {
+                String tableNameDB = variable.getDatabaseTableName();
                 if (tableNameDB.equalsIgnoreCase(tableName)) {
                     variableNumber++;
-                    String variableType = element.getElementsByTagName(Globals.NAMESPACE + "variable_type").item(0).getTextContent();
-                    Object obj = record.getVariable(element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent());
-
+                    String variableType = variable.getVariableType();
+                    Object obj = record.getVariable(variable.getDatabaseVariableName());
                     if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
                         if (obj != null) {
                             try {
@@ -1763,6 +1759,7 @@ public class CanRegDAO {
             ResultSet result = stmtGetHighestPatientID.executeQuery();
             result.next();
             String highestPatientID = result.getString(1);
+            result.close();
             if (highestPatientID != null) {
                 patientID = canreg.common.Tools.increment(highestPatientID);
             } else {
@@ -2101,7 +2098,6 @@ public class CanRegDAO {
     private String strGetHighestTumourRecordID;
      */
     private GlobalToolBox globalToolBox;
-    private static boolean debug = true;
 
     private synchronized void saveSources(Object tumourID, Set<Source> sources) throws SQLException {
         if (sources != null) {
@@ -2319,8 +2315,11 @@ public class CanRegDAO {
         ResultSet result;
         int rowCount = -1;
         DistributedTableDataSource dataSource;
-        StringBuilder counterStringBuilder = new StringBuilder();
-        StringBuilder getterStringBuilder = new StringBuilder();
+
+        counterStringBuilder.delete(0, counterStringBuilder.length());
+        getterStringBuilder.delete(0, getterStringBuilder.length());
+        filterStringBuilder.delete(0, filterStringBuilder.length());
+
         boolean joinedTables = false;
 
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
@@ -2348,7 +2347,6 @@ public class CanRegDAO {
             throw new UnknownTableException("Unknown table name.");
         }
         String filterString = filter.getFilterString();
-        StringBuilder filterStringBuilder = new StringBuilder();
         int parentesOverskudd = 0;
         if (!filterString.isEmpty()) {
             if (joinedTables) {
@@ -2382,11 +2380,11 @@ public class CanRegDAO {
         System.out.println("filterString: " + filterStringBuilder);
         System.out.println("getterString: " + getterString);
         System.out.println("counterString: " + counterString);
-        */
-        
+         */
+
         ResultSet countRowSet;
         try {
-            countRowSet = statement.executeQuery(counterStringBuilder.toString() +" "+ filterStringBuilder.toString());
+            countRowSet = statement.executeQuery(counterStringBuilder.toString() + " " + filterStringBuilder.toString());
         } catch (java.sql.SQLSyntaxErrorException ex) {
             throw ex;
         }
@@ -2401,7 +2399,7 @@ public class CanRegDAO {
             filterStringBuilder.append(" ORDER BY \"").append(canreg.common.Tools.toUpperCaseStandardized(filter.getSortByVariable())).append("\"");
         }
         try {
-            result = statement.executeQuery(getterStringBuilder.toString() +" "+ filterStringBuilder.toString());
+            result = statement.executeQuery(getterStringBuilder.toString() + " " + filterStringBuilder.toString());
         } catch (java.sql.SQLSyntaxErrorException ex) {
             throw ex;
         }
@@ -2438,5 +2436,81 @@ public class CanRegDAO {
                 br.close();
             }
         }
+    }
+
+    public boolean dropAndRebuildKeys() throws SQLException {
+        Statement statement = dbConnection.createStatement();
+        return dropAndRebuildKeys(statement);
+    }
+
+    private boolean dropAndRebuildKeys(Statement statement) throws SQLException {
+        boolean success = true;
+        // Set primary keys in patient table
+        for (String command : QueryGenerator.strCreatePatientTablePrimaryKey(
+                globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
+            try {
+                System.out.println(command);
+                statement.execute(command);
+            } catch (SQLException sqle) {
+                Logger.getLogger(CanRegDAO.class.getName()).log(Level.WARNING, null, sqle);
+                success = false;
+            }
+        }
+        // Set primary keys in tumour table
+        for (String command : QueryGenerator.strCreateTumourTablePrimaryKey(
+                globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName())) {
+            try {
+                System.out.println(command);
+                statement.execute(command);
+            } catch (SQLException sqle) {
+                Logger.getLogger(CanRegDAO.class.getName()).log(Level.WARNING, null, sqle);
+                success = false;
+            }
+        }
+
+        // Set primary keys in source table
+        for (String command : QueryGenerator.strCreateSourceTablePrimaryKey(
+                globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName())) {
+            try {
+                System.out.println(command);
+                statement.execute(command);
+            } catch (SQLException sqle) {
+                Logger.getLogger(CanRegDAO.class.getName()).log(Level.WARNING, null, sqle);
+                success = false;
+            }
+        }
+
+        // Set foreign keys in tumour table
+        for (String command : QueryGenerator.strCreateTumourTableForeignKey(
+                globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName(),
+                globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
+            try {
+                System.out.println(command);
+                statement.execute(command);
+            } catch (SQLException sqle) {
+                Logger.getLogger(CanRegDAO.class.getName()).log(Level.WARNING, null, sqle);
+                success = false;
+            }
+        }
+        // Set foreign keys in source table
+        for (String command : QueryGenerator.strCreateSourceTableForeignKey(
+                globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName(),
+                globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName())) {
+            try {
+                System.out.println(command);
+                statement.execute(command);
+            } catch (SQLException sqle) {
+                Logger.getLogger(CanRegDAO.class.getName()).log(Level.WARNING, null, sqle);
+                success = false;
+            }
+        }
+        return success;
     }
 }
