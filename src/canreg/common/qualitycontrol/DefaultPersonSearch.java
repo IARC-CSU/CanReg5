@@ -3,7 +3,7 @@ package canreg.common.qualitycontrol;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.PersonSearchVariable;
 import canreg.common.Soundex;
-import canreg.server.database.Patient;
+import canreg.common.database.Patient;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;

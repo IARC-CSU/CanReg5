@@ -1,10 +1,9 @@
 package canreg.common.qualitycontrol;
 
 import canreg.common.DatabaseVariablesListElement;
-import canreg.common.GlobalToolBox;
 import canreg.common.Globals.StandardVariableNames;
-import canreg.server.database.Patient;
-import canreg.server.database.Tumour;
+import canreg.common.database.Patient;
+import canreg.common.database.Tumour;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -73,6 +72,9 @@ public class Checker {
          *
          */
         DateOfLastContact,
+        /**
+         *
+         */
         TopographyMorphology
     }
     LinkedList<CheckInterface> checks;

@@ -1,7 +1,7 @@
 package canreg.common.qualitycontrol;
 
 import canreg.common.PersonSearchVariable;
-import canreg.server.database.Patient;
+import canreg.common.database.Patient;
 
 /**
  *
