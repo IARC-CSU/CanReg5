@@ -9,6 +9,18 @@ import java.util.Set;
  * @author ervikm
  */
 public class DatabaseFilter implements Serializable {
+    private DatabaseVariablesListElement rangeDatabaseVariablesListElement;
+
+    public void setRangeDatabaseVariablesListElement(DatabaseVariablesListElement rangeDatabaseVariablesListElement) {
+        this.rangeDatabaseVariablesListElement = rangeDatabaseVariablesListElement;
+    }
+
+    /**
+     * @return the rangeDatabaseVariablesListElement
+     */
+    public DatabaseVariablesListElement getRangeDatabaseVariablesListElement() {
+        return rangeDatabaseVariablesListElement;
+    }
 
     /**
      * 
@@ -108,7 +120,7 @@ public class DatabaseFilter implements Serializable {
 
     public void setRange(Object[] range) {
         if (range != null && range.length==3) {
-            setRangeDatabaseIndexedListElement((DatabaseIndexesListElement) range[0]);
+            setRangeDatabaseVariablesListElement((DatabaseVariablesListElement) range[0]);
             setRangeStart((String) range[1]);
             setRangeEnd((String) range[2]);
         } else {
@@ -119,7 +131,7 @@ public class DatabaseFilter implements Serializable {
     /**
      * @return the rangeDatabaseIndexedListElement
      */
-    public DatabaseIndexesListElement getRangeDatabaseIndexedListElement() {
+    private DatabaseIndexesListElement getRangeDatabaseIndexedListElement() {
         return rangeDatabaseIndexedListElement;
     }
 
@@ -127,7 +139,7 @@ public class DatabaseFilter implements Serializable {
      * @param rangeDatabaseIndexedListElement the rangeDatabaseIndexedListElement to set
      */
     public void setRangeDatabaseIndexedListElement(DatabaseIndexesListElement rangeDatabaseIndexedListElement) {
-        this.rangeDatabaseIndexedListElement = rangeDatabaseIndexedListElement;
+        this.rangeDatabaseVariablesListElement = rangeDatabaseIndexedListElement.getMainVariable();
     }
 
     /**

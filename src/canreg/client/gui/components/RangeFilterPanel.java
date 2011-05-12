@@ -10,23 +10,19 @@ import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.common.Tools;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDesktopPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.text.JTextComponent;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -74,7 +70,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         this.doc = doc;
         indexesInDB = canreg.common.Tools.getIndexesListElements(doc, Globals.NAMESPACE);
 
-        rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(indexesInDB));
+        rangeComboBox.setModel(new javax.swing.DefaultComboBoxModel(getArrayOfIndexedVariables(indexesInDB)));
         patientVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
         tumourVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
         sourceVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
@@ -94,6 +90,21 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         refreshVariableList();
         refreshFilterComboBox();
         refreshIndexList();
+    }
+
+    private static DatabaseVariablesListElement[] getArrayOfIndexedVariables(DatabaseIndexesListElement[] indexes) {
+        Set<DatabaseVariablesListElement> set = new TreeSet<DatabaseVariablesListElement>(
+                new Comparator<DatabaseVariablesListElement>() {
+
+                    @Override
+                    public int compare(DatabaseVariablesListElement o1, DatabaseVariablesListElement o2) {
+                        return o1.toString().compareTo(o2.toString());
+                    }
+                });
+        for (DatabaseIndexesListElement index : indexes) {
+            set.addAll(Arrays.asList(index.getVariableListElementsInIndex()));
+        }
+        return set.toArray(new DatabaseVariablesListElement[0]);
     }
 
     /**
@@ -478,7 +489,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         String tempStart = rangeStartTextField.getText();
         String tempEnd = rangeEndTextField.getText();
 
-        rangeComboBox.setModel(new DefaultComboBoxModel(indexesInTableTemp));
+        rangeComboBox.setModel(new DefaultComboBoxModel(getArrayOfIndexedVariables(indexesInTableTemp)));
 
         if (Tools.findInArray(indexesInTableTemp, tempIndex) > -1) {
             rangeComboBox.setSelectedItem(tempIndex);
@@ -572,32 +583,25 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
         Object[] range = new Object[3];
         if (rangeEnabled) {
             range[0] = rangeComboBox.getSelectedItem();
-            DatabaseIndexesListElement index = (DatabaseIndexesListElement) range[0];
-            DatabaseVariablesListElement variable = null;
-            if (index != null) {
-                DatabaseVariablesListElement[] variables = index.getVariableListElementsInIndex();
-                range[1] = rangeStartTextField.getText();
-                range[2] = rangeEndTextField.getText();
-                if (variables.length > 0) {
-                    variable = variables[0];
-                    String range1 = (String) range[1];
-                    String range2 = (String) range[2];
-                    if (range1.length() > 0) {
-                        range[1] = variable.getSQLqueryFormat(range1);
-                    }
-                    if (range2.length() > 0) {
-                        range[2] = variable.getSQLqueryFormat(range2);
-                    }
-                }
-            } else {
-                range = null;
+            DatabaseVariablesListElement variable = (DatabaseVariablesListElement) range[0];
+            range[1] = rangeStartTextField.getText();
+            range[2] = rangeEndTextField.getText();
+            String range1 = (String) range[1];
+            String range2 = (String) range[2];
+            if (range1.length() > 0) {
+                range[1] = variable.getSQLqueryFormat(range1);
             }
+            if (range2.length() > 0) {
+                range[2] = variable.getSQLqueryFormat(range2);
+            }
+        } else {
+            range = null;
         }
         return range;
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getFromValue() {
@@ -626,15 +630,11 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
      */
     public void initValues() {
         filterCollection = new LinkedList<String>();
-        // Get the system description
 
         filterWizardInternalFrame = new FastFilterInternalFrame();
         filterWizardInternalFrame.setActionListener(this);
 
         filterWizardInternalFrame.setTableName(tableChooserComboBox.getSelectedItem().toString());
-
-        // variablesInDB = CanRegClientApp.getApplication().getGlobalToolBox().getVariables();
-
     }
 
     private void refreshVariableList() {

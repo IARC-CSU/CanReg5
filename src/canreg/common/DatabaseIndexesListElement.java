@@ -37,7 +37,7 @@ public class DatabaseIndexesListElement implements Serializable, DatabaseElement
 
     @Override
     public String toString() {
-        return getMainVariableName() + " (" + databaseTableName + ")";
+        return getMainVariable().getDatabaseVariableName() + " (" + databaseTableName + ")";
     }
 
     /**
@@ -63,7 +63,7 @@ public class DatabaseIndexesListElement implements Serializable, DatabaseElement
         } else if (getMainVariable() != null) {
             return getMainVariable().getDatabaseVariableName();
         } else {
-            return "";
+            return null;
         }
     }
 
