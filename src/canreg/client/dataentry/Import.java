@@ -1,14 +1,21 @@
 package canreg.client.dataentry;
 
+import canreg.common.database.Patient;
+import canreg.common.database.Tools;
+import canreg.common.database.Tumour;
+import canreg.common.database.Source;
+import canreg.common.database.NameSexRecord;
+import canreg.common.database.DatabaseRecord;
 import au.com.bytecode.opencsv.CSVReader;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.common.Globals;
+import canreg.common.conversions.ConversionResult;
+import canreg.common.conversions.Converter;
 import canreg.common.qualitycontrol.CheckResult;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -119,7 +126,12 @@ public class Import {
                         if (rel.getFileColumnNumber() < lineElements.length) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
                                 if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                    patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                    try {
+                                        patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                    } catch (NumberFormatException ex) {
+                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        success = false;
+                                    }
                                 }
                             } else {
                                 patient.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
@@ -139,7 +151,12 @@ public class Import {
                         if (rel.getFileColumnNumber() < lineElements.length) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
                                 if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                    tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                    try {
+                                        tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                    } catch (NumberFormatException ex) {
+                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        success = false;
+                                    }
                                 }
                             } else {
                                 tumour.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
@@ -159,7 +176,12 @@ public class Import {
                         if (rel.getFileColumnNumber() < lineElements.length) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
                                 if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                    source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                    try {
+                                        source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                    } catch (NumberFormatException ex) {
+                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        success = false;
+                                    }
                                 }
                             } else {
                                 source.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
@@ -364,10 +386,10 @@ public class Import {
         noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientRecordIDVariableName()));
         HashMap mpCodes = new HashMap();
         int numberOfLinesRead = 0;
-        BufferedReader bufferedReader = null;
         int linesToRead = io.getMaxLines();
-        String[] lineElements;
+        String[] lineElements = null;
         ResultCode worstResultCodeFound;
+        CSVReader csvReader = null;
 
         try {
             // first we get the patients
@@ -378,20 +400,24 @@ public class Import {
                 FileInputStream patientFIS = new FileInputStream(files[0]);
                 InputStreamReader patientISR = new InputStreamReader(patientFIS, io.getFileCharsets()[0]);
 
+                csvReader = new CSVReader(patientISR, io.getSeparators()[0]);
+
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", patientISR.getEncoding());
 
                 int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[0].getAbsolutePath());
-                bufferedReader = new BufferedReader(patientISR);
-                String line = bufferedReader.readLine();
+
                 // Skip first line
-                line = bufferedReader.readLine();
+                csvReader.readNext();
+
                 // patientNumber
 
                 if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
                     linesToRead = numberOfRecordsInFile;
                 }
 
-                while (line != null && (numberOfLinesRead < linesToRead)) {
+                lineElements = csvReader.readNext();
+
+                while (lineElements != null && (numberOfLinesRead < linesToRead)) {
                     // We allow for null tasks...
                     boolean savePatient = true;
                     boolean deletePatient = false;
@@ -401,7 +427,6 @@ public class Import {
                         task.firePropertyChange(PROGRESS, ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, ((numberOfLinesRead) * 100 / linesToRead) / 3);
                         task.firePropertyChange(PATIENTS, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
                     }
-                    lineElements = canreg.common.Tools.breakDownLine(io.getSeparators()[0], line);
 
                     // Build patient part
                     Patient patient = new Patient();
@@ -410,7 +435,12 @@ public class Import {
                         if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
                                 if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                    patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                    try {
+                                        patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                    } catch (NumberFormatException ex) {
+                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        success = false;
+                                    }
                                 }
                             } else {
                                 patient.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
@@ -462,9 +492,7 @@ public class Import {
                                 break;
                         }
                         // reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "Tumour already exists.\n");
-
                     }
-
 
                     if (task != null) {
                         task.firePropertyChange(RECORD, 50, 75);
@@ -488,17 +516,18 @@ public class Import {
                     }
 
                     //Read next line of data
-                    line = bufferedReader.readLine();
+                    lineElements = csvReader.readNext();
                     numberOfLinesRead++;
-
-                    reportWriter.flush();
 
                     if (Thread.interrupted()) {
                         //We've been interrupted: no more importing.
+                        reportWriter.flush();
                         throw new InterruptedException();
                     }
                 }
+                csvReader.close();
                 reportWriter.write("Finished reading patients.\n\n");
+                reportWriter.flush();
             }
             task.firePropertyChange(PATIENTS, 100, 100);
             task.firePropertyChange("progress", 33, 34);
@@ -513,10 +542,10 @@ public class Import {
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", tumourISR.getEncoding());
 
                 int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[1].getAbsolutePath());
-                bufferedReader = new BufferedReader(tumourISR);
-                String line = bufferedReader.readLine();
+                csvReader = new CSVReader(tumourISR, io.getSeparators()[1]);
+
                 // Skip first line
-                line = bufferedReader.readLine();
+                csvReader.readNext();
 
                 // reset the number of lines read
                 numberOfLinesRead = 0;
@@ -524,7 +553,10 @@ public class Import {
                 if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
                     linesToRead = numberOfRecordsInFile;
                 }
-                while (line != null && (numberOfLinesRead < linesToRead)) {
+
+                lineElements = csvReader.readNext();
+
+                while (lineElements != null && (numberOfLinesRead < linesToRead)) {
                     // We allow for null tasks...
                     boolean saveTumour = true;
                     boolean deleteTumour = false;
@@ -533,7 +565,6 @@ public class Import {
                         task.firePropertyChange(PROGRESS, 33 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 33 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
                         task.firePropertyChange(TUMOURS, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
                     }
-                    lineElements = canreg.common.Tools.breakDownLine(io.getSeparators()[1], line);
                     // Build tumour part
                     Tumour tumour = new Tumour();
                     for (int i = 0; i < map.size(); i++) {
@@ -541,7 +572,12 @@ public class Import {
                         if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
                                 if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                    tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                    try {
+                                        tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                    } catch (NumberFormatException ex) {
+                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        success = false;
+                                    }
                                 }
                             } else {
                                 tumour.setVariable(rel.getDatabaseVariableName(),
@@ -622,18 +658,25 @@ public class Import {
                             }
 
                             if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing) {
-                                // If no errors were found we generate ICD10 code
-                                // ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
+                                // TODO: If no errors were found we generate ICD10 code
+                                ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
+                                tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
+                            } else {
+                                tumour.setVariable(io.getTumourRecordStatus(), "0");
                             }
 
                             if (worstResultCodeFound == CheckResult.ResultCode.OK) {
                                 // message += "Cross-check conclusion: Valid";
                             } else {
+
                                 reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "\t" + message + "\n");
                                 // System.out.println(tumour.getVariable(io.getTumourIDVariablename()) + " " + message);
                             }
+                            tumour.setVariable(io.getTumourCheckStatus(), CheckResult.toDatabaseVariable(worstResultCodeFound));
                         } else {
                             reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "\t" + "No patient matches this Tumour." + "\n");
+                            tumour.setVariable(io.getTumourRecordStatus(), "0");
+                            tumour.setVariable(io.getTumourCheckStatus(), CheckResult.toDatabaseVariable(ResultCode.Missing));
                         }
                     }
                     if (task != null) {
@@ -657,16 +700,18 @@ public class Import {
                         task.firePropertyChange(RECORD, 75, 100);
                     }
                     //Read next line of data
-                    line = bufferedReader.readLine();
+                    lineElements = csvReader.readNext();
                     numberOfLinesRead++;
-                    reportWriter.flush();
 
                     if (Thread.interrupted()) {
                         //We've been interrupted: no more importing.
+                        reportWriter.flush();
                         throw new InterruptedException();
                     }
                 }
+                csvReader.close();
                 reportWriter.write("Finished reading tumours.\n\n");
+                reportWriter.flush();
             }
             task.firePropertyChange(TUMOURS, 100, 100);
 
@@ -682,10 +727,10 @@ public class Import {
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", sourceISR.getEncoding());
 
                 int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[2].getAbsolutePath());
-                bufferedReader = new BufferedReader(sourceISR);
-                String line = bufferedReader.readLine();
+                csvReader = new CSVReader(sourceISR, io.getSeparators()[2]);
+
                 // Skip first line
-                line = bufferedReader.readLine();
+                csvReader.readNext();
 
                 // reset the number of lines read
                 numberOfLinesRead = 0;
@@ -693,7 +738,10 @@ public class Import {
                 if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
                     linesToRead = numberOfRecordsInFile;
                 }
-                while (line != null && (numberOfLinesRead < linesToRead)) {
+
+                lineElements = csvReader.readNext();
+
+                while (lineElements != null && (numberOfLinesRead < linesToRead)) {
                     // We allow for null tasks...
                     boolean needToSavePatientAgain = true;
                     int patientDatabaseRecordID = -1;
@@ -702,7 +750,6 @@ public class Import {
                         task.firePropertyChange(PROGRESS, 67 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 67 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
                         task.firePropertyChange(SOURCES, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
                     }
-                    lineElements = canreg.common.Tools.breakDownLine(io.getSeparators()[2], line);
 
                     // Build source part
 
@@ -712,7 +759,12 @@ public class Import {
                         if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
                                 if (lineElements[rel.getFileColumnNumber()].length() > 0) {
-                                    source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                    try {
+                                        source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                    } catch (NumberFormatException ex) {
+                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        success = false;
+                                    }
                                 }
                             } else {
                                 source.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
@@ -748,47 +800,48 @@ public class Import {
                         task.firePropertyChange(RECORD, 75, 100);
                     }
                     //Read next line of data
-                    line = bufferedReader.readLine();
+                    lineElements = csvReader.readNext();
                     numberOfLinesRead++;
-                    reportWriter.flush();
 
                     if (Thread.interrupted()) {
                         //We've been interrupted: no more importing.
+                        reportWriter.flush();
                         throw new InterruptedException();
                     }
                 }
                 reportWriter.write("Finished reading sources.\n\n");
+                reportWriter.flush();
             }
             task.firePropertyChange(SOURCES, 100, 100);
             task.firePropertyChange(PROGRESS, 100, 100);
             while (!task.isProgressPropertyValid()) {
                 // wait untill progress has been updated...
             }
+            csvReader.close();
             reportWriter.write("Finished\n");
+            reportWriter.flush();
             success = true;
         } catch (IOException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
-            success = false;
-        } catch (NumberFormatException ex) {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
             success = false;
         } catch (InterruptedException ex) {
             Logger.getLogger(Import.class.getName()).log(Level.INFO, "Interupted on line: " + (numberOfLinesRead + 1) + ". ", ex);
             success = true;
         } catch (IndexOutOfBoundsException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ",
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "String too short error in line: " + (numberOfLinesRead + 1 + 1) + ". ",
                     ex);
             success = false;
         } finally {
-            if (bufferedReader != null) {
+            if (csvReader != null) {
                 try {
-                    bufferedReader.close();
+                    csvReader.close();
                 } catch (IOException ex) {
                     Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             if (reportWriter != null) {
                 try {
+                    reportWriter.flush();
                     reportWriter.close();
                 } catch (IOException ex) {
                     Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
