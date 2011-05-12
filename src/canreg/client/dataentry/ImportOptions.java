@@ -42,6 +42,9 @@ public class ImportOptions {
     private String obsoleteTumourFlagVariableName;
     private String obsoletePatientFlagVariableName;
     private String tumourSequenceVariableName;
+    private String tumourCheckStatus;
+    private String tumourRecordStatus;
+    private String ICD10VariableName;
     private Charset fileCharset;
     private Charset[] fileCharsets;
     private char[] separators;
@@ -435,5 +438,47 @@ public class ImportOptions {
      */
     public void setSexVariableName(String sexVariableName) {
         this.sexVariableName = sexVariableName;
+    }
+
+    /**
+     * @return the tumourCheckStatus
+     */
+    public String getTumourCheckStatus() {
+        return tumourCheckStatus;
+    }
+
+    /**
+     * @param tumourCheckStatus the tumourCheckStatus to set
+     */
+    public void setTumourCheckStatus(String tumourCheckStatus) {
+        this.tumourCheckStatus = tumourCheckStatus;
+    }
+
+    /**
+     * @return the tumourRecordStatus
+     */
+    public String getTumourRecordStatus() {
+        return tumourRecordStatus;
+    }
+
+    /**
+     * @param tumourRecordStatus the tumourRecordStatus to set
+     */
+    public void setTumourRecordStatus(String tumourRecordStatus) {
+        this.tumourRecordStatus = tumourRecordStatus;
+    }
+
+    /**
+     * @return the ICD10VariableName
+     */
+    public String getICD10VariableName() {
+        return ICD10VariableName;
+    }
+
+    /**
+     * @param ICD10VariableName the ICD10VariableName to set
+     */
+    public void setICD10VariableName(String ICD10VariableName) {
+        this.ICD10VariableName = ICD10VariableName;
     }
 }
