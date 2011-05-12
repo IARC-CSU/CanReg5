@@ -78,14 +78,16 @@ public class QueryGenerator {
 
     static String buildRangePart(DatabaseFilter filter) {
         String filterString = "";
-        DatabaseIndexesListElement rangeDBile = filter.getRangeDatabaseIndexedListElement();
-        if (rangeDBile != null) {
-            String tableName = rangeDBile.getDatabaseTableName();
+        DatabaseVariablesListElement rangeDatabaseVariableListElement = filter.getRangeDatabaseVariablesListElement();
+        if (rangeDatabaseVariableListElement != null) {
+            String tableName = rangeDatabaseVariableListElement.getDatabaseTableName();
             String tableRecordIDVariableName = "";
 
-            if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+            if (tableName.contains(Globals.SOURCE_TABLE_NAME)) {
+                tableRecordIDVariableName = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
+            } else if (tableName.contains(Globals.TUMOUR_TABLE_NAME)) {
                 tableRecordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
-            } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+            }else if (tableName.contains(Globals.PATIENT_TABLE_NAME)) {
                 tableRecordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
             }
 
@@ -94,14 +96,14 @@ public class QueryGenerator {
                     + " FROM APP." + tableName
                     + " WHERE ";
             if (filter.getRangeStart() != null && filter.getRangeStart().length() > 0) {
-                filterString += filter.getRangeDatabaseIndexedListElement().getMainVariableName()
+                filterString += filter.getRangeDatabaseVariablesListElement().getDatabaseVariableName()
                         + " >= " + filter.getRangeStart();
             }
             if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) && (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
                 filterString += " AND ";
             }
             if (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0) {
-                filterString += filter.getRangeDatabaseIndexedListElement().getMainVariableName()
+                filterString += filter.getRangeDatabaseVariablesListElement().getDatabaseVariableName()
                         + " <= " + filter.getRangeEnd();
             }
             filterString += ")";
@@ -371,6 +373,34 @@ public class QueryGenerator {
         return commands.toArray(new String[0]);
     }
 
+    static String[] strCreateTumourTablePrimaryKey(String databaseVariableName) {
+        LinkedList<String> commands = new LinkedList<String>();
+        // drop the current primary key
+        commands.add("ALTER TABLE APP.TUMOUR DROP PRIMARY KEY");
+        // add an unique identifier
+        // commands.add("ALTER TABLE APP.TUMOUR DROP UNIQUE (" + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + ")");
+
+        commands.add("ALTER TABLE APP.TUMOUR ADD UNIQUE (" + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + ")");
+        // create primary key
+        commands.add("ALTER TABLE APP.TUMOUR ADD PRIMARY KEY ( " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " , " + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + ") ");
+        return commands.toArray(new String[0]);
+    }
+
+    static String[] strCreateSourceTablePrimaryKey(String databaseVariableName) {
+        LinkedList<String> commands = new LinkedList<String>();
+        // drop the current primary key
+        commands.add("ALTER TABLE APP.SOURCE DROP PRIMARY KEY");
+        // add an unique identifier
+        commands.add("ALTER TABLE APP.SOURCE ADD UNIQUE (" + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + ")");
+
+        commands.add("ALTER TABLE APP.SOURCE ALTER COLUMN " + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + "  NOT NULL");
+        // create primary key
+        commands.add("ALTER TABLE APP.SOURCE ADD PRIMARY KEY ( " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME
+                + " , " + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName)
+                + ")");
+        return commands.toArray(new String[0]);
+    }
+
     static String[] strCreateTumourTableForeignKey(String tumourDatabaseVariableNames, String patientDatabaseVariableNames) {
         // set variables unique
         LinkedList<String> commands = new LinkedList<String>();
@@ -379,6 +409,17 @@ public class QueryGenerator {
                 + canreg.common.Tools.toUpperCaseStandardized(tumourDatabaseVariableNames) + ") "
                 + "REFERENCES APP.PATIENT ("
                 + canreg.common.Tools.toUpperCaseStandardized(patientDatabaseVariableNames) + ") ");
+        return commands.toArray(new String[0]);
+    }
+
+    static String[] strCreateSourceTableForeignKey(String sourceDatabaseVariableNames, String tumourDatabaseVariableNames) {
+        // set variables unique
+        LinkedList<String> commands = new LinkedList<String>();
+        // create foreign key
+        commands.add("ALTER TABLE APP.SOURCE ADD FOREIGN KEY ("
+                + canreg.common.Tools.toUpperCaseStandardized(sourceDatabaseVariableNames) + ") "
+                + "REFERENCES APP.TUMOUR ("
+                + canreg.common.Tools.toUpperCaseStandardized(tumourDatabaseVariableNames) + ") ");
         return commands.toArray(new String[0]);
     }
 
@@ -613,8 +654,10 @@ public class QueryGenerator {
             } else if (standardVariableName.equalsIgnoreCase(Globals.StandardVariableNames.PatientID.toString())) {
                 queryLine += " NOT NULL ";
             } else if (standardVariableName.equalsIgnoreCase(Globals.StandardVariableNames.TumourID.toString())) {
-                queryLine += " NOT NULL ";
-            } else if (standardVariableName.equalsIgnoreCase(Globals.StandardVariableNames.TumourRecordID.toString())) {
+                queryLine += " NOT NULL UNIQUE ";
+                // } else if (standardVariableName.equalsIgnoreCase(Globals.StandardVariableNames.TumourRecordID.toString())) {
+                //    queryLine += " NOT NULL UNIQUE ";
+            } else if (standardVariableName.equalsIgnoreCase(Globals.StandardVariableNames.SourceRecordID.toString())) {
                 queryLine += " NOT NULL UNIQUE ";
             }
         }
