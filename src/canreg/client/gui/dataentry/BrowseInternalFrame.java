@@ -18,18 +18,16 @@ import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.Tools;
-import canreg.server.database.DatabaseRecord;
-import canreg.server.database.Patient;
+import canreg.common.database.DatabaseRecord;
+import canreg.common.database.Patient;
 import canreg.server.database.RecordLockedException;
-import canreg.server.database.Tumour;
+import canreg.common.database.Tumour;
 import canreg.server.database.UnknownTableException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -43,8 +41,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -490,7 +486,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 newTableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
             } catch (SQLException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                result = "Not valid";
+                result = "Not valid" + ex.getMessage();
             } catch (RemoteException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Remote exception";
@@ -578,8 +574,10 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 tca.setOnlyAdjustLarger(false);
                 tca.adjustColumns();
                 resultPanel.setVisible(true);
-            } else if (result.equals("Not valid")) {
-                JOptionPane.showInternalMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NOT_A_VALID_FILTER."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            } else if (result.toString().startsWith("Not valid")) {
+                JOptionPane.showInternalMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NOT_A_VALID_FILTER.") +"\n"
+                        + result.toString().substring("Not valid".length()),
+                        java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, result);
             }
