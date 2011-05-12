@@ -2,8 +2,8 @@ package canreg.client.analysis;
 
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
-import canreg.server.database.AgeGroupStructure;
-import canreg.server.database.PopulationDataset;
+import canreg.common.database.AgeGroupStructure;
+import canreg.common.database.PopulationDataset;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.NumberFormat;
