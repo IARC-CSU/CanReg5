@@ -1,11 +1,10 @@
 package canreg.common.conversions;
 
 import canreg.common.DatabaseVariablesListElement;
-import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
-import canreg.server.database.Patient;
-import canreg.server.database.Tumour;
+import canreg.common.database.Patient;
+import canreg.common.database.Tumour;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
