@@ -1,5 +1,6 @@
 package canreg.common;
 
+import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -18,8 +19,10 @@ public class GlobalToolBox {
     private Document doc;
     private Map<String, DatabaseVariablesListElement> standardVariableNameToDatabaseVariableListElementMap;
     private Map<Integer, DatabaseGroupsListElement> groupIDToDatabaseGroupListElementMap;
+    private Map<IARCStandardVariableNames, String> mapIARCstandardVariablesVariableName;
     private DatabaseVariablesListElement[] databaseVariablesListElements;
     private Charset standardCharSet;
+    private Translator translator;
 
     /**
      * 
@@ -31,6 +34,8 @@ public class GlobalToolBox {
         databaseVariablesListElements = Tools.getVariableListElements(doc, Globals.NAMESPACE);
         standardVariableNameToDatabaseVariableListElementMap = buildVariablesMap(databaseVariablesListElements);
         standardCharSet = Tools.getStandardCharset(doc, Globals.NAMESPACE);
+        translator = Tools.getTranslator(doc, Globals.NAMESPACE);
+        mapIARCstandardVariablesVariableName = Tools.getMapIARCstandardVariablesVariableName(doc, Globals.NAMESPACE);
     }
 
     public Document getDocument() {
@@ -39,6 +44,10 @@ public class GlobalToolBox {
 
     public Charset getStandardCharset() {
         return standardCharSet;
+    }
+
+    public Translator getTranslator() {
+        return translator;
     }
 
     /**
@@ -105,5 +114,12 @@ public class GlobalToolBox {
         // Then build meta variables - i.e. behaviour as fifth digit in morphology
 
         return map;
+    }
+
+    /**
+     * @return the mapIARCstandardVariablesVariableName
+     */
+    public Map<IARCStandardVariableNames, String> getMapIARCstandardVariablesVariableName() {
+        return mapIARCstandardVariablesVariableName;
     }
 }
