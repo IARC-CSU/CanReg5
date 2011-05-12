@@ -12,9 +12,8 @@ package canreg.client.analysis;
  * @author Morten Johannes Ervik
  * @version 1.0
  */
-import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
-import canreg.server.database.PopulationDataset;
+import canreg.common.database.PopulationDataset;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
@@ -808,23 +807,6 @@ public abstract class TableBuilder {
         return elementArray;
     }
 
-    public String[] breakDownLine(LinkedList<FieldDescription> fil, String line) {
-        LinkedList<String> elements = new LinkedList();
-        int pointer = 0;
-        String tmpString = new String();
-        boolean finished = false;
-        FieldDescription tmpDesc;
-        while (pointer < fil.size()) {
-            tmpDesc = fil.get(pointer++);
-            elements.add(getContentOfField(fil, tmpDesc.getName(), line));
-        }
-        String[] elementArray = new String[elements.size()];
-        for (int i = 0; i < elementArray.length; i++) {
-            elementArray[i] = elements.get(i);
-        }
-        return elementArray;
-    }
-
     public LinkedList readDescription(String descriptionFileName) {
         // read description from file
         try {
@@ -836,38 +818,6 @@ public abstract class TableBuilder {
                     + " not found.");
             return null;
         }
-    }
-
-    public int[] extractTimeSpan(String line) {
-        int ys[] = new int[2];
-        try {
-            if (line != null) {
-                String y1 = line.substring(line.length() - 10, line.length() - 6);
-                String y2 = line.substring(line.length() - 5, line.length() - 1);
-                try {
-                    ys[0] = Integer.parseInt(y1);
-                    ys[1] = Integer.parseInt(y2);
-                } catch (NumberFormatException pe) {
-                    System.out.println("No interval in dictionary entry: " + line);
-                    ys = null;
-                }
-                return ys;
-            } else {
-                return null;
-            }
-        } catch (StringIndexOutOfBoundsException sioobe) {
-            return null;
-        }
-    }
-
-    public int numberOfTrues(boolean[] booleans) {
-        int n = 0;
-        for (int i = 0; i < booleans.length; i++) {
-            if (booleans[i]) {
-                n++;
-            }
-        }
-        return n;
     }
 
     public double findHighestPopulationCount(double[][] population) {
@@ -1005,27 +955,6 @@ public abstract class TableBuilder {
         return cn;
     }
 
-    public String getRegistryLabel(String registryNumber,
-            String registryDictionary) {
-        String str = null;
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(
-                    registryDictionary)));
-            String line = br.readLine();
-            while (line != null) {
-                if (registryNumber.equals(line.substring(0, 8))) {
-                    str = line.substring(10).trim();
-                    break;
-                }
-                line = br.readLine();
-            }
-        } catch (IOException ioe) {
-            System.out.println("Dictionary-file error...");
-            return null;
-        }
-        return str;
-    }
 
     public String[] getInfoArray(String content,
             int columnNumber,
@@ -1384,7 +1313,7 @@ public abstract class TableBuilder {
         nf.setMaximumFractionDigits(decimals);
         nf.setMinimumFractionDigits(decimals);
         if (number == -1) {
-            return new String("-");
+            return "-";
         } else {
             return nf.format(number);
         }
