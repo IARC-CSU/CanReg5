@@ -3,6 +3,7 @@ package canreg.common;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.qualitycontrol.PersonSearcher.CompareAlgorithms;
+import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
@@ -16,6 +17,8 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -316,14 +319,14 @@ public class Tools {
     }
 
     /*
-     * mapping standard variable names in capital letters to variable list elements
+     * mapping standard variables to variable list elements
      *
      */
-    public static TreeMap<String, DatabaseVariablesListElement> buildStandardVariablesMap(DatabaseVariablesListElement[] variableListElements) {
-        TreeMap<String, DatabaseVariablesListElement> variablesMap = new TreeMap<String, DatabaseVariablesListElement>();
+    public static TreeMap<StandardVariableNames, DatabaseVariablesListElement> buildStandardVariablesMap(DatabaseVariablesListElement[] variableListElements) {
+        TreeMap<StandardVariableNames, DatabaseVariablesListElement> variablesMap = new TreeMap<StandardVariableNames, DatabaseVariablesListElement>();
         for (DatabaseVariablesListElement elem : variableListElements) {
             if (elem.getStandardVariableName() != null) {
-                variablesMap.put(canreg.common.Tools.toUpperCaseStandardized(elem.getStandardVariableName()), elem);
+                variablesMap.put(StandardVariableNames.valueOf(elem.getStandardVariableName()), elem);
             }
         }
         return variablesMap;
@@ -855,5 +858,111 @@ public class Tools {
         detector.reset();
 
         return encoding;
+    }
+
+    public static Translator getTranslator(Document doc, String NAMESPACE) {
+        // TODO scan the doc for things coded non-standard and build a translator
+        // for now just return an empty translator
+        Translator translator = new Translator();
+        DatabaseVariablesListElement[] variables = getVariableListElements(doc, NAMESPACE);
+
+        return translator;
+    }
+
+    public static Map<IARCStandardVariableNames, String> getMapIARCstandardVariablesVariableName(Document doc, String NAMESPACE) {
+        EnumMap<IARCStandardVariableNames, String> map = new EnumMap<IARCStandardVariableNames, String>(IARCStandardVariableNames.class);
+        DatabaseVariablesListElement[] variables = getVariableListElements(doc, NAMESPACE);
+        Map<StandardVariableNames, IARCStandardVariableNames> mapStdVarbNamesIARCStdVarbNames = getMapStdVarbNamesIARCStdVarbNames();
+
+        for (DatabaseVariablesListElement variable:variables){
+            String stdNameString = variable.getStandardVariableName();
+            if (stdNameString!=null){
+                StandardVariableNames stdVarb = StandardVariableNames.valueOf(stdNameString);
+                IARCStandardVariableNames iarcStdVarb = mapStdVarbNamesIARCStdVarbNames.get(stdVarb);
+                if (iarcStdVarb!=null){
+                    map.put(iarcStdVarb, variable.getDatabaseVariableName());
+                }
+            }
+        }
+
+        return map;
+    }
+
+    private static Map<StandardVariableNames, IARCStandardVariableNames> getMapStdVarbNamesIARCStdVarbNames(){
+        EnumMap<StandardVariableNames, IARCStandardVariableNames> map = new EnumMap<StandardVariableNames, IARCStandardVariableNames>(StandardVariableNames.class);
+
+        /**
+         * Date
+         * String
+         * Coded yyyyMMdd
+         */
+        map.put(StandardVariableNames.IncidenceDate, IARCStandardVariableNames.IncidenceDate);
+        /**
+         * Date
+         * String
+         * Coded yyyyMMdd
+         */
+        map.put(StandardVariableNames.BirthDate, IARCStandardVariableNames.BirthDate);
+        /**
+         * Age at diagnosis
+         * Number
+         * Unknown age 999
+         */
+        map.put(StandardVariableNames.Age, IARCStandardVariableNames.Age);
+        /**
+         * Gender
+         * Coded 1=Male, 2=Female, 9=Unknown
+         */
+        map.put(StandardVariableNames.Sex, IARCStandardVariableNames.Sex);
+
+        /**
+         * Topography, Site
+         * String
+         * Coded according to ICD-O-3
+         */
+        map.put(StandardVariableNames.Topography, IARCStandardVariableNames.Topography);
+        /**
+         * Morphology, Histology
+         * String
+         * Coded according to ICD-O-3
+         */
+        map.put(StandardVariableNames.Morphology, IARCStandardVariableNames.Morphology);
+        /**
+         * Behaviour
+         * String
+         * Coded according to ICD-O-3
+         */
+        map.put(StandardVariableNames.Behaviour, IARCStandardVariableNames.Behaviour);
+
+        /**
+         * Basis of Diagnosis
+         * String
+         * Coded according to ICD-O-3
+         */
+        map.put(StandardVariableNames.BasisDiagnosis, IARCStandardVariableNames.BasisDiagnosis);
+        /**
+         * ICD10
+         */
+        map.put(StandardVariableNames.ICD10, IARCStandardVariableNames.ICD10);
+        /**
+         * Date
+         * String
+         * Coded yyyyMMdd
+         */
+        map.put(StandardVariableNames.Lastcontact, IARCStandardVariableNames.Lastcontact);
+        /**
+         * Grade
+         * Value between 1 and 9
+         */
+        map.put(StandardVariableNames.Grade, IARCStandardVariableNames.Grade);
+        /**
+         * International Childhood Cancer Classification
+         */
+        map.put(StandardVariableNames.ICCC, IARCStandardVariableNames.ICCC);
+        /**
+         * Stage
+         */
+        map.put(StandardVariableNames.Stage, IARCStandardVariableNames.Stage);
+        return map;
     }
 }

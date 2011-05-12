@@ -26,7 +26,7 @@ public class Translator {
     public void addTranslation(String variableName, Object value, Object translatedValue){
         Translation translation = translationsMap.get(variableName);
         if (translation==null){
-            translation = new Translation(variableName);
+            translation = new Translation();
             translationsMap.put(variableName, translation);
         }
         translation.addTranslation(value, translatedValue);

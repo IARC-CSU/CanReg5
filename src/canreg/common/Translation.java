@@ -11,7 +11,7 @@ class Translation {
     private Map<Object, Object> translationMap;
     private Object defaultValue;
 
-    protected Translation(String variableName) {
+    protected Translation() {
         translationMap = new HashMap<Object, Object>();
     }
 
