@@ -46,7 +46,6 @@ import javax.swing.table.DefaultTableModel;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
-import org.mozilla.universalchardet.UniversalDetector;
 
 /**
  *
@@ -915,6 +914,9 @@ public class ImportView extends javax.swing.JInternalFrame {
         io.setTumourSequenceVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimSeq.toString()).getDatabaseVariableName());
         io.setFirstNameVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.FirstName.toString()).getDatabaseVariableName());
         io.setSexVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Sex.toString()).getDatabaseVariableName());
+        io.setTumourCheckStatus(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.CheckStatus.toString()).getDatabaseVariableName());
+        io.setTumourRecordStatus(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString()).getDatabaseVariableName());
+        io.setICD10VariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ICD10.toString()).getDatabaseVariableName());
 
         // Set the characterset
         io.setFileCharset((Charset) charsetsComboBox.getSelectedItem());

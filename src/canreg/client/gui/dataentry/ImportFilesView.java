@@ -895,6 +895,9 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         io.setObsoletePatientFlagVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString()).getDatabaseVariableName());
         io.setObsoleteTumourFlagVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString()).getDatabaseVariableName());
         io.setTumourSequenceVariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimSeq.toString()).getDatabaseVariableName());
+        io.setTumourCheckStatus(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.CheckStatus.toString()).getDatabaseVariableName());
+        io.setTumourRecordStatus(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString()).getDatabaseVariableName());
+        io.setICD10VariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ICD10.toString()).getDatabaseVariableName());
 
         // Set the charactersets
         io.setFilesCharsets(getCharsets());
