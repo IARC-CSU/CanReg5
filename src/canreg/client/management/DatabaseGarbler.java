@@ -7,6 +7,7 @@ import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DateHelper;
 import canreg.common.Globals;
+import canreg.common.Globals.StandardVariableNames;
 import canreg.common.GregorianCalendarCanReg;
 import canreg.common.database.Patient;
 import canreg.server.database.RecordLockedException;
@@ -34,7 +35,7 @@ public class DatabaseGarbler {
 
     private Map<String, Integer> firstNames;
     private Document doc;
-    private TreeMap<String, DatabaseVariablesListElement> standardVariablesMap;
+    private Map<StandardVariableNames, DatabaseVariablesListElement> standardVariablesMap;
     private final String[] firstNamesArray;
     private String GARBLING_MESSAGE = "Garbling, please wait.................";
 
@@ -55,16 +56,16 @@ public class DatabaseGarbler {
         }
         Object[][] rows;
 
-        DatabaseVariablesListElement patientIDVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.PatientID.toString().toUpperCase());
-        DatabaseVariablesListElement patientRecordIDVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.PatientRecordID.toString().toUpperCase());
-        DatabaseVariablesListElement patientRecordIDTumourTableVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString().toUpperCase());
-        DatabaseVariablesListElement firstNameVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.FirstName.toString().toUpperCase());
-        DatabaseVariablesListElement lastNameVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.Surname.toString().toUpperCase());
-        DatabaseVariablesListElement sexVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.Sex.toString().toUpperCase());
-        DatabaseVariablesListElement adressCodeVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.AddressCode.toString().toUpperCase());
-        DatabaseVariablesListElement incidenceDateVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.IncidenceDate.toString().toUpperCase());
-        DatabaseVariablesListElement birthDateVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.BirthDate.toString().toUpperCase());
-        DatabaseVariablesListElement ageVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.BirthDate.toString().toUpperCase());
+        DatabaseVariablesListElement patientIDVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.PatientID);
+        DatabaseVariablesListElement patientRecordIDVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.PatientRecordID);
+        DatabaseVariablesListElement patientRecordIDTumourTableVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.PatientRecordIDTumourTable);
+        DatabaseVariablesListElement firstNameVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.FirstName);
+        DatabaseVariablesListElement lastNameVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.Surname);
+        DatabaseVariablesListElement sexVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.Sex);
+        DatabaseVariablesListElement adressCodeVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.AddressCode);
+        DatabaseVariablesListElement incidenceDateVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.IncidenceDate);
+        DatabaseVariablesListElement birthDateVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.BirthDate);
+        DatabaseVariablesListElement ageVariableListElement = standardVariablesMap.get(Globals.StandardVariableNames.BirthDate);
         Patient[] patients1 = new Patient[]{};
 
         try {
@@ -73,7 +74,7 @@ public class DatabaseGarbler {
             // get all the patient record ids in the database
             DatabaseFilter filter = new DatabaseFilter();
             Set<DatabaseVariablesListElement> set = new TreeSet<DatabaseVariablesListElement>();
-            set.add(standardVariablesMap.get(Globals.StandardVariableNames.PatientRecordID.toString().toUpperCase()));
+            set.add(standardVariablesMap.get(Globals.StandardVariableNames.PatientRecordID));
             filter.setDatabaseVariables(null);
             DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
             rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, distributedTableDescription.getRowCount());
