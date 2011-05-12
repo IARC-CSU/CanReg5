@@ -2,7 +2,7 @@ package canreg.client.analysis;
 
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
-import canreg.server.database.PopulationDataset;
+import canreg.common.database.PopulationDataset;
 import java.util.LinkedList;
 import java.io.IOException;
 import java.io.FileReader;
