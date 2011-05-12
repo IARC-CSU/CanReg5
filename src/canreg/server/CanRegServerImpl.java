@@ -135,7 +135,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         patientRecordIDvariableName = serverToolbox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
 
         // temp!
-        db.setSystemPropery("DATABASE_VERSION", "5.00.05");
+        // db.setSystemPropery("DATABASE_VERSION", "5.00.05");
 
         // migrate the database if necessary
         Migrator migrator = new Migrator(getCanRegVersion(), db);
@@ -144,7 +144,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
         // Step four: initiate the quality controllers
         personSearcher = new DefaultPersonSearch(
-                Tools.getVariableListElements(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
+                Tools.getVariableListElements(
+                systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
         PersonSearchVariable[] searchVariables = Tools.getPersonSearchVariables(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE);
         personSearcher.setSearchVariables(searchVariables);
         personSearcher.setThreshold(Tools.getPersonSearchMinimumMatch(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
@@ -707,8 +708,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             releaseResultSet(dataDescription.getResultSetID());
             DatabaseIndexesListElement dbile = new DatabaseIndexesListElement(null);
             dbile.setDatabaseTableName(Globals.PATIENT_TABLE_NAME);
-            dbile.setMainVariable(serverToolbox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()));
             filter.setRangeDatabaseIndexedListElement(dbile);
+            filter.setRangeDatabaseVariablesListElement(serverToolbox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()));
             filter.setRangeStart(rangeStart);
             filter.setRangeEnd(rangeEnd);
             dataDescription = getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
