@@ -1,6 +1,6 @@
 package canreg.common;
 
-import canreg.server.database.AgeGroupStructure;
+import canreg.common.database.AgeGroupStructure;
 
 /**
  *
@@ -133,8 +133,8 @@ public class Globals {
         PATIENT_TABLE_NAME,
         TUMOUR_AND_PATIENT_JOIN_TABLE_NAME,
         SOURCE_TABLE_NAME,
-        SOURCE_AND_TUMOUR_JOIN_TABLE_NAME
-    // ,SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME
+        SOURCE_AND_TUMOUR_JOIN_TABLE_NAME,
+        SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME
     };
     static public String[] TABLE_LIST = {
         PATIENT_TABLE_NAME,
@@ -176,7 +176,7 @@ public class Globals {
     public static String DEFAULT_BACK_UP_EVERY = "7";
     public static int GLOBAL_PERSON_SEARCH_STEP_SIZE = 1;
     // public static String CANREG_HELP_FILE_NAME = "CanReg5-functionality.html";
-    public static String RECORD_STATUS_PENDING_CODE = "0";
+
     public static int UNDUPLICATION_NOT_DONE_CODE = 0;
     public static int MAX_POPULATION_DATASETS_IN_TABLE = 50;
     public static String OBSOLETE_VALUE = "1";
@@ -439,7 +439,7 @@ public class Globals {
         /**
          * 
          */
-        TumourRecordID,
+        // TumourRecordID,
         /**
          * 
          */
@@ -496,4 +496,27 @@ public class Globals {
         "8 - not assigned",
         "Training"
     };
+    public static enum RecordStatusValues {
+        Pending,
+        Confirmed
+    }
+
+    public static String RECORD_STATUS_PENDING_CODE = "0";
+    public static String RECORD_STATUS_CONFIRMED_CODE = "1";
+
+    public static enum TurmourCheckStatusValues {
+        Invalid,
+        OK,
+        Rare,
+        Missing
+    }
+
+    public static String TUMOUR_CHECK_STATUS_INVALID_CODE = "0";
+    public static String TUMOUR_CHECK_STATUS_OK_CODE = "1";
+    public static String TUMOUR_CHECK_STATUS_RARE_CODE = "2";
+    public static String TUMOUR_CHECK_STATUS_MISSING_CODE = "3";
+
+    public static enum PatientUnduplicationStatusValues {
+
+    }
 }
