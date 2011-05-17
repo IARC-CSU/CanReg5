@@ -37,7 +37,7 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
          * @param distributedTableDescription
          * @throws Exception 
          */
-	public DistributedTableDataSourceClient(DistributedTableDescription distributedTableDescription) throws Exception {
+	public DistributedTableDataSourceClient(DistributedTableDescription distributedTableDescription) throws DistributedTableDescriptionException {
 		super();
                 this.distributedTableDescription = distributedTableDescription;
 	}
