@@ -42,6 +42,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 
@@ -89,7 +90,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
 
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabbedPane = new javax.swing.JTabbedPane();
         generalPanel = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         fontSizeLabel = new javax.swing.JLabel();
@@ -115,6 +116,11 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         checkButton = new javax.swing.JButton();
         lookAndFeelPanel = new javax.swing.JPanel();
         showOutlineCheckBox = new javax.swing.JCheckBox();
+        pathsPanel = new javax.swing.JPanel();
+        rPanel = new javax.swing.JPanel();
+        rInstallationLabel = new javax.swing.JLabel();
+        rInstallationTextField = new javax.swing.JTextField();
+        rInstallationBrowseButton = new javax.swing.JButton();
 
         setClosable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(OptionsFrame.class);
@@ -137,7 +143,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         jButton2.setIcon(resourceMap.getIcon("jButton2.icon")); // NOI18N
         jButton2.setName("jButton2"); // NOI18N
 
-        jTabbedPane1.setName("jTabbedPane1"); // NOI18N
+        tabbedPane.setName("tabbedPane"); // NOI18N
 
         generalPanel.setName("generalPanel"); // NOI18N
 
@@ -224,10 +230,10 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(87, Short.MAX_VALUE))
+                .addContainerGap(111, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("generalPanel.TabConstraints.tabTitle"), generalPanel); // NOI18N
+        tabbedPane.addTab(resourceMap.getString("generalPanel.TabConstraints.tabTitle"), generalPanel); // NOI18N
 
         systemPanel.setName("systemPanel"); // NOI18N
 
@@ -310,10 +316,10 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(systemPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(automaticBackupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(117, Short.MAX_VALUE))
+                .addContainerGap(141, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("systemPanel.TabConstraints.tabTitle"), systemPanel); // NOI18N
+        tabbedPane.addTab(resourceMap.getString("systemPanel.TabConstraints.tabTitle"), systemPanel); // NOI18N
 
         advancedPanel.setName("advancedPanel"); // NOI18N
 
@@ -430,10 +436,64 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addComponent(versionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lookAndFeelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("advancedPanel.TabConstraints.tabTitle"), advancedPanel); // NOI18N
+        tabbedPane.addTab(resourceMap.getString("advancedPanel.TabConstraints.tabTitle"), advancedPanel); // NOI18N
+
+        pathsPanel.setName("pathsPanel"); // NOI18N
+
+        rPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("rPanel.border.title"))); // NOI18N
+        rPanel.setName("rPanel"); // NOI18N
+
+        rInstallationLabel.setText(resourceMap.getString("rInstallationLabel.text")); // NOI18N
+        rInstallationLabel.setName("rInstallationLabel"); // NOI18N
+
+        rInstallationTextField.setText(resourceMap.getString("rInstallationTextField.text")); // NOI18N
+        rInstallationTextField.setName("rInstallationTextField"); // NOI18N
+
+        rInstallationBrowseButton.setAction(actionMap.get("browseForR")); // NOI18N
+        rInstallationBrowseButton.setText(resourceMap.getString("rInstallationBrowseButton.text")); // NOI18N
+        rInstallationBrowseButton.setName("rInstallationBrowseButton"); // NOI18N
+
+        javax.swing.GroupLayout rPanelLayout = new javax.swing.GroupLayout(rPanel);
+        rPanel.setLayout(rPanelLayout);
+        rPanelLayout.setHorizontalGroup(
+            rPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rPanelLayout.createSequentialGroup()
+                .addComponent(rInstallationLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rInstallationTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rInstallationBrowseButton)
+                .addContainerGap())
+        );
+        rPanelLayout.setVerticalGroup(
+            rPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(rInstallationLabel)
+                .addComponent(rInstallationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(rInstallationBrowseButton))
+        );
+
+        javax.swing.GroupLayout pathsPanelLayout = new javax.swing.GroupLayout(pathsPanel);
+        pathsPanel.setLayout(pathsPanelLayout);
+        pathsPanelLayout.setHorizontalGroup(
+            pathsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pathsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(rPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        pathsPanelLayout.setVerticalGroup(
+            pathsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pathsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(rPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(186, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab(resourceMap.getString("pathsPanel.TabConstraints.tabTitle"), pathsPanel); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -442,7 +502,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                    .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -453,7 +513,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -505,15 +565,20 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JComboBox languageComboBox;
     private javax.swing.JLabel languageLabel;
     private javax.swing.JLabel latestVersionLabel;
     private javax.swing.JTextField latestVersionTextField;
     private javax.swing.JPanel lookAndFeelPanel;
     private javax.swing.JTextField numberOfDaysTextField;
+    private javax.swing.JPanel pathsPanel;
+    private javax.swing.JButton rInstallationBrowseButton;
+    private javax.swing.JLabel rInstallationLabel;
+    private javax.swing.JTextField rInstallationTextField;
+    private javax.swing.JPanel rPanel;
     private javax.swing.JCheckBox showOutlineCheckBox;
     private javax.swing.JPanel systemPanel;
+    private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JLabel versionInstalledLabel;
     private javax.swing.JTextField versionInstalledTextField;
     private javax.swing.JPanel versionPanel;
@@ -578,6 +643,9 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
 
         numberOfDaysTextField.setText(backUpEvery);
         automaticbackupCheckBox.setSelected(localSettings.isAutoBackup());
+        
+        String rPath = localSettings.getProperty(LocalSettings.R_PATH);
+        rInstallationTextField.setText(rPath);
     }
 
     private String getNewestVersionNumber() {
@@ -625,6 +693,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         } else {
             localSettings.setAutomaticBackup(false);
         }
+        localSettings.setProperty(LocalSettings.R_PATH, rInstallationTextField.getText());
         // write settings to file
         localSettings.writeSettings();
     }
@@ -657,6 +726,19 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             }
         } else {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("NO_INFORMATION"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("MESSAGE"), JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    @Action
+    public void browseForR() {
+        String path = "";
+        if (rInstallationTextField.getText().trim().length()>0){
+            path = rInstallationTextField.getText();
+        }
+        JFileChooser chooser = new JFileChooser(path);
+        int choice = chooser.showDialog(jLabel2, "OK");
+        if (choice == JFileChooser.APPROVE_OPTION && chooser.getSelectedFile() != null){
+            rInstallationTextField.setText(chooser.getSelectedFile().getAbsolutePath());   
         }
     }
 }
