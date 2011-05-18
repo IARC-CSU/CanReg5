@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.common;
 
 import java.io.Serializable;
@@ -57,7 +56,11 @@ public class DatabaseIndexesListElement implements Serializable, DatabaseElement
 
     @Override
     public String toString() {
-        return getMainVariable().getDatabaseVariableName() + " (" + databaseTableName + ")";
+        if (getMainVariable() != null) {
+            return getMainVariable().getDatabaseVariableName() + " (" + databaseTableName + ")";
+        } else {
+            return " (" + databaseTableName + ")";
+        }
     }
 
     /**
@@ -78,7 +81,7 @@ public class DatabaseIndexesListElement implements Serializable, DatabaseElement
      * @return the mainVariable
      */
     public String getMainVariableName() {
-        if (getVariableNamesInIndex() != null && getVariableNamesInIndex().size()>0) {
+        if (getVariableNamesInIndex() != null && getVariableNamesInIndex().size() > 0) {
             return getVariableNamesInIndex().getFirst();
         } else if (getMainVariable() != null) {
             return getMainVariable().getDatabaseVariableName();
