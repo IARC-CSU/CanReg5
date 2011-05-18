@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.server.database;
 
 import canreg.common.database.User;
@@ -2309,9 +2308,7 @@ public class CanRegDAO {
                     + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
                     + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
         }
-        System.out.print(query);
-
-
+        System.out.println(query);
         try {
             result = statement.executeQuery(query);
         } catch (java.sql.SQLSyntaxErrorException ex) {
