@@ -24,13 +24,6 @@ import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.PopulationDataset;
 import java.util.LinkedList;
-import java.io.IOException;
-import java.io.FileReader;
-import java.text.NumberFormat;
-import java.io.File;
-import java.io.PrintStream;
-import java.io.FileWriter;
-import java.util.Calendar;
 
 /**
  * <p>Title: CI5-IX tools</p>
@@ -44,7 +37,7 @@ import java.util.Calendar;
  * @author Morten Johannes Ervik
  * @version 1.0
  */
-public class QualityIndicatorsTableBuilder extends TableBuilder {
+public class QualityIndicatorsTableBuilder extends AbstractEditorialTableBuilder {
 
     private static Globals.StandardVariableNames[] variablesNeeded = {
         Globals.StandardVariableNames.Sex,
@@ -1605,7 +1598,8 @@ public class QualityIndicatorsTableBuilder extends TableBuilder {
      */
 
     @Override
-    public LinkedList<String> buildTable(String registryLabel, String reportFileName, int startYear, int endYear, Object[][] incidenceData, PopulationDataset[] populations, PopulationDataset[] standardPopulations, LinkedList<ConfigFields> configList, String[] engineParameters) {
+    public LinkedList<String> buildTable(String registryLabel, String reportFileName, int startYear, int endYear, Object[][] incidenceData, PopulationDataset[] populations, PopulationDataset[] standardPopulations, LinkedList<ConfigFields> configList, String[] engineParameters,
+            FileTypes fileType) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
