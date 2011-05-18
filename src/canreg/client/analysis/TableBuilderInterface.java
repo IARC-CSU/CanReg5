@@ -33,7 +33,8 @@ public interface TableBuilderInterface {
         html,
         txt,
         png,
-        svg
+        svg,
+        wmf
     };
 
     public StandardVariableNames[] getVariablesNeeded();
