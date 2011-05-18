@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.client;
 
 import canreg.common.Globals;
@@ -39,12 +38,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class LocalSettings {
-    // Programming related
 
+    // Programming related
     private String settingsFileName;
     private String settingsDir;
     private Properties properties;
-    private boolean settingsChanged;    // Key names
+    private boolean settingsChanged;
+    // Key names
     /**
      * 
      */
@@ -73,7 +73,7 @@ public final class LocalSettings {
      * 
      */
     public static String OUTLINE_DRAG_MODE_KEY = "outline_drag_mode";
-     /**
+    /**
      *
      */
     public static final String TABLES_PATH_KEY = "tables_path";
@@ -122,6 +122,10 @@ public final class LocalSettings {
      * 
      */
     public static String FALSE_PROPERTY = "false";
+    /**
+     * 
+     */
+    public static String R_PATH = "r_path";
 
     /**
      * 
@@ -341,6 +345,8 @@ public final class LocalSettings {
             property = TRUE_PROPERTY;
         } else if (key.equalsIgnoreCase(BACKUP_EVERY_KEY)) {
             property = Globals.DEFAULT_BACK_UP_EVERY;
+        } else if (key.equalsIgnoreCase(R_PATH)) {
+            property = tryToFindRInstalltionOnWindows();
         }
         return property;
     }
@@ -353,6 +359,7 @@ public final class LocalSettings {
         setProperty(WORKING_DIR_PATH_KEY, getDefaultProperty(WORKING_DIR_PATH_KEY));
         setProperty(AUTO_BACKUP_KEY, getDefaultProperty(AUTO_BACKUP_KEY));
         setProperty(BACKUP_EVERY_KEY, getDefaultProperty(BACKUP_EVERY_KEY));
+        setProperty(R_PATH, getDefaultProperty(R_PATH));
         settingsChanged = true;
     }
 
@@ -528,5 +535,37 @@ public final class LocalSettings {
             File fileSystemDir = new File(dir);
             fileSystemDir.mkdir();
         }
+    }
+
+    private static String tryToFindRInstalltionOnWindows() {
+        String path = "";
+        boolean folderFound = false;
+        // try windows 32
+        String[] foldersToTry = new String[] {
+            System.getenv("ProgramFilesW6432") + Globals.FILE_SEPARATOR + "R",
+            System.getenv("ProgramFiles") + Globals.FILE_SEPARATOR + "R",
+            System.getenv("ProgramFiles(x86)") + Globals.FILE_SEPARATOR + "R"
+        };
+        File folder = null;
+        for (String folderToTry : foldersToTry) {
+            folder = new File(folderToTry);
+            if (folder.exists()) {
+                folderFound = true;
+                break;
+            }
+        }
+        if (folderFound && folder != null) {
+            File[] files = folder.listFiles();
+            if (files.length > 0) {
+                File file = new File(files[0].getPath() + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "R.exe");
+                if (file.exists()){
+                    path = file.getPath();
+                }
+            }
+        }
+
+        //
+
+        return path;
     }
 }
