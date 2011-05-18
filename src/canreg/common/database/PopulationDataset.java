@@ -17,8 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
-
 package canreg.common.database;
 
 import java.io.Serializable;
@@ -257,26 +255,49 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      * @param foundAgeGroups
      * @param targetAgeGroupStructure
      */
-    public void addPopulationDataToArrayForTableBuilder(double[][] populationArray, boolean[] foundAgeGroups, AgeGroupStructure targetAgeGroupStructure) {
+    public void addPopulationDataToArrayForTableBuilder(
+            double[][] populationArray, // population array to fill
+            boolean[] foundAgeGroups, // age groups to fill
+            AgeGroupStructure targetAgeGroupStructure) // target age group structure
+    {
 
         // load population data
         for (PopulationDatasetsEntry pdse : ageGroups) {
-            int sex = pdse.getSex()-1;
-            if (sex>1){
-                sex=2;
+            int sex = pdse.getSex() - 1;
+            if (sex > 1) {
+                sex = 2;
             }
             int ageGroup = pdse.getAgeGroup();
-            if (ageGroupStructure.getSizeOfFirstGroup()!=1){
-                ageGroup = ageGroup+1;
+            if (ageGroupStructure.getSizeOfFirstGroup() != 1) {
+                ageGroup = ageGroup + 1;
             }
-            if (foundAgeGroups!= null && ageGroup<foundAgeGroups.length){
+            if (foundAgeGroups != null && ageGroup < foundAgeGroups.length) {
                 foundAgeGroups[ageGroup] = true;
             }
             int population = pdse.getCount();
             populationArray[sex][ageGroup] += population;
             // For the total
-            populationArray[sex][populationArray[0].length-1] += population;
+            populationArray[sex][populationArray[0].length - 1] += population;
 
         }
+    }
+
+    public String getStringRepresentationOfAgeGroupsForFile() {
+        return getStringRepresentationOfAgeGroupsForFile("\t");
+    }
+
+    public String getStringRepresentationOfAgeGroupsForFile(String separator) {
+        StringBuilder popString = new StringBuilder();
+        for (PopulationDatasetsEntry pop : getAgeGroups()) {
+            if (getDate().length() > 4) {
+                popString.append(getDate().substring(0, 4));
+            } else {
+                popString.append(getDate());
+            }
+            popString.append(separator);
+            popString.append(pop.getStringRepresentationOfAgeGroupsForFile(separator));
+            popString.append("\r\n");
+        }
+        return popString.toString();
     }
 }

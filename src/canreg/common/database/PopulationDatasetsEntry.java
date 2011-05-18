@@ -17,8 +17,7 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
- package canreg.common.database;
+package canreg.common.database;
 
 import java.io.Serializable;
 
@@ -35,19 +34,17 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
     static String SEX_KEY = "SEX";
     static int SEX_CODE_MALE = 1;
     static int SEX_CODE_FEMALE = 2;
-
     private int ageGroup;
     private int count;
     private int populationDatasetID;
     private int sex;
-    
+
     /**
      * Creates a new instance of PopulationDatasetsEntry
      * @param ageGroup 
      * @param sex
      * @param count 
      */
-    
     public PopulationDatasetsEntry(int ageGroup, int sex, int count) {
         super();
         this.ageGroup = ageGroup;
@@ -57,7 +54,7 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
 
     @Override
     public String toString() {
-        return "PopulationDatasetEntry: "+ageGroup+ " "+sex+" "+count;
+        return "PopulationDatasetEntry: " + ageGroup + " " + sex + " " + count;
     }
 
     /**
@@ -122,5 +119,13 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
      */
     public void setSex(int sex) {
         this.sex = sex;
+    }
+
+    public String getStringRepresentationOfAgeGroupsForFile() {
+        return getStringRepresentationOfAgeGroupsForFile("\t");
+    }
+
+    public String getStringRepresentationOfAgeGroupsForFile(String separator) {
+        return sex + separator + ageGroup + separator + count;
     }
 }
