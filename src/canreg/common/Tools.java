@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.common;
 
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
@@ -455,7 +454,7 @@ public class Tools {
             try {
                 id = Integer.parseInt(e.getElementsByTagName(namespace + "group_id").item(0).getTextContent());
                 NodeList positionNodeList = e.getElementsByTagName(namespace + "group_pos");
-                if (positionNodeList.item(0)!=null) {
+                if (positionNodeList.item(0) != null) {
                     position = Integer.parseInt(positionNodeList.item(0).getTextContent());
                 } else {
                     position = i;
@@ -893,12 +892,12 @@ public class Tools {
         DatabaseVariablesListElement[] variables = getVariableListElements(doc, NAMESPACE);
         Map<StandardVariableNames, IARCStandardVariableNames> mapStdVarbNamesIARCStdVarbNames = getMapStdVarbNamesIARCStdVarbNames();
 
-        for (DatabaseVariablesListElement variable:variables){
+        for (DatabaseVariablesListElement variable : variables) {
             String stdNameString = variable.getStandardVariableName();
-            if (stdNameString!=null){
+            if (stdNameString != null) {
                 StandardVariableNames stdVarb = StandardVariableNames.valueOf(stdNameString);
                 IARCStandardVariableNames iarcStdVarb = mapStdVarbNamesIARCStdVarbNames.get(stdVarb);
-                if (iarcStdVarb!=null){
+                if (iarcStdVarb != null) {
                     map.put(iarcStdVarb, variable.getDatabaseVariableName());
                 }
             }
@@ -907,7 +906,7 @@ public class Tools {
         return map;
     }
 
-    private static Map<StandardVariableNames, IARCStandardVariableNames> getMapStdVarbNamesIARCStdVarbNames(){
+    private static Map<StandardVariableNames, IARCStandardVariableNames> getMapStdVarbNamesIARCStdVarbNames() {
         EnumMap<StandardVariableNames, IARCStandardVariableNames> map = new EnumMap<StandardVariableNames, IARCStandardVariableNames>(StandardVariableNames.class);
 
         /**
