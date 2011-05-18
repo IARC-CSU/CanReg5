@@ -44,12 +44,7 @@ public class ConfigFields {
     }
 
     public boolean containsValue(String name) {
-        for (String fieldNameString : listOfValues) {
-            if (fieldNameString.equals(name)) {
-                return true;
-            }
-        }
-        return false;
+        return listOfValues.contains(name);
     }
 
     public String getFieldName() {
