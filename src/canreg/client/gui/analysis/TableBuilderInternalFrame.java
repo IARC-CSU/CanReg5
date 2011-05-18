@@ -25,19 +25,15 @@
  */
 package canreg.client.gui.analysis;
 
-import canreg.client.analysis.AbstractEditorialTableBuilder.FileTypes;
+import canreg.client.analysis.TableBuilderInterface.FileTypes;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.LocalSettings;
-import canreg.client.analysis.AgeSpecificCasesPerHundredThousandTableBuilder;
-import canreg.client.analysis.AgeSpecificCasesTableBuilder;
 import canreg.client.analysis.ConfigFields;
 import canreg.client.analysis.ConfigFieldsReader;
 import canreg.client.analysis.NotCompatibleDataException;
-import canreg.client.analysis.PieChartTableBuilder;
-import canreg.client.analysis.PopulationPyramidTableBuilder;
-import canreg.client.analysis.AbstractEditorialTableBuilder;
+import canreg.client.analysis.TableBuilderFactory;
 import canreg.client.analysis.TableBuilderInterface;
 import canreg.client.analysis.TableBuilderListElement;
 import canreg.client.gui.components.LabelAndComboBoxJPanel;
@@ -45,7 +41,9 @@ import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.PopulationDataset;
+import canreg.server.database.UnknownTableException;
 import java.awt.Cursor;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -216,6 +214,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         headerOfTableLabel = new javax.swing.JLabel();
         headerOfTableTextField = new javax.swing.JTextField();
         imageButton = new javax.swing.JButton();
+        pdfButton = new javax.swing.JButton();
+        svgButton = new javax.swing.JButton();
+        wmfButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
@@ -313,8 +314,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(previewLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE))
+                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
+                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -406,7 +407,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(numberOfYearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(warningLabel)
-                .addContainerGap(215, Short.MAX_VALUE))
+                .addContainerGap(223, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("rangePanel.TabConstraints.tabTitle"), rangePanel); // NOI18N
@@ -440,7 +441,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -467,7 +468,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(filterPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -476,9 +477,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         writeOutPanel.setName("writeOutPanel"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(TableBuilderInternalFrame.class, this);
-        postScriptButton.setAction(actionMap.get("generateTablesAction")); // NOI18N
+        postScriptButton.setAction(actionMap.get("generatePStable")); // NOI18N
         postScriptButton.setText(resourceMap.getString("postScriptButton.text")); // NOI18N
-        postScriptButton.setEnabled(false);
         postScriptButton.setName("postScriptButton"); // NOI18N
         postScriptButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -486,9 +486,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             }
         });
 
-        tabulatedButton.setAction(actionMap.get("generateTablesAction")); // NOI18N
+        tabulatedButton.setAction(actionMap.get("generateTabulatedTables")); // NOI18N
         tabulatedButton.setText(resourceMap.getString("tabulatedButton.text")); // NOI18N
-        tabulatedButton.setEnabled(false);
         tabulatedButton.setName("tabulatedButton"); // NOI18N
 
         headerOfTableLabel.setText(resourceMap.getString("headerOfTableLabel.text")); // NOI18N
@@ -505,10 +504,34 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             }
         });
 
-        imageButton.setAction(actionMap.get("generateTablesAction")); // NOI18N
+        imageButton.setAction(actionMap.get("generatePNGTable")); // NOI18N
         imageButton.setText(resourceMap.getString("imageButton.text")); // NOI18N
-        imageButton.setEnabled(false);
         imageButton.setName("imageButton"); // NOI18N
+
+        pdfButton.setAction(actionMap.get("generatePDFtable")); // NOI18N
+        pdfButton.setName("pdfButton"); // NOI18N
+        pdfButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pdfButtonActionPerformed(evt);
+            }
+        });
+
+        svgButton.setAction(actionMap.get("generateSVGFile")); // NOI18N
+        svgButton.setText(resourceMap.getString("svgButton.text")); // NOI18N
+        svgButton.setName("svgButton"); // NOI18N
+        svgButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                svgButtonActionPerformed(evt);
+            }
+        });
+
+        wmfButton.setAction(actionMap.get("generateWMFAction")); // NOI18N
+        wmfButton.setName("wmfButton"); // NOI18N
+        wmfButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wmfButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout writeOutPanelLayout = new javax.swing.GroupLayout(writeOutPanel);
         writeOutPanel.setLayout(writeOutPanelLayout);
@@ -521,9 +544,12 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                         .addComponent(headerOfTableLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(headerOfTableTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE))
-                    .addComponent(tabulatedButton, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
+                    .addComponent(pdfButton, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
                     .addComponent(postScriptButton, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
-                    .addComponent(imageButton, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE))
+                    .addComponent(wmfButton, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
+                    .addComponent(tabulatedButton, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
+                    .addComponent(svgButton, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
+                    .addComponent(imageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE))
                 .addContainerGap())
         );
         writeOutPanelLayout.setVerticalGroup(
@@ -534,12 +560,18 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(headerOfTableLabel)
                     .addComponent(headerOfTableTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pdfButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(postScriptButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabulatedButton)
+                .addComponent(svgButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(imageButton)
-                .addContainerGap(217, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(wmfButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tabulatedButton)
+                .addContainerGap(138, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("writeOutPanel.TabConstraints.tabTitle"), writeOutPanel); // NOI18N
@@ -573,7 +605,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -638,39 +670,42 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         postScriptButton.setEnabled(false);
         tabulatedButton.setEnabled(false);
         imageButton.setEnabled(false);
+        pdfButton.setEnabled(false);
+        svgButton.setEnabled(false);
+        wmfButton.setEnabled(false);
 
         if (tble != null) {
+
             descriptionTextPane.setText(tble.getDescription());
             if (tble.getPreviewImageFilename() != null) {
                 icon = new ImageIcon(Globals.TABLES_PREVIEW_PATH + "/" + tble.getPreviewImageFilename(),
                         tble.getName());
                 previewImageLabel.setIcon(icon);
             }
+            try {
+                tableBuilder = TableBuilderFactory.getTableBuilder(tble);
 
-            if (tble.getEngineName().equalsIgnoreCase("incidencerates")) {
-                tableBuilder = new AgeSpecificCasesPerHundredThousandTableBuilder();
-            } else if (tble.getEngineName().equalsIgnoreCase("numberofcases")) {
-                tableBuilder = new AgeSpecificCasesTableBuilder();
-            } else if (tble.getEngineName().equalsIgnoreCase("populationpyramids")) {
-                tableBuilder = new PopulationPyramidTableBuilder();
-            } else if (tble.getEngineName().equalsIgnoreCase("top10piechart")) {
-                tableBuilder = new PieChartTableBuilder();
-            } else {
-                tableBuilder = null;
-            }
-            
-            if (tableBuilder != null) {
-                FileTypes[] fileTypes = tableBuilder.getFileTypesGenerated();
-
-                for (FileTypes filetype : fileTypes) {
-                    if (filetype.equals(FileTypes.ps)) {
-                        postScriptButton.setEnabled(true);
-                    } else if (filetype.equals(FileTypes.csv)) {
-                        tabulatedButton.setEnabled(true);
-                    } else if (filetype.equals(FileTypes.png)) {
-                        imageButton.setEnabled(true);
+                if (tableBuilder != null) {
+                    FileTypes[] fileTypes = tableBuilder.getFileTypesGenerated();
+                    for (FileTypes filetype : fileTypes) {
+                        if (filetype.equals(FileTypes.ps)) {
+                            postScriptButton.setEnabled(true);
+                        } else if (filetype.equals(FileTypes.csv)) {
+                            tabulatedButton.setEnabled(true);
+                        } else if (filetype.equals(FileTypes.png)) {
+                            imageButton.setEnabled(true);
+                        } else if (filetype.equals(FileTypes.pdf)) {
+                            pdfButton.setEnabled(true);
+                        } else if (filetype.equals(FileTypes.svg)) {
+                            svgButton.setEnabled(true);
+                        } else if (filetype.equals(FileTypes.wmf)) {
+                            wmfButton.setEnabled(true);
+                        }
                     }
                 }
+            } catch (FileNotFoundException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+                Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             descriptionTextPane.setText("");
@@ -701,6 +736,18 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         // generateTablesAction();
     }//GEN-LAST:event_postScriptButtonActionPerformed
 
+    private void pdfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pdfButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pdfButtonActionPerformed
+
+    private void svgButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_svgButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_svgButtonActionPerformed
+
+    private void wmfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wmfButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_wmfButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JButton cancelButton;
@@ -720,6 +767,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JTextField midYearTextField;
     private javax.swing.JButton nextButton;
     private javax.swing.JTextField numberOfYearsTextField;
+    private javax.swing.JButton pdfButton;
     private javax.swing.JPanel populationDatasetChooserPanel;
     private javax.swing.JPanel populationDatasetChoosersPanel;
     private javax.swing.JButton postScriptButton;
@@ -729,6 +777,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JPanel rangePanel;
     private com.toedter.calendar.JYearChooser startYearChooser;
     private javax.swing.JLabel startYearLabel;
+    private javax.swing.JButton svgButton;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JList tableTypeList;
     private javax.swing.JPanel tableTypePanel;
@@ -736,6 +785,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton tabulatedButton;
     private javax.swing.JLabel typeLabel;
     private javax.swing.JLabel warningLabel;
+    private javax.swing.JButton wmfButton;
     private javax.swing.JPanel writeOutPanel;
     // End of variables declaration//GEN-END:variables
 
@@ -849,8 +899,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
-    @Action
-    public void generateTablesAction() {
+    private void generateTablesAction(FileTypes filetype) {
         boolean filterError = false;
 
         TableBuilderListElement tble = (TableBuilderListElement) tableTypeList.getSelectedValue();
@@ -858,14 +907,12 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         if (tble == null) {
             JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("NO_TABLE_TYPE_SELECTED"), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("NO_TABLE_TYPE_SELECTED"), JOptionPane.ERROR_MESSAGE);
             return;
-        } else if (tble.getEngineName().equalsIgnoreCase("incidencerates")) {
-            tableBuilder = new AgeSpecificCasesPerHundredThousandTableBuilder();
-        } else if (tble.getEngineName().equalsIgnoreCase("numberofcases")) {
-            tableBuilder = new AgeSpecificCasesTableBuilder();
-        } else if (tble.getEngineName().equalsIgnoreCase("populationpyramids")) {
-            tableBuilder = new PopulationPyramidTableBuilder();
-        } else if (tble.getEngineName().equalsIgnoreCase("top10piechart")) {
-            tableBuilder = new PieChartTableBuilder();
+        } else {
+            try {
+                tableBuilder = TableBuilderFactory.getTableBuilder(tble);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         Set<DatabaseVariablesListElement> variables = new LinkedHashSet<DatabaseVariablesListElement>();
@@ -904,6 +951,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     // cancelled
                     return;
                 }
+
+                setCursor(hourglassCursor);
 
                 int i = 0;
                 String populationFilterString = "";
@@ -961,9 +1010,19 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                         incidenceData = tableDataSource.retrieveRows(0, tableDatadescription.getRowCount());
                     }
 
-                    setCursor(hourglassCursor);
-
-                    LinkedList<String> filesGenerated = tableBuilder.buildTable(heading, fileName, startYear, endYear, incidenceData, populations, standardPopulations, tble.getConfigFields(), tble.getEngineParameters());
+                    // Build the table(s)
+                    LinkedList<String> filesGenerated =
+                            tableBuilder.buildTable(
+                            heading,
+                            fileName,
+                            startYear,
+                            endYear,
+                            incidenceData,
+                            populations,
+                            standardPopulations,
+                            tble.getConfigFields(),
+                            tble.getEngineParameters(),
+                            filetype);
 
                     String filesGeneratedList = new String();
                     for (String fileN : filesGenerated) {
@@ -976,7 +1035,13 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
                     // Opening the resulting files...
                     for (String resultFileName : filesGenerated) {
-                        canreg.common.Tools.openFile(resultFileName);
+                        if (new File(resultFileName).exists()) {
+                            try {
+                                canreg.common.Tools.openFile(resultFileName);
+                            } catch (IOException ex) {
+                                Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
                     }
 
                 } catch (SQLException ex) {
@@ -988,12 +1053,46 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (NotCompatibleDataException ex) {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (Exception ex) {
+                } catch (DistributedTableDescriptionException ex) {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (UnknownTableException ex) {
+                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    setCursor(normalCursor);
                 }
             } else {
                 JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("POPULATION_SET_NOT_COMPATIBLE"), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("NO_TABLES_BUILT"), JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    @Action
+    public void generatePStable() {
+        generateTablesAction(FileTypes.ps);
+    }
+
+    @Action
+    public void generateTabulatedTables() {
+        generateTablesAction(FileTypes.csv);
+    }
+
+    @Action
+    public void generatePNGTable() {
+        generateTablesAction(FileTypes.png);
+    }
+
+    @Action
+    public void generatePDFtable() {
+        generateTablesAction(FileTypes.pdf);
+    }
+
+    @Action
+    public void generateSVGFile() {
+        generateTablesAction(FileTypes.svg);
+    }
+
+    @Action
+    public void generateWMFAction() {
+        generateTablesAction(FileTypes.wmf);
     }
 }

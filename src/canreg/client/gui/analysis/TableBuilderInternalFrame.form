@@ -47,7 +47,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="363" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="371" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -123,8 +123,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="previewImageLabel" pref="207" max="32767" attributes="0"/>
-                          <Component id="descriptionScrollPane" alignment="0" pref="207" max="32767" attributes="0"/>
+                          <Component id="previewImageLabel" pref="215" max="32767" attributes="0"/>
+                          <Component id="descriptionScrollPane" alignment="0" pref="215" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -261,7 +261,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="warningLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="215" max="32767" attributes="0"/>
+                      <EmptySpace pref="223" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -366,7 +366,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="293" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="301" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -434,7 +434,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="rangeFilterPanel" pref="313" max="32767" attributes="0"/>
+                      <Component id="rangeFilterPanel" pref="321" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -474,9 +474,12 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="headerOfTableTextField" pref="347" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="tabulatedButton" alignment="0" pref="434" max="32767" attributes="0"/>
+                          <Component id="pdfButton" alignment="0" pref="434" max="32767" attributes="0"/>
                           <Component id="postScriptButton" alignment="0" pref="434" max="32767" attributes="0"/>
-                          <Component id="imageButton" alignment="0" pref="434" max="32767" attributes="0"/>
+                          <Component id="wmfButton" alignment="0" pref="434" max="32767" attributes="0"/>
+                          <Component id="tabulatedButton" alignment="0" pref="434" max="32767" attributes="0"/>
+                          <Component id="svgButton" alignment="0" pref="434" max="32767" attributes="0"/>
+                          <Component id="imageButton" alignment="1" pref="434" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -491,12 +494,18 @@
                           <Component id="headerOfTableTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="pdfButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="postScriptButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tabulatedButton" min="-2" max="-2" attributes="0"/>
+                      <Component id="svgButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="imageButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="217" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="wmfButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="tabulatedButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="138" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -505,10 +514,9 @@
             <Component class="javax.swing.JButton" name="postScriptButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateTablesAction" methodName="generateTablesAction"/>
+                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generatePStable" methodName="generatePStable"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="postScriptButton.text"/>
-                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="postScriptButton" noResource="true"/>
               </Properties>
               <Events>
@@ -518,10 +526,9 @@
             <Component class="javax.swing.JButton" name="tabulatedButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateTablesAction" methodName="generateTablesAction"/>
+                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateTabulatedTables" methodName="generateTabulatedTables"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="tabulatedButton.text"/>
-                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="tabulatedButton" noResource="true"/>
               </Properties>
             </Component>
@@ -544,12 +551,45 @@
             <Component class="javax.swing.JButton" name="imageButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateTablesAction" methodName="generateTablesAction"/>
+                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generatePNGTable" methodName="generatePNGTable"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="imageButton.text"/>
-                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="imageButton" noResource="true"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="pdfButton">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generatePDFtable" methodName="generatePDFtable"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="pdfButton" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pdfButtonActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="svgButton">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateSVGFile" methodName="generateSVGFile"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="svgButton.text"/>
+                <Property name="name" type="java.lang.String" value="svgButton" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="svgButtonActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="wmfButton">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateWMFAction" methodName="generateWMFAction"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="wmfButton" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="wmfButtonActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
