@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.client.analysis;
 
 import canreg.common.Globals;
@@ -34,7 +33,7 @@ import java.util.LinkedList;
  *
  * @author ervikm
  */
-public class PopulationPyramidTableBuilder extends TableBuilder {
+public class PopulationPyramidTableBuilder extends AbstractEditorialTableBuilder {
 
     //Some parameters
     int baseline = 500;
@@ -46,6 +45,7 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
     private String[] sexLabel;
     private Globals.StandardVariableNames[] variablesNeeded = null;
     private FileTypes[] fileTypesGenerated = new FileTypes[]{FileTypes.ps};
+    private String populationString;
 
     public PopulationPyramidTableBuilder() {
         super();
@@ -53,7 +53,17 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
     }
 
     @Override
-    public LinkedList<String> buildTable(String registryLabel, String reportFileName, int startYear, int endYear, Object[][] incidenceData, PopulationDataset[] populations, PopulationDataset[] standardPopulations, LinkedList<ConfigFields> configList, String[] engineParameters) throws NotCompatibleDataException {
+    public LinkedList<String> buildTable(
+            String registryLabel,
+            String reportFileName,
+            int startYear,
+            int endYear,
+            Object[][] incidenceData,
+            PopulationDataset[] populations,
+            PopulationDataset[] standardPopulations,
+            LinkedList<ConfigFields> configList,
+            String[] engineParameters,
+            FileTypes fileType) throws NotCompatibleDataException {
 
         LinkedList<String> generatedFiles = new LinkedList<String>();
 
@@ -63,7 +73,6 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
 
         numberOfYears = endYear - startYear + 1;
 
-        int[] years = {startYear, endYear};
         // get the pops
         // translate and scan
         double[][] populationArray = new double[numberOfSexes][numberOfAgeGroups + 1];
@@ -90,7 +99,22 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
             }
         }
 
+        // calculate all age groups group
+        for (int j = 0; j < 2; j++) {
+            for (int i = 0; i < allAgeGroupsIndex; i++) {
+                populationArray[j][allAgeGroupsIndex] += populationArray[j][i];
+            }
+        }
+
         double highest = findHighestPopulationCount(populationArray);
+
+        populationString = populations[0].getPopulationDatasetName();
+
+        int lastCommaPlace = populationString.lastIndexOf(",");
+
+        if (lastCommaPlace != -1) {
+            populationString = populationString.substring(0, lastCommaPlace);
+        }
 
         // Construct the PS-file
         String tableFileName = reportFileName + ".ps";
@@ -134,86 +158,12 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
 
             fw.write("0 780 MT (" + registryLabel + ") CS\n");
             fw.write("Titlefont SF\n");
-            fw.write("0 760 MT (" + populations[0].getPopulationDatasetName() + ") CS\n");
+            fw.write("0 760 MT (" + populationString + ") CS\n");
             fw.write("0 750 MT (" + tableLabel[0] + ") CS\n");
             fw.write("/col 20 def\n");
 
             fw.write("Tablefont SF\n");
-            /*
-            if (numberOfFoundYears8 > 0) {
-            // draw the old data
-            offset = baseline;
-            fw.write("[2 1] 0 setdash\n");
-            for (int i = 1; i <= highestPopulationAgeGroup; i++) {
-            if (foundAgeGroups8[i]) {
-            if (i != highestPopulationAgeGroup) {
-            if (populationArray8[0][i] < populationArray[0][i]) {
-            fw.write(drawBox((int) (center - between / 2 -
-            maxlength * populationArray8[0][i] /
-            highest),
-            offset,
-            (int) (center - between / 2 -
-            maxlength * populationArray[0][i] /
-            highest),
-            offset + height, 0.90, false));
-            }
-            
-            fw.write(drawBox(center - between / 2, offset,
-            (int) (center - between / 2 -
-            maxlength * populationArray8[0][i] /
-            highest),
-            offset + height));
-            
-            if (populationArray8[1][i] < populationArray[1][i]) {
-            fw.write(drawBox((int) (center + between / 2 +
-            maxlength * populationArray8[1][i] /
-            highest),
-            offset,
-            (int) (center + between / 2 +
-            maxlength * populationArray[1][i] /
-            highest),
-            offset + height, 0.90, false));
-            }
-            
-            fw.write(drawBox(center + between / 2, offset,
-            (int) (center + between / 2 +
-            maxlength * populationArray8[1][i] /
-            highest),
-            offset + height));
-            
-            }
-            
-            else {
-            fw.write(drawTriangle(center - between / 2,
-            offset,
-            (int) (center - between / 2 -
-            maxlength *
-            (2 * populationArray8[0][i] /
-            ((100 / 5) -
-            highestPopulationAgeGroup)) /
-            highest),
-            offset,
-            center - between / 2,
-            baseline + height * (100 / 5)));
-            fw.write(drawTriangle(center + between / 2,
-            offset,
-            (int) (center + between / 2 +
-            maxlength *
-            (2 * populationArray8[1][i] /
-            ((100 / 5) -
-            highestPopulationAgeGroup)) /
-            highest),
-            offset,
-            center + between / 2,
-            baseline + height * (100 / 5)));
-            
-            }
-            }
-            offset += height;
-            }
-            }
-             */
-            // draw the new data
+
             offset = baseline;
             fw.write("[] 0 setdash\n");
 
@@ -346,7 +296,7 @@ public class PopulationPyramidTableBuilder extends TableBuilder {
     }
 
     @Override
-    public boolean areThesePopulationDatasetsOK(PopulationDataset[] sets) {
+    public boolean areThesePopulationDatasetsCompatible(PopulationDataset[] sets) {
         boolean OK = true;
         for (PopulationDataset pds : sets) {
             OK = OK && pds.getAgeGroupStructure().getSizeOfGroups() == 5;
