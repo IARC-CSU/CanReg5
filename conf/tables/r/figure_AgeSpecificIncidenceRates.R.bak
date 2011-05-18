@@ -1,0 +1,36 @@
+#Script for graphs of age specific incidence rates per 100 000.
+
+#Default filetype is pdf
+figure_AgeSpecificIncidenceRates <- function(filetype = "pdf", dataInc, dataPop){
+
+
+	dataInc <- subset(dataInc, select = c(YEAR, ICD10GROUP, SEX, AGEGROUP, CASES))
+	#One frame with the number sites given in the file
+	nrSites <- length(levels(dataInc$ICD10))
+	nrSites
+
+	#List of the sites
+	listSites <- levels(dataInc$ICD10)
+	listSites
+
+	dataPopMale <- subsetSex(dataPop, 1)
+	dataPopFemale <- subsetSex(dataPop, 2)
+	dataPopMale <- mergePeriods(dataPopMale, "Pop")
+	dataPopFemale <- mergePeriods(dataPopFemale, "Pop")
+	
+	
+	for(i in 1:nrSites){
+	
+	site <- listSites[i]
+	print(site)
+	
+	
+
+	
+	makeAgeSpecIncRates(dataInc, dataPopMale, dataPopFemale, site)	
+	
+
+	}#End for nrSites	
+		
+
+}#End function
