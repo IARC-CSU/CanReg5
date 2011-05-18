@@ -32,7 +32,7 @@ import java.io.PrintStream;
 import java.io.FileWriter;
 import java.util.Date;
 
-public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder {
+public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEditorialTableBuilder {
 
     private static Globals.StandardVariableNames[] variablesNeeded = {
         Globals.StandardVariableNames.Sex,
@@ -64,7 +64,8 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
             PopulationDataset[] populations,
             PopulationDataset[] standardPopulations,
             LinkedList<ConfigFields> configList,
-            String[] engineParameters) throws NotCompatibleDataException {
+            String[] engineParameters,
+            FileTypes fileType) throws NotCompatibleDataException {
 
         LinkedList<String> generatedFiles = new LinkedList<String>();
 
@@ -120,7 +121,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                 configList);
         // sexLabel = ConfigFieldsReader.findConfig("sex_label", configList);
 
-        sexLabel = new String[]{java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("MALE"), java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("FEMALE")};
+        sexLabel = new String[]{java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("MALE"), java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("FEMALE")};
 
         icdLabel = ConfigFieldsReader.findConfig("ICD_groups_labels",
                 configList);
@@ -128,44 +129,44 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                 "ICD10_groups",
                 configList);
 
-        cancerGroupsLocal = generateICD10Groups(icd10GroupDescriptions);
+        cancerGroupsLocal = EditorialTableTools.generateICD10Groups(icd10GroupDescriptions);
 
-        allCancerGroupsIndex = getICD10index("ALL", icd10GroupDescriptions);
+        allCancerGroupsIndex = EditorialTableTools.getICD10index("ALL", icd10GroupDescriptions);
 
-        leukemiaNOSCancerGroupIndex = getICD10index(950,
+        leukemiaNOSCancerGroupIndex = EditorialTableTools.getICD10index(950,
                 cancerGroupsLocal);
 
-        skinCancerGroupIndex = getICD10index("C44",
+        skinCancerGroupIndex = EditorialTableTools.getICD10index("C44",
                 icd10GroupDescriptions);
 
-        bladderCancerGroupIndex = getICD10index("C67",
+        bladderCancerGroupIndex = EditorialTableTools.getICD10index("C67",
                 icd10GroupDescriptions);
 
-        mesotheliomaCancerGroupIndex = getICD10index("C45",
+        mesotheliomaCancerGroupIndex = EditorialTableTools.getICD10index("C45",
                 icd10GroupDescriptions);
 
-        kaposiSarkomaCancerGroupIndex = getICD10index("C46",
+        kaposiSarkomaCancerGroupIndex = EditorialTableTools.getICD10index("C46",
                 icd10GroupDescriptions);
 
-        myeloproliferativeDisordersCancerGroupIndex = getICD10index("MPD",
+        myeloproliferativeDisordersCancerGroupIndex = EditorialTableTools.getICD10index("MPD",
                 icd10GroupDescriptions);
 
-        myelodysplasticSyndromesCancerGroupIndex = getICD10index("MDS",
+        myelodysplasticSyndromesCancerGroupIndex = EditorialTableTools.getICD10index("MDS",
                 icd10GroupDescriptions);
 
-        allCancerGroupsButSkinIndex = getICD10index("ALLbC44",
+        allCancerGroupsButSkinIndex = EditorialTableTools.getICD10index("ALLbC44",
                 icd10GroupDescriptions);
 
-        leukemiaNOSCancerGroupIndex = getICD10index(950,
+        leukemiaNOSCancerGroupIndex = EditorialTableTools.getICD10index(950,
                 cancerGroupsLocal);
 
-        brainAndCentralNervousSystemCancerGroupIndex = getICD10index("C70-72",
+        brainAndCentralNervousSystemCancerGroupIndex = EditorialTableTools.getICD10index("C70-72",
                 icd10GroupDescriptions);
 
-        ovaryCancerGroupIndex = getICD10index(569,
+        ovaryCancerGroupIndex = EditorialTableTools.getICD10index(569,
                 cancerGroupsLocal);
 
-        otherCancerGroupsIndex = getICD10index("O&U", icd10GroupDescriptions);
+        otherCancerGroupsIndex = EditorialTableTools.getICD10index("O&U", icd10GroupDescriptions);
 
         numberOfCancerGroups = cancerGroupsLocal.length;
 
@@ -187,7 +188,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
         populationArray = new double[numberOfSexes][numberOfAgeGroups];
         foundAgeGroups = new boolean[numberOfAgeGroups];
 
-        if (areThesePopulationDatasetsOK(populations)) {
+        if (areThesePopulationDatasetsCompatible(populations)) {
             for (PopulationDataset population : populations) {
                 population.addPopulationDataToArrayForTableBuilder(populationArray, foundAgeGroups, new AgeGroupStructure(5, 85, 1));
             }
@@ -293,7 +294,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
                         if (icdString.length() < 3) {
                             icdNumber = icdNumber * 10;
                         }
-                        icdIndex = getICD10index(icdNumber, cancerGroupsLocal);
+                        icdIndex = EditorialTableTools.getICD10index(icdNumber, cancerGroupsLocal);
                         if (icdIndex == -1) {
                             icdIndex = -1;
                         }
@@ -1112,8 +1113,8 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends TableBuilder
     }
 
     @Override
-    public boolean areThesePopulationDatasetsOK(PopulationDataset[] sets) {
-        boolean OK = super.areThesePopulationDatasetsOK(sets);
+    public boolean areThesePopulationDatasetsCompatible(PopulationDataset[] sets) {
+        boolean OK = super.areThesePopulationDatasetsCompatible(sets);
         for (PopulationDataset pds : sets) {
             OK = OK && pds.getAgeGroupStructure().getSizeOfGroups() == 5;
         }
