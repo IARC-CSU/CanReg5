@@ -36,6 +36,7 @@ import canreg.client.analysis.NotCompatibleDataException;
 import canreg.client.analysis.TableBuilderFactory;
 import canreg.client.analysis.TableBuilderInterface;
 import canreg.client.analysis.TableBuilderListElement;
+import canreg.client.analysis.TableErrorException;
 import canreg.client.gui.components.LabelAndComboBoxJPanel;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseFilter;
@@ -747,7 +748,6 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private void wmfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wmfButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_wmfButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JButton cancelButton;
@@ -865,19 +865,19 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     tempArray = ConfigFieldsReader.findConfig("table_label", configFields);
                     if (tempArray != null && tempArray.length > 0) {
                         etle.setName(tempArray[0]);
-                        System.out.println(tempArray[0]);
+                        // System.out.println(tempArray[0]);
                     }
 
                     tempArray = ConfigFieldsReader.findConfig("table_description", configFields);
                     if (tempArray != null && tempArray.length > 0) {
                         etle.setDescription(tempArray[0]);
-                        System.out.println(tempArray[0]);
+                        // System.out.println(tempArray[0]);
                     }
 
                     tempArray = ConfigFieldsReader.findConfig("table_engine", configFields);
                     if (tempArray != null && tempArray.length > 0) {
                         etle.setEngineName(tempArray[0]);
-                        System.out.println(tempArray[0]);
+                        // System.out.println(tempArray[0]);
                     }
 
                     String[] engineParameters = ConfigFieldsReader.findConfig("engine_parameters", configFields);
@@ -886,7 +886,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     tempArray = ConfigFieldsReader.findConfig("preview_image", configFields);
                     if (tempArray != null && tempArray.length > 0) {
                         etle.setPreviewImageFilename(tempArray[0]);
-                        System.out.println(tempArray[0]);
+                        // System.out.println(tempArray[0]);
                     }
 
                     tableTypeLinkedList.add(etle);
@@ -1039,12 +1039,14 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                             try {
                                 canreg.common.Tools.openFile(resultFileName);
                             } catch (IOException ex) {
+                                JOptionPane.showMessageDialog(this, "Unable to open: " + resultFileName + "\n" + ex.getLocalizedMessage());
                                 Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
                     }
 
                 } catch (SQLException ex) {
+                    setCursor(normalCursor);
                     JOptionPane.showMessageDialog(this, "Something wrong with the SQL query: \n" + ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (RemoteException ex) {
@@ -1057,6 +1059,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (UnknownTableException ex) {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (TableErrorException ex) {
+                    setCursor(normalCursor);
+                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, "Something went wrong while building the table: \n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } finally {
                     setCursor(normalCursor);
                 }
