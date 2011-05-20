@@ -16,7 +16,7 @@ if (Args[1] == "png") {
 	# svg needs the RSvgDevice library installed
     filename <- paste( Args[2], ".svg" , sep = "")
 	require(RSvgDevice)
-    devSVG(file=filename)
+    devSVG(file=filename) 
 } else if (Args[1] == "ps") { 
     filename <- paste( Args[2], ".ps" , sep = "")
     postscript(file=filename) 
@@ -43,7 +43,7 @@ source(paste(sep="/", script.basename, "mergePeriods.R"))
 source(paste(sep="/", script.basename, "makeageSpecIncRates.R"))
 source(paste(sep="/", script.basename, "subsetSite.R"))
 source(paste(sep="/", script.basename, "plotAgeSpecIncRates.R"))
-# source(paste(sep="/", script.basename, "plotLogAgeSpecIncRates.r"))
+source(paste(sep="/", script.basename, "plotLogAgeSpecIncRates.r"))
 
 # The incidence file is the 4th argument
 fileInc <- Args[4]
@@ -56,9 +56,7 @@ dataPop <- read.table(filePop, header=TRUE)
 
 #The variable log has to be declared as TRUE or False wether or not the users wants figures with log rates
 #Default is FALSE
-
-logr = FALSE
-figure_AgeSpecificIncidenceRates(dataInc, dataPop, logr)
+figure_AgeSpecificIncidenceRates(dataInc, dataPop, log = T)
 	
 dev.off()
 

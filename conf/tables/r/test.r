@@ -12,9 +12,22 @@ if (Args[1] == "png") {
 } else if (Args[1] == "pdf") { 
     filename <- paste( Args[2], ".pdf" , sep = "")
     pdf(file=filename) 
+} else if (Args[1] == "svg") { 
+	# svg needs the RSvgDevice library installed
+    filename <- paste( Args[2], ".svg" , sep = "")
+	require(RSvgDevice)
+    devSVG(file=filename) 
+} else if (Args[1] == "ps") { 
+    filename <- paste( Args[2], ".ps" , sep = "")
+    postscript(file=filename) 
+} else if (Args[1] == "wmf") { 
+	# This only works on windows
+    filename <- paste( Args[2], ".wmf" , sep = "")
+    win.metafile(file=filename) 
 } else { 
-    filename <- paste( Args[2], ".png" , sep = "")
-    png(file=filename, bg="transparent") 
+	# defaults to pdf
+    filename <- paste( Args[2], ".pdf" , sep = "")
+    pdf(file=filename, bg="transparent") 
 }
 
 # call proper function

@@ -1,36 +1,42 @@
 #Script for graphs of age specific incidence rates per 100 000.
 
-#Default filetype is pdf
-figure_AgeSpecificIncidenceRates <- function(filetype = "pdf", dataInc, dataPop){
+figure_AgeSpecificIncidenceRates <- function(dataInc, dataPop, logr){
 
-
-	dataInc <- subset(dataInc, select = c(YEAR, ICD10GROUP, SEX, AGEGROUP, CASES))
+	
+	dataInc <- subset(dataInc, select = c(YEAR, ICD10GROUP, ICD10GROUPLABEL, SEX, AGE_GROUP, CASES))
+	
 	#One frame with the number sites given in the file
-	nrSites <- length(levels(dataInc$ICD10))
-	nrSites
+	nrSites <- nlevels(dataInc$ICD10GROUP)
+
+	##############################################split.screen(c(ceiling(nrSites/2), floor(nrSites/2)))
+
+	#Number of agegroups
+	nrOfAgeGroups <- nlevels(as.factor(dataPop$AGE_GROUP))
 
 	#List of the sites
-	listSites <- levels(dataInc$ICD10)
-	listSites
+	listSites <- levels(dataInc$ICD10GROUP)
+	siteLabel <- levels(dataInc$ICD10GROUPLABEL)
 
-	dataPopMale <- subsetSex(dataPop, 1)
-	dataPopFemale <- subsetSex(dataPop, 2)
-	dataPopMale <- mergePeriods(dataPopMale, "Pop")
-	dataPopFemale <- mergePeriods(dataPopFemale, "Pop")
 	
+	dataPopMale <- subsetSex(dataPop, 1)
+	dataPopMale <- mergePeriods(dataPopMale, "Pop", nrOfAgeGroups)
+
+	dataPopFemale <- subsetSex(dataPop, 2)	
+	dataPopFemale <- mergePeriods(dataPopFemale, "Pop", nrOfAgeGroups)
 	
 	for(i in 1:nrSites){
 	
+	#site <- substr(listSites[i], 4, nchar(listSites[i]))
 	site <- listSites[i]
-	#print(site)
 	
-	
+	#Extract the first two characters from a string
+	siteCx <- substr(siteLabel[i], 1, 2)
 
+	makeAgeSpecIncRates(dataInc, dataPopMale, dataPopFemale, site, siteCx, nrOfAgeGroups, logr)	
 	
-	makeAgeSpecIncRates(dataInc, dataPopMale, dataPopFemale, site)	
-	
-
 	}#End for nrSites	
 		
+	##############################################close.screen(all = TRUE)  
+
 
 }#End function
