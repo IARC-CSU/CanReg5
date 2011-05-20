@@ -25,7 +25,6 @@ import canreg.client.analysis.TableBuilderInterface.FileTypes;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.PopulationDataset;
-import canreg.common.database.PopulationDatasetsEntry;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -106,7 +105,7 @@ public class RTableBuilder implements TableBuilderInterface {
             PopulationDataset[] standardPopulations,
             LinkedList<ConfigFields> configList,
             String[] engineParameters,
-            FileTypes fileType) throws NotCompatibleDataException {
+            FileTypes fileType) throws NotCompatibleDataException, TableErrorException {
         LinkedList<String> filesCreated = new LinkedList<String>();
         InputStream is;
 
@@ -115,25 +114,10 @@ public class RTableBuilder implements TableBuilderInterface {
             File popfile = File.createTempFile("pop", ".tsv");
             BufferedWriter popoutput = new BufferedWriter(new FileWriter(popfile));
 
-            String popheader = "YEAR" + separator;
-            popheader += "SEX" + separator;
-            popheader += "AGE_GROUP" + separator;
-            popheader += "COUNT";
-            popoutput.append(popheader);
-            popoutput.newLine();
-            int thisYear = startYear;
-            for (PopulationDataset popset : populations) {
-                for (PopulationDatasetsEntry pop : popset.getAgeGroups()) {
-                    popoutput.append(thisYear+"");
-                    popoutput.append(separator);
-                    popoutput.append(pop.getStringRepresentationOfAgeGroupsForFile(separator));
-                    popoutput.newLine();
-                }
-                thisYear++;
-            }
-            popoutput.flush();
+            Tools.writePopulationsToFile(popoutput, startYear, populations, separator);
+
             popoutput.close();
-            filesCreated.add(popfile.getPath());
+            // filesCreated.add(popfile.getPath());
 
             // write inc to tempfile
             File incfile = File.createTempFile("inc", ".tsv");
@@ -166,7 +150,7 @@ public class RTableBuilder implements TableBuilderInterface {
             for (String rScript : rScripts) {
                 Runtime rt = Runtime.getRuntime();
                 String command = "\"" + rpath + "\""
-                        + " --slave -f "
+                        + " --slave --file="
                         + "\"" + dir.getAbsolutePath() + Globals.FILE_SEPARATOR
                         + "r" + Globals.FILE_SEPARATOR
                         + rScript
@@ -183,23 +167,27 @@ public class RTableBuilder implements TableBuilderInterface {
                 is = new BufferedInputStream(pr.getInputStream());
                 try {
                     pr.waitFor();
+                    // convert the output to a string
+                    String theString = convertStreamToString(is);
+
+                    // and add all to the list of files to return
+                    for (String fileName : theString.split("\n")) {
+                        if (new File(fileName).exists()) {
+                            filesCreated.add(fileName);
+                        }
+                    }
+                    System.out.println(theString);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (java.util.NoSuchElementException ex) {
+                    Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
+                    String errorMessage = convertStreamToString(errorStream);
+                    System.out.println(errorMessage);
+                    throw new TableErrorException("R says:\n \"" + errorMessage+ "\"");
+                } finally {
+                    System.out.println(pr.exitValue());
                 }
-
-                // convert the output to a string
-                String theString = convertStreamToString(is);
-
-                // and add all to the list of files to return
-                for (String fileName : theString.split("\n")) {
-                    if (new File(fileName).exists()) {
-                        filesCreated.add(fileName);
-                    }
-                }
-
-                System.out.println(theString);
-
-                System.out.println(pr.exitValue());
             }
 
         } catch (IOException ex) {
@@ -209,7 +197,7 @@ public class RTableBuilder implements TableBuilderInterface {
         return filesCreated;
     }
 
-    private String convertStreamToString(InputStream is) {
+    private String convertStreamToString(InputStream is) throws java.util.NoSuchElementException {
         return new Scanner(is).useDelimiter("\\A").next();
     }
 
