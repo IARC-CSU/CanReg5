@@ -25,7 +25,6 @@ import canreg.client.analysis.TableBuilderInterface.FileTypes;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.PopulationDataset;
-import canreg.common.database.PopulationDatasetsEntry;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -34,10 +33,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import canreg.client.analysis.Tools.KeyGroupsEnum;
 
 public class RTableBuilderGrouped implements TableBuilderInterface {
 
@@ -50,28 +54,16 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
         Globals.StandardVariableNames.ICD10,
         Globals.StandardVariableNames.Morphology,
         Globals.StandardVariableNames.Behaviour,
-        Globals.StandardVariableNames.BasisDiagnosis};
+        Globals.StandardVariableNames.BasisDiagnosis
+    };
     private FileTypes[] fileTypesGenerated;
     private String separator = "\t";
     private final LocalSettings localSettings;
     private final String rpath;
     private final String[] tableLabel;
-    private final String[] icdLabel;
+    private final String[] icdGroupLabels;
     private final String[] icd10GroupDescriptions;
     private final LinkedList[] cancerGroupsLocal;
-    private final int allCancerGroupsIndex;
-    private final int leukemiaNOSCancerGroupIndex;
-    private final int skinCancerGroupIndex;
-    private final int bladderCancerGroupIndex;
-    private final int mesotheliomaCancerGroupIndex;
-    private final int kaposiSarkomaCancerGroupIndex;
-    private final int myeloproliferativeDisordersCancerGroupIndex;
-    private final int myelodysplasticSyndromesCancerGroupIndex;
-    private final int allCancerGroupsButSkinIndex;
-    private final int brainAndCentralNervousSystemCancerGroupIndex;
-    private final int ovaryCancerGroupIndex;
-    private final int otherCancerGroupsIndex;
-    private final int numberOfCancerGroups;
     private static int YEAR_COLUMN = 0;
     private static int SEX_COLUMN = 1;
     private static int AGE_COLUMN = 2;
@@ -85,6 +77,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
     static int allAgeGroupsIndex = 20;
     static int unknownAgeGroupIndex = 19;
     private final String[] rScripts;
+    private Map<KeyGroupsEnum, Integer> keyGroupsMap;
 
     public RTableBuilderGrouped(String configFileName) throws FileNotFoundException {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -107,10 +100,8 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
 
         rScripts = ConfigFieldsReader.findConfig(R_SCRIPTS, configList);
 
-        tableLabel = ConfigFieldsReader.findConfig("table_label",
-                configList);
-        icdLabel = ConfigFieldsReader.findConfig("ICD_groups_labels",
-                configList);
+        tableLabel = ConfigFieldsReader.findConfig("table_label", configList);
+        icdGroupLabels = ConfigFieldsReader.findConfig("ICD_groups_labels", configList);
 
         icd10GroupDescriptions = ConfigFieldsReader.findConfig(
                 "ICD_groups",
@@ -118,42 +109,21 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
 
         cancerGroupsLocal = EditorialTableTools.generateICD10Groups(icd10GroupDescriptions);
 
-        allCancerGroupsIndex = EditorialTableTools.getICD10index("ALL", icd10GroupDescriptions);
+        // indexes
+        keyGroupsMap = new EnumMap<KeyGroupsEnum, Integer>(KeyGroupsEnum.class);
 
-        leukemiaNOSCancerGroupIndex = EditorialTableTools.getICD10index(950,
-                cancerGroupsLocal);
-
-        skinCancerGroupIndex = EditorialTableTools.getICD10index("C44",
-                icd10GroupDescriptions);
-
-        bladderCancerGroupIndex = EditorialTableTools.getICD10index("C67",
-                icd10GroupDescriptions);
-
-        mesotheliomaCancerGroupIndex = EditorialTableTools.getICD10index("C45",
-                icd10GroupDescriptions);
-
-        kaposiSarkomaCancerGroupIndex = EditorialTableTools.getICD10index("C46",
-                icd10GroupDescriptions);
-
-        myeloproliferativeDisordersCancerGroupIndex = EditorialTableTools.getICD10index("MPD",
-                icd10GroupDescriptions);
-
-        myelodysplasticSyndromesCancerGroupIndex = EditorialTableTools.getICD10index("MDS",
-                icd10GroupDescriptions);
-
-        allCancerGroupsButSkinIndex = EditorialTableTools.getICD10index("ALLbC44",
-                icd10GroupDescriptions);
-
-        brainAndCentralNervousSystemCancerGroupIndex = EditorialTableTools.getICD10index("C70-72",
-                icd10GroupDescriptions);
-
-        ovaryCancerGroupIndex = EditorialTableTools.getICD10index(569,
-                cancerGroupsLocal);
-
-        otherCancerGroupsIndex = EditorialTableTools.getICD10index("O&U", icd10GroupDescriptions);
-
-        numberOfCancerGroups = cancerGroupsLocal.length;
-
+        keyGroupsMap.put(KeyGroupsEnum.allCancerGroupsIndex, EditorialTableTools.getICD10index("ALL", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.leukemiaNOSCancerGroupIndex, EditorialTableTools.getICD10index(950, cancerGroupsLocal));
+        keyGroupsMap.put(KeyGroupsEnum.skinCancerGroupIndex, EditorialTableTools.getICD10index("C44", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.bladderCancerGroupIndex, EditorialTableTools.getICD10index("C67", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.mesotheliomaCancerGroupIndex, EditorialTableTools.getICD10index("C45", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.kaposiSarkomaCancerGroupIndex, EditorialTableTools.getICD10index("C46", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.myeloproliferativeDisordersCancerGroupIndex, EditorialTableTools.getICD10index("MPD", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.myelodysplasticSyndromesCancerGroupIndex, EditorialTableTools.getICD10index("MDS", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.allCancerGroupsButSkinIndex, EditorialTableTools.getICD10index("ALLbC44", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.brainAndCentralNervousSystemCancerGroupIndex, EditorialTableTools.getICD10index("C70-72", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.ovaryCancerGroupIndex, EditorialTableTools.getICD10index(569, cancerGroupsLocal));
+        keyGroupsMap.put(KeyGroupsEnum.otherCancerGroupsIndex, EditorialTableTools.getICD10index("O&U", icd10GroupDescriptions));
     }
 
     @Override
@@ -176,32 +146,23 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
             PopulationDataset[] standardPopulations,
             LinkedList<ConfigFields> configList,
             String[] engineParameters,
-            FileTypes fileType) throws NotCompatibleDataException {
+            FileTypes fileType) throws NotCompatibleDataException, TableErrorException {
         LinkedList<String> filesCreated = new LinkedList<String>();
         InputStream is;
+
+        List<Integer> dontCount = new LinkedList<Integer>();
+
+        // all sites but skin?
+        if (Arrays.asList(engineParameters).contains("noC44")) {
+            dontCount.add(keyGroupsMap.get(KeyGroupsEnum.skinCancerGroupIndex));
+        }
 
         try {
             // write pops to tempfile
             File popfile = File.createTempFile("pop", ".tsv");
             BufferedWriter popoutput = new BufferedWriter(new FileWriter(popfile));
 
-            String popheader = "YEAR" + separator;
-            popheader += "SEX" + separator;
-            popheader += "AGE_GROUP" + separator;
-            popheader += "COUNT";
-            popoutput.append(popheader);
-            popoutput.newLine();
-            int thisYear = startYear;
-            for (PopulationDataset popset : populations) {
-                for (PopulationDatasetsEntry pop : popset.getAgeGroups()) {
-                    popoutput.append(thisYear+"");
-                    popoutput.append(separator);
-                    popoutput.append(pop.getStringRepresentationOfAgeGroupsForFile(separator));
-                    popoutput.newLine();
-                }
-                thisYear++;
-            }
-            popoutput.flush();
+            Tools.writePopulationsToFile(popoutput, startYear, populations, separator);
             popoutput.close();
             filesCreated.add(popfile.getPath());
 
@@ -213,7 +174,6 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
             String ageString;
             String behaviourString;
             String basisString;
-            String casesString;
 
             int sex, icdNumber, year, icdIndex, yearIndex, ageGroup, ageInt, basis, cases;
 
@@ -225,8 +185,10 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
 
                 String incheader = "YEAR";
                 incheader += separator + "ICD10GROUP";
+                incheader += separator + "ICD10GROUPLABEL";
                 incheader += separator + "SEX";
                 incheader += separator + "AGEGROUP";
+                incheader += separator + "MORPHOLOGY";
                 incheader += separator + "BEHAVIOUR";
                 incheader += separator + "BASIS";
                 incheader += separator + "CASES";
@@ -253,39 +215,11 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                     }
 
                     morphologyString = (String) line[MORPHOLOGY_COLUMN];
+                    icdString = (String) line[ICD10_COLUMN];
 
-                    if (icdIndex < 0) {
-                        icdString = (String) line[ICD10_COLUMN];
-                        if (icdString.length() > 0
-                                && icdString.trim().substring(0, 1).equals("C")) {
-                            icdString = icdString.trim().substring(1);
-                            icdNumber = Integer.parseInt(icdString);
-                            if (icdString.length() < 3) {
-                                icdNumber = icdNumber * 10;
-                            }
-                            icdIndex = EditorialTableTools.getICD10index(icdNumber, cancerGroupsLocal);
-                            if (icdIndex == -1) {
-                                icdIndex = -1;
-                            }
-                        } else if (icdString.length() > 0
-                                && icdString.trim().substring(0, 1).equals("D")) {
-                            icdString = icdString.trim().substring(1);
-                            icdNumber = Integer.parseInt(icdString);
-                            if (icdString.length() < 3) {
-                                icdNumber = icdNumber * 10;
-                            }
-                            if (icdNumber == 90 || icdNumber == 414) {
-                                icdIndex = bladderCancerGroupIndex;
-                            } else if ((int) (icdNumber / 10) == 45 || (int) (icdNumber / 10) == 47) {
-                                icdIndex = myeloproliferativeDisordersCancerGroupIndex;
-                            } else if ((int) (icdNumber / 10) == 46) {
-                                icdIndex = myelodysplasticSyndromesCancerGroupIndex;
-                            }
-                        }
-                    }
+                    icdIndex = Tools.assignICDGroupIndex(keyGroupsMap, icdString, morphologyString, cancerGroupsLocal);
 
-
-                    if (icdIndex >= 0) {
+                    if (icdIndex != Tools.DONT_COUNT && icdIndex >= 0) {
                         yearString = line[YEAR_COLUMN].toString();
                         year = Integer.parseInt(yearString);
                         ageString = line[AGE_COLUMN].toString();
@@ -306,9 +240,11 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                         cases = (Integer) line[CASES_COLUMN];
 
                         outLine.append(year).append(separator);
-                        outLine.append(icd10GroupDescriptions[icdIndex]).append(separator);
+                        outLine.append("\"").append(icd10GroupDescriptions[icdIndex]).append("\"").append(separator);
+                        outLine.append("\"").append(icdGroupLabels[icdIndex].substring(3)).append("\"").append(separator);
                         outLine.append(sexString).append(separator);
                         outLine.append(ageGroup).append(separator);
+                        outLine.append(morphologyString).append(separator);
                         outLine.append(behaviourString).append(separator);
                         outLine.append(basisString).append(separator);
                         outLine.append(cases);
@@ -327,7 +263,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                 for (String rScript : rScripts) {
 
                     String command = "\"" + rpath + "\""
-                            + " --slave -f "
+                            + " --slave --file="
                             + "\"" + dir.getAbsolutePath() + Globals.FILE_SEPARATOR
                             + "r" + Globals.FILE_SEPARATOR
                             + rScript
@@ -347,30 +283,33 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                     is = new BufferedInputStream(pr.getInputStream());
                     try {
                         pr.waitFor();
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                        // convert the output to a string
+                        String theString = convertStreamToString(is);
 
-                    // convert the output to a string
-                    String theString = convertStreamToString(is);
-
-                    // and add all to the list of files to return
-                    for (String fileName : theString.split("\n")) {
-                        if (new File(fileName).exists()) {
-                            filesCreated.add(fileName);
+                        // and add all to the list of files to return
+                        for (String fileName : theString.split("\n")) {
+                            if (new File(fileName).exists()) {
+                                filesCreated.add(fileName);
+                            }
                         }
+                        System.out.println(theString);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (java.util.NoSuchElementException ex) {
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+                        BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
+                        String errorMessage = convertStreamToString(errorStream);
+                        System.out.println(errorMessage);
+                        throw new TableErrorException("R says:\n" + errorMessage);
+                    } finally {
+                        System.out.println(pr.exitValue());
+                        // Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, null, pr.exitValue());
                     }
-
-                    System.out.println(theString);
-
-                    System.out.println(pr.exitValue());
                 }
             }
 
-
-
         } catch (IOException ex) {
-            Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return filesCreated;
