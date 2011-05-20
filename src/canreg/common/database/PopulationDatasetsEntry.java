@@ -126,6 +126,6 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
     }
 
     public String getStringRepresentationOfAgeGroupsForFile(String separator) {
-        return sex + separator + ageGroup + separator + count;
+        return ageGroup + separator + sex + separator + count;
     }
 }
