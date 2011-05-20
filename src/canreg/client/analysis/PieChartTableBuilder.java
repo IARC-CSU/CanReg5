@@ -19,24 +19,31 @@
  */
 package canreg.client.analysis;
 
+import canreg.client.analysis.TableBuilderInterface.FileTypes;
+import canreg.client.analysis.Tools.KeyGroupsEnum;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.PopulationDataset;
-import java.awt.image.BufferedImage;
+import java.awt.Color;
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.EnumMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartTheme;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
-import org.jfree.data.general.DefaultKeyedValues2DDataset;
+import org.jfree.chart.StandardChartTheme;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultKeyedValuesDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
@@ -44,13 +51,13 @@ import org.jfree.data.general.DefaultPieDataset;
  *
  * @author ervikm
  */
-public class PieChartTableBuilder extends AbstractEditorialTableBuilder {
+public class PieChartTableBuilder implements TableBuilderInterface {
 
-    private static int YEAR_COLUMN = 0;
+    // private static int YEAR_COLUMN = 0;
     private static int SEX_COLUMN = 1;
     private static int ICD10_COLUMN = 2;
     private static int MORPHOLOGY_COLUMN = 3;
-    private static int BEHAVIOUR_COLUMN = 4;
+    // private static int BEHAVIOUR_COLUMN = 4;
     private static int CASES_COLUMN = 5;
     private static Globals.StandardVariableNames[] variablesNeeded = {
         Globals.StandardVariableNames.Sex,
@@ -58,13 +65,29 @@ public class PieChartTableBuilder extends AbstractEditorialTableBuilder {
         Globals.StandardVariableNames.Morphology,
         Globals.StandardVariableNames.Behaviour,};
     private static FileTypes[] fileTypesGenerated = {
-        FileTypes.png
+        FileTypes.png,
+        FileTypes.svg
     };
     private LinkedList[] cancerGroupsLocal;
     private String[] sexLabel;
     private JFreeChart chart;
     private String[] icdLabel;
     private NumberFormat format;
+    private String[] icd10GroupDescriptions;
+    private int numberOfCancerGroups;
+    private int numberOfSexes = 2;
+    private int DONT_COUNT = -999;
+    private EnumMap<KeyGroupsEnum, Integer> keyGroupsMap;
+    private int otherCancerGroupsIndex;
+    private Integer skinCancerGroupIndex;
+    private int allCancerGroupsIndex;
+    private int allCancerGroupsButSkinIndex;
+    private int topNLimit = 10;
+
+    public PieChartTableBuilder() {
+        ChartTheme chartTheme = new StandardChartTheme("sansserif");
+        ChartFactory.setChartTheme(chartTheme);
+    }
 
     @Override
     public StandardVariableNames[] getVariablesNeeded() {
@@ -83,7 +106,8 @@ public class PieChartTableBuilder extends AbstractEditorialTableBuilder {
             PopulationDataset[] populations, // can be null
             PopulationDataset[] standardPopulations,
             LinkedList<ConfigFields> configList,
-            String[] engineParameters) throws NotCompatibleDataException {
+            String[] engineParameters,
+            FileTypes fileType) throws NotCompatibleDataException {
         String footerString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("TABLE BUILT ") + new Date() + java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString(" BY CANREG5.");
 
         LinkedList<String> generatedFiles = new LinkedList<String>();
@@ -93,50 +117,37 @@ public class PieChartTableBuilder extends AbstractEditorialTableBuilder {
 
         // sexLabel = ConfigFieldsReader.findConfig("sex_label", configList);
 
-        sexLabel = new String[]{java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("MALE"), java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/TableBuilder").getString("FEMALE")};
+        sexLabel = new String[]{java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("MALE"), java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("FEMALE")};
 
         icd10GroupDescriptions = ConfigFieldsReader.findConfig(
                 "ICD10_groups",
                 configList);
 
-        cancerGroupsLocal = generateICD10Groups(icd10GroupDescriptions);
+        cancerGroupsLocal = EditorialTableTools.generateICD10Groups(icd10GroupDescriptions);
 
-        allCancerGroupsIndex = getICD10index("ALL", icd10GroupDescriptions);
+        // indexes
+        keyGroupsMap = new EnumMap<KeyGroupsEnum, Integer>(KeyGroupsEnum.class);
 
-        leukemiaNOSCancerGroupIndex = getICD10index(950,
-                cancerGroupsLocal);
+        keyGroupsMap.put(KeyGroupsEnum.allCancerGroupsIndex, EditorialTableTools.getICD10index("ALL", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.leukemiaNOSCancerGroupIndex, EditorialTableTools.getICD10index(950, cancerGroupsLocal));
+        keyGroupsMap.put(KeyGroupsEnum.skinCancerGroupIndex, EditorialTableTools.getICD10index("C44", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.bladderCancerGroupIndex, EditorialTableTools.getICD10index("C67", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.mesotheliomaCancerGroupIndex, EditorialTableTools.getICD10index("C45", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.kaposiSarkomaCancerGroupIndex, EditorialTableTools.getICD10index("C46", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.myeloproliferativeDisordersCancerGroupIndex, EditorialTableTools.getICD10index("MPD", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.myelodysplasticSyndromesCancerGroupIndex, EditorialTableTools.getICD10index("MDS", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.allCancerGroupsButSkinIndex, EditorialTableTools.getICD10index("ALLbC44", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.brainAndCentralNervousSystemCancerGroupIndex, EditorialTableTools.getICD10index("C70-72", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyGroupsEnum.ovaryCancerGroupIndex, EditorialTableTools.getICD10index(569, cancerGroupsLocal));
+        keyGroupsMap.put(KeyGroupsEnum.otherCancerGroupsIndex, EditorialTableTools.getICD10index("O&U", icd10GroupDescriptions));
 
-        skinCancerGroupIndex = getICD10index("C44",
-                icd10GroupDescriptions);
-
-        bladderCancerGroupIndex = getICD10index("C67",
-                icd10GroupDescriptions);
-
-        mesotheliomaCancerGroupIndex = getICD10index("C45",
-                icd10GroupDescriptions);
-
-        kaposiSarkomaCancerGroupIndex = getICD10index("C46",
-                icd10GroupDescriptions);
-
-        myeloproliferativeDisordersCancerGroupIndex = getICD10index("MPD",
-                icd10GroupDescriptions);
-
-        myelodysplasticSyndromesCancerGroupIndex = getICD10index("MDS",
-                icd10GroupDescriptions);
-
-        allCancerGroupsButSkinIndex = getICD10index("ALLbC44",
-                icd10GroupDescriptions);
-
-        leukemiaNOSCancerGroupIndex = getICD10index(950,
-                cancerGroupsLocal);
-
-        brainAndCentralNervousSystemCancerGroupIndex = getICD10index("C70-72",
-                icd10GroupDescriptions);
-
-        ovaryCancerGroupIndex = getICD10index(569,
-                cancerGroupsLocal);
+        otherCancerGroupsIndex = keyGroupsMap.get(KeyGroupsEnum.otherCancerGroupsIndex);
+        skinCancerGroupIndex = keyGroupsMap.get(KeyGroupsEnum.skinCancerGroupIndex);
+        allCancerGroupsIndex = keyGroupsMap.get(KeyGroupsEnum.allCancerGroupsIndex);
+        allCancerGroupsButSkinIndex = keyGroupsMap.get(KeyGroupsEnum.allCancerGroupsButSkinIndex);
 
         numberOfCancerGroups = cancerGroupsLocal.length;
+
         double[] line;
         double[] casesLine;
 
@@ -146,6 +157,12 @@ public class PieChartTableBuilder extends AbstractEditorialTableBuilder {
             double casesArray[][] = new double[numberOfCancerGroups][numberOfSexes];
 
             int sex, icdNumber, icdIndex, cases;
+            List<Integer> dontCount = new LinkedList<Integer>();
+            // all sites but skin?
+            if (Arrays.asList(engineParameters).contains("noC44")) {
+                dontCount.add(skinCancerGroupIndex);
+                tableHeader += ", excluding C44";
+            }
 
             for (Object[] dataLine : incidenceData) {
 
@@ -167,116 +184,92 @@ public class PieChartTableBuilder extends AbstractEditorialTableBuilder {
                 }
 
                 morphologyString = (String) dataLine[MORPHOLOGY_COLUMN];
+                icdString = (String) dataLine[ICD10_COLUMN];
 
-                if (morphologyString.length() > 0) {
-                    int morphology = Integer.parseInt(morphologyString);
-                    if (morphology == 9140) {
-                        icdIndex = kaposiSarkomaCancerGroupIndex;
-                    } else if ((int) (morphology / 10) == 905) {
-                        icdIndex = mesotheliomaCancerGroupIndex;
-                    }
-                }
+                icdIndex = Tools.assignICDGroupIndex(keyGroupsMap, icdString, morphologyString, cancerGroupsLocal);
 
-                if (icdIndex < 0) {
-                    icdString = (String) dataLine[ICD10_COLUMN];
-                    if (icdString.length() > 0
-                            && icdString.trim().substring(0, 1).equals("C")) {
-                        icdString = icdString.trim().substring(1);
-                        icdNumber = Integer.parseInt(icdString);
-                        if (icdString.length() < 3) {
-                            icdNumber = icdNumber * 10;
-                        }
-                        icdIndex = getICD10index(icdNumber, cancerGroupsLocal);
-                        if (icdIndex == -1) {
-                            icdIndex = -1;
-                        }
-                    } else if (icdString.length() > 0
-                            && icdString.trim().substring(0, 1).equals("D")) {
-                        icdString = icdString.trim().substring(1);
-                        icdNumber = Integer.parseInt(icdString);
-                        if (icdString.length() < 3) {
-                            icdNumber = icdNumber * 10;
-                        }
-                        if (icdNumber == 90 || icdNumber == 414) {
-                            icdIndex = bladderCancerGroupIndex;
-                        } else if ((int) (icdNumber / 10) == 45 || (int) (icdNumber / 10) == 47) {
-                            icdIndex = myeloproliferativeDisordersCancerGroupIndex;
-                        } else if ((int) (icdNumber / 10) == 46) {
-                            icdIndex = myelodysplasticSyndromesCancerGroupIndex;
+                if (!dontCount.contains(icdIndex) && icdIndex != DONT_COUNT) {
+                    // Extract cases
+                    cases = (Integer) dataLine[CASES_COLUMN];
+
+                    if (sex <= numberOfSexes && icdIndex >= 0
+                            && icdIndex <= cancerGroupsLocal.length) {
+                        casesArray[icdIndex][sex - 1] += cases;
+                    } else {
+                        if (otherCancerGroupsIndex >= 0) {
+                            casesArray[otherCancerGroupsIndex][sex
+                                    - 1] += cases;
                         }
                     }
-                }
-
-                // Extract cases
-                cases = (Integer) dataLine[CASES_COLUMN];
-
-                if (sex <= numberOfSexes && icdIndex >= 0
-                        && icdIndex <= cancerGroupsLocal.length) {
-                    casesArray[icdIndex][sex - 1] += cases;
-                } else {
-                    if (otherCancerGroupsIndex >= 0) {
-                        casesArray[otherCancerGroupsIndex][sex
+                    if (allCancerGroupsIndex >= 0) {
+                        casesArray[allCancerGroupsIndex][sex - 1] += cases;
+                    }
+                    if (allCancerGroupsButSkinIndex >= 0
+                            && skinCancerGroupIndex >= 0
+                            && icdIndex != skinCancerGroupIndex) {
+                        casesArray[allCancerGroupsButSkinIndex][sex
                                 - 1] += cases;
                     }
-                }
-                if (allCancerGroupsIndex >= 0) {
-                    casesArray[allCancerGroupsIndex][sex - 1] += cases;
-                }
-                if (allCancerGroupsButSkinIndex >= 0
-                        && skinCancerGroupIndex >= 0
-                        && icdIndex != skinCancerGroupIndex) {
-                    casesArray[allCancerGroupsButSkinIndex][sex
-                            - 1] += cases;
                 }
             }
 
             // separate top 10 and the rest
-            TreeSet<CancerCasesCount> top10Male = new TreeSet<CancerCasesCount>();
+            TreeSet<CancerCasesCount> topNMale = new TreeSet<CancerCasesCount>();
             LinkedList<CancerCasesCount> theRestMale = new LinkedList<CancerCasesCount>();
 
-            TreeSet<CancerCasesCount> top10Female = new TreeSet<CancerCasesCount>();
+            TreeSet<CancerCasesCount> topNFemale = new TreeSet<CancerCasesCount>();
             LinkedList<CancerCasesCount> theRestFemale = new LinkedList<CancerCasesCount>();
 
 
             CancerCasesCount otherElement = null;
             CancerCasesCount thisElement = null;
 
-            TreeSet<CancerCasesCount> top10;
+            TreeSet<CancerCasesCount> topN;
             LinkedList<CancerCasesCount> theRest;
 
             format = NumberFormat.getInstance();
-            format.setMaximumFractionDigits(2);
+            format.setMaximumFractionDigits(1);
 
             for (int icdGroupNumber = 0; icdGroupNumber < casesArray.length; icdGroupNumber++) {
                 casesLine = casesArray[icdGroupNumber];
                 for (int sexNumber = 0; sexNumber < 2; sexNumber++) {
+
                     if (sexNumber == 0) {
-                        top10 = top10Male;
+                        topN = topNMale;
                         theRest = theRestMale;
                     } else {
-                        top10 = top10Female;
+                        topN = topNFemale;
                         theRest = theRestFemale;
                     }
 
                     thisElement = new CancerCasesCount(
-                            icdLabel[icdGroupNumber].substring(3)
-                            + " " + format.format(casesLine[sexNumber] / casesArray[allCancerGroupsIndex][sexNumber] * 100) + "%"
-                            + " (" + icd10GroupDescriptions[icdGroupNumber] + ")",
-                            casesLine[sexNumber]);
-                    if (icdGroupNumber != allCancerGroupsButSkinIndex && icdGroupNumber != allCancerGroupsIndex) {
-                        if (top10.size() < 10) {
-                            top10.add(thisElement);
+                            icd10GroupDescriptions[icdGroupNumber],
+                            icdLabel[icdGroupNumber].substring(3),
+                            casesLine[sexNumber],
+                            icdGroupNumber);
+
+                    // if this is the "other" group - add it immediately to "the rest"
+                    if (icdGroupNumber == otherCancerGroupsIndex) {
+                        theRest.add(thisElement);
+                        // if not we check if this is one of the collection groups
+                    } else if (icdGroupNumber != allCancerGroupsButSkinIndex
+                            && icdGroupNumber != allCancerGroupsIndex) {
+                        // if it is less than N cancers in top N - add it
+                        if (topN.size() < topNLimit) {
+                            topN.add(thisElement);
                         } else {
-                            otherElement = top10.last();
+                            // otherwise we need to compare it to the last element in the top 10
+                            otherElement = topN.last();
                             if (thisElement.compareTo(otherElement) < 0) {
-                                top10.remove(otherElement);
+                                topN.remove(otherElement);
                                 theRest.add(otherElement);
-                                top10.add(thisElement);
+                                topN.add(thisElement);
                             } else {
                                 theRest.add(thisElement);
                             }
                         }
                     }
+
                 }
             }
 
@@ -284,17 +277,35 @@ public class PieChartTableBuilder extends AbstractEditorialTableBuilder {
             DefaultPieDataset dataset = new DefaultKeyedValuesDataset();
             int position = 0;
             int sexNumber = 0;
-            double restCount = casesArray[allCancerGroupsIndex][sexNumber];
-            for (CancerCasesCount count : top10Male) {
-                System.out.println(count);
-                restCount -= count.getCount();
-                dataset.insertValue(position++, count.label, count.getCount());
+
+            double restCount = sumUpTheRest(theRestMale, dontCount);
+            for (CancerCasesCount count : topNMale) {
+                // System.out.println(count);
+                // restCount -= count.getCount();
+
+                dataset.insertValue(position++,
+                        count.toString()
+                        + " (" + format.format(count.getCount() / casesArray[allCancerGroupsIndex][sexNumber] * 100) + "%)",
+                        count.getCount());
             }
             dataset.insertValue(position++, "Other", restCount);
-            chart = ChartFactory.createPieChart(tableHeader + sexLabel[sexNumber], dataset, true, true, Locale.getDefault());
-            File file = new File(reportFileName + "-" + sexLabel[sexNumber] + ".png");
+
+            chart = ChartFactory.createPieChart(
+                    tableHeader + ", " + sexLabel[sexNumber],
+                    dataset, true, true, Locale.getDefault());
+
+            setPlotColours((PiePlot) chart.getPlot(), topNLimit + 1, Color.BLUE.brighter());
+
+            String fileName = reportFileName + "-" + sexLabel[sexNumber];
+
+            File file = new File(fileName + "." + fileType.toString());
+
             try {
-                ChartUtilities.saveChartAsPNG(file, chart, 1000, 1000);
+                if (fileType.equals(FileTypes.svg)) {
+                    Tools.exportChartAsSVG(chart, new Rectangle(1000, 1000), file);
+                } else {
+                    ChartUtilities.saveChartAsPNG(file, chart, 1000, 1000);
+                }
                 generatedFiles.add(file.getPath());
             } catch (IOException ex) {
                 Logger.getLogger(PieChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
@@ -304,24 +315,70 @@ public class PieChartTableBuilder extends AbstractEditorialTableBuilder {
             dataset = new DefaultKeyedValuesDataset();
             position = 0;
             sexNumber = 1;
-            restCount = casesArray[allCancerGroupsIndex][sexNumber];
-            for (CancerCasesCount count : top10Female) {
-                System.out.println(count);
-                restCount -= count.getCount();
-                dataset.insertValue(position++, count.label, count.getCount());
+            restCount = sumUpTheRest(theRestFemale, dontCount);
+            for (CancerCasesCount count : topNFemale) {
+                // System.out.println(count);
+                // restCount -= count.getCount();
+                dataset.insertValue(position++,
+                        count.toString() + " (" + format.format(count.getCount() / casesArray[allCancerGroupsIndex][sexNumber] * 100) + "%)",
+                        count.getCount());
             }
             dataset.insertValue(position++, "Other", restCount);
-            chart = ChartFactory.createPieChart(tableHeader + sexLabel[sexNumber], dataset, true, true, Locale.getDefault());
-            file = new File(reportFileName + "-" + sexLabel[sexNumber] + ".png");
+            chart = ChartFactory.createPieChart(
+                    tableHeader + ", " + sexLabel[sexNumber],
+                    dataset, true, true, Locale.getDefault());
+            
+            setPlotColours((PiePlot) chart.getPlot(), topNLimit + 1, Color.RED.brighter());
+            
+            fileName = reportFileName + "-" + sexLabel[sexNumber];
+
+            file = new File(fileName + "." + fileType.toString());
+
             try {
-                ChartUtilities.saveChartAsPNG(file, chart, 1000, 1000);
+                if (fileType.equals(FileTypes.svg)) {
+                    Tools.exportChartAsSVG(chart, new Rectangle(1000, 1000), file);
+                } else {
+                    ChartUtilities.saveChartAsPNG(file, chart, 1000, 1000);
+                }
                 generatedFiles.add(file.getPath());
             } catch (IOException ex) {
                 Logger.getLogger(PieChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }
         return generatedFiles;
+    }
+
+    @Override
+    public boolean areThesePopulationDatasetsCompatible(PopulationDataset[] populations) {
+        return true;
+    }
+
+    private double sumUpTheRest(LinkedList<CancerCasesCount> theRestList, List<Integer> dontCountIndexes) {
+        double theRest = 0;
+        for (CancerCasesCount count : theRestList) {
+            if (!dontCountIndexes.contains((Integer) count.getIndex())) {
+                theRest += count.getCount();
+            } else {
+                System.out.println("Found...");
+            }
+        }
+        return theRest;
+    }
+
+    private void setPlotColours(PiePlot plot, int numberOfSections, Color baseColor) {
+        Color color = baseColor;
+        for (int i = 0; i < numberOfSections; i++) {
+            plot.setSectionOutlinePaint(i, baseColor.darker().darker().darker());
+            color = darken(color);
+            plot.setSectionPaint(i, color);
+        }
+    }
+
+    private Color darken(Color color) {
+        return new Color(
+                (int) Math.floor(color.getRed() * .9),
+                (int) Math.floor(color.getGreen() * .9),
+                (int) Math.floor(color.getBlue() * .9));
     }
 
     private class CancerCasesCount implements Comparable {
@@ -329,10 +386,14 @@ public class PieChartTableBuilder extends AbstractEditorialTableBuilder {
         private String icd10;
         private String label;
         private Double count;
+        private int index;
+        private NumberFormat format;
 
-        private CancerCasesCount(String string, Double aDouble) {
-            label = string;
-            count = aDouble;
+        private CancerCasesCount(String icd10, String label, Double count, int index) {
+            this.label = label;
+            this.count = count;
+            this.icd10 = icd10;
+            this.index = index;
         }
 
         @Override
@@ -389,7 +450,21 @@ public class PieChartTableBuilder extends AbstractEditorialTableBuilder {
 
         @Override
         public String toString() {
-            return label + ": " + count;
+            return label + " (" + icd10 + "): " + count.intValue();
+        }
+
+        /**
+         * @return the index
+         */
+        public int getIndex() {
+            return index;
+        }
+
+        /**
+         * @param index the index to set
+         */
+        public void setIndex(int index) {
+            this.index = index;
         }
     }
 }
