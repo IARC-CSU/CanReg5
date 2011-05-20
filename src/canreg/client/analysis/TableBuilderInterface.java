@@ -53,7 +53,7 @@ public interface TableBuilderInterface {
             String[] engineParameters, // parameters to the engine
             FileTypes fileType // the requested filetype
             )
-            throws NotCompatibleDataException;
+            throws NotCompatibleDataException, TableErrorException;
 
     public boolean areThesePopulationDatasetsCompatible(PopulationDataset[] populations);
 }
