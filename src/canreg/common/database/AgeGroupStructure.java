@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.common.database;
 
 import java.io.Serializable;
@@ -102,14 +101,14 @@ public class AgeGroupStructure implements Serializable {
                 }
             }
         }
-
+        this.ageGroupNames = generateAgeGroupNames();
     }
-    
+
     /**
      * 
      * @return
      */
-    public String getConstructor(){
+    public String getConstructor() {
         return constructor;
     }
 
@@ -220,10 +219,10 @@ public class AgeGroupStructure implements Serializable {
     public boolean equals(Object o) {
         if (o instanceof AgeGroupStructure) {
             AgeGroupStructure ags = (AgeGroupStructure) o;
-            return (getSizeOfGroups() == ags.getSizeOfGroups() &&
-                    getSizeOfFirstGroup() == ags.getSizeOfFirstGroup() &&
-                    getMaxAge() == ags.getMaxAge() &&
-                    getCutOfAge() == ags.getCutOfAge());
+            return (getSizeOfGroups() == ags.getSizeOfGroups()
+                    && getSizeOfFirstGroup() == ags.getSizeOfFirstGroup()
+                    && getMaxAge() == ags.getMaxAge()
+                    && getCutOfAge() == ags.getCutOfAge());
         } else {
             return false;
         }
