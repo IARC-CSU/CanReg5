@@ -164,7 +164,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
 
             Tools.writePopulationsToFile(popoutput, startYear, populations, separator);
             popoutput.close();
-            filesCreated.add(popfile.getPath());
+            // filesCreated.add(popfile.getPath());
 
             // prepare incidence table
             String sexString;
@@ -187,7 +187,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                 incheader += separator + "ICD10GROUP";
                 incheader += separator + "ICD10GROUPLABEL";
                 incheader += separator + "SEX";
-                incheader += separator + "AGEGROUP";
+                incheader += separator + "AGE_GROUP";
                 incheader += separator + "MORPHOLOGY";
                 incheader += separator + "BEHAVIOUR";
                 incheader += separator + "BASIS";
@@ -241,7 +241,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
 
                         outLine.append(year).append(separator);
                         outLine.append("\"").append(icd10GroupDescriptions[icdIndex]).append("\"").append(separator);
-                        outLine.append("\"").append(icdGroupLabels[icdIndex].substring(3)).append("\"").append(separator);
+                        outLine.append("\"").append(icdGroupLabels[icdIndex]).append("\"").append(separator);
                         outLine.append(sexString).append(separator);
                         outLine.append(ageGroup).append(separator);
                         outLine.append(morphologyString).append(separator);
@@ -256,7 +256,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                 incoutput.flush();
                 incoutput.close();
 
-                filesCreated.add(incfile.getPath());
+                // filesCreated.add(incfile.getPath());
 
                 File dir = new File(Globals.TABLES_CONF_PATH);
                 // call R
