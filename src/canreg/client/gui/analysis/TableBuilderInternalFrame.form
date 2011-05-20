@@ -30,7 +30,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="tabbedPane" alignment="0" pref="459" max="32767" attributes="0"/>
+                  <Component id="tabbedPane" alignment="0" pref="499" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="backButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -47,7 +47,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="371" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="428" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -91,8 +91,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="tableTypeScrollPane" alignment="1" pref="474" max="32767" attributes="0"/>
                           <Component id="typeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="tableTypeScrollPane" alignment="1" pref="434" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="descriptionLabel" min="-2" max="-2" attributes="0"/>
@@ -101,7 +101,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="previewLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="previewImageLabel" alignment="0" pref="190" max="32767" attributes="0"/>
+                                  <Component id="previewImageLabel" alignment="0" pref="230" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -115,7 +115,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="typeLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tableTypeScrollPane" min="-2" pref="88" max="-2" attributes="0"/>
+                      <Component id="tableTypeScrollPane" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="descriptionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -123,8 +123,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="previewImageLabel" pref="215" max="32767" attributes="0"/>
-                          <Component id="descriptionScrollPane" alignment="0" pref="215" max="32767" attributes="0"/>
+                          <Component id="previewImageLabel" pref="230" max="32767" attributes="0"/>
+                          <Component id="descriptionScrollPane" alignment="0" pref="230" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -215,7 +215,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="warningLabel" alignment="1" pref="434" max="32767" attributes="0"/>
+                          <Component id="warningLabel" alignment="1" pref="474" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -223,7 +223,7 @@
                                   <Component id="startYearLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="139" max="32767" attributes="0"/>
+                              <EmptySpace pref="179" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="startYearChooser" alignment="0" max="32767" attributes="1"/>
                                   <Component id="endYearChooser" alignment="0" max="32767" attributes="1"/>
@@ -261,7 +261,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="warningLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="223" max="32767" attributes="0"/>
+                      <EmptySpace pref="280" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -353,7 +353,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane1" alignment="0" pref="434" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" alignment="0" pref="474" max="32767" attributes="0"/>
                           <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -366,7 +366,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="301" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="358" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -425,7 +425,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="rangeFilterPanel" pref="434" max="32767" attributes="0"/>
+                      <Component id="rangeFilterPanel" pref="474" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -434,7 +434,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="rangeFilterPanel" pref="321" max="32767" attributes="0"/>
+                      <Component id="rangeFilterPanel" pref="378" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -472,14 +472,14 @@
                           <Group type="102" attributes="0">
                               <Component id="headerOfTableLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="headerOfTableTextField" pref="347" max="32767" attributes="0"/>
+                              <Component id="headerOfTableTextField" pref="387" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="pdfButton" alignment="0" pref="434" max="32767" attributes="0"/>
-                          <Component id="postScriptButton" alignment="0" pref="434" max="32767" attributes="0"/>
-                          <Component id="wmfButton" alignment="0" pref="434" max="32767" attributes="0"/>
-                          <Component id="tabulatedButton" alignment="0" pref="434" max="32767" attributes="0"/>
-                          <Component id="svgButton" alignment="0" pref="434" max="32767" attributes="0"/>
-                          <Component id="imageButton" alignment="1" pref="434" max="32767" attributes="0"/>
+                          <Component id="pdfButton" alignment="0" pref="474" max="32767" attributes="0"/>
+                          <Component id="postScriptButton" alignment="0" pref="474" max="32767" attributes="0"/>
+                          <Component id="wmfButton" alignment="0" pref="474" max="32767" attributes="0"/>
+                          <Component id="tabulatedButton" alignment="0" pref="474" max="32767" attributes="0"/>
+                          <Component id="svgButton" alignment="0" pref="474" max="32767" attributes="0"/>
+                          <Component id="imageButton" alignment="1" pref="474" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -505,7 +505,7 @@
                       <Component id="wmfButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="tabulatedButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="138" max="32767" attributes="0"/>
+                      <EmptySpace pref="195" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -562,6 +562,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generatePDFtable" methodName="generatePDFtable"/>
                 </Property>
+                <Property name="text" type="java.lang.String" resourceKey="pdfButton.text"/>
                 <Property name="name" type="java.lang.String" value="pdfButton" noResource="true"/>
               </Properties>
               <Events>
@@ -585,6 +586,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateWMFAction" methodName="generateWMFAction"/>
                 </Property>
+                <Property name="text" type="java.lang.String" resourceKey="wmfButton.text"/>
                 <Property name="name" type="java.lang.String" value="wmfButton" noResource="true"/>
               </Properties>
               <Events>
