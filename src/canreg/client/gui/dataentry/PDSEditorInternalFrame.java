@@ -1812,17 +1812,6 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
 
         for (int i = pdsTable.getRowCount() - 1; i >= 0; i--) {
 
-            Object male = pdsTable.getValueAt(i, 0);
-            int maleNumber = 0;
-            if (male != null) {
-                if (male instanceof Integer) {
-                    maleNumber = (Integer) male;
-                } else {
-                    maleNumber = Integer.parseInt(male.toString());
-                }
-            }
-            dataset.addValue(-maleNumber, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("MALE"), ageGroupLabelsTable.getValueAt(i, 0).toString());
-
             Object female = pdsTable.getValueAt(i, 1);
             int femaleNumber = 0;
             if (female != null) {
@@ -1833,6 +1822,17 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                 }
             }
             dataset.addValue(femaleNumber, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("FEMALE"), ageGroupLabelsTable.getValueAt(i, 0).toString());
+
+            Object male = pdsTable.getValueAt(i, 0);
+            int maleNumber = 0;
+            if (male != null) {
+                if (male instanceof Integer) {
+                    maleNumber = (Integer) male;
+                } else {
+                    maleNumber = Integer.parseInt(male.toString());
+                }
+            }
+            dataset.addValue(-maleNumber, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("MALE"), ageGroupLabelsTable.getValueAt(i, 0).toString());
 
         }
         return dataset;
