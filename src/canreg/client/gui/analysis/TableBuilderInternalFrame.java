@@ -48,10 +48,7 @@ import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.PopulationDataset;
 import canreg.server.database.UnknownTableException;
 import com.thebuzzmedia.imgscalr.Scalr;
-import java.awt.AlphaComposite;
 import java.awt.Cursor;
-import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1128,7 +1125,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
     @Action
     public void generateTabulatedTables() {
-        generateTablesAction(FileTypes.csv);
+        generateTablesAction(FileTypes.html);
     }
 
     @Action
