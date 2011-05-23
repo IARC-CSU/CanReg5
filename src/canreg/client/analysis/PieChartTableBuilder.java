@@ -305,7 +305,6 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
                 if (fileType.equals(FileTypes.svg)) {
                     Tools.exportChartAsSVG(charts[0], new Rectangle(1000, 1000), file);
                 } else if (fileType.equals(FileTypes.jchart)) {
-                    // Tools.exportChartAsSVG(chart, new Rectangle(1000, 1000), file);
                     generatedFiles.add("OK - Male");
                 } else {
                     ChartUtilities.saveChartAsPNG(file, charts[0], 1000, 1000);
@@ -343,7 +342,6 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
                     Tools.exportChartAsSVG(charts[1], new Rectangle(1000, 1000), file);
                     generatedFiles.add(file.getPath());
                 } else if (fileType.equals(FileTypes.jchart)) {
-                    // Tools.exportChartAsSVG(chart, new Rectangle(1000, 1000), file);
                     generatedFiles.add("OK - Female");
                 } else {
                     ChartUtilities.saveChartAsPNG(file, charts[1], 1000, 1000);
