@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.client.gui;
 
 import canreg.client.gui.management.InstallNewSystemInternalFrame;
@@ -763,10 +762,11 @@ public final class CanRegClientView extends FrameView {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
-            if (System.getProperty("os.name").toString().substring(0, 3).equalsIgnoreCase("win")) {
-                File file = new File(localSettings.getProperty(LocalSettings.WORKING_DIR_PATH_KEY));
-                Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL " + file.getAbsolutePath());
+            String fileName = localSettings.getProperty(LocalSettings.WORKING_DIR_PATH_KEY);
+            if (fileName==null){
+                fileName = ".";
             }
+            canreg.common.Tools.openFile(fileName);
             return null;  // return your result
         }
 
