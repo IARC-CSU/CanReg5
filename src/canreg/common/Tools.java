@@ -20,11 +20,14 @@
 package canreg.common;
 
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
+import canreg.client.gui.tools.ImageSelection;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.qualitycontrol.PersonSearcher.CompareAlgorithms;
 import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
 import java.awt.AWTException;
+import java.awt.Image;
 import java.awt.Robot;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
@@ -982,5 +985,12 @@ public class Tools {
          */
         map.put(StandardVariableNames.Stage, IARCStandardVariableNames.Stage);
         return map;
+    }
+
+    // This method writes a image to the system clipboard.
+// otherwise it returns null.
+    public static void setClipboard(Image image) {
+        ImageSelection imgSel = new ImageSelection(image);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(imgSel, null);
     }
 }
