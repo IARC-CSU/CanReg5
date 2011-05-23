@@ -40,7 +40,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +48,6 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -58,6 +56,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
 import org.jdesktop.application.Action;
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
@@ -79,6 +78,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
     private JFreeChart chart;
     private ExcelAdapter myAd;
     private final ActionListener listener;
+    private ChartPanel chartPanel;
 
     /** Creates new form PDSEditorInternalFrame
      * @param dtp
@@ -257,12 +257,12 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         pdsTable = new javax.swing.JTable();
         totalsTable = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
+        ageGroupjLabel = new javax.swing.JLabel();
         ageGroupLabelsTable = new javax.swing.JTable();
-        jLabel4 = new javax.swing.JLabel();
+        totalLabel = new javax.swing.JLabel();
         pyramidPanel = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        pyramidLabel = new javax.swing.JLabel();
+        pyramidPanelHolder = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         lockedToggleButton = new javax.swing.JToggleButton();
@@ -544,7 +544,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                     .addComponent(editStandardPopulationButton)
                     .addComponent(standardPopulationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(standardPopulationLabel))
-                .addContainerGap(188, Short.MAX_VALUE))
+                .addContainerGap(204, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("detailsPanel.TabConstraints.tabTitle"), detailsPanel); // NOI18N
@@ -707,9 +707,9 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
 
         jPanel2.setName("jPanel2"); // NOI18N
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
-        jLabel3.setName("jLabel3"); // NOI18N
+        ageGroupjLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        ageGroupjLabel.setText(resourceMap.getString("ageGroupjLabel.text")); // NOI18N
+        ageGroupjLabel.setName("ageGroupjLabel"); // NOI18N
 
         ageGroupLabelsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -759,26 +759,26 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         ageGroupLabelsTable.setRequestFocusEnabled(false);
         ageGroupLabelsTable.getTableHeader().setReorderingAllowed(false);
 
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
-        jLabel4.setName("jLabel4"); // NOI18N
+        totalLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        totalLabel.setText(resourceMap.getString("totalLabel.text")); // NOI18N
+        totalLabel.setName("totalLabel"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
+            .addComponent(ageGroupjLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
             .addComponent(ageGroupLabelsTable, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
-            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
+            .addComponent(totalLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ageGroupjLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ageGroupLabelsTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
+                .addComponent(totalLabel)
                 .addContainerGap(202, Short.MAX_VALUE))
         );
 
@@ -797,7 +797,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         );
         dataSetPanelLayout.setVerticalGroup(
             dataSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(resourceMap.getString("dataSetPanel.TabConstraints.tabTitle"), dataSetPanel); // NOI18N
@@ -813,31 +813,23 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
-        pyramidLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pyramidLabel.setText(resourceMap.getString("pyramidLabel.text")); // NOI18N
-        pyramidLabel.setName("pyramidLabel"); // NOI18N
-        pyramidLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                pyramidLabelMouseClicked(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                pyramidLabelMouseReleased(evt);
-            }
-        });
+        pyramidPanelHolder.setName("pyramidPanelHolder"); // NOI18N
+        pyramidPanelHolder.setLayout(new java.awt.GridLayout());
 
         javax.swing.GroupLayout pyramidPanelLayout = new javax.swing.GroupLayout(pyramidPanel);
         pyramidPanel.setLayout(pyramidPanelLayout);
         pyramidPanelLayout.setHorizontalGroup(
             pyramidPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
-            .addComponent(pyramidLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+            .addComponent(pyramidPanelHolder, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
         );
         pyramidPanelLayout.setVerticalGroup(
             pyramidPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pyramidPanelLayout.createSequentialGroup()
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pyramidLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE))
+                .addComponent(pyramidPanelHolder, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab(resourceMap.getString("pyramidPanel.TabConstraints.tabTitle"), pyramidPanel); // NOI18N
@@ -1340,7 +1332,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
@@ -1350,9 +1342,9 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 261, Short.MAX_VALUE)
+                    .addGap(0, 269, Short.MAX_VALUE)
                     .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 261, Short.MAX_VALUE)))
+                    .addGap(0, 269, Short.MAX_VALUE)))
         );
 
         pack();
@@ -1402,20 +1394,6 @@ private void pyramidPanelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST
 private void dataSetPanelFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dataSetPanelFocusLost
     updatePyramid();
 }//GEN-LAST:event_dataSetPanelFocusLost
-
-private void pyramidLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pyramidLabelMouseClicked
-    if (evt.isPopupTrigger()) {
-        saveGraphicsPopupMenu.show(evt.getComponent(),
-                evt.getX(), evt.getY());
-    }
-}//GEN-LAST:event_pyramidLabelMouseClicked
-
-private void pyramidLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pyramidLabelMouseReleased
-    if (evt.isPopupTrigger()) {
-        saveGraphicsPopupMenu.show(evt.getComponent(),
-                evt.getX(), evt.getY());
-    }
-}//GEN-LAST:event_pyramidLabelMouseReleased
 
 private void pdsTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pdsTableMouseReleased
     if (evt.isPopupTrigger()) {
@@ -1520,6 +1498,15 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         dateChooser.setDate(new Date());
         standardPopulationComboBox.setModel(new javax.swing.DefaultComboBoxModel(worldPopulations));
         refreshPopulationDataSetTable();
+        updateChart();
+        chartPanel = new ChartPanel(chart);
+        chartPanel.getPopupMenu().add(saveAsSVGMenuItem,4);
+        pyramidPanelHolder.add(chartPanel);
+
+        chartPanel.setVisible(true);
+        pyramidPanelHolder.doLayout();
+
+        pyramidPanelHolder.validate();
     }
 
     @Override
@@ -1673,11 +1660,11 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         }
     }
 
-    private void buildPyramid() {
+    private void updateChart() {
         DefaultKeyedValues2DDataset dataset = getJChartDataset();
         chart = ChartFactory.createStackedBarChart(
                 nameTextField.getText(),
-                "Age Group", // domain axis label
+                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("AGE_GROUP"), // domain axis label
                 sourceTextField.getText(), // range axis label
                 dataset, // data
                 PlotOrientation.HORIZONTAL, //orientation
@@ -1685,12 +1672,11 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                 true, // tooltips
                 false // urls
                 );
-        BufferedImage image = chart.createBufferedImage(
-                //pyramidLabel.getWidth(),
-                //pyramidLabel.getHeight()
-                this.getWidth() - 30,
-                this.getHeight() - 150);
-        pyramidLabel.setIcon(new ImageIcon(image));
+    }
+
+    private void buildPyramid() {
+        updateChart();
+        chartPanel.setChart(chart);
     }
 
     private void updateTotals() {
@@ -1735,6 +1721,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JComboBox ageGroupStructureComboBox1;
     private javax.swing.JLabel ageGroupStructureLabel;
     private javax.swing.JLabel ageGroupStructureLabel1;
+    private javax.swing.JLabel ageGroupjLabel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton cancelButton1;
     private javax.swing.JMenuItem copyMenuItem;
@@ -1768,8 +1755,6 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -1798,9 +1783,9 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JTable pdsTable;
     private javax.swing.JTable pdsTable1;
-    private javax.swing.JLabel pyramidLabel;
     private javax.swing.JLabel pyramidLabel1;
     private javax.swing.JPanel pyramidPanel;
+    private javax.swing.JPanel pyramidPanelHolder;
     private javax.swing.JMenuItem saveAsPNGMenuItem;
     private javax.swing.JMenuItem saveAsSVGMenuItem;
     private javax.swing.JButton saveButton;
@@ -1817,6 +1802,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JLabel standardPopulationLabel;
     private javax.swing.JLabel standardPopulationLabel1;
     private javax.swing.JPopupMenu tablePopupMenu;
+    private javax.swing.JLabel totalLabel;
     private javax.swing.JTable totalsTable;
     private javax.swing.JTable totalsTable1;
     // End of variables declaration//GEN-END:variables
@@ -1835,7 +1821,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                     maleNumber = Integer.parseInt(male.toString());
                 }
             }
-            dataset.addValue(-maleNumber, "Male", ageGroupLabelsTable.getValueAt(i, 0).toString());
+            dataset.addValue(-maleNumber, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("MALE"), ageGroupLabelsTable.getValueAt(i, 0).toString());
 
             Object female = pdsTable.getValueAt(i, 1);
             int femaleNumber = 0;
@@ -1846,7 +1832,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                     femaleNumber = Integer.parseInt(female.toString());
                 }
             }
-            dataset.addValue(femaleNumber, "Female", ageGroupLabelsTable.getValueAt(i, 0).toString());
+            dataset.addValue(femaleNumber, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("FEMALE"), ageGroupLabelsTable.getValueAt(i, 0).toString());
 
         }
         return dataset;
@@ -1860,23 +1846,23 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
 
                 @Override
                 public boolean accept(File f) {
-                    return f.isDirectory() || f.getName().toLowerCase().endsWith("png");
+                    return f.isDirectory() || f.getName().toLowerCase().endsWith("png"); //NOI18N
                 }
 
                 @Override
                 public String getDescription() {
-                    return "PNG graphics files";
+                    return java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PNG GRAPHICS FILES");
                 }
             };
             chooser.setFileFilter(filter);
-            int result = chooser.showDialog(this, "Choose filename");
+            int result = chooser.showDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("CHOOSE FILENAME"));
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
                     File file = chooser.getSelectedFile();
-                    if (!file.getName().toLowerCase().endsWith("png")) {
-                        file = new File(file.getAbsolutePath() + ".png");
+                    if (!file.getName().toLowerCase().endsWith("png")) { //NOI18N
+                        file = new File(file.getAbsolutePath() + ".png"); //NOI18N
                     }
-                    ChartUtilities.saveChartAsPNG(file, chart, pyramidLabel.getWidth(), pyramidLabel.getHeight());
+                    ChartUtilities.saveChartAsPNG(file, chart, pyramidPanelHolder.getWidth(), pyramidPanelHolder.getHeight());
                 } catch (IOException ex) {
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1886,12 +1872,12 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
 
     @Action
     public void copyTableAction() {
-        myAd.actionPerformed(new ActionEvent(this, 0, "Copy"));
+        myAd.actionPerformed(new ActionEvent(this, 0, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("COPY")));
     }
 
     @Action
     public void pasteTableAction() {
-        myAd.actionPerformed(new ActionEvent(this, 0, "Paste"));
+        myAd.actionPerformed(new ActionEvent(this, 0, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PASTE")));
         updateTotals();
     }
 
@@ -1908,33 +1894,32 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
 
                 @Override
                 public boolean accept(File f) {
-                    return f.isDirectory() || f.getName().toLowerCase().endsWith("svg");
+                    return f.isDirectory() || f.getName().toLowerCase().endsWith("svg"); //NOI18N
                 }
 
                 @Override
                 public String getDescription() {
-                    return "SVG graphics files";
+                    return java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SVG GRAPHICS FILES");
                 }
             };
             chooser.setFileFilter(filter);
-            int result = chooser.showDialog(this, "Choose filename");
+            int result = chooser.showDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("CHOOSE FILENAME"));
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
                     File file = chooser.getSelectedFile();
-                    if (!file.getName().toLowerCase().endsWith("svg")) {
-                        file = new File(file.getAbsolutePath() + ".svg");
+                    if (!file.getName().toLowerCase().endsWith("svg")) { //NOI18N
+                        file = new File(file.getAbsolutePath() + ".svg"); //NOI18N
                     }
-                    canreg.client.analysis.Tools.exportChartAsSVG(chart, new Rectangle(pyramidLabel.getWidth(), pyramidLabel.getHeight()), file);
+                    canreg.client.analysis.Tools.exportChartAsSVG(chart, new Rectangle(pyramidPanelHolder.getWidth(), pyramidPanelHolder.getHeight()), file);
                 } catch (IOException ex) {
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
-
     }
 
     @Action
     public void copyPyramidToClipboard() {
-        Tools.setClipboard(chart.createBufferedImage(pyramidLabel.getWidth(), pyramidLabel.getHeight()));
+        Tools.setClipboard(chart.createBufferedImage(pyramidPanelHolder.getWidth(), pyramidPanelHolder.getHeight()));
     }
 }

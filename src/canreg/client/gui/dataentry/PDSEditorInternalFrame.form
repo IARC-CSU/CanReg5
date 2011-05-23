@@ -138,7 +138,7 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="jTabbedPane1" pref="482" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="498" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -150,9 +150,9 @@
           </Group>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="0" pref="261" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="269" max="32767" attributes="0"/>
                   <Component id="jInternalFrame1" min="-2" pref="0" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="261" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="269" max="32767" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -261,7 +261,7 @@
                           <Component id="standardPopulationComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="standardPopulationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="188" max="32767" attributes="0"/>
+                      <EmptySpace pref="204" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -466,7 +466,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="424" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="440" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -731,30 +731,30 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel3" alignment="0" pref="59" max="32767" attributes="0"/>
+                              <Component id="ageGroupjLabel" alignment="0" pref="59" max="32767" attributes="0"/>
                               <Component id="ageGroupLabelsTable" alignment="0" pref="59" max="32767" attributes="0"/>
-                              <Component id="jLabel4" alignment="1" pref="59" max="32767" attributes="0"/>
+                              <Component id="totalLabel" alignment="1" pref="59" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jLabel3" min="-2" pref="13" max="-2" attributes="0"/>
+                                  <Component id="ageGroupjLabel" min="-2" pref="13" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="ageGroupLabelsTable" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                                  <Component id="totalLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="202" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
                       </Layout>
                       <SubComponents>
-                        <Component class="javax.swing.JLabel" name="jLabel3">
+                        <Component class="javax.swing.JLabel" name="ageGroupjLabel">
                           <Properties>
                             <Property name="horizontalAlignment" type="int" value="0"/>
-                            <Property name="text" type="java.lang.String" resourceKey="jLabel3.text"/>
-                            <Property name="name" type="java.lang.String" value="jLabel3" noResource="true"/>
+                            <Property name="text" type="java.lang.String" resourceKey="ageGroupjLabel.text"/>
+                            <Property name="name" type="java.lang.String" value="ageGroupjLabel" noResource="true"/>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JTable" name="ageGroupLabelsTable">
@@ -782,11 +782,11 @@
                             </Property>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel4">
+                        <Component class="javax.swing.JLabel" name="totalLabel">
                           <Properties>
                             <Property name="horizontalAlignment" type="int" value="0"/>
-                            <Property name="text" type="java.lang.String" resourceKey="jLabel4.text"/>
-                            <Property name="name" type="java.lang.String" value="jLabel4" noResource="true"/>
+                            <Property name="text" type="java.lang.String" resourceKey="totalLabel.text"/>
+                            <Property name="name" type="java.lang.String" value="totalLabel" noResource="true"/>
                           </Properties>
                         </Component>
                       </SubComponents>
@@ -816,7 +816,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jButton1" alignment="0" pref="610" max="32767" attributes="0"/>
-                  <Component id="pyramidLabel" alignment="0" pref="610" max="32767" attributes="0"/>
+                  <Component id="pyramidPanelHolder" alignment="0" pref="610" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -824,7 +824,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="pyramidLabel" pref="425" max="32767" attributes="0"/>
+                      <Component id="pyramidPanelHolder" pref="430" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -839,17 +840,16 @@
                 <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="pyramidLabel">
+            <Container class="javax.swing.JPanel" name="pyramidPanelHolder">
               <Properties>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" resourceKey="pyramidLabel.text"/>
-                <Property name="name" type="java.lang.String" value="pyramidLabel" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="pyramidPanelHolder" noResource="true"/>
               </Properties>
-              <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pyramidLabelMouseClicked"/>
-                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pyramidLabelMouseReleased"/>
-              </Events>
-            </Component>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
+                <Property name="columns" type="int" value="0"/>
+                <Property name="rows" type="int" value="1"/>
+              </Layout>
+            </Container>
           </SubComponents>
         </Container>
       </SubComponents>
