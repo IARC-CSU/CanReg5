@@ -17,8 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
-
 /*
  * PDSEditorInternalFrame.java
  *
@@ -32,9 +30,11 @@ import canreg.client.gui.components.FastFilterInternalFrame;
 import canreg.client.gui.tools.ExcelAdapter;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.Globals;
+import canreg.common.Tools;
 import canreg.common.database.AgeGroupStructure;
 import canreg.common.database.PopulationDataset;
 import canreg.common.database.PopulationDatasetsEntry;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -219,7 +219,10 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
     private void initComponents() {
 
         saveGraphicsPopupMenu = new javax.swing.JPopupMenu();
-        saveMenuItem = new javax.swing.JMenuItem();
+        saveAsPNGMenuItem = new javax.swing.JMenuItem();
+        saveAsSVGMenuItem = new javax.swing.JMenuItem();
+        separator = new javax.swing.JPopupMenu.Separator();
+        copyToClipboardMenuItem = new javax.swing.JMenuItem();
         tablePopupMenu = new javax.swing.JPopupMenu();
         copyMenuItem = new javax.swing.JMenuItem();
         pasteMenuItem = new javax.swing.JMenuItem();
@@ -309,12 +312,25 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         saveGraphicsPopupMenu.setName("saveGraphicsPopupMenu"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(PDSEditorInternalFrame.class, this);
-        saveMenuItem.setAction(actionMap.get("saveGraphicsAction")); // NOI18N
+        saveAsPNGMenuItem.setAction(actionMap.get("savePNGAction")); // NOI18N
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PDSEditorInternalFrame.class);
-        saveMenuItem.setText(resourceMap.getString("saveMenuItem.text")); // NOI18N
-        saveMenuItem.setToolTipText(resourceMap.getString("saveMenuItem.toolTipText")); // NOI18N
-        saveMenuItem.setName("saveMenuItem"); // NOI18N
-        saveGraphicsPopupMenu.add(saveMenuItem);
+        saveAsPNGMenuItem.setText(resourceMap.getString("saveAsPNGMenuItem.text")); // NOI18N
+        saveAsPNGMenuItem.setToolTipText(resourceMap.getString("saveAsPNGMenuItem.toolTipText")); // NOI18N
+        saveAsPNGMenuItem.setName("saveAsPNGMenuItem"); // NOI18N
+        saveGraphicsPopupMenu.add(saveAsPNGMenuItem);
+
+        saveAsSVGMenuItem.setAction(actionMap.get("saveSVGAction")); // NOI18N
+        saveAsSVGMenuItem.setText(resourceMap.getString("saveAsSVGMenuItem.text")); // NOI18N
+        saveAsSVGMenuItem.setName("saveAsSVGMenuItem"); // NOI18N
+        saveGraphicsPopupMenu.add(saveAsSVGMenuItem);
+
+        separator.setName("separator"); // NOI18N
+        saveGraphicsPopupMenu.add(separator);
+
+        copyToClipboardMenuItem.setAction(actionMap.get("copyPyramidToClipboard")); // NOI18N
+        copyToClipboardMenuItem.setText(resourceMap.getString("copyToClipboardMenuItem.text")); // NOI18N
+        copyToClipboardMenuItem.setName("copyToClipboardMenuItem"); // NOI18N
+        saveGraphicsPopupMenu.add(copyToClipboardMenuItem);
 
         tablePopupMenu.setName("tablePopupMenu"); // NOI18N
 
@@ -528,7 +544,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                     .addComponent(editStandardPopulationButton)
                     .addComponent(standardPopulationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(standardPopulationLabel))
-                .addContainerGap(180, Short.MAX_VALUE))
+                .addContainerGap(188, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("detailsPanel.TabConstraints.tabTitle"), detailsPanel); // NOI18N
@@ -781,7 +797,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         );
         dataSetPanelLayout.setVerticalGroup(
             dataSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(resourceMap.getString("dataSetPanel.TabConstraints.tabTitle"), dataSetPanel); // NOI18N
@@ -821,7 +837,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
             .addGroup(pyramidPanelLayout.createSequentialGroup()
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pyramidLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE))
+                .addComponent(pyramidLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("pyramidPanel.TabConstraints.tabTitle"), pyramidPanel); // NOI18N
@@ -1324,7 +1340,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
@@ -1334,9 +1350,9 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 257, Short.MAX_VALUE)
+                    .addGap(0, 261, Short.MAX_VALUE)
                     .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 257, Short.MAX_VALUE)))
+                    .addGap(0, 261, Short.MAX_VALUE)))
         );
 
         pack();
@@ -1658,7 +1674,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     }
 
     private void buildPyramid() {
-        DefaultKeyedValues2DDataset dataset = getDataset();
+        DefaultKeyedValues2DDataset dataset = getJChartDataset();
         chart = ChartFactory.createStackedBarChart(
                 nameTextField.getText(),
                 "Age Group", // domain axis label
@@ -1722,6 +1738,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton cancelButton1;
     private javax.swing.JMenuItem copyMenuItem;
+    private javax.swing.JMenuItem copyToClipboardMenuItem;
     private javax.swing.JPanel dataSetPanel;
     private javax.swing.JPanel dataSetPanel1;
     private com.toedter.calendar.JDateChooser dateChooser;
@@ -1784,11 +1801,13 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JLabel pyramidLabel;
     private javax.swing.JLabel pyramidLabel1;
     private javax.swing.JPanel pyramidPanel;
+    private javax.swing.JMenuItem saveAsPNGMenuItem;
+    private javax.swing.JMenuItem saveAsSVGMenuItem;
     private javax.swing.JButton saveButton;
     private javax.swing.JButton saveButton1;
     private javax.swing.JPopupMenu saveGraphicsPopupMenu;
-    private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JMenuItem selectAllMenuItem;
+    private javax.swing.JPopupMenu.Separator separator;
     private javax.swing.JLabel sourceLabel;
     private javax.swing.JLabel sourceLabel1;
     private javax.swing.JTextField sourceTextField;
@@ -1802,7 +1821,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JTable totalsTable1;
     // End of variables declaration//GEN-END:variables
 
-    private DefaultKeyedValues2DDataset getDataset() {
+    private DefaultKeyedValues2DDataset getJChartDataset() {
         DefaultKeyedValues2DDataset dataset = new DefaultKeyedValues2DDataset();
 
         for (int i = pdsTable.getRowCount() - 1; i >= 0; i--) {
@@ -1817,7 +1836,6 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                 }
             }
             dataset.addValue(-maleNumber, "Male", ageGroupLabelsTable.getValueAt(i, 0).toString());
-
 
             Object female = pdsTable.getValueAt(i, 1);
             int femaleNumber = 0;
@@ -1835,14 +1853,14 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     }
 
     @Action
-    public void saveGraphicsAction() {
+    public void savePNGAction() {
         if (chart != null) {
             JFileChooser chooser = new JFileChooser();
             FileFilter filter = new FileFilter() {
 
                 @Override
                 public boolean accept(File f) {
-                    return f.getName().toLowerCase().endsWith("png");
+                    return f.isDirectory() || f.getName().toLowerCase().endsWith("png");
                 }
 
                 @Override
@@ -1880,5 +1898,43 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     @Action
     public void selectAllTableAction() {
         pdsTable.selectAll();
+    }
+
+    @Action
+    public void saveSVGAction() {
+        if (chart != null) {
+            JFileChooser chooser = new JFileChooser();
+            FileFilter filter = new FileFilter() {
+
+                @Override
+                public boolean accept(File f) {
+                    return f.isDirectory() || f.getName().toLowerCase().endsWith("svg");
+                }
+
+                @Override
+                public String getDescription() {
+                    return "SVG graphics files";
+                }
+            };
+            chooser.setFileFilter(filter);
+            int result = chooser.showDialog(this, "Choose filename");
+            if (result == JFileChooser.APPROVE_OPTION) {
+                try {
+                    File file = chooser.getSelectedFile();
+                    if (!file.getName().toLowerCase().endsWith("svg")) {
+                        file = new File(file.getAbsolutePath() + ".svg");
+                    }
+                    canreg.client.analysis.Tools.exportChartAsSVG(chart, new Rectangle(pyramidLabel.getWidth(), pyramidLabel.getHeight()), file);
+                } catch (IOException ex) {
+                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+    }
+
+    @Action
+    public void copyPyramidToClipboard() {
+        Tools.setClipboard(chart.createBufferedImage(pyramidLabel.getWidth(), pyramidLabel.getHeight()));
     }
 }
