@@ -47,7 +47,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="428" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="432" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -123,8 +123,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="previewImageLabel" pref="230" max="32767" attributes="0"/>
-                          <Component id="descriptionScrollPane" alignment="0" pref="230" max="32767" attributes="0"/>
+                          <Component id="previewImageLabel" pref="234" max="32767" attributes="0"/>
+                          <Component id="descriptionScrollPane" alignment="0" pref="234" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -261,7 +261,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="warningLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="280" max="32767" attributes="0"/>
+                      <EmptySpace pref="284" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -366,7 +366,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="358" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="362" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -434,7 +434,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="rangeFilterPanel" pref="378" max="32767" attributes="0"/>
+                      <Component id="rangeFilterPanel" pref="382" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -480,6 +480,7 @@
                           <Component id="tabulatedButton" alignment="0" pref="474" max="32767" attributes="0"/>
                           <Component id="svgButton" alignment="0" pref="474" max="32767" attributes="0"/>
                           <Component id="imageButton" alignment="1" pref="474" max="32767" attributes="0"/>
+                          <Component id="chartViewerButton" alignment="0" pref="474" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -505,7 +506,9 @@
                       <Component id="wmfButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="tabulatedButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="195" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="chartViewerButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="170" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -592,6 +595,15 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="wmfButtonActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="chartViewerButton">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="openInChartViewer" methodName="openInChartViewer"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="chartViewerButton.text"/>
+                <Property name="name" type="java.lang.String" value="chartViewerButton" noResource="true"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

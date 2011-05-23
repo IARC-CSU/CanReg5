@@ -34,7 +34,8 @@ public interface TableBuilderInterface {
         txt,
         png,
         svg,
-        wmf
+        wmf,
+        jchart
     };
 
     public StandardVariableNames[] getVariablesNeeded();

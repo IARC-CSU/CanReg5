@@ -51,7 +51,7 @@ import org.jfree.data.general.DefaultPieDataset;
  *
  * @author ervikm
  */
-public class PieChartTableBuilder implements TableBuilderInterface {
+public class PieChartTableBuilder implements TableBuilderInterface, JChartTableBuilderInterface {
 
     // private static int YEAR_COLUMN = 0;
     private static int SEX_COLUMN = 1;
@@ -66,11 +66,12 @@ public class PieChartTableBuilder implements TableBuilderInterface {
         Globals.StandardVariableNames.Behaviour,};
     private static FileTypes[] fileTypesGenerated = {
         FileTypes.png,
-        FileTypes.svg
+        FileTypes.svg,
+        FileTypes.jchart
     };
     private LinkedList[] cancerGroupsLocal;
     private String[] sexLabel;
-    private JFreeChart chart;
+    private JFreeChart[] charts = new JFreeChart[2];
     private String[] icdLabel;
     private NumberFormat format;
     private String[] icd10GroupDescriptions;
@@ -290,11 +291,11 @@ public class PieChartTableBuilder implements TableBuilderInterface {
             }
             dataset.insertValue(position++, "Other", restCount);
 
-            chart = ChartFactory.createPieChart(
+            charts[0] = ChartFactory.createPieChart(
                     tableHeader + ", " + sexLabel[sexNumber],
-                    dataset, true, true, Locale.getDefault());
+                    dataset, true, false, Locale.getDefault());
 
-            setPlotColours((PiePlot) chart.getPlot(), topNLimit + 1, Color.BLUE.brighter());
+            setPlotColours((PiePlot) charts[0].getPlot(), topNLimit + 1, Color.BLUE.brighter());
 
             String fileName = reportFileName + "-" + sexLabel[sexNumber];
 
@@ -302,9 +303,12 @@ public class PieChartTableBuilder implements TableBuilderInterface {
 
             try {
                 if (fileType.equals(FileTypes.svg)) {
-                    Tools.exportChartAsSVG(chart, new Rectangle(1000, 1000), file);
+                    Tools.exportChartAsSVG(charts[0], new Rectangle(1000, 1000), file);
+                } else if (fileType.equals(FileTypes.jchart)) {
+                    // Tools.exportChartAsSVG(chart, new Rectangle(1000, 1000), file);
+                    generatedFiles.add("OK - Male");
                 } else {
-                    ChartUtilities.saveChartAsPNG(file, chart, 1000, 1000);
+                    ChartUtilities.saveChartAsPNG(file, charts[0], 1000, 1000);
                 }
                 generatedFiles.add(file.getPath());
             } catch (IOException ex) {
@@ -324,23 +328,27 @@ public class PieChartTableBuilder implements TableBuilderInterface {
                         count.getCount());
             }
             dataset.insertValue(position++, "Other", restCount);
-            chart = ChartFactory.createPieChart(
+            charts[1] = ChartFactory.createPieChart(
                     tableHeader + ", " + sexLabel[sexNumber],
-                    dataset, true, true, Locale.getDefault());
-            
-            setPlotColours((PiePlot) chart.getPlot(), topNLimit + 1, Color.RED.brighter());
-            
+                    dataset, true, false, Locale.getDefault());
+
+            setPlotColours((PiePlot) charts[1].getPlot(), topNLimit + 1, Color.RED.brighter());
+
             fileName = reportFileName + "-" + sexLabel[sexNumber];
 
             file = new File(fileName + "." + fileType.toString());
 
             try {
                 if (fileType.equals(FileTypes.svg)) {
-                    Tools.exportChartAsSVG(chart, new Rectangle(1000, 1000), file);
+                    Tools.exportChartAsSVG(charts[1], new Rectangle(1000, 1000), file);
+                    generatedFiles.add(file.getPath());
+                } else if (fileType.equals(FileTypes.jchart)) {
+                    // Tools.exportChartAsSVG(chart, new Rectangle(1000, 1000), file);
+                    generatedFiles.add("OK - Female");
                 } else {
-                    ChartUtilities.saveChartAsPNG(file, chart, 1000, 1000);
+                    ChartUtilities.saveChartAsPNG(file, charts[1], 1000, 1000);
+                    generatedFiles.add(file.getPath());
                 }
-                generatedFiles.add(file.getPath());
             } catch (IOException ex) {
                 Logger.getLogger(PieChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -351,6 +359,18 @@ public class PieChartTableBuilder implements TableBuilderInterface {
     @Override
     public boolean areThesePopulationDatasetsCompatible(PopulationDataset[] populations) {
         return true;
+    }
+
+    @Override
+    public JFreeChart[] getCharts() {
+
+        // set the plots circular before returning them
+        for (JFreeChart chart: charts){
+            PiePlot plot = (PiePlot) chart.getPlot();
+            plot.setCircular(true);
+        }
+        
+        return charts;
     }
 
     private double sumUpTheRest(LinkedList<CancerCasesCount> theRestList, List<Integer> dontCountIndexes) {

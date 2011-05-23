@@ -32,11 +32,13 @@ import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.LocalSettings;
 import canreg.client.analysis.ConfigFields;
 import canreg.client.analysis.ConfigFieldsReader;
+import canreg.client.analysis.JChartTableBuilderInterface;
 import canreg.client.analysis.NotCompatibleDataException;
 import canreg.client.analysis.TableBuilderFactory;
 import canreg.client.analysis.TableBuilderInterface;
 import canreg.client.analysis.TableBuilderListElement;
 import canreg.client.analysis.TableErrorException;
+import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.components.LabelAndComboBoxJPanel;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseFilter;
@@ -74,6 +76,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jdesktop.application.Action;
+import org.jfree.chart.JFreeChart;
 
 /**
  *
@@ -224,6 +227,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         pdfButton = new javax.swing.JButton();
         svgButton = new javax.swing.JButton();
         wmfButton = new javax.swing.JButton();
+        chartViewerButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
@@ -321,8 +325,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(previewLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
-                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))
+                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -414,7 +418,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(numberOfYearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(warningLabel)
-                .addContainerGap(280, Short.MAX_VALUE))
+                .addContainerGap(284, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("rangePanel.TabConstraints.tabTitle"), rangePanel); // NOI18N
@@ -448,7 +452,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -475,7 +479,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(filterPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
+                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -542,6 +546,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             }
         });
 
+        chartViewerButton.setAction(actionMap.get("openInChartViewer")); // NOI18N
+        chartViewerButton.setText(resourceMap.getString("chartViewerButton.text")); // NOI18N
+        chartViewerButton.setName("chartViewerButton"); // NOI18N
+
         javax.swing.GroupLayout writeOutPanelLayout = new javax.swing.GroupLayout(writeOutPanel);
         writeOutPanel.setLayout(writeOutPanelLayout);
         writeOutPanelLayout.setHorizontalGroup(
@@ -558,7 +566,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(wmfButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
                     .addComponent(tabulatedButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
                     .addComponent(svgButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(imageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
+                    .addComponent(imageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                    .addComponent(chartViewerButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
                 .addContainerGap())
         );
         writeOutPanelLayout.setVerticalGroup(
@@ -580,7 +589,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addComponent(wmfButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tabulatedButton)
-                .addContainerGap(195, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chartViewerButton)
+                .addContainerGap(170, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("writeOutPanel.TabConstraints.tabTitle"), writeOutPanel); // NOI18N
@@ -614,7 +625,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -682,6 +693,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         pdfButton.setEnabled(false);
         svgButton.setEnabled(false);
         wmfButton.setEnabled(false);
+        chartViewerButton.setEnabled(false);
 
         if (tble != null) {
 
@@ -697,7 +709,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                                 tble.getName());
                         previewImageLabel.setIcon(icon);
                     } catch (IOException e) {
-                       Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, e);
+                        Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, e);
                     }
                 }
             }
@@ -709,7 +721,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     for (FileTypes filetype : fileTypes) {
                         if (filetype.equals(FileTypes.ps)) {
                             postScriptButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.csv)) {
+                        } else if (filetype.equals(FileTypes.html)) {
                             tabulatedButton.setEnabled(true);
                         } else if (filetype.equals(FileTypes.png)) {
                             imageButton.setEnabled(true);
@@ -719,6 +731,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                             svgButton.setEnabled(true);
                         } else if (filetype.equals(FileTypes.wmf)) {
                             wmfButton.setEnabled(true);
+                        }else if (filetype.equals(FileTypes.jchart)) {
+                            chartViewerButton.setEnabled(true);
                         }
                     }
                 }
@@ -769,6 +783,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JButton chartViewerButton;
     private javax.swing.JLabel descriptionLabel;
     private javax.swing.JScrollPane descriptionScrollPane;
     private javax.swing.JTextPane descriptionTextPane;
@@ -935,6 +950,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         Set<DatabaseVariablesListElement> variables = new LinkedHashSet<DatabaseVariablesListElement>();
         DistributedTableDescription tableDatadescription;
+        JChartTableBuilderInterface chartBuilder;
 
         if (tableBuilder == null) {
             JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE_TYPE_NOT_YET_IMPLEMENTED"), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE_TYPE_NOT_YET_IMPLEMENTED"), JOptionPane.ERROR_MESSAGE);
@@ -949,25 +965,27 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             if (tableBuilder.areThesePopulationDatasetsCompatible(populations)) {
                 String fileName = null;
                 // Choose file name;
-                if (chooser == null) {
-                    path = localSettings.getProperty(LocalSettings.TABLES_PATH_KEY);
-                    if (path == null) {
-                        chooser = new JFileChooser();
+                if (filetype != FileTypes.jchart) {
+                    if (chooser == null) {
+                        path = localSettings.getProperty(LocalSettings.TABLES_PATH_KEY);
+                        if (path == null) {
+                            chooser = new JFileChooser();
+                        } else {
+                            chooser = new JFileChooser(path);
+                        }
+                    }
+                    int returnVal = chooser.showSaveDialog(this);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        try {
+                            localSettings.setProperty(LocalSettings.TABLES_PATH_KEY, chooser.getSelectedFile().getParentFile().getCanonicalPath());
+                            fileName = chooser.getSelectedFile().getAbsolutePath();
+                        } catch (IOException ex) {
+                            Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     } else {
-                        chooser = new JFileChooser(path);
+                        // cancelled
+                        return;
                     }
-                }
-                int returnVal = chooser.showSaveDialog(this);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    try {
-                        localSettings.setProperty(LocalSettings.TABLES_PATH_KEY, chooser.getSelectedFile().getParentFile().getCanonicalPath());
-                        fileName = chooser.getSelectedFile().getAbsolutePath();
-                    } catch (IOException ex) {
-                        Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    // cancelled
-                    return;
                 }
 
                 setCursor(hourglassCursor);
@@ -1042,24 +1060,37 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                             tble.getEngineParameters(),
                             filetype);
 
-                    String filesGeneratedList = new String();
-                    for (String fileN : filesGenerated) {
-                        filesGeneratedList += "\n" + fileN;
-                    }
+                    if (filetype != FileTypes.jchart) {
 
-                    setCursor(normalCursor);
+                        String filesGeneratedList = new String();
+                        for (String fileN : filesGenerated) {
+                            filesGeneratedList += "\n" + fileN;
+                        }
 
-                    JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT.") + filesGeneratedList, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."), JOptionPane.INFORMATION_MESSAGE);
+                        setCursor(normalCursor);
 
-                    // Opening the resulting files...
-                    for (String resultFileName : filesGenerated) {
-                        if (new File(resultFileName).exists()) {
-                            try {
-                                canreg.common.Tools.openFile(resultFileName);
-                            } catch (IOException ex) {
-                                JOptionPane.showMessageDialog(this, "Unable to open: " + resultFileName + "\n" + ex.getLocalizedMessage());
-                                Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT.") + filesGeneratedList, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."), JOptionPane.INFORMATION_MESSAGE);
+
+                        // Opening the resulting files...
+                        for (String resultFileName : filesGenerated) {
+                            if (new File(resultFileName).exists()) {
+                                try {
+                                    canreg.common.Tools.openFile(resultFileName);
+                                } catch (IOException ex) {
+                                    JOptionPane.showMessageDialog(this, "Unable to open: " + resultFileName + "\n" + ex.getLocalizedMessage());
+                                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
+                        }
+                    } else {
+                        chartBuilder = (JChartTableBuilderInterface) tableBuilder;
+                        JFreeChart[] charts = chartBuilder.getCharts();
+                        for (JFreeChart chart : charts) {
+                            JChartViewerInternalFrame chartViewerInternalFrame = new JChartViewerInternalFrame();
+                            chartViewerInternalFrame.setChart(chart);
+                            CanRegClientView.showAndPositionInternalFrame(
+                                    CanRegClientApp.getApplication().getDesktopPane(),
+                                    chartViewerInternalFrame);
                         }
                     }
 
@@ -1118,5 +1149,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public void generateWMFAction() {
         generateTablesAction(FileTypes.wmf);
+    }
+
+    @Action
+    public void openInChartViewer() {
+        generateTablesAction(FileTypes.jchart);
     }
 }
