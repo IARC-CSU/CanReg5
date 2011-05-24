@@ -1089,6 +1089,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                                     CanRegClientApp.getApplication().getDesktopPane(),
                                     chartViewerInternalFrame);
                         }
+                        setCursor(normalCursor);
                     }
 
                 } catch (SQLException ex) {
