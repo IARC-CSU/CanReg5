@@ -1,32 +1,55 @@
-# 1st argument is either pdf, png, ps or svg
-# 2nd argument is report file name - or output file name if you want
-# 3rd argument is population file name
-# 4th argument is incidence file name
-
 Args <- commandArgs(TRUE)
-# garbage <- dev.off()
 
-if (Args[1] == "png") {
-    filename <- paste( Args[2], ".png", sep = "" )
+# 1st argument is either pdf, png, ps or svg
+filetype <- Args[1]
+
+# 2nd argument is report file name - or output file name if you want
+filename <- Args[2]
+outFileTable <- paste(filename, ".html" , sep = "")
+
+# 3rd argument is population file name
+filePop <- Args[3]
+
+# 4th argument is incidence file name
+fileInc <- Args[4]
+
+#The variable log has to be declared as TRUE or False wether or not the users wants figures with log rates
+#Default is FALSE
+logr = TRUE
+
+plotOnePage=TRUE
+
+## helper-function
+is.installed <- function(mypkg) is.element(mypkg, installed.packages()[,1]) 
+##
+
+if (filetype == "png") {
+    filename <- paste( filename, ".png", sep = "" )
     png(file=filename, bg="transparent")
-} else if (Args[1] == "pdf") { 
-    filename <- paste( Args[2], ".pdf" , sep = "")
+} else if (filetype == "pdf") { 
+    filename <- paste( filename, ".pdf" , sep = "")
     pdf(file=filename) 
-} else if (Args[1] == "svg") { 
+} else if (filetype == "svg") { 
+	filename <- paste( filename, ".svg" , sep = "")
 	# svg needs the RSvgDevice library installed
-    filename <- paste( Args[2], ".svg" , sep = "")
+	if(!is.installed("RSvgDevice")){
+		load.fun("RSvgDevice")
+	}
 	require(RSvgDevice)
-    devSVG(file=filename) 
-} else if (Args[1] == "ps") { 
-    filename <- paste( Args[2], ".ps" , sep = "")
+    devSVG(file=filename, onefile=TRUE)
+} else if (filetype == "ps") { 
+    filename <- paste( filename, ".ps" , sep = "")
     postscript(file=filename) 
-} else if (Args[1] == "wmf") { 
+} else if (filetype == "html") { 
+    filename <- paste( filename, ".html" , sep = "")
+    # postscript(file=filename) 
+} else if (filetype == "wmf") { 
 	# This only works on windows
-    filename <- paste( Args[2], ".wmf" , sep = "")
+    filename <- paste( filename, ".wmf" , sep = "")
     win.metafile(file=filename) 
 } else { 
 	# defaults to pdf
-    filename <- paste( Args[2], ".pdf" , sep = "")
+    filename <- paste( filename, ".pdf" , sep = "")
     pdf(file=filename) 
 }
 
@@ -44,20 +67,26 @@ source(paste(sep="/", script.basename, "makeageSpecIncRates.R"))
 source(paste(sep="/", script.basename, "subsetSite.R"))
 source(paste(sep="/", script.basename, "plotAgeSpecIncRates.R"))
 source(paste(sep="/", script.basename, "plotLogAgeSpecIncRates.r"))
+source(paste(sep="/", script.basename, "load.fun.R"))
+source(paste(sep="/", script.basename, "makeTable.R"))
 
-# The incidence file is the 4th argument
-fileInc <- Args[4]
 dataInc <- read.table(fileInc, header=TRUE)
-# colnames(dataInc)
 
-# The population file is the 3rd argument
-filePop <- Args[3]
 dataPop <- read.table(filePop, header=TRUE)
 
-#The variable log has to be declared as TRUE or False wether or not the users wants figures with log rates
-#Default is FALSE
-figure_AgeSpecificIncidenceRates(dataInc, dataPop, log = T)
+if(plotOnePage){	
+	op <-	par(mfrow = c(4, 3), no.readonly = FALSE)
+	#split.screen(c(3, 3))
+}
+
+figure_AgeSpecificIncidenceRates(dataInc, dataPop, logr, plotOnePage, outFileTable)
 	
+if(plotOnePage){
+	par(op)
+}
+
+figure_AgeSpecificIncidenceRates(dataInc, dataPop, logr, plotOnePage, outFileTable)
+
 dev.off()
 
 # write the name of any file created by R to out

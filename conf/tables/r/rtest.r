@@ -53,40 +53,10 @@ if (filetype == "png") {
     pdf(file=filename) 
 }
 
-# Find the directory of the script
-initial.options <- commandArgs(trailingOnly = FALSE)
-file.arg.name <- "--file="
-script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
-script.basename <- dirname(script.name)
-
-# Load dependencies
-source(paste(sep="/", script.basename, "figure_AgeSpecificIncidenceRates.R"))
-source(paste(sep="/", script.basename, "subsetSex.R"))	
-source(paste(sep="/", script.basename, "mergePeriods.R"))
-source(paste(sep="/", script.basename, "makeageSpecIncRates.R"))
-source(paste(sep="/", script.basename, "subsetSite.R"))
-source(paste(sep="/", script.basename, "plotAgeSpecIncRates.R"))
-source(paste(sep="/", script.basename, "plotLogAgeSpecIncRates.r"))
-source(paste(sep="/", script.basename, "load.fun.R"))
-source(paste(sep="/", script.basename, "makeTable.R"))
-
-dataInc <- read.table(fileInc, header=TRUE)
-
-dataPop <- read.table(filePop, header=TRUE)
-
-if(plotOnePage){	
-	op <-	par(mfrow = c(4, 3), no.readonly = FALSE)
-	#split.screen(c(3, 3))
-}
-
-figure_AgeSpecificIncidenceRates(dataInc, dataPop, logr, plotOnePage, outFileTable)
-	
-if(plotOnePage){
-	par(op)
-}
-
-figure_AgeSpecificIncidenceRates(dataInc, dataPop, logr, plotOnePage, outFileTable)
-
+# call proper function
+# in this test we call the rainbow wheel thingy stolen from the demo(graphics)
+par(bg = "gray")
+pie(rep(1,24), col = rainbow(24), radius = 0.9)
 dev.off()
 
 # write the name of any file created by R to out
