@@ -1561,7 +1561,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         pds.setDate(dateTextField.getText());
         pds.setWorldPopulationBool(false);
         PopulationDataset wpds = (PopulationDataset) standardPopulationComboBox.getSelectedItem();
-        pds.setWorldPopulationID(wpds.getWorldPopulationID());
+        pds.setWorldPopulation(wpds);
 
         int numberOfAgeGroups = pds.getAgeGroupStructure().getNumberOfAgeGroups();
 
