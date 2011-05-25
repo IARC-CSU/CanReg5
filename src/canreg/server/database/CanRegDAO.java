@@ -402,12 +402,20 @@ public class CanRegDAO {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
 
+
+        for (PopulationDataset popset : populationDatasetMap.values()) {
+            if (!popset.isWorldPopulationBool()) {
+                popset.setWorldPopulation(
+                        populationDatasetMap.get(
+                        popset.getWorldPopulationID()));
+            }
+        }
+
         try {
             queryStatement = dbConnection.createStatement();
             results = queryStatement.executeQuery(strGetPopulationDatasetEntries);
             while (results.next()) {
                 int id = results.getInt(1);
-
 
                 Integer pdsId = results.getInt(2);
 
@@ -813,7 +821,7 @@ public class CanRegDAO {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
             isConnected = false;
             // CanRegDAO now throws database mismatch exceptions if the database structure doesn't match the prepared queries.
-            throw new RemoteException("Database desciption mismatch...");
+            throw new RemoteException("Database description mismatch... \n" + ex.getLocalizedMessage());
         }
         return isConnected;
     }
