@@ -20,7 +20,9 @@
 package canreg.common.database;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  *
@@ -50,12 +52,15 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     private int worldPopulationID = 0;
     private LinkedList<PopulationDatasetsEntry> ageGroups;
     private int UNKNOWN_AGE_GROUP_CODE = 99;
+    private PopulationDataset worldPopulation;
+    private Map<String, Integer> ageGroupMap;
 
     /**
      * Creates a new instance of PopulationDatasetsEntry
      */
     public PopulationDataset() {
         super();
+        ageGroupMap = new HashMap<String, Integer>();
         ageGroups = new LinkedList<PopulationDatasetsEntry>();
     }
 
@@ -65,6 +70,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      * @param count
      */
     public void addUnkownAgeGroup(int sex, int count) {
+        ageGroupMap.put(sex + "," + UNKNOWN_AGE_GROUP_CODE, new Integer(count));
         ageGroups.add(new PopulationDatasetsEntry(UNKNOWN_AGE_GROUP_CODE, sex, count));
     }
 
@@ -72,6 +78,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      * 
      */
     public void flushAgeGroups() {
+        ageGroupMap = new HashMap<String, Integer>();
         ageGroups = new LinkedList<PopulationDatasetsEntry>();
     }
 
@@ -229,6 +236,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      * @param pdse
      */
     public void addAgeGroup(PopulationDatasetsEntry pdse) {
+        ageGroupMap.put(pdse.getSex() + "," + pdse.getAgeGroup(), new Integer(pdse.getCount()));
         ageGroups.add(pdse);
     }
 
@@ -299,5 +307,96 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
             popString.append("\r\n");
         }
         return popString.toString();
+    }
+
+    public PopulationDataset getWorldPopulation() {
+        return worldPopulation;
+    }
+
+    /**
+     * @param worldPopulation the referencePopulation to set
+     */
+    public void setWorldPopulation(PopulationDataset worldPopulation) {
+        this.worldPopulation = worldPopulation;
+        this.worldPopulationID = worldPopulation.getPopulationDatasetID();
+    }
+
+    public int getWorldPopulationForAgeGroupIndex(int sex, int index) throws IncompatiblePopulationDataSetException {
+        AgeGroupStructure wags = worldPopulation.getAgeGroupStructure();
+        // if this has the very same age group structure as the worldpop - return this
+        int count = Integer.MIN_VALUE;
+        if (wags.equals(ageGroupStructure)) {
+            count = worldPopulation.getAgeGroupCount(sex, index);
+        } else if (wags.getSizeOfGroups() == ageGroupStructure.getSizeOfGroups()) {
+            // we have the same general age group size
+            if (wags.getSizeOfFirstGroup() == ageGroupStructure.getSizeOfFirstGroup()) {
+                count = getWorldPopulationForAgeGroupIndex(sex, index, 0);
+            } // if the size of the groups are the same, 
+            // but the first group size is different
+            // and smaller than the group size
+            else if (ageGroupStructure.getSizeOfFirstGroup() < ageGroupStructure.getSizeOfGroups()) {
+                int offset = -1;
+                if (index == 0) {
+                    count = worldPopulation.getAgeGroupCount(sex, index)
+                            / ageGroupStructure.getSizeOfGroups();
+                } else if (index == 1) {
+                    int firstGroupCount = worldPopulation.getAgeGroupCount(sex, 0)
+                            / ageGroupStructure.getSizeOfGroups();
+                    count = getWorldPopulationForAgeGroupIndex(sex, index, offset)
+                            - firstGroupCount;
+                } else {
+                    count = getWorldPopulationForAgeGroupIndex(sex, index, offset);
+                }
+            } 
+            
+            // if the size of the groups are the same, 
+            // but the first group size is different
+            // and bigger than the group size 
+            // and its size is a product of the group size
+            else if (ageGroupStructure.getSizeOfFirstGroup() > ageGroupStructure.getSizeOfGroups()
+                    && ageGroupStructure.getSizeOfFirstGroup() % ageGroupStructure.getSizeOfGroups() == 0) {
+                int offset = -((ageGroupStructure.getSizeOfFirstGroup() / ageGroupStructure.getSizeOfGroups()));
+                if (index == 0) {
+                    // group all the ages that 
+                    for (int tempIndex = 0; tempIndex < offset; tempIndex++) {
+                        count += getWorldPopulationForAgeGroupIndex(sex, index);
+                    }
+                } else {
+                    count = getWorldPopulationForAgeGroupIndex(sex, index, offset);
+                }
+            }
+        }
+        // Still hasn't assigned a proper value? Throw an exception...
+        if (count == Integer.MIN_VALUE) {
+            throw new IncompatiblePopulationDataSetException();
+        }
+        return count;
+    }
+
+    private int getWorldPopulationForAgeGroupIndex(int sex, int index, int offset) {
+        AgeGroupStructure wags = worldPopulation.getAgeGroupStructure();
+        int count = 0;
+        index = index + offset;
+        if (index < wags.getNumberOfAgeGroups() - 1
+                && index < ageGroupStructure.getNumberOfAgeGroups() - 1) {
+            count = worldPopulation.getAgeGroupCount(sex, index);
+        } else {
+            // last group - no cutoff, we sum it all up
+            if (index <= wags.getNumberOfAgeGroups() - 1
+                    && ageGroupStructure.getCutOfAge() == Integer.MAX_VALUE) {
+                for (int tempIndex = index; tempIndex < wags.getNumberOfAgeGroups(); tempIndex++) {
+                    count += worldPopulation.getAgeGroupCount(sex, tempIndex);
+                }
+                // last group - with cutoff, we take that group
+            } else if (index <= wags.getNumberOfAgeGroups() - 1
+                    && ageGroupStructure.getCutOfAge() != Integer.MAX_VALUE) {
+                count = worldPopulation.getAgeGroupCount(sex, index);
+            }
+        }
+        return count;
+    }
+
+    public int getAgeGroupCount(int sex, int index) {
+        return ageGroupMap.get(sex + "," + index);
     }
 }
