@@ -31,10 +31,10 @@ import java.util.LinkedList;
  */
 public class AgeGroupStructure implements Serializable {
 
-    private int sizeOfGroups;
-    private int maxAge;
-    private int sizeOfFirstGroup;
-    private int cutOfAge;
+    private int sizeOfGroups = 5;
+    private int maxAge = 85;
+    private int sizeOfFirstGroup = 5;
+    private int cutOfAge = Integer.MAX_VALUE;
     private String[] ageGroupNames;
     private String constructor;
 
@@ -257,6 +257,33 @@ public class AgeGroupStructure implements Serializable {
      */
     public int getSizeOfFirstGroup() {
         return sizeOfFirstGroup;
+    }
+
+    public int getSizeOfAgeGroupByIndex(int index) {
+        if (index == 0) {
+            return sizeOfFirstGroup;
+        } else if (index == getNumberOfAgeGroups() - 1 && cutOfAge == Integer.MAX_VALUE) {
+            return Integer.MAX_VALUE;
+        }
+        return sizeOfGroups;
+    }
+
+    public int getLowestAgeForAgeGroupByIndex(int index) {
+        if (index == 0) {
+            return 0;
+        } else {
+            return sizeOfFirstGroup + index * sizeOfGroups;
+        }
+    }
+
+    public int getHighestAgeForAgeGroupByIndex(int index) {
+        if (index == 0) {
+            return sizeOfFirstGroup - 1;
+        } else if (index == getNumberOfAgeGroups() - 1) {
+            return cutOfAge;
+        } else {
+            return sizeOfFirstGroup + (index + 1) * sizeOfGroups - 1;
+        }
     }
 
     /**
