@@ -24,6 +24,7 @@ import canreg.client.LocalSettings;
 import canreg.client.analysis.TableBuilderInterface.FileTypes;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
+import canreg.common.database.IncompatiblePopulationDataSetException;
 import canreg.common.database.PopulationDataset;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -49,6 +50,8 @@ public class RTableBuilder implements TableBuilderInterface {
     private final LocalSettings localSettings;
     private final String rpath;
     private String[] rScripts;
+    private String[] rScriptsArguments;
+    private final String R_SCRIPTS_ARGUMENTS = "r_scripts_arguments";
 
     public RTableBuilder(String configFileName) throws FileNotFoundException {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -70,7 +73,7 @@ public class RTableBuilder implements TableBuilderInterface {
         variablesNeeded = variablesNeededList.toArray(new StandardVariableNames[0]);
 
         rScripts = ConfigFieldsReader.findConfig(R_SCRIPTS, configList);
-
+        rScriptsArguments = ConfigFieldsReader.findConfig(R_SCRIPTS_ARGUMENTS, configList);
         // build fileTypesGeneratedMap
         fileTypesGenerated = new FileTypes[]{
             FileTypes.png,
@@ -156,11 +159,17 @@ public class RTableBuilder implements TableBuilderInterface {
                         + rScript
                         + "\" "
                         + "--args "
-                        + fileType
-                        + " \"" + reportFileName + "\" "
-                        + "\"" + popfile.getPath() + "\" "
-                        + "\"" + incfile.getPath() + "\" ";
-
+                        + "-ft=" + fileType + " "
+                        + "-outGraph=\"" + reportFileName + "\" "
+                        + "-pop=\"" + popfile.getPath() + "\" "
+                        + "-inc=\"" + incfile.getPath() + "\" "
+                        + "-outTable=\"" + reportFileName + ".html\" ";
+                // add the rest of the arguments
+                if (rScriptsArguments != null) {
+                    for (String arg : rScriptsArguments) {
+                        command += arg + " ";
+                    }
+                }
                 System.out.println(command);
                 Process pr = rt.exec(command);
                 // collect the output from the R program in a stream
@@ -184,7 +193,7 @@ public class RTableBuilder implements TableBuilderInterface {
                     BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
                     String errorMessage = convertStreamToString(errorStream);
                     System.out.println(errorMessage);
-                    throw new TableErrorException("R says:\n \"" + errorMessage+ "\"");
+                    throw new TableErrorException("R says:\n \"" + errorMessage + "\"");
                 } finally {
                     System.out.println(pr.exitValue());
                 }
@@ -192,6 +201,9 @@ public class RTableBuilder implements TableBuilderInterface {
 
         } catch (IOException ex) {
             Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IncompatiblePopulationDataSetException ex) {            
+            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING, null, ex);
+            throw new NotCompatibleDataException();
         }
 
         return filesCreated;
