@@ -4,6 +4,7 @@
  */
 package canreg.client.analysis;
 
+import canreg.common.database.IncompatiblePopulationDataSetException;
 import canreg.common.database.PopulationDataset;
 import canreg.common.database.PopulationDatasetsEntry;
 import java.awt.Rectangle;
@@ -36,7 +37,7 @@ public class Tools {
     /**
      * 
      */
-    public enum KeyGroupsEnum {
+    public enum KeyCancerGroupsEnum {
 
         /**
          * 
@@ -100,21 +101,28 @@ public class Tools {
      * @param separator
      * @throws IOException
      */
-    public static void writePopulationsToFile(BufferedWriter popoutput, int startYear, PopulationDataset[] populations, String separator) throws IOException {
+    public static void writePopulationsToFile(
+            BufferedWriter popoutput,
+            int startYear,
+            PopulationDataset[] populations,
+            String separator) throws IOException, IncompatiblePopulationDataSetException {
         String popheader = "YEAR" + separator;
         popheader += "AGE_GROUP_LABEL" + separator;
         popheader += "AGE_GROUP" + separator;
         popheader += "SEX" + separator;
-        popheader += "COUNT";
+        popheader += "COUNT" + separator;
+        popheader += "REFERENCE_COUNT";
         popoutput.append(popheader);
         popoutput.newLine();
         int thisYear = startYear;
         for (PopulationDataset popset : populations) {
-            String[] ageGroupNames = popset.getAgeGroupStructure().getAgeGroupNames(); 
+            String[] ageGroupNames = popset.getAgeGroupStructure().getAgeGroupNames();
             for (PopulationDatasetsEntry pop : popset.getAgeGroups()) {
                 popoutput.append(thisYear + "").append(separator);
                 popoutput.append(ageGroupNames[pop.getAgeGroup()]).append(separator);
-                popoutput.append(pop.getStringRepresentationOfAgeGroupsForFile(separator));
+                popoutput.append(pop.getStringRepresentationOfAgeGroupsForFile(separator)).append(separator);
+                // get reference pop
+                popoutput.append(popset.getWorldPopulationForAgeGroupIndex(pop.getSex(), pop.getAgeGroup()) + "");
                 popoutput.newLine();
             }
             thisYear++;
@@ -130,7 +138,11 @@ public class Tools {
      * @param cancerGroupsLocal
      * @return This is set to DONT_COUNT if it should not be counted and -1 if it is not classifiable but countable
      */
-    public static int assignICDGroupIndex(Map<KeyGroupsEnum, Integer> keyGroupsMap, String icdString, String morphologyString, LinkedList[] cancerGroupsLocal) {
+    public static int assignICDGroupIndex(
+            Map<KeyCancerGroupsEnum, Integer> keyGroupsMap,
+            String icdString,
+            String morphologyString,
+            LinkedList[] cancerGroupsLocal) {
         int icdIndex = -1;
         int icdNumber = -1;
 
@@ -138,9 +150,9 @@ public class Tools {
         if (morphologyString.length() > 0) {
             int morphology = Integer.parseInt(morphologyString);
             if (morphology == 9140) {
-                icdIndex = keyGroupsMap.get(KeyGroupsEnum.kaposiSarkomaCancerGroupIndex);
+                icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.kaposiSarkomaCancerGroupIndex);
             } else if ((int) (morphology / 10) == 905) {
-                icdIndex = keyGroupsMap.get(KeyGroupsEnum.mesotheliomaCancerGroupIndex);
+                icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.mesotheliomaCancerGroupIndex);
             }
         }
 
@@ -155,8 +167,8 @@ public class Tools {
                 }
                 icdIndex = EditorialTableTools.getICD10index(icdNumber, cancerGroupsLocal);
                 // Group still not found - put it in others...
-                if (icdIndex < 0 && keyGroupsMap.get(KeyGroupsEnum.otherCancerGroupsIndex) >= 0) {
-                    icdIndex = keyGroupsMap.get(KeyGroupsEnum.otherCancerGroupsIndex);
+                if (icdIndex < 0 && keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex) >= 0) {
+                    icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex);
                 }
             } else if (icdString.length() > 0
                     && icdString.trim().substring(0, 1).equals("D")) // only collect certain Ds                        
@@ -167,19 +179,19 @@ public class Tools {
                     icdNumber = icdNumber * 10;
                 }
                 if (icdNumber == 90 || icdNumber == 414) {
-                    icdIndex = keyGroupsMap.get(KeyGroupsEnum.bladderCancerGroupIndex);
-                    if (icdIndex < 0 && keyGroupsMap.get(KeyGroupsEnum.otherCancerGroupsIndex) >= 0) {
-                        icdIndex = keyGroupsMap.get(KeyGroupsEnum.otherCancerGroupsIndex);
+                    icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.bladderCancerGroupIndex);
+                    if (icdIndex < 0 && keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex) >= 0) {
+                        icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex);
                     }
                 } else if ((int) (icdNumber / 10) == 45 || (int) (icdNumber / 10) == 47) {
-                    icdIndex = keyGroupsMap.get(KeyGroupsEnum.myeloproliferativeDisordersCancerGroupIndex);
-                    if (icdIndex < 0 && keyGroupsMap.get(KeyGroupsEnum.otherCancerGroupsIndex) >= 0) {
-                        icdIndex = keyGroupsMap.get(KeyGroupsEnum.otherCancerGroupsIndex);
+                    icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.myeloproliferativeDisordersCancerGroupIndex);
+                    if (icdIndex < 0 && keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex) >= 0) {
+                        icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex);
                     }
                 } else if ((int) (icdNumber / 10) == 46) {
-                    icdIndex = keyGroupsMap.get(KeyGroupsEnum.myelodysplasticSyndromesCancerGroupIndex);
-                    if (icdIndex < 0 && keyGroupsMap.get(KeyGroupsEnum.otherCancerGroupsIndex) >= 0) {
-                        icdIndex = keyGroupsMap.get(KeyGroupsEnum.otherCancerGroupsIndex);
+                    icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.myelodysplasticSyndromesCancerGroupIndex);
+                    if (icdIndex < 0 && keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex) >= 0) {
+                        icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex);
                     }
                 } else {
                     icdIndex = DONT_COUNT;
@@ -197,7 +209,10 @@ public class Tools {
      * @param svgFile the output file.
      * @throws IOException if writing the svgFile fails.
      */
-    public static void exportChartAsSVG(JFreeChart chart, Rectangle bounds, File svgFile) throws IOException {
+    public static void exportChartAsSVG(
+            JFreeChart chart,
+            Rectangle bounds,
+            File svgFile) throws IOException {
         // Get a DOMImplementation and create an XML document
         DOMImplementation domImpl =
                 GenericDOMImplementation.getDOMImplementation();
