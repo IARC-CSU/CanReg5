@@ -41,13 +41,15 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import canreg.client.analysis.Tools.KeyGroupsEnum;
+import canreg.client.analysis.Tools.KeyCancerGroupsEnum;
+import canreg.common.database.IncompatiblePopulationDataSetException;
 
 public class RTableBuilderGrouped implements TableBuilderInterface {
 
     public static String VARIABLES_NEEDED = "variables_needed";
     public static String FILE_TYPES_GENERATED = "file_types_generated";
     public static String R_SCRIPTS = "r_scripts";
+    public static String R_SCRIPTS_ARGUMENTS = "r_scripts_arguments";
     private static Globals.StandardVariableNames[] variablesNeeded = {
         Globals.StandardVariableNames.Sex,
         Globals.StandardVariableNames.Age,
@@ -77,7 +79,8 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
     static int allAgeGroupsIndex = 20;
     static int unknownAgeGroupIndex = 19;
     private final String[] rScripts;
-    private Map<KeyGroupsEnum, Integer> keyGroupsMap;
+    private Map<KeyCancerGroupsEnum, Integer> keyGroupsMap;
+    private final String[] rScriptsArguments;
 
     public RTableBuilderGrouped(String configFileName) throws FileNotFoundException {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -100,6 +103,8 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
 
         rScripts = ConfigFieldsReader.findConfig(R_SCRIPTS, configList);
 
+        rScriptsArguments = ConfigFieldsReader.findConfig(R_SCRIPTS_ARGUMENTS, configList);
+
         tableLabel = ConfigFieldsReader.findConfig("table_label", configList);
         icdGroupLabels = ConfigFieldsReader.findConfig("ICD_groups_labels", configList);
 
@@ -110,20 +115,20 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
         cancerGroupsLocal = EditorialTableTools.generateICD10Groups(icd10GroupDescriptions);
 
         // indexes
-        keyGroupsMap = new EnumMap<KeyGroupsEnum, Integer>(KeyGroupsEnum.class);
+        keyGroupsMap = new EnumMap<KeyCancerGroupsEnum, Integer>(KeyCancerGroupsEnum.class);
 
-        keyGroupsMap.put(KeyGroupsEnum.allCancerGroupsIndex, EditorialTableTools.getICD10index("ALL", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.leukemiaNOSCancerGroupIndex, EditorialTableTools.getICD10index(950, cancerGroupsLocal));
-        keyGroupsMap.put(KeyGroupsEnum.skinCancerGroupIndex, EditorialTableTools.getICD10index("C44", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.bladderCancerGroupIndex, EditorialTableTools.getICD10index("C67", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.mesotheliomaCancerGroupIndex, EditorialTableTools.getICD10index("C45", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.kaposiSarkomaCancerGroupIndex, EditorialTableTools.getICD10index("C46", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.myeloproliferativeDisordersCancerGroupIndex, EditorialTableTools.getICD10index("MPD", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.myelodysplasticSyndromesCancerGroupIndex, EditorialTableTools.getICD10index("MDS", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.allCancerGroupsButSkinIndex, EditorialTableTools.getICD10index("ALLbC44", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.brainAndCentralNervousSystemCancerGroupIndex, EditorialTableTools.getICD10index("C70-72", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.ovaryCancerGroupIndex, EditorialTableTools.getICD10index(569, cancerGroupsLocal));
-        keyGroupsMap.put(KeyGroupsEnum.otherCancerGroupsIndex, EditorialTableTools.getICD10index("O&U", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.allCancerGroupsIndex, EditorialTableTools.getICD10index("ALL", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.leukemiaNOSCancerGroupIndex, EditorialTableTools.getICD10index(950, cancerGroupsLocal));
+        keyGroupsMap.put(KeyCancerGroupsEnum.skinCancerGroupIndex, EditorialTableTools.getICD10index("C44", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.bladderCancerGroupIndex, EditorialTableTools.getICD10index("C67", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.mesotheliomaCancerGroupIndex, EditorialTableTools.getICD10index("C45", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.kaposiSarkomaCancerGroupIndex, EditorialTableTools.getICD10index("C46", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.myeloproliferativeDisordersCancerGroupIndex, EditorialTableTools.getICD10index("MPD", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.myelodysplasticSyndromesCancerGroupIndex, EditorialTableTools.getICD10index("MDS", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.allCancerGroupsButSkinIndex, EditorialTableTools.getICD10index("ALLbC44", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.brainAndCentralNervousSystemCancerGroupIndex, EditorialTableTools.getICD10index("C70-72", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.ovaryCancerGroupIndex, EditorialTableTools.getICD10index(569, cancerGroupsLocal));
+        keyGroupsMap.put(KeyCancerGroupsEnum.otherCancerGroupsIndex, EditorialTableTools.getICD10index("O&U", icd10GroupDescriptions));
     }
 
     @Override
@@ -153,8 +158,10 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
         List<Integer> dontCount = new LinkedList<Integer>();
 
         // all sites but skin?
-        if (Arrays.asList(engineParameters).contains("noC44")) {
-            dontCount.add(keyGroupsMap.get(KeyGroupsEnum.skinCancerGroupIndex));
+        if (engineParameters != null) {
+            if (Arrays.asList(engineParameters).contains("noC44")) {
+                dontCount.add(keyGroupsMap.get(KeyCancerGroupsEnum.skinCancerGroupIndex));
+            }
         }
 
         try {
@@ -269,10 +276,17 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                             + rScript
                             + "\" "
                             + "--args "
-                            + fileType
-                            + " \"" + reportFileName + "\" "
-                            + "\"" + popfile.getPath() + "\" "
-                            + "\"" + incfile.getPath() + "\" ";
+                            + "-ft=" + fileType + " "
+                            + "-outGraph=\"" + reportFileName + "\" "
+                            + "-pop=\"" + popfile.getPath() + "\" "
+                            + "-inc=\"" + incfile.getPath() + "\" "
+                            + "-outTable=\"" + reportFileName + ".html\" ";
+                    // add the rest of the arguments
+                    if (rScriptsArguments != null) {
+                        for (String arg : rScriptsArguments) {
+                            command += arg + " ";
+                        }
+                    }
 
                     System.out.println(command);
                     System.out.flush();
@@ -310,6 +324,9 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
 
         } catch (IOException ex) {
             Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IncompatiblePopulationDataSetException ex) {
+            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING, null, ex);
+            throw new NotCompatibleDataException();
         }
 
         return filesCreated;
