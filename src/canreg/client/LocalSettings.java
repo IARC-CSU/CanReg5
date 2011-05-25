@@ -316,7 +316,9 @@ public final class LocalSettings {
      */
     public String getProperty(String key) {
         String property = properties.getProperty(key);
-        if (property == null) {
+        if (property == null 
+                // Detect if R has been installed since last launch.
+                || (property.length() == 0 && key.equals(R_PATH))) {
             return getDefaultProperty(key);
         } else {
             return property;
@@ -541,7 +543,7 @@ public final class LocalSettings {
         String path = "";
         boolean folderFound = false;
         // try windows 32
-        String[] foldersToTry = new String[] {
+        String[] foldersToTry = new String[]{
             System.getenv("ProgramFilesW6432") + Globals.FILE_SEPARATOR + "R",
             System.getenv("ProgramFiles") + Globals.FILE_SEPARATOR + "R",
             System.getenv("ProgramFiles(x86)") + Globals.FILE_SEPARATOR + "R"
@@ -556,16 +558,19 @@ public final class LocalSettings {
         }
         if (folderFound && folder != null) {
             File[] files = folder.listFiles();
-            if (files.length > 0) {
-                File file = new File(files[0].getPath() + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "R.exe");
-                if (file.exists()){
-                    path = file.getPath();
+            long lastModified = 0;
+            // find the newest R installation
+            for (File thisFile : files) {
+                if (lastModified < thisFile.lastModified()) {
+                    File tempFile = new File(files[0].getPath() + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "R.exe");
+                    if (tempFile.exists()) {
+                        path = tempFile.getPath();
+                        lastModified = thisFile.lastModified();
+                    }
                 }
             }
         }
-
         //
-
         return path;
     }
 }
