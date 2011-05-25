@@ -20,7 +20,7 @@
 package canreg.client.analysis;
 
 import canreg.client.analysis.TableBuilderInterface.FileTypes;
-import canreg.client.analysis.Tools.KeyGroupsEnum;
+import canreg.client.analysis.Tools.KeyCancerGroupsEnum;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.PopulationDataset;
@@ -78,7 +78,7 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
     private int numberOfCancerGroups;
     private int numberOfSexes = 2;
     private int DONT_COUNT = -999;
-    private EnumMap<KeyGroupsEnum, Integer> keyGroupsMap;
+    private EnumMap<KeyCancerGroupsEnum, Integer> keyGroupsMap;
     private int otherCancerGroupsIndex;
     private Integer skinCancerGroupIndex;
     private int allCancerGroupsIndex;
@@ -127,25 +127,25 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
         cancerGroupsLocal = EditorialTableTools.generateICD10Groups(icd10GroupDescriptions);
 
         // indexes
-        keyGroupsMap = new EnumMap<KeyGroupsEnum, Integer>(KeyGroupsEnum.class);
+        keyGroupsMap = new EnumMap<KeyCancerGroupsEnum, Integer>(KeyCancerGroupsEnum.class);
 
-        keyGroupsMap.put(KeyGroupsEnum.allCancerGroupsIndex, EditorialTableTools.getICD10index("ALL", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.leukemiaNOSCancerGroupIndex, EditorialTableTools.getICD10index(950, cancerGroupsLocal));
-        keyGroupsMap.put(KeyGroupsEnum.skinCancerGroupIndex, EditorialTableTools.getICD10index("C44", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.bladderCancerGroupIndex, EditorialTableTools.getICD10index("C67", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.mesotheliomaCancerGroupIndex, EditorialTableTools.getICD10index("C45", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.kaposiSarkomaCancerGroupIndex, EditorialTableTools.getICD10index("C46", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.myeloproliferativeDisordersCancerGroupIndex, EditorialTableTools.getICD10index("MPD", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.myelodysplasticSyndromesCancerGroupIndex, EditorialTableTools.getICD10index("MDS", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.allCancerGroupsButSkinIndex, EditorialTableTools.getICD10index("ALLbC44", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.brainAndCentralNervousSystemCancerGroupIndex, EditorialTableTools.getICD10index("C70-72", icd10GroupDescriptions));
-        keyGroupsMap.put(KeyGroupsEnum.ovaryCancerGroupIndex, EditorialTableTools.getICD10index(569, cancerGroupsLocal));
-        keyGroupsMap.put(KeyGroupsEnum.otherCancerGroupsIndex, EditorialTableTools.getICD10index("O&U", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.allCancerGroupsIndex, EditorialTableTools.getICD10index("ALL", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.leukemiaNOSCancerGroupIndex, EditorialTableTools.getICD10index(950, cancerGroupsLocal));
+        keyGroupsMap.put(KeyCancerGroupsEnum.skinCancerGroupIndex, EditorialTableTools.getICD10index("C44", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.bladderCancerGroupIndex, EditorialTableTools.getICD10index("C67", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.mesotheliomaCancerGroupIndex, EditorialTableTools.getICD10index("C45", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.kaposiSarkomaCancerGroupIndex, EditorialTableTools.getICD10index("C46", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.myeloproliferativeDisordersCancerGroupIndex, EditorialTableTools.getICD10index("MPD", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.myelodysplasticSyndromesCancerGroupIndex, EditorialTableTools.getICD10index("MDS", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.allCancerGroupsButSkinIndex, EditorialTableTools.getICD10index("ALLbC44", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.brainAndCentralNervousSystemCancerGroupIndex, EditorialTableTools.getICD10index("C70-72", icd10GroupDescriptions));
+        keyGroupsMap.put(KeyCancerGroupsEnum.ovaryCancerGroupIndex, EditorialTableTools.getICD10index(569, cancerGroupsLocal));
+        keyGroupsMap.put(KeyCancerGroupsEnum.otherCancerGroupsIndex, EditorialTableTools.getICD10index("O&U", icd10GroupDescriptions));
 
-        otherCancerGroupsIndex = keyGroupsMap.get(KeyGroupsEnum.otherCancerGroupsIndex);
-        skinCancerGroupIndex = keyGroupsMap.get(KeyGroupsEnum.skinCancerGroupIndex);
-        allCancerGroupsIndex = keyGroupsMap.get(KeyGroupsEnum.allCancerGroupsIndex);
-        allCancerGroupsButSkinIndex = keyGroupsMap.get(KeyGroupsEnum.allCancerGroupsButSkinIndex);
+        otherCancerGroupsIndex = keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex);
+        skinCancerGroupIndex = keyGroupsMap.get(KeyCancerGroupsEnum.skinCancerGroupIndex);
+        allCancerGroupsIndex = keyGroupsMap.get(KeyCancerGroupsEnum.allCancerGroupsIndex);
+        allCancerGroupsButSkinIndex = keyGroupsMap.get(KeyCancerGroupsEnum.allCancerGroupsButSkinIndex);
 
         numberOfCancerGroups = cancerGroupsLocal.length;
 
@@ -294,7 +294,7 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
             charts[0] = ChartFactory.createPieChart(
                     tableHeader + ", " + sexLabel[sexNumber],
                     dataset, true, false, Locale.getDefault());
-
+            
             setPlotColours((PiePlot) charts[0].getPlot(), topNLimit + 1, Color.BLUE.brighter());
 
             String fileName = reportFileName + "-" + sexLabel[sexNumber];
