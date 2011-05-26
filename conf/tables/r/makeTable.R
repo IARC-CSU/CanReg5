@@ -1,15 +1,26 @@
-makeTable <- function(object, outFileTable){
+makeTable <- function(object, outFileTable, i, fileType){
 
-is.installed <- function(mypkg) is.element(mypkg, installed.packages()[,1]) 
+if(fileType == "txt"){
+	#Add col.names on top of file
+	if(i == 1){
+		write.table(object, file = outFileTable, append = TRUE, quote = FALSE, row.names = FALSE, col.names = TRUE)
 
-if(!is.installed("xtable")){
-load.fun("xtable")
-}
+	}else{
+		write.table(object, file = outFileTable, append = TRUE, quote = FALSE, row.names = FALSE, col.names = FALSE)
 
-library("xtable")
-newobject<-xtable(object)
-print(newobject, type="html", file=outFileTable, append = TRUE)
+	}#End if, else
 
-#write.table(object, file = "C:/Documents and Settings/CinUser/My Documents/Anahita/outscript/filename2.xml", append = TRUE)
+}else{
+	is.installed <- function(mypkg) is.element(mypkg, installed.packages()[,1]) 
+	if(!is.installed("xtable")){
+		load.fun("xtable")
+	}
+
+	library("xtable")
+	newobject<-xtable(object)
+	print(newobject, type="html", file=outFileTable, append = TRUE)
+
+
+	}#End else
 
 }#End function makeTable

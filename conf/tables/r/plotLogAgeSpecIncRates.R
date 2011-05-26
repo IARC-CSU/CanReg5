@@ -1,7 +1,9 @@
-plotLogAgeSpecIncRates <- function(dataMaleRates, dataFemaleRates, site, nrOfAgeGroups, ageGrLabel, outFileTable, siteName, plotOnePage){
+plotLogAgeSpecIncRates <- function(dataMaleRates, dataFemaleRates, site, nrOfAgeGroups, ageGrLabel, outFileTable, siteName, plotOnePage, plotTables, i, fileType){
+
+
 
 xlabel <- "Age"
-ylabel <- "Log rates"
+ylabel <- "Rates per 100,000"
 
 colM <- colors()[28]
 colF <- colors()[554]
@@ -10,16 +12,22 @@ age<- seq(0, (nrOfAgeGroups - 1), 1)
 
 if(!is.data.frame(dataFemaleRates)){
 
-rates <- dataMaleRates$RATESper100000 + 0.5
-#rates[rates == 0] <- 1
-rates <- log(rates)
+rates <- dataMaleRates$RATESper100000 
 
+rates[rates == 0] <- 10^(-10)
+
+rates <- round(log(rates), 4)
+
+if(plotTables){
 tableData <- cbind(dataMaleRates, rates)
 tableData$ICD10GROUPLABEL <- siteName
 colnames(tableData) <- c(colnames(dataMaleRates), "logRATES")
-makeTable(tableData, outFileTable)
 
-yMaxMin <- range(c(0, rates))
+makeTable(tableData, outFileTable, i, fileType)
+
+}
+
+yMaxMin <- range(c(0, max(rates)))
 period <- dataMaleRates$YEAR[1]
 #ratesPer100000 <- as.vector(dataMaleRates$RATES)*100000
 plot(age, rates, xlab = xlabel, ylab = ylabel, col = colM, axes = FALSE, ylim = yMaxMin, lwd =2, type = 'l')
@@ -33,16 +41,26 @@ legend("topleft",inset = 0.01, "Male", col = colM, lty = 1, lwd =2, bg = "white"
 
 }else if(!is.data.frame(dataMaleRates)){
 
-rates <- dataFemaleRates$RATESper100000 + 0.5
-#rates[rates == 0] <- 1
-rates <- log(rates)
+rates <- dataFemaleRates$RATESper100000 
+
+rates[rates == 0] <- 10^(-10)
+
+rates <- round(log(rates), 4)
+
+
+if(plotTables){
 
 tableData <- cbind(dataFemaleRates, rates)
-tableData$ICD10GROUPLABEL <-  siteName
-colnames(tableData) <- c(colnames(dataFemaleRates), "logRATES")
-makeTable(tableData, outFileTable)
 
-yMaxMin <- range(c(0, rates))
+tableData$ICD10GROUPLABEL <-  siteName
+
+colnames(tableData) <- c(colnames(dataFemaleRates), "logRATES")
+
+makeTable(tableData, outFileTable, i, fileType)
+
+}
+
+yMaxMin <- range(c(0, max(rates)))
 period <- dataFemaleRates$YEAR[1]
 #ratesPer100000 <- as.vector(dataFemaleRates$RATES)*100000
 plot(age, rates, xlab = xlabel, ylab = ylabel, col = colF, axes = FALSE, ylim = yMaxMin, lwd =2, type = 'l')
@@ -57,30 +75,33 @@ legend("topleft",inset = 0.01, "Female", col = colF, lty = 1, lwd =2, bg = "whit
 }else {
 
 
-ratesFemale <- dataFemaleRates$RATESper100000 + 0.5
-#ratesFemale[ratesFemale == 0] <- 1
-ratesFemale <- log(ratesFemale)
+ratesFemale <- dataFemaleRates$RATESper100000 
 
-ratesMale <- dataMaleRates$RATESper100000 + 0.5
-#ratesMale[ratesMale == 0] <- 1
-ratesMale <- log(ratesMale)
+ratesFemale[ratesFemale == 0] <- 10^(-10)
 
+ratesFemale <- round(log(ratesFemale), 4)
 
+ratesMale <- dataMaleRates$RATESper100000 
+ratesMale[ratesMale == 0] <- 10^(-10)
+ratesMale <- round(log(ratesMale), 4)
+
+if(plotTables){
 #For males
 tableDataM <- cbind(dataMaleRates, ratesMale)
 tableDataM$ICD10GROUPLABEL <-  siteName
 colnames(tableDataM) <- c(colnames(dataMaleRates), "logRATES")
-makeTable(tableDataM, outFileTable)
+makeTable(tableDataM, outFileTable, i, fileType)
 
 #For females
 tableDataF <- cbind(dataFemaleRates, ratesFemale)
 tableDataF$ICD10GROUPLABEL <- siteName
 colnames(tableDataF) <- c(colnames(dataFemaleRates), "logRATES")
-makeTable(tableDataF, outFileTable)
+makeTable(tableDataF, outFileTable, i, fileType)
+}
 
 period <- dataMaleRates$YEAR[1]
 
-yMaxMin <- range(c(0, ratesMale, ratesFemale))
+yMaxMin <- range(c(0, max(ratesMale), max(ratesFemale)))
 
 
 plot(age, ratesMale, xlab = xlabel, ylab = ylabel, col = colM, ylim = yMaxMin, xlim =range(c(0:16)), type = 'l', lwd =2, axes = FALSE)

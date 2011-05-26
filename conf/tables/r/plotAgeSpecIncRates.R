@@ -1,4 +1,4 @@
-plotAgeSpecIncRates <- function(dataMaleRates, dataFemaleRates, site, nrOfAgeGroups, ageGrLabel, outFileTable, siteName, plotOnePage){
+plotAgeSpecIncRates <- function(dataMaleRates, dataFemaleRates, site, nrOfAgeGroups, ageGrLabel, outFileTable, siteName, plotOnePage, plotTables, i, fileType){
 
 
 xlabel <- "Age"
@@ -13,7 +13,10 @@ if(!is.data.frame(dataFemaleRates)){
 
 dataMaleRates$ICD10GROUPLABEL <- siteName
 
-makeTable(dataMaleRates, outFileTable)
+if(plotTables){
+makeTable(dataMaleRates, outFileTable, i, fileType)
+
+}
 
 yMaxMin <- range(c(0, dataMaleRates$RATESper100000))
 period <- dataMaleRates$YEAR[1]
@@ -29,7 +32,10 @@ legend("topleft",inset = 0.01, "Male", col = colM, lty = 1, lwd =2, bg = "white"
 }else if(!is.data.frame(dataMaleRates)){
 dataFemaleRates$ICD10GROUPLABEL <- siteName
 
-makeTable(dataFemaleRates, outFileTable)
+if(plotTables){
+makeTable(dataFemaleRates, outFileTable, i, fileType)
+
+}
 
 yMaxMin <- range(c(0, dataFemaleRates$RATESper100000))
 period <- dataFemaleRates$YEAR[1]
@@ -47,9 +53,12 @@ legend("topleft",inset = 0.01, "Female", col = colF, lty = 1, lwd =2, bg = "whit
 dataMaleRates$ICD10GROUPLABEL <- siteName
 dataFemaleRates$ICD10GROUPLABEL <- siteName
 
-makeTable(dataMaleRates, outFileTable)
-makeTable(dataFemaleRates, outFileTable)
+if(plotTables){
+makeTable(dataMaleRates, outFileTable, i, fileType)
 
+makeTable(dataFemaleRates, outFileTable, i, fileType)
+
+}
 period <- dataMaleRates$YEAR[1]
 
 yMaxMin <- range(c(0, dataMaleRates$RATESper100000, dataFemaleRates$RATESper100000))

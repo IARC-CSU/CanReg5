@@ -1,11 +1,7 @@
-
 #checkArgs(c("-out=C:/Documents and Settings/CinUser/My Documents/Anahita/outscript/test", "-pop=C:/Documents and Settings/CinUser/My Documents/Anahita/Testfiles/pop1404377193814741326.tsv", "-inc=C:/Documents and Settings/CinUser/My Documents/Anahita/Testfiles/inc5404848408254658419.tsv", "-logr"), "-ft")
  
 
 checkArgs <- function(Args, variable){
-
-	##print(Args)
-	##print(variable)
 
 		##length of variable name
 		lengthVariable <- nchar(variable)
@@ -14,8 +10,7 @@ checkArgs <- function(Args, variable){
 
 	if(variable %in% c("-logr", "-onePage")){
 
-		# print((as.logical(TRUE)))
-		return(as.logical(TRUE))
+			return(as.logical(TRUE))
 	
 	}else{
 		whichArgs <- which(substr(Args, 1, lengthVariable) == variable)
@@ -25,19 +20,19 @@ checkArgs <- function(Args, variable){
 	}#end if "logr", "onePage"
 	
 	
-	}else{
+		}else{
 	
-		if(variable == "-ft"){
+			if(variable == "-ft"){
 		
-		return("pdf")
+			return("pdf")
 
 		}else{
 			
-		return(as.logical(FALSE))
+			return(as.logical(FALSE))
 
 		}
 	
-	}#End if, else
+		}#End if, else
 
 
 }#End function

@@ -1,7 +1,17 @@
 #Script for graphs of age specific incidence rates per 100 000.
 
-figure_AgeSpecificIncidenceRates <- function(dataInc, dataPop, logr, plotOnePage, outFileTable){
+figure_AgeSpecificIncidenceRates <- function(dataInc, dataPop, logr, plotOnePage, outFile, warningFile, plotTables, fileType){
 
+#############################################################################################
+#script.basename <- "C:/Documents and Settings/CinUser/My Documents/Anahita/outscript/"
+############################################################################################
+
+
+if(file.exists(warningFile)){
+
+file.remove(warningFile)
+
+}
 	
 	dataInc <- subset(dataInc, select = c(YEAR, ICD10GROUP, ICD10GROUPLABEL, SEX, AGE_GROUP, CASES))
 
@@ -15,21 +25,11 @@ figure_AgeSpecificIncidenceRates <- function(dataInc, dataPop, logr, plotOnePage
 	#One frame with the number sites given in the file
 	nrSites <- nlevels(dataInc$ICD10GROUP)
 
-	#if(plotOnePage){
-	
-	#par(no.readonly = TRUE)
-
-
-	#split.screen(c(3, 3))
-	#}
-	
 	#Number of agegroups
 	nrOfAgeGroups <- nlevels(as.factor(dataPop$AGE_GROUP))
 
 	#List of the sites
 	listSites <- levels(dataInc$ICD10GROUP)
-	siteLabel <- levels(dataInc$ICD10GROUPLABEL)
-
 	
 	dataPopMale <- subsetSex(dataPop, 1)
 	dataPopMale <- mergePeriods(dataPopMale, "Pop", nrOfAgeGroups)
@@ -39,25 +39,16 @@ figure_AgeSpecificIncidenceRates <- function(dataInc, dataPop, logr, plotOnePage
 	
 	for(i in 1:nrSites){
 	
-	#if(plotOnePage){
-	#screen(i)
-	#}
-	#site <- substr(listSites[i], 4, nchar(listSites[i]))
 	site <- listSites[i]
+
+	siteLabel <- as.vector(dataInc$ICD10GROUPLABEL[which(dataInc$ICD10GROUP == site)])[1]	
 	
 	#Extract the first two characters from a string
-	siteCx <- substr(siteLabel[i], 1, 2)
-	siteName <- substr(siteLabel[i], 4, nchar(siteLabel[i]))
-	
-	# print(siteName)
-	makeAgeSpecIncRates(dataInc, dataPopMale, dataPopFemale, site, siteCx, nrOfAgeGroups, logr, outFileTable, siteName, plotOnePage)	
-	
-	}#End for nrSites	
-		
-	##############################################close.screen(all = TRUE)  
+	siteCx <- substr(siteLabel, 1, 2)
+	siteName <- substr(siteLabel, 4, nchar(siteLabel))
 
-	#if(plotOnePage){
-	#close.screen(all = TRUE)
-	#}
+	makeAgeSpecIncRates(dataInc, dataPopMale, dataPopFemale, site, siteCx, nrOfAgeGroups, logr, outFile, siteName, plotOnePage, warningFile, plotTables, i, fileType)	
+
+	}#End for nrSites	
 	
 }#End function
