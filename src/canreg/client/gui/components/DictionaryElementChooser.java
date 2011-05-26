@@ -77,11 +77,11 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
         downAction = new DownAction("Go down", null,
                 "",
                 new Integer(KeyEvent.VK_DOWN));
-        
+
         /* Not working yet, so we remove it...
         this.registerKeyboardAction(upAction, "lineup", up,
         JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
+        
         this.registerKeyboardAction(downAction, "linedown", down,
         JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
          */
@@ -168,6 +168,8 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
         EventListModel<DictionaryEntry> eventListModel = new EventListModel<DictionaryEntry>(textFilteredDictioaryEntries);
         dictionaryEntryList.setModel(eventListModel);
         dictionaryEntryList.setSelectedValue(selected, true);
+
+        filterEdit.setText("");
     }
 
     /** This method is called from within the constructor to
@@ -357,7 +359,7 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_filterEditMousePressed
 
     private void filterEditMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filterEditMouseReleased
-       MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(filterEdit, evt);
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(filterEdit, evt);
     }//GEN-LAST:event_filterEditMouseReleased
 
     private void enterKeyPressed() {
