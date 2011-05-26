@@ -277,10 +277,9 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                             + "\" "
                             + "--args "
                             + "-ft=" + fileType + " "
-                            + "-outGraph=\"" + reportFileName + "\" "
+                            + "-out=\"" + reportFileName + "\" "
                             + "-pop=\"" + popfile.getPath() + "\" "
-                            + "-inc=\"" + incfile.getPath() + "\" "
-                            + "-outTable=\"" + reportFileName + ".html\" ";
+                            + "-inc=\"" + incfile.getPath() + "\" ";
                     // add the rest of the arguments
                     if (rScriptsArguments != null) {
                         for (String arg : rScriptsArguments) {
