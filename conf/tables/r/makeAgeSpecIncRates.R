@@ -1,9 +1,8 @@
-makeAgeSpecIncRates <- function(dataInc, dataPopMale, dataPopFemale, site, siteCx, nrOfAgeGroups, logr, outFileTable){
+makeAgeSpecIncRates <- function(dataInc, dataPopMale, dataPopFemale, site, siteCx, nrOfAgeGroups, logr, outFileTable, siteName, plotOnePage){
 
 
 
-
-	ageGrLabel <- dataPopFemale$AGE_GROUP_LABEL
+      ageGrLabel <- dataPopFemale$AGE_GROUP_LABEL
 
 	#Subset site
 	dataInc <- subsetSite(dataInc, site)
@@ -16,9 +15,9 @@ makeAgeSpecIncRates <- function(dataInc, dataPopMale, dataPopFemale, site, siteC
 	colnames(dataFemaleRates)  <- (c(colnames(dataIncFemale), "COUNTS", "RATES", "RATESper100000"))
 	
 	if(logr){
-	plotLogAgeSpecIncRates("0", dataFemaleRates, site, nrOfAgeGroups, ageGrLabel, outFileTable)	
+	plotLogAgeSpecIncRates("0", dataFemaleRates, site, nrOfAgeGroups, ageGrLabel, outFileTable, siteName, plotOnePage)	
 	} else {	
-	plotAgeSpecIncRates("0", dataFemaleRates, site, nrOfAgeGroups, ageGrLabel, outFileTable)
+	plotAgeSpecIncRates("0", dataFemaleRates, site, nrOfAgeGroups, ageGrLabel, outFileTable, siteName, plotOnePage)
 	}
 	
 	}else if(siteCx == "10"){
@@ -29,9 +28,9 @@ makeAgeSpecIncRates <- function(dataInc, dataPopMale, dataPopFemale, site, siteC
 	colnames(dataMaleRates)  <- (c(colnames(dataIncMale), "COUNTS", "RATES", "RATESper100000"))
 
 	if(logr){
-	plotLogAgeSpecIncRates(dataMaleRates, "0", site, nrOfAgeGroups, ageGrLabel, outFileTable)	
+	plotLogAgeSpecIncRates(dataMaleRates, "0", site, nrOfAgeGroups, ageGrLabel, outFileTable, siteName, plotOnePage)	
 	} else {	
-	plotAgeSpecIncRates(dataMaleRates, "0", site, nrOfAgeGroups, ageGrLabel, outFileTable)
+	plotAgeSpecIncRates(dataMaleRates, "0", site, nrOfAgeGroups, ageGrLabel, outFileTable, siteName, plotOnePage)
 	}
 
 	}else if(siteCx == "11"){
@@ -48,9 +47,9 @@ makeAgeSpecIncRates <- function(dataInc, dataPopMale, dataPopFemale, site, siteC
 	colnames(dataFemaleRates)  <- (c(colnames(dataIncFemale), "COUNTS", "RATES", "RATESper100000"))
 
 	if(logr){
-	plotLogAgeSpecIncRates(dataMaleRates, dataFemaleRates, site, nrOfAgeGroups, ageGrLabel, outFileTable)	
+	plotLogAgeSpecIncRates(dataMaleRates, dataFemaleRates, site, nrOfAgeGroups, ageGrLabel, outFileTable, siteName, plotOnePage)	
 	} else {	
-	plotAgeSpecIncRates(dataMaleRates, dataFemaleRates, site, nrOfAgeGroups, ageGrLabel, outFileTable)	
+	plotAgeSpecIncRates(dataMaleRates, dataFemaleRates, site, nrOfAgeGroups, ageGrLabel, outFileTable, siteName, plotOnePage)	
 
 	}
 

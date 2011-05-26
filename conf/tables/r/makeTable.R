@@ -3,7 +3,7 @@ makeTable <- function(object, outFileTable){
 is.installed <- function(mypkg) is.element(mypkg, installed.packages()[,1]) 
 
 if(!is.installed("xtable")){
-	load.fun("xtable")
+load.fun("xtable")
 }
 
 library("xtable")

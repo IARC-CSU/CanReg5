@@ -1,4 +1,4 @@
-plotLogAgeSpecIncRates <- function(dataMaleRates, dataFemaleRates, site, nrOfAgeGroups, ageGrLabel, outFileTable){
+plotLogAgeSpecIncRates <- function(dataMaleRates, dataFemaleRates, site, nrOfAgeGroups, ageGrLabel, outFileTable, siteName, plotOnePage){
 
 xlabel <- "Age"
 ylabel <- "Log rates"
@@ -10,12 +10,12 @@ age<- seq(0, (nrOfAgeGroups - 1), 1)
 
 if(!is.data.frame(dataFemaleRates)){
 
-rates <- dataMaleRates$RATESper100000
-rates[rates == 0] <- 1
+rates <- dataMaleRates$RATESper100000 + 0.5
+#rates[rates == 0] <- 1
 rates <- log(rates)
 
 tableData <- cbind(dataMaleRates, rates)
-tableData$ICD10GROUPLABEL <- substr( as.vector(tableData$ICD10GROUPLABEL)[1] , 4, nchar( as.vector( tableData$ICD10GROUPLABEL)[1] ) )
+tableData$ICD10GROUPLABEL <- siteName
 colnames(tableData) <- c(colnames(dataMaleRates), "logRATES")
 makeTable(tableData, outFileTable)
 
@@ -26,17 +26,19 @@ plot(age, rates, xlab = xlabel, ylab = ylabel, col = colM, axes = FALSE, ylim = 
 axis(2, tck = 1, col = "grey", lty = "dotted")
 axis(1, 0:(nrOfAgeGroups-1), ageGrLabel)
 box()
-legend("topleft",inset = 0.01, "Male", col = colM, lty = 1, lwd =2, bg = "white")
 
+if((!plotOnePage) ){
+legend("topleft",inset = 0.01, "Male", col = colM, lty = 1, lwd =2, bg = "white")
+}
 
 }else if(!is.data.frame(dataMaleRates)){
 
-rates <- dataFemaleRates$RATESper100000
-rates[rates == 0] <- 1
+rates <- dataFemaleRates$RATESper100000 + 0.5
+#rates[rates == 0] <- 1
 rates <- log(rates)
 
 tableData <- cbind(dataFemaleRates, rates)
-tableData$ICD10GROUPLABEL <-  substr( as.vector(tableData$ICD10GROUPLABEL)[1] , 4, nchar( as.vector( tableData$ICD10GROUPLABEL)[1] ) )
+tableData$ICD10GROUPLABEL <-  siteName
 colnames(tableData) <- c(colnames(dataFemaleRates), "logRATES")
 makeTable(tableData, outFileTable)
 
@@ -47,30 +49,32 @@ plot(age, rates, xlab = xlabel, ylab = ylabel, col = colF, axes = FALSE, ylim = 
 axis(2, tck = 1, col = "grey", lty = "dotted")
 axis(1, 0:(nrOfAgeGroups-1), ageGrLabel)
 box()
-legend("topleft",inset = 0.01, "Female", col = colF, lty = 1, lwd =2, bg = "white")
 
+if((!plotOnePage)){
+legend("topleft",inset = 0.01, "Female", col = colF, lty = 1, lwd =2, bg = "white")
+}
 
 }else {
 
 
-ratesFemale <- dataFemaleRates$RATESper100000
-ratesFemale[ratesFemale == 0] <- 1
+ratesFemale <- dataFemaleRates$RATESper100000 + 0.5
+#ratesFemale[ratesFemale == 0] <- 1
 ratesFemale <- log(ratesFemale)
 
-ratesMale <- dataMaleRates$RATESper100000
-ratesMale[ratesMale == 0] <- 1
+ratesMale <- dataMaleRates$RATESper100000 + 0.5
+#ratesMale[ratesMale == 0] <- 1
 ratesMale <- log(ratesMale)
 
 
 #For males
 tableDataM <- cbind(dataMaleRates, ratesMale)
-tableDataM$ICD10GROUPLABEL <-  substr( as.vector(tableDataM$ICD10GROUPLABEL)[1] , 4, nchar( as.vector( tableDataM$ICD10GROUPLABEL)[1] ) )
+tableDataM$ICD10GROUPLABEL <-  siteName
 colnames(tableDataM) <- c(colnames(dataMaleRates), "logRATES")
 makeTable(tableDataM, outFileTable)
 
 #For females
 tableDataF <- cbind(dataFemaleRates, ratesFemale)
-tableDataF$ICD10GROUPLABEL <-  substr( as.vector(tableDataF$ICD10GROUPLABEL)[1] , 4, nchar( as.vector( tableDataF$ICD10GROUPLABEL)[1] ) )
+tableDataF$ICD10GROUPLABEL <- siteName
 colnames(tableDataF) <- c(colnames(dataFemaleRates), "logRATES")
 makeTable(tableDataF, outFileTable)
 
@@ -85,16 +89,38 @@ axis(2, tck = 1, col = "grey", lty = "dotted")
 axis(1, 0:(nrOfAgeGroups-1), ageGrLabel)
 box()
 
-legend("topleft",inset = 0.01, c("Male", "Female"), col = c(colM, colF), lty = c(1, 1), lwd =2, bg = "white", )
+if((!plotOnePage)){
+
+legend("topleft",inset = 0.01, c("Male", "Female"), col = c(colM, colF), lty = c(1, 1), lwd =2, bg = "white")
+
+}
 
 }#End if else if
 
+caption <- paste("Age-specific log incidence rates per 100,000 in ", period, sep = "")
 
-caption <- paste("Age-specific incidence rates per 100,000 in ", period, sep = "")
+
+if(plotOnePage){
+
+
+if(makeTitleOnce){
+makeTitleOnce<<- FALSE
+
+title(caption, outer=TRUE)
+#legend("topleft",inset = 0.01, c("Male", "Female"), col = c(colM, colF), lty = c(1, 1), lwd =2, bg = "white", )
+legend("topleft",inset = 0.01, c("M", "F"), col = c(colM, colF), lty = c(1, 1), lwd =2, bg = "white", cex = 0.6)
+}
+
+title(siteName)
+
+}else if(!plotOnePage){
+
 caption <- paste(caption, " \n", sep = "")
-caption <- paste(caption, site, sep = "")
+caption <- paste(caption, siteName, sep = "")
+
 
 title(caption, cex = 0.05)
 
+}
 
 }#End function plotAgeSpecIncRates

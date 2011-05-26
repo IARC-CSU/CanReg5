@@ -4,6 +4,13 @@ figure_AgeSpecificIncidenceRates <- function(dataInc, dataPop, logr, plotOnePage
 
 	
 	dataInc <- subset(dataInc, select = c(YEAR, ICD10GROUP, ICD10GROUPLABEL, SEX, AGE_GROUP, CASES))
+
+
+	if(plotOnePage){
+	makeTitleOnce <<- TRUE
+	}else{
+	makeTitleOnce <<- FALSE
+	}
 	
 	#One frame with the number sites given in the file
 	nrSites <- nlevels(dataInc$ICD10GROUP)
@@ -40,8 +47,10 @@ figure_AgeSpecificIncidenceRates <- function(dataInc, dataPop, logr, plotOnePage
 	
 	#Extract the first two characters from a string
 	siteCx <- substr(siteLabel[i], 1, 2)
-
-	makeAgeSpecIncRates(dataInc, dataPopMale, dataPopFemale, site, siteCx, nrOfAgeGroups, logr, outFileTable)	
+	siteName <- substr(siteLabel[i], 4, nchar(siteLabel[i]))
+	
+	# print(siteName)
+	makeAgeSpecIncRates(dataInc, dataPopMale, dataPopFemale, site, siteCx, nrOfAgeGroups, logr, outFileTable, siteName, plotOnePage)	
 	
 	}#End for nrSites	
 		
