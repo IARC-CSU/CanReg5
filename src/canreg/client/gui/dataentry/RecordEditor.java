@@ -975,8 +975,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             worstResultCodeFound = CheckResult.ResultCode.OK;
             for (CheckResult result : checkResults) {
                 if (result.getResultCode() != CheckResult.ResultCode.OK && result.getResultCode() != CheckResult.ResultCode.NotDone) {
-                    message += result + "\n";
                     if (!result.getResultCode().equals(CheckResult.ResultCode.Missing)) {
+                        message += result + "\n";
                         worstResultCodeFound = CheckResult.decideWorstResultCode(result.getResultCode(), worstResultCodeFound);
                         for (Globals.StandardVariableNames standardVariableName : result.getVariablesInvolved()) {
                             CheckResult.ResultCode worstResultCodeFoundForThisVariable = mapOfVariablesAndWorstResultCodes.get(standardVariableName);

@@ -661,9 +661,9 @@ public class Import {
                             Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes = new EnumMap<Globals.StandardVariableNames, CheckResult.ResultCode>(Globals.StandardVariableNames.class);
                             worstResultCodeFound = CheckResult.ResultCode.OK;
                             for (CheckResult result : checkResults) {
-                                if (result.getResultCode() != CheckResult.ResultCode.OK && result.getResultCode() != CheckResult.ResultCode.NotDone) {
-                                    message += result + "\t";
+                                if (result.getResultCode() != CheckResult.ResultCode.OK && result.getResultCode() != CheckResult.ResultCode.NotDone) {                                    
                                     if (!result.getResultCode().equals(CheckResult.ResultCode.Missing)) {
+                                        message += result + "\t";
                                         worstResultCodeFound = CheckResult.decideWorstResultCode(result.getResultCode(), worstResultCodeFound);
                                         for (Globals.StandardVariableNames standardVariableName : result.getVariablesInvolved()) {
                                             CheckResult.ResultCode worstResultCodeFoundForThisVariable = mapOfVariablesAndWorstResultCodes.get(standardVariableName);
