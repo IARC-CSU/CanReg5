@@ -27,6 +27,7 @@ package canreg.client.gui.management;
 
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.Globals;
+import canreg.common.Tools;
 import java.awt.Cursor;
 import java.io.File;
 import java.io.IOException;
@@ -192,13 +193,11 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
     // This only works in Windows so far...
     public void openFolderAction() {
         if (canreg.client.CanRegClientApp.getApplication().isCanregServerRunningInThisThread()) {
-            if (System.getProperty("os.name").toString().substring(0, 3).equalsIgnoreCase("win")) {
-                try {
-                    File file = new File(Globals.CANREG_BACKUP_FOLDER);
-                    Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL " + file.getAbsolutePath());
-                } catch (IOException ex) {
-                    Logger.getLogger(BackUpInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            try {
+                Tools.openFile(Globals.CANREG_BACKUP_FOLDER);
+            } catch (IOException ex) {
+                // TODO display warning...
+                Logger.getLogger(BackUpInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
