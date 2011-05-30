@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.server;
 
 import canreg.common.database.User;
@@ -909,9 +908,13 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             success = db.deleteTumourRecord(id);
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             success = db.deletePatientRecord(id);
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+            success = db.deleteSourceRecord(id);
         } else if (tableName.equalsIgnoreCase(Globals.USERS_TABLE_NAME)) {
             success = db.deleteRecord(id, Globals.USERS_TABLE_NAME);
             userManager.writePasswordsToFile();
+        } else {
+            success = db.deleteRecord(id, tableName);
         }
         return success;
     }

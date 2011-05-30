@@ -916,43 +916,18 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private void deleteRecord(RecordEditorPanel recordEditorPanel) {
         int option = JOptionPane.NO_OPTION;
         option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("PERMANENTLY DELETE RECORD?"));
+        JTabbedPane tabbedPane = null;
+
         if (option == JOptionPane.YES_OPTION) {
             boolean success = false;
             DatabaseRecord record = recordEditorPanel.getDatabaseRecord();
-            int id = -1;
-            String tableName = null;
-            JTabbedPane tabbedPane = null;
-            if (record instanceof Patient) {
-                Object idObject = record.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
-                if (idObject != null) {
-                    id = (Integer) idObject;
-                }
-                tableName = Globals.PATIENT_TABLE_NAME;
-                tabbedPane = patientTabbedPane;
-            } else if (record instanceof Tumour) {
-                Object idObject = record.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
-                if (idObject != null) {
-                    id = (Integer) idObject;
-                }
-                tableName = Globals.TUMOUR_TABLE_NAME;
-                tabbedPane = tumourTabbedPane;
-            }
-            if (id > 0) {
-                try {
-                    canreg.client.CanRegClientApp.getApplication().releaseRecord(id, tableName);
-                    success = canreg.client.CanRegClientApp.getApplication().deleteRecord(id, tableName);
-                } catch (SQLException ex) {
-                    JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("THIS RECORD HAS OTHER RECORDS ASSIGNED TO IT.PLEASE DELETE OR MOVE THOSE FIRST."));
-                    Logger.getLogger(RecordEditor.class.getName()).log(Level.WARNING, null, ex);
-                } catch (RecordLockedException ex) {
-                    Logger.getLogger(RecordEditor.class.getName()).log(Level.WARNING, null, ex);
-                } catch (SecurityException ex) {
-                    Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (RemoteException ex) {
-                    Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+            success = deleteRecord(record);
             if (success) {
+                if (record instanceof Patient) {
+                    tabbedPane = patientTabbedPane;
+                } else if (record instanceof Tumour) {
+                    tabbedPane = tumourTabbedPane;
+                }
                 tabbedPane.remove(recordEditorPanel);
                 JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("RECORD DELETED."));
             } else {
@@ -1106,12 +1081,16 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     addToPatientMap(recordEditorPanel, dbr);
                 }
             } catch (RecordLockedException ex) {
+                JOptionPane.showInternalMessageDialog(this, ex.getLocalizedMessage(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("FAILED"), JOptionPane.WARNING_MESSAGE);
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
+                JOptionPane.showInternalMessageDialog(this, ex.getLocalizedMessage(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("FAILED"), JOptionPane.WARNING_MESSAGE);
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
+                JOptionPane.showInternalMessageDialog(this, ex.getLocalizedMessage(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("FAILED"), JOptionPane.WARNING_MESSAGE);
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
+                JOptionPane.showInternalMessageDialog(this, ex.getLocalizedMessage(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("FAILED"), JOptionPane.WARNING_MESSAGE);
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -1231,5 +1210,52 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
             setCursor(normalCursor);
         }
+    }
+
+    private boolean deleteRecord(DatabaseRecord record) {
+        boolean success = false;
+        int id = -1;
+        String tableName = null;
+        if (record instanceof Patient) {
+            Object idObject = record.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+            if (idObject != null) {
+                id = (Integer) idObject;
+            }
+            tableName = Globals.PATIENT_TABLE_NAME;
+        } else if (record instanceof Tumour) {
+            // delete sources first.
+            Tumour tumour = (Tumour) record;
+            for (Source source : tumour.getSources()) {
+                deleteRecord(source);
+            }
+
+            Object idObject = record.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+            if (idObject != null) {
+                id = (Integer) idObject;
+            }
+            tableName = Globals.TUMOUR_TABLE_NAME;
+        } else if (record instanceof Source) {
+            Object idObject = record.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+            if (idObject != null) {
+                id = (Integer) idObject;
+            }
+            tableName = Globals.SOURCE_TABLE_NAME;
+        }
+        if (id >= 0) {
+            try {
+                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, tableName);
+                success = canreg.client.CanRegClientApp.getApplication().deleteRecord(id, tableName);
+            } catch (SQLException ex) {
+                JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("THIS RECORD HAS OTHER RECORDS ASSIGNED TO IT.PLEASE DELETE OR MOVE THOSE FIRST."));
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.WARNING, null, ex);
+            } catch (RecordLockedException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.WARNING, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {
+                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return success;
     }
 }

@@ -992,6 +992,10 @@ public class CanRegDAO {
         if (tumour.getVariable(tumourCheckStatusVariable.getDatabaseVariableName()) == null) {
             tumour.setVariable(tumourCheckStatusVariable.getDatabaseVariableName(), "0");
         }
+
+        // save tumour before we save the sources...
+        int id = saveRecord(Globals.TUMOUR_TABLE_NAME, tumour, stmtSaveNewTumour);
+
         Set<Source> sources = tumour.getSources();
         // delete old sources
         try {
@@ -1004,7 +1008,7 @@ public class CanRegDAO {
         // save each of the source records
         saveSources(tumourID, sources);
 
-        return saveRecord(Globals.TUMOUR_TABLE_NAME, tumour, stmtSaveNewTumour);
+        return id;
     }
 
     /**
@@ -1322,19 +1326,25 @@ public class CanRegDAO {
      * @return
      * @throws RecordLockedException
      */
-    public synchronized boolean deleteRecord(int recordID, String tableName) throws RecordLockedException {
+    public synchronized boolean deleteRecord(int recordID, String tableName) throws RecordLockedException, SQLException {
         boolean success = false;
         if (isRecordLocked(recordID, tableName)) {
             throw new RecordLockedException();
-        }
-        String idString = "ID";
-        try {
-            Statement statement = null;
-            ResultSet results = null;
-            statement = dbConnection.createStatement();
-            statement.execute("DELETE FROM " + Globals.SCHEMA_NAME + "." + tableName + " WHERE " + idString + " = " + recordID);
-        } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+        } else {
+            if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+                success = deletePatientRecord(recordID);
+            } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+                success = deleteTumourRecord(recordID);
+            } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+                success = deleteSourceRecord(recordID);
+            } else {
+                String idString = "ID";
+                Statement statement = null;
+                ResultSet results = null;
+                statement = dbConnection.createStatement();
+                statement.execute("DELETE FROM " + Globals.SCHEMA_NAME + "." + tableName + " WHERE " + idString + " = " + recordID);
+                success = true;
+            }
         }
         return success;
     }
