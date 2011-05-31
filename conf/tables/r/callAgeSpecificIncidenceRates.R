@@ -72,8 +72,10 @@ warningFile <-  paste(warningFile, ".txt", sep = "")
 figure_AgeSpecificIncidenceRates(dataInc, dataPop, logr, plotOnePage, filename, warningFile, plotTables, fileType)
 	
 if(plotOnePage){
-	par(op)
+    par(op)
+    if (fileType != "svg") {
 	figure_AgeSpecificIncidenceRates(dataInc, dataPop, logr, plotOnePage = FALSE, filename, warningFile, plotTables, fileType)
+    }
 }
 
 if(!plotTables){
