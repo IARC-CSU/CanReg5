@@ -898,10 +898,14 @@ public class Tools {
         for (DatabaseVariablesListElement variable : variables) {
             String stdNameString = variable.getStandardVariableName();
             if (stdNameString != null) {
-                StandardVariableNames stdVarb = StandardVariableNames.valueOf(stdNameString);
-                IARCStandardVariableNames iarcStdVarb = mapStdVarbNamesIARCStdVarbNames.get(stdVarb);
-                if (iarcStdVarb != null) {
-                    map.put(iarcStdVarb, variable.getDatabaseVariableName());
+                try {
+                    StandardVariableNames stdVarb = StandardVariableNames.valueOf(stdNameString);
+                    IARCStandardVariableNames iarcStdVarb = mapStdVarbNamesIARCStdVarbNames.get(stdVarb);
+                    if (iarcStdVarb != null) {
+                        map.put(iarcStdVarb, variable.getDatabaseVariableName());
+                    }
+                } catch (java.lang.IllegalArgumentException ex) {
+                    Logger.getLogger(Tools.class.getName()).log(Level.WARNING, "{0} is not a standard variable name...", stdNameString);
                 }
             }
         }
