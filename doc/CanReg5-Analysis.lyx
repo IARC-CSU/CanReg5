@@ -49,21 +49,42 @@ CanReg analysis improvements
 Morten Johannes ERVIK, Freddie BRAY
 \end_layout
 
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Introduction
 \end_layout
 
 \begin_layout Standard
-R is a powerfull open source freely available software package that could
+R is a powerful open source freely available software package that could
  be coupled with CanReg to improve the analytical capabilites.
+\end_layout
+
+\begin_layout Standard
+\align left
+CanReg5 is an open source tool to input, store, check and analyse cancer
+ registry data.
+ It has modules to do data entry, quality control, consistency checks and
+ basic analysis of the data.
 \end_layout
 
 \begin_layout Section
 What data does registries store in CanReg5
 \end_layout
 
+\begin_layout Subsection
+Data elements
+\end_layout
+
 \begin_layout Standard
-Each record store (at least):
+Each case has (at least):
 \end_layout
 
 \begin_layout Itemize
@@ -91,7 +112,7 @@ Most valid basis of diagnosis
 \end_layout
 
 \begin_layout Itemize
-ICD10 and ICCC
+ICD-10 and ICCC
 \end_layout
 
 \begin_layout Itemize
@@ -108,7 +129,7 @@ Source info:
 
 \begin_deeper
 \begin_layout Itemize
-Type of 
+(Type of) 
 \end_layout
 
 \begin_layout Itemize
@@ -120,8 +141,12 @@ Number of
 \end_layout
 
 \end_deeper
+\begin_layout Subsection
+Population data
+\end_layout
+
 \begin_layout Standard
-Globally each registry also have population data sets (denominators).
+Each registry also have population data sets (denominators).
 \end_layout
 
 \begin_layout Section
@@ -160,16 +185,14 @@ could
  do with that data
 \end_layout
 
-\begin_layout Itemize
-Graphs:
+\begin_layout Subsection
+Graphs
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
+\begin_layout Subsubsection
 Bar charts by cancer/sex
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 incidence tables
 \end_layout
@@ -178,36 +201,30 @@ incidence tables
 number of cases
 \end_layout
 
-\end_deeper
-\begin_layout Itemize
+\begin_layout Subsubsection
 Time trends
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 ASRs (world) over time
 \end_layout
 
 \begin_layout Itemize
-age spec rates over time
+Age specific rates over time
 \end_layout
 
 \begin_layout Itemize
-age spec rates over cohort
+Age specific rates over cohort
 \end_layout
 
-\end_deeper
-\end_deeper
-\begin_layout Itemize
+\begin_layout Subsection
 Quality indicators
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-Validity:
+\begin_layout Subsubsection
+Validity
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 DCO%
 \end_layout
@@ -234,12 +251,10 @@ potentially with graphs
 \end_layout
 
 \end_deeper
-\end_deeper
-\begin_layout Itemize
-Completeness:
+\begin_layout Subsubsection
+Completeness
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 Reference childhood incidence comparison
 \end_layout
@@ -272,10 +287,12 @@ number of notifications per case
 \end_layout
 
 \end_deeper
-\end_deeper
-\end_deeper
-\begin_layout Itemize
+\begin_layout Subsection
 Geographic stuff, maps?
+\end_layout
+
+\begin_layout Itemize
+Complicated as this needs to be set up for each registry.
 \end_layout
 
 \begin_layout Section
@@ -300,11 +317,15 @@ M/I ratios as estimator of completeness
 Technical aspects
 \end_layout
 
+\begin_layout Subsection
+Getting the data to R - and back
+\end_layout
+
 \begin_layout Standard
 Basically two main ways to do it.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Export the data from CanReg5 to files readable by R and then call R in batch
  mode
 \end_layout
@@ -314,12 +335,256 @@ Prefered mehtod - more dynamic and loosely coupled.
  Easier to potentially reuse R code later.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Use libraries in Java (a Java to R bridge) to call R functions directly
 \end_layout
 
 \begin_layout Standard
 Alternative method we might want to look into.
+\end_layout
+
+\begin_layout Subsection
+Output file formats
+\end_layout
+
+\begin_layout Standard
+Graphics should be output in a format that can be used by many.
+ Possibly also given as a choice to the user.
+ (Ref: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.stat.auckland.ac.nz/~paul/R/devices.html"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Subsubsection
+Portable Network Graphics - PNG
+\end_layout
+
+\begin_layout Standard
+Very convenient for many things, but not scalable.
+ R can export directly to this format.
+\end_layout
+
+\begin_layout Subsubsection
+Enhanced Meta File - EMF
+\end_layout
+
+\begin_layout Standard
+Scalable.
+ Good for Word etc.
+ R can export directly to this format (at least as WMF).
+ Only for Windows?
+\end_layout
+
+\begin_layout Subsubsection
+Scalable Vector Graphics - SVG
+\end_layout
+
+\begin_layout Standard
+Scalable, open standard.
+ Allows for direct editting and manipulation in programs such as Adobe (r)
+ Illustrator or Inkscape.
+ R can export directly to this format.
+\end_layout
+
+\begin_layout Subsubsection
+(Encapsulated) Post Script - (E)PS
+\end_layout
+
+\begin_layout Standard
+Scalable, open standard, ready to print.
+ Good for publications.
+ R can export directly to this format.
+\end_layout
+
+\begin_layout Subsubsection
+Portable Document Format - PDF
+\end_layout
+
+\begin_layout Standard
+Scalable, open standard, ready to print.
+ R can export directly to this format.
+\end_layout
+
+\begin_layout Subsubsection
+Character Separated Values - CSV
+\end_layout
+
+\begin_layout Standard
+It would be good to write the values used in any table to a CSV file as
+ well for further use.
+\end_layout
+
+\begin_layout Section
+What now
+\end_layout
+
+\begin_layout Standard
+We want to prioritize things that can produce figures and/or look better
+ in R then using Java.
+\end_layout
+
+\begin_layout Subsection
+Priorities
+\end_layout
+
+\begin_layout Enumerate
+Age-specific rates for major diagnosis groups - linear and logaritmic (two
+ of the tables 
+\begin_inset Quotes eld
+\end_inset
+
+not yet implemented
+\begin_inset Quotes erd
+\end_inset
+
+ - see figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Majour-groups--"
+
+\end_inset
+
+.) 
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename analysis1.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Majour-groups--"
+
+\end_inset
+
+Majour groups - log
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Need to specify diagnostic groups.
+ Dynamic? (User definable?)
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+ASR and number of cases in major diagnosis groups in single calendar years
+ of observation (two of the tables 
+\begin_inset Quotes eld
+\end_inset
+
+not yet implemented
+\begin_inset Quotes erd
+\end_inset
+
+ - see figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Cases-per-year"
+
+\end_inset
+
+.) 
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename analysis2.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Cases-per-year"
+
+\end_inset
+
+Cases per year
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Need to specify diagnostic groups.
+ Dynamic? (User definable?)
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Quality indicators in major diagnostic groups (the last of the 
+\begin_inset Quotes eld
+\end_inset
+
+not yet implemented
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Need to specify diagnostic groups.
+ Dynamic? (User definable?)
+\end_layout
+
+\begin_layout Enumerate
+Compared to another reference registry? In the region/world?
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Time trends
 \end_layout
 
 \end_body

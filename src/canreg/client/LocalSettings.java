@@ -546,7 +546,7 @@ public final class LocalSettings {
         String[] foldersToTry = new String[]{
             System.getenv("ProgramFilesW6432") + Globals.FILE_SEPARATOR + "R",
             System.getenv("ProgramFiles") + Globals.FILE_SEPARATOR + "R",
-            System.getenv("ProgramFiles(x86)") + Globals.FILE_SEPARATOR + "R"
+            System.getenv("ProgramFiles(x86)") + Globals.FILE_SEPARATOR + "R"                
         };
         File folder = null;
         for (String folderToTry : foldersToTry) {

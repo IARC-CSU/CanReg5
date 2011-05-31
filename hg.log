@@ -1,5 +1,645 @@
-changeset:   729:ca838f8f229a
+changeset:   857:e7deb1d3f76d
 tag:         tip
+user:        ErvikM@X90164
+date:        Tue May 31 15:02:12 2011 +0200
+summary:     Updated the R tables configuration files and some preview tables.
+
+changeset:   856:0bef6f38c275
+user:        ErvikM@X90164
+date:        Tue May 31 15:01:16 2011 +0200
+summary:     If the user makes a SVG he get only the summary onepage plot.
+
+changeset:   855:e87552dc9664
+user:        ErvikM@X90164
+date:        Tue May 31 15:00:30 2011 +0200
+summary:     Updated the makefile function to set pointsize on the SVG.
+
+changeset:   854:6b31943bc48e
+user:        ErvikM@X90164
+date:        Tue May 31 14:50:11 2011 +0200
+summary:     MakeFile is an R function that sets the R output device. Updated the PNG to use antilaiasing if Cairo can be installed.
+
+changeset:   853:bba3c1fa8258
+user:        ErvikM@X90164
+date:        Tue May 31 14:49:34 2011 +0200
+summary:     R now writes "-outFile:" in front of any file names CanReg should open.
+
+changeset:   852:0e3f0c503326
+user:        ErvikM@X90164
+date:        Tue May 31 14:48:45 2011 +0200
+summary:     Updated R functions.
+
+changeset:   851:cd9705712d26
+user:        ErvikM@X90164
+date:        Tue May 31 14:08:01 2011 +0200
+summary:     RTableBuilders now uses logger to log messages from R.
+
+changeset:   850:295c696b82f1
+user:        ErvikM@X90164
+date:        Tue May 31 14:06:04 2011 +0200
+summary:     Updated the about.html to include Anahita Rahimi.
+
+changeset:   849:47cb1936d5ef
+user:        ErvikM@X90164
+date:        Tue May 31 13:41:13 2011 +0200
+summary:     Improved handling of no filenames returned after building tables.
+
+changeset:   848:9200da02e875
+user:        ErvikM@X90164
+date:        Mon May 30 17:06:54 2011 +0200
+summary:     CheckResult.Missing not displayed.
+
+changeset:   847:38b9c81cb8f9
+user:        ErvikM@X90164
+date:        Mon May 30 15:22:11 2011 +0200
+summary:     Improved the handling of deletion of source records.
+
+changeset:   846:1753a29783aa
+user:        ErvikM@X90164
+date:        Mon May 30 14:18:10 2011 +0200
+summary:     Open backup folder now uses cross platform system calls.
+
+changeset:   845:7b7a78dcaa41
+user:        ErvikM@X90164
+date:        Thu May 26 18:26:27 2011 +0200
+summary:     Updated R table configs.
+
+changeset:   844:a99ebf14ae2a
+user:        ErvikM@X90164
+date:        Thu May 26 18:25:51 2011 +0200
+summary:     Updated R programs.
+
+changeset:   843:3c3fef6fdd3e
+user:        ErvikM@X90164
+date:        Thu May 26 18:00:22 2011 +0200
+summary:     Updated R programs.
+
+changeset:   842:d528cc3f8222
+user:        ErvikM@X90164
+date:        Thu May 26 17:25:03 2011 +0200
+summary:     Slight change in args to R for clarity.
+
+changeset:   841:64f575d03853
+user:        ErvikM@X90164
+date:        Thu May 26 17:24:16 2011 +0200
+summary:     Filter is now cleared in the dictionary element chooser after a selection has been made.
+
+changeset:   840:7fd7246ecf90
+user:        ErvikM@X90164
+date:        Wed May 25 17:59:56 2011 +0200
+summary:     Improved the detection of the R directory.
+
+changeset:   839:94afa18ef04b
+user:        ErvikM@X90164
+date:        Wed May 25 16:12:06 2011 +0200
+summary:     Some helper-functions added to the AgeGroupStructure element.
+
+changeset:   838:160fe3cae0b4
+user:        ErvikM@X90164
+date:        Wed May 25 16:11:33 2011 +0200
+summary:     Sets a link to the world pop instead of an index.
+
+changeset:   837:7c02a0f0046c
+user:        ErvikM@X90164
+date:        Wed May 25 16:10:46 2011 +0200
+summary:     Implemented an exception to handle incompatible population sets.
+
+changeset:   836:12e4dfa91bf0
+user:        ErvikM@X90164
+date:        Wed May 25 16:08:41 2011 +0200
+summary:     Added a r_scripts_parameters argument to the r config files.
+
+changeset:   835:7c8156bcf27d
+user:        ErvikM@X90164
+date:        Wed May 25 16:08:20 2011 +0200
+summary:     Renamed KeyGroupsEnum to KeyCancerGroupsEnum for clarity. Added a r_scripts_parameters argument to the r config files.
+
+changeset:   834:6e61e8678752
+user:        ErvikM@X90164
+date:        Wed May 25 16:07:30 2011 +0200
+summary:     Renamed KeyGroupsEnum to KeyCancerGroupsEnum for clarity.
+
+changeset:   833:5a53c3c76c91
+user:        ErvikM@X90164
+date:        Wed May 25 16:03:22 2011 +0200
+summary:     The population dataset can now return the reference population for any age group.
+
+changeset:   832:c272b48ad3d3
+user:        ErvikM@X90164
+date:        Wed May 25 16:02:11 2011 +0200
+summary:     Write pops to file now also adds reference population...
+
+changeset:   831:193d24aeaa36
+user:        ErvikM@X90164
+date:        Wed May 25 14:27:11 2011 +0200
+summary:     Sets a link to the world pop instead of an index.
+
+changeset:   830:d039c5208be3
+user:        ErvikM@X90164
+date:        Tue May 24 10:02:37 2011 +0200
+summary:     R programs updated.
+
+changeset:   829:93f8e517e86a
+user:        ErvikM@X90164
+date:        Tue May 24 10:01:20 2011 +0200
+summary:     R programs updated.
+
+changeset:   828:5fdc323dbe7f
+user:        ErvikM@X90164
+date:        Tue May 24 09:58:48 2011 +0200
+summary:     Mouse pointer also returns to normal if you view the charts in the built in chartviewer...
+
+changeset:   827:0cc3cb84e593
+user:        ErvikM@X90164
+date:        Mon May 23 18:17:28 2011 +0200
+summary:     TableBuilderInternalFrame can now call HTML writers.
+
+changeset:   826:de3b91c732c7
+user:        ErvikM@X90164
+date:        Mon May 23 15:53:44 2011 +0200
+summary:     Tidied some code.
+
+changeset:   825:37040e2b02ff
+user:        ErvikM@X90164
+date:        Mon May 23 15:06:28 2011 +0200
+summary:     PDS editor now displays male blue and women red.
+
+changeset:   824:659ede1240d1
+user:        ErvikM@X90164
+date:        Mon May 23 15:05:52 2011 +0200
+summary:     CanReg chart viewer implemented. Tables supporting this can be previewed directly in CanReg.
+
+changeset:   823:a58f54222091
+user:        ErvikM@X90164
+date:        Mon May 23 14:14:17 2011 +0200
+summary:     View work files now uses platform independent system calls to open the folder view.
+
+changeset:   822:dbfb38491148
+user:        ErvikM@X90164
+date:        Mon May 23 11:59:22 2011 +0200
+summary:     Implemented a system to copy graphics from (and to) CanReg.
+
+changeset:   821:c2a130e85812
+user:        ErvikM@X90164
+date:        Mon May 23 11:59:03 2011 +0200
+summary:     Implemented a system to copy graphics from (and to) CanReg.
+
+changeset:   820:07e95851ad1f
+user:        ErvikM@X90164
+date:        Mon May 23 11:56:23 2011 +0200
+summary:     PopPyramid now allows editing of the chart and printing using the ChartPanel from JFreeChart with my added SVG writer using Batik.
+
+changeset:   819:3e8bb895a438
+user:        ErvikM@X90164
+date:        Mon May 23 11:11:58 2011 +0200
+summary:     PopPyramid can now be saved as SVG or copied to clipboard directly from the editor.
+
+changeset:   818:b55ed6d41026
+user:        ervikm@X90164
+date:        Fri May 20 17:53:19 2011 +0200
+summary:     Added SVG writer.
+
+changeset:   817:f66bd930c642
+user:        ervikm@X90164
+date:        Fri May 20 17:52:51 2011 +0200
+summary:     PieChart improved.
+
+changeset:   816:4d8e8379acbe
+user:        ervikm@X90164
+date:        Fri May 20 17:49:57 2011 +0200
+summary:     Added underscore to a variable name and codes to define what sites are for male/female.
+
+changeset:   815:7c2520cbd787
+user:        ervikm@X90164
+date:        Fri May 20 17:16:05 2011 +0200
+summary:     Added the preview image of the top 10 pie.
+
+changeset:   814:e38bdd5844b3
+user:        ervikm@X90164
+date:        Fri May 20 17:14:46 2011 +0200
+summary:     Updated the preview image.
+
+changeset:   813:b8a92ceb7d4e
+user:        ervikm@X90164
+date:        Fri May 20 17:14:21 2011 +0200
+summary:     Top10 pie chart created excluding C44.
+
+changeset:   812:79131b3b1c42
+user:        ervikm@X90164
+date:        Fri May 20 17:13:16 2011 +0200
+summary:     R can generate svg, ps and wmf as well.
+
+changeset:   811:278f1ed61b4b
+user:        ervikm@X90164
+date:        Fri May 20 17:12:39 2011 +0200
+summary:     AgeSpecific rates now call R functions.
+
+changeset:   810:4095d11ff6c6
+user:        ervikm@X90164
+date:        Fri May 20 17:11:31 2011 +0200
+summary:     A working set of R programs again.
+
+changeset:   809:5d2768f1f3a1
+user:        ervikm@X90164
+date:        Fri May 20 14:17:14 2011 +0200
+summary:     PDSentry: change the order of the fields in getStringRepresentation().
+
+changeset:   808:87bd4dfa0afb
+user:        ervikm@X90164
+date:        Fri May 20 14:16:26 2011 +0200
+summary:     Fixed a bug where the age group labels would not be generated for some instances of AgeGroupStructure.
+
+changeset:   807:2a71fd88a879
+user:        ervikm@X90164
+date:        Fri May 20 10:29:56 2011 +0200
+summary:     Added a tool to rescale the preview of the table in the table builder.
+
+changeset:   806:50744c9f32f8
+user:        ervikm@X90164
+date:        Fri May 20 10:28:26 2011 +0200
+summary:     TableBuilders now also throw a TableErrorException.
+
+changeset:   805:e1de7fee310a
+user:        ervikm@X90164
+date:        Fri May 20 10:28:19 2011 +0200
+summary:     TableBuilders now also throw a TableErrorException.
+
+changeset:   804:6a8831fe3e58
+user:        ervikm@X90164
+date:        Fri May 20 10:26:30 2011 +0200
+summary:     Refactored some code. Fixed some bugs. Added a all sites but skin option.
+
+changeset:   803:d672e9951a6a
+user:        ervikm@X90164
+date:        Fri May 20 10:25:53 2011 +0200
+summary:     Refactored some code. Fixed some bugs.
+
+changeset:   802:1697373cadbb
+user:        ervikm@X90164
+date:        Thu May 19 09:45:55 2011 +0200
+summary:     Removed debug information and improved handling of unopenable files.
+
+changeset:   801:2a84adfab468
+user:        ervikm@X90164
+date:        Wed May 18 17:30:25 2011 +0200
+summary:     Tidied some code.
+
+changeset:   800:89ccb2e0fc97
+user:        ervikm@X90164
+date:        Wed May 18 17:30:08 2011 +0200
+summary:     Moved functionality to EditorialTableTools.
+
+changeset:   799:ef5e89989fcc
+user:        ervikm@X90164
+date:        Wed May 18 17:29:16 2011 +0200
+summary:     Uses built in standard call instead of looking through a list...
+
+changeset:   798:1392e03b21c5
+user:        ervikm@X90164
+date:        Wed May 18 17:28:13 2011 +0200
+summary:     TableBuidlerInterface: added wmf and svg as filetypes.
+
+changeset:   797:32bd63869b35
+user:        ervikm@X90164
+date:        Wed May 18 17:27:29 2011 +0200
+summary:     Renamed file.
+
+changeset:   796:18aa63c24000
+user:        ervikm@X90164
+date:        Wed May 18 17:26:48 2011 +0200
+summary:     TableBuilderInternalFrame: user can now write many different file formats depending on what the various table builders support.
+
+changeset:   795:b694a58cf21a
+user:        ervikm@X90164
+date:        Wed May 18 17:24:06 2011 +0200
+summary:     TableBuilderInternalFrame: user can now write many different file formats depending on what the various table builders support.
+
+changeset:   794:484fe7b1b39d
+user:        ervikm@X90164
+date:        Wed May 18 17:22:08 2011 +0200
+summary:     Tidied some code.
+
+changeset:   793:c384f3cc85cb
+user:        ervikm@X90164
+date:        Wed May 18 17:21:17 2011 +0200
+summary:     Implemented functinality to get a string representation of a population data set to, for example, be written to file.
+
+changeset:   792:ba2f34e517df
+user:        ervikm@X90164
+date:        Wed May 18 17:16:42 2011 +0200
+summary:     Implemented automatic detection of (one of the) user's R installations.
+
+changeset:   791:e76902c1b895
+user:        ervikm@X90164
+date:        Wed May 18 17:12:41 2011 +0200
+summary:     Path to R installation added to the Options Pane.
+
+changeset:   790:f7806a607b18
+user:        ervikm@X90164
+date:        Wed May 18 17:12:20 2011 +0200
+summary:     common.Tools: better handling of null pointers.
+
+changeset:   789:243b186aee5e
+user:        ervikm@X90164
+date:        Wed May 18 17:11:36 2011 +0200
+summary:     Aknowledgements added to the about.html.
+
+changeset:   788:d9d835e43e4d
+user:        ervikm@X90164
+date:        Wed May 18 17:10:42 2011 +0200
+summary:     DatabaseIndexListElement: better handling of null pointers.
+
+changeset:   787:079412d1703d
+user:        ervikm@X90164
+date:        Wed May 18 17:09:48 2011 +0200
+summary:     Path to R installation added to the Options Pane.
+
+changeset:   786:2af20997d4b2
+user:        ervikm@X90164
+date:        Wed May 18 16:30:19 2011 +0200
+summary:     First draft of the R programs that work.
+
+changeset:   785:957db1a4eb9f
+user:        ervikm@X90164
+date:        Wed May 18 15:12:22 2011 +0200
+summary:     Implemented a tools class to group useful functionality for the table builders.
+
+changeset:   784:075fef47bb2c
+user:        ervikm@X90164
+date:        Wed May 18 15:09:11 2011 +0200
+summary:     Fixed some bugs in the population pyramid where totals showed up as 0s and the population name contained the name of one year of the population data set.
+
+changeset:   783:3a25f1920b2b
+user:        ervikm@X90164
+date:        Wed May 18 14:55:39 2011 +0200
+summary:     Updated dummy R program.
+
+changeset:   782:15fbafb94087
+user:        ervikm@X90164
+date:        Wed May 18 14:54:59 2011 +0200
+summary:     Added a dummy table configuration to test R calls.
+
+changeset:   781:ff2be4699e85
+user:        ervikm@X90164
+date:        Wed May 18 11:24:48 2011 +0200
+summary:     Moved some of the functions from the AbstractEditorialTableBuilder to a EditorialTableTools for use by other classes.
+
+changeset:   780:72d1f9f0c63e
+user:        ervikm@X90164
+date:        Wed May 18 11:24:03 2011 +0200
+summary:     Created a TableBuilderFactory to encapsulate the definitions of the various table builders.
+
+changeset:   779:ed4f7077aa67
+user:        ervikm@X90164
+date:        Wed May 18 11:23:31 2011 +0200
+summary:     Simplified the TableBuilderInterface.
+
+changeset:   778:d7b127151f1b
+user:        ervikm@X90164
+date:        Wed May 18 11:21:41 2011 +0200
+summary:     Implemented a table builder that calls R with cancer groups as specified by the user.
+
+changeset:   777:61e8df2093b6
+user:        ervikm@X90164
+date:        Wed May 18 11:21:16 2011 +0200
+summary:     Implemented a table builder that calls R with any user specified standard variables.
+
+changeset:   776:dd732bda74c8
+user:        ervikm@X90164
+date:        Tue May 17 16:07:05 2011 +0200
+summary:     Improved exception handling of distrubuted table data sources.
+
+changeset:   775:e38abb7d6664
+user:        ervikm@X90164
+date:        Mon May 16 18:59:31 2011 +0200
+summary:     A small R program to test integration with CanReg.
+
+changeset:   774:5b4c3235f78c
+user:        ervikm@X90164
+date:        Mon May 16 14:57:03 2011 +0200
+summary:     Implemented a simple pie chart of 10 most common cancers.
+
+changeset:   773:095634d007bd
+user:        ervikm@X90164
+date:        Thu May 12 15:54:15 2011 +0200
+summary:     Updated the copyright information in the source files.
+
+changeset:   772:1c169db64067
+user:        ervikm@X90164
+date:        Thu May 12 15:15:17 2011 +0200
+summary:     Improved the database garbler...
+
+changeset:   771:2c04b3973167
+user:        ervikm@X90164
+date:        Thu May 12 15:14:35 2011 +0200
+summary:     Improved the way ranges are handled. Created tools to create primary and foreign keys.
+
+changeset:   770:2b5502909e95
+user:        ervikm@X90164
+date:        Thu May 12 15:13:09 2011 +0200
+summary:     Added code to migrate the database to 5.00.06 - add foreign keys etc.
+
+changeset:   769:4a4f3c71f250
+user:        ervikm@X90164
+date:        Thu May 12 15:12:41 2011 +0200
+summary:     Fixed a bug where a resultset was not closed properly, added functionality to create indexes and keys in a database.
+
+changeset:   768:4d6ac91ef92e
+user:        ervikm@X90164
+date:        Thu May 12 15:10:46 2011 +0200
+summary:     Improved readability of the code.
+
+changeset:   767:7f1490122d06
+user:        ervikm@X90164
+date:        Thu May 12 15:10:12 2011 +0200
+summary:     Refactored some code - moved common things from .server to .common.
+
+changeset:   766:f3b4e6601e90
+user:        ervikm@X90164
+date:        Thu May 12 15:09:32 2011 +0200
+summary:     Implemented a set of tools to translate between coding schemes.
+
+changeset:   765:2ec3bd9ca0fe
+user:        ervikm@X90164
+date:        Thu May 12 15:09:14 2011 +0200
+summary:     You can now join all 3 tables in the browse/export/frequency tools.
+
+changeset:   764:1f739cce88fb
+user:        ervikm@X90164
+date:        Thu May 12 15:06:58 2011 +0200
+summary:     Refactored some code - moved common things from .server to .common.
+
+changeset:   763:26f4ff10e774
+user:        ervikm@X90164
+date:        Thu May 12 15:06:11 2011 +0200
+summary:     Added more variables to the import options.
+
+changeset:   762:316c587f406a
+user:        ervikm@X90164
+date:        Thu May 12 15:05:33 2011 +0200
+summary:     Improved error messages when filters are incorrect.
+
+changeset:   761:91a1aebcb44d
+user:        ervikm@X90164
+date:        Thu May 12 15:04:37 2011 +0200
+summary:     - Range can now be formed by any variables that is included in an index.
+
+changeset:   760:07c40c172831
+user:        ervikm@X90164
+date:        Thu May 12 15:03:06 2011 +0200
+summary:     Refactored some code - moved common things from .server to .common. Removed some legacy code.
+
+changeset:   759:5923279a70e4
+user:        ervikm@X90164
+date:        Thu May 12 15:01:19 2011 +0200
+summary:     Refactored some code - moved common things from .server to .common.
+
+changeset:   758:750ec7387e7f
+user:        ervikm@X90164
+date:        Thu May 12 14:50:55 2011 +0200
+summary:     Refactored some code - moved common things from .server to .common.
+
+changeset:   757:8ca7ba5319d5
+user:        ervikm@X90164
+date:        Thu May 12 14:50:39 2011 +0200
+summary:     Refactored some code - moved common things from .server to .common.
+
+changeset:   756:d6477ad050d9
+user:        ervikm@X90164
+date:        Thu May 12 14:46:23 2011 +0200
+summary:     Refactored some code - moved common things from .server to .common.
+
+changeset:   755:fd1846ad6f12
+user:        ervikm@X90164
+date:        Thu May 12 14:45:53 2011 +0200
+summary:     Refactored some code - moved common things from .server to .common.
+
+changeset:   754:2be5db6bc892
+user:        ervikm@X90164
+date:        Thu May 12 14:27:50 2011 +0200
+summary:     Added more variables to the import options.
+
+changeset:   753:61e08ea45ce2
+user:        ervikm@X90164
+date:        Thu May 12 14:27:18 2011 +0200
+summary:     Refactored some code - moved common things from .server to .common.
+
+changeset:   752:5ecd2aa1b9dd
+user:        ervikm@X90164
+date:        Thu May 12 14:26:53 2011 +0200
+summary:     Implemented a set of tools to translate between coding schemes.
+
+changeset:   751:a52923dc109c
+user:        ervikm@X90164
+date:        Thu May 12 12:05:35 2011 +0200
+summary:     Import:
+
+changeset:   750:20f69c5ee272
+user:        ervikm@X90164
+date:        Wed May 11 10:19:05 2011 +0200
+summary:     Improved the handling of sources during export.
+
+changeset:   749:a8eabc0b2632
+user:        ervikm@X90164
+date:        Wed May 11 10:17:28 2011 +0200
+summary:     FastFilter now clears the filter if user changes dictionary...
+
+changeset:   748:c77f6c6becbb
+user:        ervikm@X90164
+date:        Tue May 10 15:27:23 2011 +0200
+summary:     Refactored some code - moved common things from .server to .common.
+
+changeset:   747:dda66592d948
+user:        ervikm@X90164
+date:        Tue May 10 15:27:04 2011 +0200
+summary:     Refactored some code - moved common things from .server to .common.
+
+changeset:   746:4589fc1bc20e
+user:        ervikm@X90164
+date:        Tue May 10 15:25:51 2011 +0200
+summary:     Refactored some code - moved common things from .server to .common.
+
+changeset:   745:626616c29867
+user:        ervikm@X90164
+date:        Tue May 10 15:23:23 2011 +0200
+summary:     Refactored some code - moved common things from .server to .common.
+
+changeset:   744:4a419303553e
+user:        ervikm@X90164
+date:        Tue May 10 15:21:45 2011 +0200
+summary:     Refactored some code - moved common things from .server to .common.
+
+changeset:   743:f96079d53ffb
+user:        ervikm@X90164
+date:        Mon May 09 16:14:01 2011 +0200
+summary:     Fixed an off by one error in the database garbler...
+
+changeset:   742:218f63d4a1c2
+user:        ervikm@X90164
+date:        Mon May 09 16:09:36 2011 +0200
+summary:     More indexes in the source table added.
+
+changeset:   741:9779f56a9777
+user:        ervikm@X90164
+date:        Mon May 09 16:07:51 2011 +0200
+summary:     Tidied some code.
+
+changeset:   740:a971e42f4796
+user:        ervikm@X90164
+date:        Mon May 09 16:04:06 2011 +0200
+summary:     Added a Translation system for users that has different coding schemes.
+
+changeset:   739:f3ea3afec8d1
+user:        ervikm@X90164
+date:        Mon May 09 15:30:07 2011 +0200
+summary:     Removed some debugging messages.
+
+changeset:   738:5cea58e8b012
+user:        ervikm@X90164
+date:        Mon May 09 11:53:41 2011 +0200
+summary:     TableBuilder: fixed a bug where pending cases would show up in some of the tables, improved the performance of the filter.
+
+changeset:   737:b7ebcbcde369
+user:        ervikm@X90164
+date:        Fri May 06 16:21:24 2011 +0200
+summary:     Check Topo/morpho no longer breaks down if Morpho don't have a 4 digit code, but rather returns an error message.
+
+changeset:   736:c026ac0c5d63
+user:        ervikm@X90164
+date:        Fri May 06 15:12:42 2011 +0200
+summary:     Password now kept as char array through the entire login process.
+
+changeset:   735:c7e333b25abd
+user:        ervikm@X70245.iarc.lan
+date:        Fri May 06 14:55:49 2011 +0200
+summary:     Using stringbuilders in CanRegDAO.
+
+changeset:   734:494b398b53b0
+user:        ervikm@X70245.iarc.lan
+date:        Fri Apr 29 19:44:04 2011 +0200
+summary:     Use this package's lookuploader not the one in IARCtools... yet...
+
+changeset:   733:2208f54f0c5e
+user:        ervikm@X90164
+date:        Tue Apr 26 17:38:19 2011 +0200
+summary:     Special characters no longer show up in ICD10 codes.
+
+changeset:   732:b740f209f6de
+user:        ervikm@X90164
+date:        Tue Apr 26 17:14:24 2011 +0200
+summary:     Comments now removed during reading of lookup file.
+
+changeset:   731:b4c4c3d0caff
+user:        ervikm@X90164
+date:        Tue Apr 26 16:53:35 2011 +0200
+summary:     Fixed  a bug where comments in the ICD03to10 lookup file caused problems.
+
+changeset:   730:6c09d17b2c92
+user:        ervikm@X90164
+date:        Tue Apr 26 16:03:18 2011 +0200
+summary:     5.00.05
+
+changeset:   729:ca838f8f229a
 user:        ervikm@X90164
 date:        Thu Apr 21 10:16:34 2011 +0200
 summary:     Fixed a bug in a icon name in the Spanish translation.

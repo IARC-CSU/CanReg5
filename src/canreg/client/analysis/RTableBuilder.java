@@ -181,8 +181,11 @@ public class RTableBuilder implements TableBuilderInterface {
                     // System.out.println(theString);  
                     // and add all to the list of files to return
                     for (String fileName : theString.split("\n")) {
-                        if (new File(fileName).exists()) {
-                            filesCreated.add(fileName);
+                        if (fileName.startsWith("-outFile:")) {
+                            fileName = fileName.replaceFirst("-outFile:", "");
+                            if (new File(fileName).exists()) {
+                                filesCreated.add(fileName);
+                            }
                         }
                     }
                 } catch (InterruptedException ex) {

@@ -10,3 +10,8 @@
 ^doc/CanReg5-Instructions\.zip$
 ^doc/CanReg5-Instructions\.pdf$
 ^changelog\.txt\.bak$
+^conf/tables/r/test\.r\.bak$
+^conf/tables/AgeSpecificRatesLinear\.conf\.bak$
+^conf/tables/AgeSpecificRatesLinearAll\.conf\.bak$
+^conf/tables/AgeSpecificRatesLogaritmic\.conf\.bak$
+^conf/tables/r/makeFile\.R\.bak$
