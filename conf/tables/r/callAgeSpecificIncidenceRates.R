@@ -1,31 +1,12 @@
-#remove(list = ls())
-
-#source("C:/Documents and Settings/CinUser/My Documents/Anahita/Rcode/callAgeSpecificIncidenceRates.R")
-#callAgeSpecificIncidenceRates(c("-ft=pdf", "-war=C:/Documents and Settings/CinUser/My Documents/Anahita/outscript/warning.txt", "-out=C:/Documents and Settings/CinUser/My Documents/Anahita/outscript/test", "-pop=C:/Documents and Settings/CinUser/My Documents/Anahita/Testfiles/pop1404377193814741326.tsv", "-inc=C:/Documents and Settings/CinUser/My Documents/Anahita/Testfiles/inc5404848408254658419.tsv", "-logr"))
-#callAgeSpecificIncidenceRates(c("-ft=pdf", "-out=C:/Documents and Settings/CinUser/My Documents/Anahita/outscript/test", "-pop=C:/Documents and Settings/CinUser/My Documents/Anahita/Testfiles/pop1404377193814741326.tsv", "-inc=C:/Documents and Settings/CinUser/My Documents/Anahita/Testfiles/inc5404848408254658419.tsv"))
-
-
-
-############################################################# 
-#callAgeSpecificIncidenceRates <- function(Args){
-############################################################# 
-
-############################################################# 
 Args <- commandArgs(TRUE)
-#############################################################
 
-# Find the directory of the script
-
-#############################################################
+## Find directory of script
 initial.options <- commandArgs(trailingOnly = FALSE)
 file.arg.name <- "--file="
 script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
 script.basename <- dirname(script.name)
-#############################################################
-#script.basename <- dirname("C:/Documents and Settings/CinUser/My Documents/Anahita/Rcode/hei")
-##############################################################
 
-## Load dependencies
+##Load dependencies
 source(paste(sep="/", script.basename, "figure_AgeSpecificIncidenceRates.R"))
 source(paste(sep="/", script.basename, "subsetSex.R"))	
 source(paste(sep="/", script.basename, "mergePeriods.R"))
@@ -35,81 +16,58 @@ source(paste(sep="/", script.basename, "plotAgeSpecIncRates.R"))
 source(paste(sep="/", script.basename, "plotLogAgeSpecIncRates.r"))
 source(paste(sep="/", script.basename, "makeTable.R"))
 source(paste(sep="/", script.basename, "checkArgs.R"))
-source(paste(sep="/", script.basename, "load.fun.R"))
-##
-
-## helper-function
-is.installed <- function(mypkg) is.element(mypkg, installed.packages()[,1]) 
-##
-
-
+source(paste(sep="/", script.basename, "load.fun.R")) # makeFile needs this
+source(paste(sep="/", script.basename, "makeFile.R"))
 
 ##OutFile
 out <- checkArgs(Args, "-out")
 
-
 fileType <- checkArgs(Args, "-ft")
 
+##If fileType is "txt" or "html" tables will be built
 if(fileType %in% c("txt", "html")){
-filename <- paste(out, ".", sep = "" )
-filename <- paste(filename, fileType, sep = "" )
-plotTables <- TRUE
+	filename <- paste(out, ".", sep = "" )
+	filename <- paste(filename, fileType, sep = "" )
+	plotTables <- TRUE
 }else{
-plotTables <- FALSE
-outFile <- "noFile"
+	plotTables <- FALSE
+	outFile <- "noFile"
 }
 
-
+##If tables should not be built, figures will be made
 if(!plotTables){
-	if (fileType == "png") {
-		filename <- paste( out, "%03d.png", sep = "" )
-		print(paste( out, "001.png", sep = "" ))
-		png(file=filename, bg="transparent")
-	} else if (fileType == "pdf") { 
-		filename <- paste( out, ".pdf" , sep = "")
-		pdf(file=filename) 	
-	} else if (fileType == "ps") { 
-		filename <- paste( out, ".ps" , sep = "")
-		postscript(file=filename, onefile = TRUE) 
-	} else if (fileType == "html") { 
-		filename <- paste( out, ".html" , sep = "")
-	} else if (fileType == "wmf") { 
-		# This only works on windows
-		filename <- paste( out, ".wmf" , sep = "")
-		win.metafile(file=filename) 
-	} else { 
-		# defaults to pdf
-		filename <- paste(out, ".pdf" , sep = "")
-		pdf(file=filename) 
-	}
-}#End if !plotTables
 
-	##Incidence file
-	fileInc <- checkArgs(Args, "-inc")
-	dataInc <- read.table(fileInc, header=TRUE)
+	filename <- makeFile(out, fileType)
 	
-	##Population file
-	filePop <- checkArgs(Args, "-pop")
-	dataPop <- read.table(filePop, header=TRUE)
+}##End if !plotTables
+
+##Incidence file
+fileInc <- checkArgs(Args, "-inc")
+dataInc <- read.table(fileInc, header=TRUE)
 	
+##Population file
+filePop <- checkArgs(Args, "-pop")
+dataPop <- read.table(filePop, header=TRUE)
 
-	##If plot all the graphs in one window
-	plotOnePage <- checkArgs(Args, "-onePage")
-
-	##The variable logr has to be declared as TRUE/FALSE wether or not the users wants figures with log rates
-	logr <- checkArgs(Args, "-logr")
+##If (plot all figures in one window) with the following row and col numbers to split the page
+plotOnePage <- checkArgs(Args, "-onePage")
 	
+if(!(plotOnePage == FALSE)){
+	onePageRow <- as.numeric(strsplit(plotOnePage, split = "x")[[1]][1])
+	onePageCol <- as.numeric(strsplit(plotOnePage, split = "x")[[1]][2])
+	plotOnePage <-  TRUE
+}
 
+##If variable "-logr" is given as an argument, rates are given on log-scale
+logr <- checkArgs(Args, "-logr")
 
 if(plotOnePage){	
-	op <-	par(mfrow = c(4, 3), oma=c(1, 1, 1, 1))
-	#split.screen(c(3, 3))
+	op <-	par(mfrow = c(onePageRow, onePageCol), oma=c(1, 1, 1, 1))
 }
 
 ##WarningFile - file for warning messages
 warningFile <-  paste(out, "WARNING", sep = "")
 warningFile <-  paste(warningFile, ".txt", sep = "")
-
 
 figure_AgeSpecificIncidenceRates(dataInc, dataPop, logr, plotOnePage, filename, warningFile, plotTables, fileType)
 	
@@ -118,19 +76,9 @@ if(plotOnePage){
 	figure_AgeSpecificIncidenceRates(dataInc, dataPop, logr, plotOnePage = FALSE, filename, warningFile, plotTables, fileType)
 }
 
-
-#if(!plotTables){
+if(!plotTables){
 dev.off()
-#}
+}
 
-# write the name of any file created by R to out
-cat(filename)
-
-# cat("\n")
-# cat(Args[3])
-# cat("\n")
-# cat(Args[4])
-
-############################################################# 
-#}#End function
-############################################################# 
+##Write the name the file created by R to out
+cat(paste("-outFile",filename,sep=":"))
