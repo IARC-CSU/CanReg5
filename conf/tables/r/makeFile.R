@@ -32,12 +32,12 @@ if (fileType == "png") {
 	} else if (fileType == "svg") { 
 		filename <- paste( out, ".svg", sep = "" )
 		# SVG needs the Cairo/RSvgDevice library installed
-                # Using Cairo for now
+                # Using Cairo for now http://cran.r-project.org/web/packages/Cairo/Cairo.pdf
 		if(!is.installed("Cairo")) {
                     load.fun("Cairo")
 		}
 		require(Cairo)
-		CairoSVG(file=filename)
+		CairoSVG(file=filename, pointsize = 12)
 	} else if (fileType == "wmf") { 
 		# This only works on windows
 		filename <- paste( out, ".wmf" , sep = "")
