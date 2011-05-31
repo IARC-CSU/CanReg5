@@ -1,6 +1,6 @@
 mergePeriods <- function(data, popOrInc, nrOfAgeGroups){
 
-#What are the specific periods
+##Periods given in file
 periods <- levels(as.factor(data$YEAR))
 nrOfPeriods <- length(periods)
 
@@ -13,7 +13,7 @@ period1 <- periods[1]
 		timePeriod <- paste(period1, "-", period2)
 	}#End if else period1=period2
 	
-#Number of colomns and rows 
+#Number of cols and rows 
 nrCol <- ncol(data)
 nrRow <- nrOfAgeGroups
 
@@ -25,46 +25,41 @@ newData$SEX <- data$SEX[1]
 newData$AGE_GROUP <- c(0:(nrOfAgeGroups-1))
 
 	if(popOrInc=="Inc"){
-	newData$ICD10GROUP <- data$ICD10GROUP[1]
-	newData$SEX <- data$SEX[1]
-	newData$ICD10GROUPLABEL <- data$ICD10GROUPLABEL[1]
+		newData$ICD10GROUP <- data$ICD10GROUP[1]
+		newData$SEX <- data$SEX[1]
+		newData$ICD10GROUPLABEL <- data$ICD10GROUPLABEL[1]
 	}else{
-	newData$AGE_GROUP_LABEL <- as.vector(data$AGE_GROUP_LABEL[1:nrOfAgeGroups])
-	
+		newData$AGE_GROUP_LABEL <- as.vector(data$AGE_GROUP_LABEL[1:nrOfAgeGroups])
 	}
+
+	for(i in 0:(nrOfAgeGroups-1)){
+
+	tempData <- subset(data, data$AGE_GROUP == i)
+
 	
-
-#The number of ageGroups should be 0-16 representing 5 year intervals 0-4, 5-9, ..., 80+ 
-for(i in 0:(nrOfAgeGroups-1)){
-
-tempData <- subset(data, data$AGE_GROUP == i)
-
-	#Make sure there are cases for the specific agegroup
-	#if not the nr. of cases are given a value 0
+	##If no cases, the nr. of cases are given a value 0
 	if(popOrInc == "Inc"){
 	
-	if(!is.na(sum(tempData$CASES[tempData$AGE_GROUP == i]))){	
+		if(!is.na(sum(tempData$CASES[tempData$AGE_GROUP == i]))){	
 
-	newNrCases <- sum(tempData$CASES)
-	newData$CASES[i+1] <- newNrCases 
+			newNrCases <- sum(tempData$CASES)	
+			newData$CASES[i+1] <- newNrCases 
 
-	}else {
+		}else {
 
-		newData$COUNT[i+1] <- 0
+			newData$COUNT[i+1] <- 0
 
-	}#end if is.na(sum..
+		}#end if is.na(sum..
 	
 	}else if(popOrInc == "Pop"){
 
 	newNrCounts <- sum(tempData$COUNT)
 	newData$COUNT[i+1] <- newNrCounts
 
-	}#End if, popOrInc
+	}##End if, popOrInc
 
-	
-
-}#End for age
+}##End for age
 
 return(newData)
 
-}#End funtion
+}##End funtion

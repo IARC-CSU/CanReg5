@@ -1,38 +1,32 @@
-#checkArgs(c("-out=C:/Documents and Settings/CinUser/My Documents/Anahita/outscript/test", "-pop=C:/Documents and Settings/CinUser/My Documents/Anahita/Testfiles/pop1404377193814741326.tsv", "-inc=C:/Documents and Settings/CinUser/My Documents/Anahita/Testfiles/inc5404848408254658419.tsv", "-logr"), "-ft")
- 
-
+##Function checks if varibale is given as an argument
 checkArgs <- function(Args, variable){
 
-		##length of variable name
-		lengthVariable <- nchar(variable)
+##Length of variable name
+lengthVariable <- nchar(variable)
 		
-		if(variable %in% substr(Args, 1, lengthVariable)){ 
+if(variable %in% substr(Args, 1, lengthVariable)){ 
 
-	if(variable %in% c("-logr", "-onePage")){
-
+	if(variable %in% c("-logr")){
 			return(as.logical(TRUE))
-	
 	}else{
-		whichArgs <- which(substr(Args, 1, lengthVariable) == variable)
-		##print(substring( Args[whichArgs], (lengthVariable+2), nchar(Args[whichArgs]) ))
-		return(substring( Args[whichArgs], (lengthVariable+2), nchar(Args[whichArgs]) ))
+			whichArgs <- which(substr(Args, 1, lengthVariable) == variable)
 		
-	}#end if "logr", "onePage"
-	
-	
-		}else{
-	
-			if(variable == "-ft"){
+			return(substring( Args[whichArgs], (lengthVariable+2), nchar(Args[whichArgs]) ))
 		
-			return("pdf")
+	}#end else
+		
+}else{
+	
+	if(variable == "-ft"){
+		
+		return("pdf")
 
-		}else{
+	}else{
 			
-			return(as.logical(FALSE))
+		return(as.logical(FALSE))
 
-		}
+	}
 	
-		}#End if, else
-
+}#End if, else
 
 }#End function
