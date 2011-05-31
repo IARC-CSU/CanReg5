@@ -298,14 +298,14 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                         pr.waitFor();
                         // convert the output to a string
                         String theString = convertStreamToString(is);
-
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
+                        // System.out.println(theString);             
                         // and add all to the list of files to return
                         for (String fileName : theString.split("\n")) {
                             if (new File(fileName).exists()) {
                                 filesCreated.add(fileName);
                             }
                         }
-                        System.out.println(theString);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (java.util.NoSuchElementException ex) {
