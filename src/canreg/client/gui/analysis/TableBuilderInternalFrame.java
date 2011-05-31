@@ -322,8 +322,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(previewLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
-                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE))
+                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -415,7 +415,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(numberOfYearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(warningLabel)
-                .addContainerGap(284, Short.MAX_VALUE))
+                .addContainerGap(288, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("rangePanel.TabConstraints.tabTitle"), rangePanel); // NOI18N
@@ -449,7 +449,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -476,7 +476,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(filterPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
+                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -487,6 +487,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(TableBuilderInternalFrame.class, this);
         postScriptButton.setAction(actionMap.get("generatePStable")); // NOI18N
         postScriptButton.setText(resourceMap.getString("postScriptButton.text")); // NOI18N
+        postScriptButton.setToolTipText(resourceMap.getString("postScriptButton.toolTipText")); // NOI18N
         postScriptButton.setName("postScriptButton"); // NOI18N
         postScriptButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -496,6 +497,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         tabulatedButton.setAction(actionMap.get("generateTabulatedTables")); // NOI18N
         tabulatedButton.setText(resourceMap.getString("tabulatedButton.text")); // NOI18N
+        tabulatedButton.setToolTipText(resourceMap.getString("tabulatedButton.toolTipText")); // NOI18N
         tabulatedButton.setName("tabulatedButton"); // NOI18N
 
         headerOfTableLabel.setText(resourceMap.getString("headerOfTableLabel.text")); // NOI18N
@@ -514,10 +516,12 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         imageButton.setAction(actionMap.get("generatePNGTable")); // NOI18N
         imageButton.setText(resourceMap.getString("imageButton.text")); // NOI18N
+        imageButton.setToolTipText(resourceMap.getString("imageButton.toolTipText")); // NOI18N
         imageButton.setName("imageButton"); // NOI18N
 
         pdfButton.setAction(actionMap.get("generatePDFtable")); // NOI18N
         pdfButton.setText(resourceMap.getString("pdfButton.text")); // NOI18N
+        pdfButton.setToolTipText(resourceMap.getString("pdfButton.toolTipText")); // NOI18N
         pdfButton.setName("pdfButton"); // NOI18N
         pdfButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -527,6 +531,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         svgButton.setAction(actionMap.get("generateSVGFile")); // NOI18N
         svgButton.setText(resourceMap.getString("svgButton.text")); // NOI18N
+        svgButton.setToolTipText(resourceMap.getString("svgButton.toolTipText")); // NOI18N
         svgButton.setName("svgButton"); // NOI18N
         svgButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -536,6 +541,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         wmfButton.setAction(actionMap.get("generateWMFAction")); // NOI18N
         wmfButton.setText(resourceMap.getString("wmfButton.text")); // NOI18N
+        wmfButton.setToolTipText(resourceMap.getString("wmfButton.toolTipText")); // NOI18N
         wmfButton.setName("wmfButton"); // NOI18N
         wmfButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -545,6 +551,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         chartViewerButton.setAction(actionMap.get("openInChartViewer")); // NOI18N
         chartViewerButton.setText(resourceMap.getString("chartViewerButton.text")); // NOI18N
+        chartViewerButton.setToolTipText(resourceMap.getString("chartViewerButton.toolTipText")); // NOI18N
         chartViewerButton.setName("chartViewerButton"); // NOI18N
 
         javax.swing.GroupLayout writeOutPanelLayout = new javax.swing.GroupLayout(writeOutPanel);
@@ -588,7 +595,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addComponent(tabulatedButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chartViewerButton)
-                .addContainerGap(170, Short.MAX_VALUE))
+                .addContainerGap(174, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("writeOutPanel.TabConstraints.tabTitle"), writeOutPanel); // NOI18N
@@ -622,7 +629,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -728,7 +735,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                             svgButton.setEnabled(true);
                         } else if (filetype.equals(FileTypes.wmf)) {
                             wmfButton.setEnabled(true);
-                        }else if (filetype.equals(FileTypes.jchart)) {
+                        } else if (filetype.equals(FileTypes.jchart)) {
                             chartViewerButton.setEnabled(true);
                         }
                     }
@@ -1066,16 +1073,25 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
                         setCursor(normalCursor);
 
-                        JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT.") + filesGeneratedList, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."), JOptionPane.INFORMATION_MESSAGE);
-
-                        // Opening the resulting files...
-                        for (String resultFileName : filesGenerated) {
-                            if (new File(resultFileName).exists()) {
-                                try {
-                                    canreg.common.Tools.openFile(resultFileName);
-                                } catch (IOException ex) {
-                                    JOptionPane.showMessageDialog(this, "Unable to open: " + resultFileName + "\n" + ex.getLocalizedMessage());
-                                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        // Opening the resulting files if the list is not empty...
+                        if (filesGenerated.isEmpty()) {
+                            JOptionPane.showMessageDialog(this, 
+                                    "Please use \"View work files\" in the \"File\"-menu to open them", 
+                                    java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."), 
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(this, 
+                                    filesGeneratedList, 
+                                    java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."), 
+                                    JOptionPane.INFORMATION_MESSAGE);
+                            for (String resultFileName : filesGenerated) {
+                                if (new File(resultFileName).exists()) {
+                                    try {
+                                        canreg.common.Tools.openFile(resultFileName);
+                                    } catch (IOException ex) {
+                                        JOptionPane.showMessageDialog(this, "Unable to open: " + resultFileName + "\n" + ex.getLocalizedMessage());
+                                        Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                 }
                             }
                         }

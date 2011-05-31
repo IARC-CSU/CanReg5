@@ -47,7 +47,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="432" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="436" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -123,8 +123,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="previewImageLabel" pref="234" max="32767" attributes="0"/>
-                          <Component id="descriptionScrollPane" alignment="0" pref="234" max="32767" attributes="0"/>
+                          <Component id="previewImageLabel" pref="238" max="32767" attributes="0"/>
+                          <Component id="descriptionScrollPane" alignment="0" pref="238" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -261,7 +261,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="warningLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="284" max="32767" attributes="0"/>
+                      <EmptySpace pref="288" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -366,7 +366,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="362" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="366" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -434,7 +434,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="rangeFilterPanel" pref="382" max="32767" attributes="0"/>
+                      <Component id="rangeFilterPanel" pref="386" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -508,7 +508,7 @@
                       <Component id="tabulatedButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="chartViewerButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="170" max="32767" attributes="0"/>
+                      <EmptySpace pref="174" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -520,6 +520,7 @@
                   <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generatePStable" methodName="generatePStable"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="postScriptButton.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="postScriptButton.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="postScriptButton" noResource="true"/>
               </Properties>
               <Events>
@@ -532,6 +533,7 @@
                   <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateTabulatedTables" methodName="generateTabulatedTables"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="tabulatedButton.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="tabulatedButton.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="tabulatedButton" noResource="true"/>
               </Properties>
             </Component>
@@ -557,6 +559,7 @@
                   <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generatePNGTable" methodName="generatePNGTable"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="imageButton.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="imageButton.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="imageButton" noResource="true"/>
               </Properties>
             </Component>
@@ -566,6 +569,7 @@
                   <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generatePDFtable" methodName="generatePDFtable"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="pdfButton.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="pdfButton.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="pdfButton" noResource="true"/>
               </Properties>
               <Events>
@@ -578,6 +582,7 @@
                   <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateSVGFile" methodName="generateSVGFile"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="svgButton.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="svgButton.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="svgButton" noResource="true"/>
               </Properties>
               <Events>
@@ -590,6 +595,7 @@
                   <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateWMFAction" methodName="generateWMFAction"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="wmfButton.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="wmfButton.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="wmfButton" noResource="true"/>
               </Properties>
               <Events>
@@ -602,6 +608,7 @@
                   <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="openInChartViewer" methodName="openInChartViewer"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="chartViewerButton.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="chartViewerButton.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="chartViewerButton" noResource="true"/>
               </Properties>
             </Component>
