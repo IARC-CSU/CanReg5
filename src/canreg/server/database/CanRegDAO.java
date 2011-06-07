@@ -839,20 +839,19 @@ public class CanRegDAO {
 
     public boolean encryptDatabase(char[] newPasswordArray, char[] oldPasswordArray) throws RemoteException, SQLException {
 
-        // already encrypted? Change password
         if (oldPasswordArray.length != 0) {
+            // already encrypted? Change password
+            // http://db.apache.org/derby/docs/10.4/devguide/cdevcsecure55054.html
             String oldPassword = new String(oldPasswordArray);
             String newPassword = new String(newPasswordArray);
             String command = "CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY("
-                    +"\'bootPassword\', \'"+oldPassword+" , "+newPassword+"\')";
+                    + "\'bootPassword\', \'" + oldPassword + " , " + newPassword + "\')";
             Statement statement = dbConnection.createStatement();
             statement.execute(command);
             return true;
-        }
-                
-        // remove password? 
-        // Doesn't work!
-        else if (newPasswordArray.length == 0) {
+        } else if (newPasswordArray.length == 0) {
+            // remove password? 
+            // Doesn't work!
             String oldPassword = new String(oldPasswordArray);
             dbProperties.setProperty("bootPassword", oldPassword);
             try {
@@ -861,9 +860,9 @@ public class CanRegDAO {
                 Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
             dbProperties.setProperty("dataEncryption", "false");
-        } 
-        // Encrypt database
-        else {
+        } else {
+            // Encrypt database
+            // http://db.apache.org/derby/docs/10.4/devguide/cdevcsecure866716.html
             try {
                 disconnect();
             } catch (SQLException ex) {
