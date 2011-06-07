@@ -876,6 +876,7 @@ public class CanRegDAO {
         dbProperties.remove("bootPassword");
         dbProperties.remove("newBootPassword");
         boolean success = connectWithBootPassword(newPasswordArray);
+        dbProperties.remove("dataEncryption");
         return success;
     }
 
