@@ -40,6 +40,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
+import org.jdesktop.application.Task;
 
 /**
  *
@@ -699,50 +700,82 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
     }
 
     @Action
-    public void changeDBPasswordAction() {
+    public Task changeDBPasswordAction() {
         if (currentDBPasswordField.getPassword().length == 0) {
             int answer = JOptionPane.showInternalConfirmDialog(
-                    this, "Are you sure you want to encrypt the database?\n"
+                    databasePasswordPanel, "Are you sure you want to encrypt the database?\n"
                     + "If you loose this password you will loose all the data currently in the database.\n"
                     + "This is a one-way operation, so please make sure to take a backup first.",
                     "Are you sure you want to encrypt the database?", JOptionPane.YES_NO_OPTION);
             if (answer != JOptionPane.YES_OPTION) {
-                return;
+                return null;
             }
         }
         if (newDBPasswordField.getPassword().length == 0) {
             int answer = JOptionPane.showInternalConfirmDialog(
-                    this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("DO YOU REALLY WANT TO REMOVE THE PASSWORD?"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("EMPTY PASSWORD"), JOptionPane.YES_NO_OPTION);
+                    databasePasswordPanel, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("DO YOU REALLY WANT TO REMOVE THE PASSWORD?"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("EMPTY PASSWORD"), JOptionPane.YES_NO_OPTION);
             if (answer != JOptionPane.YES_OPTION) {
-                return;
+                return null;
             }
         } else if (newDBPasswordField.getPassword().length < 8) {
             JOptionPane.showInternalMessageDialog(
-                    this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("BOOT PASSWORD MUST BE AT LEAST 8 CHARACTERS LONG."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD TOO SHORT"), JOptionPane.YES_NO_OPTION);
-            return;
+                    databasePasswordPanel, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("BOOT PASSWORD MUST BE AT LEAST 8 CHARACTERS LONG."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD TOO SHORT"), JOptionPane.YES_NO_OPTION);
+            return null;
         }
         // verify if passwords match...
         if (Arrays.equals(
                 newDBPasswordField.getPassword(),
                 confirmNewDBPasswordField.getPassword())) {
+            return new ChangeDBPasswordActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+        } else {
+            JOptionPane.showInternalMessageDialog(databasePasswordPanel, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORDS DO NOT MATCH."));
+            return null;
+        }
+    }
+
+    private class ChangeDBPasswordActionTask extends org.jdesktop.application.Task<Object, Void> {
+        private final char[] newPassword;
+        private final char[] oldPassword;
+
+        ChangeDBPasswordActionTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to ChangeDBPasswordActionTask fields, here.
+            super(app);
+            newPassword = newDBPasswordField.getPassword();
+            oldPassword = currentDBPasswordField.getPassword();
+        }
+
+        @Override
+        protected Object doInBackground() {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+            Boolean success = false;
             try {
                 // System.out.println(new String(newDBPasswordField.getPassword()) + ", " + new String(currentDBPasswordField.getPassword()));
-                boolean success = canreg.client.CanRegClientApp.getApplication().setDBPassword(newDBPasswordField.getPassword(), currentDBPasswordField.getPassword());
+                success = canreg.client.CanRegClientApp.getApplication().setDBPassword(newPassword, oldPassword);
                 // canreg.client.CanRegClientApp.getApplication().changePassword(encrypted);
                 if (success) {
-                    JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD CHANGED."));
+                    JOptionPane.showInternalMessageDialog(databasePasswordPanel, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD CHANGED."));
                 } else {
-                    JOptionPane.showInternalMessageDialog(this, "Something went wrong during password change.","Password not changed.",JOptionPane.WARNING_MESSAGE);                    
+                    JOptionPane.showInternalMessageDialog(databasePasswordPanel, "Something went wrong during password change.", "Password not changed.", JOptionPane.WARNING_MESSAGE);
                 }
             } catch (SecurityException ex) {
-                JOptionPane.showInternalMessageDialog(this, "Something went wrong during password change.\n" + ex.getLocalizedMessage(),"Password not changed.",JOptionPane.WARNING_MESSAGE);                    
+                JOptionPane.showInternalMessageDialog(databasePasswordPanel, "Something went wrong during password change.\n" + ex.getLocalizedMessage(), "Password not changed.", JOptionPane.WARNING_MESSAGE);
                 Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
-                JOptionPane.showInternalMessageDialog(this, "Something went wrong during password change.\n" +ex.getLocalizedMessage(),"Password not changed.",JOptionPane.WARNING_MESSAGE);                    
+                JOptionPane.showInternalMessageDialog(databasePasswordPanel, "Something went wrong during password change.\n" + ex.getLocalizedMessage(), "Password not changed.", JOptionPane.WARNING_MESSAGE);
                 Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORDS DO NOT MATCH."));
+
+            return success;  // return your result
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
         }
     }
 }
