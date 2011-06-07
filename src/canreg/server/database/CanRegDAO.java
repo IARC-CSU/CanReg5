@@ -682,6 +682,7 @@ public class CanRegDAO {
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
             bCreated = createTables(dbConnection);
         } catch (SQLException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         dbProperties.remove("create");
         return bCreated;
@@ -690,7 +691,7 @@ public class CanRegDAO {
     /**
      * Restore database from backup.
      * @param path to database backup.
-     * @return true if successfull, false if not
+     * @return true if successful, false if not
      */
     public synchronized String restoreFromBackup(String path) {
         boolean bRestored = false, shutdownSuccess = false;
@@ -748,11 +749,14 @@ public class CanRegDAO {
      * @return
      * @throws RemoteException
      */
-    public boolean connect() throws RemoteException {
+    public boolean connect() throws SQLException, RemoteException {
         String dbUrl = getDatabaseUrl();
         try {
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
-
+        } catch (SQLException ex) {
+            throw ex;
+        }
+        try {
             //Prepare the SQL statements
             stmtSaveNewPatient = dbConnection.prepareStatement(strSavePatient, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewTumour = dbConnection.prepareStatement(strSaveTumour, Statement.RETURN_GENERATED_KEYS);
@@ -813,7 +817,6 @@ public class CanRegDAO {
 
             // test
 
-
             debugOut("Cocuou from the database connection...");
             debugOut("Next patient ID = " + getNextPatientID());
         } catch (SQLException ex) {
@@ -826,19 +829,78 @@ public class CanRegDAO {
         return isConnected;
     }
 
+    public boolean connectWithBootPassword(char[] passwordArray) throws RemoteException, SQLException {
+        String password = new String(passwordArray);
+        dbProperties.setProperty("bootPassword", password);
+        boolean success = connect();
+        dbProperties.remove("bootPassword");
+        return success;
+    }
+
+    public boolean encryptDatabase(char[] newPasswordArray, char[] oldPasswordArray) throws RemoteException, SQLException {
+
+        // already encrypted? Change password
+        if (oldPasswordArray.length != 0) {
+            String oldPassword = new String(oldPasswordArray);
+            String newPassword = new String(newPasswordArray);
+            String command = "CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY("
+                    +"\'bootPassword\', \'"+oldPassword+" , "+newPassword+"\')";
+            Statement statement = dbConnection.createStatement();
+            statement.execute(command);
+            return true;
+        }
+                
+        // remove password? 
+        // Doesn't work!
+        else if (newPasswordArray.length == 0) {
+            String oldPassword = new String(oldPasswordArray);
+            dbProperties.setProperty("bootPassword", oldPassword);
+            try {
+                disconnect();
+            } catch (SQLException ex) {
+                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            dbProperties.setProperty("dataEncryption", "false");
+        } 
+        // Encrypt database
+        else {
+            try {
+                disconnect();
+            } catch (SQLException ex) {
+                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            dbProperties.setProperty("dataEncryption", "true");
+            String password = new String(newPasswordArray);
+            dbProperties.setProperty("bootPassword", password);
+        }
+        dbProperties.remove("bootPassword");
+        dbProperties.remove("newBootPassword");
+        boolean success = connectWithBootPassword(newPasswordArray);
+        return success;
+    }
+
     /**
      * 
      */
-    public void disconnect() {
+    public boolean disconnect() throws SQLException {
+        boolean shutdownSuccess = false;
         if (isConnected) {
             String dbUrl = getDatabaseUrl();
-            dbProperties.put("shutdown", "true");
             try {
-                DriverManager.getConnection(dbUrl, dbProperties);
-            } catch (SQLException ex) {
+                dbConnection.close(); // Close current connection.
+                dbProperties.put("shutdown", "true");
+                dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
+            } catch (SQLException e) {
+                if (e.getSQLState().equals("08006")) {
+                    shutdownSuccess = true; // single db.
+                } else {
+                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, e);
+                    throw e;
+                }
             }
-            isConnected = false;
+            dbProperties.remove("shutdown");
         }
+        return shutdownSuccess;
     }
 
     /**

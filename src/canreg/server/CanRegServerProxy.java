@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.server;
 
 import canreg.common.database.User;
@@ -355,5 +354,11 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public void shutDownServer() throws RemoteException, SecurityException {
         checkPermission("shutDownServer");
         theServer.shutDownServer();
+    }
+
+    @Override
+    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray) throws RemoteException, SecurityException {
+        checkPermission("setDBPassword");
+        return theServer.setDBPassword(newPasswordArray, oldPasswordArray);
     }
 }

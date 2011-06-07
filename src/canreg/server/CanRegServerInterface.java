@@ -462,4 +462,6 @@ public interface CanRegServerInterface extends Remote {
     public DatabaseStats getDatabaseStats() throws RemoteException, SecurityException;
 
     public void shutDownServer() throws RemoteException, SecurityException;
+
+    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray) throws RemoteException, SecurityException;
 }

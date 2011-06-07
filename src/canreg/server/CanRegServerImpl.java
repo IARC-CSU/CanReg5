@@ -67,6 +67,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import javax.swing.JOptionPane;
 import org.w3c.dom.Document;
 
 /**
@@ -141,6 +142,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         if (!initDataBase()) {
             throw new RemoteException("Cannot initialize database...");
         }
+
         setTrayIconToolTip("CanReg5 server " + systemCode + " database initialized...");
         try {
             systemSettings = new SystemSettings(systemCode + "settings.xml");
@@ -193,6 +195,13 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         db = new CanRegDAO(systemCode, systemDescription.getSystemDescriptionDocument());
         try {
             connected = db.connect();
+        } catch (SQLException ex) {
+            // try with passord
+            String password = JOptionPane.showInputDialog("Please enter database boot password:");
+            connected = initDataBase(password);
+            if (!connected){
+                Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
@@ -202,6 +211,28 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             success = true;
         }
 
+        return success;
+    }
+
+    // Initialize the database connection with password
+    private boolean initDataBase(String password) throws RemoteException {
+        boolean success = false;
+        boolean connected = false;
+
+        // Connect to the database
+        db = new CanRegDAO(systemCode, systemDescription.getSystemDescriptionDocument());
+        try {
+            connected = db.connectWithBootPassword(password.toCharArray());
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            success = false;
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        }
+        if (connected && db != null) {
+            success = true;
+        }
         return success;
     }
 
@@ -974,5 +1005,16 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             SystemTray tray = SystemTray.getSystemTray();
             tray.remove(trayIcon);
         }
+    }
+
+    @Override
+    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray) throws RemoteException, SecurityException {
+        boolean success = false;
+        try {
+            success = db.encryptDatabase(newPasswordArray, oldPasswordArray);
+        } catch (SQLException ex) {
+            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return success;
     }
 }
