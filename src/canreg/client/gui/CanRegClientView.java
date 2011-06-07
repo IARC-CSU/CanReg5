@@ -334,7 +334,7 @@ public final class CanRegClientView extends FrameView {
         handbookButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(handbookButton);
 
-        toolBar.setBounds(0, 0, 800, -1);
+        toolBar.setBounds(0, 0, 800, 43);
         desktopPane.add(toolBar, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jScrollPane1.setViewportView(desktopPane);

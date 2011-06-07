@@ -33,7 +33,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="tabbedPane" alignment="0" pref="335" max="32767" attributes="0"/>
+          <Component id="tabbedPane" alignment="0" pref="339" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -67,7 +67,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="passwordPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="202" max="32767" attributes="0"/>
+                      <EmptySpace pref="206" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -156,6 +156,7 @@
                       <action class="canreg.client.gui.management.UserManagerInternalFrame" id="changePasswordAction" methodName="changePasswordAction"/>
                     </Property>
                     <Property name="text" type="java.lang.String" resourceKey="changePasswordButton.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="changePasswordButton.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="changePasswordButton" noResource="true"/>
                   </Properties>
                 </Component>
@@ -192,7 +193,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lockedRecordsScrollPane" pref="267" max="32767" attributes="0"/>
+                      <Component id="lockedRecordsScrollPane" pref="271" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -228,6 +229,153 @@
                 <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
               </Properties>
             </Component>
+          </SubComponents>
+        </Container>
+        <Container class="javax.swing.JPanel" name="databasePasswordPanel">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="databasePasswordPanel" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="Database password">
+                <Property name="tabTitle" type="java.lang.String" resourceKey="databasePasswordPanel.TabConstraints.tabTitle"/>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="passwordPanel1" alignment="0" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="passwordPanel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="169" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Container class="javax.swing.JPanel" name="passwordPanel1">
+              <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                    <TitledBorder title="Password">
+                      <Property name="titleX" resourceKey="passwordPanel1.border.title"/>
+                    </TitledBorder>
+                  </Border>
+                </Property>
+                <Property name="name" type="java.lang.String" value="passwordPanel1" noResource="true"/>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="currentDBPasswordLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="newDBPasswordLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="newDBPasswordField" alignment="0" pref="278" max="32767" attributes="1"/>
+                                          <Component id="currentDBPasswordField" alignment="0" pref="278" max="32767" attributes="1"/>
+                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="confirmNewDBPasswordLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="confirmNewDBPasswordField" pref="278" max="32767" attributes="1"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="changeDBPasswordButton" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="currentDBPasswordLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="currentDBPasswordField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="newDBPasswordLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="newDBPasswordField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="confirmNewDBPasswordLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="confirmNewDBPasswordField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="changeDBPasswordButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="newDBPasswordLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="newDBPasswordLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="newDBPasswordLabel" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="confirmNewDBPasswordLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="confirmNewDBPasswordLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="confirmNewDBPasswordLabel" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JPasswordField" name="newDBPasswordField">
+                  <Properties>
+                    <Property name="name" type="java.lang.String" value="newDBPasswordField" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JPasswordField" name="confirmNewDBPasswordField">
+                  <Properties>
+                    <Property name="name" type="java.lang.String" value="confirmNewDBPasswordField" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JButton" name="changeDBPasswordButton">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.management.UserManagerInternalFrame" id="changeDBPasswordAction" methodName="changeDBPasswordAction"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" resourceKey="changeDBPasswordButton.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="changeDBPasswordButton.toolTipText"/>
+                    <Property name="actionCommand" type="java.lang.String" resourceKey="changeDBPasswordButton.actionCommand"/>
+                    <Property name="name" type="java.lang.String" value="changeDBPasswordButton" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="currentDBPasswordLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="currentDBPasswordLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="currentDBPasswordLabel" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JPasswordField" name="currentDBPasswordField">
+                  <Properties>
+                    <Property name="name" type="java.lang.String" value="currentDBPasswordField" noResource="true"/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="userManagerPanel">
@@ -284,7 +432,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="113" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="117" max="32767" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>

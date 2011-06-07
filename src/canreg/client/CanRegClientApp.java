@@ -1199,4 +1199,8 @@ public class CanRegClientApp extends SingleFrameApplication {
     public void showLogginFrame() {
         canRegClientView.showLoginFrame();
     }
+
+    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray) throws SecurityException, RemoteException{
+        return server.setDBPassword(newPasswordArray, oldPasswordArray); 
+    }
 }
