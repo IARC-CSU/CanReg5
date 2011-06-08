@@ -68,6 +68,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             dateField.setEditable(false);
         } else if (fillInStatus.equalsIgnoreCase(Globals.FILL_IN_STATUS_MANDATORY_STRING)) {
             dateField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
+            mandatory = true;
         }
         setMaximumLength(databaseListElement.getVariableLength());
 

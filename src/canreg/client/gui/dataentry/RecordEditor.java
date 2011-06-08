@@ -960,7 +960,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
         // Check to see if all mandatory variables are there
         boolean allPresent = patientRecordEditorPanel.areAllVariablesPresent();
-        allPresent = allPresent & tumourRecordEditorPanel.areAllVariablesPresent();
+        allPresent = allPresent && tumourRecordEditorPanel.areAllVariablesPresent();
 
         if (!allPresent) {
             editChecksInternalFrame.setMandatoryVariablesTextAreaText(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("MANDATORY VARIABLES MISSING."));

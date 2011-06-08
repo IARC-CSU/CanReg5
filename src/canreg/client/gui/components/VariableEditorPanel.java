@@ -72,7 +72,7 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
      */
     private Dictionary dictionary;
     Object initialValue = null;
-    private boolean mandatory;
+    protected boolean mandatory;
     private boolean hasChanged = false;
     protected ActionListener listener;
     DictionaryElementChooser dictionaryElementChooser;
