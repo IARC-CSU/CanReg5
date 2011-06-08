@@ -475,7 +475,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             unduplicationVariableListElement = null;
             obsoleteFlagVariableListElement = null;
             checkVariableListElement = null;
-
+            
         }
 
         /*

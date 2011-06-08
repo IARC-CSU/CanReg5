@@ -140,6 +140,9 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
         if (sources == null) {
             sources = Collections.synchronizedSet(new LinkedHashSet<Source>());
         }
+        if (sources.isEmpty()) {
+            sources.add(new Source());
+        }
         this.sources = sources;
         buildTabs();
         refreshTitles();
