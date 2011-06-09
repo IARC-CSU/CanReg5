@@ -29,8 +29,8 @@ import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.Globals;
 import canreg.common.Tools;
 import java.awt.Cursor;
-import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdesktop.application.Action;
@@ -174,7 +174,12 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
 
         @Override
         protected Object doInBackground() {
-            backupPath = canreg.client.CanRegClientApp.getApplication().performBackup();
+            try {
+                backupPath = canreg.client.CanRegClientApp.getApplication().performBackup();
+            } catch (RemoteException ex) {
+                Logger.getLogger(BackUpInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                return "Error:\n" + ex.getLocalizedMessage();
+            }
             return null;
         }
 
@@ -182,7 +187,11 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
         protected void succeeded(Object result) {
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
             setCursor(normalCursor);
-            textArea.setText(textArea.getText() + "\n" +java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/BackUpInternalFrame").getString("BACKED_UP_TO_") + backupPath + ".");
+            if (result == null) {
+                textArea.setText(textArea.getText() + "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/BackUpInternalFrame").getString("BACKED_UP_TO_") + backupPath + ".");
+            } else {
+                textArea.setText(result.toString());
+            }
         }
     }
 
