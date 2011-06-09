@@ -763,7 +763,7 @@ public final class CanRegClientView extends FrameView {
             // on a background thread, so don't reference
             // the Swing GUI from here.
             String fileName = localSettings.getProperty(LocalSettings.WORKING_DIR_PATH_KEY);
-            if (fileName==null){
+            if (fileName == null) {
                 fileName = ".";
             }
             canreg.common.Tools.openFile(fileName);
@@ -964,13 +964,22 @@ public final class CanRegClientView extends FrameView {
     }
 
     private void logOut() {
+        try {
+            CanRegClientApp.getApplication().logOut();
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        setLoggedOut();
+    }
+
+    public void setLoggedOut() {
+        setUserRightsLevel(Globals.UserRightLevels.NOT_LOGGED_IN);
+        desktopPane.removeAll();
+        desktopPane.validate();
         if (browseInternalFrame != null) {
             browseInternalFrame.close();
             browseInternalFrame = null;
         }
-        CanRegClientApp.getApplication().logOut();
-        desktopPane.removeAll();
-        desktopPane.validate();
         getFrame().setTitle(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("CANREG5 - NOT LOGGED IN."));
         userLevelLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("NOT LOGGED IN."));
     }
