@@ -122,7 +122,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             server.setUserPassword(null, encrypted);
         } catch (RemoteException ex) {
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
@@ -133,7 +133,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return server.deletePopulationDataset(populationDatasetID);
         } catch (RemoteException ex) {
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
@@ -201,7 +201,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return record;
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
             return null;
@@ -219,7 +219,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             int populationDatasetID = server.saveNewPopulationDataset(pds);
             pds.setPopulationDatasetID(populationDatasetID);
         } catch (RemoteException ex) {
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
@@ -470,7 +470,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return server.getDatabaseStats();
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -488,7 +488,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return server.listCurrentUsers();
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -516,7 +516,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             server.startNetworkDBServer();
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -532,7 +532,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             server.stopNetworkDBServer();
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -572,7 +572,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             dictionary = server.getDictionary();
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -617,7 +617,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return canreg.client.dataentry.Import.importFile(task, doc, map, file, server, io);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -638,7 +638,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return canreg.client.dataentry.Import.importFiles(task, doc, map, files, server, io);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -680,7 +680,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                     server.userLoggedOut(username);
                 } catch (RemoteException ex) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-                    if (!handlePotentialDisconnect(ex.getCause())) {
+                    if (!handlePotentialDisconnect(ex)) {
                         throw ex;
                     }
                 }
@@ -716,7 +716,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             // return Globals.UserRightLevels.SUPERVISOR;
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            handlePotentialDisconnect(ex.getCause());
+            handlePotentialDisconnect(ex);
         } catch (SecurityException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -735,7 +735,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             path = server.performBackup();
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -760,7 +760,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return message;
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -798,7 +798,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return server.getDistributedTableDescription(filter, tableName);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -822,7 +822,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return record;
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -859,7 +859,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             }
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -887,7 +887,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             }
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -898,7 +898,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return server.deleteRecord(id, tableName);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -915,7 +915,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             server.releaseRecord(recordID, tableName);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -942,7 +942,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return server.deleteDictionaryEntries(dictionaryID);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
             return false;
@@ -960,7 +960,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return server.clearNameSexTable();
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
             return false;
@@ -978,7 +978,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return server.getNameSexTables();
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
             return null;
@@ -996,7 +996,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             server.saveDictionaryEntry(entry);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -1050,7 +1050,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record " + id + " already locked?", recordLockedException);
                 } catch (RemoteException ex) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-                    if (!handlePotentialDisconnect(ex.getCause())) {
+                    if (!handlePotentialDisconnect(ex)) {
                         throw ex;
                     }
                 }
@@ -1098,7 +1098,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                         records[j] = (Tumour) getRecord(id, lookUpTableName, lock);
                     } catch (RemoteException ex) {
                         Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-                        if (!handlePotentialDisconnect(ex.getCause())) {
+                        if (!handlePotentialDisconnect(ex)) {
                             throw ex;
                         }
                     }
@@ -1166,7 +1166,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return server.getPopulationDatasets();
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
             return null;
@@ -1188,7 +1188,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return server.retrieveRows(resultSetID, from, to);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
             return null;
@@ -1206,7 +1206,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             server.releaseResultSet(resultSetID);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -1224,7 +1224,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 return server.getDateOfLastBackUp();
             } catch (RemoteException ex) {
                 Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-                if (!handlePotentialDisconnect(ex.getCause())) {
+                if (!handlePotentialDisconnect(ex)) {
                     throw ex;
                 }
                 return null;
@@ -1247,7 +1247,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return server.performPersonSearch(patient, searcher);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
             return null;
@@ -1287,7 +1287,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return server.initiateGlobalPersonSearch(searcher, rangeStart, rangeEnd);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
             return null;
@@ -1299,7 +1299,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return server.nextStepGlobalPersonSearch(idString);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         } catch (Exception ex) {
@@ -1314,7 +1314,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             server.interuptGlobalPersonSearch(idString);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         }
@@ -1333,7 +1333,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return server.listUsers();
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
             return null;
@@ -1425,7 +1425,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return records;
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
             return null;
@@ -1488,7 +1488,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return server.setDBPassword(newPasswordArray, oldPasswordArray);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            if (!handlePotentialDisconnect(ex.getCause())) {
+            if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
             return false;
@@ -1496,15 +1496,18 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     public boolean handlePotentialDisconnect(Throwable ex) {
-        if (ex instanceof java.net.ConnectException) {
-            server = null;
-            systemName = "";
-            loggedIn = false;
-            canRegClientView.setLoggedOut();
+        if (ex.getCause() instanceof java.net.ConnectException
+                || ex instanceof java.rmi.ConnectIOException
+                || ex instanceof java.net.SocketException
+                || ex.getCause() instanceof java.net.SocketException) {
             JOptionPane.showMessageDialog(
                     canRegClientView.getDesktopPane(),
                     "You seem to have been disconnected from the server. \n"
                     + "Please log in again...");
+            server = null;
+            systemName = "";
+            loggedIn = false;
+            canRegClientView.setLoggedOut();
             showLogginFrame();
             return true;
         }
