@@ -504,20 +504,23 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             String result = "OK";
             try {
                 newTableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
+            } catch (UnknownTableException ex) {
+                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                result = "Unknown table " + ex.getMessage();
+            } catch (DistributedTableDescriptionException ex) {
+                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                result = "Not valid " + ex.getMessage();
             } catch (SQLException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                result = "Not valid" + ex.getMessage();
+                result = "Not valid " + ex.getMessage();
             } catch (RemoteException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                result = "Remote exception";
+                result = "Remote exception ";
             } catch (SecurityException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                result = "Security exception";
+                result = "Security exception ";
                 // } catch (InterruptedException ignore) {
                 //    result = "Ignore";
-            } catch (Exception ex) {
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                result = "Not OK";
             }
             return result;
         }
@@ -595,7 +598,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 tca.adjustColumns();
                 resultPanel.setVisible(true);
             } else if (result.toString().startsWith("Not valid")) {
-                JOptionPane.showInternalMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NOT_A_VALID_FILTER.") +"\n"
+                JOptionPane.showInternalMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NOT_A_VALID_FILTER.") + "\n"
                         + result.toString().substring("Not valid".length()),
                         java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else {
@@ -906,7 +909,6 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             editPatientID(idString);
         }
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JPanel buttonsPanel;
