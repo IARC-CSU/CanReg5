@@ -1,4 +1,4 @@
-
+# This is just a script to test if R is properly installed.
 Args <- commandArgs(TRUE)
 
 # Find the directory of the script
@@ -12,6 +12,7 @@ script.basename <- dirname(script.name)
 
 ## Load dependencies
 source(paste(sep="/", script.basename, "checkArgs.R"))
+source(paste(sep="/", script.basename, "makeFile.R"))
 ##
 
 ## helper-function
@@ -19,38 +20,9 @@ is.installed <- function(mypkg) is.element(mypkg, installed.packages()[,1])
 ##
 
 fileType <- checkArgs(Args, "-ft")
-outFileGraphs <- checkArgs(Args, "-outGraph")	
+out <- checkArgs(Args, "-out")	
 	
-if (fileType == "png") {
-    filename <- paste( outFileGraphs, ".png", sep = "" )
-    png(file=filename, bg="transparent")
-} else if (fileType == "pdf") { 
-    filename <- paste( outFileGraphs, ".pdf" , sep = "")
-    pdf(file=filename) 
-} else if (fileType == "svg") { 
-	filename <- paste( outFileGraphs, ".svg" , sep = "")
-	# svg needs the RSvgDevice library installed
-	if(!is.installed("RSvgDevice")){
-		load.fun("RSvgDevice")
-	}
-	require(RSvgDevice)
-    devSVG(file=filename, onefile=TRUE)
-} else if (fileType == "ps") { 
-    filename <- paste( outFileGraphs, ".ps" , sep = "")
-    postscript(file=filename) 
-} else if (fileType == "html") { 
-    outFileTable <- paste( outFileGraphs, ".html" , sep = "")
-    # postscript(file=filename) 
-} else if (fileType == "wmf") { 
-	# This only works on windows
-    filename <- paste( outFileGraphs, ".wmf" , sep = "")
-    win.metafile(file=filename) 
-} else { 
-	# defaults to pdf
-    filename <- paste(outFileGraphs, ".pdf" , sep = "")
-    pdf(file=filename) 
-}
-
+filename <- makeFile(out, fileType)
 
 # call proper function
 # in this test we call the rainbow wheel thingy stolen from the demo(graphics)
@@ -59,9 +31,4 @@ pie(rep(1,24), col = rainbow(24), radius = 0.9)
 dev.off()
 
 # write the name of any file created by R to out
-cat(filename)
-
-# cat("\n")
-# cat(Args[3])
-# cat("\n")
-# cat(Args[4])
+cat(paste("-outFile",filename,sep=":"))
