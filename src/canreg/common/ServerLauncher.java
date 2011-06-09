@@ -17,14 +17,13 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
-
 package canreg.common;
 
 import canreg.server.*;
 import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.logging.Level;
@@ -46,27 +45,45 @@ public class ServerLauncher {
     public static boolean start(String systemURL, String systemCode, int port) throws AlreadyBoundException {
         // int port = Globals.RMI_PORT;
         boolean success = false;
+        CanRegServerInterface server = null;
+
+        // try to create the registry if needed
         try {
             LocateRegistry.createRegistry(port);
-        } catch (Exception exception) {
-            Logger.getLogger(ServerLauncher.class.getName()).log(Level.WARNING, "Registry already running...", exception);
+        } catch (RemoteException ex) {
+            // if it is already running with another server that's fine
+            Logger.getLogger(ServerLauncher.class.getName()).log(Level.WARNING, null, ex);
         }
 
-        System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
-        System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
-        CanRegServerInterface server = null;
         try {
+            System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
+            System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
+            String rmiAddresse = "rmi://" + systemURL + ":" + port + "/CanRegLogin" + systemCode;
 
-            server = new CanRegServerImpl(systemCode);
-            CanRegLoginInterface service = new CanRegLoginImpl(server);
-            Naming.bind("rmi://" + systemURL + ":" + port + "/CanRegLogin" + systemCode, service);
-            success = true;
+            // assume already bound
+            boolean alreadyBound = true;
+
+            try {
+                // Check to see if service is already bound
+                Naming.lookup(rmiAddresse);
+            } catch (NotBoundException ex) {
+                // Logger.getLogger(ServerLauncher.class.getName()).log(Level.INFO, null, ex);
+                alreadyBound = false;
+            }
+            
+            if (!alreadyBound) {
+                server = new CanRegServerImpl(systemCode);
+                CanRegLoginInterface service = new CanRegLoginImpl(server);
+                Naming.bind(rmiAddresse, service);
+                success = true;
+            }
 
         } catch (MalformedURLException ex) {
             Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex);
             success = false;
         } catch (AlreadyBoundException ex) {
             Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex);
+            success = false;
             if (server != null) {
                 try {
                     server.shutDownServer();
@@ -74,6 +91,8 @@ public class ServerLauncher {
                     Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex1);
                 } catch (SecurityException ex1) {
                     Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex1);
+                } finally {
+                    return success;
                 }
             }
             success = false;
