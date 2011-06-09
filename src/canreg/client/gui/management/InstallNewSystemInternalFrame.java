@@ -329,6 +329,7 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
 
         String folderName = null;
         WaitFrame waitFrame;
+
         RestoreActionTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
@@ -412,8 +413,12 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("RESTORE NOT SUCCESSFULL."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else {
                 // All went well
+                try {
+                    CanRegClientApp.getApplication().logOut();
+                } catch (RemoteException ex) {
+                    Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("RESTORE SUCCESSFULL.") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("PLEASE RESTART YOUR CANREG SYSTEM."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
-                CanRegClientApp.getApplication().logOut();
             }
         }
     }
