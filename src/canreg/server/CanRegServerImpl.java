@@ -196,11 +196,16 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         try {
             connected = db.connect();
         } catch (SQLException ex) {
-            // try with passord
+            // System.out.println(ex.getCause());
+            // System.out.println("Error-code: " + ex.getErrorCode());
+            //  System.out.println("SQL-state:" + ex.getSQLState());
+            // If we reach this step and get a SQLexception - try with passord
             String password = JOptionPane.showInputDialog("Please enter database boot password:");
-            connected = initDataBase(password);
-            if (!connected){
-                Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            if (password != null) {
+                connected = initDataBase(password);
+                if (!connected) {
+                    Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
