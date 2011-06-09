@@ -1,5 +1,18 @@
 Changelog
 
+5.00.07rc2
+- The database can now be encrypted with 56-bit DES using a minimum 8 character long boot password. The user must then provide this password during every server launch.
+- All server calls now handles server disconnects and requests users to log in again. This should end problems on laptops falling asleep.
+- Launch server no longer hangs if XML contains an invalid standard variable name.
+- Person Search and duplicate search renamed to Duplicate Patient Search.
+- New source added to tumour by default on creation of new tumour.
+- Fixed a bug in the logout mechanism that would not redraw the desktop after logout.
+- Improved handling of already running servers while launching a new one.
+- R table builder allows for null as pops or incs. Better handling of nullpointers.
+- Updated the R test script.
+- Better exception handling.
+- Other bug fixes.
+
 5.00.06
 - Implemented a table builder that calls R with any user specified standard variables.
 - AgeSpecific incidence curves (linear and semi log) functionality implemented using R. (Thanks to Anahita Rahimi.)

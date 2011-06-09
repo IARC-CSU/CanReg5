@@ -1,5 +1,110 @@
-changeset:   857:e7deb1d3f76d
+changeset:   878:dd87b8c0dbb6
 tag:         tip
+user:        ErvikM@X90164
+date:        Thu Jun 09 10:39:36 2011 +0200
+summary:     All server calls now handles server disconnects and requests users to log in again.
+
+changeset:   877:f7305e91c8c5
+user:        ErvikM@X90164
+date:        Thu Jun 09 10:38:08 2011 +0200
+summary:     Better detection of encrypted databases.
+
+changeset:   876:3c2449eaa6fe
+user:        ErvikM@X90164
+date:        Thu Jun 09 10:35:21 2011 +0200
+summary:     Improved handling of already running servers while launching a new one.
+
+changeset:   875:79af4f34e6d6
+user:        ErvikM@X90164
+date:        Thu Jun 09 10:33:38 2011 +0200
+summary:     Change password button is now disabled while database is being encrypted...
+
+changeset:   874:34e4962bf846
+user:        ErvikM@X90164
+date:        Thu Jun 09 10:32:38 2011 +0200
+summary:     Better exception handling.
+
+changeset:   873:f153ef158783
+user:        ErvikM@X90164
+date:        Thu Jun 09 10:29:57 2011 +0200
+summary:     Better exception handling.
+
+changeset:   872:30f7735c268b
+user:        ErvikM@X90164
+date:        Thu Jun 09 10:27:48 2011 +0200
+summary:     Better exception handling.
+
+changeset:   871:81b97850b880
+user:        ErvikM@X90164
+date:        Thu Jun 09 10:27:10 2011 +0200
+summary:     R table builder allows for null as pops or incs. Better handling of nullpointers.
+
+changeset:   870:98cd235256e1
+user:        ErvikM@X90164
+date:        Thu Jun 09 10:25:21 2011 +0200
+summary:     Improved handling of already running servers while launching a new one.
+
+changeset:   869:fcba7636d810
+user:        ErvikM@X90164
+date:        Thu Jun 09 10:24:13 2011 +0200
+summary:     Fixed a bug in the logout mechanism that would not redraw the desktop after logout.
+
+changeset:   868:cec0303670de
+user:        ErvikM@X90164
+date:        Thu Jun 09 10:14:32 2011 +0200
+summary:     Updated the R test script.
+
+changeset:   867:287e03585e7a
+user:        ErvikM@X90164
+date:        Wed Jun 08 11:50:46 2011 +0200
+summary:     Fixed a bug where dates could be empty although they were flagged as mandatory.
+
+changeset:   866:65fb9ea85218
+user:        ErvikM@X90164
+date:        Wed Jun 08 11:23:55 2011 +0200
+summary:     New source added to tumour by default on creation of new tumour.
+
+changeset:   865:f5cd91893280
+user:        ErvikM@X90164
+date:        Tue Jun 07 17:36:37 2011 +0200
+summary:     Added some comments and reformated the code.
+
+changeset:   864:54ac83e34bf4
+user:        ErvikM@X90164
+date:        Tue Jun 07 15:42:18 2011 +0200
+summary:     Encryption process now "tidies" the dbProperties after use...
+
+changeset:   863:9724f338ab8f
+user:        ErvikM@X90164
+date:        Tue Jun 07 15:41:36 2011 +0200
+summary:     Encryption/change of database password is now a background task as it might take some time.
+
+changeset:   862:3200c74c34f5
+user:        ErvikM@X90164
+date:        Tue Jun 07 14:34:15 2011 +0200
+summary:     Person Search and duplicate search renamed to Duplicate Patient Search.
+
+changeset:   861:f4d1e14fb1cb
+user:        ErvikM@X90164
+date:        Tue Jun 07 14:33:28 2011 +0200
+summary:     The database can now be encrypted with DES. The user must then provide a boot password during server launch.
+
+changeset:   860:aa30254d6df2
+user:        ErvikM@X90164
+date:        Tue Jun 07 14:32:55 2011 +0200
+summary:     The database can now be encrypted with DES. The user must then provide a boot password during server launch.
+
+changeset:   859:e9b86ad02bc4
+user:        ErvikM@X90164
+date:        Tue May 31 16:24:38 2011 +0200
+summary:     Launch server no longer hangs if XML contains an invalid standard variable name.
+
+changeset:   858:9ac285c65e14
+user:        ErvikM@X90164
+date:        Tue May 31 15:30:09 2011 +0200
+summary:     CanReg 5.00.06
+
+changeset:   857:e7deb1d3f76d
 user:        ErvikM@X90164
 date:        Tue May 31 15:02:12 2011 +0200
 summary:     Updated the R tables configuration files and some preview tables.
