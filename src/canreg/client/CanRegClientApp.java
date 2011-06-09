@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.client;
 
 import canreg.common.cachingtableapi.DistributedTableDescription;
@@ -120,22 +119,37 @@ public class CanRegClientApp extends SingleFrameApplication {
     private TreeMap<String, Set<Integer>> locksMap;
 
     public void changePassword(String encrypted) throws SecurityException, RemoteException {
-        server.setUserPassword(null, encrypted);
+        try {
+            server.setUserPassword(null, encrypted);
+        } catch (RemoteException ex) {
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public boolean deletePopulationDataset(int populationDatasetID) throws SQLException, RemoteException, SecurityException {
-        return server.deletePopulationDataset(populationDatasetID);
+    public boolean deletePopulationDataset(int populationDatasetID) throws SQLException, SecurityException, RemoteException {
+        try {
+            return server.deletePopulationDataset(populationDatasetID);
+        } catch (RemoteException ex) {
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
-    public Patient getPatientRecord(String requestedPatientRecordID, boolean lock) throws SQLException, RemoteException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException {
+    public Patient getPatientRecord(String requestedPatientRecordID, boolean lock) throws SQLException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException, RemoteException {
         return (Patient) getRecordByID(requestedPatientRecordID, Globals.PATIENT_TABLE_NAME, lock);
     }
 
-    public Patient getPatientRecordByID(String requestedPatientID, boolean lock) throws SQLException, RemoteException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException {
+    public Patient getPatientRecordByID(String requestedPatientID, boolean lock) throws SQLException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException, RemoteException {
         return (Patient) getRecordByID(requestedPatientID, Globals.PATIENT_TABLE_NAME, lock);
     }
 
-    public Tumour getTumourRecord(String requestedPatientRecordID, boolean lock) throws SQLException, RemoteException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException {
+    public Tumour getTumourRecord(String requestedPatientRecordID, boolean lock) throws SQLException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException, RemoteException {
         return (Tumour) getRecordByID(requestedPatientRecordID, Globals.TUMOUR_TABLE_NAME, lock);
     }
 
@@ -143,47 +157,55 @@ public class CanRegClientApp extends SingleFrameApplication {
         server.saveUser(user);
     }
 
-    private DatabaseRecord getRecordByID(String recordID, String tableName, boolean lock) throws SQLException, RemoteException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException {
-        String recordIDVariableName = null;
-        String databaseRecordIDVariableName = null;
-        if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-            recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
-            databaseRecordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
-        } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-            recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
-            databaseRecordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
-        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
-            recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName();
-            databaseRecordIDVariableName = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
-        }
-
-        DatabaseFilter filter = new DatabaseFilter();
-        filter.setFilterString(recordIDVariableName + " = '" + recordID + "' ");
-        DistributedTableDescription distributedTableDescription;
-        Object[][] rows;
-        DatabaseRecord record = null;
-
-        distributedTableDescription = getDistributedTableDescription(filter, tableName);
-        int numberOfRecords = distributedTableDescription.getRowCount();
-
-        rows = retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
-        releaseResultSet(distributedTableDescription.getResultSetID());
-        if (rows.length > 0) {
-            String[] columnNames = distributedTableDescription.getColumnNames();
-            int ids[] = new int[numberOfRecords];
-            boolean found = false;
-            int idColumnNumber = 0;
-
-            while (!found && idColumnNumber < columnNames.length) {
-                found = columnNames[idColumnNumber++].equalsIgnoreCase(databaseRecordIDVariableName);
+    private DatabaseRecord getRecordByID(String recordID, String tableName, boolean lock) throws SQLException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException, RemoteException {
+        try {
+            String recordIDVariableName = null;
+            String databaseRecordIDVariableName = null;
+            if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+                recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+                databaseRecordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
+            } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+                recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+                databaseRecordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
+            } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+                recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName();
+                databaseRecordIDVariableName = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
             }
-            if (found) {
-                idColumnNumber--;
-                int id = (Integer) rows[0][idColumnNumber];
-                record = getRecord(id, tableName, lock);
+
+            DatabaseFilter filter = new DatabaseFilter();
+            filter.setFilterString(recordIDVariableName + " = '" + recordID + "' ");
+            DistributedTableDescription distributedTableDescription;
+            Object[][] rows;
+            DatabaseRecord record = null;
+
+            distributedTableDescription = getDistributedTableDescription(filter, tableName);
+            int numberOfRecords = distributedTableDescription.getRowCount();
+
+            rows = retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
+            releaseResultSet(distributedTableDescription.getResultSetID());
+            if (rows.length > 0) {
+                String[] columnNames = distributedTableDescription.getColumnNames();
+                int ids[] = new int[numberOfRecords];
+                boolean found = false;
+                int idColumnNumber = 0;
+
+                while (!found && idColumnNumber < columnNames.length) {
+                    found = columnNames[idColumnNumber++].equalsIgnoreCase(databaseRecordIDVariableName);
+                }
+                if (found) {
+                    idColumnNumber--;
+                    int id = (Integer) rows[0][idColumnNumber];
+                    record = getRecord(id, tableName, lock);
+                }
             }
+            return record;
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+            return null;
         }
-        return record;
     }
 
     /**
@@ -193,8 +215,15 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      */
     public void saveNewPopulationDataset(PopulationDataset pds) throws SecurityException, RemoteException {
-        int populationDatasetID = server.saveNewPopulationDataset(pds);
-        pds.setPopulationDatasetID(populationDatasetID);
+        try {
+            int populationDatasetID = server.saveNewPopulationDataset(pds);
+            pds.setPopulationDatasetID(populationDatasetID);
+        } catch (RemoteException ex) {
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -232,7 +261,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         versionString += "b" + appInfoProperties.getProperty("program.BUILDNUM");
         versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
         Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, "CanReg version: {0}", versionString);
-        
+
         splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("BUILDING GUI..."), 90);
         canRegClientView = new CanRegClientView(this);
 
@@ -251,20 +280,23 @@ public class CanRegClientApp extends SingleFrameApplication {
                         option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
                     }
                 } else {
-                    try {
-                        if (loggedIn) {
-                            int users = listUsersLoggedIn().length - 1;
-
-                            int numberOfRecordsOpen = numberOfRecordsOpen();
-                            if (numberOfRecordsOpen > 0) {
-                                option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + users + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_OTHERS_WILL_BE_DISCONNECTED.") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("YOU_HAVE_") + numberOfRecordsOpen + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_RECORDS_OPEN.") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
-                            } else {
-                                option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + users + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_OTHERS_WILL_BE_DISCONNECTED."), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
-                            }
-                        } else {
-                            option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_OTHERS_WILL_BE_DISCONNECTED."), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
+                    if (loggedIn) {
+                        int users = 0;
+                        try {
+                            users = listUsersLoggedIn().length - 1;
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    } catch (RemoteException ex) {
+                        int numberOfRecordsOpen = numberOfRecordsOpen();
+                        if (numberOfRecordsOpen > 0) {
+                            option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + users + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_OTHERS_WILL_BE_DISCONNECTED.") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("YOU_HAVE_") + numberOfRecordsOpen + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_RECORDS_OPEN.") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
+                        } else {
+                            option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + users + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_OTHERS_WILL_BE_DISCONNECTED."), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
+                        }
+                    } else {
+                        option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_OTHERS_WILL_BE_DISCONNECTED."), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
                     }
                 }
                 return option == JOptionPane.YES_OPTION;
@@ -273,9 +305,13 @@ public class CanRegClientApp extends SingleFrameApplication {
             @Override
             public void willExit(EventObject e) {
                 if (loggedIn) {
-                    logOut();
+                    try {
+                        logOut();
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-                if (isCanregServerRunningInThisThread()&&server!=null){
+                if (isCanregServerRunningInThisThread() && server != null) {
                     try {
                         server.shutDownServer();
                     } catch (RemoteException ex) {
@@ -357,7 +393,11 @@ public class CanRegClientApp extends SingleFrameApplication {
             //login object received
             // try to get system name
             sysName = loginServer.getSystemName();
-        } catch (Exception e) {
+        } catch (NotBoundException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MalformedURLException e) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, null, e);
             // System.exit(0);
         }
@@ -425,8 +465,16 @@ public class CanRegClientApp extends SingleFrameApplication {
         return systemName;
     }
 
-    public DatabaseStats getDatabaseStats() throws RemoteException, SecurityException {
-        return server.getDatabaseStats();
+    public DatabaseStats getDatabaseStats() throws SecurityException, RemoteException {
+        try {
+            return server.getDatabaseStats();
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+        }
+        return null;
     }
 
     /**
@@ -435,8 +483,16 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public String[] listUsersLoggedIn() throws RemoteException, SecurityException {
-        return server.listCurrentUsers();
+    public String[] listUsersLoggedIn() throws SecurityException, RemoteException {
+        try {
+            return server.listCurrentUsers();
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+        }
+        return null;
     }
 
     /**
@@ -455,8 +511,15 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public void startDatabaseServer() throws RemoteException, SecurityException {
-        server.startNetworkDBServer();
+    public void startDatabaseServer() throws SecurityException, RemoteException {
+        try {
+            server.startNetworkDBServer();
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+        }
     }
 
     /**
@@ -464,8 +527,15 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public void stopDatabaseServer() throws RemoteException, SecurityException {
-        server.stopNetworkDBServer();
+    public void stopDatabaseServer() throws SecurityException, RemoteException {
+        try {
+            server.stopNetworkDBServer();
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+        }
     }
 
     /**
@@ -498,7 +568,14 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      */
     public void refreshDictionary() throws SecurityException, RemoteException {
-        dictionary = server.getDictionary();
+        try {
+            dictionary = server.getDictionary();
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+        }
     }
 
     /**
@@ -535,8 +612,16 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param io
      * @throws java.rmi.RemoteException
      */
-    public boolean importFile(Task<Object, Void> task, Document doc, List<Relation> map, File file, ImportOptions io) throws RemoteException, SQLException, SecurityException, RecordLockedException {
-        return canreg.client.dataentry.Import.importFile(task, doc, map, file, server, io);
+    public boolean importFile(Task<Object, Void> task, Document doc, List<Relation> map, File file, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
+        try {
+            return canreg.client.dataentry.Import.importFile(task, doc, map, file, server, io);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+        }
+        return false;
     }
 
     /**
@@ -548,8 +633,16 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param io
      * @throws java.rmi.RemoteException
      */
-    public boolean importFiles(Task<Object, Void> task, Document doc, List<Relation> map, File[] files, ImportOptions io) throws RemoteException, SQLException, SecurityException, RecordLockedException {
-        return canreg.client.dataentry.Import.importFiles(task, doc, map, files, server, io);
+    public boolean importFiles(Task<Object, Void> task, Document doc, List<Relation> map, File[] files, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
+        try {
+            return canreg.client.dataentry.Import.importFiles(task, doc, map, files, server, io);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+        }
+        return false;
     }
 
     /**
@@ -570,6 +663,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             // logOut();
             super.quit(evt);
+            // TODO if canreg server is running in this thread - shut it down...
         } catch (SecurityException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -578,17 +672,24 @@ public class CanRegClientApp extends SingleFrameApplication {
     /**
      * 
      */
-    public void logOut() {
+    public void logOut() throws RemoteException {
         try {
             releaseAllRecordsHeldByThisClient();
-            server.userLoggedOut(username);
+            if (server != null) {
+                try {
+                    server.userLoggedOut(username);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                    if (!handlePotentialDisconnect(ex.getCause())) {
+                        throw ex;
+                    }
+                }
+            }
             server = null;
             systemName = "";
             loggedIn = false;
             canRegClientView.setUserRightsLevel(Globals.UserRightLevels.NOT_LOGGED_IN);
             localSettings.writeSettings();
-        } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -609,11 +710,13 @@ public class CanRegClientApp extends SingleFrameApplication {
     public Globals.UserRightLevels getUserRightLevel() {
         Globals.UserRightLevels level = Globals.UserRightLevels.NOT_LOGGED_IN;
         try {
+
             level = server.getUserRightLevel();
-            // For now all users are supervisors
+            // return Globals.UserRightLevels.SUPERVISOR;
             // return Globals.UserRightLevels.SUPERVISOR;
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            handlePotentialDisconnect(ex.getCause());
         } catch (SecurityException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -626,14 +729,15 @@ public class CanRegClientApp extends SingleFrameApplication {
      * 
      * @return
      */
-    public String performBackup() {
+    public String performBackup() throws RemoteException {
         String path = null;
         try {
             path = server.performBackup();
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
         }
         return path;
     }
@@ -646,13 +750,21 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      */
     public String restoreBackup(String path) throws SecurityException, RemoteException {
-        String message = server.restoreFromBackup(path);
-        // Refresh the dictionary
-        // refreshDictionary();
+        try {
+            String message = server.restoreFromBackup(path);
+            // refreshDictionary();
+            // refreshDictionary();
 
-        //Log out...
-        logOut();
-        return message;
+            //Log out...
+            logOut();
+            return message;
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+        }
+        return null;
     }
 
     /**
@@ -681,8 +793,16 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.lang.SecurityException
      * @throws java.lang.Exception
      */
-    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, UnknownTableException, DistributedTableDescriptionException {
-        return server.getDistributedTableDescription(filter, tableName);
+    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, SecurityException, UnknownTableException, DistributedTableDescriptionException, RemoteException {
+        try {
+            return server.getDistributedTableDescription(filter, tableName);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+        }
+        return null;
     }
 
     /**
@@ -693,12 +813,20 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
-    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock) throws SecurityException, RemoteException, RecordLockedException {
-        DatabaseRecord record = server.getRecord(recordID, tableName, lock);
-        if (lock && record != null) {
-            lockRecord(recordID, tableName);
+    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock) throws SecurityException, RecordLockedException, RemoteException {
+        try {
+            DatabaseRecord record = server.getRecord(recordID, tableName, lock);
+            if (lock && record != null) {
+                lockRecord(recordID, tableName);
+            }
+            return record;
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
         }
-        return record;
+        return null;
     }
 
     /**
@@ -707,24 +835,33 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
-    public int saveRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException, SQLException, RecordLockedException {
+    public int saveRecord(DatabaseRecord databaseRecord) throws SecurityException, SQLException, RecordLockedException, RemoteException {
         int recordNumber = -1;
-        if (databaseRecord != null) {
-            if (databaseRecord instanceof Patient) {
-                databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
-                databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdatedBy.toString()).getDatabaseVariableName(), username);
-                recordNumber = server.savePatient((Patient) databaseRecord);
-            } else if (databaseRecord instanceof Tumour) {
-                databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
-                databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdatedBy.toString()).getDatabaseVariableName(), username);
-                recordNumber = server.saveTumour((Tumour) databaseRecord);
-            } else if (databaseRecord instanceof NameSexRecord) {
-                recordNumber = server.saveNameSexRecord((NameSexRecord) databaseRecord, true);
-            } else if (databaseRecord instanceof PopulationDataset) {
-                // recordNumber = server.savePopulationDataset((PopulationDataset) databaseRecord);
+        try {
+            if (databaseRecord != null) {
+                if (databaseRecord instanceof Patient) {
+
+                    databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
+                    databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdatedBy.toString()).getDatabaseVariableName(), username);
+                    recordNumber = server.savePatient((Patient) databaseRecord);
+
+                } else if (databaseRecord instanceof Tumour) {
+                    databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
+                    databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdatedBy.toString()).getDatabaseVariableName(), username);
+                    recordNumber = server.saveTumour((Tumour) databaseRecord);
+                } else if (databaseRecord instanceof NameSexRecord) {
+                    recordNumber = server.saveNameSexRecord((NameSexRecord) databaseRecord, true);
+                } else if (databaseRecord instanceof PopulationDataset) {
+                    // recordNumber = server.savePopulationDataset((PopulationDataset) databaseRecord);
+                }
+            } else {
+                debugOut("Trying to save null databaseRecord.");
             }
-        } else {
-            debugOut("Trying to save null databaseRecord.");
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
         }
         return recordNumber;
     }
@@ -735,29 +872,53 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
-    public void editRecord(DatabaseRecord databaseRecord) throws SecurityException, RemoteException, RecordLockedException {
-        if (databaseRecord instanceof Patient) {
-            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
-            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdatedBy.toString()).getDatabaseVariableName(), username);
-            server.editPatient((Patient) databaseRecord);
-        } else if (databaseRecord instanceof Tumour) {
-            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
-            databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdatedBy.toString()).getDatabaseVariableName(), username);
-            server.editTumour((Tumour) databaseRecord);
+    public void editRecord(DatabaseRecord databaseRecord) throws SecurityException, RecordLockedException, RemoteException {
+        try {
+            if (databaseRecord instanceof Patient) {
+
+                databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
+                databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdatedBy.toString()).getDatabaseVariableName(), username);
+                server.editPatient((Patient) databaseRecord);
+
+            } else if (databaseRecord instanceof Tumour) {
+                databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString()).getDatabaseVariableName(), dateFormat.format(new Date()));
+                databaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdatedBy.toString()).getDatabaseVariableName(), username);
+                server.editTumour((Tumour) databaseRecord);
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
         }
     }
 
-    public boolean deleteRecord(int id, String tableName) throws SecurityException, RemoteException, RecordLockedException, SQLException {
-        return server.deleteRecord(id, tableName);
+    public boolean deleteRecord(int id, String tableName) throws SecurityException, RecordLockedException, SQLException, RemoteException {
+        try {
+            return server.deleteRecord(id, tableName);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+        }
+        return false;
     }
 
-    public synchronized void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException {
-        // release a locked record
-        Set lockSet = locksMap.get(tableName);
-        if (lockSet != null) {
-            lockSet.remove(recordID);
+    public synchronized void releaseRecord(int recordID, String tableName) throws SecurityException, RemoteException {
+        try {
+            // release a locked record
+            Set lockSet = locksMap.get(tableName);
+            if (lockSet != null) {
+                lockSet.remove(recordID);
+            }
+            server.releaseRecord(recordID, tableName);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
         }
-        server.releaseRecord(recordID, tableName);
     }
 
     private synchronized boolean isRecordLocked(int recordID, String tableName) {
@@ -777,7 +938,15 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      */
     public boolean deleteDictionaryEntries(int dictionaryID) throws SecurityException, RemoteException {
-        return server.deleteDictionaryEntries(dictionaryID);
+        try {
+            return server.deleteDictionaryEntries(dictionaryID);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+            return false;
+        }
     }
 
     /**
@@ -787,7 +956,15 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      */
     public boolean clearNameSexTable() throws SecurityException, RemoteException {
-        return server.clearNameSexTable();
+        try {
+            return server.clearNameSexTable();
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+            return false;
+        }
     }
 
     /**
@@ -797,7 +974,15 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      */
     public Map<String, Integer> getNameSexTables() throws SecurityException, RemoteException {
-        return server.getNameSexTables();
+        try {
+            return server.getNameSexTables();
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+            return null;
+        }
     }
 
     /**
@@ -807,7 +992,14 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      */
     public void saveDictionaryEntry(DictionaryEntry entry) throws SecurityException, RemoteException {
-        server.saveDictionaryEntry(entry);
+        try {
+            server.saveDictionaryEntry(entry);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+        }
     }
 
     /**
@@ -820,7 +1012,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.sql.SQLException
      * @throws java.lang.Exception
      */
-    public Tumour[] getTumourRecordsBasedOnPatientID(String idString, boolean lock) throws RemoteException, SecurityException, SQLException, RecordLockedException, DistributedTableDescriptionException, UnknownTableException {
+    public Tumour[] getTumourRecordsBasedOnPatientID(String idString, boolean lock) throws SecurityException, SQLException, RecordLockedException, DistributedTableDescriptionException, UnknownTableException, RemoteException {
         Tumour[] records = null;
         String lookUpTableName = "";
         DatabaseFilter filter = new DatabaseFilter();
@@ -856,6 +1048,11 @@ public class CanRegClientApp extends SingleFrameApplication {
                     records[j] = (Tumour) getRecord(id, lookUpTableName, lock);
                 } catch (RecordLockedException recordLockedException) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record " + id + " already locked?", recordLockedException);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                    if (!handlePotentialDisconnect(ex.getCause())) {
+                        throw ex;
+                    }
                 }
             }
         }
@@ -863,7 +1060,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         return records;
     }
 
-    public Tumour getTumourRecordBasedOnTumourID(String idString, boolean lock) throws RemoteException, SecurityException, SQLException, RecordLockedException, DistributedTableDescriptionException, UnknownTableException {
+    public Tumour getTumourRecordBasedOnTumourID(String idString, boolean lock) throws SecurityException, SQLException, RecordLockedException, DistributedTableDescriptionException, UnknownTableException, RemoteException {
         Tumour[] records = null;
         Tumour tumourToReturn = null;
         String lookUpTableName = "";
@@ -896,8 +1093,15 @@ public class CanRegClientApp extends SingleFrameApplication {
                 records = new Tumour[numberOfRecords];
                 idColumnNumber--;
                 for (int j = 0; j < numberOfRecords; j++) {
-                    id = (Integer) rows[j][idColumnNumber];
-                    records[j] = (Tumour) getRecord(id, lookUpTableName, lock);
+                    try {
+                        id = (Integer) rows[j][idColumnNumber];
+                        records[j] = (Tumour) getRecord(id, lookUpTableName, lock);
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                        if (!handlePotentialDisconnect(ex.getCause())) {
+                            throw ex;
+                        }
+                    }
                 }
                 try {
                     tumourToReturn = records[0];
@@ -958,7 +1162,15 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      */
     public Map<Integer, PopulationDataset> getPopulationDatasets() throws SecurityException, RemoteException {
-        return server.getPopulationDatasets();
+        try {
+            return server.getPopulationDatasets();
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+            return null;
+        }
     }
 
     /**
@@ -971,8 +1183,16 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.lang.SecurityException
      * @throws java.lang.Exception
      */
-    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException, DistributedTableDescriptionException {
-        return server.retrieveRows(resultSetID, from, to);
+    public Object[][] retrieveRows(String resultSetID, int from, int to) throws SecurityException, DistributedTableDescriptionException, RemoteException {
+        try {
+            return server.retrieveRows(resultSetID, from, to);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+            return null;
+        }
     }
 
     /**
@@ -981,8 +1201,15 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
-    public void releaseResultSet(String resultSetID) throws SecurityException, RemoteException, SQLException {
-        server.releaseResultSet(resultSetID);
+    public void releaseResultSet(String resultSetID) throws SecurityException, SQLException, RemoteException {
+        try {
+            server.releaseResultSet(resultSetID);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+        }
     }
 
     /**
@@ -993,7 +1220,15 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     public Date getDateOfLastBackUp() throws SecurityException, RemoteException {
         if (server != null) {
-            return server.getDateOfLastBackUp();
+            try {
+                return server.getDateOfLastBackUp();
+            } catch (RemoteException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                if (!handlePotentialDisconnect(ex.getCause())) {
+                    throw ex;
+                }
+                return null;
+            }
         } else {
             return null;
         }
@@ -1008,7 +1243,15 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      */
     public Map<String, Float> performDuplicateSearch(Patient patient, PersonSearcher searcher) throws SecurityException, RemoteException {
-        return server.performPersonSearch(patient, searcher);
+        try {
+            return server.performPersonSearch(patient, searcher);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+            return null;
+        }
     }
 
     /**
@@ -1040,15 +1283,41 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      */
     public String initiateGlobalDuplicateSearch(PersonSearcher searcher, String rangeStart, String rangeEnd) throws SecurityException, RemoteException {
-        return server.initiateGlobalPersonSearch(searcher, rangeStart, rangeEnd);
+        try {
+            return server.initiateGlobalPersonSearch(searcher, rangeStart, rangeEnd);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+            return null;
+        }
     }
 
-    public Map<String, Map<String, Float>> nextStepGlobalPersonSearch(String idString) throws SecurityException, RemoteException, Exception {
-        return server.nextStepGlobalPersonSearch(idString);
+    public Map<String, Map<String, Float>> nextStepGlobalPersonSearch(String idString) throws SecurityException, RemoteException {
+        try {
+            return server.nextStepGlobalPersonSearch(idString);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+        } catch (Exception ex) {
+            // TODO: stop throwing general exceptions...
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     public void interuptGlobalPersonSearch(String idString) throws SecurityException, RemoteException {
-        server.interuptGlobalPersonSearch(idString);
+        try {
+            server.interuptGlobalPersonSearch(idString);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+        }
     }
 
     /**
@@ -1060,7 +1329,15 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     public List<User> listUsers() throws SecurityException, RemoteException {
-        return server.listUsers();
+        try {
+            return server.listUsers();
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+            return null;
+        }
     }
 
     /**
@@ -1076,7 +1353,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             if (splash != null) {
                 Graphics2D g = splash.createGraphics();
                 g.setComposite(AlphaComposite.Clear);
-                g.fillRect(0,0,splash.getSize().width,splash.getSize().height);
+                g.fillRect(0, 0, splash.getSize().width, splash.getSize().height);
                 g.setPaintMode();
                 g.setColor(Color.BLACK);
                 g.setFont(new Font("SansSerif", Font.BOLD, 20));
@@ -1106,45 +1383,53 @@ public class CanRegClientApp extends SingleFrameApplication {
         lockSet.add(recordID);
     }
 
-    public Patient[] getPatientRecordsByID(String recordID, boolean lock) throws SQLException, RemoteException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException {
-        Patient[] records = null;
+    public Patient[] getPatientRecordsByID(String recordID, boolean lock) throws SQLException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException, RemoteException {
+        try {
+            Patient[] records = null;
 
-        String databaseRecordIDVariableName = null;
-        String tableName = Globals.PATIENT_TABLE_NAME;
-        String patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
-        databaseRecordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
+            String databaseRecordIDVariableName = null;
+            String tableName = Globals.PATIENT_TABLE_NAME;
+            String patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
+            databaseRecordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
 
-        DatabaseFilter filter = new DatabaseFilter();
-        filter.setFilterString(patientIDVariableName + " = '" + recordID + "' ");
-        DistributedTableDescription distributedTableDescription;
-        Object[][] rows;
-        DatabaseRecord record = null;
+            DatabaseFilter filter = new DatabaseFilter();
+            filter.setFilterString(patientIDVariableName + " = '" + recordID + "' ");
+            DistributedTableDescription distributedTableDescription;
+            Object[][] rows;
+            DatabaseRecord record = null;
 
-        distributedTableDescription = getDistributedTableDescription(filter, tableName);
+            distributedTableDescription = getDistributedTableDescription(filter, tableName);
 
-        int numberOfRecords = distributedTableDescription.getRowCount();
-        records = new Patient[numberOfRecords];
+            int numberOfRecords = distributedTableDescription.getRowCount();
+            records = new Patient[numberOfRecords];
 
-        rows = retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
-        releaseResultSet(distributedTableDescription.getResultSetID());
-        if (rows.length > 0) {
-            String[] columnNames = distributedTableDescription.getColumnNames();
-            int ids[] = new int[numberOfRecords];
-            boolean found = false;
-            int idColumnNumber = 0;
+            rows = retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
+            releaseResultSet(distributedTableDescription.getResultSetID());
+            if (rows.length > 0) {
+                String[] columnNames = distributedTableDescription.getColumnNames();
+                int ids[] = new int[numberOfRecords];
+                boolean found = false;
+                int idColumnNumber = 0;
 
-            while (!found && idColumnNumber < columnNames.length) {
-                found = columnNames[idColumnNumber++].equalsIgnoreCase(databaseRecordIDVariableName);
-            }
-            if (found) {
-                idColumnNumber--;
-                for (int recordNo = 0; recordNo < numberOfRecords; recordNo++) {
-                    int id = (Integer) rows[recordNo][idColumnNumber];
-                    records[recordNo] = (Patient) getRecord(id, Globals.PATIENT_TABLE_NAME, lock);
+                while (!found && idColumnNumber < columnNames.length) {
+                    found = columnNames[idColumnNumber++].equalsIgnoreCase(databaseRecordIDVariableName);
+                }
+                if (found) {
+                    idColumnNumber--;
+                    for (int recordNo = 0; recordNo < numberOfRecords; recordNo++) {
+                        int id = (Integer) rows[recordNo][idColumnNumber];
+                        records[recordNo] = (Patient) getRecord(id, Globals.PATIENT_TABLE_NAME, lock);
+                    }
                 }
             }
+            return records;
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+            return null;
         }
-        return records;
     }
 
     private synchronized int numberOfRecordsOpen() {
@@ -1166,15 +1451,13 @@ public class CanRegClientApp extends SingleFrameApplication {
         if (splash != null) {
             Graphics2D g = splash.createGraphics();
             g.setComposite(AlphaComposite.Clear);
-            g.fillRect(0,0,splash.getSize().width,splash.getSize().height);
+            g.fillRect(0, 0, splash.getSize().width, splash.getSize().height);
             g.setPaintMode();
             g.setColor(Color.BLACK);
             g.setFont(new Font("SansSerif", Font.BOLD, 10));
-            g.drawString(message, 35, splash.getSize().height / 2+20);
-            g.drawRect(35, splash.getSize().height/2+30
-                    , splash.getSize().width-70, 9);
-            g.fillRect(37,splash.getSize().height/2+32
-                    ,(progress*(splash.getSize().width-68)/maxProgress),5);
+            g.drawString(message, 35, splash.getSize().height / 2 + 20);
+            g.drawRect(35, splash.getSize().height / 2 + 30, splash.getSize().width - 70, 9);
+            g.fillRect(37, splash.getSize().height / 2 + 32, (progress * (splash.getSize().width - 68) / maxProgress), 5);
             splash.update();
         }
     }
@@ -1200,7 +1483,31 @@ public class CanRegClientApp extends SingleFrameApplication {
         canRegClientView.showLoginFrame();
     }
 
-    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray) throws SecurityException, RemoteException{
-        return server.setDBPassword(newPasswordArray, oldPasswordArray); 
+    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray) throws SecurityException, RemoteException {
+        try {
+            return server.setDBPassword(newPasswordArray, oldPasswordArray);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex.getCause())) {
+                throw ex;
+            }
+            return false;
+        }
+    }
+
+    public boolean handlePotentialDisconnect(Throwable ex) {
+        if (ex instanceof java.net.ConnectException) {
+            server = null;
+            systemName = "";
+            loggedIn = false;
+            canRegClientView.setLoggedOut();
+            JOptionPane.showMessageDialog(
+                    canRegClientView.getDesktopPane(),
+                    "You seem to have been disconnected from the server. \n"
+                    + "Please log in again...");
+            showLogginFrame();
+            return true;
+        }
+        return false;
     }
 }
