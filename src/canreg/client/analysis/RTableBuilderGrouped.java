@@ -167,10 +167,11 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
         try {
             // write pops to tempfile
             File popfile = File.createTempFile("pop", ".tsv");
-            BufferedWriter popoutput = new BufferedWriter(new FileWriter(popfile));
-
-            Tools.writePopulationsToFile(popoutput, startYear, populations, separator);
-            popoutput.close();
+            if (populations != null) {
+                BufferedWriter popoutput = new BufferedWriter(new FileWriter(popfile));
+                Tools.writePopulationsToFile(popoutput, startYear, populations, separator);
+                popoutput.close();
+            }
             // filesCreated.add(popfile.getPath());
 
             // prepare incidence table
@@ -183,11 +184,10 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
             String basisString;
 
             int sex, icdNumber, year, icdIndex, yearIndex, ageGroup, ageInt, basis, cases;
+            File incfile = File.createTempFile("inc", ".tsv");
 
             if (incidenceData != null) {
-
                 // write inc to tempfile
-                File incfile = File.createTempFile("inc", ".tsv");
                 BufferedWriter incoutput = new BufferedWriter(new FileWriter(incfile));
 
                 String incheader = "YEAR";
@@ -262,65 +262,64 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                 }
                 incoutput.flush();
                 incoutput.close();
+            }
+            // filesCreated.add(incfile.getPath());
 
-                // filesCreated.add(incfile.getPath());
+            File dir = new File(Globals.TABLES_CONF_PATH);
+            // call R
+            for (String rScript : rScripts) {
 
-                File dir = new File(Globals.TABLES_CONF_PATH);
-                // call R
-                for (String rScript : rScripts) {
-
-                    String command = "\"" + rpath + "\""
-                            + " --slave --file="
-                            + "\"" + dir.getAbsolutePath() + Globals.FILE_SEPARATOR
-                            + "r" + Globals.FILE_SEPARATOR
-                            + rScript
-                            + "\" "
-                            + "--args "
-                            + "-ft=" + fileType + " "
-                            + "-out=\"" + reportFileName + "\" "
-                            + "-pop=\"" + popfile.getPath() + "\" "
-                            + "-inc=\"" + incfile.getPath() + "\" ";
-                    // add the rest of the arguments
-                    if (rScriptsArguments != null) {
-                        for (String arg : rScriptsArguments) {
-                            command += arg + " ";
-                        }
+                String command = "\"" + rpath + "\""
+                        + " --slave --file="
+                        + "\"" + dir.getAbsolutePath() + Globals.FILE_SEPARATOR
+                        + "r" + Globals.FILE_SEPARATOR
+                        + rScript
+                        + "\" "
+                        + "--args "
+                        + "-ft=" + fileType + " "
+                        + "-out=\"" + reportFileName + "\" "
+                        + "-pop=\"" + popfile.getPath() + "\" "
+                        + "-inc=\"" + incfile.getPath() + "\" ";
+                // add the rest of the arguments
+                if (rScriptsArguments != null) {
+                    for (String arg : rScriptsArguments) {
+                        command += arg + " ";
                     }
+                }
 
-                    System.out.println(command);
-                    System.out.flush();
+                System.out.println(command);
+                System.out.flush();
 
-                    Runtime rt = Runtime.getRuntime();
-                    Process pr = rt.exec(command);
-                    // collect the output from the R program in a stream
-                    is = new BufferedInputStream(pr.getInputStream());
-                    try {
-                        pr.waitFor();
-                        // convert the output to a string
-                        String theString = convertStreamToString(is);
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
-                        // System.out.println(theString);             
-                        // and add all to the list of files to return
-                        for (String fileName : theString.split("\n")) {
-                            if (fileName.startsWith("-outFile:")) {
-                                fileName = fileName.replaceFirst("-outFile:", "");
-                                if (new File(fileName).exists()) {
-                                    filesCreated.add(fileName);
-                                }
+                Runtime rt = Runtime.getRuntime();
+                Process pr = rt.exec(command);
+                // collect the output from the R program in a stream
+                is = new BufferedInputStream(pr.getInputStream());
+                try {
+                    pr.waitFor();
+                    // convert the output to a string
+                    String theString = convertStreamToString(is);
+                    Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
+                    // System.out.println(theString);             
+                    // and add all to the list of files to return
+                    for (String fileName : theString.split("\n")) {
+                        if (fileName.startsWith("-outFile:")) {
+                            fileName = fileName.replaceFirst("-outFile:", "");
+                            if (new File(fileName).exists()) {
+                                filesCreated.add(fileName);
                             }
                         }
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (java.util.NoSuchElementException ex) {
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
-                        BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
-                        String errorMessage = convertStreamToString(errorStream);
-                        System.out.println(errorMessage);
-                        throw new TableErrorException("R says:\n" + errorMessage);
-                    } finally {
-                        System.out.println(pr.exitValue());
-                        // Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, null, pr.exitValue());
                     }
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (java.util.NoSuchElementException ex) {
+                    Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+                    BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
+                    String errorMessage = convertStreamToString(errorStream);
+                    System.out.println(errorMessage);
+                    throw new TableErrorException("R says:\n" + errorMessage);
+                } finally {
+                    System.out.println(pr.exitValue());
+                    // Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, null, pr.exitValue());
                 }
             }
 

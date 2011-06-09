@@ -116,14 +116,16 @@ public class Tools {
         popoutput.newLine();
         int thisYear = startYear;
         for (PopulationDataset popset : populations) {
-            String[] ageGroupNames = popset.getAgeGroupStructure().getAgeGroupNames();
-            for (PopulationDatasetsEntry pop : popset.getAgeGroups()) {
-                popoutput.append(thisYear + "").append(separator);
-                popoutput.append(ageGroupNames[pop.getAgeGroup()]).append(separator);
-                popoutput.append(pop.getStringRepresentationOfAgeGroupsForFile(separator)).append(separator);
-                // get reference pop
-                popoutput.append(popset.getWorldPopulationForAgeGroupIndex(pop.getSex(), pop.getAgeGroup()) + "");
-                popoutput.newLine();
+            if (popset != null) {
+                String[] ageGroupNames = popset.getAgeGroupStructure().getAgeGroupNames();
+                for (PopulationDatasetsEntry pop : popset.getAgeGroups()) {
+                    popoutput.append(thisYear + "").append(separator);
+                    popoutput.append(ageGroupNames[pop.getAgeGroup()]).append(separator);
+                    popoutput.append(pop.getStringRepresentationOfAgeGroupsForFile(separator)).append(separator);
+                    // get reference pop
+                    popoutput.append(popset.getWorldPopulationForAgeGroupIndex(pop.getSex(), pop.getAgeGroup()) + "");
+                    popoutput.newLine();
+                }
             }
             thisYear++;
         }

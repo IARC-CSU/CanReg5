@@ -115,38 +115,39 @@ public class RTableBuilder implements TableBuilderInterface {
         try {
             // write pops to tempfile
             File popfile = File.createTempFile("pop", ".tsv");
-            BufferedWriter popoutput = new BufferedWriter(new FileWriter(popfile));
-
-            Tools.writePopulationsToFile(popoutput, startYear, populations, separator);
-
-            popoutput.close();
+            if (populations != null) {
+                BufferedWriter popoutput = new BufferedWriter(new FileWriter(popfile));
+                Tools.writePopulationsToFile(popoutput, startYear, populations, separator);
+                popoutput.close();
+            }
             // filesCreated.add(popfile.getPath());
 
             // write inc to tempfile
             File incfile = File.createTempFile("inc", ".tsv");
-            BufferedWriter incoutput = new BufferedWriter(new FileWriter(incfile));
+            if (incidenceData != null) {
+                BufferedWriter incoutput = new BufferedWriter(new FileWriter(incfile));
 
-            String incheader = "YEAR";
-            for (StandardVariableNames stdVarbName : variablesNeeded) {
-                incheader += separator + stdVarbName.toString().toUpperCase();
-            }
-            incheader += separator + "CASES";
-            incoutput.append(incheader);
-            incoutput.newLine();
-            StringBuilder line = new StringBuilder();
-            for (Object[] row : incidenceData) {
-                line.delete(0, line.length());
-                for (Object element : row) {
-                    line.append(element.toString()).append(separator);
+                String incheader = "YEAR";
+                for (StandardVariableNames stdVarbName : variablesNeeded) {
+                    incheader += separator + stdVarbName.toString().toUpperCase();
                 }
-                line.deleteCharAt(line.length() - 1);
-                incoutput.append(line);
+                incheader += separator + "CASES";
+                incoutput.append(incheader);
                 incoutput.newLine();
+                StringBuilder line = new StringBuilder();
+                for (Object[] row : incidenceData) {
+                    line.delete(0, line.length());
+                    for (Object element : row) {
+                        line.append(element.toString()).append(separator);
+                    }
+                    line.deleteCharAt(line.length() - 1);
+                    incoutput.append(line);
+                    incoutput.newLine();
+                }
+                incoutput.flush();
+                incoutput.close();
+                // filesCreated.add(incfile.getPath());
             }
-            incoutput.flush();
-            incoutput.close();
-            // filesCreated.add(incfile.getPath());
-
             File dir = new File(Globals.TABLES_CONF_PATH);
             // call R
 
