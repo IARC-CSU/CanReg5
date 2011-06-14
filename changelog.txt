@@ -3,6 +3,7 @@ Changelog
 5.00.07rc2
 - The database can now be encrypted with 56-bit DES using a minimum 8 character long boot password. The user must then provide this password during every server launch.
 - All server calls now handles server disconnects and requests users to log in again. This should end problems on laptops falling asleep.
+- The CanReg server can now be launched in single user mode without RMI (network calls).
 - Launch server no longer hangs if XML contains an invalid standard variable name.
 - Person Search and duplicate search renamed to Duplicate Patient Search.
 - New source added to tumour by default on creation of new tumour.

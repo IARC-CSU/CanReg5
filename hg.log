@@ -1,5 +1,20 @@
-changeset:   878:dd87b8c0dbb6
+changeset:   881:ff23d6941658
 tag:         tip
+user:        ErvikM@X90164
+date:        Tue Jun 14 17:04:40 2011 +0200
+summary:     The CanReg server can now be launched in single user mode without RMI.
+
+changeset:   880:1b0a6ec95aed
+user:        ErvikM@X90164
+date:        Thu Jun 09 17:34:19 2011 +0200
+summary:     5.00.07rc3 - Summer School Edition
+
+changeset:   879:5396dca64235
+user:        ErvikM@X90164
+date:        Thu Jun 09 16:30:07 2011 +0200
+summary:     Improved detection of server disconnects.
+
+changeset:   878:dd87b8c0dbb6
 user:        ErvikM@X90164
 date:        Thu Jun 09 10:39:36 2011 +0200
 summary:     All server calls now handles server disconnects and requests users to log in again.
