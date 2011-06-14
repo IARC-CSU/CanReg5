@@ -17,9 +17,9 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.server;
 
+import canreg.common.Globals;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.rmi.server.*;
@@ -44,7 +44,16 @@ public class CanRegLoginImpl extends UnicastRemoteObject
      */
     public CanRegLoginImpl(CanRegServerInterface server)
             throws RemoteException, MalformedURLException {
+        System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
+        System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
         this.theServer = server;
+    }
+
+    public CanRegLoginImpl(String serverCode)
+            throws RemoteException, MalformedURLException {
+        System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
+        System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
+        theServer = new CanRegServerImpl(serverCode);
     }
 
     @Override
@@ -56,7 +65,7 @@ public class CanRegLoginImpl extends UnicastRemoteObject
         Subject user = lc.getSubject();
 
         theServer.userLoggedIn(username);
-        
+
         // Return a reference to a proxy object that encapsulates the access
         // to the theServer, for this client
         return new CanRegServerProxy(user, theServer);
@@ -82,4 +91,3 @@ public class CanRegLoginImpl extends UnicastRemoteObject
         return theServer.getCanRegVersion();
     }
 }
-

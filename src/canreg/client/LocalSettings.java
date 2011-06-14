@@ -88,6 +88,10 @@ public final class LocalSettings {
     /**
      * 
      */
+    public static String SINGLE_USER_MODE_KEY = "single_user";
+    /**
+     * 
+     */
     public static String LOOK_AND_FEEL_KEY = "look_and_feel";
     /**
      * 

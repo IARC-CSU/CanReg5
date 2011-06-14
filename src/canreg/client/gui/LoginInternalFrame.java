@@ -116,6 +116,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         jButton1 = new javax.swing.JButton();
         portField = new javax.swing.JTextField();
         portLabel = new javax.swing.JLabel();
+        singleUserCheckBox = new javax.swing.JCheckBox();
         advancedCheckBox = new javax.swing.JCheckBox();
         launchServerButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -193,12 +194,12 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(jLabel1))
                 .addGap(10, 10, 10)
                 .addGroup(systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(canRegSystemComboBox, 0, 365, Short.MAX_VALUE)
+                    .addComponent(canRegSystemComboBox, 0, 364, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, systemPanelLayout.createSequentialGroup()
-                        .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                        .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(rememberPasswordCheckBox))
-                    .addComponent(usernameTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
+                    .addComponent(usernameTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE))
                 .addContainerGap())
         );
         systemPanelLayout.setVerticalGroup(
@@ -216,7 +217,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(passwordLabel)
                     .addComponent(rememberPasswordCheckBox)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(137, Short.MAX_VALUE))
+                .addContainerGap(139, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("systemPanel.TabConstraints.tabTitle"), systemPanel); // NOI18N
@@ -271,6 +272,10 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         portLabel.setText(resourceMap.getString("portLabel.text")); // NOI18N
         portLabel.setName("portLabel"); // NOI18N
 
+        singleUserCheckBox.setText(resourceMap.getString("singleUserCheckBox.text")); // NOI18N
+        singleUserCheckBox.setToolTipText(resourceMap.getString("singleUserCheckBox.toolTipText")); // NOI18N
+        singleUserCheckBox.setName("singleUserCheckBox"); // NOI18N
+
         javax.swing.GroupLayout advancedPanelLayout = new javax.swing.GroupLayout(advancedPanel);
         advancedPanel.setLayout(advancedPanelLayout);
         advancedPanelLayout.setHorizontalGroup(
@@ -278,15 +283,16 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(advancedPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(advancedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                .addGroup(advancedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(singleUserCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
                     .addComponent(autoStartCheckBox)
                     .addGroup(advancedPanelLayout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(portLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(portField, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         advancedPanelLayout.setVerticalGroup(
@@ -294,12 +300,14 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(advancedPanelLayout.createSequentialGroup()
                 .addGroup(advancedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
+                    .addComponent(jButton1)
                     .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(portLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(advancedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(autoStartCheckBox)))
+                .addComponent(autoStartCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(singleUserCheckBox)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         advancedCheckBox.setAction(actionMap.get("changeShowAdvancedAction")); // NOI18N
@@ -343,11 +351,11 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(codeField, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
-                            .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)))
+                                .addComponent(codeField, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
+                            .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)))
                     .addGroup(settingsPanelLayout.createSequentialGroup()
                         .addComponent(advancedCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
                         .addComponent(launchServerButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addServerToListButton)))
@@ -373,7 +381,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(launchServerButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(advancedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("settingsPanel.TabConstraints.tabTitle"), settingsPanel); // NOI18N
@@ -385,9 +393,9 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(feedbackLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                        .addComponent(feedbackLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -398,7 +406,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(loginButton)
@@ -446,9 +454,15 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         } else {
             autoStartCheckBox.setSelected(false);
         }
+        String singleUserBooleanString = localSettings.getProperty(LocalSettings.SINGLE_USER_MODE_KEY);
+        if (singleUserBooleanString != null) {
+            boolean autoStartServerBoolean = singleUserBooleanString.equalsIgnoreCase(LocalSettings.TRUE_PROPERTY);
+            singleUserCheckBox.setSelected(autoStartServerBoolean);
+        } else {
+            singleUserCheckBox.setSelected(false);
+        }
         // Advanced 
         advancedPanel.setVisible(false);
-
     }
 
     private void saveDefaultValues() {
@@ -474,6 +488,12 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             localSettings.setProperty(LocalSettings.AUTO_START_SERVER_KEY, LocalSettings.TRUE_PROPERTY);
         } else {
             localSettings.setProperty(LocalSettings.AUTO_START_SERVER_KEY, LocalSettings.FALSE_PROPERTY);
+        }
+        // Should one log in to the server in local only mode?
+        if (singleUserCheckBox.isSelected()) {
+            localSettings.setProperty(LocalSettings.SINGLE_USER_MODE_KEY, LocalSettings.TRUE_PROPERTY);
+        } else {
+            localSettings.setProperty(LocalSettings.SINGLE_USER_MODE_KEY, LocalSettings.FALSE_PROPERTY);
         }
         localSettings.writeSettings();
     }
@@ -514,7 +534,25 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
 
         try {
             saveDefaultValues();
-            String canRegSystemName = CanRegClientApp.getApplication().login(serverObjectString, username, password);
+            String canRegSystemName;
+            // testing an approach to avoid the RMI for single users
+            boolean loginLocally = singleUserCheckBox.isSelected();
+            if (!loginLocally) {
+                canRegSystemName = CanRegClientApp.getApplication().loginRMI(serverObjectString, username, password);
+            } else {
+                feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("LAUNCHING_SERVER..."));
+
+                WaitFrame waitFrame = new WaitFrame();
+                waitFrame.setLabel(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("LAUNCHING_SERVER..."));
+                waitFrame.setIndeterminate(true);
+                desktopPane.add(waitFrame, javax.swing.JLayeredPane.POPUP_LAYER);
+                waitFrame.setVisible(true);
+                waitFrame.setLocation((desktopPane.getWidth() - waitFrame.getWidth()) / 2, (desktopPane.getHeight() - waitFrame.getHeight()) / 2);
+
+                canRegSystemName = CanRegClientApp.getApplication().loginDirect(code, username, password);
+
+                waitFrame.dispose();
+            }
             if (canRegSystemName != null) {
                 fv.getFrame().setTitle("CanReg5 - " + canRegSystemName);
                 this.dispose();
@@ -626,6 +664,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel serverURLLabel;
     private javax.swing.JTextField serverURLTextField;
     private javax.swing.JPanel settingsPanel;
+    private javax.swing.JCheckBox singleUserCheckBox;
     private javax.swing.JPanel systemPanel;
     private javax.swing.JLabel usernameLabel;
     private javax.swing.JTextField usernameTextField;

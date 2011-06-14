@@ -46,6 +46,7 @@ import canreg.common.database.Patient;
 import canreg.common.database.PopulationDataset;
 import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
+import canreg.server.CanRegLoginImpl;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -411,7 +412,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param username The username of the user
      * @param password The password of the user
      * @return CanReg System's name if successfull - null if not
-     * @throws javax.security.auth.login.LoginException
+     * @throws javax.security.auth.loginRMI.LoginException
      * @throws java.lang.NullPointerException
      * @throws java.rmi.NotBoundException
      * @throws java.net.MalformedURLException
@@ -419,24 +420,37 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.net.UnknownHostException
      * @throws canreg.exceptions.WrongCanRegVersionException
      */
-    public String login(String serverObjectString, String username, char[] password) throws LoginException, NullPointerException, NotBoundException, MalformedURLException, RemoteException, UnknownHostException, WrongCanRegVersionException {
-        this.username = username;
+    public String loginRMI(String serverObjectString, String username, char[] password) throws LoginException, NullPointerException, NotBoundException, MalformedURLException, RemoteException, UnknownHostException, WrongCanRegVersionException {
+        String returnString = null;
         debugOut("connecting to server=" + serverObjectString + " as " + username + ".");
-        CanRegLoginInterface loginServer = null;
-
         //authenticate credentials
-        loginServer = (CanRegLoginInterface) Naming.lookup(serverObjectString);
+        CanRegLoginInterface loginServer = getCanRegLoginServer(serverObjectString);
         //login object received
+        if (loginServer != null) {
+            returnString = login(loginServer, username, password);
+        }
+        return returnString;
+    }
+    
+    public String loginDirect(String serverCode, String username, char[] password) throws LoginException, NullPointerException, NotBoundException, MalformedURLException, RemoteException, UnknownHostException, WrongCanRegVersionException {
+        // should this be moved to the loginserver?
+        CanRegLoginInterface loginServer = new CanRegLoginImpl(serverCode);
+        return login(loginServer, username, password);
+    }
 
+    private CanRegLoginInterface getCanRegLoginServer(String serverObjectString) throws NotBoundException, MalformedURLException, RemoteException {
+        return (CanRegLoginInterface) Naming.lookup(serverObjectString);
+    }
+
+    private String login(CanRegLoginInterface loginServer, String username, char[] password) throws LoginException, NullPointerException, NotBoundException, MalformedURLException, RemoteException, UnknownHostException, WrongCanRegVersionException {
         if (!canRegSystemVersionString.trim().equalsIgnoreCase(loginServer.getSystemVersion().trim())) {
             throw (new WrongCanRegVersionException("Server: " + loginServer.getSystemVersion() + ", Client: " + canRegSystemVersionString));
         }
-        //do the login 
+        //do the loginRMI 
         debugOut("ATTEMPTING LOGIN");
         server = (CanRegServerInterface) loginServer.login(username, password);
         if (server != null) {
             // See if server version of CanReg matches the 
-
 
             debugOut("LOGIN SUCCESSFULL");
             // This should work...
@@ -454,6 +468,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
             checker = new Checker(globalToolBox.getStandardVariables());
             converter = new Converter(globalToolBox.getStandardVariables());
+            this.username = username;
 
             return systemName;
         } else {
