@@ -257,6 +257,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         advancedPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("advancedPanel.border.title"))); // NOI18N
         advancedPanel.setName("advancedPanel"); // NOI18N
 
+        autoStartCheckBox.setAction(actionMap.get("autoLaunchServerToggled")); // NOI18N
         autoStartCheckBox.setText(resourceMap.getString("autoStartCheckBox.text")); // NOI18N
         autoStartCheckBox.setName("autoStartCheckBox"); // NOI18N
 
@@ -272,6 +273,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         portLabel.setText(resourceMap.getString("portLabel.text")); // NOI18N
         portLabel.setName("portLabel"); // NOI18N
 
+        singleUserCheckBox.setAction(actionMap.get("singleUserModeToggledAction")); // NOI18N
         singleUserCheckBox.setText(resourceMap.getString("singleUserCheckBox.text")); // NOI18N
         singleUserCheckBox.setToolTipText(resourceMap.getString("singleUserCheckBox.toolTipText")); // NOI18N
         singleUserCheckBox.setName("singleUserCheckBox"); // NOI18N
@@ -518,6 +520,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
 
     private void codeFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_codeFieldFocusGained
         launchServerButton.setEnabled(true);
+        singleUserCheckBox.setEnabled(true);
     }//GEN-LAST:event_codeFieldFocusGained
 
     /**
@@ -745,6 +748,8 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                 CanRegClientApp.getApplication().setCanregServerRunningInThisThread(true);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SERVER_STARTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
                 launchServerButton.setEnabled(false);
+                singleUserCheckBox.setSelected(false);
+                singleUserCheckBox.setEnabled(false);
             } else {
                 feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SERVER_FAILED_TO_START."));
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SERVER_FAILED_TO_START."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
@@ -871,5 +876,22 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public void changeShowAdvancedAction() {
         advancedPanel.setVisible(advancedCheckBox.isSelected());
+    }
+
+    @Action
+    public void singleUserModeToggledAction() {
+        if (singleUserCheckBox.isSelected()) {
+            autoStartCheckBox.setSelected(false);
+            launchServerButton.setEnabled(false);
+        } else {
+            launchServerButton.setEnabled(true);            
+        }
+    }
+
+    @Action
+    public void autoLaunchServerToggled() {
+        if (autoStartCheckBox.isSelected()) {
+            singleUserCheckBox.setSelected(false);
+        }
     }
 }

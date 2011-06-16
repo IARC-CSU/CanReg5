@@ -380,6 +380,9 @@
               <SubComponents>
                 <Component class="javax.swing.JCheckBox" name="autoStartCheckBox">
                   <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.LoginInternalFrame" id="autoLaunchServerToggled" methodName="autoLaunchServerToggled"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" resourceKey="autoStartCheckBox.text"/>
                     <Property name="name" type="java.lang.String" value="autoStartCheckBox" noResource="true"/>
                   </Properties>
@@ -414,6 +417,9 @@
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="singleUserCheckBox">
                   <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.LoginInternalFrame" id="singleUserModeToggledAction" methodName="singleUserModeToggledAction"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" resourceKey="singleUserCheckBox.text"/>
                     <Property name="toolTipText" type="java.lang.String" resourceKey="singleUserCheckBox.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="singleUserCheckBox" noResource="true"/>
