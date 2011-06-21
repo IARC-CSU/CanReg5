@@ -17,8 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
-
 package canreg.client.dataentry;
 
 import canreg.client.CanRegClientApp;
@@ -173,7 +171,7 @@ public class DictionaryHelper {
     private static LinkedList<DictionaryEntry> parseDictionaryText(int dictionaryID, String str) {
         LinkedList dictionaryEntries = new LinkedList<DictionaryEntry>();
         String[] stringArray = str.split("[\\n|\\r]");
-        if (stringArray[0].trim().length() > 0) {
+        if (stringArray.length > 1 && stringArray[0].trim().length() > 0 && stringArray[1].trim().length() > 0) {
             for (String string : stringArray) {
                 String[] lineArray = string.split("\\t");
                 if (lineArray.length > 1) {
@@ -211,19 +209,23 @@ public class DictionaryHelper {
             }
         }
         int i = 1;
-        for (DictionaryEntry de : contents) {
-            // first check length of code if we have a dictionary
-            String code = de.getCode();
-            if (dictionary != null) {
-                if (code.length() != codeLength && code.length() != fullCodeLength) {
-                    errors.put(i, "Line " + i + " - Wrong length: " + code);
+        if (contents.size() == 0) {
+            errors.put(0, "Empty dictionary");
+        } else {
+            for (DictionaryEntry de : contents) {
+                // first check length of code if we have a dictionary
+                String code = de.getCode();
+                if (dictionary != null) {
+                    if (code.length() != codeLength && code.length() != fullCodeLength) {
+                        errors.put(i, "Line " + i + " - Wrong length: " + code);
+                    }
                 }
+                // Then we check if it is a duplicate
+                if (!codes.add(code)) {
+                    errors.put(i, "Line " + i + " - Duplicate code: " + code);
+                }
+                i++;
             }
-            // Then we check if it is a duplicate
-            if (!codes.add(code)) {
-                errors.put(i, "Line " + i + " - Duplicate code: " + code);
-            }
-            i++;
         }
         return errors;
     }
