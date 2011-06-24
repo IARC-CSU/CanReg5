@@ -615,7 +615,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             } else if (e.getActionCommand().equalsIgnoreCase(CHECKS)) {
                 runChecks((RecordEditorPanel) source);
             } else if (e.getActionCommand().equalsIgnoreCase(SAVE)) {
-                saveRecord((RecordEditorPanel) source);
+                saveRecord((RecordEditorPanel) source);              
             } else if (e.getActionCommand().equalsIgnoreCase(CHANGE_PATIENT_RECORD)) {
                 changePatientRecord((RecordEditorPanel) source);
             } else if (e.getActionCommand().equalsIgnoreCase(OBSOLETE)) {
@@ -1041,7 +1041,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         CanRegClientView.showAndPositionInternalFrame(desktopPane, editChecksInternalFrame);
     }
 
-    private void saveRecord(RecordEditorPanel recordEditorPanel) {
+    private DatabaseRecord saveRecord(RecordEditorPanel recordEditorPanel) {
         boolean OK = true;
         DatabaseRecord databaseRecord = recordEditorPanel.getDatabaseRecord();
         if (databaseRecord instanceof Tumour) {
@@ -1074,11 +1074,13 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         }
         if (OK) {
             try {
-                DatabaseRecord dbr = saveRecord(databaseRecord);
-                recordEditorPanel.refreshDatabaseRecord(dbr);
+                databaseRecord = saveRecord(databaseRecord);
+                recordEditorPanel.refreshDatabaseRecord(databaseRecord);
                 // refreshTitles(recordEditorPanel, dbr);
-                if (dbr instanceof Patient) {
-                    addToPatientMap(recordEditorPanel, dbr);
+                if (databaseRecord instanceof Patient) {
+                    addToPatientMap(recordEditorPanel, databaseRecord);
+                    // String ID = (String) databaseRecord.getVariable(patientIDVariableName);
+                    refreshTitles(recordEditorPanel, databaseRecord);
                 }
             } catch (RecordLockedException ex) {
                 JOptionPane.showInternalMessageDialog(this, ex.getLocalizedMessage(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("FAILED"), JOptionPane.WARNING_MESSAGE);
@@ -1094,6 +1096,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        return databaseRecord;
     }
 
     private void changePatientRecord(RecordEditorPanel tumourRecordEditorPanel) {
