@@ -212,9 +212,9 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     public String getDescriptiveString() {
         String desc = getName();
         if (isCompound()){
-            desc += "(Compound, Code Length: " + getCodeLength() + ", Full length: "+ getFullDictionaryCodeLength() +")";  
+            desc += " (Compound, Code Length: " + getCodeLength() + ", Full length: "+ getFullDictionaryCodeLength() +")";  
         } else {
-            desc += "(Simple, Full length: "+ getFullDictionaryCodeLength() +")";
+            desc += " (Simple, Full length: "+ getFullDictionaryCodeLength() +")";
         }
         return desc;
     }
