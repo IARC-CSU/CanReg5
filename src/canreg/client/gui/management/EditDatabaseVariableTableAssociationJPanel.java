@@ -44,7 +44,7 @@ public class EditDatabaseVariableTableAssociationJPanel extends javax.swing.JPan
      */
     void setDble(DatabaseVariablesListElement dble) {
         this.dble=dble;
-        variableNameLabel.setText(dble.getFullName());
+        variableDescriptionLabel.setText(dble.getDescriptiveString());
         jComboBox1.setSelectedItem(dble.getTable());
     }
 
@@ -58,7 +58,7 @@ public class EditDatabaseVariableTableAssociationJPanel extends javax.swing.JPan
     private void initComponents() {
 
         jComboBox1 = new javax.swing.JComboBox();
-        variableNameLabel = new javax.swing.JLabel();
+        variableDescriptionLabel = new javax.swing.JLabel();
 
         setName("Form"); // NOI18N
 
@@ -66,22 +66,22 @@ public class EditDatabaseVariableTableAssociationJPanel extends javax.swing.JPan
         jComboBox1.setName("jComboBox1"); // NOI18N
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(EditDatabaseVariableTableAssociationJPanel.class);
-        variableNameLabel.setText(resourceMap.getString("variableNameLabel.text")); // NOI18N
-        variableNameLabel.setName("variableNameLabel"); // NOI18N
+        variableDescriptionLabel.setText(resourceMap.getString("variableDescriptionLabel.text")); // NOI18N
+        variableDescriptionLabel.setName("variableDescriptionLabel"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(variableNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                .addComponent(variableDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(variableNameLabel)
+                .addComponent(variableDescriptionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -89,7 +89,7 @@ public class EditDatabaseVariableTableAssociationJPanel extends javax.swing.JPan
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JLabel variableNameLabel;
+    private javax.swing.JLabel variableDescriptionLabel;
     // End of variables declaration//GEN-END:variables
 
     /**

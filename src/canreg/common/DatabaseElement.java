@@ -26,4 +26,5 @@ package canreg.common;
  */
 public interface DatabaseElement {
     // I'm sure we can move things into here...
+    public String getDescriptiveString();
 }

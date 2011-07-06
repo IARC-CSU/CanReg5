@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.common;
 
 import java.io.Serializable;
@@ -144,7 +143,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
 
     @Override
     public String toString() {
-        return getFullName() + " ("+getTable()+")";
+        return getFullName() + " (" + getTable() + ")";
     }
 
     /**
@@ -260,6 +259,18 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
             return group.getGroupIndex();
         } else {
             return -1;
+        }
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public String getGroupName() {
+        if (group != null) {
+            return group.getGroupName();
+        } else {
+            return "";
         }
     }
 
@@ -432,9 +443,40 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
         return databaseDictionaryListElement;
     }
 
+    public String getDictionaryName() {
+        if (databaseDictionaryListElement != null) {
+            return databaseDictionaryListElement.getName();
+        } else {
+            return "";
+        }
+    }
+
     public void setGroup(DatabaseGroupsListElement group) {
         this.group = group;
     }
+
+    @Override
+    public String getDescriptiveString() {
+        String desc = "";
+        if (getStandardVariableName()!=null){
+            desc += "* "+getFullName()+" (StdVar: "+getStandardVariableName()+") ";
+        } else {
+            desc += getFullName();
+        }
+        if (getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME)) {
+            desc += " (Dict: " + getDictionaryName() + " Group: " + getGroupName() + ")";
+        } else if (getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
+            desc += " (Number, Group: " + getGroupName()+")";
+        } else if (getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME)
+                || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME)
+                || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
+            desc += " (Text, Length: "+ getVariableLength()+", Group: " + getGroupName() + ")";
+        } else if (getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)){
+            desc += " (Date, Group: " + getGroupName() + ")";
+        } else {
+            desc += " (Group: " + getGroupName() + ")";
+        }
+        desc = desc + "";
+        return desc;
+    }
 }
-
-

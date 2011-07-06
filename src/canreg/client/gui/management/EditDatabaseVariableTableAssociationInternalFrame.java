@@ -139,10 +139,10 @@ public class EditDatabaseVariableTableAssociationInternalFrame extends javax.swi
         variablesAndTablesPanelLayout.setHorizontalGroup(
             variablesAndTablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(variablesAndTablesPanelLayout.createSequentialGroup()
-                .addComponent(variablesLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
+                .addComponent(variablesLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
                 .addGap(217, 217, 217)
                 .addComponent(tableLabel))
-            .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
+            .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
         );
         variablesAndTablesPanelLayout.setVerticalGroup(
             variablesAndTablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,7 +151,7 @@ public class EditDatabaseVariableTableAssociationInternalFrame extends javax.swi
                     .addComponent(variablesLabel)
                     .addComponent(tableLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
+                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
         );
 
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
@@ -166,7 +166,7 @@ public class EditDatabaseVariableTableAssociationInternalFrame extends javax.swi
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(variablesAndTablesPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(saveButton)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(

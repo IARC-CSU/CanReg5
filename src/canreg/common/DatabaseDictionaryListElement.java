@@ -207,4 +207,15 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     public void setUnkownCode(String unknownCode) {
         this.unknownCode = unknownCode;
     }
+
+    @Override
+    public String getDescriptiveString() {
+        String desc = getName();
+        if (isCompound()){
+            desc += "(Compound, Code Length: " + getCodeLength() + ", Full length: "+ getFullDictionaryCodeLength() +")";  
+        } else {
+            desc += "(Simple, Full length: "+ getFullDictionaryCodeLength() +")";
+        }
+        return desc;
+    }
 }

@@ -20,7 +20,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="variableNameLabel" pref="164" max="32767" attributes="0"/>
+              <Component id="variableDescriptionLabel" pref="164" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jComboBox1" min="-2" pref="98" max="-2" attributes="0"/>
           </Group>
@@ -29,7 +29,7 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="103" groupAlignment="3" attributes="0">
-              <Component id="variableNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="variableDescriptionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -48,10 +48,10 @@
         <Property name="name" type="java.lang.String" value="jComboBox1" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="variableNameLabel">
+    <Component class="javax.swing.JLabel" name="variableDescriptionLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" resourceKey="variableNameLabel.text"/>
-        <Property name="name" type="java.lang.String" value="variableNameLabel" noResource="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="variableDescriptionLabel.text"/>
+        <Property name="name" type="java.lang.String" value="variableDescriptionLabel" noResource="true"/>
       </Properties>
     </Component>
   </SubComponents>

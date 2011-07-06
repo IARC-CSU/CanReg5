@@ -200,7 +200,7 @@ public class DatabaseElementPanel extends javax.swing.JPanel {
     }
 
     void refresh() {
-        nameTextField.setText(databaseElement.toString());
+        nameTextField.setText(databaseElement.getDescriptiveString());
     }
 
     void setRemovable(boolean editable) {
