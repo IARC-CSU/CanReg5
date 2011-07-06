@@ -25,6 +25,7 @@
  */
 package canreg.client.gui.dataentry;
 
+import au.com.bytecode.opencsv.CSVReader;
 import canreg.client.gui.components.VariableMappingPanel;
 import canreg.client.LocalSettings;
 import canreg.client.CanRegClientApp;
@@ -681,7 +682,7 @@ public class ImportView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_maxLinesTextFieldMousePressed
 
     private void maxLinesTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maxLinesTextFieldMouseReleased
-         MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(maxLinesTextField, evt);
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(maxLinesTextField, evt);
     }//GEN-LAST:event_maxLinesTextFieldMouseReleased
 
     /**
@@ -969,32 +970,29 @@ public class ImportView extends javax.swing.JInternalFrame {
             // numberOfRecordsTextField.setText(""+(canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath())-1));
             FileInputStream fis = new FileInputStream(inFile);
             br = new BufferedReader(new InputStreamReader(fis, (Charset) charsetsComboBox.getSelectedItem()));
-            // Read the parts of the file into the preview area...
-            int i = 0;
 
-            String line = br.readLine();
-            String headers = new String();
-            // String dataText = new String();
+            CSVReader reader = new CSVReader(br, getSeparator());
+            String[] lineElements;
+
+            int linesToRead = Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW;
+            int numberOfLinesRead = 0;
+            String[] headers = {};
             Vector<Vector<String>> data = new Vector<Vector<String>>();
-
-            while (i < Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW && line != null) {
-                if (i == 0) {
-                    headers = line;
+            while ((lineElements = reader.readNext()) != null && (numberOfLinesRead < linesToRead)) {
+                if (numberOfLinesRead == 0) {
+                    headers = lineElements;
                 } else {
-                    String[] lineData = line.split(getSeparator() + "");
-                    Vector vec = new Vector(Arrays.asList(lineData));
+                    Vector vec = new Vector(Arrays.asList(lineElements));
                     data.add(vec);
-                    // dataText += line + "\n";
                 }
-                line = br.readLine();
-                i++;
-                numberOfRecordsShownTextField.setText(i + "");
+                numberOfLinesRead++;
             }
+            numberOfRecordsShownTextField.setText(numberOfLinesRead + "");
 
             // previewTextArea.setText(headers + "\n" + dataText);
             // previewTextArea.setCaretPosition(0);
             previewPanel.setVisible(true);
-            Vector columnNames = new Vector(Arrays.asList(headers.split(getSeparator() + "")));
+            Vector columnNames = new Vector(Arrays.asList(headers));
             previewTable.setModel(new DefaultTableModel(data, columnNames));
         } catch (FileNotFoundException fileNotFoundException) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
