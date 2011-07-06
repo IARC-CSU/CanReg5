@@ -182,6 +182,7 @@
             </Component>
             <Container class="javax.swing.JScrollPane" name="previewTableScrollPane">
               <Properties>
+                <Property name="focusable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="previewTableScrollPane" noResource="true"/>
               </Properties>
 
@@ -198,6 +199,8 @@
                       </Table>
                     </Property>
                     <Property name="autoResizeMode" type="int" value="0"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                    <Property name="focusable" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="previewTable" noResource="true"/>
                   </Properties>
                 </Component>

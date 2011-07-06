@@ -25,6 +25,7 @@
  */
 package canreg.client.gui.components;
 
+import au.com.bytecode.opencsv.CSVReader;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.Globals;
@@ -138,6 +139,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         numberOfRecordsTextField.setFocusable(false);
         numberOfRecordsTextField.setName("numberOfRecordsTextField"); // NOI18N
 
+        previewTableScrollPane.setFocusable(false);
         previewTableScrollPane.setName("previewTableScrollPane"); // NOI18N
 
         previewTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -152,6 +154,8 @@ public class PreviewFilePanel extends javax.swing.JPanel {
             }
         ));
         previewTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        previewTable.setEnabled(false);
+        previewTable.setFocusable(false);
         previewTable.setName("previewTable"); // NOI18N
         previewTableScrollPane.setViewportView(previewTable);
 
@@ -309,6 +313,9 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         }
     }
 
+   /**
+     * 
+     */
     @Action
     public void previewAction() {
         // show the contents of the file
@@ -316,47 +323,40 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         try {
             changeFile();
             // numberOfRecordsTextField.setText(""+(canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath())-1));
-            if (inFile != null) {
-                FileInputStream fis = new FileInputStream(inFile);
-                br = new BufferedReader(new InputStreamReader(fis, (Charset) charsetsComboBox.getSelectedItem()));
-                // Read the parts of the file into the preview area...
-                int i = 0;
+            FileInputStream fis = new FileInputStream(inFile);
+            br = new BufferedReader(new InputStreamReader(fis, (Charset) charsetsComboBox.getSelectedItem()));
 
-                String line = br.readLine();
-                String headers = new String();
-                // String dataText = new String();
-                Vector<Vector<String>> data = new Vector<Vector<String>>();
+            CSVReader reader = new CSVReader(br, getSeparator());
+            String[] lineElements;
 
-                while (i < Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW && line != null) {
-                    if (i == 0) {
-                        headers = line;
-                    } else {
-                        String[] lineData = line.split(getSeparator() + "");
-                        Vector vec = new Vector(Arrays.asList(lineData));
-                        data.add(vec);
-                        // dataText += line + "\n";
-                    }
-                    line = br.readLine();
-                    i++;
-                    numberOfRecordsShownTextField.setText(i + "");
+            int linesToRead = Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW;
+            int numberOfLinesRead = 0;
+            String[] headers = {};
+            Vector<Vector<String>> data = new Vector<Vector<String>>();
+            while ((lineElements = reader.readNext()) != null && (numberOfLinesRead < linesToRead)) {
+                if (numberOfLinesRead == 0) {
+                    headers = lineElements;
+                } else {
+                    Vector vec = new Vector(Arrays.asList(lineElements));
+                    data.add(vec);
                 }
-
-                // previewTextArea.setText(headers + "\n" + dataText);
-                // previewTextArea.setCaretPosition(0);
-                previewPanel.setVisible(true);
-                Vector columnNames = new Vector(Arrays.asList(headers.split(getSeparator() + "")));
-                previewTable.setModel(new DefaultTableModel(data, columnNames));
+                numberOfLinesRead++;
             }
+            numberOfRecordsShownTextField.setText(numberOfLinesRead + "");
+
+            // previewTextArea.setText(headers + "\n" + dataText);
+            // previewTextArea.setCaretPosition(0);
+            previewPanel.setVisible(true);
+            Vector columnNames = new Vector(Arrays.asList(headers));
+            previewTable.setModel(new DefaultTableModel(data, columnNames));
         } catch (FileNotFoundException fileNotFoundException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not preview file: \'" + fileNameTextField.getText().trim() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, fileNotFoundException);
         } catch (IOException ex) {
             Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                if (br != null) {
-                    br.close();
-                }
+                br.close();
             } catch (IOException ex) {
                 Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
