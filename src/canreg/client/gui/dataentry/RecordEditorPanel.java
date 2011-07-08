@@ -505,6 +505,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             tableName = Globals.PATIENT_TABLE_NAME;
             mpPanel.setVisible(false);
             changePatientRecordMenuItem.setVisible(false);
+            obsoleteToggleButton.setVisible(false);
             checksPanel.setVisible(false);
             sequencePanel.setVisible(false);
         } else if (panelType == panelTypes.TUMOUR) {
@@ -666,8 +667,17 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
         popupMenu = new javax.swing.JPopupMenu();
         deleteMenuItem = new javax.swing.JMenuItem();
+        obsoleteToggleButton = new javax.swing.JRadioButtonMenuItem();
         changePatientRecordMenuItem = new javax.swing.JMenuItem();
         systemPanel = new javax.swing.JPanel();
+        controlPanel = new javax.swing.JPanel();
+        saveButton = new javax.swing.JButton();
+        menuButton = new javax.swing.JButton();
+        updatedByPanel = new javax.swing.JPanel();
+        byLabel = new javax.swing.JLabel();
+        userLabel = new javax.swing.JLabel();
+        dateLabel = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         checksPanel = new javax.swing.JPanel();
         checksButton = new javax.swing.JButton();
         checksLabel = new javax.swing.JLabel();
@@ -679,14 +689,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         mpLabel = new javax.swing.JLabel();
         recordStatusPanel = new javax.swing.JPanel();
         recordStatusComboBox = new javax.swing.JComboBox();
-        obsoleteToggleButton = new javax.swing.JToggleButton();
-        controlPanel = new javax.swing.JPanel();
-        saveButton = new javax.swing.JButton();
-        menuButton = new javax.swing.JButton();
-        updatedByPanel = new javax.swing.JPanel();
-        byLabel = new javax.swing.JLabel();
-        userLabel = new javax.swing.JLabel();
-        dateLabel = new javax.swing.JLabel();
         sequencePanel = new javax.swing.JPanel();
         sequenceNumberDescriptionLabel = new javax.swing.JLabel();
         sequenceNumberValueLabel = new javax.swing.JLabel();
@@ -704,6 +706,12 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         deleteMenuItem.setName("deleteMenuItem"); // NOI18N
         popupMenu.add(deleteMenuItem);
 
+        obsoleteToggleButton.setAction(actionMap.get("setObsoleteFlag")); // NOI18N
+        obsoleteToggleButton.setSelected(true);
+        obsoleteToggleButton.setText(resourceMap.getString("obsoleteToggleButton.text")); // NOI18N
+        obsoleteToggleButton.setName("obsoleteToggleButton"); // NOI18N
+        popupMenu.add(obsoleteToggleButton);
+
         changePatientRecordMenuItem.setAction(actionMap.get("changePatientRecord")); // NOI18N
         changePatientRecordMenuItem.setText(resourceMap.getString("changePatientRecordMenuItem.text")); // NOI18N
         changePatientRecordMenuItem.setName("changePatientRecordMenuItem"); // NOI18N
@@ -712,6 +720,72 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         setName("Form"); // NOI18N
 
         systemPanel.setName("systemPanel"); // NOI18N
+
+        controlPanel.setName("controlPanel"); // NOI18N
+
+        saveButton.setAction(actionMap.get("saveRecord")); // NOI18N
+        saveButton.setText(resourceMap.getString("saveButton.text")); // NOI18N
+        saveButton.setName("saveButton"); // NOI18N
+
+        menuButton.setAction(actionMap.get("menuAction")); // NOI18N
+        menuButton.setText(resourceMap.getString("menuButton.text")); // NOI18N
+        menuButton.setName("menuButton"); // NOI18N
+
+        javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
+        controlPanel.setLayout(controlPanelLayout);
+        controlPanelLayout.setHorizontalGroup(
+            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(menuButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
+                    .addComponent(saveButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        controlPanelLayout.setVerticalGroup(
+            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(controlPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(menuButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(saveButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        updatedByPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("updatedByPanel.border.title"))); // NOI18N
+        updatedByPanel.setName("updatedByPanel"); // NOI18N
+
+        byLabel.setText(resourceMap.getString("byLabel.text")); // NOI18N
+        byLabel.setName("byLabel"); // NOI18N
+
+        userLabel.setText(resourceMap.getString("userLabel.text")); // NOI18N
+        userLabel.setName("userLabel"); // NOI18N
+
+        dateLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        dateLabel.setText(resourceMap.getString("dateLabel.text")); // NOI18N
+        dateLabel.setName("dateLabel"); // NOI18N
+
+        javax.swing.GroupLayout updatedByPanelLayout = new javax.swing.GroupLayout(updatedByPanel);
+        updatedByPanel.setLayout(updatedByPanelLayout);
+        updatedByPanelLayout.setHorizontalGroup(
+            updatedByPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(updatedByPanelLayout.createSequentialGroup()
+                .addComponent(byLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE))
+            .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+        );
+        updatedByPanelLayout.setVerticalGroup(
+            updatedByPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(updatedByPanelLayout.createSequentialGroup()
+                .addGroup(updatedByPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(byLabel)
+                    .addComponent(userLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jPanel1.setName("jPanel1"); // NOI18N
 
         checksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("checksPanel.border.title"))); // NOI18N
         checksPanel.setName("checksPanel"); // NOI18N
@@ -802,92 +876,19 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         recordStatusComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         recordStatusComboBox.setName("recordStatusComboBox"); // NOI18N
 
-        obsoleteToggleButton.setAction(actionMap.get("setObsoleteFlag")); // NOI18N
-        obsoleteToggleButton.setText(resourceMap.getString("obsoleteToggleButton.text")); // NOI18N
-        obsoleteToggleButton.setName("obsoleteToggleButton"); // NOI18N
-
         javax.swing.GroupLayout recordStatusPanelLayout = new javax.swing.GroupLayout(recordStatusPanel);
         recordStatusPanel.setLayout(recordStatusPanelLayout);
         recordStatusPanelLayout.setHorizontalGroup(
             recordStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, recordStatusPanelLayout.createSequentialGroup()
-                .addGroup(recordStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(obsoleteToggleButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
-                    .addComponent(recordStatusComboBox, 0, 157, Short.MAX_VALUE))
+                .addComponent(recordStatusComboBox, 0, 143, Short.MAX_VALUE)
                 .addContainerGap())
         );
         recordStatusPanelLayout.setVerticalGroup(
             recordStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(recordStatusPanelLayout.createSequentialGroup()
                 .addComponent(recordStatusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(obsoleteToggleButton)
-                .addContainerGap())
-        );
-
-        controlPanel.setName("controlPanel"); // NOI18N
-
-        saveButton.setAction(actionMap.get("saveRecord")); // NOI18N
-        saveButton.setText(resourceMap.getString("saveButton.text")); // NOI18N
-        saveButton.setName("saveButton"); // NOI18N
-
-        menuButton.setAction(actionMap.get("menuAction")); // NOI18N
-        menuButton.setText(resourceMap.getString("menuButton.text")); // NOI18N
-        menuButton.setName("menuButton"); // NOI18N
-
-        javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
-        controlPanel.setLayout(controlPanelLayout);
-        controlPanelLayout.setHorizontalGroup(
-            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(menuButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
-                    .addComponent(saveButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        controlPanelLayout.setVerticalGroup(
-            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(controlPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(menuButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(saveButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        updatedByPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("updatedByPanel.border.title"))); // NOI18N
-        updatedByPanel.setName("updatedByPanel"); // NOI18N
-
-        byLabel.setText(resourceMap.getString("byLabel.text")); // NOI18N
-        byLabel.setName("byLabel"); // NOI18N
-
-        userLabel.setText(resourceMap.getString("userLabel.text")); // NOI18N
-        userLabel.setName("userLabel"); // NOI18N
-
-        dateLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        dateLabel.setText(resourceMap.getString("dateLabel.text")); // NOI18N
-        dateLabel.setName("dateLabel"); // NOI18N
-
-        javax.swing.GroupLayout updatedByPanelLayout = new javax.swing.GroupLayout(updatedByPanel);
-        updatedByPanel.setLayout(updatedByPanelLayout);
-        updatedByPanelLayout.setHorizontalGroup(
-            updatedByPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(updatedByPanelLayout.createSequentialGroup()
-                .addComponent(byLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-        );
-        updatedByPanelLayout.setVerticalGroup(
-            updatedByPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(updatedByPanelLayout.createSequentialGroup()
-                .addGroup(updatedByPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(byLabel)
-                    .addComponent(userLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         sequencePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("sequencePanel.border.title"))); // NOI18N
@@ -912,59 +913,72 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             sequencePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sequencePanelLayout.createSequentialGroup()
                 .addGroup(sequencePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sequenceNumberDescriptionLabel)
-                    .addComponent(sequenceTotalDescriptionLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(sequencePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(sequenceNumberValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(sequenceTotalValueLabel)))
+                    .addGroup(sequencePanelLayout.createSequentialGroup()
+                        .addComponent(sequenceNumberDescriptionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(sequenceNumberValueLabel))
+                    .addGroup(sequencePanelLayout.createSequentialGroup()
+                        .addComponent(sequenceTotalDescriptionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(sequenceTotalValueLabel)))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         sequencePanelLayout.setVerticalGroup(
             sequencePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sequencePanelLayout.createSequentialGroup()
                 .addGroup(sequencePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(sequencePanelLayout.createSequentialGroup()
-                        .addComponent(sequenceNumberDescriptionLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sequenceTotalDescriptionLabel))
-                    .addGroup(sequencePanelLayout.createSequentialGroup()
-                        .addComponent(sequenceNumberValueLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sequenceTotalValueLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(17, Short.MAX_VALUE))
+                    .addComponent(sequenceNumberDescriptionLabel)
+                    .addComponent(sequenceNumberValueLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGroup(sequencePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sequenceTotalDescriptionLabel)
+                    .addComponent(sequenceTotalValueLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        javax.swing.GroupLayout systemPanelLayout = new javax.swing.GroupLayout(systemPanel);
-        systemPanel.setLayout(systemPanelLayout);
-        systemPanelLayout.setHorizontalGroup(
-            systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(systemPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(checksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(personSearchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(mpPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordStatusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(recordStatusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sequencePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sequencePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addComponent(checksPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
+                .addComponent(personSearchPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
+                .addComponent(mpPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(sequencePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(recordStatusPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        javax.swing.GroupLayout systemPanelLayout = new javax.swing.GroupLayout(systemPanel);
+        systemPanel.setLayout(systemPanelLayout);
+        systemPanelLayout.setHorizontalGroup(
+            systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, systemPanelLayout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(updatedByPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(controlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10))
+                .addComponent(updatedByPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(controlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         systemPanelLayout.setVerticalGroup(
             systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(systemPanelLayout.createSequentialGroup()
                 .addGroup(systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(mpPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-                    .addComponent(personSearchPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-                    .addComponent(checksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-                    .addComponent(sequencePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(updatedByPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(recordStatusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-                    .addComponent(controlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(controlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(updatedByPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -979,14 +993,14 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(systemPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(dataScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 767, Short.MAX_VALUE)
+            .addComponent(dataScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 799, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(systemPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dataScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE))
+                .addComponent(dataScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE))
         );
 
         dataScrollPane.getVerticalScrollBar().setUnitIncrement(16);
@@ -1002,11 +1016,12 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     private javax.swing.JScrollPane dataScrollPane;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JMenuItem deleteMenuItem;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JButton menuButton;
     private javax.swing.JButton mpButton;
     private javax.swing.JLabel mpLabel;
     private javax.swing.JPanel mpPanel;
-    private javax.swing.JToggleButton obsoleteToggleButton;
+    private javax.swing.JRadioButtonMenuItem obsoleteToggleButton;
     private javax.swing.JPanel personSearchPanel;
     private javax.swing.JPopupMenu popupMenu;
     private javax.swing.JComboBox recordStatusComboBox;

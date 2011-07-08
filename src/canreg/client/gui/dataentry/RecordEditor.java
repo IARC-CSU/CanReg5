@@ -326,6 +326,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         recordSplitPane.setDividerSize(10);
         recordSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         recordSplitPane.setResizeWeight(0.5);
+        recordSplitPane.setContinuousLayout(true);
         recordSplitPane.setName("recordSplitPane"); // NOI18N
         recordSplitPane.setOneTouchExpandable(true);
 
@@ -416,7 +417,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -621,7 +622,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             } else if (e.getActionCommand().equalsIgnoreCase(OBSOLETE)) {
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
                 int option = JOptionPane.NO_OPTION;
-                option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("REALLY CHANGE OBSOLETE-STATUS?"));
+                option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("REALLY CHANGE OBSOLETE-STATUS?"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("REALLY CHANGE OBSOLETE-STATUS?"), JOptionPane.YES_NO_OPTION);
                 boolean toggle = (option == JOptionPane.YES_OPTION);
                 recordEditorPanel.toggleObsolete(toggle);
                 if (toggle) {
@@ -904,9 +905,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     }
 
     @Action
-    public void togglePatientTumour() {
+    public void togglePatientTumour() {        
         int loc = recordSplitPane.getDividerLocation();
-        if (loc == 1) {
+        if (loc < recordSplitPane.getHeight()/2) {
             recordSplitPane.setDividerLocation(1.0);
         } else {
             recordSplitPane.setDividerLocation(0.0);
