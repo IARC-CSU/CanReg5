@@ -1,17 +1,23 @@
 Changelog
 
-5.00.07rc2
+5.00.07
 - The database can now be encrypted with 56-bit DES using a minimum 8 character long boot password. The user must then provide this password during every server launch.
 - All server calls now handles server disconnects and requests users to log in again. This should end problems on laptops falling asleep.
 - The CanReg server can now be launched in single user mode without RMI (network calls).
 - Launch server no longer hangs if XML contains an invalid standard variable name.
+- More info shown about the database elements during migration/tailoring.
 - Person Search and duplicate search renamed to Duplicate Patient Search.
 - New source added to tumour by default on creation of new tumour.
+- PatientID shows up as a title of the recordeditor when the patient has been assigned an ID.
+- Improved the preview while importing data. Now properly supports other separating characters. No longer editable.
 - Fixed a bug in the logout mechanism that would not redraw the desktop after logout.
+- Fixed a bug in the dictionary editor where a series of only codes - no labels were accepted, but not added to the database.
 - Improved handling of already running servers while launching a new one.
+- More consistent layout in the record editor.
 - R table builder allows for null as pops or incs. Better handling of nullpointers.
 - Updated the R test script.
 - Better exception handling.
+- Chinese translation started.
 - Other bug fixes.
 
 5.00.06

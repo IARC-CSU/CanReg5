@@ -1,5 +1,65 @@
-changeset:   881:ff23d6941658
+changeset:   893:c29efd8e87ee
 tag:         tip
+user:        ErvikM@X90164
+date:        Fri Jul 08 11:47:50 2011 +0200
+summary:     The llibrary class Pair<A,B> implemented.
+
+changeset:   892:c1465fc400e5
+user:        ErvikM@X90164
+date:        Fri Jul 08 11:47:07 2011 +0200
+summary:     More consistent layout in the record editor.
+
+changeset:   891:0fafaa902b06
+user:        ErvikM@X90164
+date:        Wed Jul 06 17:56:33 2011 +0200
+summary:     Improved the preview while importing data. Now properly supports other separating characters. No longer editable.
+
+changeset:   890:3930c025fa57
+user:        ErvikM@X90164
+date:        Wed Jul 06 17:48:34 2011 +0200
+summary:     Improved the preview while importing data. Now properly supports other separating characters.
+
+changeset:   889:42de2915d7ba
+user:        ErvikM@X90164
+date:        Wed Jul 06 11:57:59 2011 +0200
+summary:     More info shown about the database elements during migration/tailoring.
+
+changeset:   888:5a3f3d0bc670
+user:        ErvikM@X90164
+date:        Wed Jul 06 11:55:09 2011 +0200
+summary:     More info shown about the database elements during migration/tailoring.
+
+changeset:   887:64eb490107fe
+user:        ErvikM@X90164
+date:        Wed Jul 06 11:53:26 2011 +0200
+summary:     Chinese translation started.
+
+changeset:   886:7822e67272e7
+user:        ErvikM@X90164
+date:        Fri Jun 24 14:48:19 2011 +0200
+summary:     PatientID shows up as a title of the recordeditor when the patient has been assigned an ID.
+
+changeset:   885:c399100258e5
+user:        ErvikM@X90164
+date:        Tue Jun 21 14:46:00 2011 +0200
+summary:     Fixed a bug in the dictionary editor where a series of only codes - no labels were accepted, but not added to the database.
+
+changeset:   884:06c908ed3f0a
+user:        ErvikM@X90164
+date:        Thu Jun 16 14:47:20 2011 +0200
+summary:     Single user mode and launch server cannot both be ticked.
+
+changeset:   883:d69aa91caa51
+user:        ErvikM@X90164
+date:        Tue Jun 14 17:14:27 2011 +0200
+summary:     Tidyed some code.
+
+changeset:   882:e59f8a453e24
+user:        ErvikM@X90164
+date:        Tue Jun 14 17:07:57 2011 +0200
+summary:     5.00.07rc4
+
+changeset:   881:ff23d6941658
 user:        ErvikM@X90164
 date:        Tue Jun 14 17:04:40 2011 +0200
 summary:     The CanReg server can now be launched in single user mode without RMI.

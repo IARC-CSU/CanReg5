@@ -111,6 +111,19 @@ today
 \end_inset
 
 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{empty}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1271,15 +1284,54 @@ Convert system definition
 \begin_inset Quotes erd
 \end_inset
 
+ (See figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:CanReg-systems-definition-menu"
 
+\end_inset
+
+.)
 \end_layout
 
 \begin_layout Standard
 \align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename 4.png
-	width 4.17708in
-	height 1.42708in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:CanReg-systems-definition-menu"
+
+\end_inset
+
+CanReg systems definition converter menu
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \end_inset
 
@@ -2406,6 +2458,12 @@ Yes
 \end_layout
 
 \begin_layout Standard
+If your database is encrypted you will get a message regarding this and
+ you need to provide the database password to open it.
+ Please note that this can be different from your user's password.
+\end_layout
+
+\begin_layout Standard
 When the CanReg5 server is running on your machine you should see an icon
  in your notification area
 \begin_inset Index
@@ -2779,6 +2837,17 @@ Login
 
 .
  
+\end_layout
+
+\begin_layout Standard
+\align left
+Please note that you do 
+\emph on
+not
+\emph default
+ need to install the system definition or convert from CanReg4.
+ You only need the code (for example TRN) of the CanReg system you want
+ to connect to.
 \end_layout
 
 \begin_layout Subsection
@@ -3510,7 +3579,7 @@ welcome screen
 
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 Login to CanReg
 \end_layout
 
@@ -3528,6 +3597,130 @@ reference "sub:Login"
 \end_layout
 
 \begin_layout Subsubsection
+Advanced login settings
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename loginsettings.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Login-settings"
+
+\end_inset
+
+Login settings
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Under Settings you can tick Advanced to get access to some more advanced
+ settings for CanReg.
+ (See figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:Login-settings"
+
+\end_inset
+
+.)
+\end_layout
+
+\begin_layout Paragraph
+Test connection 
+\end_layout
+
+\begin_layout Standard
+will test the connection to the server specified - without connecting to
+ it.
+\end_layout
+
+\begin_layout Paragraph
+Get IP Address
+\end_layout
+
+\begin_layout Standard
+will try to get the ip address of the URL specified in the Server URL field.
+ If this is set to localhost it will give you the IP address of the machine
+ you are on.
+ This can be usefull when installing CanReg in a network.
+\end_layout
+
+\begin_layout Paragraph
+Port
+\end_layout
+
+\begin_layout Standard
+lets you change the port the server is running on.
+ This can be useful if another program is running on the default port and
+ you want to change that or if you need to tunnel CanReg traffic through
+ a VPN-network or similar.
+\end_layout
+
+\begin_layout Paragraph
+Automatically launch local server on startup
+\end_layout
+
+\begin_layout Standard
+is by default ticked after installing a new XML.
+ This does what it says - it will try to launch the last used CanReg server
+ on this machine when starting CanReg.
+ Basically it clicks 
+\begin_inset Quotes eld
+\end_inset
+
+Launch Server
+\begin_inset Quotes erd
+\end_inset
+
+ for you when opening the login screen.
+\end_layout
+
+\begin_layout Paragraph
+Single user mode
+\end_layout
+
+\begin_layout Standard
+lets you log on to your CanReg system without starting the network components.
+ This can be useful if you are the only user on CanReg this session.
+ Like this you avoid network related errors due to for example laptops falling
+ asleep.
+ Also, it is slightly safer, since you can be sure that nobody can log on
+ to your system but you (even if they have gotten hold of your username
+ and password and server address).
+\end_layout
+
+\begin_layout Subsection
 Install New System
 \end_layout
 
@@ -4001,8 +4194,8 @@ If you know the exact value you want to return for at least one of the columns.
 \begin_inset Tabular
 <lyxtabular version="3" rows="3" columns="2">
 <features>
-<column alignment="center" valignment="top" width="75line%">
-<column alignment="center" valignment="top" width="75col%">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -4047,7 +4240,7 @@ AND
 \begin_inset Text
 
 \begin_layout Plain Layout
-records mathces both criterias
+match both criterias
 \end_layout
 
 \end_inset
@@ -4067,7 +4260,7 @@ OR
 \begin_inset Text
 
 \begin_layout Plain Layout
-records mathces one of the criterias
+match one of the criterias
 \end_layout
 
 \end_inset
@@ -4080,8 +4273,8 @@ records mathces one of the criterias
 
 \end_layout
 
-\begin_layout Standard
-Examples of how to use:
+\begin_layout Paragraph
+Examples of how to use
 \end_layout
 
 \begin_layout Itemize
@@ -4141,6 +4334,13 @@ wizard
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename filterwizard.png
 
@@ -4149,12 +4349,47 @@ wizard
 
 \end_layout
 
-\begin_layout Standard
-Fast method to specify filter, or selection, criteria.
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Filter-Wizard"
+
+\end_inset
+
+Filter Wizard
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-For example, to select
+The filter wizard is here to help you build filters.
+ (See figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:Filter-Wizard"
+
+\end_inset
+
+.) It is a fast method to specify filter, or selection, criteria.
+\end_layout
+
+\begin_layout Paragraph
+For example
+\end_layout
+
+\begin_layout Standard
+, to select
 \end_layout
 
 \begin_layout Standard
@@ -4163,46 +4398,46 @@ Females over 60 years old....
 \end_layout
 
 \begin_layout Standard
-Click on ...
+Launch Filter Wizard and click on ...
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Enumerate
 Variable - "Sex"
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Enumerate
 Operator - "="
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Enumerate
 Value - "Female" (from Dictionary)
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Enumerate
 Logical Operator - "And"
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Enumerate
 "Add"
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Enumerate
 Variable - "Age"
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Enumerate
 Operator - ">"
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Enumerate
 Value - type "60"
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Enumerate
 "Add"
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Enumerate
 "OK"
 \end_layout
 
@@ -6080,7 +6315,14 @@ builder
 
 \begin_layout Standard
 \align left
-The Table builder lets you build incidence tables
+The Table builder (See figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:Table-builder"
+
+\end_inset
+
+) lets you build incidence tables
 \begin_inset Index
 status open
 
@@ -6141,10 +6383,44 @@ Pick Incidence per 100,000 by age group (Period):
 
 \begin_layout Standard
 \align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename 41.png
 	width 5.04167in
 	height 4.125in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Table-builder"
+
+\end_inset
+
+Table builder
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \end_inset
 
@@ -6303,7 +6579,7 @@ Then you can go to the Make tables tab to generate the actual tables.
 \begin_inset Quotes eld
 \end_inset
 
-Generate post script files
+Generate post script (PS) files
 \begin_inset Index
 status open
 
@@ -6317,7 +6593,14 @@ postscript files
 \begin_inset Quotes erd
 \end_inset
 
- and choose a file name.
+ (See figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:File-formats-selector"
+
+\end_inset
+
+.) and choose a file name.
  (If the table generates more than one file (like it is the case for incidence
  per 100,000 some number or text will be added to the name you give for
  each file.) 
@@ -6325,14 +6608,46 @@ postscript files
 
 \begin_layout Standard
 \align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename 44.png
-	width 4.98958in
-	height 4.08333in
 
 \end_inset
 
- 
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:File-formats-selector"
+
+\end_inset
+
+File formats selector
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -6346,18 +6661,6 @@ Tables built.
 \end_inset
 
  
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename 45.png
-	width 2.84375in
-	height 1.32292in
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -7066,63 +7369,144 @@ password
 \end_inset
 
 , go to the Current user tab in the user manager and enter your new password
- twice:
+ twice.
+ (See figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:Change-your-own-pqd"
+
+\end_inset
+
+.)
 \end_layout
 
 \begin_layout Standard
 \align center
-\begin_inset Graphics
-	filename 30.png
-	width 5.4785in
-	height 2.6764in
-
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Subsubsection
-
-\series bold
-Locked records
-\begin_inset Index
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 30.png
 
-\series medium
-locked
-\series bold
- 
-\series medium
-records
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Change-your-own-pqd"
+
+\end_inset
+
+Change your own password
 \end_layout
 
 \end_inset
 
 
-\series default
- 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Database password
 \end_layout
 
 \begin_layout Standard
 \align left
-Not yet implemented.
- 
+The CanReg5 database can be encrypted using 56-bit DES encryption.
+ To enable this you need to provide a minimum 8 characters long password
+ on the 
+\begin_inset Quotes eld
+\end_inset
+
+Database password
+\begin_inset Quotes erd
+\end_inset
+
+ tab.
+ (See figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:Set-database-password"
+
+\end_inset
+
+.) This protects your database in case somebody gets hold of it.
+ The user will now be asked for this password everytime she launches the
+ server.
+ (Once it is running others can connect to the database as usual.) This is
+ a one way process - the only way to remove the encryption of your database
+ is to export all the data, build an empty database and import everything
+ again.
+ The password can, however, be changed at any point in time.
 \end_layout
 
 \begin_layout Standard
-This option is mainly useful for people working in a network environment.
+\align left
+Please note that if you loose this password you loose access to all the
+ data in CanReg! (And it is nothing that can be done about it.)
 \end_layout
 
 \begin_layout Standard
-The "List" button allows you to see what other records are being edited
- and by whom.
+\align left
+This functionality is only available to users with supervisor access.
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename databasePassword.png
+
+\end_inset
+
+
 \end_layout
 
-\begin_layout Standard
-The "Clear" button allows a supervisor to reset this list of users (in case
- of error, for example if the computer was switched off during data entry)
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Set-database-password"
+
+\end_inset
+
+Set database password
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -7162,7 +7546,14 @@ supervisor
 \end_inset
 
  rights you have access to the User manager part of the user manager.
- This allows you to add and delete users.
+ (See figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:User-manager"
+
+\end_inset
+
+.) This allows you to add and delete users.
  Each user has their own login name
 \begin_inset Index
 status open
@@ -7252,10 +7643,42 @@ analyst
 
 \begin_layout Standard
 \align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename 31.png
-	width 4.64583in
-	height 3.70833in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:User-manager"
+
+\end_inset
+
+User manager
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \end_inset
 
@@ -8443,6 +8866,19 @@ First of all make sure that you have the latest version of CanReg installed,
  some unclosed quotes in any of the fields.
  This will brake down the import as CanReg allows qoutes around strings
  that contain the separating character, but not unclosed quotes.
+\begin_inset Newline newline
+\end_inset
+
+Another possibility is that your Java Runtime Environment has been set up
+ with not enough memory.
+ To address this please see 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:Issues-with-memory"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -9492,6 +9928,12 @@ Let CanReg5 import the data (this might take a while) and click “OK”.
 \begin_layout Enumerate
 Click “Browse/Edit” and “Refresh Table” to see that the data has arrived
  well.
+ 
+\emph on
+Verify that you have the same number of tumours in the tumour table as in
+ CanReg4.
+
+\emph default
  Double click a record to take a look at it.
 \begin_inset Newpage newpage
 \end_inset
@@ -9535,8 +9977,6 @@ status open
 \align center
 \begin_inset Graphics
 	filename 41.png
-	width 5.04167in
-	height 4.125in
 
 \end_inset
 
@@ -9940,8 +10380,7 @@ populationpyramids
 \end_layout
 
 \begin_layout Standard
-This is the simplest configuration file so far as it basically looks like
- this:
+This is the simplest configuration file so far as it looks like this:
 \end_layout
 
 \begin_layout LyX-Code
@@ -10762,6 +11201,89 @@ Third party tools
 
 \begin_layout Standard
 Here's a list of useful free third-party tools to use with CanReg5.
+\end_layout
+
+\begin_layout Subsection
+Java Runtime Environment
+\end_layout
+
+\begin_layout Standard
+To run CanReg at all you need a Java Runtime Environment.
+ You can get it from http://java.com/en/download/manual.jsp.
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Issues-with-memory"
+
+\end_inset
+
+Issues with memory
+\end_layout
+
+\begin_layout Standard
+By default most JVM implementations limit themselves to using a small amount
+ of RAM (eg: 64MB), even if your computer has a lot of system RAM (eg: 1GB).
+ This can lead to out of memory conditions, even if your computer has lots
+ of free memory.
+ To configure your JVM to use more memory, complete the following steps:
+\end_layout
+
+\begin_layout Paragraph
+On Windows:
+\end_layout
+
+\begin_layout Standard
+Go to Control Panel | Java , in 'Java' panel, click view Java applet running
+ settings.
+ Set Java Running Parameters to:
+\end_layout
+
+\begin_layout Standard
+-Xmx256M -Xms256M -Xss128k
+\end_layout
+
+\begin_layout Standard
+Save and apply these changes.
+ You must close and restart CanReg (and potential web browsers open) for
+ these changes to take effect.
+\end_layout
+
+\begin_layout Standard
+These settings require 256MB of contiguous memory be available.
+ You may need to restart your computer before these settings will work.
+\end_layout
+
+\begin_layout Paragraph
+On Solaris/Linux:
+\end_layout
+
+\begin_layout LyX-Code
+cd /bin 
+\end_layout
+
+\begin_layout LyX-Code
+./ControlPanel 
+\end_layout
+
+\begin_layout Standard
+Change Java Applet running Parameters to: -Xmx256M -Xms256M -Xss128k
+\end_layout
+
+\begin_layout Standard
+Press OK, restart CanReg (and potential web browsers open) for these changes
+ to take effect.
+\end_layout
+
+\begin_layout Standard
+This will configure your JVM to use a fixed 256MB of RAM.
+\end_layout
+
+\begin_layout Standard
+If you have multiple versions of java on same machine, please perform the
+ above operations for all versions.
+ 
 \end_layout
 
 \begin_layout Subsection

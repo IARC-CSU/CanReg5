@@ -1,42 +1,60 @@
-#LyX 1.6.8 created this file. For more info see http://www.lyx.org/
-\lyxformat 345
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
 \begin_document
 \begin_header
 \textclass article
 \use_default_options true
+\maintain_unincluded_children false
 \language english
+\language_package default
 \inputencoding auto
+\fontencoding global
 \font_roman default
 \font_sans default
 \font_typewriter default
 \font_default_family default
+\use_non_tex_fonts false
 \font_sc false
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
 
 \graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
 \paperfontsize default
 \use_hyperref false
 \papersize default
 \use_geometry false
 \use_amsmath 1
 \use_esint 1
+\use_mhchem 1
+\use_mathdots 1
 \cite_engine basic
 \use_bibtopic false
+\use_indices false
 \paperorientation portrait
+\suppress_date false
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
-\defskip medskip
+\paragraph_indentation default
 \quotes_language english
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
 \tracking_changes false
 \output_changes false
-\author "" 
-\author "" 
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
 \end_header
 
 \begin_body
@@ -79,6 +97,10 @@ This document is a road map for the development of CanReg5.
 CanReg 5.1
 \end_layout
 
+\begin_layout Standard
+Remaining ideas/fixes for CanReg 5.1
+\end_layout
+
 \begin_layout Section*
 Data Entry related
 \end_layout
@@ -88,7 +110,7 @@ Improve detection of changes to a record.
 \end_layout
 
 \begin_layout Itemize
-Let user enter dates in the format they wish
+Let user enter dates in the format they wish?
 \end_layout
 
 \begin_layout Itemize
@@ -111,18 +133,6 @@ Database related
 
 \begin_layout Itemize
 Better database connection security.
-\end_layout
-
-\begin_layout Itemize
-Optional encryption of the database (
-\begin_inset Quotes eld
-\end_inset
-
-boot-password
-\begin_inset Quotes erd
-\end_inset
-
-)
 \end_layout
 
 \begin_layout Itemize
@@ -253,10 +263,6 @@ Management related
 \end_layout
 
 \begin_layout Itemize
-Streamline the restore from backup-function on a new install.
-\end_layout
-
-\begin_layout Itemize
 Better detection of missing mandatory variables
 \end_layout
 
@@ -282,27 +288,8 @@ Topo, Morpho, Address etc.
 
 \end_deeper
 \end_deeper
-\begin_layout Itemize
-Possibility to run the server separately
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Batch mode?
-\end_layout
-
-\begin_layout Itemize
-System tray notifications? ( http://java.sun.com/developer/technicalArticles/J2SE/
-Desktop/javase6/systemtray/ )
-\end_layout
-
-\end_deeper
 \begin_layout Section*
 Pending bugs
-\end_layout
-
-\begin_layout Itemize
-Pop pyramid: totals and subtitle
 \end_layout
 
 \begin_layout Part*
@@ -310,6 +297,10 @@ Pop pyramid: totals and subtitle
 \end_inset
 
 Proposals for CanReg 5.2
+\end_layout
+
+\begin_layout Standard
+Ideas/fixes for CanReg 5.1.
 \end_layout
 
 \begin_layout Section*
@@ -321,7 +312,7 @@ Improved printing functionality.
 \end_layout
 
 \begin_layout Itemize
-Internalize some dictionaries:
+Internalize some dictionaries (this has started, but can be taken further)
 \end_layout
 
 \begin_deeper
