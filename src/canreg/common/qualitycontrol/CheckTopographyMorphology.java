@@ -18,11 +18,9 @@
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  * @author Andy Cooke
  */
-
 package canreg.common.qualitycontrol;
 
 import canreg.common.Globals;
-import canreg.common.LookUpLoader;
 import canreg.common.qualitycontrol.Checker.CheckNames;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,31 +31,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * 
  * @author ervikm
  */
 public class CheckTopographyMorphology extends CheckInterface {
 
-    private Map<String, String> morphologicalFamiliesMap = null;
-    private Map<String, String> lookUpMustMap5 = null;
-    private Map<String, String> lookUpMustMap6 = null;
-    private Map<String, String> lookUpMustNotMap5 = null;
-    private Map<String, String> lookUpMustNotMap6 = null;
+    public static Map<String, String> morphologicalFamiliesMap = null;
+    public static Map<String, String> lookUpMustMap5 = null;
+    public static Map<String, String> lookUpMustNotMap5 = null;
     /**
      *
      */
-    public static String morphologicalFamiliesLookUpFileResource = "/canreg/common/resources/lookup/MorphFam.txt";
     public static final int mustCodeLength = 5;
-    public static String Must_LookupFile = "/canreg/common/resources/lookup/Must.txt";
-    public static final int mustNotCodeLength = 6;
-    public static String MustNot_LookupFile = "/canreg/common/resources/lookup/MustNot.txt";
 
     @Override
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return new Globals.StandardVariableNames[]{
                     Globals.StandardVariableNames.Topography,
-                    Globals.StandardVariableNames.Morphology
-                };
+                    Globals.StandardVariableNames.Morphology};
     }
 
     @Override
@@ -86,7 +77,7 @@ public class CheckTopographyMorphology extends CheckInterface {
         }
 
         if (morphologyCode.length() < 4) {
-            //System.out.println("SHOULDN'T HAVE BEEN CALLED WHEN INVALID");
+            // System.out.println("SHOULDN'T HAVE BEEN CALLED WHEN INVALID");
             result.setMessage(morphologyCode + " is too short.");
             result.setResultCode(CheckResult.ResultCode.Invalid);
             return result;
@@ -101,7 +92,6 @@ public class CheckTopographyMorphology extends CheckInterface {
             // System.out.println("not a valid morph code? " + morphologyCode);
             return result;
         }
-
         if (morphologyFamilyString.length() < 3) {
             // System.out.println("SHOULDN'T HAVE BEEN CALLED WHEN INVALID - Morph_fam_line");
             result.setMessage(morphologyCode);
@@ -128,92 +118,91 @@ public class CheckTopographyMorphology extends CheckInterface {
         }
         String look = familyString + "C" + topographyCode;
 
-        //------< '*' all families, '+' must, '-' mustnot >-----
+        // ------< '*' all families, '+' must, '-' mustnot >-----
         switch (morphologyFamilyString.charAt(0)) {
             case '*': // all families
             {
                 result.setMessage("");
                 result.setResultCode(CheckResult.ResultCode.OK);
-                return result;
+                break;
             }
 
-            case '+': //----------------------------< must file
+            case '+': // ----------------------------< must file
             {
-                //--------< "look" is "family"+"topography"
-                //-----------< compare up to topog site only
-                MustLookupResult = lookUpMustMap5.get(look.substring(0, 5));
-                if (MustLookupResult != null && MustLookupResult.length() > 5) {
-                    if (MustLookupResult.charAt(5) == '*'
-                            || MustLookupResult.charAt(5) == topographyCode.charAt(2)) {
-                        result.setMessage("");
-                        result.setResultCode(CheckResult.ResultCode.OK);
-                        return result;
-                    }
-                    // case of 8270/3,75.1 etc
-                    MustLookupResult = lookUpMustMap6.get(look.substring(0, 6));
-                    if (MustLookupResult.length() > 5) {
-                        if (MustLookupResult.charAt(5) == topographyCode.charAt(2)) {
+                // --------< "look" is "family"+"topography"
+                // -----------< compare up to topog site only
+                // Get The key and if the key exits, we get the value(* or one
+                // number
+                // MustLookupResult = lookUpMustMap5.get(look.substring(0, 5));
+                if (lookUpMustMap5.containsKey(look.substring(0, 5))) {
+                    MustLookupResult = lookUpMustMap5.get(look.substring(0, 5));
+
+                    if (MustLookupResult.length() >= 1) {
+                        if (look.charAt(5) == '*'
+                                || look.charAt(5) == topographyCode.charAt(2)) {
                             result.setMessage("");
                             result.setResultCode(CheckResult.ResultCode.OK);
-                            return result;
+                            break;
                         }
                     }
-                }
+                } else {
 
-                //-----------< entry not found either 5 or 6 characters
-                result.setMessage(topographyCode + ", " + morphologyCode);
-                result.setResultCode(CheckResult.ResultCode.Rare);
-                return result;
+                    // -----------< entry not found either 5 
+                    result.setMessage(topographyCode + ", " + morphologyCode);
+                    result.setResultCode(CheckResult.ResultCode.Rare);
+                    break;
+                }
             }
 
-            case '-': //----------------------< must not file
+            case '-': // ----------------------< must not file
             {
-                MustNotLookupResult = lookUpMustNotMap5.get(look.substring(0, 5));
-                if (MustNotLookupResult != null && MustNotLookupResult.length() > 5) {
-                    if (MustNotLookupResult.charAt(5) == '*'
-                            || MustLookupResult.charAt(5) == topographyCode.charAt(2)) {
-                        result.setMessage(topographyCode + ", " + morphologyCode);
-                        result.setResultCode(CheckResult.ResultCode.Rare);
-                        return result;
-                    }
-                    //-----------------------< in case sub-site dependant
-                    MustNotLookupResult = lookUpMustNotMap6.get(look.substring(0, 6));
-                    if (MustNotLookupResult.length() > 5) {
-                        if (MustLookupResult.charAt(5) == topographyCode.charAt(2)) {
-                            result.setMessage(topographyCode + ", " + morphologyCode);
-                            result.setResultCode(CheckResult.ResultCode.Rare);
-                            return result;
+                if (lookUpMustMap5.containsKey(look.substring(0, 5))) {
+                    MustLookupResult = lookUpMustMap5.get(look.substring(0, 5));
+
+                    if (MustLookupResult.length() >= 1) {
+                        if (look.charAt(5) == '*'
+                                || look.charAt(5) == topographyCode.charAt(2)) {
+                            result.setMessage("");
+                            result.setResultCode(CheckResult.ResultCode.OK);
+                            break;
                         }
                     }
+                } else {
+                    // -----------< entry not found either 5
+                    result.setMessage(topographyCode + ", " + morphologyCode);
+                    result.setResultCode(CheckResult.ResultCode.Rare);
+                    break;
+
                 }
-                //	not found in MustNot file
-                result.setMessage("");
-                result.setResultCode(CheckResult.ResultCode.OK);
-                return result;
-            }//break;
+
+
+            }// break;
         }// end of switch
-        result.setMessage("");
-        result.setResultCode(CheckResult.ResultCode.OK);
+
         return result;
     }
 
     public CheckTopographyMorphology() {
-        InputStream morphFamResourceStream = this.getClass().getResourceAsStream(morphologicalFamiliesLookUpFileResource);
-        InputStream lookUpMustResourceStream = this.getClass().getResourceAsStream(Must_LookupFile);
-        InputStream lookUpMustNotResourceStream = this.getClass().getResourceAsStream(MustNot_LookupFile);
+        InputStream morphFamResourceStream = this.getClass().getResourceAsStream(
+                Globals.morphologicalFamiliesLookUpFileResource);
+        InputStream lookUpMustResourceStream = this.getClass().getResourceAsStream(Globals.mustLookupFile);
+        InputStream lookUpMustNotResourceStream = this.getClass().getResourceAsStream(Globals.mustNotLookupFile);
 
         try {
-            morphologicalFamiliesMap = LookUpLoader.load(morphFamResourceStream, 4);
-            lookUpMustMap5 = LookUpLoader.load(lookUpMustResourceStream, 5);
-            lookUpMustNotMap5 = LookUpLoader.load(lookUpMustNotResourceStream, 5);
-            lookUpMustMap6 = LookUpLoader.load(lookUpMustResourceStream, 6);
-            lookUpMustNotMap6 = LookUpLoader.load(lookUpMustNotResourceStream, 6);
+            morphologicalFamiliesMap = fr.iarc.cin.iarctools.tools.LookUpLoader.load(morphFamResourceStream, 4);
+            lookUpMustMap5 = fr.iarc.cin.iarctools.tools.LookUpLoader.load(
+                    lookUpMustResourceStream, 5);
+            lookUpMustNotMap5 = fr.iarc.cin.iarctools.tools.LookUpLoader.load(
+                    lookUpMustNotResourceStream, 5);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE,
+                    null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE,
+                    null, ex);
         } catch (URISyntaxException ex) {
-            Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE,
+                    null, ex);
         }
     }
 }

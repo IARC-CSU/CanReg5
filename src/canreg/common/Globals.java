@@ -212,6 +212,9 @@ public class Globals {
     public static String NAMESEX_TABLE_SEX_VARIABLE_NAME = "SEX";
     public static String NAMESEX_TABLE_NAME = "NAMESEX";
     public static final int MAX_ERROR_LINES = 25;
+    public static final String morphologicalFamiliesLookUpFileResource = "/canreg/common/resources/lookup/MorphFam.txt";
+    public static final String mustLookupFile= "/canreg/common/resources/lookup/Must.txt";
+    public static final String mustNotLookupFile = "/canreg/common/resources/lookup/MustNot.txt";
 
     /**
      * 
