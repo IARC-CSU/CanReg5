@@ -47,6 +47,7 @@ import canreg.common.database.PopulationDataset;
 import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
 import canreg.server.CanRegLoginImpl;
+import canreg.server.management.SystemDefinitionConverter;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -54,11 +55,13 @@ import java.awt.Graphics2D;
 import java.awt.SplashScreen;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -431,7 +434,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
         return returnString;
     }
-    
+
     public String loginDirect(String serverCode, String username, char[] password) throws LoginException, NullPointerException, NotBoundException, MalformedURLException, RemoteException, UnknownHostException, WrongCanRegVersionException {
         // should this be moved to the loginserver?
         CanRegLoginInterface loginServer = new CanRegLoginImpl(serverCode);
@@ -1360,32 +1363,49 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param args
      */
     public static void main(String[] args) {
-        splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("STARTING..."), 10);
-        init();
-        initializeLookAndFeels();
-        if (args.length > 0) {
-            SplashScreen splash = SplashScreen.getSplashScreen();
-            if (splash != null) {
-                Graphics2D g = splash.createGraphics();
-                g.setComposite(AlphaComposite.Clear);
-                g.fillRect(0, 0, splash.getSize().width, splash.getSize().height);
-                g.setPaintMode();
-                g.setColor(Color.BLACK);
-                g.setFont(new Font("SansSerif", Font.BOLD, 20));
-                g.drawString(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("CANREG5 SERVER STARTING..."), 35, splash.getSize().height / 2);
-                splash.update();
-            }
+        // first see if we are dealing with something that doesn't use the GUI
+        if (args.length > 0 && args[0].equalsIgnoreCase("--convert")) {
+            // direct access to the converter
+            // usage CanReg --convert <CanReg4 system definition file> [Charset name]
             try {
-                canreg.common.ServerLauncher.start(Globals.DEFAULT_SERVER_ADDRESS, args[0], Globals.DEFAULT_PORT);
-                if (splash != null) {
-                    splash.close();
+                SystemDefinitionConverter sdc = new SystemDefinitionConverter();
+                if (args.length == 3) {
+                    Charset cs = Charset.forName(args[2]);
+                    sdc.setFileEncoding(cs);
                 }
-                JOptionPane.showMessageDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("CANREG SERVER ") + args[0] + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString(" LAUNCHED."));
-            } catch (AlreadyBoundException ex) {
+                sdc.convert(args[1]);
+            } catch (FileNotFoundException ex) {
+                System.out.println(args[1] + " not found. " + ex);
                 Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            launch(CanRegClientApp.class, args);
+            splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("STARTING..."), 10);
+            init();
+            initializeLookAndFeels();
+            if (args.length > 0) {
+                SplashScreen splash = SplashScreen.getSplashScreen();
+                if (splash != null) {
+                    Graphics2D g = splash.createGraphics();
+                    g.setComposite(AlphaComposite.Clear);
+                    g.fillRect(0, 0, splash.getSize().width, splash.getSize().height);
+                    g.setPaintMode();
+                    g.setColor(Color.BLACK);
+                    g.setFont(new Font("SansSerif", Font.BOLD, 20));
+                    g.drawString(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("CANREG5 SERVER STARTING..."), 35, splash.getSize().height / 2);
+                    splash.update();
+                }
+                try {
+                    canreg.common.ServerLauncher.start(Globals.DEFAULT_SERVER_ADDRESS, args[0], Globals.DEFAULT_PORT);
+                    if (splash != null) {
+                        splash.close();
+                    }
+                    JOptionPane.showMessageDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("CANREG SERVER ") + args[0] + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString(" LAUNCHED."));
+                } catch (AlreadyBoundException ex) {
+                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                launch(CanRegClientApp.class, args);
+            }
         }
     }
 
