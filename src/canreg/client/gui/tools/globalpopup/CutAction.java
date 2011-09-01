@@ -30,7 +30,7 @@ class CutAction extends AbstractAction{
     private JTextComponent jComponent;
 
     public CutAction(JTextComponent comp){
-        super("Cut");
+        super(java.util.ResourceBundle.getBundle("canreg/client/gui/tools/globalpopup/resources/globalpopup").getString("CUT"));
         this.jComponent = comp;
     }
 

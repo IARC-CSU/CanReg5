@@ -30,7 +30,7 @@ class DeleteAction extends AbstractAction{
     private JTextComponent jComponent;
 
     public DeleteAction(JTextComponent comp){
-        super("Delete");
+        super(java.util.ResourceBundle.getBundle("canreg/client/gui/tools/globalpopup/resources/globalpopup").getString("DELETE"));
         this.jComponent = comp;
     }
 

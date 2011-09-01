@@ -33,7 +33,7 @@ class PasteAction extends AbstractAction{
     private JTextComponent jComponent;
 
     public PasteAction(JTextComponent jComponent){
-        super("Paste");
+        super(java.util.ResourceBundle.getBundle("canreg/client/gui/tools/globalpopup/resources/globalpopup").getString("PASTE"));
         this.jComponent = jComponent;
     }
 

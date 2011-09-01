@@ -30,7 +30,7 @@ class SelectAllAction extends AbstractAction{
     private JTextComponent jComponent;
 
     public SelectAllAction(JTextComponent jComponent){
-        super("Select All");
+        super(java.util.ResourceBundle.getBundle("canreg/client/gui/tools/globalpopup/resources/globalpopup").getString("SELECT ALL"));
         this.jComponent = jComponent;
     }
 

@@ -30,7 +30,7 @@ class CopyAction extends AbstractAction{
     private JTextComponent jComponent;
 
     public CopyAction(JTextComponent jComponent){
-        super("Copy");
+        super(java.util.ResourceBundle.getBundle("canreg/client/gui/tools/globalpopup/resources/globalpopup").getString("COPY"));
         this.jComponent = jComponent;
     }
 
