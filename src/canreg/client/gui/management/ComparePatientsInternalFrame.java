@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * ComparePatientsInternalFrame.java
  *
  * Created on 07-Jul-2011, 17:23:40
@@ -13,7 +8,6 @@ package canreg.client.gui.management;
 import canreg.common.Pair;
 import canreg.common.database.Patient;
 import canreg.common.database.Tumour;
-import java.lang.String;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
