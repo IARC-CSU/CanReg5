@@ -37,12 +37,15 @@ import java.util.logging.Logger;
 public class CheckTopographyMorphology extends CheckInterface {
 
     public static Map<String, String> morphologicalFamiliesMap = null;
-    public static Map<String, String> lookUpMustMap5 = null;
-    public static Map<String, String> lookUpMustNotMap5 = null;
+    public static Map<String, String> lookUpMustMap = null;
+    public static Map<String, String> lookUpMustNotMap = null;
     /**
      *
      */
-    public static final int mustCodeLength = 5;
+    public static final int mustKeyLength = 6;
+    private static final int mustNotkeyLength = 6;
+    public static String Must_LookupFile = "/iarctools/resources/lookup/Must.txt";
+    public static String MustNot_LookupFile = "/iarctools/resources/lookup/MustNot.txt";
 
     @Override
     public Globals.StandardVariableNames[] getVariablesNeeded() {
@@ -59,7 +62,7 @@ public class CheckTopographyMorphology extends CheckInterface {
     @Override
     public CheckResult performCheck(Map<Globals.StandardVariableNames, Object> variables) {
         CheckResult result = new CheckResult();
-        result.setCheckName(Checker.CheckNames.TopographyMorphology.toString());
+        result.setCheckName(CheckNames.TopographyMorphology.toString());
         result.setResultCode(CheckResult.ResultCode.NotDone);
 
         String morphologyCode = null;
@@ -67,9 +70,11 @@ public class CheckTopographyMorphology extends CheckInterface {
 
         try {
             result.addVariableInvolved(Globals.StandardVariableNames.Topography);
-            topographyCode = variables.get(Globals.StandardVariableNames.Topography).toString();
+            topographyCode = variables.get(
+                    Globals.StandardVariableNames.Topography).toString();
             result.addVariableInvolved(Globals.StandardVariableNames.Morphology);
-            morphologyCode = variables.get(Globals.StandardVariableNames.Morphology).toString();
+            morphologyCode = variables.get(
+                    Globals.StandardVariableNames.Morphology).toString();
         } catch (NullPointerException nullPointerException) {
             result.setResultCode(CheckResult.ResultCode.Missing);
             result.setMessage("Missing variable(s) needed.");
@@ -98,7 +103,15 @@ public class CheckTopographyMorphology extends CheckInterface {
             result.setResultCode(CheckResult.ResultCode.Invalid);
             return result;
         }
-
+        // If Code Topo est de la forme 42, on sort l'enreg � unlikely... car il
+        // manquerait le zero
+        // on the left
+        if (topographyCode.length() == 2) {
+            // System.out.println("SHOULDN'T HAVE BEEN CALLED WHEN INVALID - topo");
+            result.setMessage(topographyCode);
+            result.setResultCode(CheckResult.ResultCode.Query);
+            return result;
+        }
         if (topographyCode.length() < 3) {
             // System.out.println("SHOULDN'T HAVE BEEN CALLED WHEN INVALID - topo");
             result.setMessage(topographyCode);
@@ -131,51 +144,65 @@ public class CheckTopographyMorphology extends CheckInterface {
             {
                 // --------< "look" is "family"+"topography"
                 // -----------< compare up to topog site only
-                // Get The key and if the key exits, we get the value(* or one
-                // number
+                // Get The partial key and if the key exits, ended by '*' , or
+                // complete key
                 // MustLookupResult = lookUpMustMap5.get(look.substring(0, 5));
-                if (lookUpMustMap5.containsKey(look.substring(0, 5))) {
-                    MustLookupResult = lookUpMustMap5.get(look.substring(0, 5));
 
-                    if (MustLookupResult.length() >= 1) {
-                        if (look.charAt(5) == '*'
-                                || look.charAt(5) == topographyCode.charAt(2)) {
-                            result.setMessage("");
-                            result.setResultCode(CheckResult.ResultCode.OK);
-                            break;
-                        }
-                    }
+                String look1 = look.substring(0, mustKeyLength - 1) + "*";
+
+                if (lookUpMustMap.containsKey(look1)) {
+
+                    result.setMessage("");
+                    result.setResultCode(CheckResult.ResultCode.OK);
+
+                    break;
+                } else if (lookUpMustMap.containsKey(look.substring(0, mustKeyLength))) {
+
+
+                    result.setMessage("");
+                    result.setResultCode(CheckResult.ResultCode.OK);
+
                 } else {
+                    // -----------< entry not found on partial key  Test all the key
 
-                    // -----------< entry not found either 5 
-                    result.setMessage(topographyCode + ", " + morphologyCode);
+                    result.setMessage("Fam.:" + morphologyFamilyString);
                     result.setResultCode(CheckResult.ResultCode.Rare);
+
                     break;
                 }
             }
 
             case '-': // ----------------------< must not file
-            {
-                if (lookUpMustMap5.containsKey(look.substring(0, 5))) {
-                    MustLookupResult = lookUpMustMap5.get(look.substring(0, 5));
+            { // If we find combination of morpho and topo, it must be unlikely
+                // because
+                // we must not find this association.!!+
+                // For example, We search for 5 characters in the key (67C77*)
+                // Then we search for the 6 characters
+                String look1 = look.substring(0, mustNotkeyLength - 1) + "*";
+                if (lookUpMustNotMap.containsKey(look1)) {
 
-                    if (MustLookupResult.length() >= 1) {
-                        if (look.charAt(5) == '*'
-                                || look.charAt(5) == topographyCode.charAt(2)) {
-                            result.setMessage("");
-                            result.setResultCode(CheckResult.ResultCode.OK);
-                            break;
-                        }
-                    }
-                } else {
-                    // -----------< entry not found either 5
-                    result.setMessage(topographyCode + ", " + morphologyCode);
+                    result.setMessage("Fam.:" + morphologyFamilyString);
                     result.setResultCode(CheckResult.ResultCode.Rare);
+
+                    break;
+                    // Search for complete key
+                    // There is not * in the key for example String key="68C420";
+                    // We search the key in 6 items
+                } else if (lookUpMustNotMap.containsKey(look.substring(0,
+                        mustNotkeyLength))) {
+                    // We have found forbidden code.
+
+                    result.setMessage("Fam.:" + morphologyFamilyString);
+                    result.setResultCode(CheckResult.ResultCode.Rare);
+
                     break;
 
+                } else {
+                    // We haven't found this combination >> OK
+                    result.setMessage("");
+                    result.setResultCode(CheckResult.ResultCode.OK);
+                    break;
                 }
-
-
             }// break;
         }// end of switch
 
@@ -190,9 +217,9 @@ public class CheckTopographyMorphology extends CheckInterface {
 
         try {
             morphologicalFamiliesMap = fr.iarc.cin.iarctools.tools.LookUpLoader.load(morphFamResourceStream, 4);
-            lookUpMustMap5 = fr.iarc.cin.iarctools.tools.LookUpLoader.load(
+            lookUpMustMap = fr.iarc.cin.iarctools.tools.LookUpLoader.load(
                     lookUpMustResourceStream, 5);
-            lookUpMustNotMap5 = fr.iarc.cin.iarctools.tools.LookUpLoader.load(
+            lookUpMustNotMap = fr.iarc.cin.iarctools.tools.LookUpLoader.load(
                     lookUpMustNotResourceStream, 5);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE,
