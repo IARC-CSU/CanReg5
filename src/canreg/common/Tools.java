@@ -997,4 +997,10 @@ public class Tools {
         ImageSelection imgSel = new ImageSelection(image);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(imgSel, null);
     }
+
+    public static <T> T[] arrayConcat(T[] first, T[] second) {
+        T[] result = Arrays.copyOf(first, first.length + second.length);
+        System.arraycopy(second, 0, result, first.length, second.length);
+        return result;
+    }
 }
