@@ -5,11 +5,33 @@
  */
 package canreg.client.gui.management;
 
+import canreg.client.CanRegClientApp;
+import canreg.client.gui.CanRegClientView;
+import canreg.client.gui.dataentry.RecordEditor;
+import canreg.client.gui.tools.TableColumnAdjuster;
+import canreg.common.DatabaseFilter;
+import canreg.common.GlobalToolBox;
+import canreg.common.Globals;
 import canreg.common.Pair;
+import canreg.common.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
+import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Patient;
 import canreg.common.database.Tumour;
+import canreg.server.database.RecordLockedException;
+import canreg.server.database.UnknownTableException;
+import java.awt.Cursor;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import org.jdesktop.application.Action;
@@ -21,11 +43,50 @@ import org.jdesktop.application.Action;
 public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
 
     private List<Pair<Patient, Tumour[]>> recordSets;
+    private Pair<Patient, Tumour[]> mainRecord;
+    private TableModel tableModel;
+    private String patientIDlookupVariable;
+    private String tumourIDlookupVariable;
+    private GlobalToolBox globalToolBox;
+    private JDesktopPane desktopPane;
+    private String patientIDTumourTablelookupVariable;
+    private LinkedList<Float> percentList;
 
     /** Creates new form ComparePatientsInternalFrame */
-    public ComparePatientsInternalFrame() {
+    public ComparePatientsInternalFrame(JDesktopPane desktopPane) {
+        this.desktopPane = desktopPane;
         initComponents();
+        globalToolBox = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox();
         recordSets = new LinkedList<Pair<Patient, Tumour[]>>();
+        percentList = new LinkedList<Float>();
+        patientIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
+        tumourIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+        patientIDTumourTablelookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName();
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                rowClicked(evt);
+            }
+        });
+    }
+
+    private void rowClicked(java.awt.event.MouseEvent evt) {
+        if (evt.getClickCount() == 2) {
+            JTable target = (JTable) evt.getSource();
+            int rowNumber = target.rowAtPoint(evt.getPoint());
+            TableModel model = target.getModel();
+            int columnNumber = 0;
+            String lookUpVariable;
+            lookUpVariable = canreg.common.Tools.toUpperCaseStandardized(patientIDlookupVariable);
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                if (canreg.common.Tools.toUpperCaseStandardized(model.getColumnName(i)).equals(lookUpVariable)) {
+                    columnNumber = i;
+                    break;
+                }
+            }
+            editPatientID("" + model.getValueAt(rowNumber, columnNumber));
+        }
     }
 
     /** This method is called from within the constructor to
@@ -42,13 +103,18 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
+        setMaximizable(true);
+        setResizable(true);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(ComparePatientsInternalFrame.class);
+        setTitle(resourceMap.getString("Form.title")); // NOI18N
         setName("Form"); // NOI18N
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
+        jTable1.setAutoCreateRowSorter(true);
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
+                {new Boolean(false), null, null, null},
                 {null, null, null, null},
                 {null, null, null, null}
             },
@@ -71,20 +137,18 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jTable1.setColumnSelectionAllowed(false);
         jTable1.setEnabled(false);
-        jTable1.setFocusable(false);
         jTable1.setName("jTable1"); // NOI18N
         jScrollPane1.setViewportView(jTable1);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(ComparePatientsInternalFrame.class);
-        jTable1.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTable1.columnModel.title0")); // NOI18N
-        jTable1.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTable1.columnModel.title1")); // NOI18N
-        jTable1.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTable1.columnModel.title2")); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ComparePatientsInternalFrame.class, this);
         jButton1.setAction(actionMap.get("closeAction")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
         jButton2.setAction(actionMap.get("mergePatientAction")); // NOI18N
+        jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
         jButton2.setName("jButton2"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -92,7 +156,7 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(326, Short.MAX_VALUE)
+                .addContainerGap(242, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
@@ -102,7 +166,7 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -122,21 +186,160 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
         this.dispose();
     }
 
-    public void addRecordSet(Patient patient, Tumour[] tumours) {
+    public void addMainRecordSet(Patient patient, Tumour[] tumours) {
+        Pair recordSet = new Pair(patient, tumours);
+        mainRecord = recordSet;
+        refreshTable();
+    }
+
+    public void addRecordSet(Patient patient, Tumour[] tumours, float percent) {
         Pair recordSet = new Pair(patient, tumours);
         recordSets.add(recordSet);
+        percentList.add(percent);
         refreshTable();
     }
 
     private void refreshTable() {
-        // redo now that the table is turned
-        String[] columnNames = new String[recordSets.size() + 1];
-        columnNames[0] = "Variable";
-        int i = 0;
-        for (Pair<Patient, Tumour[]> recordSet : recordSets) {
-            columnNames[i++] = "Patient " + i;
+        Patient mainPatient = mainRecord.getFirst();
+        String[] columnNames = canreg.common.Tools.arrayConcat(new String[]{"Merge", "Percent"}, mainPatient.getVariableNames());
+        Object[][] data = new Object[recordSets.size() + 1][columnNames.length];
+        // add the main one
+        List<Object> line = new LinkedList<Object>();
+        line.add(false);
+        line.add("---");
+        for (String varb : mainPatient.getVariableNames()) {
+            line.add(mainPatient.getVariable(varb));
         }
-        // TableModel t = new DefaultTableModel(data, columnNames);
+        data[0] = line.toArray();
+        
+        // add the rest
+        int i = 1;
+        for (Pair<Patient, Tumour[]> recordSet : recordSets) {
+            Patient patient = recordSet.getFirst();
+            List<Object> newLine = new LinkedList<Object>();
+            newLine.add(false);
+            newLine.add(percentList.get(i - 1)+" %");
+            for (String varb : mainPatient.getVariableNames()) {
+                newLine.add(patient.getVariable(varb));
+            }
+            data[i] = newLine.toArray();
+            i++;
+        }
+        tableModel = new DefaultTableModel(data, columnNames);
+        jTable1.setModel(tableModel);
+        jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        TableColumnAdjuster tca = new TableColumnAdjuster(jTable1);
+        tca.setColumnDataIncluded(false);
+        tca.setOnlyAdjustLarger(false);
+        tca.adjustColumns();
+        jTable1.setRowSelectionAllowed(true);
+    }
+
+    /**
+     *
+     * @param idString
+     */
+    public void editPatientID(String idString) {
+        Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+        Cursor normalCursor = getCursor();
+        setCursor(hourglassCursor);
+
+        String tableName = Globals.PATIENT_TABLE_NAME;
+
+        RecordEditor recordEditor = new RecordEditor(desktopPane);
+        recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
+        recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
+        DatabaseRecord record = null;
+        DatabaseFilter filter = new DatabaseFilter();
+        filter.setFilterString(patientIDlookupVariable + " = '" + idString + "' ");
+        DistributedTableDescription distributedTableDescription;
+        Object[][] rows;
+        DatabaseRecord[] tumourRecords;
+
+        try {
+            distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+            int numberOfRecords = distributedTableDescription.getRowCount();
+
+            if (numberOfRecords == 0) {
+                /*
+                If we don't get any records with that ID - we propose to create one.
+                 */
+                int answer = JOptionPane.showInternalConfirmDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NO_PATIENT_WITH_THAT_ID_FOUND,_DO_YOU_WANT_TO_CREATE_ONE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("PATIENT_ID_NOT_FOUND"), JOptionPane.YES_NO_OPTION);
+                if (answer == JOptionPane.YES_OPTION) {
+                    record = new Patient();
+                    record.setVariable(patientIDlookupVariable, idString);
+                    CanRegClientApp.getApplication().saveRecord(record);
+                    distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+                    numberOfRecords = distributedTableDescription.getRowCount();
+                } else {
+                    setCursor(normalCursor);
+                    return;
+                }
+            }
+
+            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
+            CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
+            String[] columnNames = distributedTableDescription.getColumnNames();
+            int ids[] = new int[numberOfRecords];
+            boolean found = false;
+            int idColumnNumber = 0;
+            // First get the patient IDs matching the tumour
+            while (!found && idColumnNumber < columnNames.length) {
+                found = columnNames[idColumnNumber++].equalsIgnoreCase(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+            }
+            if (found) {
+                idColumnNumber--;
+                TreeSet<DatabaseRecord> set = new TreeSet<DatabaseRecord>(new Comparator<DatabaseRecord>() {
+
+                    @Override
+                    public int compare(DatabaseRecord o1, DatabaseRecord o2) {
+                        return (o1.getVariable(tumourIDlookupVariable).toString().compareTo(o2.getVariable(tumourIDlookupVariable).toString()));
+                    }
+                });
+                // Get all the tumour records for all the patient records...
+                for (int j = 0; j < numberOfRecords; j++) {
+                    ids[j] = (Integer) rows[j][idColumnNumber];
+                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME, true);
+                    recordEditor.addRecord(record);
+
+                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true);
+                    for (DatabaseRecord rec : tumourRecords) {
+                        // store them in a set, so we don't show them several times
+                        if (rec != null) {
+                            set.add(rec);
+                        }
+                    }
+                }
+                if (set.isEmpty()) {
+                    Tumour rec = new Tumour();
+                    rec.setVariable(patientIDTumourTablelookupVariable, idString);
+                    set.add(rec);
+                }
+
+                for (DatabaseRecord rec : set) {
+                    // store them in a map, so we don't show them several times
+                    recordEditor.addRecord(rec);
+                }
+                CanRegClientView.showAndPositionInternalFrame(desktopPane, recordEditor);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD_NOT_FOUND"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (RecordLockedException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Record already open.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(ComparePatientsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DistributedTableDescriptionException ex) {
+            Logger.getLogger(ComparePatientsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknownTableException ex) {
+            Logger.getLogger(ComparePatientsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ComparePatientsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(ComparePatientsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(ComparePatientsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            setCursor(normalCursor);
+        }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

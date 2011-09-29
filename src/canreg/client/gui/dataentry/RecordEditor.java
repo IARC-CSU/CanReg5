@@ -28,6 +28,7 @@ package canreg.client.gui.dataentry;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
+import canreg.client.gui.management.ComparePatientsInternalFrame;
 import canreg.client.gui.tools.PrintUtilities;
 import canreg.client.gui.tools.WaitFrame;
 import canreg.common.DatabaseVariablesListElement;
@@ -616,7 +617,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             } else if (e.getActionCommand().equalsIgnoreCase(CHECKS)) {
                 runChecks((RecordEditorPanel) source);
             } else if (e.getActionCommand().equalsIgnoreCase(SAVE)) {
-                saveRecord((RecordEditorPanel) source);              
+                saveRecord((RecordEditorPanel) source);
             } else if (e.getActionCommand().equalsIgnoreCase(CHANGE_PATIENT_RECORD)) {
                 changePatientRecord((RecordEditorPanel) source);
             } else if (e.getActionCommand().equalsIgnoreCase(OBSOLETE)) {
@@ -905,9 +906,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     }
 
     @Action
-    public void togglePatientTumour() {        
+    public void togglePatientTumour() {
         int loc = recordSplitPane.getDividerLocation();
-        if (loc < recordSplitPane.getHeight()/2) {
+        if (loc < recordSplitPane.getHeight() / 2) {
             recordSplitPane.setDividerLocation(1.0);
         } else {
             recordSplitPane.setDividerLocation(0.0);
@@ -1180,29 +1181,44 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         desktopPane.add(waitFrame, javax.swing.JLayeredPane.POPUP_LAYER);
         waitFrame.setVisible(true);
         waitFrame.setLocation((desktopPane.getWidth() - waitFrame.getWidth()) / 2, (desktopPane.getHeight() - waitFrame.getHeight()) / 2);
+        Map<String, Float> map;
         try {
             DatabaseRecord sourceOfActionDatabaseRecord = recordEditorPanel.getDatabaseRecord();
             // buildDatabaseRecord();
-            Map<String, Float> map = canreg.client.CanRegClientApp.getApplication().performDuplicateSearch((Patient) sourceOfActionDatabaseRecord, null);
+            map = canreg.client.CanRegClientApp.getApplication().performDuplicateSearch((Patient) sourceOfActionDatabaseRecord, null);
             //remove patients with the same patientID -- already mapped
             String patientRecordID = (String) sourceOfActionDatabaseRecord.getVariable(patientIDVariableName);
             String records = "";
-            for (String otherPatientRecordID : map.keySet()) {
-                // records += i + ": " + map.get(i) + "\n";
-                if (patientRecordID.equals(otherPatientRecordID)) {
-                    // do nothing
-                    //                } else if (patientRecordID.equals(otherPatientRecordID)) {
-                    //                   records += "Patient id: " + otherPatientRecordID + ", score: " + map.get(otherPatientRecordID) + "% (Already matched.)\n";
-                } else {
-                    records += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("PATIENT ID: ") + otherPatientRecordID + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(", SCORE: ") + map.get(otherPatientRecordID) + "%\n";
-                }
-            }
             waitFrame.dispose();
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-            setCursor(normalCursor);
-            if (records.length() > 0) {
+            if (map.keySet().size() > 0) {
+                // add records to the comparator
+                ComparePatientsInternalFrame cpif = new ComparePatientsInternalFrame(desktopPane);
+                cpif.addMainRecordSet((Patient) sourceOfActionDatabaseRecord, null);
+                for (String prid : map.keySet()) {
+                    if (patientRecordID.equals(prid)) {
+                        // do nothing
+                     } else {
+                        try {
+                            Patient patient2 = canreg.client.CanRegClientApp.getApplication().getPatientRecordByID(prid, false);
+                            cpif.addRecordSet(patient2, null, map.get(prid));
+                            records += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("PATIENT ID: ") + patient2.getVariable(patientIDVariableName) + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(", SCORE: ") + map.get(prid) + "%\n";
+                        } catch (SQLException ex) {
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (RecordLockedException ex) {
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (UnknownTableException ex) {
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (DistributedTableDescriptionException ex) {
+                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                setCursor(normalCursor);
                 JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("POTENTIAL DUPLICATES FOUND:") + records);
+                CanRegClientView.showAndPositionInternalFrame(desktopPane, cpif);
             } else {
+                setCursor(normalCursor);
                 JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("NO POTENTIAL DUPLICATES FOUND."));
                 // recordEditorPanel.setPersonSearchStatus();
             }

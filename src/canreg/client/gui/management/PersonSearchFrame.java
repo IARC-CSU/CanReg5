@@ -17,8 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
-
 /*
  * PersonSearchFrame.java
  *
@@ -75,7 +73,6 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     private Task duplicateSearchTask;
     private JDesktopPane desktopPane;
     private Document doc;
-    private DatabaseVariablesListElement[] variablesInDB;
     private String personSearchHandlerID;
     int recordsTested;
     int matchesFound;
@@ -83,7 +80,6 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     boolean personSearcherRunning = false;
     private GlobalToolBox globalToolBox;
     private String patientIDlookupVariable;
-    private String patientRecordIDlookupVariable;
     private String patientIDTumourTablelookupVariable;
     private String tumourIDlookupVariable;
 
@@ -93,7 +89,6 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
 
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
         patientIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
-        patientRecordIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
         patientIDTumourTablelookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName();
         tumourIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
 
@@ -593,6 +588,47 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     }
 
     private void rowClicked(java.awt.event.MouseEvent evt) {
+        String referenceTable;
+
+        if (evt.getClickCount() == 2) {
+            JTable target = (JTable) evt.getSource();
+            int rowNumber = target.getSelectedRow();
+            int columnNumber = target.getSelectedColumn();
+            if (columnNumber == 0 || columnNumber == 1) {
+                // TableModel model = target.getModel();
+                ComparePatientsInternalFrame cpif = new ComparePatientsInternalFrame(desktopPane);
+                try {
+//                  patient = CanRegClientApp.getApplication().getPatientRecord("" + model.getValueAt(rowNumber, columnNumber), false);
+                    String patient1ID = (String) target.getValueAt(rowNumber, 0);
+                    Patient patient1 = CanRegClientApp.getApplication().getPatientRecordsByID(patient1ID, false)[0];
+                    cpif.addMainRecordSet(patient1, null);
+                    // find all results with same as ID1
+                    for (int row = 0; row < resultTableModel.getRowCount(); row++) {
+                        if (patient1ID.equals(target.getValueAt(row, 0))) {
+                            String patient2ID = (String) target.getValueAt(row, 1);
+                            Patient patient2 = CanRegClientApp.getApplication().getPatientRecordsByID(patient2ID, false)[0];
+                            cpif.addRecordSet(patient2, null, (Float) target.getValueAt(row, 2));
+                        }
+                    }
+                    CanRegClientView.showAndPositionInternalFrame(desktopPane, cpif);
+                } catch (SQLException ex) {
+                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (RecordLockedException ex) {
+                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (UnknownTableException ex) {
+                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (DistributedTableDescriptionException ex) {
+                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SecurityException ex) {
+                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    private void rowClickedOld(java.awt.event.MouseEvent evt) {
         String referenceTable;
 
         if (evt.getClickCount() == 2) {
