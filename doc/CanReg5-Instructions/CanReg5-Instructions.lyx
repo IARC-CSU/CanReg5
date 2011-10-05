@@ -14,6 +14,8 @@
 \@ifundefined{definecolor}
  {\usepackage{color}}{}
 \usepackage{hyperref}
+\usepackage{listings}
+\definecolor{lightyellow}{RGB}{255,255,200}
 %% \lfoot{\today}
 \end_preamble
 \options portrait
@@ -7623,7 +7625,8 @@ rare cases
 \end_inset
 
  or possible duplicates.
- Changing the Dictionary and User Administration are also prohibited.
+ Changing the Dictionary and User Administration (adding users, changing
+ user levels) are also prohibited.
 \end_layout
 
 \begin_layout Itemize
@@ -9464,6 +9467,7 @@ Go to “Tool” in CanReg5 menu and click “Convert system definition”.
 \begin_layout Enumerate
 \begin_inset Graphics
 	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/ToolsConvertCR4Menu.emf
+	width 90line%
 
 \end_inset
 
@@ -10453,6 +10457,7 @@ top10piechart
 
 \begin_layout Standard
 \begin_inset Float figure
+placement h
 wide false
 sideways false
 status open
@@ -10568,6 +10573,16 @@ name "sub:CanReg-and-R"
 \end_inset
 
 CanReg and R
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+R
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -10587,7 +10602,7 @@ r_scripts
 \begin_layout Standard
 This can be one or many R scripts that gets called by CanReg to produce
  tables.
- (See the box on page 
+ (See the listing on page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "A-sample-main"
@@ -10633,202 +10648,227 @@ file_types_generated {
 
 \end_deeper
 \begin_layout Standard
-\begin_inset Box Boxed
-position "t"
-hor_pos "c"
-has_inner_box 1
-inner_pos "t"
-use_parbox 0
-width "100col%"
-special "none"
-height "1in"
-height_special "totalheight"
-status open
-
-\begin_layout Plain Layout
 \begin_inset CommandInset label
 LatexCommand label
 name "A-sample-main"
 
 \end_inset
 
-A sample main R script (See the folder conf/tables/r for more info)
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=R}
 \end_layout
 
-\begin_layout LyX-Code
-Args <- commandArgs(TRUE) 
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{backgroundcolor=
+\backslash
+color{lightyellow}}
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
 
+
+\backslash
+lstset{caption=A sample main R script (See the folder conf/tables/r for
+ more info)}
 \end_layout
 
-\begin_layout LyX-Code
-fileType <- checkArgs(Args, "-ft")
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}[frame=tb]
 \end_layout
 
-\begin_layout LyX-Code
-out <- checkArgs(Args,"-out")
+\begin_layout Plain Layout
+
+Args <- commandArgs(TRUE)
 \end_layout
 
-\begin_layout LyX-Code
-if (fileType == "png") {
+\begin_layout Plain Layout
+
+## Find directory of script 
 \end_layout
 
-\begin_layout LyX-Code
-    filename <- paste( out, ".png", sep = "" )
-\end_layout
+\begin_layout Plain Layout
 
-\begin_layout LyX-Code
-    png(file=filename, bg="transparent") 
-\end_layout
-
-\begin_layout LyX-Code
-} else if (fileType == "pdf") {
-\end_layout
-
-\begin_layout LyX-Code
-    filename <- paste( out, ".pdf" , sep = "")
-\end_layout
-
-\begin_layout LyX-Code
-    pdf(file=filename)  
-\end_layout
-
-\begin_layout LyX-Code
-}
-\end_layout
-
-\begin_layout LyX-Code
-...
-\end_layout
-
-\begin_layout LyX-Code
-} else {
-\end_layout
-
-\begin_layout LyX-Code
-    # defaults to pdf
-\end_layout
-
-\begin_layout LyX-Code
-    filename <- paste( out, ".pdf" , sep = "")
-\end_layout
-
-\begin_layout LyX-Code
-    pdf(file=filename)
-\end_layout
-
-\begin_layout LyX-Code
-}
-\end_layout
-
-\begin_layout LyX-Code
-
-\end_layout
-
-\begin_layout LyX-Code
-# Find the directory of the script 
-\end_layout
-
-\begin_layout LyX-Code
 initial.options <- commandArgs(trailingOnly = FALSE) 
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
+
 file.arg.name <- "--file=" 
 \end_layout
 
-\begin_layout LyX-Code
-script.name <- sub(file.arg.name, ""
+\begin_layout Plain Layout
+
+script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.optio
+ns)]) 
 \end_layout
 
-\begin_layout LyX-Code
-    , initial.options[grep(file.arg.name, initial.options)]) 
+\begin_layout Plain Layout
+
+script.basename <- dirname(script.name) 
 \end_layout
 
-\begin_layout LyX-Code
-script.basename <- dirname(script.name)
-\end_layout
-
-\begin_layout LyX-Code
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
+
+source(paste(sep="/", script.basename, "makeTable.R")) 
+\end_layout
+
+\begin_layout Plain Layout
+
+source(paste(sep="/", script.basename, "checkArgs.R")) 
+\end_layout
+
+\begin_layout Plain Layout
+
+source(paste(sep="/", script.basename, "makeFile.R"))
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+##OutFile out <- checkArgs(Args, "-out")
+\end_layout
+
+\begin_layout Plain Layout
+
+fileType <- checkArgs(Args, "-ft")
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
 # Load dependencies 
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
+
 source(paste(sep="/", script.basename, "myLibrary1.R"))
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
+
 ...
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
+
 source(paste(sep="/", script.basename, "myLibraryN.r"))
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout LyX-Code
-# The incidence file is the 4th argument 
+\begin_layout Plain Layout
+
+# The incidence file  
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
+
 fileInc <- checkArgs(Args, "-inc") 
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
+
 dataInc <- read.table(fileInc, header=TRUE)
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout LyX-Code
-# The population file is the 3rd argument 
+\begin_layout Plain Layout
+
+# The population file 
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
+
 filePop <- checkArgs(Args, "-pop")
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
+
 dataPop <- read.table(filePop, header=TRUE)
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
+
 #do your plot
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
+
 generatedFilenames = createMyNiceFigure(dataInc, dataPop) 
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
+
 dev.off()
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
+
 # write the name of any file created by R to out 
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Plain Layout
+
 cat(generatedFilenames)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{backgroundcolor=
+\backslash
+color{white}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language= , caption= }
 \end_layout
 
 \end_inset
@@ -12155,7 +12195,7 @@ Spanish:
 \series bold
 Chinese:
 \series default
- Yayun Dai, IARC, France
+ Yayun Dai, IARC, France and Shixuan Liu, China
 \end_layout
 
 \begin_layout Section

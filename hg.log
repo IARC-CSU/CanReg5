@@ -1,5 +1,75 @@
-changeset:   893:c29efd8e87ee
+changeset:   907:da80d260c612
 tag:         tip
+user:        ErvikM@X90164
+date:        Thu Sep 29 18:31:18 2011 +0200
+summary:     Patients comparator implemented.
+
+changeset:   906:0d5ff772459f
+user:        ErvikM@X90164
+date:        Thu Sep 29 18:30:24 2011 +0200
+summary:     ArrayConcat implemented.
+
+changeset:   905:47e17fe65cdb
+user:        ErvikM@X90164
+date:        Wed Sep 28 11:14:09 2011 +0200
+summary:     Updated topography and morphology check.
+
+changeset:   904:eded3c08aa9c
+user:        ErvikM@X90164
+date:        Wed Sep 21 15:13:00 2011 +0200
+summary:     Updated about.html and other small fixes.
+
+changeset:   903:ab70bd60d069
+user:        ErvikM@X90164
+date:        Mon Sep 12 16:50:03 2011 +0200
+summary:     Updated the spanish translation.
+
+changeset:   902:f2318ad8188d
+user:        ErvikM@X90164
+date:        Mon Sep 12 16:49:58 2011 +0200
+summary:     Updated the spanish translation.
+
+changeset:   901:43af78dd246e
+user:        ErvikM@X90164
+date:        Mon Sep 05 10:36:29 2011 +0200
+summary:     Updated the chinese translation.
+
+changeset:   900:522a01c62a9d
+user:        ErvikM@X90164
+date:        Thu Sep 01 13:52:10 2011 +0200
+summary:     Internationalized pop up menus.
+
+changeset:   899:7cc9caa755eb
+user:        ErvikM@X90164
+date:        Wed Aug 31 11:14:53 2011 +0200
+summary:     Udated the Chinese translation.
+
+changeset:   898:671119a32e6e
+user:        ErvikM@X90164
+date:        Wed Aug 31 11:14:31 2011 +0200
+summary:     Added functionality to convert CanReg4 system definitions in batch mode using --corvert <.def-file> [encoding] as arguments.
+
+changeset:   897:0741e8a43ce1
+user:        ErvikM@X90164
+date:        Mon Aug 29 14:37:46 2011 +0200
+summary:     Updated translations. French and Chinese.
+
+changeset:   896:492fc9607e64
+user:        ErvikM@X90164
+date:        Mon Aug 22 17:03:09 2011 +0200
+summary:     Handbook is now using the book-layout (instead of article).
+
+changeset:   895:5a38f633f544
+user:        ErvikM@X90164
+date:        Mon Jul 11 14:57:00 2011 +0200
+summary:     Version 5.00.07
+
+changeset:   894:31d70be1eea2
+user:        ErvikM@X90164
+date:        Mon Jul 11 14:55:03 2011 +0200
+summary:     ComparePatients frame started.
+
+changeset:   893:c29efd8e87ee
 user:        ErvikM@X90164
 date:        Fri Jul 08 11:47:50 2011 +0200
 summary:     The llibrary class Pair<A,B> implemented.

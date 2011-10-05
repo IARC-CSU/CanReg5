@@ -552,6 +552,7 @@ public class Import {
             }
             task.firePropertyChange(PATIENTS, 100, 100);
             task.firePropertyChange("progress", 33, 34);
+            
             // then we get the tumours
             task.firePropertyChange(TUMOURS, 0, 0);
             if (files[1] != null) {

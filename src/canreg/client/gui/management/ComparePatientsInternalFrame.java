@@ -8,11 +8,12 @@ package canreg.client.gui.management;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.dataentry.RecordEditor;
-import canreg.client.gui.tools.TableColumnAdjuster;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.Pair;
+import canreg.common.PersonSearchVariable;
+import canreg.common.Tools;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.DatabaseRecord;
@@ -20,6 +21,7 @@ import canreg.common.database.Patient;
 import canreg.common.database.Tumour;
 import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -32,9 +34,16 @@ import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import org.jdesktop.application.Action;
+import org.w3c.dom.Document;
 
 /**
  *
@@ -51,41 +60,61 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
     private JDesktopPane desktopPane;
     private String patientIDTumourTablelookupVariable;
     private LinkedList<Float> percentList;
+    private String[] defaultColumns;
+    private String firstColumnName;
+    private JTable resultTable;
 
     /** Creates new form ComparePatientsInternalFrame */
     public ComparePatientsInternalFrame(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
         initComponents();
+        firstColumnName = "Merge";
+        firstColumnName = "-----";
         globalToolBox = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox();
-        recordSets = new LinkedList<Pair<Patient, Tumour[]>>();
-        percentList = new LinkedList<Float>();
         patientIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
         tumourIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         patientIDTumourTablelookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName();
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        Document doc = globalToolBox.getDocument();
+        PersonSearchVariable[] searchVariables = Tools.getPersonSearchVariables(doc, Globals.NAMESPACE);
+        LinkedList<String> defaultColumnsList = new LinkedList<String>();
+        // defaultColumnsList.add(patientIDlookupVariable);
+        for (PersonSearchVariable psv : searchVariables) {
+            defaultColumnsList.add(psv.getName());
+        }
+        defaultColumns = defaultColumnsList.toArray(new String[0]);
+        recordSets = new LinkedList<Pair<Patient, Tumour[]>>();
+        percentList = new LinkedList<Float>();
+        mergeButton.setVisible(false);
+    }
 
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                rowClicked(evt);
-            }
-        });
+    public void setColumnsToShow(String[] columnNames) {
+        defaultColumns = columnNames;
     }
 
     private void rowClicked(java.awt.event.MouseEvent evt) {
-        if (evt.getClickCount() == 2) {
-            JTable target = (JTable) evt.getSource();
-            int rowNumber = target.rowAtPoint(evt.getPoint());
-            TableModel model = target.getModel();
-            int columnNumber = 0;
-            String lookUpVariable;
-            lookUpVariable = canreg.common.Tools.toUpperCaseStandardized(patientIDlookupVariable);
-            for (int i = 0; i < model.getColumnCount(); i++) {
-                if (canreg.common.Tools.toUpperCaseStandardized(model.getColumnName(i)).equals(lookUpVariable)) {
-                    columnNumber = i;
-                    break;
+        JTable target = (JTable) evt.getSource();
+        if (evt.getClickCount() == 2) {  
+            if (target.columnAtPoint(evt.getPoint()) != 0) {
+                int rowNumber = target.rowAtPoint(evt.getPoint());
+                TableModel model = target.getModel();
+                int columnNumber = 0;
+                String lookUpVariable;
+                lookUpVariable = canreg.common.Tools.toUpperCaseStandardized(patientIDlookupVariable);
+                for (int i = 0; i < model.getColumnCount(); i++) {
+                    if (canreg.common.Tools.toUpperCaseStandardized(model.getColumnName(i)).equals(lookUpVariable)) {
+                        columnNumber = i;
+                        break;
+                    }
                 }
+                editPatientID("" + model.getValueAt(rowNumber, columnNumber));
             }
-            editPatientID("" + model.getValueAt(rowNumber, columnNumber));
+        } else if (evt.getClickCount() == 1) {
+            int columnNumber = target.columnAtPoint(evt.getPoint());
+            if (columnNumber == 0) {
+                int rowNumber = target.rowAtPoint(evt.getPoint());
+                Boolean oldValue = (Boolean) tableModel.getValueAt(rowNumber, columnNumber);
+                tableModel.setValueAt(!oldValue, rowNumber, columnNumber);
+            }
         }
     }
 
@@ -98,79 +127,66 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        closeButton = new javax.swing.JButton();
+        mergeButton = new javax.swing.JButton();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        resultScrollPane = new javax.swing.JScrollPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jTextArea1 = new javax.swing.JTextArea();
 
+        setClosable(true);
         setMaximizable(true);
         setResizable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(ComparePatientsInternalFrame.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setName("Form"); // NOI18N
 
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ComparePatientsInternalFrame.class, this);
+        closeButton.setAction(actionMap.get("closeAction")); // NOI18N
+        closeButton.setName("closeButton"); // NOI18N
+
+        mergeButton.setAction(actionMap.get("mergePatientAction")); // NOI18N
+        mergeButton.setText(resourceMap.getString("mergeButton.text")); // NOI18N
+        mergeButton.setName("mergeButton"); // NOI18N
+
+        jSplitPane1.setDividerLocation(220);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setResizeWeight(1.0);
+        jSplitPane1.setName("jSplitPane1"); // NOI18N
+
+        resultScrollPane.setName("resultScrollPane"); // NOI18N
+        jSplitPane1.setTopComponent(resultScrollPane);
+
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        jTable1.setAutoCreateRowSorter(true);
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {new Boolean(false), null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Merge?", "Patient ID", "Variable 1", "Variable 2"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                true, false, false, false
-            };
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setText(resourceMap.getString("jTextArea1.text")); // NOI18N
+        jTextArea1.setName("jTextArea1"); // NOI18N
+        jScrollPane1.setViewportView(jTextArea1);
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jTable1.setColumnSelectionAllowed(false);
-        jTable1.setEnabled(false);
-        jTable1.setName("jTable1"); // NOI18N
-        jScrollPane1.setViewportView(jTable1);
-
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ComparePatientsInternalFrame.class, this);
-        jButton1.setAction(actionMap.get("closeAction")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
-
-        jButton2.setAction(actionMap.get("mergePatientAction")); // NOI18N
-        jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
-        jButton2.setName("jButton2"); // NOI18N
+        jSplitPane1.setRightComponent(jScrollPane1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(242, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addContainerGap(323, Short.MAX_VALUE)
+                .addComponent(mergeButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(closeButton)
                 .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(closeButton)
+                    .addComponent(mergeButton))
                 .addContainerGap())
         );
 
@@ -201,38 +217,102 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
 
     private void refreshTable() {
         Patient mainPatient = mainRecord.getFirst();
-        String[] columnNames = canreg.common.Tools.arrayConcat(new String[]{"Merge", "Percent"}, mainPatient.getVariableNames());
+        String[] columnNames = canreg.common.Tools.arrayConcat(new String[]{
+                    firstColumnName,
+                    "Percent", patientIDlookupVariable}, defaultColumns);
         Object[][] data = new Object[recordSets.size() + 1][columnNames.length];
         // add the main one
         List<Object> line = new LinkedList<Object>();
-        line.add(false);
-        line.add("---");
-        for (String varb : mainPatient.getVariableNames()) {
+        line.add(true);
+        line.add("Original");
+        line.add(mainPatient.getVariable(patientIDlookupVariable));
+        for (String varb : defaultColumns) {
             line.add(mainPatient.getVariable(varb));
         }
         data[0] = line.toArray();
-        
+
         // add the rest
         int i = 1;
         for (Pair<Patient, Tumour[]> recordSet : recordSets) {
             Patient patient = recordSet.getFirst();
             List<Object> newLine = new LinkedList<Object>();
             newLine.add(false);
-            newLine.add(percentList.get(i - 1)+" %");
-            for (String varb : mainPatient.getVariableNames()) {
+            newLine.add(percentList.get(i - 1) + " %");
+            newLine.add(patient.getVariable(patientIDlookupVariable));
+            for (String varb : defaultColumns) {
                 newLine.add(patient.getVariable(varb));
             }
             data[i] = newLine.toArray();
             i++;
         }
-        tableModel = new DefaultTableModel(data, columnNames);
-        jTable1.setModel(tableModel);
-        jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        TableColumnAdjuster tca = new TableColumnAdjuster(jTable1);
-        tca.setColumnDataIncluded(false);
-        tca.setOnlyAdjustLarger(false);
-        tca.adjustColumns();
-        jTable1.setRowSelectionAllowed(true);
+        tableModel = new MyTableModel(data, columnNames);
+
+        resultTable = new javax.swing.JTable(tableModel) {
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row,
+                    int column) {
+                Component component = super.prepareRenderer(renderer, row, column);
+                int rendererWidth = component.getPreferredSize().width;
+                TableColumn tableColumn = getColumnModel().getColumn(column);
+                tableColumn.setPreferredWidth(Math.max(rendererWidth
+                        + getIntercellSpacing().width,
+                        tableColumn.getPreferredWidth()));
+                return component;
+            }
+        };
+
+        resultTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        resultTable.setColumnSelectionAllowed(false);
+        resultTable.setEnabled(false);
+        resultTable.setName("resultTable"); // NOI18N
+
+        resultScrollPane.setViewportView(resultTable);
+
+        resultTable.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                rowClicked(evt);
+            }
+        });
+
+        resultTable.getColumnModel().addColumnModelListener(new TableColumnModelListener() {
+
+            @Override
+            public void columnMoved(TableColumnModelEvent e) {
+                System.out.println("From Index: " + e.getFromIndex());
+                System.out.println("To Index: " + e.getToIndex());
+                if (e.getFromIndex() == 0 && e.getToIndex() != 0) {
+                    resultTable.moveColumn(e.getToIndex(), e.getFromIndex());
+                }
+            }
+
+            @Override
+            public void columnAdded(TableColumnModelEvent e) {
+                // resultTable.columnAdded(e);
+            }
+
+            @Override
+            public void columnRemoved(TableColumnModelEvent e) {
+                // resultTable.columnRemoved(e);
+            }
+
+            @Override
+            public void columnMarginChanged(ChangeEvent e) {
+                // resultTable.columnMarginChanged(e);
+            }
+
+            @Override
+            public void columnSelectionChanged(ListSelectionEvent e) {
+                // resultTable.columnSelectionChanged(e);
+            }
+        });
+        // TableColumnAdjuster tca = new TableColumnAdjuster(resultTable);
+        // tca.setColumnDataIncluded(true);
+        // tca.setOnlyAdjustLarger(true);
+        // tca.adjustColumns();
+        resultScrollPane.setViewportView(resultTable);
+        // jSplitPane1.setTopComponent(new JScrollPane(resultTable));
     }
 
     /**
@@ -342,9 +422,38 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton closeButton;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JButton mergeButton;
+    private javax.swing.JScrollPane resultScrollPane;
     // End of variables declaration//GEN-END:variables
+
+    class MyTableModel extends DefaultTableModel {
+
+        public MyTableModel(Object rowData[][], Object columnNames[]) {
+            super(rowData, columnNames);
+        }
+
+        @Override
+        public Class getColumnClass(int col) {
+            if (col == 0) //first column is boolean
+            {
+                return Boolean.class;
+            } else {
+                return String.class;  //other columns accept String values  
+            }
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int col) {
+            if (col == 0 && row!=0) //first column will be editable, excapt first line
+            {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 }

@@ -1,5 +1,17 @@
 Changelog
 
+5.00.08
+- Updated topography and morphology check.
+- Patients comparator implemented.
+- Internationalized pop up menus.
+- Added functionality to convert CanReg4 system definitions in batch mode using --corvert <.def-file> [encoding] as arguments.
+- Updated French translation.
+- Updated Chinese translation.
+- Updated Spanish translation.
+- Handbook is now using the book-layout (instead of article).
+- Updated about.html
+- Other small fixes.
+
 5.00.07
 - The database can now be encrypted with 56-bit DES using a minimum 8 character long boot password. The user must then provide this password during every server launch.
 - All server calls now handles server disconnects and requests users to log in again. This should end problems on laptops falling asleep.
