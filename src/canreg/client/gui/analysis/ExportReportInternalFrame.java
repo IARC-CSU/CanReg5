@@ -399,7 +399,6 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private void dateFormatComboBoxMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dateFormatComboBoxMousePressed
         // TODO add your handling code here:
     }//GEN-LAST:event_dateFormatComboBoxMousePressed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox correctUnknownCheckBox;
     private javax.swing.JComboBox dateFormatComboBox;
@@ -770,7 +769,6 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-
             // Export the sorces?
             if (exportSourceInformationCheckBox.isSelected()) {
                 try {
@@ -860,7 +858,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     }
                     boolean last = (column == columnCount - 1);
                     if (last) {
-                        line.replace(line.length()-2,line.length()-1,"");
+                        // System.out.println("Sep string lenght: " + separatingString.length());
+                        line.replace(line.length() - separatingString.length(), line.length(), "");
                         // line = line.substring(0, line.length() - separatingString.length());
                     }
                 }
@@ -869,7 +868,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     for (int i = 0; i < maxNumberOfSourcesPerTumour; i++) {
                         for (String header : sourceVariableNames) {
                             if (maxNumberOfSourcesPerTumour > 1) {
-                                line.append(separatingString).append(header).append(i+1);
+                                line.append(separatingString).append(header).append(i + 1);
                             } else {
                                 line.append(separatingString).append(header);
                             }
@@ -945,7 +944,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                         }
                         boolean last = (column == columnCount - 1);
                         if (last) {
-                        line.replace(line.length()-2,line.length()-1,"");
+                            // line.replace(line.length()-2,line.length()-1,"");
+                            line.replace(line.length() - separatingString.length(), line.length(), "");
                         }
                     }
                     // if we should export the sources we do that here...
@@ -1007,12 +1007,12 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     }
                     setProgress(100 * row / rowCount);
                     // Garbage collect every 1000 rows?
-                    if (row%1000==0){
+                    if (row % 1000 == 0) {
                         System.gc();
                     }
                     bw.write(line + "\n");
                     line.delete(0, line.length());
-                    
+
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
