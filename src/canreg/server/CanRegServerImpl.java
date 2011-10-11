@@ -779,7 +779,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             // releaseResultSet(resultSetID);
         } catch (SQLException ex) {
             Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
+        } catch (UnknownTableException ex) {
+            Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (DistributedTableDescriptionException ex) {
             Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resultSetID;
@@ -794,7 +796,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws Exception
      */
     @Override
-    public synchronized Map<String, Map<String, Float>> nextStepGlobalPersonSearch(String idString) throws SecurityException, RemoteException, Exception {
+    public synchronized Map<String, Map<String, Float>> nextStepGlobalPersonSearch(String idString) throws SecurityException, RemoteException, RecordLockedException {
         Map<String, Map<String, Float>> patientIDScorePatientIDMap = new TreeMap<String, Map<String, Float>>();
         GlobalPersonSearchHandler globalPersonSearchHandler = activePersonSearchers.get(idString);
         if (globalPersonSearchHandler != null) {
@@ -879,7 +881,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             releaseResultSet(dataDescription.getResultSetID());
         } catch (SQLException ex) {
             Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
+        } catch (UnknownTableException ex) {
+            Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DistributedTableDescriptionException ex) {
             Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
         }
         return patientIDScoreMap;

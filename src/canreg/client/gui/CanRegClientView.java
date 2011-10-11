@@ -44,9 +44,12 @@ import canreg.client.gui.management.UserManagerInternalFrame;
 import canreg.client.gui.tools.WaitFrame;
 import canreg.client.management.DatabaseGarbler;
 import canreg.common.Globals;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Patient;
 import canreg.common.database.Tumour;
+import canreg.server.database.RecordLockedException;
+import canreg.server.database.UnknownTableException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -1204,15 +1207,19 @@ public final class CanRegClientView extends FrameView {
             for (DatabaseRecord rec : tumourRecords) {
                 internalFrame.addRecord(rec);
             }
+        } catch (UnknownTableException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
+        } catch (DistributedTableDescriptionException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (RecordLockedException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        } 
         showAndPositionInternalFrame(desktopPane, internalFrame);
         maximizeHeight(desktopPane, internalFrame);
     }

@@ -122,7 +122,7 @@ public class DatabaseGarbler {
                     if (patient1 != null) {
                         try {
                             patients1 = CanRegClientApp.getApplication().getPatientRecordsByID((String) patient1.getVariable(patientIDVariableListElement.getDatabaseVariableName()), true);
-                        } catch (Exception ex) {
+                        } catch (DistributedTableDescriptionException ex) {
                             Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
                         }
 

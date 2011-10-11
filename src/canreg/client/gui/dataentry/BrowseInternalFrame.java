@@ -555,7 +555,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 if (tableDatadescription != null) {
                     try {
                         tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
-                    } catch (Exception ex) {
+                    } catch (DistributedTableDescriptionException ex) {
                         Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
@@ -564,7 +564,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 if (tableDataSource != null) {
                     try {
                         tableDataModel = new DistributedTableModel(tableDataSource);
-                    } catch (Exception ex) {
+                    } catch (DistributedTableDescriptionException ex) {
                         Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     // tableDataModel = new PagingTableModel(tableDataSource);
@@ -663,63 +663,6 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         editPatientID(idString);
     }
 
-    /**
-     * 
-     * @param idString
-    
-    public void editPatientID(String idString){
-    String tableName = Globals.PATIENT_TABLE_NAME;
-    
-    RecordEditor recordEditor = new RecordEditor(dtp);
-    recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
-    recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
-    DatabaseRecord record = null;
-    DatabaseFilter filter = new DatabaseFilter();
-    filter.setFilterString(patientIDlookupVariable + " = '"+idString+"' ");
-    DistributedTableDescription distributedTableDescription;
-    Object[][] rows;
-    DatabaseRecord[] tumourRecords;
-    
-    try {
-    distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
-    int numberOfRecords = distributedTableDescription.getRowCount();
-    rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
-    CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
-    String[] columnNames = distributedTableDescription.getColumnNames();
-    int ids[] = new int[numberOfRecords];
-    boolean found = false;
-    int idColumnNumber = 0;
-    while (!found && idColumnNumber<columnNames.length){
-    found = columnNames[idColumnNumber++].equalsIgnoreCase(patientIDlookupVariable);
-    }
-    if (found){
-    idColumnNumber--;
-    for (int j=0; j<numberOfRecords;j++){
-    ids[j]=(Integer) rows[j][idColumnNumber];
-    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME);
-    recordEditor.addRecord(record);
-    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(ids[j]+"", Globals.PATIENT_TABLE_NAME);
-    for (DatabaseRecord rec : tumourRecords){
-    recordEditor.addRecord(rec);
-    }
-    }
-    CanRegClientView.showAndPositionInternalFrame(dtp, recordEditor);
-    }
-    else {
-    JOptionPane.showMessageDialog(rootPane, "Record not found", "Error", JOptionPane.ERROR_MESSAGE);
-    }
-    
-    } catch (SQLException ex) {
-    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (RemoteException ex) {
-    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (SecurityException ex) {
-    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (Exception ex) {
-    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    }
-     */
     /**
      *
      * @param idString

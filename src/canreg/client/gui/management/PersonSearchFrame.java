@@ -32,7 +32,6 @@ import canreg.client.CanRegClientApp;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
 import canreg.common.DatabaseFilter;
-import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.qualitycontrol.DefaultPersonSearch;
@@ -491,7 +490,13 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
                 Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (Exception ex) {
+            } catch (DistributedTableDescriptionException ex) {
+                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RecordLockedException ex) {
+                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnknownTableException ex) {
                 Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
             return null;  // return your result

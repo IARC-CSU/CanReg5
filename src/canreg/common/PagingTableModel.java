@@ -2,6 +2,7 @@ package canreg.common;
 
 import canreg.common.cachingtableapi.DistributedTableDataSource;
 import canreg.common.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +23,7 @@ import javax.swing.table.AbstractTableModel;
 public class PagingTableModel extends AbstractTableModel {
 
     private static final int MAX_PAGE_SIZE = 80;
-   //private static final int LATENCY_MILLIS = 1500;
+    //private static final int LATENCY_MILLIS = 1500;
     private int dataOffset = 0;
     private ArrayList<Object[]> data = new ArrayList<Object[]>();
     private SortedSet<Segment> pending = new TreeSet<Segment>();
@@ -83,7 +84,7 @@ public class PagingTableModel extends AbstractTableModel {
         }
         Object rowObject = page.get(pageIndex)[col];
         // for this simulation just return the whole rowObject
-           Logger.getLogger(PagingTableModel.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
+        Logger.getLogger(PagingTableModel.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
         return rowObject;
     }
 
@@ -96,7 +97,7 @@ public class PagingTableModel extends AbstractTableModel {
         int startOffset = Math.max(0, offset - MAX_PAGE_SIZE / 2);
         int length = offset + MAX_PAGE_SIZE / 2 - startOffset;
         load(startOffset, length);
-       
+
     }
 
     private boolean isPending(int offset) {
@@ -131,10 +132,9 @@ public class PagingTableModel extends AbstractTableModel {
             public void run() {
                 Object[][] dataObject;
                 try {
-                    dataObject = tableDataSource.retrieveRows(startOffset, startOffset+length);
-                            
-                } catch (Exception ex) {
-                    Logger.getLogger(PagingTableModel.class.getName()).log(Level.WARNING, "error retrieving page at " + startOffset + ": aborting \n"+ex.getMessage(), ex);
+                    dataObject = tableDataSource.retrieveRows(startOffset, startOffset + length);
+                } catch (DistributedTableDescriptionException ex) {
+                    Logger.getLogger(PagingTableModel.class.getName()).log(Level.WARNING, "error retrieving page at " + startOffset + ": aborting \n" + ex.getMessage(), ex);
                     pending.remove(seg);
                     return;
                 }
@@ -156,10 +156,9 @@ public class PagingTableModel extends AbstractTableModel {
         };
         // run on another thread
         new Thread(fetch).start();
-        
+
     }
 
-    
     private void setData(int offset, ArrayList<Object[]> newData) {
         // This method must be called from the event dispatch thread.
         int lastRow = offset + newData.size() - 1;
@@ -170,19 +169,19 @@ public class PagingTableModel extends AbstractTableModel {
 
     /*
     public static void main(String[] argv) {
-        JTable tab = new JTable(new PagingTableModel());
-        JScrollPane sp = new JScrollPane(tab);
-        //JScrollPane sp = LazyViewport.createLazyScrollPaneFor(tab);
-
-        JFrame f = new JFrame("PagingTableModel");
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setContentPane(sp);
-        f.setSize(200, 148);
-        f.setVisible(true);
+    JTable tab = new JTable(new PagingTableModel());
+    JScrollPane sp = new JScrollPane(tab);
+    //JScrollPane sp = LazyViewport.createLazyScrollPaneFor(tab);
+    
+    JFrame f = new JFrame("PagingTableModel");
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    f.setContentPane(sp);
+    f.setSize(200, 148);
+    f.setVisible(true);
     }
      * /
-
-     // ---------------- begin static nested class ----------------
+    
+    // ---------------- begin static nested class ----------------
     /**
      * This class is used to keep track of which rows have been scheduled for
      * loading, so that rows don't get scheduled twice concurrently. The idea
@@ -192,7 +191,7 @@ public class PagingTableModel extends AbstractTableModel {
      */
     static final class Segment implements Comparable<Segment> {
 
-        private int base = 0,  length = 1;
+        private int base = 0, length = 1;
 
         public Segment(int base, int length) {
             this.base = base;

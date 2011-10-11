@@ -30,7 +30,7 @@ public class DistributedTableModel extends AbstractTableModel implements TableMo
          * @param tableDataSource The object from which data should be retrieved.
          * @throws Exception 
 	 */
-	public DistributedTableModel(DistributedTableDataSource tableDataSource) throws Exception {
+	public DistributedTableModel(DistributedTableDataSource tableDataSource) throws DistributedTableDescriptionException {
 		this(tableDataSource, 200, 1000);//will set the two ints to their defaults in the constructor
 	}
 
@@ -41,7 +41,7 @@ public class DistributedTableModel extends AbstractTableModel implements TableMo
          * @param maximumCacheSize The number of rows that the DistributedTableModel should hold before overwriting data that's not required.
          * @throws Exception 
 	 */
-	public DistributedTableModel(DistributedTableDataSource tableDataSource, int chunkSize, int maximumCacheSize) throws Exception {
+	public DistributedTableModel(DistributedTableDataSource tableDataSource, int chunkSize, int maximumCacheSize) throws DistributedTableDescriptionException {
 		this.tableDataSource = tableDataSource;
 		this.tableDescription = tableDataSource.getTableDescription();
 		this.tableClientCache = new DistributedTableClientCache(chunkSize, maximumCacheSize, tableDataSource);
@@ -50,6 +50,7 @@ public class DistributedTableModel extends AbstractTableModel implements TableMo
 	/**
 	 * @see javax.swing.table.TableModel#getRowCount()
 	 */
+    @Override
 	public int getRowCount() {
 		return tableDescription.getRowCount();
 	}
@@ -57,6 +58,7 @@ public class DistributedTableModel extends AbstractTableModel implements TableMo
 	/**
 	 * @see javax.swing.table.TableModel#getColumnCount()
 	 */
+    @Override
 	public int getColumnCount() {
 		return tableDescription.getColumnCount();
 	}
@@ -90,6 +92,7 @@ public class DistributedTableModel extends AbstractTableModel implements TableMo
 	/**
 	 * @see javax.swing.table.TableModel#getValueAt(int, int)
 	 */
+    @Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
         Object value = null;
         if (tableClientCache!=null){

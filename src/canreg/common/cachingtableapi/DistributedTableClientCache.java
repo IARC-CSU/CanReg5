@@ -51,7 +51,7 @@ public class DistributedTableClientCache implements Serializable {
      * @throws Exception
      * @tableDataSource A source of table data, (via the method <code>retrieveRows</code>).
      */
-    public DistributedTableClientCache(int chunkSize, int maximumCacheSize, DistributedTableDataSource tableDataSource) throws Exception {
+    public DistributedTableClientCache(int chunkSize, int maximumCacheSize, DistributedTableDataSource tableDataSource) throws DistributedTableDescriptionException {
         this.tableDataSource = tableDataSource;
         this.tableDescription = tableDataSource.getTableDescription();
 
@@ -117,7 +117,7 @@ public class DistributedTableClientCache implements Serializable {
                     if (toIndex > tableDescription.getRowCount()) {
                         toIndex = tableDescription.getRowCount();
                     }
-                } catch (Exception ex) {
+                } catch (NullPointerException ex) {
                     ex.printStackTrace();
                 }
             } //USER IS ASCENDING THE TABLE
@@ -133,7 +133,7 @@ public class DistributedTableClientCache implements Serializable {
             //RETRIEVE THE DATA
             try {
                 rows = tableDataSource.retrieveRows(fromIndex, toIndex);
-            } catch (Exception ex) {
+            } catch (DistributedTableDescriptionException ex) {
                 ex.printStackTrace();
                 throw new RuntimeException("Problem occurred retrieving table data \n");
             }

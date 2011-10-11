@@ -35,7 +35,9 @@ import canreg.client.gui.CanRegClientView;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.Dictionary;
+import canreg.server.database.UnknownTableException;
 import java.awt.Cursor;
 import java.awt.MenuItem;
 import java.awt.Point;
@@ -280,7 +282,10 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                 result = "Security exception " + ex.getLocalizedMessage();
                 // } catch (InterruptedException ignore) {
                 //    result = "Ignore";
-            } catch (Exception ex) { //TODO: get rid of general exceptions!
+            } catch (DistributedTableDescriptionException ex) { 
+                Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                result = "Not OK" + ex.getLocalizedMessage();
+            } catch (UnknownTableException ex) { 
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Not OK" + ex.getLocalizedMessage();
             }
@@ -316,7 +321,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                 if (tableDatadescription != null) {
                     try {
                         tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
-                    } catch (Exception ex) {
+                    } catch (DistributedTableDescriptionException ex) {
                         Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
@@ -341,7 +346,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                         resultPanel.revalidate();
                         resultPanel.repaint();
                         resultPanel.setVisible(true);
-                    } catch (Exception ex) {
+                    } catch (DistributedTableDescriptionException ex) {
                         Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -452,7 +457,9 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {
             Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
+        } catch (DistributedTableDescriptionException ex) {
+            Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknownTableException ex) {
             Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
 

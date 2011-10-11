@@ -14,6 +14,7 @@ package canreg.common.postscriptviewer;
 
 
 import canreg.common.postscriptviewer.interpreter.PAContext;
+import canreg.common.postscriptviewer.interpreter.PainterException;
 import java.io.*;
 import java.net.*;
 
@@ -46,6 +47,7 @@ public class PostscriptViewer extends JApplet implements ActionListener, Runnabl
     Demo demo;
 
 
+    @Override
     public void init() {
         p1 = new JPanel(new BorderLayout());
         EmptyBorder eb = new EmptyBorder(5,20,10,20);
@@ -60,6 +62,7 @@ public class PostscriptViewer extends JApplet implements ActionListener, Runnabl
         p1.add("West", combo);
         p1.setToolTipText("click to start/stop iterating");
         p1.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
                 if (demo.thread == null) demo.start(); else demo.stop();
             }
@@ -87,6 +90,7 @@ public class PostscriptViewer extends JApplet implements ActionListener, Runnabl
     }
 
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof JButton) {
             JFileChooser chooser = new JFileChooser();
@@ -110,6 +114,7 @@ public class PostscriptViewer extends JApplet implements ActionListener, Runnabl
     }
 
 
+    @Override
     public void run() {
         demo.repaint();
     }
@@ -125,6 +130,7 @@ public class PostscriptViewer extends JApplet implements ActionListener, Runnabl
         }
     
 
+        @Override
         public void paint(Graphics g) {
             Dimension d = getSize();
             Graphics2D g2 = (Graphics2D) g;
@@ -139,7 +145,9 @@ public class PostscriptViewer extends JApplet implements ActionListener, Runnabl
                 InputStream inputStream = url.openStream();
                 context.draw(inputStream);	
                 inputStream.close();
-            } catch (Exception e) {
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (PainterException e) {
                 e.printStackTrace();
             }
         }
@@ -163,6 +171,7 @@ public class PostscriptViewer extends JApplet implements ActionListener, Runnabl
         }
     
     
+        @Override
         public void run() {
             Thread me = Thread.currentThread();
             while (thread == me) {
@@ -183,6 +192,7 @@ public class PostscriptViewer extends JApplet implements ActionListener, Runnabl
         demo.init();
         demo.addOpenButton();
 	WindowListener l = new WindowAdapter() {
+            @Override
 	    public void windowClosing(WindowEvent e) {System.exit(0);}
 	};
 	Frame f = new Frame("Postscript Viewer Demo");

@@ -17,8 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
-
 package canreg.client.dataentry;
 
 import canreg.common.database.Patient;
@@ -274,7 +272,13 @@ public class Import {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (SecurityException ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (Exception ex) {
+                        } catch (DistributedTableDescriptionException ex) {
+                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (RecordLockedException ex) {
+                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (UnknownTableException ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         for (Patient oldPatient : oldPatients) {
@@ -337,7 +341,6 @@ public class Import {
                         }
                     }
                 }
-
 
                 if (needToSavePatientAgain) {
                     if (patientDatabaseRecordID > 0) {
@@ -405,7 +408,7 @@ public class Import {
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
         noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientIDVariableName()));
         noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientRecordIDVariableName()));
-        HashMap mpCodes = new HashMap();
+        // HashMap mpCodes = new HashMap();
         int numberOfLinesRead = 0;
         int linesToRead = io.getMaxLines();
         String[] lineElements = null;
@@ -480,9 +483,20 @@ public class Import {
                     try {
                         oldPatient = CanRegClientApp.getApplication().getPatientRecordByID(
                                 (String) patientID, false);
-                    } catch (Exception ex) {
+                    } catch (DistributedTableDescriptionException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RecordLockedException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SecurityException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (UnknownTableException ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                     }
+
 
                     if (oldPatient != null) {
                         // deal with discrepancies
@@ -552,7 +566,7 @@ public class Import {
             }
             task.firePropertyChange(PATIENTS, 100, 100);
             task.firePropertyChange("progress", 33, 34);
-            
+
             // then we get the tumours
             task.firePropertyChange(TUMOURS, 0, 0);
             if (files[1] != null) {
@@ -617,7 +631,17 @@ public class Import {
                     try {
                         tumour2 = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(
                                 (String) tumour.getVariable(io.getTumourIDVariablename()), false);
-                    } catch (Exception ex) {
+                    } catch (DistributedTableDescriptionException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RecordLockedException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SecurityException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (UnknownTableException ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
@@ -650,7 +674,17 @@ public class Import {
                         try {
                             patient = CanRegClientApp.getApplication().getPatientRecord(
                                     (String) tumour.getVariable(io.getPatientRecordIDTumourTableVariableName()), false);
-                        } catch (Exception ex) {
+                        } catch (DistributedTableDescriptionException ex) {
+                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (RecordLockedException ex) {
+                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (UnknownTableException ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                         }
 
@@ -662,7 +696,7 @@ public class Import {
                             Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes = new EnumMap<Globals.StandardVariableNames, CheckResult.ResultCode>(Globals.StandardVariableNames.class);
                             worstResultCodeFound = CheckResult.ResultCode.OK;
                             for (CheckResult result : checkResults) {
-                                if (result.getResultCode() != CheckResult.ResultCode.OK && result.getResultCode() != CheckResult.ResultCode.NotDone) {                                    
+                                if (result.getResultCode() != CheckResult.ResultCode.OK && result.getResultCode() != CheckResult.ResultCode.NotDone) {
                                     if (!result.getResultCode().equals(CheckResult.ResultCode.Missing)) {
                                         message += result + "\t";
                                         worstResultCodeFound = CheckResult.decideWorstResultCode(result.getResultCode(), worstResultCodeFound);
@@ -801,7 +835,17 @@ public class Import {
                     try {
                         tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(
                                 (String) source.getVariable(io.getTumourIDSourceTableVariableName()), false);
-                    } catch (Exception ex) {
+                    } catch (DistributedTableDescriptionException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RecordLockedException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SecurityException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (UnknownTableException ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     if (task != null) {

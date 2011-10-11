@@ -646,7 +646,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
 
                 reportStream.flush();
                 reportStream.close();
-            } catch (Exception ioe) {
+            } catch (IOException ioe) {
                 System.out.println("Error in reportfile: " + tabReportFileName);
                 reportStream = new PrintStream(System.out);
             }

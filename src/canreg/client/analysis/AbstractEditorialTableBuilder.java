@@ -655,8 +655,8 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
             pf.write("20 " + Y + " MT 580 " + Y + " LT 580 " + (Y - H)
                     + " LT 20 " + (Y - H) + " LT CP fill\n");
             pf.write("0 SG\n");
-        } catch (Exception e) {
-            System.out.println("FileOut error...");
+        } catch (IOException e) {
+            System.out.println("FileOut error... " + e);
         }
     }
 

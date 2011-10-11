@@ -1119,7 +1119,11 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SecurityException ex) {
                     Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (Exception ex) {
+                } catch (DistributedTableDescriptionException ex) {
+                    Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (RecordLockedException ex) {
+                    Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (UnknownTableException ex) {
                     Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

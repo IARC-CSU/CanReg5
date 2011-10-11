@@ -309,7 +309,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                         SmallStr = SmallStr.replaceAll(sub, rep1);
                         BigStr = BigStr.replaceAll(sub, rep2);
                     } catch (Exception e) {
-                        // DEPeditsInst.Warning(SmallStr+"|"+sub+"|"+rep1+"|"+rep2);/////////////////
+                        
                     }
                     posB[matchCount] = posBig;
                     posS[matchCount] = posSmall;

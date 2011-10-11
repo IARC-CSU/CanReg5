@@ -528,10 +528,14 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 result = "Security exception";
                 // } catch (InterruptedException ignore) {
                 //     result = "Ignore";
-            } catch (Exception ex) {
+            } catch (DistributedTableDescriptionException ex) {
+                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                result = "Not OK";
+            } catch (UnknownTableException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Not OK";
             }
+
             return result;
         }
 
@@ -564,7 +568,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 if (tableDatadescription != null) {
                     try {
                         tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
-                    } catch (Exception ex) {
+                    } catch (DistributedTableDescriptionException ex) {
                         Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
@@ -573,7 +577,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 if (tableDataSource != null) {
                     try {
                         tableDataModel = new DistributedTableModel(tableDataSource);
-                    } catch (Exception ex) {
+                    } catch (DistributedTableDescriptionException ex) {
                         Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     // tableDataModel = new PagingTableModel(tableDataSource);

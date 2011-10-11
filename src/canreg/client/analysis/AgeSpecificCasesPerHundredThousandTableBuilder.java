@@ -643,7 +643,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
 
                 reportStream.flush();
                 reportStream.close();
-            } catch (Exception ioe) {
+            } catch (IOException ioe) {
                 System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("ERROR IN REPORTFILE: ") + tabReportFileName);
                 reportStream = new PrintStream(System.out);
             }
