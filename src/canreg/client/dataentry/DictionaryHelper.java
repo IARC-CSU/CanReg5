@@ -171,7 +171,7 @@ public class DictionaryHelper {
     private static LinkedList<DictionaryEntry> parseDictionaryText(int dictionaryID, String str) {
         LinkedList dictionaryEntries = new LinkedList<DictionaryEntry>();
         String[] stringArray = str.split("[\\n|\\r]");
-        if (stringArray.length > 1 && stringArray[0].trim().length() > 0 && stringArray[1].trim().length() > 0) {
+        if (stringArray.length > 0 && stringArray[0].trim().length() > 0) {
             for (String string : stringArray) {
                 String[] lineArray = string.split("\\t");
                 if (lineArray.length > 1) {
