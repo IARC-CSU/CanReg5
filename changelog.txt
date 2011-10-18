@@ -1,5 +1,13 @@
 Changelog
 
+5.00.09
+- Fixed a bug where the last character of some lines in the export file went missing.
+- Fixed a bug where user couldn't save dictionary when a it only contained one entry.
+- Fixed a bug where no error message was displayed when records were locked and tried to open.
+- Removed warning message if no encoding is detected for dictionary during import.
+- Removed most generic exceptions and replaced them with specific ones.
+- Other bug fixes
+
 5.00.08
 - Updated topography and morphology check.
 - Patients comparator implemented.

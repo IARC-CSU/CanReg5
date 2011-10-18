@@ -10,6 +10,10 @@ copy doc\CanReg5-Instructions\CanReg5-Instructions.pdf doc\
 %zx% a -tzip CanReg5.zip changelog.txt
 cd %distfolder%
 %zx% a -tzip ..\CanReg5.zip .
-move ..\CanReg5.zip .
+md web
+copy ..\changelog.txt web\
+copy ..\version.txt web\
+copy ..\doc\CanReg5-Instructions\CanReg5-Instructions.pdf web\
+move ..\CanReg5.zip web\
 cd ..
 goto :eof

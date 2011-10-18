@@ -1,5 +1,15 @@
-changeset:   915:b0f92f599711
+changeset:   917:bbacc0bc0ed5
 tag:         tip
+user:        ErvikM@X90164
+date:        Tue Oct 18 15:49:11 2011 +0200
+summary:     Added the empty TRN database to the version control. Added the CanReg.exe to the version control. Created an installer script. Added the generation of the installer and the .zip file to the ant build script.
+
+changeset:   916:1219e461535b
+user:        ErvikM@X90164
+date:        Tue Oct 18 15:45:20 2011 +0200
+summary:     Removed warning message if no encoding is detected for dictionary during import.
+
+changeset:   915:b0f92f599711
 user:        ErvikM@X90191
 date:        Tue Oct 18 14:32:09 2011 +0200
 summary:     Back from Mauritius

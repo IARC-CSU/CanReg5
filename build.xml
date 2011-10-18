@@ -83,7 +83,12 @@
         <copy file="appinfo.properties" todir="${build.classes.dir}"/>
     </target>
     <target name="-post-jar">
-        <echo>Building zip-distribution</echo>
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="ruby"/>
+            <arg value="update_version_number.rb"/>
+        </exec>
+        <echo>Building zip-distribution...</echo>
         <exec executable="cmd">
             <arg value="/c"/>
             <arg value="create-zip.bat"/>
