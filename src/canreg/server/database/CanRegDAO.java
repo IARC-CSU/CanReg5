@@ -1269,6 +1269,9 @@ public class CanRegDAO {
                 id = results.getInt(1);
             }
 
+        } catch (java.sql.SQLIntegrityConstraintViolationException sqle){
+            // System.out.println(nameSexRecord.getName());
+            // Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         } catch (SQLException sqle) {
             System.out.println(nameSexRecord.getName());
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
