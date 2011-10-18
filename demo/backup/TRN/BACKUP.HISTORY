@@ -1,0 +1,5 @@
+Thu Mar 25 15:48:20 CET 2010:Backup started for database located at C:\Documents and Settings\ervikm\.CanRegServer\Database\TRN to C:\Documents and Settings\ervikm\.CanRegServer\Backup\TRN\2010-03-25\TRN.
+Thu Mar 25 15:48:21 CET 2010:Backup of data segment to C:\Documents and Settings\ervikm\.CanRegServer\Backup\TRN\2010-03-25\TRN\seg0 completed. 
+Thu Mar 25 15:48:21 CET 2010:copied log directory from C:\Documents and Settings\ervikm\.CanRegServer\Database\TRN\log to C:\Documents and Settings\ervikm\.CanRegServer\Backup\TRN\2010-03-25\TRN\log
+Thu Mar 25 15:48:21 CET 2010:Backup completed, log instant at (1,768411) 
+

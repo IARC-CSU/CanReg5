@@ -1,5 +1,45 @@
-changeset:   907:da80d260c612
+changeset:   915:b0f92f599711
 tag:         tip
+user:        ErvikM@X90191
+date:        Tue Oct 18 14:32:09 2011 +0200
+summary:     Back from Mauritius
+
+changeset:   914:d01c760b1814
+user:        ErvikM@X90191
+date:        Tue Oct 11 14:58:29 2011 +0200
+summary:     Removed most generic exceptions and replaced them with specific ones.
+
+changeset:   913:1a3fc6c69c14
+user:        ErvikM@X90191
+date:        Tue Oct 11 13:14:27 2011 +0200
+summary:     Fixed a bug where the last character of some lines in the export file went missing.
+
+changeset:   912:74e61f7eecda
+user:        ErvikM@X90191
+date:        Tue Oct 11 13:11:47 2011 +0200
+summary:     Fixed a bug where no error message was displayed when records were locked and tried to open.
+
+changeset:   911:160db8b4e4dd
+user:        ErvikM@X90191
+date:        Tue Oct 11 09:39:39 2011 +0200
+summary:     Fixed a bug where user couldn't save dictionary when a it only contained one entry.
+
+changeset:   910:294516bd2aba
+user:        ErvikM@X90164
+date:        Wed Oct 05 17:20:15 2011 +0200
+summary:     Version 5.00.08
+
+changeset:   909:2368c605b158
+user:        ErvikM@X90164
+date:        Fri Sep 30 11:59:48 2011 +0200
+summary:     Updated the handbook.
+
+changeset:   908:14dfd2d0f27d
+user:        ErvikM@X90164
+date:        Fri Sep 30 11:59:17 2011 +0200
+summary:     Updated the about.html.
+
+changeset:   907:da80d260c612
 user:        ErvikM@X90164
 date:        Thu Sep 29 18:31:18 2011 +0200
 summary:     Patients comparator implemented.
