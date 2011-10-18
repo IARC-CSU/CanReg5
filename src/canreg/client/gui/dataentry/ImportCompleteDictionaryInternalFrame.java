@@ -497,8 +497,8 @@ private void previewTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-
             charsetsComboBox.setSelectedItem(charset);
             // System.out.println("Detected encoding = " + encoding);
         } else {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame").getString("NO_ENCODING_DETECTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame").getString("WARNING"), JOptionPane.WARNING_MESSAGE);
-            // System.out.println("No encoding detected.");
+            // JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame").getString("NO_ENCODING_DETECTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame").getString("WARNING"), JOptionPane.WARNING_MESSAGE);
+            System.out.println("No encoding detected.");
         }
         return;
     }
