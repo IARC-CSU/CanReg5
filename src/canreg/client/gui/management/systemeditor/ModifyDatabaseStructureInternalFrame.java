@@ -97,7 +97,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                     Globals.REGIONS[9]
                 }));
         setListeners();
-        searchVariablesPanel.setEnabled(true);
+        // searchVariablesPanel.setEnabled(true);
         // databaseIndexPanel.setVisible(false);
         codingPanel.setVisible(false);
         settingsPanel.setVisible(false);
@@ -135,14 +135,11 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         jButton2 = new javax.swing.JButton();
         editorsScrollPane = new javax.swing.JScrollPane();
         editorsPanel = new javax.swing.JPanel();
-        searchVariablesPanel = new javax.swing.JPanel();
-        personSearchVariablesPanel = new canreg.client.gui.management.PersonSearchVariablesPanel();
-        dictionariesPanel = new javax.swing.JPanel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         databaseDictionaryPanel = new canreg.client.gui.management.systemeditor.DatabaseDictionariesPanel();
-        variablesPanel = new javax.swing.JPanel();
-        databaseVariablePanel = new canreg.client.gui.management.systemeditor.DatabaseVariablesPanel();
-        groupsPanel = new javax.swing.JPanel();
         databaseGroupPanel = new canreg.client.gui.management.systemeditor.DatabaseGroupsPanel();
+        databaseVariablePanel = new canreg.client.gui.management.systemeditor.DatabaseVariablesPanel();
+        personSearchVariablesPanel = new canreg.client.gui.management.PersonSearchVariablesPanel();
         codingPanel = new javax.swing.JPanel();
         maleCodeLabel = new javax.swing.JLabel();
         maleCodeTextField = new javax.swing.JTextField();
@@ -162,7 +159,6 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         mprulesCheckBox = new javax.swing.JCheckBox();
         specialRegistryCheckBox = new javax.swing.JCheckBox();
         strictPasswordModeCheckBox = new javax.swing.JCheckBox();
-        searchVariablesPanel1 = new javax.swing.JPanel();
         databaseIndexPanel = new canreg.client.gui.management.systemeditor.DatabaseIndexPanel();
 
         setClosable(true);
@@ -221,11 +217,11 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(regionLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(regionComboBox, 0, 139, Short.MAX_VALUE))
+                        .addComponent(regionComboBox, 0, 179, Short.MAX_VALUE))
                     .addGroup(generalPanelLayout.createSequentialGroup()
                         .addComponent(registryNameLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(registryNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)))
+                        .addComponent(registryNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton2)
@@ -253,69 +249,19 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
 
         editorsPanel.setName("editorsPanel"); // NOI18N
 
-        searchVariablesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("searchVariablesPanel.border.title"))); // NOI18N
-        searchVariablesPanel.setName("searchVariablesPanel"); // NOI18N
-
-        personSearchVariablesPanel.setName("personSearchVariablesPanel"); // NOI18N
-
-        javax.swing.GroupLayout searchVariablesPanelLayout = new javax.swing.GroupLayout(searchVariablesPanel);
-        searchVariablesPanel.setLayout(searchVariablesPanelLayout);
-        searchVariablesPanelLayout.setHorizontalGroup(
-            searchVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(personSearchVariablesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
-        );
-        searchVariablesPanelLayout.setVerticalGroup(
-            searchVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(personSearchVariablesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-        );
-
-        dictionariesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("dictionariesPanel.border.title"))); // NOI18N
-        dictionariesPanel.setName("dictionariesPanel"); // NOI18N
+        jTabbedPane1.setName("jTabbedPane1"); // NOI18N
 
         databaseDictionaryPanel.setName("databaseDictionaryPanel"); // NOI18N
-
-        javax.swing.GroupLayout dictionariesPanelLayout = new javax.swing.GroupLayout(dictionariesPanel);
-        dictionariesPanel.setLayout(dictionariesPanelLayout);
-        dictionariesPanelLayout.setHorizontalGroup(
-            dictionariesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseDictionaryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
-        );
-        dictionariesPanelLayout.setVerticalGroup(
-            dictionariesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseDictionaryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-
-        variablesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("variablesPanel.border.title"))); // NOI18N
-        variablesPanel.setName("variablesPanel"); // NOI18N
-
-        databaseVariablePanel.setName("databaseVariablePanel"); // NOI18N
-
-        javax.swing.GroupLayout variablesPanelLayout = new javax.swing.GroupLayout(variablesPanel);
-        variablesPanel.setLayout(variablesPanelLayout);
-        variablesPanelLayout.setHorizontalGroup(
-            variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseVariablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
-        );
-        variablesPanelLayout.setVerticalGroup(
-            variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseVariablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
-        );
-
-        groupsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("groupsPanel.border.title"))); // NOI18N
-        groupsPanel.setName("groupsPanel"); // NOI18N
+        jTabbedPane1.addTab(resourceMap.getString("databaseDictionaryPanel.TabConstraints.tabTitle"), databaseDictionaryPanel); // NOI18N
 
         databaseGroupPanel.setName("databaseGroupPanel"); // NOI18N
+        jTabbedPane1.addTab(resourceMap.getString("databaseGroupPanel.TabConstraints.tabTitle"), databaseGroupPanel); // NOI18N
 
-        javax.swing.GroupLayout groupsPanelLayout = new javax.swing.GroupLayout(groupsPanel);
-        groupsPanel.setLayout(groupsPanelLayout);
-        groupsPanelLayout.setHorizontalGroup(
-            groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseGroupPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
-        );
-        groupsPanelLayout.setVerticalGroup(
-            groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseGroupPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
-        );
+        databaseVariablePanel.setName("databaseVariablePanel"); // NOI18N
+        jTabbedPane1.addTab(resourceMap.getString("databaseVariablePanel.TabConstraints.tabTitle"), databaseVariablePanel); // NOI18N
+
+        personSearchVariablesPanel.setName("personSearchVariablesPanel"); // NOI18N
+        jTabbedPane1.addTab(resourceMap.getString("personSearchVariablesPanel.TabConstraints.tabTitle"), personSearchVariablesPanel); // NOI18N
 
         codingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("codingPanel.border.title"))); // NOI18N
         codingPanel.setName("codingPanel"); // NOI18N
@@ -399,7 +345,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(dateSeparatorTextField, 0, 0, Short.MAX_VALUE))))
                     .addComponent(basisCodesCheckBox))
-                .addContainerGap(232, Short.MAX_VALUE))
+                .addContainerGap(277, Short.MAX_VALUE))
         );
         codingPanelLayout.setVerticalGroup(
             codingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -423,8 +369,10 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                     .addComponent(morphologyLengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(basisCodesCheckBox)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(208, Short.MAX_VALUE))
         );
+
+        jTabbedPane1.addTab(resourceMap.getString("codingPanel.TabConstraints.tabTitle"), codingPanel); // NOI18N
 
         settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("settingsPanel.border.title"))); // NOI18N
         settingsPanel.setName("settingsPanel"); // NOI18N
@@ -471,54 +419,20 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                 .addComponent(strictPasswordModeCheckBox))
         );
 
-        searchVariablesPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("searchVariablesPanel1.border.title"))); // NOI18N
-        searchVariablesPanel1.setName("searchVariablesPanel1"); // NOI18N
+        jTabbedPane1.addTab(resourceMap.getString("settingsPanel.TabConstraints.tabTitle"), settingsPanel); // NOI18N
 
         databaseIndexPanel.setName("databaseIndexPanel"); // NOI18N
-
-        javax.swing.GroupLayout searchVariablesPanel1Layout = new javax.swing.GroupLayout(searchVariablesPanel1);
-        searchVariablesPanel1.setLayout(searchVariablesPanel1Layout);
-        searchVariablesPanel1Layout.setHorizontalGroup(
-            searchVariablesPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseIndexPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
-        );
-        searchVariablesPanel1Layout.setVerticalGroup(
-            searchVariablesPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(databaseIndexPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
+        jTabbedPane1.addTab(resourceMap.getString("databaseIndexPanel.TabConstraints.tabTitle"), databaseIndexPanel); // NOI18N
 
         javax.swing.GroupLayout editorsPanelLayout = new javax.swing.GroupLayout(editorsPanel);
         editorsPanel.setLayout(editorsPanelLayout);
         editorsPanelLayout.setHorizontalGroup(
             editorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(editorsPanelLayout.createSequentialGroup()
-                .addGroup(editorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
-                    .addComponent(codingPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(dictionariesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(groupsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(searchVariablesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(variablesPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(searchVariablesPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
         );
         editorsPanelLayout.setVerticalGroup(
             editorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(editorsPanelLayout.createSequentialGroup()
-                .addComponent(dictionariesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(groupsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchVariablesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(codingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchVariablesPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         editorsScrollPane.setViewportView(editorsPanel);
@@ -528,14 +442,14 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(generalPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(editorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 589, Short.MAX_VALUE)
+            .addComponent(editorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(generalPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE))
+                .addComponent(editorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE))
         );
 
         pack();
@@ -651,16 +565,15 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     private javax.swing.JLabel dateFormatLabel;
     private javax.swing.JLabel dateSeparatorLabel;
     private javax.swing.JTextField dateSeparatorTextField;
-    private javax.swing.JPanel dictionariesPanel;
     private javax.swing.JPanel editorsPanel;
     private javax.swing.JScrollPane editorsScrollPane;
     private javax.swing.JCheckBox fastSafeModeCheckBox;
     private javax.swing.JLabel femaleCodeLabel;
     private javax.swing.JTextField femaleCodeTextField;
     private javax.swing.JPanel generalPanel;
-    private javax.swing.JPanel groupsPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel maleCodeLabel;
     private javax.swing.JTextField maleCodeTextField;
     private javax.swing.JLabel morphologyLengthLabel;
@@ -673,14 +586,11 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     private javax.swing.JTextField registryCodeTextField;
     private javax.swing.JLabel registryNameLabel;
     private javax.swing.JTextField registryNameTextField;
-    private javax.swing.JPanel searchVariablesPanel;
-    private javax.swing.JPanel searchVariablesPanel1;
     private javax.swing.JPanel settingsPanel;
     private javax.swing.JCheckBox specialRegistryCheckBox;
     private javax.swing.JCheckBox strictPasswordModeCheckBox;
     private javax.swing.JLabel unknownSexLabel;
     private javax.swing.JTextField unknownSexTextField;
-    private javax.swing.JPanel variablesPanel;
     // End of variables declaration//GEN-END:variables
 
     private void fillAutoVariables() {

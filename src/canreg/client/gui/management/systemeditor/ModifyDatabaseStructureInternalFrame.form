@@ -27,7 +27,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="generalPanel" alignment="0" max="32767" attributes="0"/>
-          <Component id="editorsScrollPane" alignment="0" pref="589" max="32767" attributes="0"/>
+          <Component id="editorsScrollPane" alignment="0" pref="629" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -35,7 +35,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="generalPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="editorsScrollPane" pref="733" max="32767" attributes="0"/>
+              <Component id="editorsScrollPane" pref="481" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -68,12 +68,12 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="regionLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="regionComboBox" pref="139" max="32767" attributes="1"/>
+                          <Component id="regionComboBox" pref="179" max="32767" attributes="1"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="registryNameLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="registryNameTextField" pref="388" max="32767" attributes="1"/>
+                          <Component id="registryNameTextField" pref="428" max="32767" attributes="1"/>
                       </Group>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -191,454 +191,351 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="settingsPanel" alignment="0" pref="560" max="32767" attributes="1"/>
-                          <Component id="codingPanel" alignment="1" max="32767" attributes="1"/>
-                          <Component id="dictionariesPanel" alignment="0" max="32767" attributes="1"/>
-                          <Component id="groupsPanel" alignment="1" max="32767" attributes="1"/>
-                          <Component id="searchVariablesPanel" alignment="0" max="32767" attributes="1"/>
-                          <Component id="variablesPanel" alignment="1" max="32767" attributes="1"/>
-                          <Component id="searchVariablesPanel1" alignment="1" max="32767" attributes="1"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="jTabbedPane1" alignment="0" pref="610" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="dictionariesPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="groupsPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variablesPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="searchVariablesPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="codingPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="settingsPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="searchVariablesPanel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="jTabbedPane1" min="-2" max="-2" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Container class="javax.swing.JPanel" name="searchVariablesPanel">
+            <Container class="javax.swing.JTabbedPane" name="jTabbedPane1">
               <Properties>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Search Variables">
-                      <Property name="titleX" resourceKey="searchVariablesPanel.border.title"/>
-                    </TitledBorder>
-                  </Border>
-                </Property>
-                <Property name="name" type="java.lang.String" value="searchVariablesPanel" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="jTabbedPane1" noResource="true"/>
               </Properties>
 
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="personSearchVariablesPanel" alignment="0" pref="544" max="32767" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="personSearchVariablesPanel" alignment="0" pref="314" max="32767" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="canreg.client.gui.management.PersonSearchVariablesPanel" name="personSearchVariablesPanel">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="personSearchVariablesPanel" noResource="true"/>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="dictionariesPanel">
-              <Properties>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Dictionaries">
-                      <Property name="titleX" resourceKey="dictionariesPanel.border.title"/>
-                    </TitledBorder>
-                  </Border>
-                </Property>
-                <Property name="name" type="java.lang.String" value="dictionariesPanel" noResource="true"/>
-              </Properties>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseDictionaryPanel" alignment="0" pref="544" max="32767" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseDictionaryPanel" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
+              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
               <SubComponents>
                 <Component class="canreg.client.gui.management.systemeditor.DatabaseDictionariesPanel" name="databaseDictionaryPanel">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="databaseDictionaryPanel" noResource="true"/>
                   </Properties>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                      <JTabbedPaneConstraints tabName="Dictionaries">
+                        <Property name="tabTitle" type="java.lang.String" resourceKey="databaseDictionaryPanel.TabConstraints.tabTitle"/>
+                      </JTabbedPaneConstraints>
+                    </Constraint>
+                  </Constraints>
                 </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="variablesPanel">
-              <Properties>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Variables">
-                      <Property name="titleX" resourceKey="variablesPanel.border.title"/>
-                    </TitledBorder>
-                  </Border>
-                </Property>
-                <Property name="name" type="java.lang.String" value="variablesPanel" noResource="true"/>
-              </Properties>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseVariablePanel" alignment="0" pref="544" max="32767" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseVariablePanel" alignment="0" pref="56" max="32767" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="canreg.client.gui.management.systemeditor.DatabaseVariablesPanel" name="databaseVariablePanel">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="databaseVariablePanel" noResource="true"/>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="groupsPanel">
-              <Properties>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Groups">
-                      <Property name="titleX" resourceKey="groupsPanel.border.title"/>
-                    </TitledBorder>
-                  </Border>
-                </Property>
-                <Property name="name" type="java.lang.String" value="groupsPanel" noResource="true"/>
-              </Properties>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseGroupPanel" alignment="0" pref="544" max="32767" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseGroupPanel" alignment="0" pref="56" max="32767" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
                 <Component class="canreg.client.gui.management.systemeditor.DatabaseGroupsPanel" name="databaseGroupPanel">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="databaseGroupPanel" noResource="true"/>
                   </Properties>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                      <JTabbedPaneConstraints tabName="Groups">
+                        <Property name="tabTitle" type="java.lang.String" resourceKey="databaseGroupPanel.TabConstraints.tabTitle"/>
+                      </JTabbedPaneConstraints>
+                    </Constraint>
+                  </Constraints>
                 </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="codingPanel">
-              <Properties>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Coding">
-                      <Property name="titleX" resourceKey="codingPanel.border.title"/>
-                    </TitledBorder>
-                  </Border>
-                </Property>
-                <Property name="name" type="java.lang.String" value="codingPanel" noResource="true"/>
-              </Properties>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Group type="102" alignment="0" attributes="1">
-                                          <Component id="morphologyLengthLabel" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="morphologyLengthTextField" max="32767" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="maleCodeLabel" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="maleCodeTextField" min="-2" pref="18" max="-2" attributes="0"/>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="femaleCodeLabel" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="femaleCodeTextField" min="-2" pref="18" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="1">
-                                          <Component id="dateFormatLabel" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="dateFormatComboBox" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Component id="unknownSexLabel" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="unknownSexTextField" min="-2" pref="20" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="1">
-                                          <Component id="dateSeparatorLabel" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="dateSeparatorTextField" min="0" pref="0" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                              </Group>
-                              <Component id="basisCodesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace pref="232" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="maleCodeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="maleCodeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="femaleCodeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="unknownSexLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="femaleCodeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="unknownSexTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="dateFormatLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="dateFormatComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="dateSeparatorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="dateSeparatorTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="morphologyLengthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="morphologyLengthTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="basisCodesCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="12" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JLabel" name="maleCodeLabel">
+                <Component class="canreg.client.gui.management.systemeditor.DatabaseVariablesPanel" name="databaseVariablePanel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="maleCodeLabel.text"/>
-                    <Property name="name" type="java.lang.String" value="maleCodeLabel" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="databaseVariablePanel" noResource="true"/>
                   </Properties>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                      <JTabbedPaneConstraints tabName="Variables">
+                        <Property name="tabTitle" type="java.lang.String" resourceKey="databaseVariablePanel.TabConstraints.tabTitle"/>
+                      </JTabbedPaneConstraints>
+                    </Constraint>
+                  </Constraints>
                 </Component>
-                <Component class="javax.swing.JTextField" name="maleCodeTextField">
+                <Component class="canreg.client.gui.management.PersonSearchVariablesPanel" name="personSearchVariablesPanel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="maleCodeTextField.text"/>
-                    <Property name="name" type="java.lang.String" value="maleCodeTextField" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="personSearchVariablesPanel" noResource="true"/>
                   </Properties>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                      <JTabbedPaneConstraints tabName="Search Variables">
+                        <Property name="tabTitle" type="java.lang.String" resourceKey="personSearchVariablesPanel.TabConstraints.tabTitle"/>
+                      </JTabbedPaneConstraints>
+                    </Constraint>
+                  </Constraints>
                 </Component>
-                <Component class="javax.swing.JTextField" name="femaleCodeTextField">
+                <Container class="javax.swing.JPanel" name="codingPanel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="femaleCodeTextField.text"/>
-                    <Property name="name" type="java.lang.String" value="femaleCodeTextField" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="femaleCodeLabel">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="femaleCodeLabel.text"/>
-                    <Property name="name" type="java.lang.String" value="femaleCodeLabel" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="unknownSexLabel">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="unknownSexLabel.text"/>
-                    <Property name="name" type="java.lang.String" value="unknownSexLabel" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="unknownSexTextField">
-                  <Properties>
-                    <Property name="editable" type="boolean" value="false"/>
-                    <Property name="text" type="java.lang.String" resourceKey="unknownSexTextField.text"/>
-                    <Property name="name" type="java.lang.String" value="unknownSexTextField" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="dateFormatLabel">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="dateFormatLabel.text"/>
-                    <Property name="name" type="java.lang.String" value="dateFormatLabel" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="dateFormatComboBox">
-                  <Properties>
-                    <Property name="editable" type="boolean" value="true"/>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="4">
-                        <StringItem index="0" value="dd/mm/yyyy"/>
-                        <StringItem index="1" value="mm/dd/yyyy"/>
-                        <StringItem index="2" value="mm/dd/yy"/>
-                        <StringItem index="3" value="yyyy/mm/dd"/>
-                      </StringArray>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                        <TitledBorder title="Coding">
+                          <Property name="titleX" resourceKey="codingPanel.border.title"/>
+                        </TitledBorder>
+                      </Border>
                     </Property>
-                    <Property name="name" type="java.lang.String" value="dateFormatComboBox" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="codingPanel" noResource="true"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="dateSeparatorLabel">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="dateSeparatorLabel.text"/>
-                    <Property name="name" type="java.lang.String" value="dateSeparatorLabel" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="dateSeparatorTextField">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="dateSeparatorTextField.text"/>
-                    <Property name="name" type="java.lang.String" value="dateSeparatorTextField" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="morphologyLengthLabel">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="morphologyLengthLabel.text"/>
-                    <Property name="name" type="java.lang.String" value="morphologyLengthLabel" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="morphologyLengthTextField">
-                  <Properties>
-                    <Property name="editable" type="boolean" value="false"/>
-                    <Property name="text" type="java.lang.String" resourceKey="morphologyLengthTextField.text"/>
-                    <Property name="name" type="java.lang.String" value="morphologyLengthTextField" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="basisCodesCheckBox">
-                  <Properties>
-                    <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" resourceKey="basisCodesCheckBox.text"/>
-                    <Property name="name" type="java.lang.String" value="basisCodesCheckBox" noResource="true"/>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="settingsPanel">
-              <Properties>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Settings">
-                      <Property name="titleX" resourceKey="settingsPanel.border.title"/>
-                    </TitledBorder>
-                  </Border>
-                </Property>
-                <Property name="name" type="java.lang.String" value="settingsPanel" noResource="true"/>
-              </Properties>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                      <JTabbedPaneConstraints tabName="Coding">
+                        <Property name="tabTitle" type="java.lang.String" resourceKey="codingPanel.TabConstraints.tabTitle"/>
+                      </JTabbedPaneConstraints>
+                    </Constraint>
+                  </Constraints>
 
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="fastSafeModeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="mprulesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="specialRegistryCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="strictPasswordModeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Group type="102" alignment="0" attributes="1">
+                                              <Component id="morphologyLengthLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="morphologyLengthTextField" max="32767" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="maleCodeLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="maleCodeTextField" min="-2" pref="18" max="-2" attributes="0"/>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Component id="femaleCodeLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="femaleCodeTextField" min="-2" pref="18" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="1">
+                                              <Component id="dateFormatLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="dateFormatComboBox" max="32767" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Group type="102" attributes="0">
+                                              <Component id="unknownSexLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="unknownSexTextField" min="-2" pref="20" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" attributes="1">
+                                              <Component id="dateSeparatorLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="dateSeparatorTextField" min="0" pref="0" max="32767" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                                  <Component id="basisCodesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace pref="277" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="fastSafeModeCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="mprulesCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="specialRegistryCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="strictPasswordModeCheckBox" min="-2" max="-2" attributes="0"/>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="maleCodeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="maleCodeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="femaleCodeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="unknownSexLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="femaleCodeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="unknownSexTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="dateFormatLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="dateFormatComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="dateSeparatorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="dateSeparatorTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="morphologyLengthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="morphologyLengthTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="basisCodesCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="208" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JCheckBox" name="fastSafeModeCheckBox">
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JLabel" name="maleCodeLabel">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="maleCodeLabel.text"/>
+                        <Property name="name" type="java.lang.String" value="maleCodeLabel" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="maleCodeTextField">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="maleCodeTextField.text"/>
+                        <Property name="name" type="java.lang.String" value="maleCodeTextField" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="femaleCodeTextField">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="femaleCodeTextField.text"/>
+                        <Property name="name" type="java.lang.String" value="femaleCodeTextField" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="femaleCodeLabel">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="femaleCodeLabel.text"/>
+                        <Property name="name" type="java.lang.String" value="femaleCodeLabel" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="unknownSexLabel">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="unknownSexLabel.text"/>
+                        <Property name="name" type="java.lang.String" value="unknownSexLabel" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="unknownSexTextField">
+                      <Properties>
+                        <Property name="editable" type="boolean" value="false"/>
+                        <Property name="text" type="java.lang.String" resourceKey="unknownSexTextField.text"/>
+                        <Property name="name" type="java.lang.String" value="unknownSexTextField" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="dateFormatLabel">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="dateFormatLabel.text"/>
+                        <Property name="name" type="java.lang.String" value="dateFormatLabel" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JComboBox" name="dateFormatComboBox">
+                      <Properties>
+                        <Property name="editable" type="boolean" value="true"/>
+                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                          <StringArray count="4">
+                            <StringItem index="0" value="dd/mm/yyyy"/>
+                            <StringItem index="1" value="mm/dd/yyyy"/>
+                            <StringItem index="2" value="mm/dd/yy"/>
+                            <StringItem index="3" value="yyyy/mm/dd"/>
+                          </StringArray>
+                        </Property>
+                        <Property name="name" type="java.lang.String" value="dateFormatComboBox" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="dateSeparatorLabel">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="dateSeparatorLabel.text"/>
+                        <Property name="name" type="java.lang.String" value="dateSeparatorLabel" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="dateSeparatorTextField">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="dateSeparatorTextField.text"/>
+                        <Property name="name" type="java.lang.String" value="dateSeparatorTextField" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="morphologyLengthLabel">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="morphologyLengthLabel.text"/>
+                        <Property name="name" type="java.lang.String" value="morphologyLengthLabel" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="morphologyLengthTextField">
+                      <Properties>
+                        <Property name="editable" type="boolean" value="false"/>
+                        <Property name="text" type="java.lang.String" resourceKey="morphologyLengthTextField.text"/>
+                        <Property name="name" type="java.lang.String" value="morphologyLengthTextField" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="basisCodesCheckBox">
+                      <Properties>
+                        <Property name="selected" type="boolean" value="true"/>
+                        <Property name="text" type="java.lang.String" resourceKey="basisCodesCheckBox.text"/>
+                        <Property name="name" type="java.lang.String" value="basisCodesCheckBox" noResource="true"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JPanel" name="settingsPanel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="fastSafeModeCheckBox.text"/>
-                    <Property name="toolTipText" type="java.lang.String" resourceKey="fastSafeModeCheckBox.toolTipText"/>
-                    <Property name="enabled" type="boolean" value="false"/>
-                    <Property name="name" type="java.lang.String" value="fastSafeModeCheckBox" noResource="true"/>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                        <TitledBorder title="Settings">
+                          <Property name="titleX" resourceKey="settingsPanel.border.title"/>
+                        </TitledBorder>
+                      </Border>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="settingsPanel" noResource="true"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="mprulesCheckBox">
-                  <Properties>
-                    <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" resourceKey="mprulesCheckBox.text"/>
-                    <Property name="name" type="java.lang.String" value="mprulesCheckBox" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="specialRegistryCheckBox">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="specialRegistryCheckBox.text"/>
-                    <Property name="name" type="java.lang.String" value="specialRegistryCheckBox" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="strictPasswordModeCheckBox">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="strictPasswordModeCheckBox.text"/>
-                    <Property name="toolTipText" type="java.lang.String" resourceKey="strictPasswordModeCheckBox.toolTipText"/>
-                    <Property name="enabled" type="boolean" value="false"/>
-                    <Property name="name" type="java.lang.String" value="strictPasswordModeCheckBox" noResource="true"/>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="searchVariablesPanel1">
-              <Properties>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Indexes">
-                      <Property name="titleX" resourceKey="searchVariablesPanel1.border.title"/>
-                    </TitledBorder>
-                  </Border>
-                </Property>
-                <Property name="name" type="java.lang.String" value="searchVariablesPanel1" noResource="true"/>
-              </Properties>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                      <JTabbedPaneConstraints tabName="Settings">
+                        <Property name="tabTitle" type="java.lang.String" resourceKey="settingsPanel.TabConstraints.tabTitle"/>
+                      </JTabbedPaneConstraints>
+                    </Constraint>
+                  </Constraints>
 
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseIndexPanel" alignment="0" pref="544" max="32767" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="databaseIndexPanel" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="fastSafeModeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="mprulesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="specialRegistryCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="strictPasswordModeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="fastSafeModeCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="mprulesCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="specialRegistryCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="strictPasswordModeCheckBox" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JCheckBox" name="fastSafeModeCheckBox">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="fastSafeModeCheckBox.text"/>
+                        <Property name="toolTipText" type="java.lang.String" resourceKey="fastSafeModeCheckBox.toolTipText"/>
+                        <Property name="enabled" type="boolean" value="false"/>
+                        <Property name="name" type="java.lang.String" value="fastSafeModeCheckBox" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="mprulesCheckBox">
+                      <Properties>
+                        <Property name="selected" type="boolean" value="true"/>
+                        <Property name="text" type="java.lang.String" resourceKey="mprulesCheckBox.text"/>
+                        <Property name="name" type="java.lang.String" value="mprulesCheckBox" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="specialRegistryCheckBox">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="specialRegistryCheckBox.text"/>
+                        <Property name="name" type="java.lang.String" value="specialRegistryCheckBox" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="strictPasswordModeCheckBox">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="strictPasswordModeCheckBox.text"/>
+                        <Property name="toolTipText" type="java.lang.String" resourceKey="strictPasswordModeCheckBox.toolTipText"/>
+                        <Property name="enabled" type="boolean" value="false"/>
+                        <Property name="name" type="java.lang.String" value="strictPasswordModeCheckBox" noResource="true"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
                 <Component class="canreg.client.gui.management.systemeditor.DatabaseIndexPanel" name="databaseIndexPanel">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="databaseIndexPanel" noResource="true"/>
                   </Properties>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                      <JTabbedPaneConstraints tabName="Indexes">
+                        <Property name="tabTitle" type="java.lang.String" resourceKey="databaseIndexPanel.TabConstraints.tabTitle"/>
+                      </JTabbedPaneConstraints>
+                    </Constraint>
+                  </Constraints>
                 </Component>
               </SubComponents>
             </Container>
