@@ -119,6 +119,7 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
         }
         elementPanelsSet.add(elementPanel);
         listener.actionPerformed(new ActionEvent(this, 0, UPDATED));
+        elementPanel.editAction();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
