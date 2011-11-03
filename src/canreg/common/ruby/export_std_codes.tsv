@@ -1,0 +1,41 @@
+name	default_code
+Sex	9
+Year of diagnosis	9999
+Addr at DX--state	
+County at DX	
+Primary site	
+Behavior code ICD-O-3	
+Histologic type ICD-O-3	
+Behavior (92-00) ICD-O-2	
+Histology (92-00) ICD-O-2	
+Cause of death (ICD-7, 8 or 9)	
+Cause of death (ICD-10)	
+ICD revision number	
+Year of initial RX--SEER	
+Month of initial RX--SEER	
+Coding system for EOD	
+Age at diagnosis	
+Race 1	
+Spanish/Hispanic origin	
+NHIA Derived Hisp Origin	
+Year of last contact	
+Year of birth	
+Month of diagnosis	
+Month of last contact	
+Month of birth	
+Census Tract 2000	
+Census Tract 1970/80/90	
+Census Cod Sys 1970/80/90	
+Census Tr Certainty 2000	
+Census Tr Cert 1970/80/90	
+Sequence number--central	
+Diagnostic confirmation	
+Vital status	
+SEER type of follow-up	
+Type of Reporting Source	
+Reporting hospital (last 6-digits)	
+Accession number--hosp	
+Patient ID number	
+Behavior recode for analysis	
+Primary site - labeled	
+ICD-O-3 Hist/behavior, labeled	

@@ -38,6 +38,8 @@ public class TableBuilderFactory {
             tableBuilder = new RTableBuilder(tble.getConfigFileName());
         } else if (tble.getEngineName().equalsIgnoreCase("r-engine-grouped")) {
             tableBuilder = new RTableBuilderGrouped(tble.getConfigFileName());
+        } else if (tble.getEngineName().equalsIgnoreCase("seer")) {
+            tableBuilder = new SEERPrepFileTableBuilder(tble.getConfigFileName());
         } else {
             tableBuilder = null;
         }

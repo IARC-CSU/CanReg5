@@ -15,3 +15,5 @@
 ^conf/tables/AgeSpecificRatesLinearAll\.conf\.bak$
 ^conf/tables/AgeSpecificRatesLogaritmic\.conf\.bak$
 ^conf/tables/r/makeFile\.R\.bak$
+^inno-build\.bat\.bak$
+^src/fr_propertiesFiles\.txt$

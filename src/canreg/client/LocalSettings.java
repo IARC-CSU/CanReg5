@@ -130,6 +130,10 @@ public final class LocalSettings {
      * 
      */
     public static String R_PATH = "r_path";
+    /**
+     * 
+     */
+    public static final String SEER_PREP_PATH = "seer_prep_path";
 
     /**
      * 

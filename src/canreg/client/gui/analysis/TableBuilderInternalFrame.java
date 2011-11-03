@@ -225,6 +225,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         svgButton = new javax.swing.JButton();
         wmfButton = new javax.swing.JButton();
         chartViewerButton = new javax.swing.JButton();
+        seerPrepButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
@@ -322,8 +323,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(previewLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
+                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -415,7 +416,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(numberOfYearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(warningLabel)
-                .addContainerGap(288, Short.MAX_VALUE))
+                .addContainerGap(292, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("rangePanel.TabConstraints.tabTitle"), rangePanel); // NOI18N
@@ -449,7 +450,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -476,7 +477,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(filterPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
+                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -554,6 +555,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         chartViewerButton.setToolTipText(resourceMap.getString("chartViewerButton.toolTipText")); // NOI18N
         chartViewerButton.setName("chartViewerButton"); // NOI18N
 
+        seerPrepButton.setAction(actionMap.get("generateFilesForSEERPrepAction")); // NOI18N
+        seerPrepButton.setText(resourceMap.getString("seerPrepButton.text")); // NOI18N
+        seerPrepButton.setName("seerPrepButton"); // NOI18N
+
         javax.swing.GroupLayout writeOutPanelLayout = new javax.swing.GroupLayout(writeOutPanel);
         writeOutPanel.setLayout(writeOutPanelLayout);
         writeOutPanelLayout.setHorizontalGroup(
@@ -571,7 +576,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(tabulatedButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
                     .addComponent(svgButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
                     .addComponent(imageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(chartViewerButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
+                    .addComponent(chartViewerButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                    .addComponent(seerPrepButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
                 .addContainerGap())
         );
         writeOutPanelLayout.setVerticalGroup(
@@ -595,7 +601,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addComponent(tabulatedButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chartViewerButton)
-                .addContainerGap(174, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(seerPrepButton)
+                .addContainerGap(149, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("writeOutPanel.TabConstraints.tabTitle"), writeOutPanel); // NOI18N
@@ -629,7 +637,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -698,6 +706,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         svgButton.setEnabled(false);
         wmfButton.setEnabled(false);
         chartViewerButton.setEnabled(false);
+        seerPrepButton.setEnabled(false);
 
         if (tble != null) {
 
@@ -737,6 +746,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                             wmfButton.setEnabled(true);
                         } else if (filetype.equals(FileTypes.jchart)) {
                             chartViewerButton.setEnabled(true);
+                        } else if (filetype.equals(FileTypes.seer)) {
+                            seerPrepButton.setEnabled(true);
                         }
                     }
                 }
@@ -750,8 +761,6 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         previewImageLabel.setIcon(icon);
         // tableTypePanel.revalidate();
         // tableTypePanel.repaint();
-
-
 
     }//GEN-LAST:event_tableTypeListValueChanged
 
@@ -812,6 +821,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel previewLabel;
     private canreg.client.gui.components.RangeFilterPanel rangeFilterPanel;
     private javax.swing.JPanel rangePanel;
+    private javax.swing.JButton seerPrepButton;
     private com.toedter.calendar.JYearChooser startYearChooser;
     private javax.swing.JLabel startYearLabel;
     private javax.swing.JButton svgButton;
@@ -1168,5 +1178,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public void openInChartViewer() {
         generateTablesAction(FileTypes.jchart);
+    }
+
+    @Action
+    public void generateFilesForSEERPrepAction() {
+        generateTablesAction(FileTypes.seer);
     }
 }
