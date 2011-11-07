@@ -196,7 +196,7 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
                 fwfw.close();
                 // filesCreated.add(reportFileName); //can't open it with the system.
             }
-            File dir = new File(Globals.TABLES_CONF_PATH);
+            // File dir = new File(Globals.TABLES_CONF_PATH);
 
         } catch (IOException ex) {
             Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
