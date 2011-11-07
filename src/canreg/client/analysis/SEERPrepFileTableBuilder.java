@@ -91,7 +91,10 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
             int thisYear = startYear;
             if (populations != null) {
                 FixedWidthFileWriter fwfw = new FixedWidthFileWriter(26, true); //TODO: make dynamic
-                fwfw.setOutputFileName(baseFileName.getParent() + Globals.FILE_SEPARATOR + "pop-" + baseFileName.getName());
+                fwfw.setOutputFileName(baseFileName.getParent() + Globals.FILE_SEPARATOR + "pop-" + baseFileName.getName()+".txd");
+                TreeMap map = new TreeMap();
+                // recode the address to XX
+                map.put(StandardVariableNames.AddressCode, "XX");
                 for (PopulationDataset pop : populations) {
                     ageGroupStructure = pop.getAgeGroupStructure();
                     if (ageGroupStructure.getSizeOfGroups() != 5
@@ -99,9 +102,7 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
                         // for now we only allow 5 year age groups and no cutoff age
                         throw (new IncompatiblePopulationDataSetException());
                     }
-                    TreeMap map = new TreeMap();
                     map.put(StandardVariableNames.IncidenceDate, (thisYear * 10000) + "");
-                    map.put(StandardVariableNames.AddressCode, "XX");
                     int offset = 0; // the difference between SEER age group count and CanReg
 
                     for (int sex = 1; sex <= 2; sex++) {
@@ -171,7 +172,7 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
 
             if (incidenceData != null) {
                 FixedWidthFileWriter fwfw = new FixedWidthFileWriter(1946); //TODO: make dynamic
-                fwfw.setOutputFileName(baseFileName.getParent() + Globals.FILE_SEPARATOR + "cases-" + baseFileName.getName());
+                fwfw.setOutputFileName(baseFileName.getParent() + Globals.FILE_SEPARATOR + "cases-" + baseFileName.getName()+".txd");
                 for (Object[] row : incidenceData) {
                     TreeMap map = new TreeMap();
                     // map.put(StandardVariableNames.IncidenceDate, row[0]);
