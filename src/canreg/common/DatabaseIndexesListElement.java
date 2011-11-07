@@ -128,4 +128,9 @@ public class DatabaseIndexesListElement implements Serializable, DatabaseElement
     public String getDescriptiveString() {
         return getIndexName() + " (Table: "+ getDatabaseTableName() + ", Main Variable: " + getMainVariableName() +")";
     }
+
+    @Override
+    public boolean userVariable() {
+        return true;
+    }
 }

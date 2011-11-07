@@ -116,6 +116,8 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
             elementsPanel.repaint();
             elementPanel.setVisible(true);
             elementPanel.setColorSignal(colorize(element));
+        } else {
+            elementPanel.setVisible(false);
         }
         elementPanelsSet.add(elementPanel);
         listener.actionPerformed(new ActionEvent(this, 0, UPDATED));
@@ -136,6 +138,10 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
         } else if (e.getActionCommand().equals(DatabaseElementPanel.MOVE_UP_ACTION)) {
             DatabaseElementPanel source = (DatabaseElementPanel) e.getSource();
             DatabaseElementPanel lower = elementPanelsSet.lower(source);
+            // skip all invisible elements
+            while (lower != null && !lower.getDatabaseElement().userVariable()) {
+                lower = elementPanelsSet.lower(lower);
+            }
             if (lower != null) {
                 elementPanelsSet.remove(source);
                 elementPanelsSet.remove(lower);
@@ -149,6 +155,9 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
         } else if (e.getActionCommand().equals(DatabaseElementPanel.MOVE_DOWN_ACTION)) {
             DatabaseElementPanel source = (DatabaseElementPanel) e.getSource();
             DatabaseElementPanel higher = elementPanelsSet.higher(source);
+            while (higher != null && !higher.getDatabaseElement().userVariable()) {
+                higher = elementPanelsSet.higher(higher);
+            }
             if (higher != null) {
                 elementPanelsSet.remove(source);
                 elementPanelsSet.remove(higher);

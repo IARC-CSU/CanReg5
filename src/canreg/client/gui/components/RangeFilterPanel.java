@@ -174,7 +174,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
 
     /**
      * 
-     * @param visible
+     * @param userVariable
      */
     public void setTableChooserVisible(boolean visible) {
         tableChooserPanel.setVisible(visible);
@@ -183,7 +183,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
 
     /**
      * 
-     * @param visible
+     * @param userVariable
      */
     public void setRecordPanelvisible(boolean visible) {
         recordsPanel.setVisible(visible);
@@ -781,7 +781,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
 
     /**
      * 
-     * @param visible
+     * @param userVariable
      */
     public void setSortByVariableShown(boolean visible) {
         sortByChooserPanel.setVisible(visible);

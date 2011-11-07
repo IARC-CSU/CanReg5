@@ -26,5 +26,11 @@ package canreg.common;
  */
 public interface DatabaseElement {
     // I'm sure we can move things into here...
+    
     public String getDescriptiveString();
+
+    
+    // This returns true if this is a user added variable 
+    // - a variable that is not a system variable    
+    public boolean userVariable();
 }

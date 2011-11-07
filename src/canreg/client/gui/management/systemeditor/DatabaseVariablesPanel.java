@@ -65,8 +65,7 @@ public class DatabaseVariablesPanel extends DatabaseElementsPanel {
 
     @Override
     public boolean visible(DatabaseElement dbe) {
-        DatabaseVariablesListElement davaliel = (DatabaseVariablesListElement) dbe;
-        return (davaliel.getGroupID() > 0);
+        return dbe.userVariable();
     }
 
     @Override

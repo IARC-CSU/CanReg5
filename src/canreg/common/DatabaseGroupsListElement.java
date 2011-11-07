@@ -94,4 +94,9 @@ public class DatabaseGroupsListElement implements Serializable, DatabaseElement 
     public String getDescriptiveString() {
         return groupName;
     }
+
+    @Override
+    public boolean userVariable() {
+        return true;
+    }
 }

@@ -57,7 +57,7 @@ public class DatabaseGroupsPanel extends DatabaseElementsPanel {
 
     @Override
     public boolean visible(DatabaseElement dbe) {
-        // groups are always visible
+        // groups are always userVariable
         return true;
     }
 

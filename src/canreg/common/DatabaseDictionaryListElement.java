@@ -218,4 +218,9 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
         }
         return desc;
     }
+
+    @Override
+    public boolean userVariable() {
+        return true;
+    }
 }
