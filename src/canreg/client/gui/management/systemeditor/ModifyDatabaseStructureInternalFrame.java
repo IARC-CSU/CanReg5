@@ -123,22 +123,15 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        generalPanel = new javax.swing.JPanel();
-        registryCodeLabel = new javax.swing.JLabel();
-        registryCodeTextField = new javax.swing.JTextField();
-        checkIfUniqueButton = new javax.swing.JButton();
-        regionLabel = new javax.swing.JLabel();
-        regionComboBox = new javax.swing.JComboBox();
-        registryNameLabel = new javax.swing.JLabel();
-        registryNameTextField = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        editorsScrollPane = new javax.swing.JScrollPane();
-        editorsPanel = new javax.swing.JPanel();
+        jSplitPane1 = new javax.swing.JSplitPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
+        dictionariesScrollPane = new javax.swing.JScrollPane();
         databaseDictionaryPanel = new canreg.client.gui.management.systemeditor.DatabaseDictionariesPanel();
+        groupsScrollPane = new javax.swing.JScrollPane();
         databaseGroupPanel = new canreg.client.gui.management.systemeditor.DatabaseGroupsPanel();
+        variablesScrollPane = new javax.swing.JScrollPane();
         databaseVariablePanel = new canreg.client.gui.management.systemeditor.DatabaseVariablesPanel();
+        searchVariablesScrollPane = new javax.swing.JScrollPane();
         personSearchVariablesPanel = new canreg.client.gui.management.PersonSearchVariablesPanel();
         codingPanel = new javax.swing.JPanel();
         maleCodeLabel = new javax.swing.JLabel();
@@ -159,7 +152,18 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         mprulesCheckBox = new javax.swing.JCheckBox();
         specialRegistryCheckBox = new javax.swing.JCheckBox();
         strictPasswordModeCheckBox = new javax.swing.JCheckBox();
+        indexesScrollPane1 = new javax.swing.JScrollPane();
         databaseIndexPanel = new canreg.client.gui.management.systemeditor.DatabaseIndexPanel();
+        generalPanel = new javax.swing.JPanel();
+        registryCodeLabel = new javax.swing.JLabel();
+        registryCodeTextField = new javax.swing.JTextField();
+        checkIfUniqueButton = new javax.swing.JButton();
+        regionLabel = new javax.swing.JLabel();
+        regionComboBox = new javax.swing.JComboBox();
+        registryNameLabel = new javax.swing.JLabel();
+        registryNameTextField = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setClosable(true);
         setResizable(true);
@@ -167,101 +171,45 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
 
-        generalPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("generalPanel.border.title"))); // NOI18N
-        generalPanel.setName("generalPanel"); // NOI18N
-
-        registryCodeLabel.setText(resourceMap.getString("registryCodeLabel.text")); // NOI18N
-        registryCodeLabel.setName("registryCodeLabel"); // NOI18N
-
-        registryCodeTextField.setText(resourceMap.getString("registryCodeTextField.text")); // NOI18N
-        registryCodeTextField.setName("registryCodeTextField"); // NOI18N
-
-        checkIfUniqueButton.setText(resourceMap.getString("checkIfUniqueButton.text")); // NOI18N
-        checkIfUniqueButton.setToolTipText(resourceMap.getString("checkIfUniqueButton.toolTipText")); // NOI18N
-        checkIfUniqueButton.setEnabled(false);
-        checkIfUniqueButton.setName("checkIfUniqueButton"); // NOI18N
-
-        regionLabel.setText(resourceMap.getString("regionLabel.text")); // NOI18N
-        regionLabel.setName("regionLabel"); // NOI18N
-
-        regionComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        regionComboBox.setName("regionComboBox"); // NOI18N
-
-        registryNameLabel.setText(resourceMap.getString("registryNameLabel.text")); // NOI18N
-        registryNameLabel.setName("registryNameLabel"); // NOI18N
-
-        registryNameTextField.setText(resourceMap.getString("registryNameTextField.text")); // NOI18N
-        registryNameTextField.setName("registryNameTextField"); // NOI18N
-
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ModifyDatabaseStructureInternalFrame.class, this);
-        jButton1.setAction(actionMap.get("pickXML")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
-
-        jButton2.setAction(actionMap.get("saveXML")); // NOI18N
-        jButton2.setName("jButton2"); // NOI18N
-
-        javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
-        generalPanel.setLayout(generalPanelLayout);
-        generalPanelLayout.setHorizontalGroup(
-            generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(generalPanelLayout.createSequentialGroup()
-                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(generalPanelLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(registryCodeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(registryCodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(checkIfUniqueButton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(regionLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(regionComboBox, 0, 179, Short.MAX_VALUE))
-                    .addGroup(generalPanelLayout.createSequentialGroup()
-                        .addComponent(registryNameLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(registryNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
-                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1))
-                .addContainerGap())
-        );
-        generalPanelLayout.setVerticalGroup(
-            generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(generalPanelLayout.createSequentialGroup()
-                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(registryNameLabel)
-                    .addComponent(registryNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(registryCodeLabel)
-                    .addComponent(registryCodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(checkIfUniqueButton)
-                    .addComponent(regionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(regionLabel)
-                    .addComponent(jButton2)))
-        );
-
-        editorsScrollPane.setName("editorsScrollPane"); // NOI18N
-
-        editorsPanel.setName("editorsPanel"); // NOI18N
+        jSplitPane1.setDividerSize(0);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setName("jSplitPane1"); // NOI18N
 
         jTabbedPane1.setName("jTabbedPane1"); // NOI18N
 
+        dictionariesScrollPane.setName("dictionariesScrollPane"); // NOI18N
+
         databaseDictionaryPanel.setName("databaseDictionaryPanel"); // NOI18N
-        jTabbedPane1.addTab(resourceMap.getString("databaseDictionaryPanel.TabConstraints.tabTitle"), databaseDictionaryPanel); // NOI18N
+        dictionariesScrollPane.setViewportView(databaseDictionaryPanel);
+
+        jTabbedPane1.addTab(resourceMap.getString("dictionariesScrollPane.TabConstraints.tabTitle"), dictionariesScrollPane); // NOI18N
+        dictionariesScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        groupsScrollPane.setName("groupsScrollPane"); // NOI18N
 
         databaseGroupPanel.setName("databaseGroupPanel"); // NOI18N
-        jTabbedPane1.addTab(resourceMap.getString("databaseGroupPanel.TabConstraints.tabTitle"), databaseGroupPanel); // NOI18N
+        groupsScrollPane.setViewportView(databaseGroupPanel);
+
+        jTabbedPane1.addTab(resourceMap.getString("groupsScrollPane.TabConstraints.tabTitle"), groupsScrollPane); // NOI18N
+        groupsScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        variablesScrollPane.setName("variablesScrollPane"); // NOI18N
 
         databaseVariablePanel.setName("databaseVariablePanel"); // NOI18N
-        jTabbedPane1.addTab(resourceMap.getString("databaseVariablePanel.TabConstraints.tabTitle"), databaseVariablePanel); // NOI18N
+        variablesScrollPane.setViewportView(databaseVariablePanel);
+
+        jTabbedPane1.addTab(resourceMap.getString("variablesScrollPane.TabConstraints.tabTitle"), variablesScrollPane); // NOI18N
+        variablesScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        searchVariablesScrollPane.setName("searchVariablesScrollPane"); // NOI18N
 
         personSearchVariablesPanel.setName("personSearchVariablesPanel"); // NOI18N
-        jTabbedPane1.addTab(resourceMap.getString("personSearchVariablesPanel.TabConstraints.tabTitle"), personSearchVariablesPanel); // NOI18N
+        searchVariablesScrollPane.setViewportView(personSearchVariablesPanel);
+
+        jTabbedPane1.addTab(resourceMap.getString("searchVariablesScrollPane.TabConstraints.tabTitle"), searchVariablesScrollPane); // NOI18N
+        searchVariablesScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         codingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("codingPanel.border.title"))); // NOI18N
         codingPanel.setName("codingPanel"); // NOI18N
@@ -345,7 +293,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(dateSeparatorTextField, 0, 0, Short.MAX_VALUE))))
                     .addComponent(basisCodesCheckBox))
-                .addContainerGap(277, Short.MAX_VALUE))
+                .addContainerGap(193, Short.MAX_VALUE))
         );
         codingPanelLayout.setVerticalGroup(
             codingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -369,7 +317,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                     .addComponent(morphologyLengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(basisCodesCheckBox)
-                .addContainerGap(208, Short.MAX_VALUE))
+                .addContainerGap(160, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("codingPanel.TabConstraints.tabTitle"), codingPanel); // NOI18N
@@ -421,36 +369,98 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
 
         jTabbedPane1.addTab(resourceMap.getString("settingsPanel.TabConstraints.tabTitle"), settingsPanel); // NOI18N
 
+        indexesScrollPane1.setName("indexesScrollPane1"); // NOI18N
+
         databaseIndexPanel.setName("databaseIndexPanel"); // NOI18N
-        jTabbedPane1.addTab(resourceMap.getString("databaseIndexPanel.TabConstraints.tabTitle"), databaseIndexPanel); // NOI18N
+        indexesScrollPane1.setViewportView(databaseIndexPanel);
 
-        javax.swing.GroupLayout editorsPanelLayout = new javax.swing.GroupLayout(editorsPanel);
-        editorsPanel.setLayout(editorsPanelLayout);
-        editorsPanelLayout.setHorizontalGroup(
-            editorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
-        );
-        editorsPanelLayout.setVerticalGroup(
-            editorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
+        jTabbedPane1.addTab(resourceMap.getString("indexesScrollPane1.TabConstraints.tabTitle"), indexesScrollPane1); // NOI18N
+        indexesScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 
-        editorsScrollPane.setViewportView(editorsPanel);
+        jSplitPane1.setRightComponent(jTabbedPane1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(generalPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(editorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(generalPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        generalPanel.setName("generalPanel"); // NOI18N
+
+        registryCodeLabel.setText(resourceMap.getString("registryCodeLabel.text")); // NOI18N
+        registryCodeLabel.setName("registryCodeLabel"); // NOI18N
+
+        registryCodeTextField.setText(resourceMap.getString("registryCodeTextField.text")); // NOI18N
+        registryCodeTextField.setName("registryCodeTextField"); // NOI18N
+
+        checkIfUniqueButton.setText(resourceMap.getString("checkIfUniqueButton.text")); // NOI18N
+        checkIfUniqueButton.setToolTipText(resourceMap.getString("checkIfUniqueButton.toolTipText")); // NOI18N
+        checkIfUniqueButton.setEnabled(false);
+        checkIfUniqueButton.setName("checkIfUniqueButton"); // NOI18N
+
+        regionLabel.setText(resourceMap.getString("regionLabel.text")); // NOI18N
+        regionLabel.setName("regionLabel"); // NOI18N
+
+        regionComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        regionComboBox.setName("regionComboBox"); // NOI18N
+
+        registryNameLabel.setText(resourceMap.getString("registryNameLabel.text")); // NOI18N
+        registryNameLabel.setName("registryNameLabel"); // NOI18N
+
+        registryNameTextField.setText(resourceMap.getString("registryNameTextField.text")); // NOI18N
+        registryNameTextField.setName("registryNameTextField"); // NOI18N
+
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ModifyDatabaseStructureInternalFrame.class, this);
+        jButton1.setAction(actionMap.get("pickXML")); // NOI18N
+        jButton1.setName("jButton1"); // NOI18N
+
+        jButton2.setAction(actionMap.get("saveXML")); // NOI18N
+        jButton2.setName("jButton2"); // NOI18N
+
+        javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
+        generalPanel.setLayout(generalPanelLayout);
+        generalPanelLayout.setHorizontalGroup(
+            generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(registryCodeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(registryCodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkIfUniqueButton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(regionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(regionComboBox, 0, 94, Short.MAX_VALUE))
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addComponent(registryNameLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(registryNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE))
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addContainerGap())
         );
+        generalPanelLayout.setVerticalGroup(
+            generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(registryNameLabel)
+                    .addComponent(registryNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(registryCodeLabel)
+                    .addComponent(registryCodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(checkIfUniqueButton)
+                    .addComponent(regionLabel)
+                    .addComponent(regionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jSplitPane1.setLeftComponent(generalPanel);
+
+        getContentPane().add(jSplitPane1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -565,14 +575,16 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     private javax.swing.JLabel dateFormatLabel;
     private javax.swing.JLabel dateSeparatorLabel;
     private javax.swing.JTextField dateSeparatorTextField;
-    private javax.swing.JPanel editorsPanel;
-    private javax.swing.JScrollPane editorsScrollPane;
+    private javax.swing.JScrollPane dictionariesScrollPane;
     private javax.swing.JCheckBox fastSafeModeCheckBox;
     private javax.swing.JLabel femaleCodeLabel;
     private javax.swing.JTextField femaleCodeTextField;
     private javax.swing.JPanel generalPanel;
+    private javax.swing.JScrollPane groupsScrollPane;
+    private javax.swing.JScrollPane indexesScrollPane1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel maleCodeLabel;
     private javax.swing.JTextField maleCodeTextField;
@@ -586,11 +598,13 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     private javax.swing.JTextField registryCodeTextField;
     private javax.swing.JLabel registryNameLabel;
     private javax.swing.JTextField registryNameTextField;
+    private javax.swing.JScrollPane searchVariablesScrollPane;
     private javax.swing.JPanel settingsPanel;
     private javax.swing.JCheckBox specialRegistryCheckBox;
     private javax.swing.JCheckBox strictPasswordModeCheckBox;
     private javax.swing.JLabel unknownSexLabel;
     private javax.swing.JTextField unknownSexTextField;
+    private javax.swing.JScrollPane variablesScrollPane;
     // End of variables declaration//GEN-END:variables
 
     private void fillAutoVariables() {
