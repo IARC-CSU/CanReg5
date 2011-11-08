@@ -86,17 +86,19 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(elementsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(addButton))
-            .addComponent(elementsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                .addContainerGap(355, Short.MAX_VALUE)
+                .addComponent(addButton)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(elementsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 16, Short.MAX_VALUE)
+                .addComponent(elementsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addButton))
+                .addComponent(addButton)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -132,9 +134,15 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(DatabaseElementPanel.REMOVE_ACTION)) {
             elementsPanel.remove((Component) e.getSource());
-            elementPanelsSet.remove((DatabaseElementPanel) e.getSource());
+            DatabaseElementPanel source = (DatabaseElementPanel) e.getSource();
+            elementPanelsSet.remove(source);
             elementsPanel.revalidate();
             elementsPanel.repaint();
+            // update positions
+            int i = 0;
+            for (DatabaseElementPanel element:elementPanelsSet){
+                element.setPosition((i++));
+            }
         } else if (e.getActionCommand().equals(DatabaseElementPanel.MOVE_UP_ACTION)) {
             DatabaseElementPanel source = (DatabaseElementPanel) e.getSource();
             DatabaseElementPanel lower = elementPanelsSet.lower(source);
