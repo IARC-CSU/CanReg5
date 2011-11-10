@@ -1,5 +1,60 @@
-changeset:   917:bbacc0bc0ed5
+changeset:   928:19182f048909
 tag:         tip
+user:        ErvikM@X90164
+date:        Thu Nov 10 15:39:46 2011 +0100
+summary:     Updated the French translation.
+
+changeset:   927:dd442bf801da
+user:        ErvikM@X90164
+date:        Tue Nov 08 15:01:14 2011 +0100
+summary:     Fixed a bug where one couldn't add new variables after having removed some.
+
+changeset:   926:e787a7f7fad4
+user:        ErvikM@X90164
+date:        Tue Nov 08 15:00:27 2011 +0100
+summary:     Improved the layout of the system editor.
+
+changeset:   925:4627f9a50889
+user:        ErvikM@X90164
+date:        Mon Nov 07 16:43:30 2011 +0100
+summary:     Fixed bug in system editor where you needed to click several times on arrows if there were hidden variables involved...
+
+changeset:   924:ba0eda3071b7
+user:        ErvikM@X90164
+date:        Mon Nov 07 16:42:36 2011 +0100
+summary:     Optimized some code.
+
+changeset:   923:4fb6a6ca52cd
+user:        ErvikM@X90164
+date:        Mon Nov 07 10:41:56 2011 +0100
+summary:     Optimized some code.
+
+changeset:   922:40a387f13a0f
+user:        ErvikM@X90164
+date:        Thu Nov 03 15:25:04 2011 +0100
+summary:     Implemented export facilities to get data in a fixed width file following the NAACR 1946 v11.3 format from CanReg to SEER*prep and then on to SEER*stat.
+
+changeset:   921:c543b4caa3b3
+user:        ErvikM@X90164
+date:        Tue Oct 25 17:51:40 2011 +0200
+summary:     Replaced the old Twitter RSS URL with a more generic one using the Twitter API.
+
+changeset:   920:3729114436ec
+user:        ErvikM@X90164
+date:        Fri Oct 21 15:17:04 2011 +0200
+summary:     Modify database structure GUI is now using tabs to split up variables, dictionaries, groups, etc...
+
+changeset:   919:d1ff0590cbf3
+user:        ErvikM@X90164
+date:        Fri Oct 21 11:09:35 2011 +0200
+summary:     After adding elements to the database structure editor the relevant editor opens.
+
+changeset:   918:36eb2516a550
+user:        ErvikM@X90164
+date:        Tue Oct 18 16:48:35 2011 +0200
+summary:     5.00.09
+
+changeset:   917:bbacc0bc0ed5
 user:        ErvikM@X90164
 date:        Tue Oct 18 15:49:11 2011 +0200
 summary:     Added the empty TRN database to the version control. Added the CanReg.exe to the version control. Created an installer script. Added the generation of the installer and the .zip file to the ant build script.

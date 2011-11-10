@@ -828,7 +828,7 @@ JRE
 \begin_layout Standard
 \align left
 Before you install and run CanReg5 for the first time it is recommended
- that you install the latest Java Runtime environment (May 2011: Version
+ that you install the latest Java 6 Runtime Environment (May 2011: Version
  6 Update 25 ) You can get that from here: 
 \begin_inset CommandInset href
 LatexCommand href
@@ -853,9 +853,17 @@ Install CanReg5
 \end_layout
 
 \begin_layout Standard
+CanReg5 is compatible with most major operating systems and the default
+ distribution of CanReg is simply a zip-archive.
+\end_layout
+
+\begin_layout Subsection
+From CanReg5.zip
+\end_layout
+
+\begin_layout Standard
 \align left
-CanReg5 is distributed as a zip-archive.
- To install it simply extract the content to a new folder, for example on
+To install it simply extract the content to a new folder, for example on
  your desktop.
  (It is important to keep the same directory structure as inside the zip-file.)
  
@@ -873,6 +881,50 @@ Extract here...
 \end_inset
 
  
+\end_layout
+
+\begin_layout Subsection
+From CanReg5-Setup.zip (Windows only)
+\end_layout
+
+\begin_layout Standard
+An alternative way to install CanReg is by running the CanReg5-Setup.exe
+ from within CanReg5-Setup.zip.
+ This is a standard windows installer that will install CanReg5 in your
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Program Files
+\begin_inset Quotes erd
+\end_inset
+
+ folder (by default).
+ It is just a matter of clicking 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ ,
+\begin_inset Quotes erd
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ etc.
 \end_layout
 
 \begin_layout Section
@@ -6370,7 +6422,7 @@ population pyramid
 \end_inset
 
  that is implemented so far\SpecialChar \ldots{}
-) 
+)
 \end_layout
 
 \begin_layout Standard
@@ -6848,7 +6900,452 @@ CanReg5 chart editor
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Subsection
+CanReg and SEER*Stat
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:CanReg-and-SEER*stat"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+CanReg provides a facility to export data to be used in the free SEER*stat
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+SEER*Stat
+\end_layout
+
+\end_inset
+
+.
+ (Windows only.) To do so you'll have to first get hold of and install SEER*Stat
+ and SEER*Prep
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+SEER*Prep
+\end_layout
+
+\end_inset
+
+ from the SEER website.
+ (
+\begin_inset CommandInset href
+LatexCommand href
+target "http://seer.cancer.gov/seerprep/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://seer.cancer.gov/seerstat"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+Please note that the following limits apply (for now, as SEER*Stat wants
+ things like this, but in the future we might be able to work around them):
+\end_layout
+
+\begin_layout Itemize
+PatientIDs have to be 8 digits or less.
+\end_layout
+
+\begin_layout Itemize
+Population datasets has to have 5 year age groups.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+In CanReg
+\end_layout
+
+\begin_layout Standard
+Afterwards you can use the table builder in CanReg and choose the SEER*Prep
+ as table type, specify the range of years you want to look at, the population
+ datasets matching each year in the period and click 
+\begin_inset Quotes eld
+\end_inset
+
+Generate files for SEER*Prep
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This will ask you to specify the base name of the files for SEER*Prep,
+ i.e.
  
+\begin_inset Quotes eld
+\end_inset
+
+Goiania1999-2001
+\begin_inset Quotes erd
+\end_inset
+
+.
+ (CanReg will add 
+\begin_inset Quotes eld
+\end_inset
+
+cases-
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+pop-
+\begin_inset Quotes erd
+\end_inset
+
+ for respectively the incidence file and the population file, as well as
+ the suffix 
+\begin_inset Quotes eld
+\end_inset
+
+.txd
+\begin_inset Quotes erd
+\end_inset
+
+ so that SEER*Prep recognises the files.) 
+\end_layout
+
+\begin_layout Standard
+Start SEER*Prep.
+\end_layout
+
+\begin_layout Subsubsection
+In SEER*Prep
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename seerprep.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+SEER*Prep in action
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You have to first specify that your files follow the NAACCR 1946 v11.3 format,
+ by opening the corresponding .dd file from the folder you installed SEER*prep
+ to.
+ (Most probably 
+\begin_inset Quotes eld
+\end_inset
+
+naaccr1946.ver11_3.d02032011.dd
+\begin_inset Quotes erd
+\end_inset
+
+) Then under 
+\begin_inset Quotes eld
+\end_inset
+
+Database name:
+\begin_inset Quotes erd
+\end_inset
+
+ you can specify something more instructive than the default.
+\end_layout
+
+\begin_layout Standard
+Then you add your case file and population files from above using the 
+\begin_inset Quotes eld
+\end_inset
+
+Add...
+\begin_inset Quotes erd
+\end_inset
+
+ buttons.
+\end_layout
+
+\begin_layout Standard
+Do the following choices under 
+\begin_inset Quotes eld
+\end_inset
+
+When Linking to Populations Use:
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Age: 
+\begin_inset Quotes eld
+\end_inset
+
+Age recode with <1 years old
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Default Std: 
+\begin_inset Quotes eld
+\end_inset
+
+World Std.
+ Million (19 age groups) (recommended)
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Race: 
+\begin_inset Quotes eld
+\end_inset
+
+Custom race
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Leave Population Count Location as it is (Start col 19, length 8)
+\end_layout
+
+\begin_layout Standard
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+Edit...
+\begin_inset Quotes erd
+\end_inset
+
+ on the study cutoff date for survival and set it to something after the
+ last entry in the database.
+ (The date of the export?) (This is not important for now as the survival
+ features in SEER*Stat is not valid for data from CanReg yet.)
+\end_layout
+
+\begin_layout Standard
+Click the 
+\begin_inset Quotes eld
+\end_inset
+
+Lightning
+\begin_inset Quotes erd
+\end_inset
+
+ button.
+ (Or go to the 
+\begin_inset Quotes eld
+\end_inset
+
+Execute
+\begin_inset Quotes erd
+\end_inset
+
+ menu and choose 
+\begin_inset Quotes eld
+\end_inset
+
+Create file...
+\begin_inset Quotes erd
+\end_inset
+
+ SEER*Prep will then ask you where you want it to write it's report file.
+ Choose somewhere you'll be able to find it back, i.e.
+ the Desktop.
+ (If you have already created a database with this name, SEER*Prep will
+ ask you if you want to overwrite it.
+ Choose 
+\begin_inset Quotes eld
+\end_inset
+
+yes
+\begin_inset Quotes erd
+\end_inset
+
+, if you want.)
+\end_layout
+
+\begin_layout Standard
+Next you get some choices regarding invalid values.
+ (The first time you might want to choose 
+\begin_inset Quotes eld
+\end_inset
+
+Do not exclude any records
+\begin_inset Quotes erd
+\end_inset
+
+.)
+\end_layout
+
+\begin_layout Standard
+That's it.
+ SEER*Prep will generate the files that SEER*Stat needs.
+ Exit SEER*Prep and start SEER*Stat.
+ 
+\end_layout
+
+\begin_layout Standard
+(A more detailed walk through on this process can be found here:
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+target "http://seer.cancer.gov/seerprep/example.html"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Subsubsection
+In SEER*Stat
+\end_layout
+
+\begin_layout Standard
+Your data from above should now appear in SEER*Stat under the name you chose
+ for the database above ready to be exploited in SEER*Stat.
+ 
+\end_layout
+
+\begin_layout Standard
+You might have to create a new profile, by going to the 
+\begin_inset Quotes eld
+\end_inset
+
+Profile
+\begin_inset Quotes erd
+\end_inset
+
+ menu and choosing 
+\begin_inset Quotes eld
+\end_inset
+
+Add New...
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+Add Local...
+\begin_inset Quotes erd
+\end_inset
+
+ for Data Locations and choose the folder that SEER*Prep writes data to.
+\end_layout
+
+\begin_layout Standard
+(You can also untick the Client-Server ssp-connection if you want.)
+\end_layout
+
+\begin_layout Standard
+Under 
+\begin_inset Quotes eld
+\end_inset
+
+Other variables
+\begin_inset Quotes erd
+\end_inset
+
+ you have to specify valid paths for the 
+\begin_inset Quotes eld
+\end_inset
+
+User Variables
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Open or Save
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+Temporary Files
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
@@ -11248,7 +11745,17 @@ Java Runtime Environment
 \end_layout
 
 \begin_layout Standard
-To run CanReg at all you need a Java Runtime Environment.
+To run CanReg at all you need a Java Runtime Environment
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+Java Runtime Environment
+\end_layout
+
+\end_inset
+
+.
  You can get it from http://java.com/en/download/manual.jsp.
 \end_layout
 
@@ -11357,7 +11864,17 @@ target "http://www.r-project.org/"
 \end_layout
 
 \begin_layout Standard
-To download R go to 
+To download R
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+R
+\end_layout
+
+\end_inset
+
+ go to 
 \begin_inset CommandInset href
 LatexCommand href
 target "http://cran.r-project.org/mirrors.html"
@@ -11414,7 +11931,17 @@ Epi Info
 \end_layout
 
 \begin_layout Standard
-From the Epi Info website: 
+From the Epi Info
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+Epi Info
+\end_layout
+
+\end_inset
+
+ website: 
 \end_layout
 
 \begin_layout Quote
@@ -11455,6 +11982,60 @@ target "http://wwwn.cdc.gov/epiinfo/html/ei6_downloads.htm"
 \end_inset
 
  )
+\end_layout
+
+\begin_layout Subsection
+SEER*Stat and SEER*Prep
+\end_layout
+
+\begin_layout Standard
+From the SEER website:
+\end_layout
+
+\begin_layout Quote
+\begin_inset Quotes eld
+\end_inset
+
+The SEER*Stat
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+SEER*Stat
+\end_layout
+
+\end_inset
+
+ statistical software provides a convenient, intuitive mechanism for the
+ analysis of SEER and other cancer-related databases.
+ It is a powerful PC tool to view individual cancer records and to produce
+ statistics for studying the impact of cancer on a population.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To get your data from CanReg to SEER*Stat you need to go via SEER*Prep
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+SEER*Prep
+\end_layout
+
+\end_inset
+
+.
+ (See 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:CanReg-and-SEER*stat"
+
+\end_inset
+
+ for more information.)
 \end_layout
 
 \begin_layout Section

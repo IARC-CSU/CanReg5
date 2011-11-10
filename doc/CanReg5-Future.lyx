@@ -36,6 +36,7 @@
 \tracking_changes false
 \output_changes false
 \author "" 
+\author "" 
 \end_header
 
 \begin_body
@@ -271,6 +272,10 @@ Topo, Morpho, Address etc.
 \end_deeper
 \begin_layout Itemize
 Possibility to change the path of the database/other system variables.
+\end_layout
+
+\begin_layout Itemize
+Variables grouped by table/on screen group
 \end_layout
 
 \begin_layout Section*

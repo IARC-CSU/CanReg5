@@ -1,5 +1,17 @@
 Changelog
 
+5.00.10
+- Implemented export facilities to get data in a fixed width file following the NAACR 1946 v11.3 format from CanReg to SEER*prep and then on to SEER*stat.
+- System editor GUI is now using tabs to split up variables, dictionaries, groups, etc...
+- Improved scroll speed in system editor.
+- Fixed bug in system editor where you needed to click several times on arrows if there were hidden variables involved.
+- Fixed a bug where one couldn't add new variables after having removed some.
+- After adding elements to the database structure editor the relevant editor opens.
+- Replaced the old Twitter RSS URL with a more generic one using the Twitter API.
+- Updated the French translation.
+- Optimized some code.
+- Other bugfixes.
+
 5.00.09
 - Fixed a bug where the last character of some lines in the export file went missing.
 - Fixed a bug where user couldn't save dictionary when a it only contained one entry.
