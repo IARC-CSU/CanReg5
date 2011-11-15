@@ -21,6 +21,7 @@
 package canreg.common.qualitycontrol;
 
 import canreg.common.Globals;
+import canreg.common.LookUpLoader;
 import canreg.common.qualitycontrol.Checker.CheckNames;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -44,8 +45,8 @@ public class CheckTopographyMorphology extends CheckInterface {
      */
     public static final int mustKeyLength = 6;
     private static final int mustNotkeyLength = 6;
-    public static String Must_LookupFile = "/iarctools/resources/lookup/Must.txt";
-    public static String MustNot_LookupFile = "/iarctools/resources/lookup/MustNot.txt";
+    public static String Must_LookupFile = "/canreg/common/resources/lookup/Must.txt";
+    public static String MustNot_LookupFile = "/canreg/common/resources/lookup/MustNot.txt";
 
     @Override
     public Globals.StandardVariableNames[] getVariablesNeeded() {
@@ -216,11 +217,9 @@ public class CheckTopographyMorphology extends CheckInterface {
         InputStream lookUpMustNotResourceStream = this.getClass().getResourceAsStream(Globals.mustNotLookupFile);
 
         try {
-            morphologicalFamiliesMap = fr.iarc.cin.iarctools.tools.LookUpLoader.load(morphFamResourceStream, 4);
-            lookUpMustMap = fr.iarc.cin.iarctools.tools.LookUpLoader.load(
-                    lookUpMustResourceStream, 5);
-            lookUpMustNotMap = fr.iarc.cin.iarctools.tools.LookUpLoader.load(
-                    lookUpMustNotResourceStream, 5);
+            morphologicalFamiliesMap = LookUpLoader.load(morphFamResourceStream, 4);
+            lookUpMustMap = LookUpLoader.load(lookUpMustResourceStream, mustKeyLength);
+            lookUpMustNotMap = LookUpLoader.load(lookUpMustNotResourceStream, mustNotkeyLength);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE,
                     null, ex);
