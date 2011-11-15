@@ -204,61 +204,64 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                 StringBuilder outLine = new StringBuilder();
 
                 for (Object[] line : incidenceData) {
+                    try {
+                        // Set default
+                        icdIndex = -1;
+                        cases = 0;
 
-                    // Set default
-                    icdIndex = -1;
-                    cases = 0;
-
-                    // Unknown sex group = 3
-                    sex = 3;
-                    // Extract data
-                    sexString = (String) line[SEX_COLUMN];
-                    sex = Integer.parseInt(sexString.trim());
-
-                    // sex = 3 is unknown sex
-
-                    if (sex > 2) {
+                        // Unknown sex group = 3
                         sex = 3;
-                    }
+                        // Extract data
+                        sexString = (String) line[SEX_COLUMN];
+                        sex = Integer.parseInt(sexString.trim());
 
-                    morphologyString = (String) line[MORPHOLOGY_COLUMN];
-                    icdString = (String) line[ICD10_COLUMN];
+                        // sex = 3 is unknown sex
 
-                    icdIndex = Tools.assignICDGroupIndex(keyGroupsMap, icdString, morphologyString, cancerGroupsLocal);
-
-                    if (icdIndex != Tools.DONT_COUNT && icdIndex >= 0) {
-                        yearString = line[YEAR_COLUMN].toString();
-                        year = Integer.parseInt(yearString);
-                        ageString = line[AGE_COLUMN].toString();
-                        ageInt = Integer.parseInt(ageString);
-                        yearIndex = year - startYear;
-
-                        if (ageInt == unknownAgeInt) {
-                            ageGroup = unknownAgeGroupIndex;
-                        } else {
-                            ageGroup = populations[yearIndex].getAgeGroupIndex(ageInt);
+                        if (sex > 2) {
+                            sex = 3;
                         }
 
-                        // extract basis
-                        basisString = (String) line[BASIS_DIAGNOSIS_COLUMN];
-                        // extract behaviour
-                        behaviourString = (String) line[BEHAVIOUR_COLUMN];
-                        // Extract cases
-                        cases = (Integer) line[CASES_COLUMN];
+                        morphologyString = (String) line[MORPHOLOGY_COLUMN];
+                        icdString = (String) line[ICD10_COLUMN];
 
-                        outLine.append(year).append(separator);
-                        outLine.append("\"").append(icd10GroupDescriptions[icdIndex]).append("\"").append(separator);
-                        outLine.append("\"").append(icdGroupLabels[icdIndex]).append("\"").append(separator);
-                        outLine.append(sexString).append(separator);
-                        outLine.append(ageGroup).append(separator);
-                        outLine.append(morphologyString).append(separator);
-                        outLine.append(behaviourString).append(separator);
-                        outLine.append(basisString).append(separator);
-                        outLine.append(cases);
-                        incoutput.append(outLine);
-                        incoutput.newLine();
+                        icdIndex = Tools.assignICDGroupIndex(keyGroupsMap, icdString, morphologyString, cancerGroupsLocal);
+
+                        if (icdIndex != Tools.DONT_COUNT && icdIndex >= 0) {
+                            yearString = line[YEAR_COLUMN].toString();
+                            year = Integer.parseInt(yearString);
+                            ageString = line[AGE_COLUMN].toString();
+                            ageInt = Integer.parseInt(ageString);
+                            yearIndex = year - startYear;
+
+                            if (ageInt == unknownAgeInt) {
+                                ageGroup = unknownAgeGroupIndex;
+                            } else {
+                                ageGroup = populations[yearIndex].getAgeGroupIndex(ageInt);
+                            }
+
+                            // extract basis
+                            basisString = (String) line[BASIS_DIAGNOSIS_COLUMN];
+                            // extract behaviour
+                            behaviourString = (String) line[BEHAVIOUR_COLUMN];
+                            // Extract cases
+                            cases = (Integer) line[CASES_COLUMN];
+
+                            outLine.append(year).append(separator);
+                            outLine.append("\"").append(icd10GroupDescriptions[icdIndex]).append("\"").append(separator);
+                            outLine.append("\"").append(icdGroupLabels[icdIndex]).append("\"").append(separator);
+                            outLine.append(sexString).append(separator);
+                            outLine.append(ageGroup).append(separator);
+                            outLine.append(morphologyString).append(separator);
+                            outLine.append(behaviourString).append(separator);
+                            outLine.append(basisString).append(separator);
+                            outLine.append(cases);
+                            incoutput.append(outLine);
+                            incoutput.newLine();
+                        }
+                        outLine.delete(0, outLine.length());
+                    } catch (NumberFormatException nfe) {
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING, null, nfe);
                     }
-                    outLine.delete(0, outLine.length());
                 }
                 incoutput.flush();
                 incoutput.close();

@@ -41,10 +41,10 @@ import java.util.regex.*;
 public class FixedWidthFileWriter implements FileWriterInterface {
 
     private BufferedWriter outFile;
-    private String outFileName;
+    // private String outFileName;
     private final int lineLength;
     private char blanc = ' ';
-    private String[] order;
+    // private String[] order;
     private Pattern pattern = Pattern.compile("([^\\[\\]]*)\\[?([0-9]*),?([0-9]*)\\]?");
     private LinkedList<FileElement> fileElementList = new LinkedList<FileElement>();
     private boolean isPopulationFile;
@@ -115,7 +115,7 @@ public class FixedWidthFileWriter implements FileWriterInterface {
     @Override
     public boolean setOutputFileName(String fileName) {
         try {
-            outFileName = fileName;
+            // outFileName = fileName;
             outFile = new BufferedWriter(new FileWriter(fileName));
         } catch (IOException ex) {
             Logger.getLogger(FixedWidthFileWriter.class.getName()).log(Level.WARNING, null, ex);
@@ -178,7 +178,8 @@ public class FixedWidthFileWriter implements FileWriterInterface {
 
     @Override
     public void defineOrder(String[] order) {
-        this.order = order;
+        // Not aplicable 
+        // this.order = order;
     }
 
     private StringBuilder getEmptyLine(int length) {
