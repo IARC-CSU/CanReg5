@@ -877,13 +877,13 @@ public class Import {
                 }
                 reportWriter.write("Finished reading sources.\n\n");
                 reportWriter.flush();
+                csvReader.close();
             }
             task.firePropertyChange(SOURCES, 100, 100);
             task.firePropertyChange(PROGRESS, 100, 100);
             while (!task.isProgressPropertyValid()) {
                 // wait untill progress has been updated...
             }
-            csvReader.close();
             reportWriter.write("Finished\n");
             reportWriter.flush();
             success = true;
