@@ -575,7 +575,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 }//GEN-LAST:event_reportFileNameTextFieldFocusLost
 
     private void maxLinesTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maxLinesTextFieldMousePressed
-         MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(maxLinesTextField, evt);
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(maxLinesTextField, evt);
     }//GEN-LAST:event_maxLinesTextFieldMousePressed
 
     private void maxLinesTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maxLinesTextFieldMouseReleased
@@ -640,12 +640,21 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     @Action()
     public Task importAction() {
         // TODO: Add a handler for errors in the file structure...
-
+        if (overwriteRadioButton.isSelected()) {
+            // if the overwrite is selected, warn the user.
+            int result = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("THIS_MIGHT_DROP_DATA_IN_THE_DATABASE._REALLY_GO_AHEAD_WITH_OVERWRITE?"),
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("RELLY_OVERWRITE?"),
+                    JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.NO_OPTION) {
+                return null;
+            }
+        }
         // see if the report file already exists...
         File file = new File(reportFileNameTextField.getText());
         if (file.exists()) {
-            int result = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), 
-                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("THE_REPORT_FILE")+ file.getAbsolutePath() + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("ALREADY_EXISTS.")+" \n"+java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("DO_YOU_WANT_TO_OVERWRITE_IT?"),
+            int result = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("THE_REPORT_FILE") + file.getAbsolutePath() + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("ALREADY_EXISTS.") + " \n" + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("DO_YOU_WANT_TO_OVERWRITE_IT?"),
                     java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportFilesView").getString("REPORT_FILE_EXISTS._OVERWRITE?"),
                     JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.NO_OPTION) {
@@ -663,6 +672,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         progressBar.setStringPainted(true);
         importButton.setEnabled(false);
         // this.dispose();
+
         importTask = new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
         importTask.addPropertyChangeListener(new PropertyChangeListener() {
 
@@ -716,10 +726,10 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             variablesMap = buildMap();
 
             files = new File[]{
-                        patientPreviewFilePanel.getInFile(),
-                        tumourPreviewFilePanel.getInFile(),
-                        sourcePreviewFilePanel.getInFile()
-                    };
+                patientPreviewFilePanel.getInFile(),
+                tumourPreviewFilePanel.getInFile(),
+                sourcePreviewFilePanel.getInFile()
+            };
 
             io = buildImportOptions();
         }
