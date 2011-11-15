@@ -1,5 +1,35 @@
-changeset:   928:19182f048909
+changeset:   934:03fb2c4cabe0
 tag:         tip
+user:        ErvikM@X90164
+date:        Tue Nov 15 17:13:51 2011 +0100
+summary:     Added a warning message when using the "Overwrite" option during import.
+
+changeset:   933:e9ed044cd710
+user:        ErvikM@X90164
+date:        Tue Nov 15 17:13:22 2011 +0100
+summary:     Fixed a bug in the table builder where text instead of numbers in age, sex, morphology, topography etc would break the table instead of give a warning.
+
+changeset:   932:164d565e1fbb
+user:        ErvikM@X90164
+date:        Tue Nov 15 17:12:04 2011 +0100
+summary:     Fixed a bug in the topography/morphology check where too many rare cases were detected.
+
+changeset:   931:1c92f1eeb70d
+user:        ErvikM@X90164
+date:        Tue Nov 15 15:38:17 2011 +0100
+summary:     Added a warning message when using the "Overwrite" option during import.
+
+changeset:   930:563ab4c21969
+user:        ErvikM@X90164
+date:        Tue Nov 15 15:37:27 2011 +0100
+summary:     Fixed a bug where csvreader was attempted closed even when null.
+
+changeset:   929:a06567b28f21
+user:        ErvikM@X90164
+date:        Thu Nov 10 15:47:08 2011 +0100
+summary:     5.00.10
+
+changeset:   928:19182f048909
 user:        ErvikM@X90164
 date:        Thu Nov 10 15:39:46 2011 +0100
 summary:     Updated the French translation.

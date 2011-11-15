@@ -1,5 +1,11 @@
 Changelog
 
+5.00.11rc2
+- Fixed a bug in the topography/morphology check where too many rare cases were detected.
+- Fixed a bug in the table builder where text instead of numbers in age, sex, morphology, topography etc would break the table instead of give a warning.
+- Added a warning message when using the "Overwrite" option during import.
+- Fixed a bug where csvreader was attempted closed even when null.
+
 5.00.10
 - Implemented export facilities to get data in a fixed width file following the NAACR 1946 v11.3 format from CanReg to SEER*prep and then on to SEER*stat.
 - System editor GUI is now using tabs to split up variables, dictionaries, groups, etc...

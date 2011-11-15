@@ -165,8 +165,13 @@ public class CheckTopographyMorphology extends CheckInterface {
 
                 } else {
                     // -----------< entry not found on partial key  Test all the key
-
-                    result.setMessage("Fam.:" + morphologyFamilyString);
+                    String messageString = morphologyFamilyString;
+                    try {
+                        messageString = "" + (Integer.parseInt(morphologyFamilyString.substring(1)) + 1);
+                    } catch (NumberFormatException nfe) {
+                        messageString = morphologyFamilyString;
+                    }
+                    result.setMessage("Morpology ("+morphologyCode+") is in family " + messageString +", but topography is "+topographyCode+".");
                     result.setResultCode(CheckResult.ResultCode.Rare);
 
                     break;
@@ -181,10 +186,15 @@ public class CheckTopographyMorphology extends CheckInterface {
                 // Then we search for the 6 characters
                 String look1 = look.substring(0, mustNotkeyLength - 1) + "*";
                 if (lookUpMustNotMap.containsKey(look1)) {
-
-                    result.setMessage("Fam.:" + morphologyFamilyString);
+                    String messageString = morphologyFamilyString;
+                    try {
+                        messageString = "" + (Integer.parseInt(morphologyFamilyString.substring(1)) + 64);
+                    } catch (NumberFormatException nfe) {
+                        messageString = morphologyFamilyString;
+                    }
+                    result.setMessage("Morpology ("+morphologyCode+") is in family " + messageString +", but topography is "+topographyCode+".");
                     result.setResultCode(CheckResult.ResultCode.Rare);
-
+                    
                     break;
                     // Search for complete key
                     // There is not * in the key for example String key="68C420";
