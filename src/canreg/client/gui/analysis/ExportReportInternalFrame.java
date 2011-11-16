@@ -97,6 +97,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private int VARIABLE_NAME_STANDARD_INDEX = 3;
     private DatabaseVariablesListElement tumourIDdbvle;
     private String fileName;
+    
 
     /** Creates new form ExportFrame
      * @param dtp is a pointer to the current desktop pane.
@@ -880,7 +881,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     }
                 }
 
-                bw.write(line + "\n");
+                bw.write(line + Globals.newline);
                 line = new StringBuilder();
                 for (int row = 0; row < rowCount; row++) {
                     for (int column = 0; column < columnCount; column++) {
@@ -1014,7 +1015,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     if (row % 1000 == 0) {
                         System.gc();
                     }
-                    bw.write(line + "\n");
+                    bw.write(line + Globals.newline);
                     line.delete(0, line.length());
 
                 }

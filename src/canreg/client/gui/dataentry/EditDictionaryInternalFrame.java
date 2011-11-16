@@ -286,7 +286,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 bw = new BufferedWriter(new FileWriter(file));
 
                 for (DatabaseDictionaryListElement dbdle : dictionariesInDB) {
-                    bw.write("#" + dbdle.getDictionaryID() + "\t----" + dbdle.getName() + "\n");
+                    bw.write("#" + dbdle.getDictionaryID() + "\t----" + dbdle.getName() + Globals.newline);
                     // chooseDictionaryComboBox.setSelectedItem(dbdle);
                     // refreshSelectedDictionaryAction();
                     Dictionary dic = CanRegClientApp.getApplication().getDictionary().get(dbdle.getDictionaryID());
@@ -296,10 +296,10 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                         Iterator<Entry<String, DictionaryEntry>> iterator = map.entrySet().iterator();
                         while (iterator.hasNext()) {
                             DictionaryEntry entry = iterator.next().getValue();
-                            bw.write(entry.getCode() + "\t" + entry.getDescription() + "\n");
+                            bw.write(entry.getCode() + "\t" + entry.getDescription() + Globals.newline);
                         }
                     }
-                    bw.write("\n");
+                    bw.write(Globals.newline);
                 }
                 bw.flush();
                 bw.close();

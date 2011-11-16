@@ -216,7 +216,8 @@ public class Globals {
     public static final String morphologicalFamiliesLookUpFileResource = "/canreg/common/resources/lookup/MorphFam.txt";
     public static final String mustLookupFile= "/canreg/common/resources/lookup/Must.txt";
     public static final String mustNotLookupFile = "/canreg/common/resources/lookup/MustNot.txt";
-
+    public static String newline = System.getProperty("line.separator");
+    
     /**
      * 
      */

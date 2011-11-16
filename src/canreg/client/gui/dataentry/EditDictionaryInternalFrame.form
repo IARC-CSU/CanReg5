@@ -140,7 +140,7 @@
                       <Component id="chooseDictionaryComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="displayScrollPane" pref="418" max="32767" attributes="0"/>
+                  <Component id="displayScrollPane" pref="422" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="updateButton" alignment="3" min="-2" max="-2" attributes="0"/>
