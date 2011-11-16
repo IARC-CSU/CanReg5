@@ -420,7 +420,7 @@ public class Import {
             task.firePropertyChange(PROGRESS, 0, 0);
             task.firePropertyChange(PATIENTS, 0, 0);
             if (files[0] != null) {
-                reportWriter.write("Starting to import patients from " + files[0].getAbsolutePath() + "\n");
+                reportWriter.write("Starting to import patients from " + files[0].getAbsolutePath() + Globals.newline);
                 FileInputStream patientFIS = new FileInputStream(files[0]);
                 InputStreamReader patientISR = new InputStreamReader(patientFIS, io.getFileCharsets()[0]);
 
@@ -508,7 +508,7 @@ public class Import {
                                 String updateReport = updateRecord(oldPatient, patient);
                                 if (updateReport.length() > 0) {
                                     reportWriter.write(patient.getVariable(
-                                            io.getTumourIDVariablename()) + "\n" + updateReport);
+                                            io.getTumourIDVariablename()) + Globals.newline + updateReport);
                                 }
                                 oldPatientDatabaseRecordID = (Integer) oldPatient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
                                 patient = oldPatient;
@@ -520,7 +520,7 @@ public class Import {
                                 String overWriteReport = overwriteRecord(oldPatient, patient);
                                 if (overWriteReport.length() > 0) {
                                     reportWriter.write(patient.getVariable(
-                                            io.getTumourIDVariablename()) + "\n" + overWriteReport);
+                                            io.getTumourIDVariablename()) + Globals.newline + overWriteReport);
                                 }
                                 patient = oldPatient;
                                 savePatient = true;
@@ -561,7 +561,7 @@ public class Import {
                     }
                 }
                 csvReader.close();
-                reportWriter.write("Finished reading patients.\n\n");
+                reportWriter.write("Finished reading patients."+Globals.newline+Globals.newline);
                 reportWriter.flush();
             }
             task.firePropertyChange(PATIENTS, 100, 100);
@@ -570,7 +570,7 @@ public class Import {
             // then we get the tumours
             task.firePropertyChange(TUMOURS, 0, 0);
             if (files[1] != null) {
-                reportWriter.write("Starting to import tumours from " + files[1].getAbsolutePath() + "\n");
+                reportWriter.write("Starting to import tumours from " + files[1].getAbsolutePath() + Globals.newline);
 
                 FileInputStream tumourFIS = new FileInputStream(files[1]);
                 InputStreamReader tumourISR = new InputStreamReader(tumourFIS, io.getFileCharsets()[1]);
@@ -654,7 +654,7 @@ public class Import {
                             case ImportOptions.UPDATE:
                                 String updateReport = updateRecord(tumour2, tumour);
                                 if (updateReport.length() > 0) {
-                                    reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "\n" + updateReport);
+                                    reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + Globals.newline + updateReport);
                                 }
                                 tumour = tumour2;
                                 saveTumour = true;
@@ -725,12 +725,12 @@ public class Import {
                                 // message += "Cross-check conclusion: Valid";
                             } else {
 
-                                reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "\t" + message + "\n");
+                                reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "\t" + message + Globals.newline);
                                 // System.out.println(tumour.getVariable(io.getTumourIDVariablename()) + " " + message);
                             }
                             tumour.setVariable(io.getTumourCheckStatus(), CheckResult.toDatabaseVariable(worstResultCodeFound));
                         } else {
-                            reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "\t" + "No patient matches this Tumour." + "\n");
+                            reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "\t" + "No patient matches this Tumour." + Globals.newline);
                             tumour.setVariable(io.getTumourRecordStatus(), "0");
                             tumour.setVariable(io.getTumourCheckStatus(), CheckResult.toDatabaseVariable(ResultCode.Missing));
                         }
@@ -766,7 +766,7 @@ public class Import {
                     }
                 }
                 csvReader.close();
-                reportWriter.write("Finished reading tumours.\n\n");
+                reportWriter.write("Finished reading tumours."+Globals.newline+Globals.newline);
                 reportWriter.flush();
             }
             task.firePropertyChange(TUMOURS, 100, 100);
@@ -775,7 +775,7 @@ public class Import {
             task.firePropertyChange(SOURCES, 0, 0);
             task.firePropertyChange(PROGRESS, 66, 66);
             if (files[2] != null) {
-                reportWriter.write("Starting to import sources from " + files[2].getAbsolutePath() + "\n");
+                reportWriter.write("Starting to import sources from " + files[2].getAbsolutePath() + Globals.newline);
 
                 FileInputStream sourceFIS = new FileInputStream(files[2]);
                 InputStreamReader sourceISR = new InputStreamReader(sourceFIS, io.getFileCharsets()[2]);
@@ -875,7 +875,7 @@ public class Import {
                         throw new InterruptedException();
                     }
                 }
-                reportWriter.write("Finished reading sources.\n\n");
+                reportWriter.write("Finished reading sources."+Globals.newline+Globals.newline);
                 reportWriter.flush();
                 csvReader.close();
             }
@@ -884,7 +884,7 @@ public class Import {
             while (!task.isProgressPropertyValid()) {
                 // wait untill progress has been updated...
             }
-            reportWriter.write("Finished\n");
+            reportWriter.write("Finished"+Globals.newline);
             reportWriter.flush();
             success = true;
         } catch (IOException ex) {
