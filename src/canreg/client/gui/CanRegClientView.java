@@ -265,6 +265,7 @@ public final class CanRegClientView extends FrameView {
         jMenuItem5 = new javax.swing.JMenuItem();
         icdo3DocumentationWebsiteMenuItem = new javax.swing.JMenuItem();
         jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
         statusPanel = new javax.swing.JPanel();
         javax.swing.JSeparator statusPanelSeparator = new javax.swing.JSeparator();
@@ -593,6 +594,11 @@ public final class CanRegClientView extends FrameView {
         jMenuItem8.setName("jMenuItem8"); // NOI18N
         helpMenu.add(jMenuItem8);
 
+        jMenuItem9.setAction(actionMap.get("showChangeLogAction")); // NOI18N
+        jMenuItem9.setText(resourceMap.getString("jMenuItem9.text")); // NOI18N
+        jMenuItem9.setName("jMenuItem9"); // NOI18N
+        helpMenu.add(jMenuItem9);
+
         aboutMenuItem.setAction(actionMap.get("showAboutBox")); // NOI18N
         aboutMenuItem.setName("aboutMenuItem"); // NOI18N
         helpMenu.add(aboutMenuItem);
@@ -686,6 +692,11 @@ public final class CanRegClientView extends FrameView {
 
     public JDesktopPane getDesktopPane() {
         return desktopPane;
+    }
+
+    public void showChangeLog() {
+        Task task = showChangeLogAction();
+        task.run();
     }
 
     private class OpenICDO3ManualTask extends org.jdesktop.application.Task<Object, Void> {
@@ -1481,6 +1492,32 @@ public final class CanRegClientView extends FrameView {
             // the result computed by doInBackground().
         }
     }
+
+    @Action
+    public Task showChangeLogAction() {
+        return new ShowChangeLogActionTask(getApplication());
+    }
+
+    private class ShowChangeLogActionTask extends org.jdesktop.application.Task<Object, Void> {
+        ShowChangeLogActionTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to ShowChangeLogActionTask fields, here.
+            super(app);
+            ChangeLogInternalFrame internalFrame = new ChangeLogInternalFrame();
+            showAndPositionInternalFrame(desktopPane, internalFrame);
+        }
+        @Override protected Object doInBackground() {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+            return null;  // return your result
+        }
+        @Override protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;
@@ -1514,6 +1551,7 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;

@@ -107,6 +107,7 @@ public class Globals {
     static public String CANREG_UPDATED_INSTRUCTIONS_URL = "http://www.iacr.com.fr/CanReg5/CanReg5-instructions.pdf";
     static public String CANREG_UPDATED_INSTRUCTIONS_LOCAL_FILE = CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + "CanReg5-instructions.pdf";
     static public String CANREG_INSTRUCTIONS_LOCAL_FILE = "CanReg5-instructions.pdf";
+    public static String CANREG_CHANGELOG_URL = "http://www.iacr.com.fr/CanReg5/changelog.txt";
     /**
      * 
      */
@@ -217,6 +218,7 @@ public class Globals {
     public static final String mustLookupFile= "/canreg/common/resources/lookup/Must.txt";
     public static final String mustNotLookupFile = "/canreg/common/resources/lookup/MustNot.txt";
     public static String newline = System.getProperty("line.separator");
+
     
     /**
      * 

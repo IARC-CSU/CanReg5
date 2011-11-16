@@ -29,7 +29,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="tabbedPane" alignment="1" pref="424" max="32767" attributes="0"/>
+                  <Component id="tabbedPane" alignment="1" pref="482" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jButton2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -44,7 +44,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="278" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="282" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -114,7 +114,7 @@
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="111" max="32767" attributes="0"/>
+                      <EmptySpace pref="115" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -142,7 +142,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="fontSizeLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="fontSizeComboBox" pref="316" max="32767" attributes="0"/>
+                          <Component id="fontSizeComboBox" pref="374" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -271,7 +271,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="automaticBackupPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="141" max="32767" attributes="0"/>
+                      <EmptySpace pref="145" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -297,7 +297,7 @@
                               <Group type="102" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="automaticbackupCheckBox" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="141" max="32767" attributes="0"/>
+                                  <EmptySpace pref="199" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
@@ -416,7 +416,7 @@
                       <Component id="versionPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lookAndFeelPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="66" max="32767" attributes="0"/>
+                      <EmptySpace pref="69" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -447,17 +447,14 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="downloadLatestButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace pref="47" max="32767" attributes="0"/>
+                                  <Component id="downloadLatestButton1" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="latestVersionTextField" pref="181" max="32767" attributes="1"/>
-                                      <Component id="versionInstalledTextField" alignment="1" pref="181" max="32767" attributes="1"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="checkButton" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="latestVersionTextField" alignment="1" pref="239" max="32767" attributes="1"/>
+                              <Component id="versionInstalledTextField" alignment="1" pref="239" max="32767" attributes="1"/>
                           </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="checkButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -474,8 +471,11 @@
                               <Component id="checkButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="latestVersionTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="downloadLatestButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="7" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="downloadLatestButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="downloadLatestButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -535,6 +535,22 @@
                     <Property name="name" type="java.lang.String" value="checkButton" noResource="true"/>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JButton" name="downloadLatestButton1">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.management.OptionsFrame" id="viewChangeLogAction" methodName="viewChangeLogAction"/>
+                    </Property>
+                    <Property name="foreground" type="java.awt.Color" resourceKey="downloadLatestButton1.foreground"/>
+                    <Property name="text" type="java.lang.String" resourceKey="downloadLatestButton1.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="downloadLatestButton1.toolTipText"/>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="null"/>
+                    </Property>
+                    <Property name="borderPainted" type="boolean" value="false"/>
+                    <Property name="contentAreaFilled" type="boolean" value="false"/>
+                    <Property name="name" type="java.lang.String" value="downloadLatestButton1" noResource="true"/>
+                  </Properties>
+                </Component>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="lookAndFeelPanel">
@@ -555,7 +571,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="showOutlineCheckBox" pref="371" max="32767" attributes="0"/>
+                          <Component id="showOutlineCheckBox" pref="429" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -610,7 +626,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="rPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="186" max="32767" attributes="0"/>
+                      <EmptySpace pref="190" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -634,7 +650,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="rInstallationLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="rInstallationTextField" pref="264" max="32767" attributes="0"/>
+                          <Component id="rInstallationTextField" pref="322" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="rInstallationBrowseButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
