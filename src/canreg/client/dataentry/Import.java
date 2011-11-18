@@ -914,6 +914,7 @@ public class Import {
                 }
             }
         }
+        task.firePropertyChange(PROGRESS, 100, 100);        
         task.firePropertyChange("finished", null, null);
         return success;
     }

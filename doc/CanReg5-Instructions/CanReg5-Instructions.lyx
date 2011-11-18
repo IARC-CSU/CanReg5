@@ -5042,6 +5042,11 @@ As well as performing these checks, this function also determines the ICD-10
  code derived from the ICD-O Topography and Morphology.
 \end_layout
 
+\begin_layout Standard
+For more information on these checks please see: http://www.iacr.com.fr/TechRep42-M
+Prules.pdf
+\end_layout
+
 \begin_layout Subsection
 Person search
 \begin_inset Index
