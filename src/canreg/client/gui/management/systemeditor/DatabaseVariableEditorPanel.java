@@ -32,8 +32,14 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import org.jdesktop.application.Action;
 
 /**
@@ -127,6 +133,23 @@ public class DatabaseVariableEditorPanel extends javax.swing.JPanel {
         fillInStatusComboBox.setName("fillInStatusComboBox"); // NOI18N
 
         shortNameTextField.setText(resourceMap.getString("shortNameTextField.text")); // NOI18N
+        shortNameTextField.setInputVerifier(new InputVerifier() {
+
+            @Override
+            public boolean verify(JComponent input) {
+                JTextField tf = (JTextField) input;
+                String textToVerify = tf.getText();
+                Pattern p = Pattern.compile("(^[\\w]+$)");
+                Matcher m = p.matcher(textToVerify);
+                if (m.matches()) {
+                    tf.setText(textToVerify);
+                    return true;
+                } else {
+                    JOptionPane.showMessageDialog(input, "Invalid short name (No special character, whitespace, ., ;, :, (, ), etc allowed - only word characters [a-zA-Z_0-9].)");
+                    return false;
+                }
+            }
+        });
         shortNameTextField.setName("shortNameTextField"); // NOI18N
 
         englishNameTextField.setText(resourceMap.getString("englishNameTextField.text")); // NOI18N
@@ -150,12 +173,29 @@ public class DatabaseVariableEditorPanel extends javax.swing.JPanel {
         variableLengthLabel.setName("variableLengthLabel"); // NOI18N
 
         variableLengthTextField.setText(resourceMap.getString("variableLengthTextField.text")); // NOI18N
+        variableLengthTextField.setInputVerifier(new InputVerifier() {
+
+            @Override
+            public boolean verify(JComponent input) {
+                try {
+                    Integer.parseInt(variableLengthTextField.getText().trim());
+
+                    int length = Integer.parseInt(variableLengthTextField.getText());
+                    if (length <= 0) {
+                        JOptionPane.showInternalMessageDialog(variableLengthTextField,
+                            "Variable length should greater than 0.");
+                        return false;
+                    } else {
+                        return true;
+                    }
+
+                } catch (NumberFormatException nfe) {
+                    JOptionPane.showInternalMessageDialog(variableLengthTextField, nfe);
+                    return false;
+                }
+            }}
+        );
         variableLengthTextField.setName("variableLengthTextField"); // NOI18N
-        variableLengthTextField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                variableLengthTextFieldFocusLost(evt);
-            }
-        });
 
         dictionaryLabel.setText(resourceMap.getString("dictionaryLabel.text")); // NOI18N
         dictionaryLabel.setEnabled(false);
@@ -280,20 +320,6 @@ public class DatabaseVariableEditorPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_fullNameTextFieldFocusLost
 
-    private void variableLengthTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_variableLengthTextFieldFocusLost
-        try {
-            Integer.parseInt(variableLengthTextField.getText());
-
-            int length = Integer.parseInt(variableLengthTextField.getText());
-            if (length <= 0) {
-                JOptionPane.showInternalMessageDialog(this,
-                        "Variable length should greater than 0.");
-            }
-
-        } catch (NumberFormatException nfe) {
-            JOptionPane.showInternalMessageDialog(this, nfe);
-        }
-    }//GEN-LAST:event_variableLengthTextFieldFocusLost
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox dictionaryComboBox;
     private javax.swing.JLabel dictionaryLabel;

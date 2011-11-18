@@ -194,6 +194,9 @@
     <Component class="javax.swing.JTextField" name="shortNameTextField">
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="shortNameTextField.text"/>
+        <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new InputVerifier() {&#xa;&#xa;    @Override&#xa;    public boolean verify(JComponent input) {&#xa;        JTextField tf = (JTextField) input;&#xa;        String textToVerify = tf.getText();&#xa;        Pattern p = Pattern.compile(&quot;(^[\\w]+$)&quot;);&#xa;        Matcher m = p.matcher(textToVerify);&#xa;        if (m.matches()) {&#xa;            tf.setText(textToVerify);&#xa;            return true;&#xa;        } else {&#xa;            JOptionPane.showMessageDialog(input, &quot;Invalid short name (No special character, whitespace, ., ;, :, (, ), etc allowed - only word characters [a-zA-Z_0-9].)&quot;);&#xa;            return false;&#xa;        }&#xa;    }&#xa;}" type="code"/>
+        </Property>
         <Property name="name" type="java.lang.String" value="shortNameTextField" noResource="true"/>
       </Properties>
     </Component>
@@ -253,11 +256,11 @@
     <Component class="javax.swing.JTextField" name="variableLengthTextField">
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="variableLengthTextField.text"/>
+        <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new InputVerifier() {&#xa;&#xa;    @Override&#xa;    public boolean verify(JComponent input) {&#xa;        try {&#xa;            Integer.parseInt(variableLengthTextField.getText().trim());&#xa;&#xa;            int length = Integer.parseInt(variableLengthTextField.getText());&#xa;            if (length &lt;= 0) {&#xa;                JOptionPane.showInternalMessageDialog(variableLengthTextField,&#xa;                    &quot;Variable length should greater than 0.&quot;);&#xa;                return false;&#xa;            } else {&#xa;                return true;&#xa;            }&#xa;&#xa;        } catch (NumberFormatException nfe) {&#xa;            JOptionPane.showInternalMessageDialog(variableLengthTextField, nfe);&#xa;            return false;&#xa;        }&#xa;    }}&#xa;    " type="code"/>
+        </Property>
         <Property name="name" type="java.lang.String" value="variableLengthTextField" noResource="true"/>
       </Properties>
-      <Events>
-        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="variableLengthTextFieldFocusLost"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="dictionaryLabel">
       <Properties>
