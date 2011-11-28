@@ -5977,18 +5977,45 @@ There are two main reasons for doing this:
 \end_layout
 
 \begin_layout Itemize
-To be able to Import the file into another computer program (e.g.
- Microsoft's "Excel" or "Access") for further analysis.
+To be able to 
+\emph on
+import
+\emph default
+ the file into another program (e.g.
+ 
+\emph on
+Stata
+\emph default
+, 
+\emph on
+SPSS
+\emph default
+, a general spreadsheet like 
+\emph on
+Excel
+\emph default
+ or 
+\emph on
+Calc
+\emph default
+ or 
+\emph on
+Access
+\emph default
+) for further analysis.
 \end_layout
 
 \begin_layout Itemize
-To produce a report, or case listing, that could be read into "Word" and
- printed out.
+To produce a report, or case listing, that could be read into 
+\emph on
+Word
+\emph default
+ and printed out.
 \end_layout
 
 \begin_layout Standard
 \align left
-To export your data go to Analysis -- Export Data/Reports:
+To export your data go to Analysis -> Export Data/Reports:
 \end_layout
 
 \begin_layout Standard
@@ -6060,14 +6087,14 @@ reference "sub:ExportVariablesSelector"
 \end_layout
 
 \begin_layout Itemize
-Tick the Titles(?)/Variable headers to include.
+Choose the Variable headers to include.
 \end_layout
 
 \begin_layout Itemize
-Choose the File Style(
+Choose the File Format (
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:Export-file-style"
+reference "sub:Export-file-format"
 
 \end_inset
 
@@ -6095,14 +6122,14 @@ Options
 \end_layout
 
 \begin_layout Subsection
-Export file style
+Export file format
 \begin_inset Index
 status open
 
 \begin_layout Plain Layout
 
 \series medium
-export file style
+export file format
 \end_layout
 
 \end_inset
@@ -6110,7 +6137,7 @@ export file style
 
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:Export-file-style"
+name "sub:Export-file-format"
 
 \end_inset
 
@@ -6118,20 +6145,12 @@ name "sub:Export-file-style"
 \end_layout
 
 \begin_layout Standard
-All file styles produce text files, with a new line at the end of each case.
-\end_layout
-
-\begin_layout Standard
-They all have default extension .TXT except for "Comma Separated Variable",
+All file formats produce text files, with one case per line (a new line
+ at the end of each case).
+ They all have default extension .TXT except for "Comma Separated Variable",
  which has .CSV.
-\end_layout
-
-\begin_layout Standard
-"Tab Delimited" writes each variable separated by the TAB character.
-\end_layout
-
-\begin_layout Standard
-"Comma Separated Variables" encloses each variable in quotes, and separates
+ "Tab Delimited" writes each variable separated by the TAB character.
+ "Comma Separated Values" encloses each variable in quotes, and separates
  by a comma.
 \end_layout
 
@@ -6145,7 +6164,19 @@ Tab Separated
 \begin_inset Quotes erd
 \end_inset
 
- file you can open this in general spreadsheets (like Excel).
+ or a 
+\begin_inset Quotes eld
+\end_inset
+
+Comma Separated
+\begin_inset Quotes erd
+\end_inset
+
+ file you can open this in general spreadsheets (like 
+\emph on
+Excel
+\emph default
+).
 \end_layout
 
 \begin_layout Subsection
@@ -6194,19 +6225,20 @@ Titles
 \end_layout
 
 \begin_layout Standard
-will write at the top of your export file:
+Will write at the top of your export file:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
 the filter criteria, index and ranges used,
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
 today's date.
 \end_layout
 
 \begin_layout Standard
 This option is useful is you are writing a report, or case listing.
+ (Not yet implemented.)
 \end_layout
 
 \begin_layout Subsubsection
@@ -6214,12 +6246,16 @@ Short variable name
 \end_layout
 
 \begin_layout Standard
-puts the abbreviated names of the variables at the top of each column.
-\end_layout
-
-\begin_layout Standard
-If this file were imported into "Microsoft Access" then these would automaticall
-y become the names of the variables in Access.
+Puts the abbreviated names of the variables at the top of each column.
+ (If this file were imported into, for example
+\emph on
+ Access
+\emph default
+ or 
+\emph on
+R 
+\emph default
+then these would automatically become the names of the variables.)
 \end_layout
 
 \begin_layout Subsubsection
@@ -6227,7 +6263,7 @@ Long Variable name
 \end_layout
 
 \begin_layout Standard
-writes the full name of the variable at the top of each column.
+Writes the full name of the variable at the top of each column.
 \end_layout
 
 \begin_layout Subsection
@@ -6265,11 +6301,10 @@ variables to export
 \end_layout
 
 \begin_layout Standard
-Click on the variable name to select (or deselect).
-\end_layout
-
-\begin_layout Standard
-They will appear in the data grid after you have clicked refresh table.
+Tick the boxes next to the variable name to select (or deselect).
+ They will appear in the data grid after you have clicked refresh table.
+ (Note that even though you select to export the category names or descriptions
+ they only show up as codes in the preview window.)
 \end_layout
 
 \begin_layout Standard
@@ -6319,11 +6354,13 @@ correct unknown
 \end_inset
 
 " so that unknown day will be written as "01" and unknown month as "07".
-\end_layout
-
-\begin_layout Standard
-This is necessary if you wish to import the data into Excel, or any other
- software that will reject invalid dates.
+ This is necessary if you wish to import the data into 
+\emph on
+Excel
+\emph default
+, or any other software that will reject invalid dates.
+ (Please note that you lose information on what dates are unknown and what
+ dates are really mid-year.)
 \end_layout
 
 \begin_layout Subsection
@@ -6392,16 +6429,46 @@ incidence tables
 \end_inset
 
  etc in CanReg.
- You find it under analysis -- table builder.
+ You find it under analysis --> table builder.
  
 \end_layout
 
 \begin_layout Standard
 \align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename 40.png
 	width 4.07292in
 	height 1.57292in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Table-builder-in-the-menu"
+
+\end_inset
+
+Table builder in the menu.
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -6415,24 +6482,7 @@ Example
 \begin_layout Standard
 \align left
 When you start it you first choose the type of table you want to produce.
- (Please note that it is only the Incidence per 100,000 by age group (period)
- and the Population pyramid
-\begin_inset Index
-status open
-
-\begin_layout Plain Layout
-population pyramid
-\end_layout
-
-\end_inset
-
- that is implemented so far\SpecialChar \ldots{}
-)
-\end_layout
-
-\begin_layout Standard
-\align left
-Example
+ (Please note that not all the tables in the list has been implemented.)
 \end_layout
 
 \begin_layout Standard
@@ -6445,7 +6495,7 @@ Pick Incidence per 100,000 by age group (Period):
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -6477,17 +6527,13 @@ Table builder
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-The incidence rate is defined as
+The incidence rate is defined as:
 \end_layout
 
 \begin_layout Standard
@@ -6521,10 +6567,41 @@ Click on range to set the range of your analysis and set it to match the
 
 \begin_layout Standard
 \align center
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename 42.png
 	width 5.02083in
 	height 4.125in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:The-range-chooser"
+
+\end_inset
+
+The range chooser.
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -6581,7 +6658,6 @@ reference "fig:The-population-dataset"
 \end_inset
 
 .
- 
 \end_layout
 
 \begin_layout Standard
@@ -6590,7 +6666,7 @@ reference "fig:The-population-dataset"
 placement h
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -6700,10 +6776,6 @@ File formats selector
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
@@ -6732,7 +6804,11 @@ reference "sub:Tables"
 \end_inset
 
 .) files the tables will be displayed after you press OK.
- 
+ (You might have to go to the Orientation menu in 
+\emph on
+GSView
+\emph default
+ and choose Portrait to get the table in the proper orientation.)
 \end_layout
 
 \begin_layout Standard
@@ -6768,10 +6844,6 @@ Incidence Rates per 100.000
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -6896,10 +6968,6 @@ CanReg5 chart editor
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -7080,10 +7148,6 @@ SEER*Prep in action
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -7425,6 +7489,7 @@ filter
 \align center
 \begin_inset Graphics
 	filename frequenciesbyyear.png
+	width 100col%
 
 \end_inset
 
@@ -7488,7 +7553,11 @@ CSV
 
 \end_inset
 
-) that can be opened in most porgrams (Excel
+) that can be opened in most porgrams (
+\emph on
+Excel
+\emph default
+
 \begin_inset Index
 status open
 
@@ -7498,7 +7567,11 @@ Excel
 
 \end_inset
 
-, Stata
+, 
+\emph on
+Stata
+\emph default
+
 \begin_inset Index
 status open
 
@@ -7508,7 +7581,11 @@ Stata
 
 \end_inset
 
-, R
+, 
+\emph on
+R
+\emph default
+
 \begin_inset Index
 status open
 
@@ -7523,7 +7600,11 @@ R
 
 \begin_layout Standard
 \align left
-The table can also be selected and copied and pasted into Excel
+The table can also be selected and copied and pasted into 
+\emph on
+Excel
+\emph default
+
 \begin_inset Index
 status open
 
@@ -7752,6 +7833,58 @@ if re-installing on a new computer, or
 
 \begin_layout Itemize
 recovering from a lost or damaged computer situation.
+\end_layout
+
+\begin_layout Standard
+There are two ways to do this.
+ The easiest one is to use the tool 
+\begin_inset Quotes eld
+\end_inset
+
+Install new system
+\begin_inset Quotes erd
+\end_inset
+
+ that we have access to when CanReg launches.
+\end_layout
+
+\begin_layout Subsubsection
+Restore with 
+\begin_inset Quotes eld
+\end_inset
+
+Install new system
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Click 
+\begin_inset Quotes eld
+\end_inset
+
+Install new system
+\begin_inset Quotes erd
+\end_inset
+
+ and browse to the XML file describing this system and click Open.
+ If this is part of a backup CanReg will tell you that a backup has been
+ detected and asks you if you want to restore this.
+ Click yes and it will restore this.
+\end_layout
+
+\begin_layout Subsubsection
+Restore with 
+\begin_inset Quotes eld
+\end_inset
+
+Restore from backup
+\begin_inset Quotes erd
+\end_inset
+
+-tool
 \end_layout
 
 \begin_layout Standard

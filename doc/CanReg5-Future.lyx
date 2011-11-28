@@ -114,11 +114,29 @@ Database related
 \end_layout
 
 \begin_layout Itemize
+Move XML to the database so that we no longer have mismatch.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+During backup we export it.
+\end_layout
+
+\begin_layout Itemize
+During start up of server we first get the XML from the server.
+\end_layout
+
+\begin_layout Itemize
+Stored as a BLOB?
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
 Better database connection security.
 \end_layout
 
 \begin_layout Itemize
-Move deprecated cases to a different table.
+Move deprecated cases to a different table?
 \end_layout
 
 \begin_layout Itemize
@@ -181,25 +199,14 @@ Improve person search
 
 \begin_deeper
 \begin_layout Itemize
-Dedicated merge patient interface by clicking 
-\begin_inset Quotes eld
-\end_inset
-
-compare
-\begin_inset Quotes erd
-\end_inset
-
-
+Look into using the Duke library.
 \end_layout
 
 \begin_layout Itemize
-Highlight differences between records
+Improve the dedicated merge patient interface.
 \end_layout
 
-\begin_layout Itemize
-Accept all (without looking) after a search run?
-\end_layout
-
+\begin_deeper
 \begin_layout Itemize
 A table is displayed, where the top line contains the original record you
  are editing, and other lines contain possible matches.
@@ -213,6 +220,15 @@ A table is displayed, where the top line contains the original record you
  updated, and delete the other.
  In the case of Multiples, both records are kept, and the MP sequence and
  total boxes are automatically filled in.
+\end_layout
+
+\begin_layout Itemize
+Highlight differences between records.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Accept all (without looking) after a search run?
 \end_layout
 
 \end_deeper
@@ -278,10 +294,84 @@ Possibility to change the path of the database/other system variables.
 Variables grouped by table/on screen group
 \end_layout
 
+\begin_layout Itemize
+Migration wizard:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Ask user to export data from CanReg.
+\end_layout
+
+\begin_layout Itemize
+Ask user to export dictionary from CanReg.
+\end_layout
+
+\begin_layout Itemize
+Ask user to find the system definition file.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Convert it and ask if the user would like to optionally change some elements
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Import the dictionary.
+\end_layout
+
+\begin_layout Itemize
+Take backup.
+ (Make copy as empty.)
+\end_layout
+
+\begin_layout Itemize
+Offer to import population dataset.
+\end_layout
+
+\begin_layout Itemize
+Take backup.
+\end_layout
+
+\begin_layout Itemize
+Import the data.
+\end_layout
+
+\begin_layout Itemize
+Take backup.
+\end_layout
+
+\end_deeper
 \begin_layout Section*
 Pending bugs
 \end_layout
 
+\begin_layout Itemize
+Import bugs should not break import when 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+unclosed double quotes
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+empty lines
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+lines with too few elements 
+\end_layout
+
+\end_deeper
 \begin_layout Part*
 \begin_inset Newpage pagebreak
 \end_inset
