@@ -47,7 +47,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="440" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="444" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -123,8 +123,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="previewImageLabel" pref="242" max="32767" attributes="0"/>
-                          <Component id="descriptionScrollPane" alignment="0" pref="242" max="32767" attributes="0"/>
+                          <Component id="previewImageLabel" pref="246" max="32767" attributes="0"/>
+                          <Component id="descriptionScrollPane" alignment="0" pref="246" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -261,7 +261,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="warningLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="292" max="32767" attributes="0"/>
+                      <EmptySpace pref="296" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -366,7 +366,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="370" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="374" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -434,7 +434,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="rangeFilterPanel" pref="390" max="32767" attributes="0"/>
+                      <Component id="rangeFilterPanel" pref="394" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -480,6 +480,7 @@
                           <Component id="tabulatedButton" alignment="0" pref="474" max="32767" attributes="0"/>
                           <Component id="svgButton" alignment="0" pref="474" max="32767" attributes="0"/>
                           <Component id="imageButton" alignment="1" pref="474" max="32767" attributes="0"/>
+                          <Component id="csvButton" alignment="0" pref="474" max="32767" attributes="0"/>
                           <Component id="chartViewerButton" alignment="0" pref="474" max="32767" attributes="0"/>
                           <Component id="seerPrepButton" alignment="0" pref="474" max="32767" attributes="0"/>
                       </Group>
@@ -508,10 +509,12 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="tabulatedButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="csvButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="chartViewerButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="seerPrepButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="149" max="32767" attributes="0"/>
+                      <EmptySpace pref="124" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -622,6 +625,16 @@
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="seerPrepButton.text"/>
                 <Property name="name" type="java.lang.String" value="seerPrepButton" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="csvButton">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateCSV" methodName="generateCSV"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="csvButton.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="csvButton.toolTipText"/>
+                <Property name="name" type="java.lang.String" value="csvButton" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>

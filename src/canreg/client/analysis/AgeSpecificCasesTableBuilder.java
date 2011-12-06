@@ -20,15 +20,16 @@
  */
 package canreg.client.analysis;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import canreg.common.Globals;
 import canreg.common.database.AgeGroupStructure;
 import canreg.common.database.PopulationDataset;
 import java.util.LinkedList;
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.io.File;
-import java.io.PrintStream;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +44,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
         Globals.StandardVariableNames.Behaviour,
         Globals.StandardVariableNames.BasisDiagnosis};
     private static FileTypes[] fileTypesGenerated = {
-        FileTypes.ps
+        FileTypes.ps, FileTypes.csv
     };
     private static int YEAR_COLUMN = 0;
     private static int SEX_COLUMN = 1;
@@ -81,7 +82,6 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
         double tableFontSize = 7.5;
         String font = "Times";
 
-        boolean reportToFile = true;
         int[] years = {startYear, endYear};
 
         double casesArray[][][] = null; // a 3D array of sex, icd and agegroup - with one extra layer in all dimensions containing a sum of all
@@ -315,7 +315,6 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                                 icdIndex = myelodysplasticSyndromesCancerGroupIndex;
                             }
                         }
-
                     }
 
                     yearString = line[YEAR_COLUMN].toString();
@@ -629,30 +628,6 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
 
         ASRf = new char[numberOfSexes][numberOfCancerGroups];
 
-        // Writing
-        System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString("WRITING DATA..."));
-
-        PrintStream reportStream = new PrintStream(System.out);
-        File reportFile;
-
-        if (reportToFile) {
-            String tabReportFileName = reportFileName + ".tab";
-            try {
-                reportFile = new File(tabReportFileName);
-                reportStream = new PrintStream(tabReportFileName);
-                System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString("WRITING TO ") + tabReportFileName);
-
-                // write tab separated stuff here
-
-                reportStream.flush();
-                reportStream.close();
-            } catch (IOException ioe) {
-                System.out.println("Error in reportfile: " + tabReportFileName);
-                reportStream = new PrintStream(System.out);
-            }
-
-        }
-
         // Adjust the age labels
         ageLabel[1] = "0-";
         ageLabel[highestPopulationAgeGroup] = ageLabel[highestPopulationAgeGroup].substring(0,
@@ -663,186 +638,363 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
         nf.setMaximumFractionDigits(1);
         nf.setMinimumFractionDigits(1);
 
-        // Make PS-file
+        Writer reportFileWriter;
 
-        for (int sexNumber = 0; sexNumber < numberOfSexes - 1; sexNumber++) {
-            String psFileName = reportFileName + "-" + sexLabel[sexNumber] + ".ps";
-            generatedFiles.add(psFileName);
-            try {
-                FileWriter fw = new FileWriter(psFileName);
-                nf.setMaximumFractionDigits(1);
-                nf.setMinimumFractionDigits(1);
+        if (fileType.equals(FileTypes.csv)) {
+            // write tab separated stuff here
+            CSVWriter csvOut;
+            for (int sexNumber = 0; sexNumber < numberOfSexes - 1; sexNumber++) {
+                String tabReportFileName = "";
+                try {
+                    tabReportFileName = reportFileName + sexLabel[sexNumber] + ".tsv";
+                    System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("WRITING TO ") + tabReportFileName);
+                    reportFileWriter = new FileWriter(tabReportFileName);
+                } catch (IOException ioe) {
+                    System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("ERROR IN REPORTFILE: ") + tabReportFileName);
+                    reportFileWriter = new OutputStreamWriter(System.out);
+                }
+                // reportStream = new PrintStream(tabReportFileName);
+                csvOut = new CSVWriter(reportFileWriter, '\t');
+                // write the header line
+                LinkedList<String> line = new LinkedList<String>();
+                line.add("SITE");
+                line.add("ALL AGES");
+                line.add("AGE UNK");
+                // add age groups
 
-                fw.write("/RLT {rlineto} def\n");
-                fw.write("/LT {lineto} def\n");
-                fw.write("/MT {moveto} def\n");
-                fw.write("/SCF {scalefont} def\n");
-                fw.write("/SF {setfont} def\n");
-                fw.write("/SG {setgray} def\n");
-                fw.write("/FF {findfont} def\n");
-                fw.write("/SLW {setlinewidth} def\n");
-                fw.write("/CP {closepath} def\n");
-                fw.write("/Mainfont\n");
-                fw.write("/Helvetica-Bold FF " + (int) (tableFontSize * 2 - 3) + " SCF def\n");
-                fw.write("/Titlefont\n");
-                fw.write("/Helvetica FF " + tableFontSize + " SCF def\n");
-                fw.write("/Tablefont\n");
-                fw.write("/" + font + " FF " + tableFontSize + " SCF def\n");
-                fw.write("/ASRfont\n");
-                fw.write("/" + font + "-Bold FF " + tableFontSize + " SCF def\n");
-                fw.write("/ICDfont\n");
-                fw.write("/" + font + "-Italic FF " + tableFontSize + " SCF def\n");
-                fw.write("/ASRitalicsfont\n");
-                fw.write("/" + font + "-Italic-Bold FF " + tableFontSize + " SCF def\n");
-                fw.write("/col 735 def\n");
-                fw.write(
-                        "/RS {dup stringwidth pop col exch sub 0 rmoveto show} def\n");
-                fw.write(
-                        "/CS {dup stringwidth pop 810 exch sub 2 div 0 rmoveto show} def\n");
-                fw.write("/nstr 1 string def\n");
-                fw.write("/prtchar {nstr 0 3 -1 roll put nstr show} def\n");
-                fw.write("newpath\n");
-                fw.write("90 rotate -20 -570 translate\n"); //  Landscape
-                fw.write("Mainfont SF\n");
-                fw.write("0 535 MT (" + registryLabel + ") CS\n");
-                fw.write("Titlefont SF\n");
-                fw.write("0 525 MT (" + populationString + ") CS\n");
-                fw.write("0 513 MT (" + tableLabel[0] + " - " + sexLabel[sexNumber] + ") CS\n");
+                for (int age = 1; age <= highestPopulationAgeGroup; age++) {
+                    line.add(ageLabel[age]);
+                }
+
+                line.add("CRUDE RATE");
+                line.add("(%)");
+                line.add("CUM 0-64");
+                line.add("CUM 0-74");
+                line.add("ASR");
+                line.add("ICD (10th)");
+                csvOut.writeNext(line.toArray(new String[0]));
+                line.clear();
+
+                // write the data
+                for (int j = 0; j < numberOfCancerGroups; j++) {
+                    if (icdLabel[j].charAt(sexNumber) == '1') {
+                        line.add(icdLabel[j].substring(3));
+                        line.add(formatNumber(totalCasesPerHundredThousand[sexNumber][j], 0));
+                        line.add(formatNumber(casesArray[j][sexNumber][unknownAgeGroupIndex], 0));
+                        for (int age = 1; age <= highestPopulationAgeGroup; age++) {
+                            if (casesArray[j][sexNumber][age] > 0) {
+                                line.add(formatNumber(casesArray[j][sexNumber][age], 0));
+                            } else {
+                                line.add("0");
+                            }
+                        }
+                        line.add(formatNumber(crudeRate[sexNumber][j], 2));
+                        line.add(formatNumber(100 * totalCasesPerHundredThousand[sexNumber][j] / totalCasesPerHundredThousand[sexNumber][allCancerGroupsButSkinIndex]));
+                        line.add(formatNumber(cumRate64[sexNumber][j], 2));
+                        line.add(formatNumber(cumRate74[sexNumber][j], 2));
+                        line.add(formatNumber(ASR[sexNumber][j]));
+                        line.add(icd10GroupDescriptions[j]);
+                        csvOut.writeNext(line.toArray(new String[0]));
+                        line.clear();
+                    }
+                }
+
+                try {
+                    csvOut.flush();
+                    csvOut.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(AgeSpecificCasesPerHundredThousandTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                generatedFiles.add(tabReportFileName);
+            }
+        } else {
+
+            // Make PS-file
+
+            for (int sexNumber = 0; sexNumber < numberOfSexes - 1; sexNumber++) {
+                String psFileName = reportFileName + "-" + sexLabel[sexNumber] + ".ps";
+                generatedFiles.add(psFileName);
+                try {
+                    FileWriter fw = new FileWriter(psFileName);
+                    nf.setMaximumFractionDigits(1);
+                    nf.setMinimumFractionDigits(1);
+
+                    fw.write("/RLT {rlineto} def\n");
+                    fw.write("/LT {lineto} def\n");
+                    fw.write("/MT {moveto} def\n");
+                    fw.write("/SCF {scalefont} def\n");
+                    fw.write("/SF {setfont} def\n");
+                    fw.write("/SG {setgray} def\n");
+                    fw.write("/FF {findfont} def\n");
+                    fw.write("/SLW {setlinewidth} def\n");
+                    fw.write("/CP {closepath} def\n");
+                    fw.write("/Mainfont\n");
+                    fw.write("/Helvetica-Bold FF " + (int) (tableFontSize * 2 - 3) + " SCF def\n");
+                    fw.write("/Titlefont\n");
+                    fw.write("/Helvetica FF " + tableFontSize + " SCF def\n");
+                    fw.write("/Tablefont\n");
+                    fw.write("/" + font + " FF " + tableFontSize + " SCF def\n");
+                    fw.write("/ASRfont\n");
+                    fw.write("/" + font + "-Bold FF " + tableFontSize + " SCF def\n");
+                    fw.write("/ICDfont\n");
+                    fw.write("/" + font + "-Italic FF " + tableFontSize + " SCF def\n");
+                    fw.write("/ASRitalicsfont\n");
+                    fw.write("/" + font + "-Italic-Bold FF " + tableFontSize + " SCF def\n");
+                    fw.write("/col 735 def\n");
+                    fw.write(
+                            "/RS {dup stringwidth pop col exch sub 0 rmoveto show} def\n");
+                    fw.write(
+                            "/CS {dup stringwidth pop 810 exch sub 2 div 0 rmoveto show} def\n");
+                    fw.write("/nstr 1 string def\n");
+                    fw.write("/prtchar {nstr 0 3 -1 roll put nstr show} def\n");
+                    fw.write("newpath\n");
+                    fw.write("90 rotate -20 -570 translate\n"); //  Landscape
+                    fw.write("Mainfont SF\n");
+                    fw.write("0 535 MT (" + registryLabel + ") CS\n");
+                    fw.write("Titlefont SF\n");
+                    fw.write("0 525 MT (" + populationString + ") CS\n");
+                    fw.write("0 513 MT (" + tableLabel[0] + " - " + sexLabel[sexNumber] + ") CS\n");
 //                                                                                              draw the grey frame
-                fw.write("0.85 SG 27 510 translate\n");
-                fw.write("0 -5 MT 785 -5 LT 785 -27 LT 0 -27 LT  CP fill\n");
-                fw.write("0 -510 translate 0.95 SG\n");
-                double k = 475;
+                    fw.write("0.85 SG 27 510 translate\n");
+                    fw.write("0 -5 MT 785 -5 LT 785 -27 LT 0 -27 LT  CP fill\n");
+                    fw.write("0 -510 translate 0.95 SG\n");
+                    double k = 475;
 
-                for (int icd = 0; icd < numberOfCancerGroups; icd++) {
-                    if ((icd + 1) < numberOfCancerGroups && icdLabel[icd + 1].charAt(sexNumber) == '1') {
-                        int lines = (isLineBreak(icd));
-                        if (lines > 0) {
-                            k -= 2;
-                            fw.write(
-                                    "0 " + (k - 2) + " MT 785 " + (k - 2) + " LT 785 " + (k - 2 - (lines * (tableFontSize))) + " LT 0 " + (k - 2 - (lines * (tableFontSize))) + " LT CP fill\n");
-                        } else if (lines < 0) {
-                            k -= 2;
+                    for (int icd = 0; icd < numberOfCancerGroups; icd++) {
+                        if ((icd + 1) < numberOfCancerGroups && icdLabel[icd + 1].charAt(sexNumber) == '1') {
+                            int lines = (isLineBreak(icd));
+                            if (lines > 0) {
+                                k -= 2;
+                                fw.write(
+                                        "0 " + (k - 2) + " MT 785 " + (k - 2) + " LT 785 " + (k - 2 - (lines * (tableFontSize))) + " LT 0 " + (k - 2 - (lines * (tableFontSize))) + " LT CP fill\n");
+                            } else if (lines < 0) {
+                                k -= 2;
+                            }
+                            k -= tableFontSize;
                         }
-                        k -= tableFontSize;
                     }
-                }
 
-                /*
-                for (int j = 0; j < numberOfCancerGroups; j++) {
-                if (icdLabel[j].charAt(sex) == '1') {
-                
-                int lines = (isLineBreak(j));
-                if (lines > 0) {
-                k -= 2;
-                
-                fw.write(
-                "0 " + (k + tableFontSize) + " MT 774 " + (k + tableFontSize) +
-                " LT 774 " + (k - lines * tableFontSize) + " LT 0 " + (k - lines * tableFontSize) +
-                " LT CP fill\n");
-                
-                } else if (lines > 0)
-                k -= 2;
-                k -= lines * tableFontSize;
-                
-                
-                
-                
-                if (IsLineBreak(j)) {
-                k -= 2;
-                }
-                //  draw the grey frames
-                if (j == 8) {
-                fw.write(
-                "0 " + (k + tableFontSize) + " MT 774 " + (k + tableFontSize) +
-                " LT 774 " + (k - 35) + " LT 0 " + (k - 35) +
-                " LT CP fill\n");
-                } else if (j == 34) {
-                fw.write(
-                "0 " + (k + tableFontSize) + " MT 774 " + (k + tableFontSize) +
-                " LT 774 " + (k - 26) + " LT 0 " + (k - 26) +
-                " LT CP fill\n");
-                } else if (j == 16 || j == 22 || j == 40) {
-                fw.write(
-                "0 " + (k + tableFontSize) + " MT 774 " + (k + tableFontSize) +
-                " LT 774 " + (k - 18) + " LT 0 " + (k - 18) +
-                " LT CP fill\n");
-                } else if (j == 27) {
-                fw.write(
-                "0 " + (k + tableFontSize) + " MT 774 " + (k + tableFontSize) +
-                " LT 774 " + (k - 42) + " LT 0 " + (k - 42) +
-                " LT CP fill\n");
-                } else if (j == 47) {
-                fw.write(
-                "0 " + (k + tableFontSize) + " MT 774 " + (k + tableFontSize) +
-                " LT 774 " + (k - 34) + " LT 0 " + (k - 34) +
-                " LT CP fill\n");
-                } else if (j == 53) {
-                fw.write(
-                "0 " + (k + tableFontSize) + " MT 774 " + (k + tableFontSize) +
-                " LT 774 " + (k - 12) + " LT 0 " + (k - 12) +
-                " LT CP fill\n");
-                }
-                k -= (tableFontSize);
-                }
-                
-                }
-                 */
-                fw.write("0 SG\n");
-
-                fw.write("ICDfont SF\n");
-                fw.write(" 740 496 MT (ICD) show\n");
-                fw.write(" 740 487 MT ((10th)) show\n");
-                k = 475;
-                for (int j = 0; j < numberOfCancerGroups; j++) {
-                    if (icdLabel[j].charAt(sexNumber) == '1') {
-                        if (isLineBreak(j - 1) != 0) {
-                            k -= 2;
-                        }
-                        if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex
-                                || j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
-                            fw.write("ICDfont SF\n");
-                        } else {
-                            fw.write("ICDfont SF\n");
-                        }
-
-                        fw.write("745 " + k + " MT ("
-                                + icd10GroupDescriptions[j] + ") show\n");
-                        k -= (tableFontSize);
+                    /*
+                    for (int j = 0; j < numberOfCancerGroups; j++) {
+                    if (icdLabel[j].charAt(sex) == '1') {
+                    
+                    int lines = (isLineBreak(j));
+                    if (lines > 0) {
+                    k -= 2;
+                    
+                    fw.write(
+                    "0 " + (k + tableFontSize) + " MT 774 " + (k + tableFontSize) +
+                    " LT 774 " + (k - lines * tableFontSize) + " LT 0 " + (k - lines * tableFontSize) +
+                    " LT CP fill\n");
+                    
+                    } else if (lines > 0)
+                    k -= 2;
+                    k -= lines * tableFontSize;
+                    
+                    
+                    
+                    
+                    if (IsLineBreak(j)) {
+                    k -= 2;
                     }
-                }
-
-
-
-                fw.write("/col col 0 sub def\n");
-                fw.write("ASRfont SF\n");
-                fw.write("0 496 MT (ASR) RS\n");
-                fw.write("0 487 MT ((W)) RS\n");
-                k = 475;
-                for (int j = 0; j < numberOfCancerGroups; j++) {
-                    if (icdLabel[j].charAt(sexNumber) == '1') {
-                        if (isLineBreak(j - 1) != 0) {
-                            k -= 2;
-                        }
-                        if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex
-                                || j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
-                            fw.write("ASRitalicsfont SF\n");
-                        } else {
-                            fw.write("ASRfont SF\n");
-                        }
-
-                        fw.write("0 " + k + " MT (" + formatNumber(ASR[sexNumber][j])
-                                + ") RS\n");
-                        k -= (tableFontSize);
+                    //  draw the grey frames
+                    if (j == 8) {
+                    fw.write(
+                    "0 " + (k + tableFontSize) + " MT 774 " + (k + tableFontSize) +
+                    " LT 774 " + (k - 35) + " LT 0 " + (k - 35) +
+                    " LT CP fill\n");
+                    } else if (j == 34) {
+                    fw.write(
+                    "0 " + (k + tableFontSize) + " MT 774 " + (k + tableFontSize) +
+                    " LT 774 " + (k - 26) + " LT 0 " + (k - 26) +
+                    " LT CP fill\n");
+                    } else if (j == 16 || j == 22 || j == 40) {
+                    fw.write(
+                    "0 " + (k + tableFontSize) + " MT 774 " + (k + tableFontSize) +
+                    " LT 774 " + (k - 18) + " LT 0 " + (k - 18) +
+                    " LT CP fill\n");
+                    } else if (j == 27) {
+                    fw.write(
+                    "0 " + (k + tableFontSize) + " MT 774 " + (k + tableFontSize) +
+                    " LT 774 " + (k - 42) + " LT 0 " + (k - 42) +
+                    " LT CP fill\n");
+                    } else if (j == 47) {
+                    fw.write(
+                    "0 " + (k + tableFontSize) + " MT 774 " + (k + tableFontSize) +
+                    " LT 774 " + (k - 34) + " LT 0 " + (k - 34) +
+                    " LT CP fill\n");
+                    } else if (j == 53) {
+                    fw.write(
+                    "0 " + (k + tableFontSize) + " MT 774 " + (k + tableFontSize) +
+                    " LT 774 " + (k - 12) + " LT 0 " + (k - 12) +
+                    " LT CP fill\n");
                     }
-                }
+                    k -= (tableFontSize);
+                    }
+                    
+                    }
+                     */
+                    fw.write("0 SG\n");
 
-                fw.write("/col col 20 sub def\n");
-                fw.write("Tablefont SF\n");
-                fw.write("0 496 MT (CUM) RS\n");
-                fw.write("0 487 MT (0-74) RS\n");
-                k = 475;
-                if (cumRate74[sexNumber][allCancerGroupsIndex] > 0) {
+                    fw.write("ICDfont SF\n");
+                    fw.write(" 740 496 MT (ICD) show\n");
+                    fw.write(" 740 487 MT ((10th)) show\n");
+                    k = 475;
+                    for (int j = 0; j < numberOfCancerGroups; j++) {
+                        if (icdLabel[j].charAt(sexNumber) == '1') {
+                            if (isLineBreak(j - 1) != 0) {
+                                k -= 2;
+                            }
+                            if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex
+                                    || j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
+                                fw.write("ICDfont SF\n");
+                            } else {
+                                fw.write("ICDfont SF\n");
+                            }
+
+                            fw.write("745 " + k + " MT ("
+                                    + icd10GroupDescriptions[j] + ") show\n");
+                            k -= (tableFontSize);
+                        }
+                    }
+
+
+
+                    fw.write("/col col 0 sub def\n");
+                    fw.write("ASRfont SF\n");
+                    fw.write("0 496 MT (ASR) RS\n");
+                    fw.write("0 487 MT ((W)) RS\n");
+                    k = 475;
+                    for (int j = 0; j < numberOfCancerGroups; j++) {
+                        if (icdLabel[j].charAt(sexNumber) == '1') {
+                            if (isLineBreak(j - 1) != 0) {
+                                k -= 2;
+                            }
+                            if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex
+                                    || j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
+                                fw.write("ASRitalicsfont SF\n");
+                            } else {
+                                fw.write("ASRfont SF\n");
+                            }
+
+                            fw.write("0 " + k + " MT (" + formatNumber(ASR[sexNumber][j])
+                                    + ") RS\n");
+                            k -= (tableFontSize);
+                        }
+                    }
+
+                    fw.write("/col col 20 sub def\n");
+                    fw.write("Tablefont SF\n");
+                    fw.write("0 496 MT (CUM) RS\n");
+                    fw.write("0 487 MT (0-74) RS\n");
+                    k = 475;
+                    if (cumRate74[sexNumber][allCancerGroupsIndex] > 0) {
+                        for (int j = 0; j < numberOfCancerGroups; j++) {
+                            if (icdLabel[j].charAt(sexNumber) == '1') {
+                                if (isLineBreak(j - 1) != 0) {
+                                    k -= 2;
+                                }
+                                if (j == skinCancerGroupIndex
+                                        || j == ovaryCancerGroupIndex
+                                        || j == bladderCancerGroupIndex
+                                        || j == myelodysplasticSyndromesCancerGroupIndex
+                                        || j == myeloproliferativeDisordersCancerGroupIndex
+                                        || j == brainAndCentralNervousSystemCancerGroupIndex) {
+                                    fw.write("ICDfont SF\n");
+                                } else {
+                                    fw.write("Tablefont SF\n");
+                                }
+
+                                fw.write("0 " + k + " MT (" + formatNumber(cumRate74[sexNumber][j], 2)
+                                        + ") RS\n");
+                                k -= (tableFontSize);
+                            }
+                        }
+                    }
+
+
+                    fw.write("/col col 20 sub def\n");
+                    fw.write("Tablefont SF\n");
+                    fw.write("0 496 MT (CUM) RS\n");
+                    fw.write("0 487 MT (0-64) RS\n");
+                    k = 475;
+                    for (int j = 0; j < numberOfCancerGroups; j++) {
+                        if (icdLabel[j].charAt(sexNumber) == '1') {
+                            if (isLineBreak(j - 1) != 0) {
+                                k -= 2;
+                            }
+                            if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex
+                                    || j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
+                                fw.write("ICDfont SF\n");
+                            } else {
+                                fw.write("Tablefont SF\n");
+                            }
+
+                            fw.write("0 " + k + " MT (" + formatNumber(cumRate64[sexNumber][j], 2)
+                                    + ") RS\n");
+                            k -= (tableFontSize);
+                        }
+                    }
+                    /* No MVs shown
+                    fw.write("Tablefont SF\n");
+                    fw.write("/col col 20 sub def\n");
+                    fw.write("0 496 MT (MV) RS\n");
+                    fw.write("0 487 MT ((%)) RS\n");
+                    k = 475;
+                    for (int j = 0; j < numberOfCancerGroups; j++) {
+                    if (icdLabel[j].charAt(sex) == '1') {
+                    if (isLineBreak(j - 1)!=0) {
+                    k -= 2;
+                    }
+                    
+                    if (j==skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex ||
+                    j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
+                    fw.write("ICDfont SF\n");
+                    } else fw.write("Tablefont SF\n");
+                    
+                    if (CA[sex][j] >= 0) {
+                    fw.write("0 " + k + " MT (" +
+                    formatNumber(MV[sex][j]) + ") RS\n");
+                    } else {
+                    fw.write("0 " + k + " MT (      -) RS\n");
+                    }
+                    k -= (tableFontSize);
+                    }
+                    }
+                     */
+                    fw.write("/col col 20 sub def\n");
+                    fw.write("0 491 MT ((%)) RS\n");
+                    k = 475;
+                    for (int j = 0; j < numberOfCancerGroups; j++) {
+                        if (icdLabel[j].charAt(sexNumber) == '1') {
+                            if (isLineBreak(j - 1) != 0) {
+                                k -= 2;
+                            }
+
+                            if (j == skinCancerGroupIndex
+                                    || j == ovaryCancerGroupIndex
+                                    || j == bladderCancerGroupIndex
+                                    || j == myelodysplasticSyndromesCancerGroupIndex
+                                    || j == myeloproliferativeDisordersCancerGroupIndex
+                                    || j == brainAndCentralNervousSystemCancerGroupIndex) {
+                                fw.write("ICDfont SF\n");
+                            } else {
+                                fw.write("Tablefont SF\n");
+                            }
+
+                            if (j != allCancerGroupsIndex && allCancerGroupsButSkinIndex >= 0) {
+                                fw.write("0 " + k + " MT ("
+                                        + formatNumber(100 * totalCasesPerHundredThousand[sexNumber][j]
+                                        / totalCasesPerHundredThousand[sexNumber][allCancerGroupsButSkinIndex])
+                                        + ") RS\n");
+                            }
+                            k -= (tableFontSize);
+                        }
+                    }
+                    fw.write("/col col 20 sub def\n");
+                    fw.write("0 496 MT (CRUDE) RS\n");
+                    fw.write("0 487 MT (RATE) RS\n");
+                    k = 475;
                     for (int j = 0; j < numberOfCancerGroups; j++) {
                         if (icdLabel[j].charAt(sexNumber) == '1') {
                             if (isLineBreak(j - 1) != 0) {
@@ -859,246 +1011,141 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                                 fw.write("Tablefont SF\n");
                             }
 
-                            fw.write("0 " + k + " MT (" + formatNumber(cumRate74[sexNumber][j], 2)
+                            fw.write("0 " + k + " MT (" + formatNumber(crudeRate[sexNumber][j])
                                     + ") RS\n");
                             k -= (tableFontSize);
                         }
                     }
-                }
-
-
-                fw.write("/col col 20 sub def\n");
-                fw.write("Tablefont SF\n");
-                fw.write("0 496 MT (CUM) RS\n");
-                fw.write("0 487 MT (0-64) RS\n");
-                k = 475;
-                for (int j = 0; j < numberOfCancerGroups; j++) {
-                    if (icdLabel[j].charAt(sexNumber) == '1') {
-                        if (isLineBreak(j - 1) != 0) {
-                            k -= 2;
-                        }
-                        if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex
-                                || j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
-                            fw.write("ICDfont SF\n");
-                        } else {
-                            fw.write("Tablefont SF\n");
-                        }
-
-                        fw.write("0 " + k + " MT (" + formatNumber(cumRate64[sexNumber][j], 2)
-                                + ") RS\n");
-                        k -= (tableFontSize);
-                    }
-                }
-                /* No MVs shown
-                fw.write("Tablefont SF\n");
-                fw.write("/col col 20 sub def\n");
-                fw.write("0 496 MT (MV) RS\n");
-                fw.write("0 487 MT ((%)) RS\n");
-                k = 475;
-                for (int j = 0; j < numberOfCancerGroups; j++) {
-                if (icdLabel[j].charAt(sex) == '1') {
-                if (isLineBreak(j - 1)!=0) {
-                k -= 2;
-                }
-                
-                if (j==skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex ||
-                j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
-                fw.write("ICDfont SF\n");
-                } else fw.write("Tablefont SF\n");
-                
-                if (CA[sex][j] >= 0) {
-                fw.write("0 " + k + " MT (" +
-                formatNumber(MV[sex][j]) + ") RS\n");
-                } else {
-                fw.write("0 " + k + " MT (      -) RS\n");
-                }
-                k -= (tableFontSize);
-                }
-                }
-                 */
-                fw.write("/col col 20 sub def\n");
-                fw.write("0 491 MT ((%)) RS\n");
-                k = 475;
-                for (int j = 0; j < numberOfCancerGroups; j++) {
-                    if (icdLabel[j].charAt(sexNumber) == '1') {
-                        if (isLineBreak(j - 1) != 0) {
-                            k -= 2;
-                        }
-
-                        if (j == skinCancerGroupIndex
-                                || j == ovaryCancerGroupIndex
-                                || j == bladderCancerGroupIndex
-                                || j == myelodysplasticSyndromesCancerGroupIndex
-                                || j == myeloproliferativeDisordersCancerGroupIndex
-                                || j == brainAndCentralNervousSystemCancerGroupIndex) {
-                            fw.write("ICDfont SF\n");
-                        } else {
-                            fw.write("Tablefont SF\n");
-                        }
-
-                        if (j != allCancerGroupsIndex && allCancerGroupsButSkinIndex >= 0) {
-                            fw.write("0 " + k + " MT ("
-                                    + formatNumber(100 * totalCasesPerHundredThousand[sexNumber][j]
-                                    / totalCasesPerHundredThousand[sexNumber][allCancerGroupsButSkinIndex])
-                                    + ") RS\n");
-                        }
-                        k -= (tableFontSize);
-                    }
-                }
-                fw.write("/col col 20 sub def\n");
-                fw.write("0 496 MT (CRUDE) RS\n");
-                fw.write("0 487 MT (RATE) RS\n");
-                k = 475;
-                for (int j = 0; j < numberOfCancerGroups; j++) {
-                    if (icdLabel[j].charAt(sexNumber) == '1') {
-                        if (isLineBreak(j - 1) != 0) {
-                            k -= 2;
-                        }
-                        if (j == skinCancerGroupIndex
-                                || j == ovaryCancerGroupIndex
-                                || j == bladderCancerGroupIndex
-                                || j == myelodysplasticSyndromesCancerGroupIndex
-                                || j == myeloproliferativeDisordersCancerGroupIndex
-                                || j == brainAndCentralNervousSystemCancerGroupIndex) {
-                            fw.write("ICDfont SF\n");
-                        } else {
-                            fw.write("Tablefont SF\n");
-                        }
-
-                        fw.write("0 " + k + " MT (" + formatNumber(crudeRate[sexNumber][j])
-                                + ") RS\n");
-                        k -= (tableFontSize);
-                    }
-                }
-                fw.write("/col 119 def\n");
-                fw.write("0 496 MT (ALL) RS\n");
-                fw.write("0 487 MT (AGES) RS\n");
-                k = 475;
-                for (int j = 0; j < numberOfCancerGroups; j++) {
-                    if (icdLabel[j].charAt(sexNumber) == '1') {
-                        if (isLineBreak(j - 1) != 0) {
-                            k -= 2;
-                        }
-                        if (j == skinCancerGroupIndex
-                                || j == ovaryCancerGroupIndex
-                                || j == bladderCancerGroupIndex
-                                || j == myelodysplasticSyndromesCancerGroupIndex
-                                || j == myeloproliferativeDisordersCancerGroupIndex
-                                || j == brainAndCentralNervousSystemCancerGroupIndex) {
-                            fw.write("ICDfont SF\n");
-                        } else {
-                            fw.write("Tablefont SF\n");
-                        }
-
-                        fw.write("0 " + k + " MT ("
-                                + formatNumber(totalCasesPerHundredThousand[sexNumber][j], 0) + ") RS\n");
-                        k -= (tableFontSize);
-                    }
-                }
-                fw.write("/col col 20 add def\n");
-                fw.write("0 496 MT (AGE) RS\n");
-                fw.write("0 487 MT (UNK) RS\n");
-                k = 475;
-                for (int j = 0; j < numberOfCancerGroups; j++) {
-                    if (icdLabel[j].charAt(sexNumber) == '1') {
-                        if (isLineBreak(j - 1) != 0) {
-                            k -= 2;
-                        }
-                        if (j == skinCancerGroupIndex
-                                || j == ovaryCancerGroupIndex
-                                || j == bladderCancerGroupIndex
-                                || j == myelodysplasticSyndromesCancerGroupIndex
-                                || j == myeloproliferativeDisordersCancerGroupIndex
-                                || j == brainAndCentralNervousSystemCancerGroupIndex) {
-                            fw.write("ICDfont SF\n");
-                        } else {
-                            fw.write("Tablefont SF\n");
-                        }
-
-                        fw.write("0 " + k + " MT ("
-                                + formatNumber(casesArray[j][sexNumber][unknownAgeGroupIndex], 0)
-                                + ") RS\n");
-                        k -= (tableFontSize);
-                    }
-                }
-
-                if (highestPopulationAgeGroup == numberOfAgeGroups - 4) {
-                    fw.write("/col 145 def\n");
-                } else if (highestPopulationAgeGroup == numberOfAgeGroups - 5) {
-                    fw.write("/col 176 def\n");
-                } else if (highestPopulationAgeGroup == numberOfAgeGroups - 6) {
-                    fw.write("/col 208 def\n");
-                } else {
-                    fw.write("/col 145 def\n");
-                }
-
-                for (int age = 1; age <= highestPopulationAgeGroup; age++) {
-                    fw.write("/col col 26 add def\n");
-                    fw.write("0 491 MT (" + ageLabel[age] + ") RS\n");
-                    // fw.write("/col col 5 sub def\n");
+                    fw.write("/col 119 def\n");
+                    fw.write("0 496 MT (ALL) RS\n");
+                    fw.write("0 487 MT (AGES) RS\n");
                     k = 475;
                     for (int j = 0; j < numberOfCancerGroups; j++) {
                         if (icdLabel[j].charAt(sexNumber) == '1') {
                             if (isLineBreak(j - 1) != 0) {
                                 k -= 2;
                             }
-
-                            if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex
-                                    || j
-                                    == myeloproliferativeDisordersCancerGroupIndex
-                                    || j
-                                    == brainAndCentralNervousSystemCancerGroupIndex) {
+                            if (j == skinCancerGroupIndex
+                                    || j == ovaryCancerGroupIndex
+                                    || j == bladderCancerGroupIndex
+                                    || j == myelodysplasticSyndromesCancerGroupIndex
+                                    || j == myeloproliferativeDisordersCancerGroupIndex
+                                    || j == brainAndCentralNervousSystemCancerGroupIndex) {
                                 fw.write("ICDfont SF\n");
                             } else {
                                 fw.write("Tablefont SF\n");
                             }
 
-
-                            if (casesArray[j][sexNumber][age] > 0) {
-                                fw.write("0 " + k + " MT ("
-                                        + formatNumber(casesArray[j][sexNumber][age], 0) + ") RS\n");
-                            } else {
-                                fw.write("0 " + k + " MT (    -  ) RS\n");
-                            }
+                            fw.write("0 " + k + " MT ("
+                                    + formatNumber(totalCasesPerHundredThousand[sexNumber][j], 0) + ") RS\n");
                             k -= (tableFontSize);
                         }
                     }
-                }
-                fw.write("3 492 MT ( S I T E) show\n");
-                k = 475;
-                for (int j = 0; j < numberOfCancerGroups; j++) {
-                    if (icdLabel[j].charAt(sexNumber) == '1') {
-                        if (isLineBreak(j - 1) != 0) {
-                            k -= 2;
-                        }
-                        if (j == skinCancerGroupIndex
-                                || j == ovaryCancerGroupIndex
-                                || j == bladderCancerGroupIndex
-                                || j == myelodysplasticSyndromesCancerGroupIndex
-                                || j == myeloproliferativeDisordersCancerGroupIndex
-                                || j == brainAndCentralNervousSystemCancerGroupIndex) {
-                            fw.write("ICDfont SF\n");
-                        } else {
-                            fw.write("Tablefont SF\n");
-                        }
+                    fw.write("/col col 20 add def\n");
+                    fw.write("0 496 MT (AGE) RS\n");
+                    fw.write("0 487 MT (UNK) RS\n");
+                    k = 475;
+                    for (int j = 0; j < numberOfCancerGroups; j++) {
+                        if (icdLabel[j].charAt(sexNumber) == '1') {
+                            if (isLineBreak(j - 1) != 0) {
+                                k -= 2;
+                            }
+                            if (j == skinCancerGroupIndex
+                                    || j == ovaryCancerGroupIndex
+                                    || j == bladderCancerGroupIndex
+                                    || j == myelodysplasticSyndromesCancerGroupIndex
+                                    || j == myeloproliferativeDisordersCancerGroupIndex
+                                    || j == brainAndCentralNervousSystemCancerGroupIndex) {
+                                fw.write("ICDfont SF\n");
+                            } else {
+                                fw.write("Tablefont SF\n");
+                            }
 
-                        fw.write("3 " + k + " MT (" + icdLabel[j].substring(3)
-                                + ") show\n");
-                        k -= (tableFontSize);
+                            fw.write("0 " + k + " MT ("
+                                    + formatNumber(casesArray[j][sexNumber][unknownAgeGroupIndex], 0)
+                                    + ") RS\n");
+                            k -= (tableFontSize);
+                        }
                     }
-                }
-                if (showSeeNotesNote) {
-                    fw.write("3 0 MT (" + notesString + ") show\n");
-                }
 
-                // Write the footer
-                fw.write("0 0 MT (" + footerString + ") CS\n");
+                    if (highestPopulationAgeGroup == numberOfAgeGroups - 4) {
+                        fw.write("/col 145 def\n");
+                    } else if (highestPopulationAgeGroup == numberOfAgeGroups - 5) {
+                        fw.write("/col 176 def\n");
+                    } else if (highestPopulationAgeGroup == numberOfAgeGroups - 6) {
+                        fw.write("/col 208 def\n");
+                    } else {
+                        fw.write("/col 145 def\n");
+                    }
 
-                fw.write("showpage\n");
-                System.out.println("Wrote " + psFileName + ".");
-                fw.close();
-            } catch (IOException ioe) {
-                System.out.println(ioe);
+                    for (int age = 1; age <= highestPopulationAgeGroup; age++) {
+                        fw.write("/col col 26 add def\n");
+                        fw.write("0 491 MT (" + ageLabel[age] + ") RS\n");
+                        // fw.write("/col col 5 sub def\n");
+                        k = 475;
+                        for (int j = 0; j < numberOfCancerGroups; j++) {
+                            if (icdLabel[j].charAt(sexNumber) == '1') {
+                                if (isLineBreak(j - 1) != 0) {
+                                    k -= 2;
+                                }
+
+                                if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex
+                                        || j
+                                        == myeloproliferativeDisordersCancerGroupIndex
+                                        || j
+                                        == brainAndCentralNervousSystemCancerGroupIndex) {
+                                    fw.write("ICDfont SF\n");
+                                } else {
+                                    fw.write("Tablefont SF\n");
+                                }
+
+
+                                if (casesArray[j][sexNumber][age] > 0) {
+                                    fw.write("0 " + k + " MT ("
+                                            + formatNumber(casesArray[j][sexNumber][age], 0) + ") RS\n");
+                                } else {
+                                    fw.write("0 " + k + " MT (    -  ) RS\n");
+                                }
+                                k -= (tableFontSize);
+                            }
+                        }
+                    }
+                    fw.write("3 492 MT ( S I T E) show\n");
+                    k = 475;
+                    for (int j = 0; j < numberOfCancerGroups; j++) {
+                        if (icdLabel[j].charAt(sexNumber) == '1') {
+                            if (isLineBreak(j - 1) != 0) {
+                                k -= 2;
+                            }
+                            if (j == skinCancerGroupIndex
+                                    || j == ovaryCancerGroupIndex
+                                    || j == bladderCancerGroupIndex
+                                    || j == myelodysplasticSyndromesCancerGroupIndex
+                                    || j == myeloproliferativeDisordersCancerGroupIndex
+                                    || j == brainAndCentralNervousSystemCancerGroupIndex) {
+                                fw.write("ICDfont SF\n");
+                            } else {
+                                fw.write("Tablefont SF\n");
+                            }
+
+                            fw.write("3 " + k + " MT (" + icdLabel[j].substring(3)
+                                    + ") show\n");
+                            k -= (tableFontSize);
+                        }
+                    }
+                    if (showSeeNotesNote) {
+                        fw.write("3 0 MT (" + notesString + ") show\n");
+                    }
+
+                    // Write the footer
+                    fw.write("0 0 MT (" + footerString + ") CS\n");
+
+                    fw.write("showpage\n");
+                    System.out.println("Wrote " + psFileName + ".");
+                    fw.close();
+                } catch (IOException ioe) {
+                    System.out.println(ioe);
+                }
             }
         }
 
