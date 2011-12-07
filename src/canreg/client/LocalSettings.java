@@ -27,10 +27,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
@@ -324,7 +326,7 @@ public final class LocalSettings {
      */
     public String getProperty(String key) {
         String property = properties.getProperty(key);
-        if (property == null 
+        if (property == null
                 // Detect if R has been installed since last launch.
                 || (property.length() == 0 && key.equals(R_PATH))) {
             return getDefaultProperty(key);
@@ -423,11 +425,31 @@ public final class LocalSettings {
                     String url = properties.getProperty("server." + serverNumber + ".url");
                     String port = properties.getProperty("server." + serverNumber + ".port");
                     String code = properties.getProperty("server." + serverNumber + ".code");
-                    serverList.add(new ServerDescription(name, url, Integer.parseInt(port), code, serverNumber));
+                    if (name != null && url != null && port != null && code != null) {
+                        serverList.add(new ServerDescription(name, url, Integer.parseInt(port), code, serverNumber));
+                    }
                 }
             }
         }
-        return serverList;
+        return removeDuplicateServers(serverList);
+    }
+
+    private LinkedList<ServerDescription> removeDuplicateServers(List<ServerDescription> servers) {
+        HashMap<String,ServerDescription> serverStringRepresentationMap = new HashMap<String,ServerDescription>();
+        for (ServerDescription server:servers){
+            String stringRep = server.getUrl()+":"+server.getPort()+"/"+server.getCode();
+            ServerDescription otherServer = serverStringRepresentationMap.get(stringRep);
+            if (otherServer!=null){
+                // find the one with the highest number and remove the other
+                if (server.getId()>otherServer.getId()) {
+                    serverStringRepresentationMap.remove(stringRep);
+                    serverStringRepresentationMap.put(stringRep,server);
+                }
+            } else {
+                serverStringRepresentationMap.put(stringRep,server);
+            }
+        }
+        return new LinkedList(serverStringRepresentationMap.values());
     }
 
     /**
@@ -554,7 +576,7 @@ public final class LocalSettings {
         String[] foldersToTry = new String[]{
             System.getenv("ProgramFilesW6432") + Globals.FILE_SEPARATOR + "R",
             System.getenv("ProgramFiles") + Globals.FILE_SEPARATOR + "R",
-            System.getenv("ProgramFiles(x86)") + Globals.FILE_SEPARATOR + "R"                
+            System.getenv("ProgramFiles(x86)") + Globals.FILE_SEPARATOR + "R"
         };
         File folder = null;
         for (String folderToTry : foldersToTry) {
