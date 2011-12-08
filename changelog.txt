@@ -1,5 +1,15 @@
 Changelog
 
+5.00.12
+- Tables for "age specific cases per 100.000" and "age specific cases" can now be written to a character separated file and opened in general spreadsheets for further work.
+- Duplicate entries no longer show up in the list of favourite servers.
+- Added automatic verification of short name of variables (database variable name) in the system editor.
+- Better feedback while logging in. A progress bar shows up if things take long.
+- Implemented a changelog-viewer to see what's new in the current version of CanReg.
+- Updated handbook.
+- Updated translations.
+- Various fixes.
+
 5.00.11
 - Fixed a bug in the topography/morphology check where too many rare cases were detected.
 - Fixed a bug in the table builder where text instead of numbers in age, sex, morphology, topography etc would break the table instead of give a warning.

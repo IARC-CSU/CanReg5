@@ -1,5 +1,45 @@
-changeset:   936:9c3be886cc4e
+changeset:   944:422ba2b3d6b2
 tag:         tip
+user:        ErvikM@X90164
+date:        Thu Dec 08 16:24:04 2011 +0100
+summary:     Better feedback while logging in. A progress bar shows up if things take long.
+
+changeset:   943:ad3af8254013
+user:        ErvikM@X90164
+date:        Wed Dec 07 11:33:36 2011 +0100
+summary:     Duplicate entries no longer show up in the list of favourite servers.
+
+changeset:   942:117ecd98333f
+user:        ErvikM@X90164
+date:        Tue Dec 06 16:07:47 2011 +0100
+summary:     Tables for "age specific cases per 100.000" and "age specific cases" can now be written to a character separated file and opened in general spreadsheets for further work.
+
+changeset:   941:469d424fc5ec
+user:        ErvikM@X90191
+date:        Mon Nov 28 17:18:43 2011 +0200
+summary:     Back from Cairo. Updated Handbook and future.
+
+changeset:   940:d97fc8690f59
+user:        ErvikM@X90164
+date:        Fri Nov 18 16:09:15 2011 +0100
+summary:     Various fixes.
+
+changeset:   939:d408e4ca552e
+user:        ErvikM@X90164
+date:        Fri Nov 18 16:08:42 2011 +0100
+summary:     Added automatic verification of short name of variables. (Database variable name.)
+
+changeset:   938:df1913abc9b4
+user:        ErvikM@X90164
+date:        Wed Nov 16 16:04:26 2011 +0100
+summary:     Fixed a bug where some windows programs could't detect the line endings of report files.
+
+changeset:   937:e1bea285c333
+user:        ErvikM@X90164
+date:        Wed Nov 16 14:49:20 2011 +0100
+summary:     Implemented a changelog-viewer.
+
+changeset:   936:9c3be886cc4e
 user:        ErvikM@X90164
 date:        Wed Nov 16 11:01:02 2011 +0100
 summary:     Fixed a bug where windows programs could't detect the line endings of exported files (case listings/dictionaries).
