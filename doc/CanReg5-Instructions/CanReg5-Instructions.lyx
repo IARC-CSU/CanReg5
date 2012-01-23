@@ -1685,7 +1685,10 @@ Please note that certain modifications done using this tool will impact
  the CanReg system, do required modifications using this tool or directly
  in the XML, relaunching the CanReg server and then import the data (this
  again will potentially have to be adapted to the structural changes).
- 
+ CanReg will warn you if you have done changes that require a rebuild of
+ the database.
+ (Fields with pink background in this editor - as well as adding or removing
+ variables, leads to this.)
 \end_layout
 
 \begin_layout Standard
@@ -1739,9 +1742,7 @@ s.
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename 9.png
-	width 5.4785in
-	height 7.884in
+	filename modify-database-structure.png
 
 \end_inset
 
@@ -1786,9 +1787,7 @@ dictionary
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename 10.png
-	width 3.11458in
-	height 2.65625in
+	filename dictionary-editor-sex.png
 
 \end_inset
 
@@ -1977,9 +1976,8 @@ variable
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename 12.png
-	width 4.28125in
-	height 4.41667in
+	filename variable-editor-surname.png
+	width 100col%
 
 \end_inset
 
@@ -2105,7 +2103,15 @@ System
 Multiple Primary Copy:
 \series default
  Legacy information.
- Leave as other.
+ Leave as 
+\begin_inset Quotes eld
+\end_inset
+
+Other
+\begin_inset Quotes erd
+\end_inset
+
+.
  
 \end_layout
 
