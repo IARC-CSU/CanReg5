@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.client.gui.management.systemeditor;
 
 import canreg.common.DatabaseElement;
@@ -86,7 +85,7 @@ public class DatabaseVariablesPanel extends DatabaseElementsPanel {
         DatabaseVariablesListElement element;
         for (DatabaseElementPanel elementPanel : elementPanelsSet) {
             element = (DatabaseVariablesListElement) elementPanel.getDatabaseElement();
-            if (element.getStandardVariableName()!=null && variableName.equalsIgnoreCase(element.getStandardVariableName())){
+            if (element.getStandardVariableName() != null && variableName.equalsIgnoreCase(element.getStandardVariableName())) {
                 return element;
             }
         }

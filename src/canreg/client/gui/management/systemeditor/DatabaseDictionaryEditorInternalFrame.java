@@ -39,6 +39,8 @@ import org.jdesktop.application.Action;
 public class DatabaseDictionaryEditorInternalFrame extends javax.swing.JInternalFrame {
     private ActionListener listener;
     public static String UPDATED = "dictionary_updated";
+    private int originalLength;
+    private DatabaseDictionaryListElement databaseDictionaryListElement;
 
     /** Creates new form DatabaseDictionaryEditorInternalFrame */
     public DatabaseDictionaryEditorInternalFrame() {
@@ -110,12 +112,18 @@ public class DatabaseDictionaryEditorInternalFrame extends javax.swing.JInternal
     @Action
     public void okAction() {
         databaseDictionaryEditorPanel1.refreshDatabaseDictionaryListElement();
+        // if structure changed fire structure change event
+        if (originalLength!=databaseDictionaryListElement.getFullDictionaryCodeLength()){
+            listener.actionPerformed(new ActionEvent(this, 0, DatabaseElementPanel.STRUCTURE_CHANGE_ACTION));
+        }
         listener.actionPerformed(new ActionEvent(this, 0, UPDATED));
         this.dispose();
     }
     
     public void setDatabaseDictionaryListElement(DatabaseDictionaryListElement databaseDictionaryListElement) {
+        this.databaseDictionaryListElement = databaseDictionaryListElement;
         databaseDictionaryEditorPanel1.setDatabaseDictionaryListElement(databaseDictionaryListElement);
+        originalLength = databaseDictionaryListElement.getFullDictionaryCodeLength();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

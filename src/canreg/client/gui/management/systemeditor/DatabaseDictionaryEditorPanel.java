@@ -114,6 +114,7 @@ public class DatabaseDictionaryEditorPanel extends javax.swing.JPanel {
         typeLabel.setText(resourceMap.getString("typeLabel.text")); // NOI18N
         typeLabel.setName("typeLabel"); // NOI18N
 
+        fullCodeLengthTextField.setBackground(resourceMap.getColor("fullCodeLengthTextField.background")); // NOI18N
         fullCodeLengthTextField.setText(resourceMap.getString("fullCodeLengthTextField.text")); // NOI18N
         fullCodeLengthTextField.setName("fullCodeLengthTextField"); // NOI18N
         fullCodeLengthTextField.addActionListener(new java.awt.event.ActionListener() {

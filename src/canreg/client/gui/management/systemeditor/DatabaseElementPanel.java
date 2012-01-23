@@ -41,6 +41,7 @@ public class DatabaseElementPanel extends javax.swing.JPanel {
     private ActionListener listener;
     private int position = 0;
     public static String EDIT_ACTION = "edit";
+    public static String STRUCTURE_CHANGE_ACTION = "structure_change";
     public static String MOVE_UP_ACTION = "move_up";
     public static String MOVE_DOWN_ACTION = "move_down";
     public static String REMOVE_ACTION = "remove";
@@ -150,6 +151,7 @@ public class DatabaseElementPanel extends javax.swing.JPanel {
     @Action
     public void removeAction() {
         if (listener != null) {
+            listener.actionPerformed(new ActionEvent(this, 0, STRUCTURE_CHANGE_ACTION));
             listener.actionPerformed(new ActionEvent(this, 0, REMOVE_ACTION));
         }
     }

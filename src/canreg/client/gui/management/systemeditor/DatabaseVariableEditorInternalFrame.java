@@ -28,6 +28,7 @@ package canreg.client.gui.management.systemeditor;
 import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.Globals;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Level;
@@ -44,6 +45,11 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
     private ActionListener listener;
     public final static String UPDATED = "varaiable_updated";
     public final static String STANDARDVARIABLEMAPPINGCHANGED = "standard_variable_mapping_changed";
+    private DatabaseVariablesListElement databaseVariablesListElement;
+    private String originalTable;
+    private String originalName;
+    private int originalLength;
+    private boolean originallyNumeric;
 
     /** Creates new form DatabaseVariableEditorInternalFrame */
     public DatabaseVariableEditorInternalFrame() {
@@ -119,6 +125,13 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
     public void okAction() {
         try {
             databaseVariableEditor.refreshDatabaseVariablesListElement();
+            if (originalLength != databaseVariablesListElement.getVariableLength()
+                    || !originalName.equals(databaseVariablesListElement.getDatabaseVariableName())
+                    || !originalTable.equals(databaseVariablesListElement.getDatabaseTableName())
+                    || (originallyNumeric && !databaseVariablesListElement.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME))
+                    || (!originallyNumeric && databaseVariablesListElement.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME))) {
+                listener.actionPerformed(new ActionEvent(this, 0, DatabaseElementPanel.STRUCTURE_CHANGE_ACTION));
+            }
             listener.actionPerformed(new ActionEvent(this, 0, UPDATED));
             this.dispose();
         } catch (DatabaseVariablesListException ex) {
@@ -130,6 +143,11 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseVariablesListElement) {
         // this.setTitle(databaseVariablesListElement.getDatabaseVariableName());
         databaseVariableEditor.setDatabaseVariablesListElement(databaseVariablesListElement);
+        this.databaseVariablesListElement = databaseVariablesListElement;
+        originalTable = databaseVariablesListElement.getTable();
+        originalName = databaseVariablesListElement.getDatabaseVariableName();
+        originalLength = databaseVariablesListElement.getVariableLength();
+        originallyNumeric = databaseVariablesListElement.getVariableType().equals(Globals.VARIABLE_TYPE_NUMBER_NAME);
     }
 
     public void setGroups(DatabaseGroupsListElement[] groups) {

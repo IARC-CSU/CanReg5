@@ -82,6 +82,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     };
     private SystemDescription systemDescription;
     private final JDesktopPane dtp;
+    private boolean structureChanged = false;
 
     /** Creates new form ModifyDatabaseStructureInternalFrame */
     public ModifyDatabaseStructureInternalFrame(JDesktopPane dtp) {
@@ -386,6 +387,21 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
 
         registryCodeTextField.setText(resourceMap.getString("registryCodeTextField.text")); // NOI18N
         registryCodeTextField.setName("registryCodeTextField"); // NOI18N
+        registryCodeTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                registryCodeTextFieldActionPerformed(evt);
+            }
+        });
+        registryCodeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                registryCodeTextFieldFocusLost(evt);
+            }
+        });
+        registryCodeTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                registryCodeTextFieldPropertyChange(evt);
+            }
+        });
 
         checkIfUniqueButton.setText(resourceMap.getString("checkIfUniqueButton.text")); // NOI18N
         checkIfUniqueButton.setToolTipText(resourceMap.getString("checkIfUniqueButton.toolTipText")); // NOI18N
@@ -465,6 +481,33 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void registryCodeTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_registryCodeTextFieldPropertyChange
+        // System.out.println("Code changed: Property");
+        // codeChanged(registryCodeTextField.getText());
+    }//GEN-LAST:event_registryCodeTextFieldPropertyChange
+
+    private void registryCodeTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registryCodeTextFieldActionPerformed
+        // System.out.println("Code changed: Action");
+        codeChanged(registryCodeTextField.getText());
+    }//GEN-LAST:event_registryCodeTextFieldActionPerformed
+
+    private void registryCodeTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_registryCodeTextFieldFocusLost
+        // System.out.println("Code changed: Focus");
+        codeChanged(registryCodeTextField.getText());
+    }//GEN-LAST:event_registryCodeTextFieldFocusLost
+
+    private void codeChanged(String code) {
+        if (checkCode(code)) {
+            JOptionPane.showMessageDialog(this, "Database '" + code + "' exists.\nIf you haven't done so already, please connect to your CanReg system and perform a backup before proceeding.\nPlease refer to the handbook for more information on what changes you can do to a running CanReg5 system.", "Database exists", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private boolean checkCode(String code) {
+        // does the database folder exist?
+        File file = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + code);
+        return file.exists();
+    }
+
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
@@ -514,6 +557,8 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         specialRegistryCheckBox.setSelected("1".equals(systemDescription.getTextContentFromElement("special_registry")));
         strictPasswordModeCheckBox.setSelected("1".equals(systemDescription.getTextContentFromElement("password_rules")));
 
+        codeChanged(registryCodeTextField.getText());
+
     }
 
     @Action
@@ -532,7 +577,16 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                 return;
             }
         }
-
+        if (checkCode(registryCodeTextField.getText())) {
+            // overwriting the XML of a running system
+            if (structureChanged) {
+                // don't let the user save their new XML
+                JOptionPane.showMessageDialog(this, "Database '" + registryCodeTextField.getText() + "' exists and you have done changes to the structure of the database.\n"
+                        + "You can't save this XML with this code before you have deleted the old database files.\n"
+                        + "Please refer to the handbook for more information on this.", "Database exists", JOptionPane.ERROR_MESSAGE);       
+                return;
+            }
+        }
         // refresh the doc
         // set the system stuff
         systemDescription.setSystemName(registryNameTextField.getText());
@@ -561,7 +615,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         if (oldFile != null) {
             message += "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame").getString("OLD_FILE_BACKED_UP_AS_") + oldFile.getAbsolutePath();
         }
-        JOptionPane.showMessageDialog(this, message, "Title", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Saved", JOptionPane.INFORMATION_MESSAGE);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox basisCodesCheckBox;
@@ -616,16 +670,13 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         if (e.getActionCommand().equals(DatabaseElementsPanel.UPDATED)) {
             databaseVariablePanel.redrawTable();
 
-
         } else if (e.getActionCommand().equals(DatabaseVariableEditorInternalFrame.STANDARDVARIABLEMAPPINGCHANGED)) {
             DatabaseVariableEditorPanel dbve = (DatabaseVariableEditorPanel) e.getSource();
             DatabaseVariablesListElement variable = databaseVariablePanel.isThisStandardVariableAlreadyMapped(dbve.getStandardVariable());
 
-
             if (variable != null && variable != dbve.getDatabaseVariablesListElement()) {
                 JOptionPane.showInternalMessageDialog(dbve,
                         "This standard variable is already mapped to " + variable.getFullName() + ". Please revise.");
-
 
             }
         } else if (e.getActionCommand().equals(DatabaseVariableEditorInternalFrame.UPDATED)) {
@@ -643,13 +694,15 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         } else if (e.getActionCommand().equals(DatabaseIndexEditorInternalFrame.UPDATED)) {
             databaseIndexPanel.redrawTable();
 
-
+        } else if (e.getActionCommand().equals(DatabaseElementPanel.STRUCTURE_CHANGE_ACTION)) {
+            if (!structureChanged) {
+                this.setTitle(this.getTitle() + " - Database structure changed");
+                structureChanged = true;
+            }
         } else if (e.getActionCommand().equals(DatabaseElementPanel.EDIT_ACTION)) {
             if (systemDescription != null) {
                 DatabaseElementPanel ep = (DatabaseElementPanel) e.getSource();
                 DatabaseElement dbe = ep.getDatabaseElement();
-
-
                 if (dbe instanceof DatabaseVariablesListElement) {
                     DatabaseVariableEditorInternalFrame dveif = new DatabaseVariableEditorInternalFrame();
                     dveif.setDictionaries(databaseDictionaryPanel.getDatabaseElements());
@@ -657,36 +710,26 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                     dveif.setDatabaseVariablesListElement((DatabaseVariablesListElement) dbe);
                     dveif.setActionListener(this);
                     CanRegClientView.showAndPositionInternalFrame(dtp, dveif);
-
-
                 } else if (dbe instanceof DatabaseDictionaryListElement) {
                     DatabaseDictionaryEditorInternalFrame dveif = new DatabaseDictionaryEditorInternalFrame();
                     dveif.setDatabaseDictionaryListElement((DatabaseDictionaryListElement) dbe);
                     dveif.setActionListener(this);
                     CanRegClientView.showAndPositionInternalFrame(dtp, dveif);
-
-
                 } else if (dbe instanceof DatabaseGroupsListElement) {
                     DatabaseGroupEditorInternalFrame dveif = new DatabaseGroupEditorInternalFrame();
                     dveif.setDatabaseGroupsListElement((DatabaseGroupsListElement) dbe);
                     dveif.setActionListener(this);
                     CanRegClientView.showAndPositionInternalFrame(dtp, dveif);
-
-
                 } else if (dbe instanceof DatabaseIndexesListElement) {
                     DatabaseIndexEditorInternalFrame diep = new DatabaseIndexEditorInternalFrame();
                     diep.setVariablesInDatabase((DatabaseVariablesListElement[]) databaseVariablePanel.getDatabaseElements());
                     diep.setDatabaseIndexesListElement((DatabaseIndexesListElement) dbe);
                     diep.setActionListener(this);
                     CanRegClientView.showAndPositionInternalFrame(dtp, diep);
-
-
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
                         "Please load a system definition XML first.");
-
-
             }
         }
     }

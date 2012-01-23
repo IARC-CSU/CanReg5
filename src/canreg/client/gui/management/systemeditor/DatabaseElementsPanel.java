@@ -26,6 +26,8 @@
 package canreg.client.gui.management.systemeditor;
 
 import canreg.common.DatabaseElement;
+import canreg.common.DatabaseIndexesListElement;
+import canreg.common.DatabaseVariablesListElement;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -123,6 +125,11 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
         }
         elementPanelsSet.add(elementPanel);
         listener.actionPerformed(new ActionEvent(this, 0, UPDATED));
+        // if we add an index or a variable, we change the structure
+        if (element instanceof DatabaseVariablesListElement || element instanceof DatabaseIndexesListElement) {
+            listener.actionPerformed(new ActionEvent(this, 0, DatabaseElementPanel.STRUCTURE_CHANGE_ACTION));
+        }
+
         elementPanel.editAction();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -140,7 +147,7 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
             elementsPanel.repaint();
             // update positions
             int i = 0;
-            for (DatabaseElementPanel element:elementPanelsSet){
+            for (DatabaseElementPanel element : elementPanelsSet) {
                 element.setPosition((i++));
             }
         } else if (e.getActionCommand().equals(DatabaseElementPanel.MOVE_UP_ACTION)) {
@@ -176,12 +183,10 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
                 elementPanelsSet.add(higher);
             }
             redrawTable();
-        } else if (e.getActionCommand().equals(DatabaseElementPanel.EDIT_ACTION)) {
-            // pass it on
-            if (listener != null) {
-                listener.actionPerformed(e);
-            }
+        } else if (listener != null) {
+            listener.actionPerformed(e); // pass it on
         }
+
     }
 
     void setElements(DatabaseElement[] databaseElementsArray) {

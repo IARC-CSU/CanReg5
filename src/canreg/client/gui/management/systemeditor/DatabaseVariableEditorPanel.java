@@ -132,6 +132,7 @@ public class DatabaseVariableEditorPanel extends javax.swing.JPanel {
         fillInStatusComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         fillInStatusComboBox.setName("fillInStatusComboBox"); // NOI18N
 
+        shortNameTextField.setBackground(resourceMap.getColor("shortNameTextField.background")); // NOI18N
         shortNameTextField.setText(resourceMap.getString("shortNameTextField.text")); // NOI18N
         shortNameTextField.setInputVerifier(new InputVerifier() {
 
@@ -164,6 +165,7 @@ public class DatabaseVariableEditorPanel extends javax.swing.JPanel {
         variableTypeLabel.setText(resourceMap.getString("variableTypeLabel.text")); // NOI18N
         variableTypeLabel.setName("variableTypeLabel"); // NOI18N
 
+        variableTypeComboBox.setBackground(resourceMap.getColor("variableTypeComboBox.background")); // NOI18N
         variableTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(DatabaseVariableEditorPanel.class, this);
         variableTypeComboBox.setAction(actionMap.get("variableTypeChosenAction")); // NOI18N
@@ -172,6 +174,7 @@ public class DatabaseVariableEditorPanel extends javax.swing.JPanel {
         variableLengthLabel.setText(resourceMap.getString("variableLengthLabel.text")); // NOI18N
         variableLengthLabel.setName("variableLengthLabel"); // NOI18N
 
+        variableLengthTextField.setBackground(resourceMap.getColor("variableLengthTextField.background")); // NOI18N
         variableLengthTextField.setText(resourceMap.getString("variableLengthTextField.text")); // NOI18N
         variableLengthTextField.setInputVerifier(new InputVerifier() {
 
@@ -208,6 +211,7 @@ public class DatabaseVariableEditorPanel extends javax.swing.JPanel {
         tableLabel.setText(resourceMap.getString("tableLabel.text")); // NOI18N
         tableLabel.setName("tableLabel"); // NOI18N
 
+        tableComboBox.setBackground(resourceMap.getColor("tableComboBox.background")); // NOI18N
         tableComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         tableComboBox.setName("tableComboBox"); // NOI18N
 
