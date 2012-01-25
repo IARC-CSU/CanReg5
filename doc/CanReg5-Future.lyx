@@ -52,9 +52,8 @@ By: Morten Johannes Ervik, CIN, IARC
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename CanReg5-Instructions/0.png
-	width 2.24931in
-	height 2.24931in
+	filename CanReg5-Instructions/LogoBetaNewer.png
+	width 50col%
 
 \end_inset
 
@@ -136,7 +135,7 @@ Better database connection security.
 \end_layout
 
 \begin_layout Itemize
-Move deprecated cases to a different table?
+Move deprecated/obsolete cases to a different table?
 \end_layout
 
 \begin_layout Itemize
@@ -439,6 +438,12 @@ Other? Chinese?
 Improve workflow during data entry.
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Use another GUI/form system? http://www.miglayout.com/ ?
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Build a dictionary chooser into the record editor? 
 \end_layout
