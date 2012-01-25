@@ -9937,6 +9937,29 @@ Category: Tables
 \end_layout
 
 \end_deeper
+\begin_layout Itemize
+\align left
+Using a population dataset with a cut off age at less than 85 while building
+ some R-tables leads to errors in the last age group in the tables.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\align left
+Severity: Shouldn't cause loss of data 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Priority: Medium 
+\end_layout
+
+\begin_layout Itemize
+\align left
+Category: Tables
+\end_layout
+
+\end_deeper
 \begin_layout Section
 
 \family sans

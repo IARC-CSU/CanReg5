@@ -1,5 +1,12 @@
 Changelog
 
+5.00.13
+- Added functionality in the system definition editor to detect running databases and changes that impacts on the database structure and warns the user about that.
+- Reverted back to the old way of accessing the twitter rss feed.
+- Logo updated.
+- Updated documentation and roadmap.
+- Other bug fixes.
+
 5.00.12
 - Tables for "age specific cases per 100.000" and "age specific cases" can now be written to a character separated file and opened in general spreadsheets for further work.
 - Duplicate entries no longer show up in the list of favourite servers.

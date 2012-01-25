@@ -416,6 +416,10 @@ Person Search Status.
 The possibility to select premade dictionaries during set up?
 \end_layout
 
+\begin_layout Itemize
+Migrate GUI away from Swing Application Framework?
+\end_layout
+
 \begin_layout Section*
 Data Entry related
 \end_layout

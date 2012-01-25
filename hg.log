@@ -1,5 +1,50 @@
-changeset:   944:422ba2b3d6b2
+changeset:   953:5d2b0f93934f
 tag:         tip
+user:        ErvikM@X90164
+date:        Wed Jan 25 10:14:10 2012 +0100
+summary:     Added functionality in the system definition editor to detect running databases and changes that impacts on the database structure and warns the user about that.
+
+changeset:   952:117beb277a3b
+user:        ErvikM@X90164.iarc.lan
+date:        Wed Jan 25 10:13:20 2012 +0100
+summary:     Updated documentation and roadmap.
+
+changeset:   951:ae1dbdb043e8
+user:        ErvikM@X90164
+date:        Mon Jan 23 17:01:20 2012 +0100
+summary:     Handbook updated with info on upgraded system definition editor.
+
+changeset:   950:dde9e92558d4
+user:        ErvikM@X90164
+date:        Mon Jan 23 16:26:53 2012 +0100
+summary:     Added functionality in the system definition editor to detect running databases and changes that impacts on the database structure and warns the user about that.
+
+changeset:   949:ecc9022a81f7
+user:        ErvikM@X90164
+date:        Mon Jan 23 15:16:52 2012 +0100
+summary:     Logo updated.
+
+changeset:   948:f63a9e85b5a0
+user:        ErvikM@X90164
+date:        Fri Dec 09 11:20:28 2011 +0100
+summary:     Reverted back to the old way of accessing the twitter rss feed.
+
+changeset:   947:13471cba2ed2
+user:        ErvikM@X90164
+date:        Thu Dec 08 16:51:59 2011 +0100
+summary:     5.00.12
+
+changeset:   946:824accd79c03
+user:        ErvikM@X90164
+date:        Thu Dec 08 16:43:34 2011 +0100
+summary:     5.00.12
+
+changeset:   945:3ba98d209411
+user:        ErvikM@X90164
+date:        Thu Dec 08 16:39:32 2011 +0100
+summary:     Updated translations.
+
+changeset:   944:422ba2b3d6b2
 user:        ErvikM@X90164
 date:        Thu Dec 08 16:24:04 2011 +0100
 summary:     Better feedback while logging in. A progress bar shows up if things take long.
