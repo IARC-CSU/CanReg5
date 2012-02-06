@@ -38,7 +38,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import org.jdesktop.application.Action;
 
