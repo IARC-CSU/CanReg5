@@ -25,7 +25,7 @@ import java.io.Serializable;
  *
  * @author ervikm
  */
-public class DatabaseVariablesListElement implements Serializable, DatabaseElement {
+public class DatabaseVariablesListElement implements Serializable, DatabaseElement, Comparable<DatabaseVariablesListElement> {
     // Table in the database for the variable
 
     private String table;
@@ -483,5 +483,10 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     @Override
     public boolean userVariable() {
         return (getGroupID() > 0);
+    }
+
+    @Override
+    public int compareTo(DatabaseVariablesListElement o) {
+        return toString().compareTo(o.toString());
     }
 }
