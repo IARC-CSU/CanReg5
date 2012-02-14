@@ -17,3 +17,11 @@
 ^conf/tables/r/makeFile\.R\.bak$
 ^inno-build\.bat\.bak$
 ^src/fr_propertiesFiles\.txt$
+syntax: glob
+.hg.7z
+.class
+build/*
+*.jar
+hg-old/*
+translations/*
+dist/web/CanReg5-Instructions.pdf
