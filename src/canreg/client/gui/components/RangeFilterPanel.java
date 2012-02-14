@@ -17,8 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
-
 /*
  * RangeFilterPanel.java
  *
@@ -29,8 +27,10 @@ package canreg.client.gui.components;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.Tools;
+import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
@@ -38,6 +38,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -66,10 +67,12 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
     private DatabaseVariablesListElement[] tumourVariablesInDB;
     private DatabaseVariablesListElement[] sourceVariablesInDB;
     private boolean rangeEnabled = true;
+    private GlobalToolBox globalToolBox;
 
     /** Creates new form RangeFilterPanel */
     public RangeFilterPanel() {
         initComponents();
+        globalToolBox = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox();
     }
 
     /**
@@ -111,6 +114,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
         refreshVariableList();
         refreshFilterComboBox();
         refreshIndexList();
+        setSelectedTable(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME);
     }
 
     private static DatabaseVariablesListElement[] getArrayOfIndexedVariables(DatabaseIndexesListElement[] indexes) {
@@ -178,7 +182,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
      */
     public void setTableChooserVisible(boolean visible) {
         tableChooserPanel.setVisible(visible);
-        tableChooserComboBox.setSelectedItem(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME);
+        setSelectedTable(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME);
     }
 
     /**
@@ -460,7 +464,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
     private void refreshIndexList() {
         DatabaseIndexesListElement[] indexesInTableTemp;
         String tableName = tableChooserComboBox.getSelectedItem().toString();
-        // tidy this for sources
+        // TODO: tidy this for sources
         if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
             LinkedList<DatabaseIndexesListElement> tempIndexesInTable = new LinkedList<DatabaseIndexesListElement>();
             for (int i = 0; i
@@ -531,6 +535,7 @@ private void refreshTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
 private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tableChooserComboBoxActionPerformed
     refreshVariableList();
     refreshIndexList();
+    selectedTableChanged(tableChooserComboBox.getSelectedItem().toString());
     filterWizardInternalFrame.setTableName(tableChooserComboBox.getSelectedItem().toString());
     actionListener.actionPerformed(new ActionEvent(this, 0, "tableChanged"));
 }//GEN-LAST:event_tableChooserComboBoxActionPerformed
@@ -840,5 +845,22 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
 
     public void setSelectedTable(String table) {
         tableChooserComboBox.setSelectedItem(table);
+        // selectedTableChanged(table);
+    }
+
+    private void selectedTableChanged(String table) {
+        // set sort by variable
+        // System.out.println(table);
+        Arrays.sort(variablesInTable);
+        if (table.contains(Globals.TUMOUR_TABLE_NAME)) {
+            int n = Arrays.binarySearch(variablesInTable, globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.IncidenceDate.toString()));
+            sortByChooserComboBox.setSelectedItem(variablesInTable[n]);
+        } else if (table.contains(Globals.PATIENT_TABLE_NAME)) {
+            int n = Arrays.binarySearch(variablesInTable, globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()));
+            sortByChooserComboBox.setSelectedItem(variablesInTable[n]);
+        } else if (table.contains(Globals.SOURCE_TABLE_NAME)) {
+            int n = Arrays.binarySearch(variablesInTable, globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()));
+            sortByChooserComboBox.setSelectedItem(variablesInTable[n]);
+        }
     }
 }
