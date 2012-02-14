@@ -25,3 +25,10 @@ build/*
 hg-old/*
 translations/*
 dist/web/CanReg5-Instructions.pdf
+*.bak
+dist/CanReg5-Setup.exe
+dist/*
+doc/*.epub
+doc/*.pdf
+*.lyx~
+doc/CanReg5-Instructions/*.pdf
