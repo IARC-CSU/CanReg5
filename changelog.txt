@@ -1,5 +1,11 @@
 Changelog
 
+5.00.14
+- Fixed an import related bug where sometimes cases were missed during imort!
+- The browser sorts by default by Incidence Date/PatientID/SourceRecordID depending on tables shown.
+- Updated the doc.
+- Other minor fixes.
+
 5.00.13
 - Added functionality in the system definition editor to detect running databases and changes that impacts on the database structure and warns the user about that.
 - Reverted back to the old way of accessing the twitter rss feed.
