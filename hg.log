@@ -1,5 +1,15 @@
-changeset:   956:f7eb2b364cfd
+changeset:   958:5e8c3f24dfc5
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 16 15:19:56 2012 +0100
+summary:     Fixed a nullpointer error in the rangefilter panel if the actionlistener had not been set.
+
+changeset:   957:541903408286
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 16 12:01:12 2012 +0100
+summary:     5.00.14
+
+changeset:   956:f7eb2b364cfd
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Thu Feb 16 09:11:31 2012 +0100
 summary:     Updated the doc.

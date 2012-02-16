@@ -1,5 +1,8 @@
 Changelog
 
+5.00.15
+- Fixed a nullpointer error in the rangefilter panel if the actionlistener had not been set.
+
 5.00.14
 - Fixed an import related bug where sometimes cases were missed during imort!
 - The browser sorts by default by Incidence Date/PatientID/SourceRecordID depending on tables shown.
