@@ -66,7 +66,6 @@
 \tracking_changes false
 \output_changes false
 \author "" 
-\author "" 
 \end_header
 
 \begin_body
@@ -328,23 +327,18 @@ twitter
 
 \begin_layout Standard
 \align left
-We have created a project page at Project Kenai to help us keep track of
- issues with CanReg5: 
+We have created a project page at SourceForge to help us keep track of issues
+ with CanReg5: 
 \begin_inset CommandInset href
 LatexCommand href
-target "http://kenai.com/projects/canreg"
+target "http://sourceforge.net/projects/canreg/"
 
 \end_inset
 
 .
- This consists of one open forum, one closed user forum and an issue tracker
- (standard BugZilla).
- To have access to the user forum and the issue tracker you need to create
- an account at Project Kenai and ask to be associated with the CanReg project.
- This is free of charge.
- Using these tools allows you to see what error reports other CanReg users
+ Using tools there allows you to see what error reports other CanReg users
  have already filed and if solutions have already been proposed and also
- discuss potential improvements for CanReg5.
+ discuss potential improvements for CanReg5, before posting your own queries.
 \end_layout
 
 \begin_layout Standard
@@ -564,7 +558,7 @@ Checking if you have the latest version of CanReg installed.
 
 \begin_layout Standard
 \align left
-If you have version 4.99.0 or no CanReg5 at all you can 
+(If you have version 4.99.0 or no CanReg5 at all you can 
 \begin_inset Index
 status open
 
@@ -581,7 +575,7 @@ target "http://www.iacr.com.fr/CanReg5/CanReg5.zip"
 
 \end_inset
 
-
+)
 \end_layout
 
 \begin_layout Section
