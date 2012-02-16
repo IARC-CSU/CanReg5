@@ -537,11 +537,15 @@ private void tableChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     refreshIndexList();
     selectedTableChanged(tableChooserComboBox.getSelectedItem().toString());
     filterWizardInternalFrame.setTableName(tableChooserComboBox.getSelectedItem().toString());
-    actionListener.actionPerformed(new ActionEvent(this, 0, "tableChanged"));
+    if (actionListener != null) {
+        actionListener.actionPerformed(new ActionEvent(this, 0, "tableChanged"));
+    }
 }//GEN-LAST:event_tableChooserComboBoxActionPerformed
 
 private void sortByChooserComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortByChooserComboBoxActionPerformed
-    actionListener.actionPerformed(new ActionEvent(this, 0, "sortby"));
+    if (actionListener != null) {
+        actionListener.actionPerformed(new ActionEvent(this, 0, "sortby"));
+    }
 }//GEN-LAST:event_sortByChooserComboBoxActionPerformed
 
 private void filterComboBoxMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filterComboBoxMousePressed
@@ -737,7 +741,9 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
             refreshFilterComboBox();
             filterComboBox.setSelectedIndex(position);
         }
-        actionListener.actionPerformed(new ActionEvent(this, 0, "refresh"));
+        if (actionListener != null) {
+            actionListener.actionPerformed(new ActionEvent(this, 0, "refresh"));
+        }
     }
 
     /**
@@ -810,7 +816,9 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
         int position = addFilterToComboBox(filter);
         refreshFilterComboBox();
         filterComboBox.setSelectedIndex(position);
-        actionListener.actionPerformed(new ActionEvent(this, 0, "refresh"));
+        if (actionListener != null) {
+            actionListener.actionPerformed(new ActionEvent(this, 0, "refresh"));
+        }
     }
 
     @Override
