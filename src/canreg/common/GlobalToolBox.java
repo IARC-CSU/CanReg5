@@ -20,7 +20,7 @@
 
 package canreg.common;
 
-import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
+// import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -39,7 +39,7 @@ public class GlobalToolBox {
     private Document doc;
     private Map<String, DatabaseVariablesListElement> standardVariableNameToDatabaseVariableListElementMap;
     private Map<Integer, DatabaseGroupsListElement> groupIDToDatabaseGroupListElementMap;
-    private Map<IARCStandardVariableNames, String> mapIARCstandardVariablesVariableName;
+    // private Map<IARCStandardVariableNames, String> mapIARCstandardVariablesVariableName;
     private DatabaseVariablesListElement[] databaseVariablesListElements;
     private Charset standardCharSet;
     private Translator translator;
@@ -138,8 +138,13 @@ public class GlobalToolBox {
 
     /**
      * @return the mapIARCstandardVariablesVariableName
-     */
+     * 
+//   Commented away to be able to disable the IARCtools package... 
+//    
+
+     
     public Map<IARCStandardVariableNames, String> getMapIARCstandardVariablesVariableName() {
         return mapIARCstandardVariablesVariableName;
     }
+     */
 }

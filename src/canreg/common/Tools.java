@@ -23,7 +23,7 @@ import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.tools.ImageSelection;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.qualitycontrol.PersonSearcher.CompareAlgorithms;
-import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
+// import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
 import java.awt.AWTException;
 import java.awt.Image;
 import java.awt.Robot;
@@ -890,107 +890,110 @@ public class Tools {
         return translator;
     }
 
-    public static Map<IARCStandardVariableNames, String> getMapIARCstandardVariablesVariableName(Document doc, String NAMESPACE) {
-        EnumMap<IARCStandardVariableNames, String> map = new EnumMap<IARCStandardVariableNames, String>(IARCStandardVariableNames.class);
-        DatabaseVariablesListElement[] variables = getVariableListElements(doc, NAMESPACE);
-        Map<StandardVariableNames, IARCStandardVariableNames> mapStdVarbNamesIARCStdVarbNames = getMapStdVarbNamesIARCStdVarbNames();
-
-        for (DatabaseVariablesListElement variable : variables) {
-            String stdNameString = variable.getStandardVariableName();
-            if (stdNameString != null) {
-                try {
-                    StandardVariableNames stdVarb = StandardVariableNames.valueOf(stdNameString);
-                    IARCStandardVariableNames iarcStdVarb = mapStdVarbNamesIARCStdVarbNames.get(stdVarb);
-                    if (iarcStdVarb != null) {
-                        map.put(iarcStdVarb, variable.getDatabaseVariableName());
-                    }
-                } catch (java.lang.IllegalArgumentException ex) {
-                    Logger.getLogger(Tools.class.getName()).log(Level.WARNING, "{0} is not a standard variable name...", stdNameString);
-                }
-            }
-        }
-
-        return map;
-    }
-
-    private static Map<StandardVariableNames, IARCStandardVariableNames> getMapStdVarbNamesIARCStdVarbNames() {
-        EnumMap<StandardVariableNames, IARCStandardVariableNames> map = new EnumMap<StandardVariableNames, IARCStandardVariableNames>(StandardVariableNames.class);
-
-        /**
-         * Date
-         * String
-         * Coded yyyyMMdd
-         */
-        map.put(StandardVariableNames.IncidenceDate, IARCStandardVariableNames.IncidenceDate);
-        /**
-         * Date
-         * String
-         * Coded yyyyMMdd
-         */
-        map.put(StandardVariableNames.BirthDate, IARCStandardVariableNames.BirthDate);
-        /**
-         * Age at diagnosis
-         * Number
-         * Unknown age 999
-         */
-        map.put(StandardVariableNames.Age, IARCStandardVariableNames.Age);
-        /**
-         * Gender
-         * Coded 1=Male, 2=Female, 9=Unknown
-         */
-        map.put(StandardVariableNames.Sex, IARCStandardVariableNames.Sex);
-
-        /**
-         * Topography, Site
-         * String
-         * Coded according to ICD-O-3
-         */
-        map.put(StandardVariableNames.Topography, IARCStandardVariableNames.Topography);
-        /**
-         * Morphology, Histology
-         * String
-         * Coded according to ICD-O-3
-         */
-        map.put(StandardVariableNames.Morphology, IARCStandardVariableNames.Morphology);
-        /**
-         * Behaviour
-         * String
-         * Coded according to ICD-O-3
-         */
-        map.put(StandardVariableNames.Behaviour, IARCStandardVariableNames.Behaviour);
-
-        /**
-         * Basis of Diagnosis
-         * String
-         * Coded according to ICD-O-3
-         */
-        map.put(StandardVariableNames.BasisDiagnosis, IARCStandardVariableNames.BasisDiagnosis);
-        /**
-         * ICD10
-         */
-        map.put(StandardVariableNames.ICD10, IARCStandardVariableNames.ICD10);
-        /**
-         * Date
-         * String
-         * Coded yyyyMMdd
-         */
-        map.put(StandardVariableNames.Lastcontact, IARCStandardVariableNames.Lastcontact);
-        /**
-         * Grade
-         * Value between 1 and 9
-         */
-        map.put(StandardVariableNames.Grade, IARCStandardVariableNames.Grade);
-        /**
-         * International Childhood Cancer Classification
-         */
-        map.put(StandardVariableNames.ICCC, IARCStandardVariableNames.ICCC);
-        /**
-         * Stage
-         */
-        map.put(StandardVariableNames.Stage, IARCStandardVariableNames.Stage);
-        return map;
-    }
-
+// TODO reimplement method to access the IARCTools package...
+//   Commented away to be able to disable the IARCtools package... 
+//    
+    
+//    public static Map<IARCStandardVariableNames, String> getMapIARCstandardVariablesVariableName(Document doc, String NAMESPACE) {
+//        EnumMap<IARCStandardVariableNames, String> map = new EnumMap<IARCStandardVariableNames, String>(IARCStandardVariableNames.class);
+//        DatabaseVariablesListElement[] variables = getVariableListElements(doc, NAMESPACE);
+//        Map<StandardVariableNames, IARCStandardVariableNames> mapStdVarbNamesIARCStdVarbNames = getMapStdVarbNamesIARCStdVarbNames();
+//
+//        for (DatabaseVariablesListElement variable : variables) {
+//            String stdNameString = variable.getStandardVariableName();
+//            if (stdNameString != null) {
+//                try {
+//                    StandardVariableNames stdVarb = StandardVariableNames.valueOf(stdNameString);
+//                    IARCStandardVariableNames iarcStdVarb = mapStdVarbNamesIARCStdVarbNames.get(stdVarb);
+//                    if (iarcStdVarb != null) {
+//                        map.put(iarcStdVarb, variable.getDatabaseVariableName());
+//                    }
+//                } catch (java.lang.IllegalArgumentException ex) {
+//                    Logger.getLogger(Tools.class.getName()).log(Level.WARNING, "{0} is not a standard variable name...", stdNameString);
+//                }
+//            }
+//        }
+//
+//        return map;
+//    }
+//
+//    private static Map<StandardVariableNames, IARCStandardVariableNames> getMapStdVarbNamesIARCStdVarbNames() {
+//        EnumMap<StandardVariableNames, IARCStandardVariableNames> map = new EnumMap<StandardVariableNames, IARCStandardVariableNames>(StandardVariableNames.class);
+//
+//        /**
+//         * Date
+//         * String
+//         * Coded yyyyMMdd
+//         */
+//        map.put(StandardVariableNames.IncidenceDate, IARCStandardVariableNames.IncidenceDate);
+//        /**
+//         * Date
+//         * String
+//         * Coded yyyyMMdd
+//         */
+//        map.put(StandardVariableNames.BirthDate, IARCStandardVariableNames.BirthDate);
+//        /**
+//         * Age at diagnosis
+//         * Number
+//         * Unknown age 999
+//         */
+//        map.put(StandardVariableNames.Age, IARCStandardVariableNames.Age);
+//        /**
+//         * Gender
+//         * Coded 1=Male, 2=Female, 9=Unknown
+//         */
+//        map.put(StandardVariableNames.Sex, IARCStandardVariableNames.Sex);
+//
+//        /**
+//         * Topography, Site
+//         * String
+//         * Coded according to ICD-O-3
+//         */
+//        map.put(StandardVariableNames.Topography, IARCStandardVariableNames.Topography);
+//        /**
+//         * Morphology, Histology
+//         * String
+//         * Coded according to ICD-O-3
+//         */
+//        map.put(StandardVariableNames.Morphology, IARCStandardVariableNames.Morphology);
+//        /**
+//         * Behaviour
+//         * String
+//         * Coded according to ICD-O-3
+//         */
+//        map.put(StandardVariableNames.Behaviour, IARCStandardVariableNames.Behaviour);
+//
+//        /**
+//         * Basis of Diagnosis
+//         * String
+//         * Coded according to ICD-O-3
+//         */
+//        map.put(StandardVariableNames.BasisDiagnosis, IARCStandardVariableNames.BasisDiagnosis);
+//        /**
+//         * ICD10
+//         */
+//        map.put(StandardVariableNames.ICD10, IARCStandardVariableNames.ICD10);
+//        /**
+//         * Date
+//         * String
+//         * Coded yyyyMMdd
+//         */
+//        map.put(StandardVariableNames.Lastcontact, IARCStandardVariableNames.Lastcontact);
+//        /**
+//         * Grade
+//         * Value between 1 and 9
+//         */
+//        map.put(StandardVariableNames.Grade, IARCStandardVariableNames.Grade);
+//        /**
+//         * International Childhood Cancer Classification
+//         */
+//        map.put(StandardVariableNames.ICCC, IARCStandardVariableNames.ICCC);
+//        /**
+//         * Stage
+//         */
+//        map.put(StandardVariableNames.Stage, IARCStandardVariableNames.Stage);
+//        return map;
+//    }
     // This method writes a image to the system clipboard.
 // otherwise it returns null.
     public static void setClipboard(Image image) {

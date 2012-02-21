@@ -21,20 +21,25 @@
  package canreg.common.database;
 
 import canreg.common.Translator;
-import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
-import fr.iarc.cin.iarctools.tools.RecordInterface;
+//   Commented away to be able to disable the IARCtools package... 
+//    
+// import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
+// import fr.iarc.cin.iarctools.tools.RecordInterface;
 import java.io.Serializable;
-import java.util.EnumMap;
 import java.util.HashMap;
 
 /**
  *
  * @author ervikm
  */
-public class DatabaseRecord implements Serializable, RecordInterface {
+public class DatabaseRecord implements Serializable 
+//   Commented away to be able to disable the IARCtools package... 
+//    
+// , RecordInterface 
+{
 
     private HashMap<String, Object> variables;
-    private EnumMap<IARCStandardVariableNames, String> map;
+    // private EnumMap<IARCStandardVariableNames, String> map;
     private Translator translator;
 
     /**
@@ -70,24 +75,28 @@ public class DatabaseRecord implements Serializable, RecordInterface {
         return variables.keySet().toArray(new String[0]);
     }
 
-    public void setMapIARCstandardVariablesVariableName(EnumMap<IARCStandardVariableNames, String> map) {
-        this.map = map;
-    }
+//   Commented away to be able to disable the IARCtools package... 
+//    
+//    public void setMapIARCstandardVariablesVariableName(EnumMap<IARCStandardVariableNames, String> map) {
+//        this.map = map;
+//    }
 
     public void setTranslator(Translator translator) {
         this.translator = translator;
     }
 
-    @Override
-    public Object getValueByIARCStandardVariableName(IARCStandardVariableNames iarcVariableName) {
-        String variableName = map.get(iarcVariableName);
-        Object value = null;
-        if (variableName != null) {
-            variables.get(variableName);
-            if (translator != null) {
-                value = translator.translate(variableName, value);
-            }
-        }
-        return value;
-    }
+//   Commented away to be able to disable the IARCtools package... 
+//    
+//    @Override
+//    public Object getValueByIARCStandardVariableName(IARCStandardVariableNames iarcVariableName) {
+//        String variableName = map.get(iarcVariableName);
+//        Object value = null;
+//        if (variableName != null) {
+//            variables.get(variableName);
+//            if (translator != null) {
+//                value = translator.translate(variableName, value);
+//            }
+//        }
+//        return value;
+//    }
 }

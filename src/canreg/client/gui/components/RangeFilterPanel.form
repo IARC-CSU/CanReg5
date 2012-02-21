@@ -83,11 +83,11 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="rangeStartTextField" pref="73" max="32767" attributes="0"/>
+                  <Component id="rangeStartTextField" pref="75" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="rangeEndTextField" pref="73" max="32767" attributes="0"/>
+                  <Component id="rangeEndTextField" pref="75" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -185,10 +185,10 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="filterComboBox" alignment="0" pref="311" max="32767" attributes="1"/>
+              <Component id="filterComboBox" alignment="0" pref="315" max="32767" attributes="1"/>
               <Group type="102" alignment="1" attributes="0">
                   <Component id="useFilterCheckBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="127" max="32767" attributes="0"/>
+                  <EmptySpace pref="131" max="32767" attributes="0"/>
                   <Component id="wizardButton" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -255,7 +255,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <Component id="recordsShownField" pref="6" max="32767" attributes="0"/>
+                  <Component id="recordsShownField" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="recordsShownLabel" min="-2" max="-2" attributes="0"/>
               </Group>

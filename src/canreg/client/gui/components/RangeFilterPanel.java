@@ -30,7 +30,6 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.Tools;
-import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
