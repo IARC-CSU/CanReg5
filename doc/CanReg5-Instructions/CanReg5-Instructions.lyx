@@ -66,6 +66,7 @@
 \tracking_changes false
 \output_changes false
 \author "" 
+\author "" 
 \end_header
 
 \begin_body
@@ -74,6 +75,7 @@
 \align center
 \begin_inset Graphics
 	filename LogoBetaNewer.png
+	lyxscale 33
 	width 66col%
 
 \end_inset
