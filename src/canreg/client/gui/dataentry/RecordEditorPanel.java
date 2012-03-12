@@ -187,7 +187,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             checksLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditorPanel").getString("DONE:_") + resultCode.toString());
             if (resultCode == ResultCode.OK || resultCode == ResultCode.Query) {
                 canBeConfirmed = true;
-            } else if (resultCode == resultCode.Rare) {
+            } else if (resultCode == ResultCode.Rare) {
                 if (CanRegClientApp.getApplication().getUserRightLevel() == Globals.UserRightLevels.SUPERVISOR) {
                     canBeConfirmed = true;
                 }
