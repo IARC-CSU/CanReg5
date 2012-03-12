@@ -317,59 +317,63 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      * @param worldPopulation the referencePopulation to set
      */
     public void setWorldPopulation(PopulationDataset worldPopulation) {
-        this.worldPopulation = worldPopulation;
-        this.worldPopulationID = worldPopulation.getPopulationDatasetID();
+        if (worldPopulation != null) {
+            this.worldPopulation = worldPopulation;
+            this.worldPopulationID = worldPopulation.getPopulationDatasetID();
+        }
     }
 
     public int getWorldPopulationForAgeGroupIndex(int sex, int index) throws IncompatiblePopulationDataSetException {
-        AgeGroupStructure wags = worldPopulation.getAgeGroupStructure();
-        // if this has the very same age group structure as the worldpop - return this
         int count = Integer.MIN_VALUE;
-        if (wags.equals(ageGroupStructure)) {
-            count = worldPopulation.getAgeGroupCount(sex, index);
-        } else if (wags.getSizeOfGroups() == ageGroupStructure.getSizeOfGroups()) {
-            // we have the same general age group size
-            if (wags.getSizeOfFirstGroup() == ageGroupStructure.getSizeOfFirstGroup()) {
-                count = getWorldPopulationForAgeGroupIndex(sex, index, 0);
-            } // if the size of the groups are the same, 
-            // but the first group size is different
-            // and smaller than the group size
-            else if (ageGroupStructure.getSizeOfFirstGroup() < ageGroupStructure.getSizeOfGroups()) {
-                int offset = -1;
-                if (index == 0) {
-                    count = worldPopulation.getAgeGroupCount(sex, index)
-                            / ageGroupStructure.getSizeOfGroups();
-                } else if (index == 1) {
-                    int firstGroupCount = worldPopulation.getAgeGroupCount(sex, 0)
-                            / ageGroupStructure.getSizeOfGroups();
-                    count = getWorldPopulationForAgeGroupIndex(sex, index, offset)
-                            - firstGroupCount;
-                } else {
-                    count = getWorldPopulationForAgeGroupIndex(sex, index, offset);
-                }
-            } 
-            
-            // if the size of the groups are the same, 
-            // but the first group size is different
-            // and bigger than the group size 
-            // and its size is a product of the group size
-            else if (ageGroupStructure.getSizeOfFirstGroup() > ageGroupStructure.getSizeOfGroups()
-                    && ageGroupStructure.getSizeOfFirstGroup() % ageGroupStructure.getSizeOfGroups() == 0) {
-                int offset = -((ageGroupStructure.getSizeOfFirstGroup() / ageGroupStructure.getSizeOfGroups()));
-                if (index == 0) {
-                    // group all the ages that 
-                    for (int tempIndex = 0; tempIndex < offset; tempIndex++) {
-                        count += getWorldPopulationForAgeGroupIndex(sex, index);
+        if (worldPopulation != null) {
+            AgeGroupStructure wags = worldPopulation.getAgeGroupStructure();
+            // if this has the very same age group structure as the worldpop - return this
+
+            if (wags.equals(ageGroupStructure)) {
+                count = worldPopulation.getAgeGroupCount(sex, index);
+            } else if (wags.getSizeOfGroups() == ageGroupStructure.getSizeOfGroups()) {
+                // we have the same general age group size
+                if (wags.getSizeOfFirstGroup() == ageGroupStructure.getSizeOfFirstGroup()) {
+                    count = getWorldPopulationForAgeGroupIndex(sex, index, 0);
+                } // if the size of the groups are the same, 
+                // but the first group size is different
+                // and smaller than the group size
+                else if (ageGroupStructure.getSizeOfFirstGroup() < ageGroupStructure.getSizeOfGroups()) {
+                    int offset = -1;
+                    if (index == 0) {
+                        count = worldPopulation.getAgeGroupCount(sex, index)
+                                / ageGroupStructure.getSizeOfGroups();
+                    } else if (index == 1) {
+                        int firstGroupCount = worldPopulation.getAgeGroupCount(sex, 0)
+                                / ageGroupStructure.getSizeOfGroups();
+                        count = getWorldPopulationForAgeGroupIndex(sex, index, offset)
+                                - firstGroupCount;
+                    } else {
+                        count = getWorldPopulationForAgeGroupIndex(sex, index, offset);
                     }
-                } else {
-                    count = getWorldPopulationForAgeGroupIndex(sex, index, offset);
+                } // if the size of the groups are the same, 
+                // but the first group size is different
+                // and bigger than the group size 
+                // and its size is a product of the group size
+                else if (ageGroupStructure.getSizeOfFirstGroup() > ageGroupStructure.getSizeOfGroups()
+                        && ageGroupStructure.getSizeOfFirstGroup() % ageGroupStructure.getSizeOfGroups() == 0) {
+                    int offset = -((ageGroupStructure.getSizeOfFirstGroup() / ageGroupStructure.getSizeOfGroups()));
+                    if (index == 0) {
+                        // group all the ages that 
+                        for (int tempIndex = 0; tempIndex < offset; tempIndex++) {
+                            count += getWorldPopulationForAgeGroupIndex(sex, index);
+                        }
+                    } else {
+                        count = getWorldPopulationForAgeGroupIndex(sex, index, offset);
+                    }
                 }
             }
+            // Still hasn't assigned a proper value? Throw an exception...
+            if (count == Integer.MIN_VALUE) {
+                throw new IncompatiblePopulationDataSetException();
+            }
         }
-        // Still hasn't assigned a proper value? Throw an exception...
-        if (count == Integer.MIN_VALUE) {
-            throw new IncompatiblePopulationDataSetException();
-        }
+
         return count;
     }
 
