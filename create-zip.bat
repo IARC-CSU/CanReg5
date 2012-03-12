@@ -8,6 +8,10 @@ REM if not exist %isx% set errormsg=%isx% not found && goto errorhandler
 copy doc\CanReg5-Instructions\CanReg5-Instructions.pdf doc\
 %zx% a -tzip CanReg5.zip doc\CanReg5-Instructions.pdf
 %zx% a -tzip CanReg5.zip changelog.txt
+REM pull out translations and zip them
+rsync -Rtrv --include "*/" --include "*.properties" --exclude "*" ./src/canreg/client/ ./translations/
+%zx% a -tzip translations.zip translations\src
+REM prepare distribution
 cd %distfolder%
 %zx% a -tzip ..\CanReg5.zip .
 md web
@@ -15,5 +19,6 @@ copy ..\changelog.txt web\
 copy ..\version.txt web\
 copy ..\doc\CanReg5-Instructions\CanReg5-Instructions.pdf web\
 move ..\CanReg5.zip web\
+move ..\translations.zip .\
 cd ..
 goto :eof
