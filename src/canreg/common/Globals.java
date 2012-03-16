@@ -554,4 +554,14 @@ public class Globals {
     public static enum PatientUnduplicationStatusValues {
 
     }
+    
+    public static String[] TRANSLATED_LOCALES = {
+        "en",
+        "fr",
+        "pt",
+        "pt_PT",
+        "es",
+        "ru",
+        "zh"
+    };
 }
