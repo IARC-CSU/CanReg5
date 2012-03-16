@@ -38,6 +38,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -612,15 +613,16 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         int numberOfElementsAdded = 0;
         LinkedList localesList = new LinkedList();
         LinkedList localesNamesList = new LinkedList();
+        
+        List<String> translatedLocales = Arrays.asList(Globals.TRANSLATED_LOCALES); 
+        
         for (int i = 0; i < locales.length; i++) {
 
-            String country = locales[i].getDisplayCountry(locales[i]);
+            // String country = locales[i].getDisplayCountry(locales[i]);
             localeNames[i] = locales[i].getDisplayName(locales[i]);
-
-            if (country.trim().length() > 0) {
-                //skip it
-            } else {
-                if (locales[i].equals(currentLocale)) {
+            
+            if (translatedLocales.contains(locales[i].toString())) {
+                if (locales[i].toString().equalsIgnoreCase(currentLocale.toString())) {
                     currentLocaleIndex = numberOfElementsAdded;
                 }
                 localesList.add(locales[i]);
@@ -691,7 +693,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private void saveValues() {
         // save values
         // localSettings.setLocale(Globals.LANGUAGES_AVAILABLE[languageComboBox.getSelectedIndex()]);
-        localSettings.setLocale(locales[languageComboBox.getSelectedIndex()].getLanguage());
+        localSettings.setLocale(locales[languageComboBox.getSelectedIndex()].toString());
 
         if (showOutlineCheckBox.isSelected()) {
             localSettings.setOutlineDragMode(true);
