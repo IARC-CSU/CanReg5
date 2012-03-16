@@ -1,5 +1,12 @@
 Changelog
 
+5.00.16b3
+- Portugese from Portugal added as langauge. (Thanks Gonçalo Forjaz)
+- Language chooser in Option Frame now only displays translated languages.
+- Fixed a potential null pointer error in the Population Datasets.
+- DerbyDB engine updated to version 10.8.
+- Tidied some old properties files.
+
 5.00.15
 - Fixed a nullpointer error in the rangefilter panel if the actionlistener had not been set.
 

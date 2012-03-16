@@ -1,5 +1,55 @@
-changeset:   958:5e8c3f24dfc5
+changeset:   968:09ebf36a513d
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 16 17:14:58 2012 +0100
+summary:     DerbyDB engine updated to version 10.8.
+
+changeset:   967:c2493f268a77
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 16 17:14:17 2012 +0100
+summary:     Language chooser in Option Frame now only displays translated languages.
+
+changeset:   966:821c40a492cb
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 16 17:13:34 2012 +0100
+summary:     Added translated languages to Globals.
+
+changeset:   965:addb9dbfea92
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 16 15:45:53 2012 +0100
+summary:     Portugese from Portugal added as langauge. (Thanks Gonçalo Forjaz)
+
+changeset:   964:16d3ea0fbded
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Mar 12 15:52:58 2012 +0100
+summary:     Fixed a potential null pointer error in the Population Datasets.
+
+changeset:   963:c2d660336bfb
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Mar 12 15:52:29 2012 +0100
+summary:     Updated scripts.
+
+changeset:   962:21aa4e4d6c7b
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Mar 12 15:51:46 2012 +0100
+summary:     Tidied some old properties files.
+
+changeset:   961:676649ae764a
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Tue Mar 06 16:37:32 2012 +0100
+summary:     Instructions and Future document updated.
+
+changeset:   960:24d66166b1f6
+user:        ErvikM@x110224
+date:        Tue Feb 21 16:11:36 2012 +0100
+summary:     Removed references to the IARCtools package - for now.
+
+changeset:   959:d5fdbfee045e
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu Feb 16 15:24:35 2012 +0100
+summary:     5.00.15
+
+changeset:   958:5e8c3f24dfc5
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Thu Feb 16 15:19:56 2012 +0100
 summary:     Fixed a nullpointer error in the rangefilter panel if the actionlistener had not been set.
