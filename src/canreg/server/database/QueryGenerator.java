@@ -301,6 +301,7 @@ public class QueryGenerator {
                 + "USER_LEVEL INT,"
                 + "EMAIL VARCHAR(255),"
                 + "REAL_NAME VARCHAR(255)"
+                + "USER_ROLE INT,"
                 + " )";
         return queryLine;
     }
