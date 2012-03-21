@@ -300,8 +300,8 @@ public class QueryGenerator {
                 + "PASSWORD VARCHAR(255),"
                 + "USER_LEVEL INT,"
                 + "EMAIL VARCHAR(255),"
-                + "REAL_NAME VARCHAR(255)"
-                + "USER_ROLE INT,"
+                + "REAL_NAME VARCHAR(255),"
+                + "USER_ROLE INT"
                 + " )";
         return queryLine;
     }
