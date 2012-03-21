@@ -1038,8 +1038,7 @@ public class CanRegDAO {
         String patientRecordID = (String) tumour.getVariable(patientRecordIDVariableName);
         // 
         if (tumourID == null
-                || tumourID.toString().trim().length() == 0 
-                // || !tumourID.toString().trim().startsWith(patientRecordID) // TODO: fix this! For now - disable it... (Maybe that is the best solution in the long run as well...)
+                || tumourID.toString().trim().length() == 0 // || !tumourID.toString().trim().startsWith(patientRecordID) // TODO: fix this! For now - disable it... (Maybe that is the best solution in the long run as well...)
                 ) {
             tumourID = getNextTumourID(patientRecordID);
             tumour.setVariable(tumourIDVariableName, tumourID);
@@ -2609,6 +2608,16 @@ public class CanRegDAO {
                 success = false;
             }
         }
+        return success;
+    }
+
+    public boolean addColumnToTable(String columnName, String columnType, String table) throws SQLException {
+        boolean success = false;
+
+        Statement statement = dbConnection.createStatement();
+        statement.execute(QueryGenerator.strAddColumnToTable(columnName, columnType, table));
+        success = true;
+
         return success;
     }
 }

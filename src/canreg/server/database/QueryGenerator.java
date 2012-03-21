@@ -691,4 +691,12 @@ public class QueryGenerator {
         String tumourRecordIDVariableNameSourceTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
         return "SELECT COUNT(*) AS N FROM APP.SOURCE GROUP BY " + tumourRecordIDVariableNameSourceTable + " ORDER BY N DESC";
     }
+
+    static String strAddColumnToTable(String columnName, String columnType, String table) {
+        return "ALTER TABLE APP." + table + " ADD COLUMN " + columnName.toUpperCase() + " " + columnType;
+    }
+    
+    static String strDropColumnFromTable(String columnName, String table) {
+        return "ALTER TABLE APP." + table + " DROP COLUMN " + columnName.toUpperCase();
+    }
 }

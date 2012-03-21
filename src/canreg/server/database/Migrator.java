@@ -20,6 +20,7 @@
 
 package canreg.server.database;
 
+import canreg.common.Globals;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,11 +58,14 @@ public class Migrator {
             if (databaseVersion.compareTo("4.99.5") < 0) {
                 migrateTo_4_99_5(canRegDAO);
             }
-            if (databaseVersion.compareTo("5.00.06") < 0) {
+            if (databaseVersion.length()<7 || databaseVersion.substring(0, 7).compareTo("5.00.06") < 0) {
                 migrateTo_5_00_06(canRegDAO);
             }
-        }
-        canRegDAO.setSystemPropery("DATABASE_VERSION", newVersion);
+            if (databaseVersion.length()<7 || databaseVersion.substring(0, 7).compareTo("5.00.17") < 0) {
+                migrateTo_5_00_17(canRegDAO);
+            }
+        }        
+        // canRegDAO.setSystemPropery("DATABASE_VERSION", newVersion);
     }
 
     private void migrateTo_4_99_5(CanRegDAO db) {
@@ -80,4 +84,14 @@ public class Migrator {
             Logger.getLogger(Migrator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    private void migrateTo_5_00_17(CanRegDAO db) {
+        try {
+            db.addColumnToTable("USER_ROLE", "INT", Globals.USERS_TABLE_NAME);
+            db.setSystemPropery("DATABASE_VERSION", "5.00.17");
+            Logger.getLogger(Migrator.class.getName()).log(Level.INFO, "Migrated the database to version 5.00.17.");
+        } catch (SQLException ex) {
+            Logger.getLogger(Migrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    } 
 }
