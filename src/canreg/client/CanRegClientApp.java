@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2011  International Agency for Research on Cancer
+ * Copyright (C) 2008-2012  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -121,6 +121,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private Properties appInfoProperties;
     private String canRegSystemVersionString;
     private TreeMap<String, Set<Integer>> locksMap;
+    private LockFile lockFile;
 
     public void changePassword(String encrypted) throws SecurityException, RemoteException {
         try {
@@ -328,9 +329,10 @@ public class CanRegClientApp extends SingleFrameApplication {
         };
 
         dateFormat = new SimpleDateFormat(Globals.DATE_FORMAT_STRING);
-
+        
+        // initialize this map
         locksMap = new TreeMap<String, Set<Integer>>();
-
+        
         addExitListener(maybeExit);
         splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("FINISHED."), 100);
     }
@@ -458,7 +460,6 @@ public class CanRegClientApp extends SingleFrameApplication {
             debugOut("LOGIN SUCCESSFULL");
             // This should work...
             systemName = server.getCanRegSystemName();
-
             loggedIn = true;
             doc = server.getDatabseDescription();
             dictionary = server.getDictionary();
@@ -472,6 +473,11 @@ public class CanRegClientApp extends SingleFrameApplication {
             checker = new Checker(globalToolBox.getStandardVariables());
             converter = new Converter(globalToolBox.getStandardVariables());
             this.username = username;
+
+            // create file for locked records
+            // locksMap = new TreeMap<String, Set<Integer>>();
+            lockFile = new LockFile(systemName+"-"+username);
+            locksMap = lockFile.getMap();
 
             return systemName;
         } else {
@@ -708,6 +714,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             loggedIn = false;
             canRegClientView.setUserRightsLevel(Globals.UserRightLevels.NOT_LOGGED_IN);
             localSettings.writeSettings();
+            lockFile.closeMap();
         } catch (SecurityException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -926,11 +933,12 @@ public class CanRegClientApp extends SingleFrameApplication {
     public synchronized void releaseRecord(int recordID, String tableName) throws SecurityException, RemoteException {
         try {
             // release a locked record
+            server.releaseRecord(recordID, tableName);
             Set lockSet = locksMap.get(tableName);
             if (lockSet != null) {
                 lockSet.remove(recordID);
             }
-            server.releaseRecord(recordID, tableName);
+            lockFile.writeMap();
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
@@ -1413,9 +1421,10 @@ public class CanRegClientApp extends SingleFrameApplication {
         Set lockSet = locksMap.get(tableName);
         if (lockSet == null) {
             lockSet = new TreeSet<Integer>();
-            locksMap.put(tableName, lockSet);
+            locksMap.put(tableName, lockSet);            
         }
         lockSet.add(recordID);
+        lockFile.writeMap();
     }
 
     public Patient[] getPatientRecordsByID(String recordID, boolean lock) throws SQLException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException, RemoteException {
@@ -1512,6 +1521,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 }
             }
         }
+        lockFile.writeMap();
     }
 
     public void showLogginFrame() {
@@ -1547,5 +1557,13 @@ public class CanRegClientApp extends SingleFrameApplication {
             return true;
         }
         return false;
+    }
+
+    public int getNumberOfRecordsLocked() {
+        return lockFile.getNumberOfRecordsLocked();
+    }
+
+    public void clearListOfLockedRecords() {
+        releaseAllRecordsHeldByThisClient();
     }
 }

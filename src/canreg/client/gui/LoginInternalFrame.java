@@ -889,7 +889,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         @Override
         protected Object doInBackground() {
             try {
-                if (!loginLocally) {                    
+                if (!loginLocally) {
                     canRegSystemName = CanRegClientApp.getApplication().loginRMI(serverObjectString, username, password);
                 } else {
                     // testing an approach to avoid the RMI for single users
@@ -933,6 +933,15 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             waitFrame.dispose();
             if (canRegSystemName != null) {
                 loggedIn(canRegSystemName, server, username);
+                // check for locked records
+                int recordsLocked = CanRegClientApp.getApplication().getNumberOfRecordsLocked();
+                if (recordsLocked > 0) {
+                    // "CanReg was not shut down properly - or is already running on this machine. Do you want to clear the list of locked records?"
+                    int result = JOptionPane.showConfirmDialog(rootPane, "CanReg was not shut down properly - or this user is already connected to this database from this computer. Do you want to clear the list of locked records?", "Do you want to clear the list of locked records?", JOptionPane.YES_NO_OPTION);
+                    if (result == JOptionPane.YES_OPTION) {
+                        CanRegClientApp.getApplication().clearListOfLockedRecords();
+                    }
+                }
             } else {
                 feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"));
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("COULD_NOT_LOG_IN_TO_THE_CANREG_SERVER_ON_") + server + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("_WITH_THE_GIVEN_CREDENTIALS.") + "\nPlease make sure you have entered the correct username and password.", java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);

@@ -140,15 +140,23 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(DatabaseElementPanel.REMOVE_ACTION)) {
-            elementsPanel.remove((Component) e.getSource());
             DatabaseElementPanel source = (DatabaseElementPanel) e.getSource();
-            elementPanelsSet.remove(source);
-            elementsPanel.revalidate();
-            elementsPanel.repaint();
-            // update positions
-            int i = 0;
-            for (DatabaseElementPanel element : elementPanelsSet) {
-                element.setPosition((i++));
+
+            // first see if this element is in use by others...
+            
+            // then try to remove
+            boolean successfullyRemoved = removeElement(source);
+            if (successfullyRemoved) {
+                // do this if successfull
+                elementsPanel.remove((Component) e.getSource());
+                elementPanelsSet.remove(source);
+                elementsPanel.revalidate();
+                elementsPanel.repaint();
+                // update positions
+                int i = 0;
+                for (DatabaseElementPanel element : elementPanelsSet) {
+                    element.setPosition((i++));
+                }
             }
         } else if (e.getActionCommand().equals(DatabaseElementPanel.MOVE_UP_ACTION)) {
             DatabaseElementPanel source = (DatabaseElementPanel) e.getSource();
@@ -229,4 +237,10 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
     public abstract Color colorize(DatabaseElement element);
 
     public abstract boolean visible(DatabaseElement element);
+
+    private boolean removeElement(DatabaseElementPanel source) {
+        boolean success = false;
+
+        return success;
+    }
 }
