@@ -106,6 +106,7 @@ public class Globals {
     static public String CANREG_LEVELS_FILE_NAME = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "levels.properties";
     static public String CANREG_UPDATED_INSTRUCTIONS_URL = "http://www.iacr.com.fr/CanReg5/CanReg5-instructions.pdf";
     static public String CANREG_UPDATED_INSTRUCTIONS_LOCAL_FILE = CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + "CanReg5-instructions.pdf";
+    static public String CANREG_LOCAL_LOCKED_RECORDS_FILE_NAME_SUFFIX = "-records.locked";
     static public String CANREG_INSTRUCTIONS_LOCAL_FILE = "CanReg5-instructions.pdf";
     public static String CANREG_CHANGELOG_URL = "http://www.iacr.com.fr/CanReg5/changelog.txt";
     /**
