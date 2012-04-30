@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.server.management;
 
 import canreg.common.DatabaseDictionaryListElement;
@@ -432,12 +431,19 @@ public final class SystemDescription {
      *
      * @param path
      */
-    public void saveSystemDescriptionXML(String path) {
+    public boolean saveSystemDescriptionXML(String path) {
+        boolean success = false;
         File file = new File(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER); // Check to see it the canreg system folder exists
         if (!file.exists()) {
             file.mkdirs(); // create it if necessary
         }
-        canreg.server.xml.Tools.writeXmlFile(doc, path);
+        try {
+            canreg.server.xml.Tools.writeXmlFile(doc, path);
+            success = true;
+        } catch (RuntimeException npe) {
+            Logger.getLogger(SystemDescription.class.getName()).log(Level.SEVERE, "Error writing system description...");
+        }
+        return success;
     }
 
     private TreeMap<String, DatabaseDictionaryListElement> getDictionaryMap() {
@@ -550,13 +556,13 @@ public final class SystemDescription {
             Element element = createPersonSearchVariable(variable);
             parentElement.appendChild(element);
         }
-        parentElement.appendChild(createElement(namespace + "minimum_match", personSearcher.getThreshold()+""));
+        parentElement.appendChild(createElement(namespace + "minimum_match", personSearcher.getThreshold() + ""));
     }
 
     private Element createPersonSearchVariable(PersonSearchVariable variable) {
         Element element = doc.createElement(namespace + "search_variable");
         element.appendChild(createElement(namespace + "variable_name", variable.getName()));
-        element.appendChild(createElement(namespace + "weigth", variable.getWeight()+""));
+        element.appendChild(createElement(namespace + "weigth", variable.getWeight() + ""));
         element.appendChild(createElement(namespace + "compare_algorithm", variable.getCompareAlgorithm().toString()));
         return element;
     }

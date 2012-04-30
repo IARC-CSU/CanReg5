@@ -583,7 +583,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                 // don't let the user save their new XML
                 JOptionPane.showMessageDialog(this, "Database '" + registryCodeTextField.getText() + "' exists and you have done changes to the structure of the database.\n"
                         + "You can't save this XML with this code before you have deleted the old database files.\n"
-                        + "Please refer to the handbook for more information on this.", "Database exists", JOptionPane.ERROR_MESSAGE);       
+                        + "Please refer to the handbook for more information on this.", "Database exists", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
@@ -610,12 +610,24 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             }
             file.renameTo(oldFile.getAbsoluteFile());
         }
-        systemDescription.saveSystemDescriptionXML(fileName);
-        String message = java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame").getString("SYSTEM_DEFINITION_SAVED_AS_") + fileName + ".";
-        if (oldFile != null) {
-            message += "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame").getString("OLD_FILE_BACKED_UP_AS_") + oldFile.getAbsolutePath();
+        boolean success = systemDescription.saveSystemDescriptionXML(fileName);
+        if (success) {
+            String message = java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame").getString("SYSTEM_DEFINITION_SAVED_AS_") + fileName + ".";
+            if (oldFile != null) {
+                message += "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame").getString("OLD_FILE_BACKED_UP_AS_") + oldFile.getAbsolutePath();
+            }
+            JOptionPane.showMessageDialog(this, message, "Saved", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            // Rename XML to error...
+            file = new File(fileName);
+            file.renameTo(new File(fileName + "-error.xml"));
+            // Restore old xml if possible...
+            if (oldFile != null) {
+                oldFile.renameTo(new File(fileName));
+            }
+            String message = "Something went wrong... Please look into the links between dictionaries, indexes, person search and variables";
+            JOptionPane.showMessageDialog(this, message, "Not saved", JOptionPane.INFORMATION_MESSAGE);
         }
-        JOptionPane.showMessageDialog(this, message, "Saved", JOptionPane.INFORMATION_MESSAGE);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox basisCodesCheckBox;

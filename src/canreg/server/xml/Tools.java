@@ -124,7 +124,7 @@ public class Tools {
                 Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
             }
             Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, npe);
-            // throw new RuntimeException(npe);
+            throw new RuntimeException(npe);
         } finally {
             try {
                 if (result != null && result.getWriter() != null) {
