@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.client.gui.dataentry;
 
 import canreg.common.DatabaseVariablesListElement;
@@ -111,6 +110,20 @@ class AutoFillHelper {
                     valueString = morphologyToBehaviour(value);
                 }
                 recordEditorPanel.setVariable(dvle, valueString);
+            } else if (Globals.StandardVariableNames.Grade.toString().equalsIgnoreCase(standardVariableName)) {
+                recordEditorPanel.setVariable(dvle, "Grade to be calculated");
+                DatabaseVariablesListElement morphologyVariableElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Morphology.toString());
+                Object value;
+                // try to get the variable from the source
+                value = sourceOfActionDatabaseRecord.getVariable(morphologyVariableElement.getDatabaseVariableName());
+                if (value == null) {
+                    value = otherDatabaseRecord.getVariable(morphologyVariableElement.getDatabaseVariableName());
+                }
+                String valueString = "";
+                if (value != null) {
+                    valueString = morphologyToGrade(value);
+                }
+                recordEditorPanel.setVariable(dvle, valueString);
             }
         }
     }
@@ -121,6 +134,17 @@ class AutoFillHelper {
             String morphologyString = (String) morphology;
             if (morphologyString.length() > 4) {
                 returnString = morphologyString.substring(4, 5);
+            }
+        }
+        return returnString;
+    }
+
+    private String morphologyToGrade(Object morphology) {
+        String returnString = "";
+        if (morphology instanceof String) {
+            String morphologyString = (String) morphology;
+            if (morphologyString.length() > 5) {
+                returnString = morphologyString.substring(5, 6);
             }
         }
         return returnString;
