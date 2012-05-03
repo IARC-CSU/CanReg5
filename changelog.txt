@@ -1,6 +1,14 @@
 Changelog
 
-5.00.16b3
+5.00.17
+- Implemented a system to detect records not properly released from the server after an unclean break.
+- Database generator: Added user role column to the users table.
+- Migrator: Added a migrator to add user roles.
+- A Grade Field variable can now be automatically filled from the 6th digit in the morphology part of the ICD-O-3 codes, like Behaviour.
+- Improved handling of null pointers in the system description editor.
+- Various bug fixes
+
+5.00.16
 - Portugese from Portugal added as langauge. (Thanks Gonçalo Forjaz)
 - Language chooser in Option Frame now only displays translated languages.
 - Fixed a potential null pointer error in the Population Datasets.

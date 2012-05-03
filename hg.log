@@ -1,5 +1,50 @@
-changeset:   968:09ebf36a513d
+changeset:   977:067934598daf
 tag:         tip
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Apr 30 15:35:40 2012 +0200
+summary:     Improved handling of null pointers in the system description editor.
+
+changeset:   976:960f5d034eac
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Apr 30 15:35:02 2012 +0200
+summary:     A Grade Field variable can now be automatically filled from the 6th digit in the morphology part of the ICD-O-3 codes, like Behaviour.
+
+changeset:   975:bf6f469c3816
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Apr 16 15:57:17 2012 +0200
+summary:     Implemented a system to detect records not properly released from the server after an unclean break.
+
+changeset:   974:50fe147c22c7
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Apr 16 15:56:26 2012 +0200
+summary:     Implemented a system to detect records not properly released from the server after an unclean break.
+
+changeset:   973:64df0fce7a2a
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Mar 21 11:29:26 2012 +0100
+summary:     5.00.17b1
+
+changeset:   972:820d520cbf08
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Mar 21 11:26:27 2012 +0100
+summary:     Migrator: Added a migrator to add user roles.
+
+changeset:   971:806e004c36b2
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Mar 21 09:24:30 2012 +0100
+summary:     Database generator: Added user role column to the users table.
+
+changeset:   970:98913ac47308
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Mar 21 09:14:44 2012 +0100
+summary:     Database generator: Added user role column to the users table.
+
+changeset:   969:bdd6edf49d15
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Mar 16 17:30:12 2012 +0100
+summary:     5.00.16b3
+
+changeset:   968:09ebf36a513d
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Fri Mar 16 17:14:58 2012 +0100
 summary:     DerbyDB engine updated to version 10.8.

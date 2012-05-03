@@ -65,4 +65,5 @@ public class DatabaseGroupsPanel extends DatabaseElementsPanel {
     public Color colorize(DatabaseElement element) {
         return null;
     }
+
 }

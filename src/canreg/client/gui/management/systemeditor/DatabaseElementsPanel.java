@@ -25,6 +25,7 @@
  */
 package canreg.client.gui.management.systemeditor;
 
+import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.DatabaseElement;
 import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
@@ -145,8 +146,9 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
             // first see if this element is in use by others...
             
             // then try to remove
-            boolean successfullyRemoved = removeElement(source);
-            if (successfullyRemoved) {
+            boolean canBeRemoved = removable(source.getDatabaseElement());
+            
+            if (canBeRemoved) {
                 // do this if successfull
                 elementsPanel.remove((Component) e.getSource());
                 elementPanelsSet.remove(source);
@@ -237,10 +239,4 @@ public abstract class DatabaseElementsPanel extends javax.swing.JPanel implement
     public abstract Color colorize(DatabaseElement element);
 
     public abstract boolean visible(DatabaseElement element);
-
-    private boolean removeElement(DatabaseElementPanel source) {
-        boolean success = false;
-
-        return success;
-    }
 }
