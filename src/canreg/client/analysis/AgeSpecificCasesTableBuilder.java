@@ -76,7 +76,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
         String notesString = "";
 
         if (populations[0].getFilter().length() > 0) {
-            notesString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString("FILTER USED:") + populations[0].getFilter();
+            notesString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString("FILTER USED:") +" "+ populations[0].getFilter();
         }
 
         double tableFontSize = 7.5;
