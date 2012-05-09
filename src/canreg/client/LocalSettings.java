@@ -156,9 +156,9 @@ public final class LocalSettings {
         if (!settingsLoaded) {
             // If not possible to load the settings - get the default ones
             createDefaultProperties();
+            createWorkingDir(properties.getProperty(WORKING_DIR_PATH_KEY));
         }
         // create the working dir
-        createWorkingDir(properties.getProperty(WORKING_DIR_PATH_KEY));
         writeSettings();
     }
 
