@@ -60,8 +60,10 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      */
     public PopulationDataset() {
         super();
+        // ageGroupStructure = new AgeGroupStructure(5, 85);
         ageGroupMap = new HashMap<String, Integer>();
         ageGroups = new LinkedList<PopulationDatasetsEntry>();
+        fillWithEmptyPopulationDatasetEntries();
     }
 
     /**
@@ -240,6 +242,15 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
         ageGroups.add(pdse);
     }
 
+    private void fillWithEmptyPopulationDatasetEntries() {
+        int groups = ageGroupStructure.getNumberOfAgeGroups();
+        for (int group = 0; group < groups; group++) {
+            for (int sex = 1; sex <= 2; sex++) {
+                addAgeGroup(new PopulationDatasetsEntry(group, sex, 0));
+            }
+        }
+    }
+
     /**
      * 
      * @return
@@ -401,6 +412,8 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     public int getAgeGroupCount(int sex, int index) {
-        return ageGroupMap.get(sex + "," + index);
+        int count = ageGroupMap.get(sex + "," + index);
+
+        return count;
     }
 }
