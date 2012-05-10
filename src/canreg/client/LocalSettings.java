@@ -204,7 +204,17 @@ public final class LocalSettings {
      * @return
      */
     public Locale getLocale() {
-        return new Locale(properties.getProperty(LOCALE_KEY));
+        String localeString = properties.getProperty(LOCALE_KEY);
+        Locale locale =Locale.getDefault();
+        if (localeString!=null && localeString.length()>0){
+            String[] parts = localeString.split("_");
+            if (parts.length > 1) {
+                locale = new Locale(parts[0],parts[1]);
+            } else {
+                locale = new Locale(localeString);
+            }
+        }
+        return locale;
     }
 
     /**
