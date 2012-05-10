@@ -58,6 +58,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
@@ -90,6 +91,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
     private Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
     private TableBuilderInterface tableBuilder = null;
+    int filterTabPos = 3;
 
     /** Creates new form TableBuilderInternalFrame */
     public TableBuilderInternalFrame() {
@@ -115,7 +117,14 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         // remove filter tab
         // Component filterTab = tabbedPane.getComponents()[3];
-        tabbedPane.remove(3);
+        tabbedPane.setEnabledAt(filterTabPos, false);
+
+        rangeFilterPanel.setSortByVariableShown(false);
+        rangeFilterPanel.setRecordPanelvisible(false);
+        rangeFilterPanel.setRefreshButtonEnabled(false);
+        rangeFilterPanel.setTableChooserVisible(false);
+
+        //tabbedPane.remove(3);
         setCursor(normalCursor);
     }
 
@@ -145,7 +154,13 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     public void jumpToPreviousTabAction() {
         int tabNumber = tabbedPane.getSelectedIndex();
         if (tabNumber >= 1) {
-            tabbedPane.setSelectedIndex(--tabNumber);
+            tabNumber -= 1;
+            if (!dontUsePopulationDatasetCheckBox.isSelected()) {
+                if (tabNumber == filterTabPos) {
+                    tabNumber -= 1;
+                }
+            }
+            tabbedPane.setSelectedIndex(tabNumber);
             changeTab(tabNumber);
         }
     }
@@ -157,7 +172,13 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     public void jumpToNextTabAction() {
         int tabNumber = tabbedPane.getSelectedIndex();
         if (tabNumber < tabbedPane.getTabCount()) {
-            tabbedPane.setSelectedIndex(++tabNumber);
+            tabNumber += 1;
+            if (!dontUsePopulationDatasetCheckBox.isSelected()) {
+                if (tabNumber == filterTabPos) {
+                    tabNumber += 1;
+                }
+            }
+            tabbedPane.setSelectedIndex(tabNumber);
             changeTab(tabNumber);
         }
     }
@@ -176,7 +197,20 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         for (LabelAndComboBoxJPanel panel : populationDatasetChooserPanels) {
             populations[i++] = (PopulationDataset) panel.getComboBoxSelectedItem();
         }
+        return populations;
+    }
 
+    private PopulationDataset[] generateDummyPopulationDatasets() {
+        PopulationDataset dummyPop = new PopulationDataset();
+        dummyPop.setFilter(rangeFilterPanel.getFilter());
+        dummyPop.setWorldPopulation(new PopulationDataset());
+        dummyPop.setWorldPopulationID(0);
+        dummyPop.setPopulationDatasetName("");
+
+        PopulationDataset[] populations = new PopulationDataset[populationDatasetChooserPanels.size()];
+        for (int i = 0; i < populationDatasetChooserPanels.size(); i++) {
+            populations[i] = dummyPop;
+        }
         return populations;
     }
 
@@ -210,9 +244,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         numberOfYearsTextField = new javax.swing.JTextField();
         warningLabel = new javax.swing.JLabel();
         populationDatasetChooserPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        pleaseChooseLabel = new javax.swing.JLabel();
+        populationDatasetsScrollPane = new javax.swing.JScrollPane();
         populationDatasetChoosersPanel = new javax.swing.JPanel();
+        dontUsePopulationDatasetCheckBox = new javax.swing.JCheckBox();
         filterPanel = new javax.swing.JPanel();
         rangeFilterPanel = new canreg.client.gui.components.RangeFilterPanel();
         writeOutPanel = new javax.swing.JPanel();
@@ -324,8 +359,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(previewLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
+                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -417,22 +452,33 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(numberOfYearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(warningLabel)
-                .addContainerGap(296, Short.MAX_VALUE))
+                .addContainerGap(304, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("rangePanel.TabConstraints.tabTitle"), rangePanel); // NOI18N
 
         populationDatasetChooserPanel.setName("populationDatasetChooserPanel"); // NOI18N
 
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
+        pleaseChooseLabel.setText(resourceMap.getString("pleaseChooseLabel.text")); // NOI18N
+        pleaseChooseLabel.setName("pleaseChooseLabel"); // NOI18N
 
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
+        populationDatasetsScrollPane.setName("populationDatasetsScrollPane"); // NOI18N
 
         populationDatasetChoosersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         populationDatasetChoosersPanel.setName("populationDatasetChoosersPanel"); // NOI18N
         populationDatasetChoosersPanel.setLayout(new java.awt.GridLayout(0, 1));
-        jScrollPane1.setViewportView(populationDatasetChoosersPanel);
+        populationDatasetsScrollPane.setViewportView(populationDatasetChoosersPanel);
+
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(TableBuilderInternalFrame.class, this);
+        dontUsePopulationDatasetCheckBox.setAction(actionMap.get("dontUsePopsCheckboxUpdated")); // NOI18N
+        dontUsePopulationDatasetCheckBox.setText(resourceMap.getString("dontUsePopulationDatasetCheckBox.text")); // NOI18N
+        dontUsePopulationDatasetCheckBox.setToolTipText(resourceMap.getString("dontUsePopulationDatasetCheckBox.toolTipText")); // NOI18N
+        dontUsePopulationDatasetCheckBox.setName("dontUsePopulationDatasetCheckBox"); // NOI18N
+        dontUsePopulationDatasetCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dontUsePopulationDatasetCheckBoxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout populationDatasetChooserPanelLayout = new javax.swing.GroupLayout(populationDatasetChooserPanel);
         populationDatasetChooserPanel.setLayout(populationDatasetChooserPanelLayout);
@@ -441,17 +487,20 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(populationDatasetChooserPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(populationDatasetChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(jLabel1))
+                    .addComponent(populationDatasetsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                    .addComponent(pleaseChooseLabel)
+                    .addComponent(dontUsePopulationDatasetCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
                 .addContainerGap())
         );
         populationDatasetChooserPanelLayout.setVerticalGroup(
             populationDatasetChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(populationDatasetChooserPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(pleaseChooseLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+                .addComponent(populationDatasetsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addComponent(dontUsePopulationDatasetCheckBox)
                 .addContainerGap())
         );
 
@@ -478,7 +527,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(filterPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
+                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -486,7 +535,6 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         writeOutPanel.setName("writeOutPanel"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(TableBuilderInternalFrame.class, this);
         postScriptButton.setAction(actionMap.get("generatePStable")); // NOI18N
         postScriptButton.setText(resourceMap.getString("postScriptButton.text")); // NOI18N
         postScriptButton.setToolTipText(resourceMap.getString("postScriptButton.toolTipText")); // NOI18N
@@ -612,7 +660,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addComponent(chartViewerButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(seerPrepButton)
-                .addContainerGap(124, Short.MAX_VALUE))
+                .addContainerGap(132, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("writeOutPanel.TabConstraints.tabTitle"), writeOutPanel); // NOI18N
@@ -646,7 +694,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -674,6 +722,22 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         }
         populationDatasetChoosersPanel.revalidate();
         populationDatasetChoosersPanel.repaint();
+        guessPopulationSelections();
+    }
+
+    private void guessPopulationSelections() {
+        Map<Integer, PopulationDataset> map = new HashMap<Integer, PopulationDataset>();
+        for (PopulationDataset pds : populationDatasetsArray) {
+            if (pds.getDate().length() >= 4) {
+                int year = Integer.parseInt(pds.getDate().substring(0, 4));
+                if (map.get(year) == null) {
+                    map.put(year, pds);
+                }
+            }
+        }
+        for (int i = 0; i <= (endYearChooser.getYear() - startYearChooser.getYear()); i++) {
+            populationDatasetChooserPanels.get(i).setComboBoxSelectedItem(map.get(i + startYearChooser.getYear()));
+        }
     }
 
     private void startYearChooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_startYearChooserPropertyChange
@@ -758,7 +822,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                             chartViewerButton.setEnabled(true);
                         } else if (filetype.equals(FileTypes.seer)) {
                             seerPrepButton.setEnabled(true);
-                        }else if (filetype.equals(FileTypes.csv)) {
+                        } else if (filetype.equals(FileTypes.csv)) {
                             csvButton.setEnabled(true);
                         }
                     }
@@ -805,6 +869,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private void wmfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wmfButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_wmfButtonActionPerformed
+    private void dontUsePopulationDatasetCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dontUsePopulationDatasetCheckBoxActionPerformed
+        // TODO add your handling code here:
+        // dontUsePopsCheckboxUpdated();
+    }//GEN-LAST:event_dontUsePopulationDatasetCheckBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JButton cancelButton;
@@ -813,22 +881,23 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel descriptionLabel;
     private javax.swing.JScrollPane descriptionScrollPane;
     private javax.swing.JTextPane descriptionTextPane;
+    private javax.swing.JCheckBox dontUsePopulationDatasetCheckBox;
     private com.toedter.calendar.JYearChooser endYearChooser;
     private javax.swing.JLabel endYearLabel;
     private javax.swing.JPanel filterPanel;
     private javax.swing.JLabel headerOfTableLabel;
     private javax.swing.JTextField headerOfTableTextField;
     private javax.swing.JButton imageButton;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField midYearTextField;
     private javax.swing.JButton nextButton;
     private javax.swing.JTextField numberOfYearsTextField;
     private javax.swing.JButton pdfButton;
+    private javax.swing.JLabel pleaseChooseLabel;
     private javax.swing.JPanel populationDatasetChooserPanel;
     private javax.swing.JPanel populationDatasetChoosersPanel;
+    private javax.swing.JScrollPane populationDatasetsScrollPane;
     private javax.swing.JButton postScriptButton;
     private javax.swing.JLabel previewImageLabel;
     private javax.swing.JLabel previewLabel;
@@ -986,7 +1055,12 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             String heading = headerOfTableTextField.getText();
             int startYear = startYearChooser.getValue();
             int endYear = endYearChooser.getValue();
-            PopulationDataset[] populations = getSelectedPopulations();
+            PopulationDataset[] populations;
+            if (dontUsePopulationDatasetCheckBox.isSelected()) {
+                populations = generateDummyPopulationDatasets();
+            } else {
+                populations = getSelectedPopulations();
+            }
             PopulationDataset[] standardPopulations = new PopulationDataset[populations.length];
 
             if (tableBuilder.areThesePopulationDatasetsCompatible(populations)) {
@@ -1098,14 +1172,14 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
                         // Opening the resulting files if the list is not empty...
                         if (filesGenerated.isEmpty()) {
-                            JOptionPane.showMessageDialog(this, 
-                                    "Please use \"View work files\" in the \"File\"-menu to open them", 
-                                    java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."), 
+                            JOptionPane.showMessageDialog(this,
+                                    "Please use \"View work files\" in the \"File\"-menu to open them",
+                                    java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."),
                                     JOptionPane.INFORMATION_MESSAGE);
                         } else {
-                            JOptionPane.showMessageDialog(this, 
-                                    filesGeneratedList, 
-                                    java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."), 
+                            JOptionPane.showMessageDialog(this,
+                                    filesGeneratedList,
+                                    java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."),
                                     JOptionPane.INFORMATION_MESSAGE);
                             for (String resultFileName : filesGenerated) {
                                 if (new File(resultFileName).exists()) {
@@ -1148,7 +1222,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 } catch (TableErrorException ex) {
                     setCursor(normalCursor);
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(this, "Something went wrong while building the table: \n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(
+                            this, "Something went wrong while building the table: \n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } finally {
                     setCursor(normalCursor);
                 }
@@ -1201,5 +1276,13 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public void generateCSV() {
         generateTablesAction(FileTypes.csv);
+    }
+
+    @Action
+    public void dontUsePopsCheckboxUpdated() {
+        boolean enabled = !dontUsePopulationDatasetCheckBox.isSelected();
+        populationDatasetsScrollPane.setVisible(enabled);
+        pleaseChooseLabel.setVisible(enabled);
+        tabbedPane.setEnabledAt(filterTabPos, !enabled);
     }
 }

@@ -47,7 +47,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="444" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="452" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -123,8 +123,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="previewImageLabel" pref="246" max="32767" attributes="0"/>
-                          <Component id="descriptionScrollPane" alignment="0" pref="246" max="32767" attributes="0"/>
+                          <Component id="previewImageLabel" pref="254" max="32767" attributes="0"/>
+                          <Component id="descriptionScrollPane" alignment="0" pref="254" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -261,7 +261,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="warningLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="296" max="32767" attributes="0"/>
+                      <EmptySpace pref="304" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -353,8 +353,9 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane1" alignment="0" pref="474" max="32767" attributes="0"/>
-                          <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="populationDatasetsScrollPane" alignment="0" pref="474" max="32767" attributes="0"/>
+                          <Component id="pleaseChooseLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="dontUsePopulationDatasetCheckBox" alignment="0" pref="474" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -364,24 +365,26 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <Component id="pleaseChooseLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="374" max="32767" attributes="0"/>
+                      <Component id="populationDatasetsScrollPane" min="-2" pref="352" max="-2" attributes="0"/>
+                      <EmptySpace pref="11" max="32767" attributes="0"/>
+                      <Component id="dontUsePopulationDatasetCheckBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel1">
+            <Component class="javax.swing.JLabel" name="pleaseChooseLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel1.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel1" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="pleaseChooseLabel.text"/>
+                <Property name="name" type="java.lang.String" value="pleaseChooseLabel" noResource="true"/>
               </Properties>
             </Component>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+            <Container class="javax.swing.JScrollPane" name="populationDatasetsScrollPane">
               <Properties>
-                <Property name="name" type="java.lang.String" value="jScrollPane1" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="populationDatasetsScrollPane" noResource="true"/>
               </Properties>
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
@@ -403,6 +406,19 @@
                 </Container>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JCheckBox" name="dontUsePopulationDatasetCheckBox">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="dontUsePopsCheckboxUpdated" methodName="dontUsePopsCheckboxUpdated"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="dontUsePopulationDatasetCheckBox.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="dontUsePopulationDatasetCheckBox.toolTipText"/>
+                <Property name="name" type="java.lang.String" value="dontUsePopulationDatasetCheckBox" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dontUsePopulationDatasetCheckBoxActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="filterPanel">
@@ -434,7 +450,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="rangeFilterPanel" pref="394" max="32767" attributes="0"/>
+                      <Component id="rangeFilterPanel" pref="402" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -514,7 +530,7 @@
                       <Component id="chartViewerButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="seerPrepButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="124" max="32767" attributes="0"/>
+                      <EmptySpace pref="132" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
