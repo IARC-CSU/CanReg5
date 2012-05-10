@@ -46,24 +46,21 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     private String filter = null;
     private String date = "";
     private String source = "";
-    private AgeGroupStructure ageGroupStructure = new AgeGroupStructure(5, 85);
+    private AgeGroupStructure ageGroupStructure;
     private String description = "";
     private boolean worldPopulationBool = false;
     private int worldPopulationID = 0;
-    private LinkedList<PopulationDatasetsEntry> ageGroups;
+    private LinkedList<PopulationDatasetsEntry> ageGroups = new LinkedList<PopulationDatasetsEntry>();
     private int UNKNOWN_AGE_GROUP_CODE = 99;
     private PopulationDataset worldPopulation;
-    private Map<String, Integer> ageGroupMap;
+    private Map<String, Integer> ageGroupMap = new HashMap<String, Integer>();
 
     /**
      * Creates a new instance of PopulationDatasetsEntry
      */
     public PopulationDataset() {
         super();
-        // ageGroupStructure = new AgeGroupStructure(5, 85);
-        ageGroupMap = new HashMap<String, Integer>();
-        ageGroups = new LinkedList<PopulationDatasetsEntry>();
-        fillWithEmptyPopulationDatasetEntries();
+        setAgeGroupStructure(new AgeGroupStructure(5, 85));
     }
 
     /**
@@ -181,8 +178,10 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      * 
      * @param ageGroupStructure
      */
-    public void setAgeGroupStructure(AgeGroupStructure ageGroupStructure) {
+    public final void setAgeGroupStructure(AgeGroupStructure ageGroupStructure) {
+        flushAgeGroups();
         this.ageGroupStructure = ageGroupStructure;
+        fillWithEmptyPopulationDatasetEntries();
     }
 
     /**
@@ -413,7 +412,6 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
 
     public int getAgeGroupCount(int sex, int index) {
         int count = ageGroupMap.get(sex + "," + index);
-
         return count;
     }
 }
