@@ -23,7 +23,6 @@
  *
  * Created on 29-Apr-2009, 15:25:10
  */
-
 package canreg.client.gui.components;
 
 import javax.swing.ComboBoxModel;
@@ -80,22 +79,24 @@ public class LabelAndComboBoxJPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox comboBox;
     private javax.swing.JLabel label;
     // End of variables declaration//GEN-END:variables
 
-    public void setComboBoxModel(ComboBoxModel model){
+    public void setComboBoxModel(ComboBoxModel model) {
         comboBox.setModel(model);
     }
 
-    public void setLabel(String label){
+    public void setLabel(String label) {
         this.label.setText(label);
     }
 
-    public Object getComboBoxSelectedItem(){
+    public Object getComboBoxSelectedItem() {
         return comboBox.getSelectedItem();
+    }
+
+    public void setComboBoxSelectedItem(Object object) {
+        comboBox.setSelectedItem(object);
     }
 }
