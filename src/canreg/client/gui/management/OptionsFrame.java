@@ -93,12 +93,15 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         jButton2 = new javax.swing.JButton();
         tabbedPane = new javax.swing.JTabbedPane();
         generalPanel = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        fontSizeLabel = new javax.swing.JLabel();
-        fontSizeComboBox = new javax.swing.JComboBox();
-        jPanel1 = new javax.swing.JPanel();
+        languagePanel = new javax.swing.JPanel();
         languageLabel = new javax.swing.JLabel();
         languageComboBox = new javax.swing.JComboBox();
+        lookAndFeelPanel = new javax.swing.JPanel();
+        showOutlineCheckBox = new javax.swing.JCheckBox();
+        fontNameLabel = new javax.swing.JLabel();
+        fontNameTextField = new javax.swing.JTextField();
+        fontSizeComboBox = new javax.swing.JComboBox();
+        fontSizeLabel = new javax.swing.JLabel();
         systemPanel = new javax.swing.JPanel();
         automaticBackupPanel = new javax.swing.JPanel();
         automaticbackupCheckBox = new javax.swing.JCheckBox();
@@ -116,8 +119,6 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         downloadLatestButton = new javax.swing.JButton();
         checkButton = new javax.swing.JButton();
         downloadLatestButton1 = new javax.swing.JButton();
-        lookAndFeelPanel = new javax.swing.JPanel();
-        showOutlineCheckBox = new javax.swing.JCheckBox();
         pathsPanel = new javax.swing.JPanel();
         rPanel = new javax.swing.JPanel();
         rInstallationLabel = new javax.swing.JLabel();
@@ -149,43 +150,8 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
 
         generalPanel.setName("generalPanel"); // NOI18N
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel4.border.title"))); // NOI18N
-        jPanel4.setToolTipText(resourceMap.getString("jPanel4.toolTipText")); // NOI18N
-        jPanel4.setEnabled(false);
-        jPanel4.setFocusable(false);
-        jPanel4.setName("jPanel4"); // NOI18N
-
-        fontSizeLabel.setText(resourceMap.getString("fontSizeLabel.text")); // NOI18N
-        fontSizeLabel.setEnabled(false);
-        fontSizeLabel.setName("fontSizeLabel"); // NOI18N
-
-        fontSizeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Medium", "Big", "Small" }));
-        fontSizeComboBox.setToolTipText(resourceMap.getString("fontSizeComboBox.toolTipText")); // NOI18N
-        fontSizeComboBox.setEnabled(false);
-        fontSizeComboBox.setName("fontSizeComboBox"); // NOI18N
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(fontSizeLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fontSizeComboBox, 0, 374, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fontSizeLabel)
-                    .addComponent(fontSizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
-        jPanel1.setName("jPanel1"); // NOI18N
+        languagePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("languagePanel.border.title"))); // NOI18N
+        languagePanel.setName("languagePanel"); // NOI18N
 
         languageLabel.setText(resourceMap.getString("languageLabel.text")); // NOI18N
         languageLabel.setName("languageLabel"); // NOI18N
@@ -194,24 +160,80 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         languageComboBox.setToolTipText(resourceMap.getString("languageComboBox.toolTipText")); // NOI18N
         languageComboBox.setName("languageComboBox"); // NOI18N
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout languagePanelLayout = new javax.swing.GroupLayout(languagePanel);
+        languagePanel.setLayout(languagePanelLayout);
+        languagePanelLayout.setHorizontalGroup(
+            languagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(languagePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(languageLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(languageComboBox, 0, 0, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        languagePanelLayout.setVerticalGroup(
+            languagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(languagePanelLayout.createSequentialGroup()
+                .addGroup(languagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(languageLabel)
                     .addComponent(languageComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        lookAndFeelPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("lookAndFeelPanel.border.title"))); // NOI18N
+        lookAndFeelPanel.setToolTipText(resourceMap.getString("lookAndFeelPanel.toolTipText")); // NOI18N
+        lookAndFeelPanel.setName("lookAndFeelPanel"); // NOI18N
+
+        showOutlineCheckBox.setText(resourceMap.getString("showOutlineCheckBox.text")); // NOI18N
+        showOutlineCheckBox.setToolTipText(resourceMap.getString("showOutlineCheckBox.toolTipText")); // NOI18N
+        showOutlineCheckBox.setName("showOutlineCheckBox"); // NOI18N
+
+        fontNameLabel.setText(resourceMap.getString("fontNameLabel.text")); // NOI18N
+        fontNameLabel.setName("fontNameLabel"); // NOI18N
+
+        fontNameTextField.setText(resourceMap.getString("fontNameTextField.text")); // NOI18N
+        fontNameTextField.setName("fontNameTextField"); // NOI18N
+
+        fontSizeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Small", "Medium", "Big" }));
+        fontSizeComboBox.setSelectedIndex(1);
+        fontSizeComboBox.setToolTipText(resourceMap.getString("fontSizeComboBox.toolTipText")); // NOI18N
+        fontSizeComboBox.setName("fontSizeComboBox"); // NOI18N
+
+        fontSizeLabel.setText(resourceMap.getString("fontSizeLabel.text")); // NOI18N
+        fontSizeLabel.setName("fontSizeLabel"); // NOI18N
+
+        javax.swing.GroupLayout lookAndFeelPanelLayout = new javax.swing.GroupLayout(lookAndFeelPanel);
+        lookAndFeelPanel.setLayout(lookAndFeelPanelLayout);
+        lookAndFeelPanelLayout.setHorizontalGroup(
+            lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
+                        .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fontNameLabel)
+                            .addComponent(fontSizeLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fontSizeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 365, Short.MAX_VALUE)
+                            .addComponent(fontNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
+                        .addComponent(showOutlineCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
+                        .addGap(18, 18, 18))))
+        );
+        lookAndFeelPanelLayout.setVerticalGroup(
+            lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
+                .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fontNameLabel)
+                    .addComponent(fontNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fontSizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fontSizeLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(showOutlineCheckBox))
         );
 
         javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
@@ -221,18 +243,18 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(generalPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(languagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lookAndFeelPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         generalPanelLayout.setVerticalGroup(
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(generalPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(languagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(115, Short.MAX_VALUE))
+                .addComponent(lookAndFeelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(92, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("generalPanel.TabConstraints.tabTitle"), generalPanel); // NOI18N
@@ -274,7 +296,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                     .addGroup(automaticBackupPanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(automaticbackupCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 199, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 203, Short.MAX_VALUE))
                     .addGroup(automaticBackupPanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel2)
@@ -318,7 +340,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(systemPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(automaticBackupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addContainerGap(160, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("systemPanel.TabConstraints.tabTitle"), systemPanel); // NOI18N
@@ -380,10 +402,10 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addGroup(versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(versionPanelLayout.createSequentialGroup()
                         .addComponent(downloadLatestButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                         .addComponent(downloadLatestButton1))
-                    .addComponent(latestVersionTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
-                    .addComponent(versionInstalledTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
+                    .addComponent(latestVersionTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                    .addComponent(versionInstalledTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(checkButton))
         );
@@ -404,41 +426,13 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                     .addComponent(downloadLatestButton1)))
         );
 
-        lookAndFeelPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("lookAndFeelPanel.border.title"))); // NOI18N
-        lookAndFeelPanel.setToolTipText(resourceMap.getString("lookAndFeelPanel.toolTipText")); // NOI18N
-        lookAndFeelPanel.setName("lookAndFeelPanel"); // NOI18N
-
-        showOutlineCheckBox.setSelected(true);
-        showOutlineCheckBox.setText(resourceMap.getString("showOutlineCheckBox.text")); // NOI18N
-        showOutlineCheckBox.setToolTipText(resourceMap.getString("showOutlineCheckBox.toolTipText")); // NOI18N
-        showOutlineCheckBox.setName("showOutlineCheckBox"); // NOI18N
-
-        javax.swing.GroupLayout lookAndFeelPanelLayout = new javax.swing.GroupLayout(lookAndFeelPanel);
-        lookAndFeelPanel.setLayout(lookAndFeelPanelLayout);
-        lookAndFeelPanelLayout.setHorizontalGroup(
-            lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(showOutlineCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        lookAndFeelPanelLayout.setVerticalGroup(
-            lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(showOutlineCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout advancedPanelLayout = new javax.swing.GroupLayout(advancedPanel);
         advancedPanel.setLayout(advancedPanelLayout);
         advancedPanelLayout.setHorizontalGroup(
             advancedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(advancedPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(advancedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(versionPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lookAndFeelPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(versionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         advancedPanelLayout.setVerticalGroup(
@@ -446,9 +440,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(advancedPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(versionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lookAndFeelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addContainerGap(157, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("advancedPanel.TabConstraints.tabTitle"), advancedPanel); // NOI18N
@@ -475,7 +467,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(rPanelLayout.createSequentialGroup()
                 .addComponent(rInstallationLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rInstallationTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                .addComponent(rInstallationTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rInstallationBrowseButton)
                 .addContainerGap())
@@ -502,7 +494,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(pathsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(rPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(190, Short.MAX_VALUE))
+                .addContainerGap(205, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("pathsPanel.TabConstraints.tabTitle"), pathsPanel); // NOI18N
@@ -525,7 +517,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -570,16 +562,17 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton downloadLatestButton;
     private javax.swing.JButton downloadLatestButton1;
     private javax.swing.JLabel everyLabel;
+    private javax.swing.JLabel fontNameLabel;
+    private javax.swing.JTextField fontNameTextField;
     private javax.swing.JComboBox fontSizeComboBox;
     private javax.swing.JLabel fontSizeLabel;
     private javax.swing.JPanel generalPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JComboBox languageComboBox;
     private javax.swing.JLabel languageLabel;
+    private javax.swing.JPanel languagePanel;
     private javax.swing.JLabel latestVersionLabel;
     private javax.swing.JTextField latestVersionTextField;
     private javax.swing.JPanel lookAndFeelPanel;
@@ -660,6 +653,15 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         
         String rPath = localSettings.getProperty(LocalSettings.R_PATH);
         rInstallationTextField.setText(rPath);
+        
+        String fontName = localSettings.getProperty(LocalSettings.FONT_NAME_KEY);
+        if (fontName==null||fontName.length()==0){
+            fontName = LocalSettings.FONT_NAME_DEFAULT;
+        }
+        fontNameTextField.setText(fontName);
+        
+        String fontSize = localSettings.getProperty(LocalSettings.FONT_SIZE_KEY);
+        fontSizeComboBox.setSelectedItem(fontSize);
     }
 
     private String getNewestVersionNumber() {
@@ -708,6 +710,10 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             localSettings.setAutomaticBackup(false);
         }
         localSettings.setProperty(LocalSettings.R_PATH, rInstallationTextField.getText());
+        
+        localSettings.setProperty(LocalSettings.FONT_NAME_KEY, fontNameTextField.getText());
+        localSettings.setProperty(LocalSettings.FONT_SIZE_KEY, fontSizeComboBox.getSelectedItem().toString());
+                
         // write settings to file
         localSettings.writeSettings();
     }

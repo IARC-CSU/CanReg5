@@ -1,5 +1,50 @@
-changeset:   977:067934598daf
+changeset:   986:fbe8280a1dfa
 tag:         tip
+user:        ErvikM@x90164
+date:        Thu May 10 17:42:37 2012 +0200
+summary:     Fixed a bug related to country specific locales.
+
+changeset:   985:76af462fd334
+user:        ErvikM@x90164
+date:        Thu May 10 14:56:44 2012 +0200
+summary:     5.00.17b5
+
+changeset:   984:0f8e3eb60e4d
+user:        ErvikM@x90164
+date:        Thu May 10 14:56:03 2012 +0200
+summary:     Tablebuilder can now build tables without denominators and also automatically guesses population datasets to use in analysis based on the date of the stored sets.
+
+changeset:   983:b98700fcb80e
+user:        ErvikM@x90164
+date:        Thu May 10 14:35:53 2012 +0200
+summary:     Added setter method for the combobox selection.
+
+changeset:   982:ee401affe2f8
+user:        ErvikM@x90164
+date:        Thu May 10 11:50:39 2012 +0200
+summary:     Fixed bugs in the population dataset system.
+
+changeset:   981:d9762b2176b5
+user:        ErvikM@x90164
+date:        Wed May 09 17:57:16 2012 +0200
+summary:     Added a missing space.
+
+changeset:   980:238eacbcc91f
+user:        ErvikM@x90164
+date:        Wed May 09 15:56:00 2012 +0200
+summary:     When a new PDS is created it is filled with age groups with 0 size.
+
+changeset:   979:a8a19eccaa91
+user:        ErvikM@x90164
+date:        Wed May 09 11:41:16 2012 +0200
+summary:     Fixed a bug where CanReg didn't launch if the working dir entry in the settings file was missing.
+
+changeset:   978:1ba941eb8ec7
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Thu May 03 14:48:01 2012 +0200
+summary:     5.00.17b3
+
+changeset:   977:067934598daf
 user:        Morten Johannes ERVIK <ervikm@iarc.fr>
 date:        Mon Apr 30 15:35:40 2012 +0200
 summary:     Improved handling of null pointers in the system description editor.

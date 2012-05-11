@@ -24,6 +24,7 @@ import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.dataentry.ImportOptions;
+import canreg.client.gui.tools.UITools;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
@@ -329,10 +330,10 @@ public class CanRegClientApp extends SingleFrameApplication {
         };
 
         dateFormat = new SimpleDateFormat(Globals.DATE_FORMAT_STRING);
-        
+
         // initialize this map
         locksMap = new TreeMap<String, Set<Integer>>();
-        
+
         addExitListener(maybeExit);
         splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("FINISHED."), 100);
     }
@@ -476,7 +477,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
             // create file for locked records
             // locksMap = new TreeMap<String, Set<Integer>>();
-            lockFile = new LockFile(systemName+"-"+username);
+            lockFile = new LockFile(systemName + "-" + username);
             locksMap = lockFile.getMap();
 
             return systemName;
@@ -607,6 +608,28 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     public void applyPreferences() {
         Locale.setDefault(localSettings.getLocale());
+        String fontNameCode = localSettings.getProperty(LocalSettings.FONT_NAME_KEY);
+        String fontSize = localSettings.getProperty(LocalSettings.FONT_SIZE_KEY);
+
+        String fontName = "Tahoma";
+        int fontSizeInt = 11;
+        
+        boolean setFont = false;
+        if (fontNameCode != null && fontNameCode.length() > 0 && !fontNameCode.equalsIgnoreCase(LocalSettings.FONT_NAME_DEFAULT)) {
+            setFont = true;
+            fontName = fontNameCode.trim();
+        }
+        if (fontSize != null && fontSize.length() > 0 && !fontSize.equalsIgnoreCase(LocalSettings.FONT_SIZE_MEDIUM)) {
+            setFont = true;
+            if (fontSize.equalsIgnoreCase(LocalSettings.FONT_SIZE_BIG)){
+                fontSizeInt = 14;
+            } else if (fontSize.equalsIgnoreCase(LocalSettings.FONT_SIZE_SMALL)){
+                fontSizeInt = 10;
+            }
+        }
+        if (setFont) {
+            setUIFont(fontName, fontSizeInt);
+        }
         if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).length() > 0) {
             try {
                 if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).equalsIgnoreCase("System")) {
@@ -1421,7 +1444,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         Set lockSet = locksMap.get(tableName);
         if (lockSet == null) {
             lockSet = new TreeSet<Integer>();
-            locksMap.put(tableName, lockSet);            
+            locksMap.put(tableName, lockSet);
         }
         lockSet.add(recordID);
         lockFile.writeMap();
@@ -1565,5 +1588,9 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public void clearListOfLockedRecords() {
         releaseAllRecordsHeldByThisClient();
+    }
+
+    public void setUIFont(String fontName, int fontSize) {
+        UITools.setUIFont(new javax.swing.plaf.FontUIResource(new Font(fontName, Font.PLAIN, fontSize)));
     }
 }

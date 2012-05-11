@@ -136,6 +136,30 @@ public final class LocalSettings {
      * 
      */
     public static final String SEER_PREP_PATH = "seer_prep_path";
+    /**
+     * 
+     */
+    public static final String FONT_NAME_KEY = "font_name";
+    /**
+     * 
+     */
+    public static final String FONT_NAME_DEFAULT = "Default";
+    /**
+     * 
+     */
+    public static final String FONT_SIZE_KEY = "font_size";
+    /**
+     * 
+     */
+    public static final String FONT_SIZE_MEDIUM = "Medium";
+    /**
+     * 
+     */
+    public static final String FONT_SIZE_SMALL = "Small";
+    /**
+     * 
+     */
+    public static final String FONT_SIZE_BIG = "Big";
 
     /**
      * 
@@ -205,11 +229,11 @@ public final class LocalSettings {
      */
     public Locale getLocale() {
         String localeString = properties.getProperty(LOCALE_KEY);
-        Locale locale =Locale.getDefault();
-        if (localeString!=null && localeString.length()>0){
+        Locale locale = Locale.getDefault();
+        if (localeString != null && localeString.length() > 0) {
             String[] parts = localeString.split("_");
             if (parts.length > 1) {
-                locale = new Locale(parts[0],parts[1]);
+                locale = new Locale(parts[0], parts[1]);
             } else {
                 locale = new Locale(localeString);
             }
@@ -369,6 +393,10 @@ public final class LocalSettings {
             property = Globals.DEFAULT_BACK_UP_EVERY;
         } else if (key.equalsIgnoreCase(R_PATH)) {
             property = tryToFindRInstalltionOnWindows();
+        } else if (key.equalsIgnoreCase(FONT_NAME_KEY)) {
+            property = FONT_NAME_DEFAULT;
+        } else if (key.equalsIgnoreCase(FONT_SIZE_KEY)) {
+            property = FONT_SIZE_MEDIUM;
         }
         return property;
     }
@@ -382,6 +410,8 @@ public final class LocalSettings {
         setProperty(AUTO_BACKUP_KEY, getDefaultProperty(AUTO_BACKUP_KEY));
         setProperty(BACKUP_EVERY_KEY, getDefaultProperty(BACKUP_EVERY_KEY));
         setProperty(R_PATH, getDefaultProperty(R_PATH));
+        setProperty(FONT_NAME_KEY, getDefaultProperty(FONT_NAME_KEY));
+        setProperty(FONT_SIZE_KEY, getDefaultProperty(FONT_SIZE_KEY));
         settingsChanged = true;
     }
 
@@ -445,18 +475,18 @@ public final class LocalSettings {
     }
 
     private LinkedList<ServerDescription> removeDuplicateServers(List<ServerDescription> servers) {
-        HashMap<String,ServerDescription> serverStringRepresentationMap = new HashMap<String,ServerDescription>();
-        for (ServerDescription server:servers){
-            String stringRep = server.getUrl()+":"+server.getPort()+"/"+server.getCode();
+        HashMap<String, ServerDescription> serverStringRepresentationMap = new HashMap<String, ServerDescription>();
+        for (ServerDescription server : servers) {
+            String stringRep = server.getUrl() + ":" + server.getPort() + "/" + server.getCode();
             ServerDescription otherServer = serverStringRepresentationMap.get(stringRep);
-            if (otherServer!=null){
+            if (otherServer != null) {
                 // find the one with the highest number and remove the other
-                if (server.getId()>otherServer.getId()) {
+                if (server.getId() > otherServer.getId()) {
                     serverStringRepresentationMap.remove(stringRep);
-                    serverStringRepresentationMap.put(stringRep,server);
+                    serverStringRepresentationMap.put(stringRep, server);
                 }
             } else {
-                serverStringRepresentationMap.put(stringRep,server);
+                serverStringRepresentationMap.put(stringRep, server);
             }
         }
         return new LinkedList(serverStringRepresentationMap.values());
