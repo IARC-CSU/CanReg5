@@ -1,4 +1,4 @@
-#LyX 1.6.10 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.9 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -8597,88 +8597,8 @@ language
 \end_layout
 
 \begin_layout Standard
-Change language of CanReg5
-\end_layout
-
-\begin_layout Subsection
-Screen/Font size
-\end_layout
-
-\begin_layout Standard
-Change font size (Not yet implemented.)
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename options12.png
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Periodic backup
-\begin_inset Index
-status open
-
-\begin_layout Plain Layout
-
-\series medium
-backup
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Reminder backup options
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename options3.png
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-CanReg version
-\begin_inset Index
-status open
-
-\begin_layout Plain Layout
-
-\series medium
-CanReg
-\series default
- 
-\series medium
-version
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Let the program check to see if the latest version
-\begin_inset Index
-status open
-
-\begin_layout Plain Layout
-latest version
-\end_layout
-
-\end_inset
-
- of CanReg is installed.
- This access the internet to find the most recent version.
+Change language of CanReg5.
+ You need to restart your CanReg5 system if you change language.
 \end_layout
 
 \begin_layout Subsection
@@ -8702,6 +8622,36 @@ look
 \end_layout
 
 \begin_layout Standard
+You need to restart your CanReg5 system if you change font style or font
+ size.
+\end_layout
+
+\begin_layout Subsubsection
+Change font
+\end_layout
+
+\begin_layout Standard
+Set the font size to sizes from Small to Big.
+\end_layout
+
+\begin_layout Subsubsection
+Change font style
+\end_layout
+
+\begin_layout Standard
+You can set the font of CanReg by typing the name of the font you want to
+ use in the Font name text box.
+ (To find out what fonts you have installed on your Windows system you can
+ take a look at the Fonts section on your Windows Control Panel.) You can
+ use this if the default font doesn't contain all the characters you would
+ like to use or if you just prefer the look of another font.
+\end_layout
+
+\begin_layout Subsubsection
+Show only outline
+\end_layout
+
+\begin_layout Standard
 The “Show only outline
 \begin_inset Index
 status open
@@ -8715,6 +8665,122 @@ only outline
  of windows while moving” will increase the performance of the user interface
  of CanReg.
  Tick this if moving windows around the screen is slow.
+\end_layout
+
+\begin_layout Subsection
+Periodic backup
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+backup
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename options12.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Reminder backup options
+\end_layout
+
+\begin_layout Subsection
+CanReg version
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+
+\series medium
+CanReg
+\series default
+ 
+\series medium
+version
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename options3.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let the program check to see if the latest version
+\begin_inset Index
+status open
+
+\begin_layout Plain Layout
+latest version
+\end_layout
+
+\end_inset
+
+ of CanReg is installed.
+ This will access the internet to find the most recent version.
+ You can click 
+\begin_inset Quotes eld
+\end_inset
+
+Download latest version
+\begin_inset Quotes erd
+\end_inset
+
+ to get the latest universal version of CanReg (The zip-file.) or click 
+\begin_inset Quotes eld
+\end_inset
+
+View Changelog
+\begin_inset Quotes erd
+\end_inset
+
+ to see what is new in CanReg.
+\end_layout
+
+\begin_layout Subsection
+Paths
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename options4.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here you can set the paths to the various helper applications of CanReg.
+ (So far only 
+\begin_inset Quotes eld
+\end_inset
+
+R
+\begin_inset Quotes erd
+\end_inset
+
+.)
 \end_layout
 
 \begin_layout Standard
@@ -10125,7 +10191,7 @@ Go to “Tool” in CanReg5 menu and click “Convert system definition”.
 \begin_deeper
 \begin_layout Enumerate
 \begin_inset Graphics
-	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/ToolsConvertCR4Menu.emf
+	filename ToolsConvertCR4Menu.png
 	width 90line%
 
 \end_inset
