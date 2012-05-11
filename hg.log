@@ -1,5 +1,10 @@
-changeset:   986:fbe8280a1dfa
+changeset:   987:8f72603f0f89
 tag:         tip
+user:        ErvikM@x90164
+date:        Fri May 11 15:10:41 2012 +0200
+summary:     Users can now change the font and font size used in CanReg5.
+
+changeset:   986:fbe8280a1dfa
 user:        ErvikM@x90164
 date:        Thu May 10 17:42:37 2012 +0200
 summary:     Fixed a bug related to country specific locales.

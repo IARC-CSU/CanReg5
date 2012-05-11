@@ -3,6 +3,7 @@ Changelog
 5.00.17
 - Implemented a system to detect records not properly released from the server after an unclean break.
 - Tablebuilder can now build tables without denominators.
+- Users can now change the font and font size used in CanReg5.
 - Tablebuilder automatically guesses population datasets to use in analysis based on the date of the stored sets.
 - Database generator: Added user role column to the users table.
 - Migrator: Added a migrator to add user roles.
