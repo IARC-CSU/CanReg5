@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.LinkedList;
@@ -215,12 +216,23 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
             }
 
             // separate top 10 and the rest
-            TreeSet<CancerCasesCount> topNMale = new TreeSet<CancerCasesCount>();
+            TreeSet<CancerCasesCount> topNMale = new TreeSet<CancerCasesCount>(new Comparator<CancerCasesCount>() {
+
+                @Override
+                public int compare(CancerCasesCount o1, CancerCasesCount o2) {
+                    return -(o1.count  +" "+ o1.toString()).compareTo(o2.count  +" "+ o2.toString());
+                }
+            });
             LinkedList<CancerCasesCount> theRestMale = new LinkedList<CancerCasesCount>();
 
-            TreeSet<CancerCasesCount> topNFemale = new TreeSet<CancerCasesCount>();
-            LinkedList<CancerCasesCount> theRestFemale = new LinkedList<CancerCasesCount>();
+            TreeSet<CancerCasesCount> topNFemale = new TreeSet<CancerCasesCount>(new Comparator<CancerCasesCount>() {
 
+                @Override
+                public int compare(CancerCasesCount o1, CancerCasesCount o2) {
+                    return -(o1.count +" "+ o1.toString()).compareTo(o2.count  +" "+ o2.toString());
+                }
+            });
+            LinkedList<CancerCasesCount> theRestFemale = new LinkedList<CancerCasesCount>();
 
             CancerCasesCount otherElement = null;
             CancerCasesCount thisElement = null;
@@ -243,30 +255,32 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
                         theRest = theRestFemale;
                     }
 
-                    thisElement = new CancerCasesCount(
-                            icd10GroupDescriptions[icdGroupNumber],
-                            icdLabel[icdGroupNumber].substring(3),
-                            casesLine[sexNumber],
-                            icdGroupNumber);
+                    if (casesLine[sexNumber] > 0) {
+                        thisElement = new CancerCasesCount(
+                                icd10GroupDescriptions[icdGroupNumber],
+                                icdLabel[icdGroupNumber].substring(3),
+                                casesLine[sexNumber],
+                                icdGroupNumber);
 
-                    // if this is the "other" group - add it immediately to "the rest"
-                    if (icdGroupNumber == otherCancerGroupsIndex) {
-                        theRest.add(thisElement);
-                        // if not we check if this is one of the collection groups
-                    } else if (icdGroupNumber != allCancerGroupsButSkinIndex
-                            && icdGroupNumber != allCancerGroupsIndex) {
-                        // if it is less than N cancers in top N - add it
-                        if (topN.size() < topNLimit) {
-                            topN.add(thisElement);
-                        } else {
-                            // otherwise we need to compare it to the last element in the top 10
-                            otherElement = topN.last();
-                            if (thisElement.compareTo(otherElement) < 0) {
-                                topN.remove(otherElement);
-                                theRest.add(otherElement);
+                        // if this is the "other" group - add it immediately to "the rest"
+                        if (icdGroupNumber == otherCancerGroupsIndex) {
+                            theRest.add(thisElement);
+                            // if not we check if this is one of the collection groups
+                        } else if (icdGroupNumber != allCancerGroupsButSkinIndex
+                                && icdGroupNumber != allCancerGroupsIndex) {
+                            // if it is less than N cancers in top N - add it
+                            if (topN.size() < topNLimit) {
                                 topN.add(thisElement);
                             } else {
-                                theRest.add(thisElement);
+                                // otherwise we need to compare it to the last element in the top 10
+                                otherElement = topN.last();
+                                if (thisElement.compareTo(otherElement) < 0) {
+                                    topN.remove(otherElement);
+                                    theRest.add(otherElement);
+                                    topN.add(thisElement);
+                                } else {
+                                    theRest.add(thisElement);
+                                }
                             }
                         }
                     }
@@ -294,7 +308,7 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
             charts[0] = ChartFactory.createPieChart(
                     tableHeader + ", " + sexLabel[sexNumber],
                     dataset, true, false, Locale.getDefault());
-            
+
             setPlotColours((PiePlot) charts[0].getPlot(), topNLimit + 1, Color.BLUE.brighter());
 
             String fileName = reportFileName + "-" + sexLabel[sexNumber];
@@ -363,11 +377,11 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
     public JFreeChart[] getCharts() {
 
         // set the plots circular before returning them
-        for (JFreeChart chart: charts){
+        for (JFreeChart chart : charts) {
             PiePlot plot = (PiePlot) chart.getPlot();
             plot.setCircular(true);
         }
-        
+
         return charts;
     }
 
