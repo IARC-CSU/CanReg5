@@ -1,4 +1,4 @@
-#LyX 1.6.8 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.9 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -42,7 +42,7 @@
 \begin_body
 
 \begin_layout Title
-CanReg analysis improvements
+CanReg analysis and R
 \end_layout
 
 \begin_layout Author
@@ -63,16 +63,17 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-R is a powerful open source freely available software package that could
- be coupled with CanReg to improve the analytical capabilites.
-\end_layout
-
-\begin_layout Standard
 \align left
 CanReg5 is an open source tool to input, store, check and analyse cancer
  registry data.
  It has modules to do data entry, quality control, consistency checks and
  basic analysis of the data.
+\end_layout
+
+\begin_layout Standard
+\align left
+R is a powerful open source freely available software package that could
+ be coupled with CanReg to improve the analytical capabilites.
 \end_layout
 
 \begin_layout Section
@@ -171,6 +172,47 @@ Population pyramids
 
 \begin_layout Itemize
 Frequencies by year
+\end_layout
+
+\begin_layout Itemize
+Age-specific rates for major diagnosis groups - linear and logaritmic
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename analysis1.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Majour-groups--"
+
+\end_inset
+
+Majour groups - log
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -322,7 +364,8 @@ Getting the data to R - and back
 \end_layout
 
 \begin_layout Standard
-Basically two main ways to do it.
+Basically two main ways to do it - using java-R library calls or exporting
+ data, but we decided on the most loosely coupled way.
 \end_layout
 
 \begin_layout Subsubsection
@@ -335,22 +378,13 @@ Prefered mehtod - more dynamic and loosely coupled.
  Easier to potentially reuse R code later.
 \end_layout
 
-\begin_layout Subsubsection
-Use libraries in Java (a Java to R bridge) to call R functions directly
-\end_layout
-
-\begin_layout Standard
-Alternative method we might want to look into.
-\end_layout
-
 \begin_layout Subsection
 Output file formats
 \end_layout
 
 \begin_layout Standard
 Graphics should be output in a format that can be used by many.
- Possibly also given as a choice to the user.
- (Ref: 
+ The user can choose from the following formats (Ref: 
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.stat.auckland.ac.nz/~paul/R/devices.html"
@@ -367,17 +401,6 @@ Portable Network Graphics - PNG
 \begin_layout Standard
 Very convenient for many things, but not scalable.
  R can export directly to this format.
-\end_layout
-
-\begin_layout Subsubsection
-Enhanced Meta File - EMF
-\end_layout
-
-\begin_layout Standard
-Scalable.
- Good for Word etc.
- R can export directly to this format (at least as WMF).
- Only for Windows?
 \end_layout
 
 \begin_layout Subsubsection
@@ -433,69 +456,10 @@ Priorities
 \end_layout
 
 \begin_layout Enumerate
-Age-specific rates for major diagnosis groups - linear and logaritmic (two
- of the tables 
-\begin_inset Quotes eld
-\end_inset
-
-not yet implemented
-\begin_inset Quotes erd
-\end_inset
-
- - see figure 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:Majour-groups--"
-
-\end_inset
-
-.) 
-\begin_inset Float figure
-placement h
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename analysis1.png
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:Majour-groups--"
-
-\end_inset
-
-Majour groups - log
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Enumerate
 Need to specify diagnostic groups.
  Dynamic? (User definable?)
 \end_layout
 
-\end_deeper
 \begin_layout Enumerate
 ASR and number of cases in major diagnosis groups in single calendar years
  of observation (two of the tables 
@@ -585,6 +549,25 @@ Compared to another reference registry? In the region/world?
 \end_deeper
 \begin_layout Enumerate
 Time trends
+\end_layout
+
+\begin_layout Subsection
+In the long(er) run
+\end_layout
+
+\begin_layout Subsubsection
+Templates for reports from registries
+\end_layout
+
+\begin_layout Standard
+We can make these R scripts work together and build a several page report
+ directly from CanReg5.
+ To get there we first need to design what we would ideally want in this
+ report and then implement the necessary parts in CanReg and R.
+ One thing we most probably would want is a way for the user to enter some
+ free text.
+ These reports could be output as PDFs (ready to print) or HTML (ready for
+ the web).
 \end_layout
 
 \end_body

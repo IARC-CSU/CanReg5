@@ -1,4 +1,4 @@
-#LyX 1.6.10 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.9 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -36,12 +36,13 @@
 \tracking_changes false
 \output_changes false
 \author "" 
+\author "" 
 \end_header
 
 \begin_body
 
 \begin_layout Title
-CanReg 5 improvements
+CanReg 5 Future Improvements
 \end_layout
 
 \begin_layout Author
@@ -174,16 +175,10 @@ Export report automatically opened in the System?
 \end_layout
 
 \begin_layout Itemize
-Automatically pick up the population data set when building tables based
- on year, filter etc.
+An intermediate question asking for sub pop when automatically picking populatio
+n data sets?
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-An intermediate question asking for sub pop?
-\end_layout
-
-\end_deeper
 \begin_layout Section*
 Quality control 
 \end_layout
