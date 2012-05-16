@@ -220,7 +220,11 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
 
                 @Override
                 public int compare(CancerCasesCount o1, CancerCasesCount o2) {
-                    return -(o1.count  +" "+ o1.toString()).compareTo(o2.count  +" "+ o2.toString());
+                    if (o1.count == o2.count) {
+                        return  -o1.toString().compareTo(o2.toString());                                
+                    } else {
+                        return -(o1.count.compareTo(o2.count));
+                    }
                 }
             });
             LinkedList<CancerCasesCount> theRestMale = new LinkedList<CancerCasesCount>();
@@ -229,7 +233,11 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
 
                 @Override
                 public int compare(CancerCasesCount o1, CancerCasesCount o2) {
-                    return -(o1.count +" "+ o1.toString()).compareTo(o2.count  +" "+ o2.toString());
+                    if (o1.count == o2.count) {
+                        return  -o1.toString().compareTo(o2.toString());                                
+                    } else {
+                        return -(o1.count.compareTo(o2.count));
+                    }
                 }
             });
             LinkedList<CancerCasesCount> theRestFemale = new LinkedList<CancerCasesCount>();
