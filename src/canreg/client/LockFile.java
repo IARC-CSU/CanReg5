@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.client;
 
 import canreg.common.Globals;
@@ -77,7 +76,9 @@ public class LockFile {
             } catch (java.io.StreamCorruptedException ex) {
                 Logger.getLogger(LockFile.class.getName()).log(Level.INFO, null, ex);
             } finally {
-                in.close();
+                if (in != null) {
+                    in.close();
+                }
                 if (!success) {
                     locksMap = new TreeMap<String, Set<Integer>>();
                 }
