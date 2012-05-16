@@ -24,6 +24,7 @@ DefaultGroupName={#MyAppName}
 OutputDir=C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\dist
 InfoBeforeFile=C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\changelog.txt
 LicenseFile=C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\src\canreg\client\gui\resources\gpl-3.0-standalone.txt
+AllowNoIcons=yes
 OutputBaseFilename=CanReg5-Setup
 Compression=lzma
 SolidCompression=yes
@@ -31,12 +32,14 @@ SolidCompression=yes
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
+Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl"
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "norwegian"; MessagesFile: "compiler:Languages\Norwegian.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: 
 
 [Files]
 Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\CanReg.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -51,6 +54,7 @@ Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\d
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
