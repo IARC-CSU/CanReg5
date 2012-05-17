@@ -1,5 +1,11 @@
 Changelog
 
+5.00.18
+- Fixed a bug in the pie chart builder where cancer groups with the same count of cases only counted once.
+- Fixed a potential null-pointer error while accessing the lock-file.
+- Updated the docs.
+- Various bug fixes.
+
 5.00.17
 - Implemented a system to detect records not properly released from the server after an unclean break.
 - Tablebuilder can now build tables without denominators.

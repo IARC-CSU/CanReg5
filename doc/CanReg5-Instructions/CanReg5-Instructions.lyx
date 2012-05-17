@@ -12794,6 +12794,10 @@ Jacques Ferlay (Original PostScript code, conversion tables and original
  quality control module)
 \end_layout
 
+\begin_layout Itemize
+Anahita Rahimi (R code for analysis)
+\end_layout
+
 \begin_layout Subsection
 Additional design
 \end_layout
@@ -12808,6 +12812,14 @@ Maria Paula Curado
 
 \begin_layout Itemize
 Lydia Voti
+\end_layout
+
+\begin_layout Itemize
+Freddie Bray
+\end_layout
+
+\begin_layout Itemize
+David Forman
 \end_layout
 
 \begin_layout Subsection
@@ -13005,6 +13017,14 @@ Spanish:
 Chinese:
 \series default
  Yayun Dai, IARC, France and Shixuan Liu, China
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Portugese, Portugal: 
+\series default
+Gonçalo Lacerda, Azores, Portugal
 \end_layout
 
 \begin_layout Section

@@ -12,3 +12,6 @@ rsync -Rtrv --include "*/" --include "*_es.properties" --exclude "*" ./src/canre
 
 # put all the chinese files in one folder
 rsync -Rtrv --include "*/" --include "*_zh.properties" --exclude "*" ./src/canreg/client/ ./translations/zh/
+
+# put all the georgian files in one folder
+rsync -Rtrv --include "*/" --include "*_ka.properties" --exclude "*" ./src/canreg/client/ ./translations/ka/

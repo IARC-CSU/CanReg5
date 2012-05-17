@@ -1,5 +1,30 @@
-changeset:   987:8f72603f0f89
+changeset:   992:791ea9568a6a
 tag:         tip
+user:        ErvikM@x90164
+date:        Wed May 16 14:26:09 2012 +0200
+summary:     Updated the docs.
+
+changeset:   991:0a078a1f5b14
+user:        ErvikM@x90164
+date:        Wed May 16 09:34:57 2012 +0200
+summary:     Fixed a potential null-pointer error while accessing the lock-file.
+
+changeset:   990:eeb72cbe4992
+user:        ErvikM@x90164
+date:        Tue May 15 10:52:15 2012 +0200
+summary:     Fixed a bug in the pie chart builder where cancer groups with the same count of cases only counted once.
+
+changeset:   989:6c45e11ff128
+user:        ErvikM@x90164
+date:        Fri May 11 17:25:20 2012 +0200
+summary:     5.00.17
+
+changeset:   988:54bcbca38d55
+user:        ErvikM@x90164
+date:        Fri May 11 16:30:30 2012 +0200
+summary:     Doc updated.
+
+changeset:   987:8f72603f0f89
 user:        ErvikM@x90164
 date:        Fri May 11 15:10:41 2012 +0200
 summary:     Users can now change the font and font size used in CanReg5.
