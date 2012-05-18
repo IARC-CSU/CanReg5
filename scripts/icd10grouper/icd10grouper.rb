@@ -80,8 +80,6 @@ java_import 'java.util.HashMap'
 conversion = ConversionICDO3toICD10.new
 # conversion.getVariablesNeeded.each {|v| puts v}
 
-
-
 puts "Reading confing file: #{options[:conf_file_name]}"
 
 config = {}

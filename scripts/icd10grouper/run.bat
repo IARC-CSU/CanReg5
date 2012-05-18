@@ -1,1 +1,1 @@
-jruby --1.9 icd10grouper.rb -t TOP -m MOR -b BEH -s SEX -g Groups.conf -f "1993-2007 Izmir Data ME.txt"
+jruby --1.9 icd10grouper.rb -t TOP -m MOR -b BEH -s SEX -g Groups.conf -f "Here be Data.csv"
