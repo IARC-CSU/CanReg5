@@ -1,17 +1,8 @@
 require 'java'
 require 'csv'
 require 'optparse'
-require '../../CanReg.jar'
-
-java_import 'canreg.client.analysis.EditorialTableTools'
-java_import 'canreg.common.conversions.ConversionICDO3toICD10'
-java_import 'canreg.common.Globals'
-java_import 'java.util.HashMap'
 
 options = {}
-
-conversion = ConversionICDO3toICD10.new
-# conversion.getVariablesNeeded.each {|v| puts v}
 
 ## default values
 options[:top_column] = "TOP"
@@ -22,6 +13,7 @@ options[:separating_character] = "\t"
 options[:in_file_name] = "1993-2007 Izmir Data ME.txt"
 options[:out_file_name] = options[:in_file_name].split(".")[0]+"-out.txt"
 options[:conf_file_name] = "Groups.conf"
+options[:canreg_path] = '../../CanReg.jar'
 
 # overrides
 option_parser = OptionParser.new do |opts|
@@ -49,6 +41,9 @@ option_parser = OptionParser.new do |opts|
   opts.on("-g GROUP_CONF_FILE", "--group-conf-file GROUP_CONF_FILE", "File containing the definitions of the groups.\n Default: #{options[:conf_file_name]}") do |column|
     options[:conf_file_name] = column
   end
+  opts.on("-p PATH_TO_CANREG","--path-to-canreg PATH_TO_CANREG", "Path to the CanReg.jar-file.\n Default: #{options[:canreg_path]}") do |path|
+    options[:canreg_path] = path
+  end
   opts.on("-f IN_FILE", "--in-file IN_FILE", "File to process.\n Default: #{options[:in_file_name]}") do |file|
     options[:in_file_name] = file
     fileparts = file.split(".")
@@ -74,6 +69,19 @@ unless File.exist?(options[:in_file_name])
   puts option_parser.help
   exit 1
 end
+
+require options[:canreg_path]
+
+java_import 'canreg.client.analysis.EditorialTableTools'
+java_import 'canreg.common.conversions.ConversionICDO3toICD10'
+java_import 'canreg.common.Globals'
+java_import 'java.util.HashMap'
+
+conversion = ConversionICDO3toICD10.new
+# conversion.getVariablesNeeded.each {|v| puts v}
+
+
+
 puts "Reading confing file: #{options[:conf_file_name]}"
 
 config = {}

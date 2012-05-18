@@ -35,6 +35,9 @@ Usage:
     -g GROUP_CONF_FILE,              File containing the definitions of the groups.
  Default: Groups.conf
         --group-conf-file
+    -p PATH_TO_CANREG,               Path to the CanReg.jar-file.
+ Default: ../../CanReg.jar
+        --path-to-canreg
     -f, --in-file IN_FILE            File to process.
  Default: 1993-2007 Izmir Data ME.txt
     -h, --help                       Display help functions.
