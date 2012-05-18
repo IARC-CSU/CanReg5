@@ -12754,6 +12754,141 @@ target "http://notepad-plus-plus.org/"
 \end_layout
 
 \begin_layout Chapter
+Scripts
+\end_layout
+
+\begin_layout Section
+Ruby scripts
+\end_layout
+
+\begin_layout Subsection
+Script to generate icd10 codes and cancer groups
+\end_layout
+
+\begin_layout Standard
+This tool lets you add icd10 codes and user defined groups to data in a
+ csv file.
+\end_layout
+
+\begin_layout Subsubsection
+Prerequisites
+\end_layout
+
+\begin_layout Paragraph
+Install JRuby 
+\end_layout
+
+\begin_layout Enumerate
+Downoad the latest JRuby from here: http://jruby.org/download fitting your
+ machine 
+\end_layout
+
+\begin_layout Enumerate
+Run the installer and follow on screen instructions 
+\end_layout
+
+\begin_layout Enumerate
+Windows: Run the 
+\begin_inset Quotes eld
+\end_inset
+
+install.bat
+\begin_inset Quotes erd
+\end_inset
+
+ in the script folder.
+ Linux/Mac: run the following commands:
+\end_layout
+
+\begin_layout LyX-Code
+jgem install bundler 
+\end_layout
+
+\begin_layout LyX-Code
+jruby --1.9 -S bundle install
+\end_layout
+
+\begin_layout Subsubsection
+Usage
+\end_layout
+
+\begin_layout LyX-Code
+jruby --1.9 icd10grouper.rb [options] 
+\end_layout
+
+\begin_layout Paragraph
+Example: 
+\end_layout
+
+\begin_layout LyX-Code
+jruby --1.9 icd10grouper.rb -t Topography -m Morphology -b Behaviour -s Sex
+ -c , -g Groups.conf -f LotsOfData.csv
+\end_layout
+
+\begin_layout Paragraph
+Arguments:
+\end_layout
+
+\begin_layout LyX-Code
+-t TOPOGRAPHY_COLUMN_NAME, Name of the column containing topography.
+ Default: TOP --topography-column-name
+\end_layout
+
+\begin_layout LyX-Code
+-m MORPHOLOGY_COLUMN_NAME, Name of the column containing morphology.
+ Default: MOR --morphology-column-name
+\end_layout
+
+\begin_layout LyX-Code
+-b BEHAVIOUR_COLUMN_NAME, Name of the column containing behaviour.
+ Default: BEH --behaviour-column-name 
+\end_layout
+
+\begin_layout LyX-Code
+-s SEX_COLUMN_NAME, Name of the column containing sex.
+ (Coded: 1-Male, 2-Female) Default: SEX --sex-column-name 
+\end_layout
+
+\begin_layout LyX-Code
+-c SEPARATING_CHARACTER, Separating character in the files.
+ Default: tab --separating-character 
+\end_layout
+
+\begin_layout LyX-Code
+-g GROUP_CONF_FILE, File containing the definitions of the groups.
+ Default: Groups.conf --group-conf-file 
+\end_layout
+
+\begin_layout LyX-Code
+-p PATH_TO_CANREG, Path to the CanReg.jar-file.
+ Default: ../../CanReg.jar --path-to-canreg 
+\end_layout
+
+\begin_layout LyX-Code
+-f, --in-file IN_FILE File to process.
+ Default: 
+\begin_inset Quotes eld
+\end_inset
+
+Here be Data.txt
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout LyX-Code
+-h, --help Display help functions.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
 
 \family sans
 \series bold
