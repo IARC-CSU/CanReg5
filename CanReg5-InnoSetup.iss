@@ -45,6 +45,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\CanReg.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\conf\*"; DestDir: "{app}\conf"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\demo\*"; DestDir: "{app}\demo"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\scripts\*"; DestDir: "{app}\scripts"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\dist\lib\*"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\dist\CanReg.jar"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\dist\README.TXT"; DestDir: "{app}"; Flags: ignoreversion
