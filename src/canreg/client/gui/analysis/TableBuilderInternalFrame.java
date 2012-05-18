@@ -1145,6 +1145,12 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
                     if (tableDatadescription.getRowCount() > 0) {
                         incidenceData = tableDataSource.retrieveRows(0, tableDatadescription.getRowCount());
+                    } else {
+                        // display error - no lines
+                        JOptionPane.showMessageDialog(this,
+                                "No incidence data available correspondign to the current filter, period and population.",
+                                "No incidence data",
+                                JOptionPane.ERROR_MESSAGE);
                     }
 
                     // Build the table(s)
