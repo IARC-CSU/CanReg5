@@ -314,28 +314,30 @@ public class Import {
                 if (sex != null && sex.length() > 0) {
                     Integer sexCode = Integer.parseInt(sex);
                     String firstNames = (String) patient.getVariable(firstNameVariableName);
-                    String[] firstNamesArray = firstNames.split(" ");
-                    for (String firstName : firstNamesArray) {
-                        if (firstName != null && firstName.trim().length() > 0) {
-                            // here we use the locale specific toUpperCase
-                            Integer registeredSexCode = nameSexTable.get(firstName);
-                            if (registeredSexCode == null) {
-                                NameSexRecord nsr = new NameSexRecord();
-                                nsr.setName(firstName);
-                                nsr.setSex(sexCode);
-
-                                server.saveNameSexRecord(nsr, false);
-
-                                nameSexTable.put(firstName, sexCode);
-                            } else if (registeredSexCode != sexCode) {
-                                if (registeredSexCode != 9) {
-                                    sexCode = 9;
+                    if (firstNames != null) {
+                        String[] firstNamesArray = firstNames.split(" ");
+                        for (String firstName : firstNamesArray) {
+                            if (firstName != null && firstName.trim().length() > 0) {
+                                // here we use the locale specific toUpperCase
+                                Integer registeredSexCode = nameSexTable.get(firstName);
+                                if (registeredSexCode == null) {
                                     NameSexRecord nsr = new NameSexRecord();
                                     nsr.setName(firstName);
                                     nsr.setSex(sexCode);
-                                    server.saveNameSexRecord(nsr, true);
-                                    nameSexTable.remove(firstName);
+
+                                    server.saveNameSexRecord(nsr, false);
+
                                     nameSexTable.put(firstName, sexCode);
+                                } else if (registeredSexCode != sexCode) {
+                                    if (registeredSexCode != 9) {
+                                        sexCode = 9;
+                                        NameSexRecord nsr = new NameSexRecord();
+                                        nsr.setName(firstName);
+                                        nsr.setSex(sexCode);
+                                        server.saveNameSexRecord(nsr, true);
+                                        nameSexTable.remove(firstName);
+                                        nameSexTable.put(firstName, sexCode);
+                                    }
                                 }
                             }
                         }
@@ -349,7 +351,13 @@ public class Import {
                         patientDatabaseRecordID = server.savePatient(patient);
                     }
                 }
-
+                if (patient != null && tumour != null) {
+                    String icd10 = (String) tumour.getVariable(io.getICD10VariableName());
+                    if (icd10 == null || icd10.trim().length() == 0) {
+                        ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
+                        tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
+                    }
+                }
                 if (tumour.getVariable(io.getPatientIDTumourTableVariableName()) == null) {
                     tumour.setVariable(io.getPatientIDTumourTableVariableName(), patientID);
                 }
@@ -561,7 +569,7 @@ public class Import {
                     }
                 }
                 csvReader.close();
-                reportWriter.write("Finished reading patients."+Globals.newline+Globals.newline);
+                reportWriter.write("Finished reading patients." + Globals.newline + Globals.newline);
                 reportWriter.flush();
             }
             task.firePropertyChange(PATIENTS, 100, 100);
@@ -670,25 +678,25 @@ public class Import {
                     }
 
                     Patient patient = null;
-                    if (io.isDoChecks() && saveTumour) {
-                        try {
-                            patient = CanRegClientApp.getApplication().getPatientRecord(
-                                    (String) tumour.getVariable(io.getPatientRecordIDTumourTableVariableName()), false);
-                        } catch (DistributedTableDescriptionException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (RecordLockedException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (RemoteException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (SQLException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (SecurityException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (UnknownTableException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                    try {
+                        patient = CanRegClientApp.getApplication().getPatientRecord(
+                                (String) tumour.getVariable(io.getPatientRecordIDTumourTableVariableName()), false);
+                    } catch (DistributedTableDescriptionException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RecordLockedException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SecurityException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (UnknownTableException ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 
-                        if (patient != null) {
+                    if (patient != null) {
+                        if (io.isDoChecks() && saveTumour) {
                             // run the edits...
                             String message = "";
                             LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumour);
@@ -712,6 +720,9 @@ public class Import {
                                 }
                                 // Logger.getLogger(Import.class.getName()).log(Level.INFO, result.toString());
                             }
+                            // always generate ICD10...
+                            // ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
+                            // tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
 
                             if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing) {
                                 // TODO: If no errors were found we generate ICD10 code
@@ -724,16 +735,23 @@ public class Import {
                             if (worstResultCodeFound == CheckResult.ResultCode.OK) {
                                 // message += "Cross-check conclusion: Valid";
                             } else {
-
                                 reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "\t" + message + Globals.newline);
                                 // System.out.println(tumour.getVariable(io.getTumourIDVariablename()) + " " + message);
                             }
                             tumour.setVariable(io.getTumourCheckStatus(), CheckResult.toDatabaseVariable(worstResultCodeFound));
+
                         } else {
-                            reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "\t" + "No patient matches this Tumour." + Globals.newline);
-                            tumour.setVariable(io.getTumourRecordStatus(), "0");
-                            tumour.setVariable(io.getTumourCheckStatus(), CheckResult.toDatabaseVariable(ResultCode.Missing));
+                            // try to generate ICD10, if missing, anyway
+                            String icd10 = (String) tumour.getVariable(io.getICD10VariableName());
+                            if (icd10 == null || icd10.trim().length() == 0) {
+                                ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
+                                tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
+                            }
                         }
+                    } else {
+                        reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "\t" + "No patient matches this Tumour." + Globals.newline);
+                        tumour.setVariable(io.getTumourRecordStatus(), "0");
+                        tumour.setVariable(io.getTumourCheckStatus(), CheckResult.toDatabaseVariable(ResultCode.Missing));
                     }
                     if (task != null) {
                         task.firePropertyChange(RECORD, 50, 75);
@@ -766,7 +784,7 @@ public class Import {
                     }
                 }
                 csvReader.close();
-                reportWriter.write("Finished reading tumours."+Globals.newline+Globals.newline);
+                reportWriter.write("Finished reading tumours." + Globals.newline + Globals.newline);
                 reportWriter.flush();
             }
             task.firePropertyChange(TUMOURS, 100, 100);
@@ -875,7 +893,7 @@ public class Import {
                         throw new InterruptedException();
                     }
                 }
-                reportWriter.write("Finished reading sources."+Globals.newline+Globals.newline);
+                reportWriter.write("Finished reading sources." + Globals.newline + Globals.newline);
                 reportWriter.flush();
                 csvReader.close();
             }
@@ -884,7 +902,7 @@ public class Import {
             while (!task.isProgressPropertyValid()) {
                 // wait untill progress has been updated...
             }
-            reportWriter.write("Finished"+Globals.newline);
+            reportWriter.write("Finished" + Globals.newline);
             reportWriter.flush();
             success = true;
         } catch (IOException ex) {
@@ -914,7 +932,7 @@ public class Import {
                 }
             }
         }
-        task.firePropertyChange(PROGRESS, 100, 100);        
+        task.firePropertyChange(PROGRESS, 100, 100);
         task.firePropertyChange("finished", null, null);
         return success;
     }
