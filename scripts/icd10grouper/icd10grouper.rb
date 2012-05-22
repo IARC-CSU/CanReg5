@@ -55,7 +55,6 @@ option_parser = OptionParser.new do |opts|
   opts.on("-f IN_FILE", "--in-file IN_FILE", "File to process.\n Default: #{options[:in_file_name]}") do |file|
     options[:in_file_name] = file
     fileparts = file.split(".")
-    # puts fileparts
     fileparts.length>1 ? fileparts[-2] = fileparts[-2]+"-out" : fileparts[0] = fileparts[0]+"-out"
     options[:out_file_name] = fileparts.join(".")
   end
@@ -78,6 +77,7 @@ unless File.exist?(options[:in_file_name])
   exit 1
 end
 
+# load in the CanReg.jar
 require options[:canreg_path]
 
 java_import 'canreg.client.analysis.EditorialTableTools'
@@ -86,7 +86,6 @@ java_import 'canreg.common.Globals'
 java_import 'java.util.HashMap'
 
 conversion = ConversionICDO3toICD10.new
-# conversion.getVariablesNeeded.each {|v| puts v}
 
 puts "Reading confing file: #{options[:conf_file_name]}"
 
@@ -97,21 +96,17 @@ File.open(options[:conf_file_name]).each do |line|
   if line=~/{/
     conf_strings = []
     conf_name = line.delete('{').strip
-    # puts conf_name
   elsif line=~/}/
     config[conf_name] = conf_strings
-    # puts "hello"
   else
     line = line.delete('"').strip
     conf_strings.push line if line.length>0
-    # puts line
   end
 end
-group_labels = config["ICD_groups_labels"].map { |entry| entry[3..-1]}
 
+group_labels = config["ICD_groups_labels"].map { |entry| entry[3..-1]}
 group_definitions = config["ICD10_groups"]
 groups = EditorialTableTools.generateICD10Groups(group_definitions)
-# groups.each {|g| puts g}
 
 in_file = CSV.open(options[:in_file_name], mode = "rb", headers: true, col_sep: options[:separating_character])
 out_file = CSV.open(options[:out_file_name], mode = "wb", headers: true, col_sep: options[:separating_character])
