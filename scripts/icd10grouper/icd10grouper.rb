@@ -1,3 +1,11 @@
+# Written by Morten Ervik <ervikm@iarc.fr>.
+# 
+# This program is distributed under the terms of the CanReg5 license.
+# You can freely distribute/modify this library.
+# 
+# It is distributed with CanReg5.
+#
+
 require 'java'
 require 'csv'
 require 'optparse'
@@ -10,7 +18,7 @@ options[:mor_column] = "MOR"
 options[:beh_column] = "BEH"
 options[:sex_column] = "SEX"
 options[:separating_character] = "\t"
-options[:in_file_name] = "1993-2007 Izmir Data ME.txt"
+options[:in_file_name] = "Lots of Data.txt"
 options[:out_file_name] = options[:in_file_name].split(".")[0]+"-out.txt"
 options[:conf_file_name] = "Groups.conf"
 options[:canreg_path] = '../../CanReg.jar'
