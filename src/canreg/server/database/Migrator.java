@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.server.database;
 
 import canreg.common.Globals;
@@ -58,13 +57,16 @@ public class Migrator {
             if (databaseVersion.compareTo("4.99.5") < 0) {
                 migrateTo_4_99_5(canRegDAO);
             }
-            if (databaseVersion.length()<7 || databaseVersion.substring(0, 7).compareTo("5.00.06") < 0) {
+            if (databaseVersion.length() < 7 || databaseVersion.substring(0, 7).compareTo("5.00.06") < 0) {
                 migrateTo_5_00_06(canRegDAO);
             }
-            if (databaseVersion.length()<7 || databaseVersion.substring(0, 7).compareTo("5.00.17") < 0) {
+            if (databaseVersion.length() < 7 || databaseVersion.substring(0, 7).compareTo("5.00.17") < 0) {
                 migrateTo_5_00_17(canRegDAO);
             }
-        }        
+            if (databaseVersion.length() < 7 || databaseVersion.substring(0, 7).compareTo("5.00.19") < 0) {
+                migrateTo_5_00_19(canRegDAO);
+            }
+        }
         // canRegDAO.setSystemPropery("DATABASE_VERSION", newVersion);
     }
 
@@ -84,7 +86,7 @@ public class Migrator {
             Logger.getLogger(Migrator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void migrateTo_5_00_17(CanRegDAO db) {
         try {
             db.addColumnToTable("USER_ROLE", "INT", Globals.USERS_TABLE_NAME);
@@ -93,5 +95,16 @@ public class Migrator {
         } catch (SQLException ex) {
             Logger.getLogger(Migrator.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } 
+    }
+
+    private void migrateTo_5_00_19(CanRegDAO db) {
+        try {
+            db.dropColumnFromTable("USER_ROLE", Globals.USERS_TABLE_NAME );
+            db.addColumnToTable("USER_ROLE", "VARCHAR(255)", Globals.USERS_TABLE_NAME);
+            db.setSystemPropery("DATABASE_VERSION", "5.00.19");
+            Logger.getLogger(Migrator.class.getName()).log(Level.INFO, "Migrated the database to version 5.00.19.");
+        } catch (SQLException ex) {
+            Logger.getLogger(Migrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

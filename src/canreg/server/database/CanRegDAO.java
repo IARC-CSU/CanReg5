@@ -2620,4 +2620,24 @@ public class CanRegDAO {
 
         return success;
     }
+
+    public boolean setColumnDataType(String columnName, String columnType, String table) throws SQLException {
+        boolean success = false;
+
+        Statement statement = dbConnection.createStatement();
+        statement.execute(QueryGenerator.strSetColumnDataType(columnName, columnType, table));
+        success = true;
+
+        return success;
+    }
+
+    public boolean dropColumnFromTable(String columnName, String table) throws SQLException {
+        boolean success = false;
+
+        Statement statement = dbConnection.createStatement();
+        statement.execute(QueryGenerator.strDropColumnFromTable(columnName, table));
+        success = true;
+
+        return success;
+    }
 }

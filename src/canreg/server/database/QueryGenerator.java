@@ -699,4 +699,8 @@ public class QueryGenerator {
     static String strDropColumnFromTable(String columnName, String table) {
         return "ALTER TABLE APP." + table + " DROP COLUMN " + columnName.toUpperCase();
     }
+
+    static String strSetColumnDataType(String columnName, String columnType, String table) {
+        return "ALTER TABLE APP." + table + " ALTER "+ columnName.toUpperCase() + " SET DATA TYPE "+columnType;
+    }
 }
