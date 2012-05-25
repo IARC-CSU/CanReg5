@@ -792,7 +792,7 @@ public final class CanRegClientView extends FrameView {
     }
 
     private static void debugOut(String msg) {
-        if (debug) {
+        if (DEBUG) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.INFO, msg);
         }
     }
@@ -957,7 +957,7 @@ public final class CanRegClientView extends FrameView {
             restoreMenuItem.setEnabled(true);
         }
 
-        garbleDatabaseMenuItem.setVisible(management && debug);
+        garbleDatabaseMenuItem.setVisible(management && DEBUG);
     }
 
     /**
@@ -1597,7 +1597,7 @@ public final class CanRegClientView extends FrameView {
     private int busyIconIndex = 0;
     private JDialog aboutBox;
     private Globals.UserRightLevels userRightsLevel = Globals.UserRightLevels.NOT_LOGGED_IN;
-    private static boolean debug = false;
+    private static boolean DEBUG = false;
     LocalSettings localSettings;
     private static int xOffset = 30, yOffset = 30;
     private static int toolBarHeight = 80;
