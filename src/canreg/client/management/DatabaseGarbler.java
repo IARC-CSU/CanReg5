@@ -99,6 +99,14 @@ public class DatabaseGarbler {
             DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
             rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, distributedTableDescription.getRowCount());
 
+            // first randomly shuffle all the patient IDs - not evenly distributed, but random enough: http://blog.ryanrampersad.com/2008/10/13/shuffle-an-array-in-java/ 
+            for (int i = 0; i < distributedTableDescription.getRowCount(); i++) {
+                int randomPos = rnd.nextInt(distributedTableDescription.getRowCount());
+                Object[] tempRow = rows[i];                
+                rows[i] = rows[randomPos];
+                rows[randomPos] = tempRow;
+            }
+                        
             // for all patients in the database
             for (int i = 0; i < distributedTableDescription.getRowCount(); i++) {
                 if (task != null) {
@@ -162,11 +170,11 @@ public class DatabaseGarbler {
                         while (patient2RecordID == patientDatabaseRecordID) {
                             patient2RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
                         }
-                        patient2 = (Patient) CanRegClientApp.getApplication().getRecord(patient2RecordID, Globals.PATIENT_TABLE_NAME, true);
+                        patient2 = (Patient) CanRegClientApp.getApplication().getRecord(patient2RecordID, Globals.PATIENT_TABLE_NAME, false);
                         while (patient2 == null) {
                             CanRegClientApp.getApplication().releaseRecord(patient2RecordID, Globals.PATIENT_TABLE_NAME);
                             patient2RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
-                            patient2 = (Patient) CanRegClientApp.getApplication().getRecord(patient2RecordID, Globals.PATIENT_TABLE_NAME, true);
+                            patient2 = (Patient) CanRegClientApp.getApplication().getRecord(patient2RecordID, Globals.PATIENT_TABLE_NAME, false);
                         }
                         // swap last names with this one
                         String oldLastName = (String) patient1.getVariable(lastNameVariableListElement.getDatabaseVariableName());
@@ -179,11 +187,11 @@ public class DatabaseGarbler {
                         while (patient3RecordID == patientDatabaseRecordID || patient3RecordID == patient2RecordID) {
                             patient3RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
                         }
-                        patient3 = (Patient) CanRegClientApp.getApplication().getRecord(patient3RecordID, Globals.PATIENT_TABLE_NAME, true);
+                        patient3 = (Patient) CanRegClientApp.getApplication().getRecord(patient3RecordID, Globals.PATIENT_TABLE_NAME, false);
                         while (patient3 == null) {
                             CanRegClientApp.getApplication().releaseRecord(patient3RecordID, Globals.PATIENT_TABLE_NAME);
                             patient3RecordID = rnd.nextInt(distributedTableDescription.getRowCount());
-                            patient3 = (Patient) CanRegClientApp.getApplication().getRecord(patient3RecordID, Globals.PATIENT_TABLE_NAME, true);
+                            patient3 = (Patient) CanRegClientApp.getApplication().getRecord(patient3RecordID, Globals.PATIENT_TABLE_NAME, false);
                         }
 
                         // swap adress fields with this one
@@ -201,7 +209,7 @@ public class DatabaseGarbler {
 
                         try {
                             // get the tumours of this patient
-                            tumors = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID((String) patient1.getVariable(patientIDVariableListElement.getDatabaseVariableName()), true);
+                            tumors = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID((String) patient1.getVariable(patientIDVariableListElement.getDatabaseVariableName()), false);
                             for (Tumour tumor : tumors) {
                                 // change incidencedate
                                 String incidenceDateString = (String) tumor.getVariable(incidenceDateVariableListElement.getDatabaseVariableName());
