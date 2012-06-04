@@ -1593,4 +1593,8 @@ public class CanRegClientApp extends SingleFrameApplication {
     public void setUIFont(String fontName, int fontSize) {
         UITools.setUIFont(new javax.swing.plaf.FontUIResource(new Font(fontName, Font.PLAIN, fontSize)));
     }
+    
+    public JDesktopPane getDeskTopPane(){
+        return canRegClientView.getDesktopPane();
+    }
 }
