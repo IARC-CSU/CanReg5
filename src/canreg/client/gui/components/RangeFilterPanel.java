@@ -51,7 +51,7 @@ import org.w3c.dom.Document;
  *
  * @author  ervikm
  */
-public class RangeFilterPanel extends javax.swing.JPanel implements ActionListener {
+public final class RangeFilterPanel extends javax.swing.JPanel implements ActionListener {
 
     private Document doc;
     // private DatabaseVariablesListElement[] variablesInDB;
@@ -72,6 +72,7 @@ public class RangeFilterPanel extends javax.swing.JPanel implements ActionListen
     public RangeFilterPanel() {
         initComponents();
         globalToolBox = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox();
+        setDeskTopPane(canreg.client.CanRegClientApp.getApplication().getDeskTopPane());
     }
 
     /**
