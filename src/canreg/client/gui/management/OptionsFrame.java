@@ -17,8 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
-
 /*
  * OptionsFrame.java
  *
@@ -124,6 +122,10 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         rInstallationLabel = new javax.swing.JLabel();
         rInstallationTextField = new javax.swing.JTextField();
         rInstallationBrowseButton = new javax.swing.JButton();
+        gsPanel = new javax.swing.JPanel();
+        gsInstallationLabel = new javax.swing.JLabel();
+        gsInstallationTextField = new javax.swing.JTextField();
+        gsInstallationBrowseButton = new javax.swing.JButton();
 
         setClosable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(OptionsFrame.class);
@@ -254,7 +256,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addComponent(languagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lookAndFeelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("generalPanel.TabConstraints.tabTitle"), generalPanel); // NOI18N
@@ -340,7 +342,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(systemPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(automaticBackupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(160, Short.MAX_VALUE))
+                .addContainerGap(168, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("systemPanel.TabConstraints.tabTitle"), systemPanel); // NOI18N
@@ -440,7 +442,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(advancedPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(versionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addContainerGap(165, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("advancedPanel.TabConstraints.tabTitle"), advancedPanel); // NOI18N
@@ -454,6 +456,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         rInstallationLabel.setName("rInstallationLabel"); // NOI18N
 
         rInstallationTextField.setText(resourceMap.getString("rInstallationTextField.text")); // NOI18N
+        rInstallationTextField.setToolTipText(resourceMap.getString("rInstallationTextField.toolTipText")); // NOI18N
         rInstallationTextField.setName("rInstallationTextField"); // NOI18N
 
         rInstallationBrowseButton.setAction(actionMap.get("browseForR")); // NOI18N
@@ -480,13 +483,47 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addComponent(rInstallationBrowseButton))
         );
 
+        gsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("gsPanel.border.title"))); // NOI18N
+        gsPanel.setName("gsPanel"); // NOI18N
+
+        gsInstallationLabel.setText(resourceMap.getString("gsInstallationLabel.text")); // NOI18N
+        gsInstallationLabel.setName("gsInstallationLabel"); // NOI18N
+
+        gsInstallationTextField.setToolTipText(resourceMap.getString("gsInstallationTextField.toolTipText")); // NOI18N
+        gsInstallationTextField.setName("gsInstallationTextField"); // NOI18N
+
+        gsInstallationBrowseButton.setAction(actionMap.get("browseForGS")); // NOI18N
+        gsInstallationBrowseButton.setName("gsInstallationBrowseButton"); // NOI18N
+
+        javax.swing.GroupLayout gsPanelLayout = new javax.swing.GroupLayout(gsPanel);
+        gsPanel.setLayout(gsPanelLayout);
+        gsPanelLayout.setHorizontalGroup(
+            gsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(gsPanelLayout.createSequentialGroup()
+                .addComponent(gsInstallationLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(gsInstallationTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(gsInstallationBrowseButton)
+                .addContainerGap())
+        );
+        gsPanelLayout.setVerticalGroup(
+            gsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(gsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(gsInstallationLabel)
+                .addComponent(gsInstallationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(gsInstallationBrowseButton))
+        );
+
         javax.swing.GroupLayout pathsPanelLayout = new javax.swing.GroupLayout(pathsPanel);
         pathsPanel.setLayout(pathsPanelLayout);
         pathsPanelLayout.setHorizontalGroup(
             pathsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pathsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(rPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(pathsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pathsPanelLayout.setVerticalGroup(
@@ -494,7 +531,9 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(pathsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(rPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(205, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(gsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(161, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("pathsPanel.TabConstraints.tabTitle"), pathsPanel); // NOI18N
@@ -517,7 +556,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -567,6 +606,10 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox fontSizeComboBox;
     private javax.swing.JLabel fontSizeLabel;
     private javax.swing.JPanel generalPanel;
+    private javax.swing.JButton gsInstallationBrowseButton;
+    private javax.swing.JLabel gsInstallationLabel;
+    private javax.swing.JTextField gsInstallationTextField;
+    private javax.swing.JPanel gsPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
@@ -595,6 +638,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         // Languages
         locales = Locale.getAvailableLocales();
         Arrays.sort(locales, new Comparator<Locale>() {
+
             @Override
             public int compare(Locale o1, Locale o2) {
                 return o1.getDisplayName(o1).compareToIgnoreCase(o2.getDisplayName(o2));
@@ -606,14 +650,14 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         int numberOfElementsAdded = 0;
         LinkedList localesList = new LinkedList();
         LinkedList localesNamesList = new LinkedList();
-        
-        List<String> translatedLocales = Arrays.asList(Globals.TRANSLATED_LOCALES); 
-        
+
+        List<String> translatedLocales = Arrays.asList(Globals.TRANSLATED_LOCALES);
+
         for (int i = 0; i < locales.length; i++) {
 
             // String country = locales[i].getDisplayCountry(locales[i]);
             localeNames[i] = locales[i].getDisplayName(locales[i]);
-            
+
             if (translatedLocales.contains(locales[i].toString())) {
                 if (locales[i].toString().equalsIgnoreCase(currentLocale.toString())) {
                     currentLocaleIndex = numberOfElementsAdded;
@@ -650,16 +694,19 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
 
         numberOfDaysTextField.setText(backUpEvery);
         automaticbackupCheckBox.setSelected(localSettings.isAutoBackup());
-        
+
         String rPath = localSettings.getProperty(LocalSettings.R_PATH);
         rInstallationTextField.setText(rPath);
-        
+
+        String gsPath = localSettings.getProperty(LocalSettings.GS_PATH);
+        gsInstallationTextField.setText(gsPath);
+
         String fontName = localSettings.getProperty(LocalSettings.FONT_NAME_KEY);
-        if (fontName==null||fontName.length()==0){
+        if (fontName == null || fontName.length() == 0) {
             fontName = LocalSettings.FONT_NAME_DEFAULT;
         }
         fontNameTextField.setText(fontName);
-        
+
         String fontSize = localSettings.getProperty(LocalSettings.FONT_SIZE_KEY);
         fontSizeComboBox.setSelectedItem(fontSize);
     }
@@ -710,10 +757,11 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             localSettings.setAutomaticBackup(false);
         }
         localSettings.setProperty(LocalSettings.R_PATH, rInstallationTextField.getText());
-        
+        localSettings.setProperty(LocalSettings.GS_PATH, gsInstallationTextField.getText());
+
         localSettings.setProperty(LocalSettings.FONT_NAME_KEY, fontNameTextField.getText());
         localSettings.setProperty(LocalSettings.FONT_SIZE_KEY, fontSizeComboBox.getSelectedItem().toString());
-                
+
         // write settings to file
         localSettings.writeSettings();
     }
@@ -752,18 +800,31 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     @Action
     public void browseForR() {
         String path = "";
-        if (rInstallationTextField.getText().trim().length()>0){
+        if (rInstallationTextField.getText().trim().length() > 0) {
             path = rInstallationTextField.getText();
         }
         JFileChooser chooser = new JFileChooser(path);
         int choice = chooser.showDialog(jLabel2, "OK");
-        if (choice == JFileChooser.APPROVE_OPTION && chooser.getSelectedFile() != null){
-            rInstallationTextField.setText(chooser.getSelectedFile().getAbsolutePath());   
+        if (choice == JFileChooser.APPROVE_OPTION && chooser.getSelectedFile() != null) {
+            rInstallationTextField.setText(chooser.getSelectedFile().getAbsolutePath());
         }
     }
 
     @Action
     public void viewChangeLogAction() {
         crcv.showChangeLog();
+    }
+
+    @Action
+    public void browseForGS() {
+        String path = "";
+        if (gsInstallationTextField.getText().trim().length() > 0) {
+            path = gsInstallationTextField.getText();
+        }
+        JFileChooser chooser = new JFileChooser(path);
+        int choice = chooser.showDialog(jLabel2, "OK");
+        if (choice == JFileChooser.APPROVE_OPTION && chooser.getSelectedFile() != null) {
+            gsInstallationTextField.setText(chooser.getSelectedFile().getAbsolutePath());
+        }
     }
 }
