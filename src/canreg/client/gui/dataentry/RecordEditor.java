@@ -34,6 +34,7 @@ import canreg.client.gui.tools.WaitFrame;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.JComponentToPDF;
 import canreg.common.conversions.ConversionResult;
 import canreg.common.conversions.Converter;
 import canreg.common.qualitycontrol.CheckResult;
@@ -51,6 +52,7 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.LinkedHashSet;
@@ -314,6 +316,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         showObsoleteRecordsCheckBox = new javax.swing.JCheckBox();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -370,6 +373,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         jButton2.setLabel(resourceMap.getString("jButton2.label")); // NOI18N
         jButton2.setName("jButton2"); // NOI18N
 
+        jButton3.setAction(actionMap.get("writePDF")); // NOI18N
+        jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
+        jButton3.setName("jButton3"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -383,24 +390,27 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(showObsoleteRecordsCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(printButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveAllButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(printButton)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(addpatientRecordButton)
-                .addComponent(saveAllButton)
                 .addComponent(showObsoleteRecordsCheckBox)
                 .addComponent(jButton1)
                 .addComponent(addTumourRecordButton)
+                .addComponent(saveAllButton)
+                .addComponent(jButton2)
                 .addComponent(printButton)
-                .addComponent(jButton2))
+                .addComponent(jButton3))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -410,7 +420,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 847, Short.MAX_VALUE)
+                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE)
                 .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
@@ -418,7 +428,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -589,6 +599,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private javax.swing.JButton addpatientRecordButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTabbedPane patientTabbedPane;
     private javax.swing.JButton printButton;
@@ -1202,7 +1213,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 for (String prid : map.keySet()) {
                     if (patientRecordID.equals(prid)) {
                         // do nothing
-                     } else {
+                    } else {
                         try {
                             Patient patient2 = canreg.client.CanRegClientApp.getApplication().getPatientRecordByID(prid, false);
                             cpif.addRecordSet(patient2, null, map.get(prid));
@@ -1281,5 +1292,38 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             }
         }
         return success;
+    }
+
+    @Action
+    public void writePDF() {
+        Set<DatabaseRecord> records = new LinkedHashSet();
+        RecordEditorPanel panel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
+        records.add(panel.getDatabaseRecord());
+
+        // String fileName = CanRegClientApp.getApplication().getLocalSettings().getProperty(LocalSettings.WORKING_DIR_PATH_KEY) + Globals.FILE_SEPARATOR + "Patient";
+        String fileName = Globals.CANREG_PATIENT_PDFS_FOLDER + Globals.FILE_SEPARATOR;
+
+        Object id = panel.getDatabaseRecord().getPatientID();
+        if (id != null && id.toString().length() > 0) {
+            fileName += id.toString();
+        } else {
+            fileName += "Patient";
+        }
+        fileName += ".pdf";
+
+        for (Component component : tumourTabbedPane.getComponents()) {
+            RecordEditorPanel tumourPanel = (RecordEditorPanel) component;
+            Tumour tumour = (Tumour) tumourPanel.getDatabaseRecord();
+            records.add(tumour);
+            records.addAll(tumour.getSources());
+        }
+
+        JComponentToPDF.RecordEditorPanelToPDF(records, fileName, globalToolBox);
+        // System.out.println("Written to ");
+        try {
+            canreg.common.Tools.openFile(fileName);
+        } catch (IOException ex) {
+            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
