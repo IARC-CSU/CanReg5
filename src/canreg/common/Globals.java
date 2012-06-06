@@ -99,6 +99,7 @@ public class Globals {
      */
     static final public String CANREG_SERVER_FOLDER = Globals.CANREG_USER_FOLDER + Globals.FILE_SEPARATOR + Globals.CANREG_SERVER_FOLDER_NAME;
     static final public String CANREG_CLIENT_FOLDER = Globals.CANREG_USER_FOLDER + Globals.FILE_SEPARATOR + Globals.CANREG_CLIENT_FOLDER_NAME;
+    static final public String CANREG_PATIENT_PDFS_FOLDER = CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + Globals.PATIENT_TABLE_NAME+"-PDFS";
     static final private String CANREG_SERVER_SYSTEM_CONFIG_FOLDER_NAME = "System";
     static final private String CANREG_SERVER_DATABASE_FOLDER_NAME = "Database";
     static final private String CANREG_BACKUP_FOLDER_NAME = "Backup";
