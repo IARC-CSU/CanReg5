@@ -1318,7 +1318,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             records.addAll(tumour.getSources());
         }
 
-        JComponentToPDF.RecordEditorPanelToPDF(records, fileName, globalToolBox);
+        JComponentToPDF.databaseRecordsToPDF(records, fileName, globalToolBox);
         // System.out.println("Written to ");
         try {
             canreg.common.Tools.openFile(fileName);

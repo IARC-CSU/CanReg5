@@ -87,9 +87,7 @@
 \align center
 
 \series bold
-Open source
-\series default
- 
+Open Source
 \end_layout
 
 \begin_layout Standard
@@ -12784,7 +12782,8 @@ Downoad the latest JRuby from here: http://jruby.org/download fitting your
 \end_layout
 
 \begin_layout Enumerate
-Run the installer and follow on screen instructions 
+Run the installer and follow on screen instructions.
+ (Make sure you add jruby to the path when asked.)
 \end_layout
 
 \begin_layout Enumerate
@@ -13051,6 +13050,10 @@ The Buzz Media (imgscalr – Java Image Scaling Library)
 
 \begin_layout Itemize
 The Apache Software Foundation (Batik) 
+\end_layout
+
+\begin_layout Itemize
+iText Software Corp (iText)
 \end_layout
 
 \begin_layout Subsection

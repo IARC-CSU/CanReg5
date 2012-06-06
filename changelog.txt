@@ -1,5 +1,19 @@
 Changelog
 
+5.00.20b2
+- Some tables, previously only available as PS, now also available as PDFs (if GhostScript is installed).
+- Data entry forms can now be written as a PDF.
+- Improved detection of R-path and added GhostScript-path.
+- Other fixes.
+
+5.00.19
+- Fixed a potential null-pointer in the table builder if people wanted to use the filter wizard.
+- Added JRuby helper scripts to use the CanReg5 conversions and grouping functionality on data not from CanReg. (See handbook.)
+- Table builder now shows a warning if trying to build a table with no data.
+- Fixed a name error in the changelog. Gonçalo Lacerda translated CanReg5 to Portuguese from Portugal.
+- ICD10 codes will be generated even when checks are not performed, potential null pointer error if no name field was defined fixed.
+- Updated the handbook.
+
 5.00.18
 - Fixed a bug in the pie chart builder where cancer groups with the same count of cases only counted once.
 - Fixed a potential null-pointer error while accessing the lock-file.
@@ -21,7 +35,7 @@ Changelog
 - Various bug fixes
 
 5.00.16
-- Portugese from Portugal added as langauge. (Thanks Gonçalo Forjaz)
+- Portugese from Portugal added as langauge. (Thanks Gonçalo Lacerda)
 - Language chooser in Option Frame now only displays translated languages.
 - Fixed a potential null pointer error in the Population Datasets.
 - DerbyDB engine updated to version 10.8.
