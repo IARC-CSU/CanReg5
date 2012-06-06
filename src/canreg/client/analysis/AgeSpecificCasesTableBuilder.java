@@ -22,8 +22,10 @@ package canreg.client.analysis;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import canreg.common.Globals;
+import canreg.common.PsToPdfConverter;
 import canreg.common.database.AgeGroupStructure;
 import canreg.common.database.PopulationDataset;
+import java.io.File;
 import java.util.LinkedList;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -43,9 +45,6 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
         Globals.StandardVariableNames.Morphology,
         Globals.StandardVariableNames.Behaviour,
         Globals.StandardVariableNames.BasisDiagnosis};
-    private static FileTypes[] fileTypesGenerated = {
-        FileTypes.ps, FileTypes.csv
-    };
     private static int YEAR_COLUMN = 0;
     private static int SEX_COLUMN = 1;
     private static int AGE_COLUMN = 2;
@@ -56,6 +55,10 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
     private static int CASES_COLUMN = 7;
     private double[][] standardPopulationArray;
     private String populationString;
+
+    public AgeSpecificCasesTableBuilder() {
+        super();
+    }
 
     @Override
     public LinkedList<String> buildTable(String registryLabel,
@@ -76,7 +79,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
         String notesString = "";
 
         if (populations[0].getFilter().length() > 0) {
-            notesString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString("FILTER USED:") +" "+ populations[0].getFilter();
+            notesString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString("FILTER USED:") + " " + populations[0].getFilter();
         }
 
         double tableFontSize = 7.5;
@@ -1149,6 +1152,18 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
             }
         }
 
+        if (fileType == FileTypes.pdf) {
+            LinkedList<String> newlyGeneratedFiles = new LinkedList<String>();
+            for (String fileN : generatedFiles) {
+                PsToPdfConverter pstopdf = new PsToPdfConverter(gspath);
+                newlyGeneratedFiles.add(pstopdf.convert(fileN));
+                // delete the ps file
+                File file = new File(fileN);
+                file.delete();
+            }
+            generatedFiles = newlyGeneratedFiles;
+        }
+
         System.out.println("Fini!");
 
         return generatedFiles;
@@ -1169,10 +1184,5 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
             OK = OK && pds.getAgeGroupStructure().getSizeOfGroups() == 5;
         }
         return OK;
-    }
-
-    @Override
-    public FileTypes[] getFileTypesGenerated() {
-        return fileTypesGenerated;
     }
 }

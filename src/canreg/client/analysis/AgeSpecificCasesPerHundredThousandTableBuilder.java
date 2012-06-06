@@ -22,15 +22,19 @@ package canreg.client.analysis;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import canreg.common.Globals;
+import canreg.common.PsToPdfConverter;
 import canreg.common.database.AgeGroupStructure;
 import canreg.common.database.PopulationDataset;
+import java.io.File;
 import java.util.LinkedList;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,9 +57,10 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
     private static int CASES_COLUMN = 7;
     private double[][] standardPopulationArray;
     private String populationString;
-    private static FileTypes[] fileTypesGenerated = {
-        FileTypes.ps, FileTypes.csv
-    };
+
+    public AgeSpecificCasesPerHundredThousandTableBuilder() {
+        super();
+    }
 
     @Override
     public LinkedList<String> buildTable(String tableHeader,
@@ -1155,8 +1160,19 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
             }
         }
 
-        System.out.println(
-                "Fini!");
+        if (fileType == FileTypes.pdf) {
+            LinkedList<String> newlyGeneratedFiles = new LinkedList<String>();
+            for (String fileN : generatedFiles) {
+                PsToPdfConverter pstopdf = new PsToPdfConverter(gspath);
+                newlyGeneratedFiles.add(pstopdf.convert(fileN));
+                // delete the ps file
+                File file = new File(fileN);
+                file.delete();
+            }
+            generatedFiles = newlyGeneratedFiles;
+        }
+
+        System.out.println("Fini!");
 
         return generatedFiles;
     }
@@ -1176,10 +1192,5 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
             OK = OK && pds.getAgeGroupStructure().getSizeOfGroups() == 5;
         }
         return OK;
-    }
-
-    @Override
-    public FileTypes[] getFileTypesGenerated() {
-        return fileTypesGenerated;
     }
 }

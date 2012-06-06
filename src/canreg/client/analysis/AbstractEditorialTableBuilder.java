@@ -17,9 +17,10 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.client.analysis;
 
+import canreg.client.CanRegClientApp;
+import canreg.client.LocalSettings;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.PopulationDataset;
 import java.io.FileReader;
@@ -30,9 +31,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.text.NumberFormat;
+import java.util.Arrays;
 
-public abstract class AbstractEditorialTableBuilder implements TableBuilderInterface{
+public abstract class AbstractEditorialTableBuilder implements TableBuilderInterface {
+    public final String gspath;
 
+    public AbstractEditorialTableBuilder() {
+        LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        gspath = localSettings.getProperty(LocalSettings.GS_PATH);
+    }
+    protected static FileTypes[] fileTypesGenerated = {
+        FileTypes.ps, FileTypes.csv
+    };
     protected static double estdPop18[] = {0.08, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07,
         0.07, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01, 0.01};
     protected static double wstdPopNormalized[] = {0, 0.12, 0.10, 0.09, 0.09, 0.08, 0.08, 0.06,
@@ -91,7 +101,7 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
     int continentNumber;
     int populationCode;
     int recordsPerFeedback = 10000;
-    static  String tablesPath = "tables/";
+    static String tablesPath = "tables/";
     static final String libPath = "lib/";
     static String dataPath = "data/";
     static String convertedPath = "converted/";
@@ -136,9 +146,6 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
     public abstract StandardVariableNames[] getVariablesNeeded();
 
     @Override
-    public abstract FileTypes[] getFileTypesGenerated();
-
-    @Override
     public abstract LinkedList<String> buildTable(String tableHeader,
             String reportFileName,
             int startYear,
@@ -148,8 +155,7 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
             PopulationDataset[] standardPopulations,
             LinkedList<ConfigFields> configList,
             String[] engineParameters,
-            FileTypes fileType
-            ) throws NotCompatibleDataException;
+            FileTypes fileType) throws NotCompatibleDataException;
 
     @Override
     public boolean areThesePopulationDatasetsCompatible(PopulationDataset[] sets) {
@@ -165,7 +171,6 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
         }
         return true;
     }
-
 
     public static int findHighestAgeGroup(boolean[] foundAgeGroups) {
         int highest = 18; // start at 18 - group 19 is unknown age
@@ -183,8 +188,6 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
         }
         return lowest;
     }
-
- 
 
     public static String getContentOfField(LinkedList<FieldDescription> fieldDescriptionList,
             String name, String line) {
@@ -428,7 +431,6 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
         return cn;
     }
 
-
     public String[] getInfoArray(String content,
             int columnNumber,
             String infoFile,
@@ -462,8 +464,6 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
         }
         return infoArray;
     }
-
-
 
     public LinkedList[] generateICD9Groups(String[] config) {
         LinkedList[] tempCancerGroups = new LinkedList[config.length];
@@ -508,8 +508,6 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
         }
         return cancerGroup;
     }
-
-
 
     public LinkedList parseICD9Group(String group) {
         LinkedList<Integer> cancerGroup = new LinkedList();
@@ -914,5 +912,18 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
         } catch (IOException ioe) {
             System.out.println("Include file error...");
         }
+    }
+
+    @Override
+    public FileTypes[] getFileTypesGenerated() {
+        // add pdf if the gsview is installed
+        FileTypes[] fileTypes = fileTypesGenerated;
+        if (gspath!=null&&gspath.length()>0) {
+            LinkedList<FileTypes> list = new LinkedList();
+            list.addAll(Arrays.asList(fileTypes));
+            list.add(FileTypes.pdf);
+            fileTypes = list.toArray(new FileTypes[]{});
+        }
+        return fileTypes;
     }
 }

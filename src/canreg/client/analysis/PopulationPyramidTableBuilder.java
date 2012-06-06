@@ -19,10 +19,14 @@
  */
 package canreg.client.analysis;
 
+import canreg.client.CanRegClientApp;
+import canreg.client.LocalSettings;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
+import canreg.common.PsToPdfConverter;
 import canreg.common.database.AgeGroupStructure;
 import canreg.common.database.PopulationDataset;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -44,7 +48,6 @@ public class PopulationPyramidTableBuilder extends AbstractEditorialTableBuilder
     private String[] tableLabel;
     private String[] sexLabel;
     private Globals.StandardVariableNames[] variablesNeeded = null;
-    private FileTypes[] fileTypesGenerated = new FileTypes[]{FileTypes.ps};
     private String populationString;
 
     public PopulationPyramidTableBuilder() {
@@ -292,6 +295,19 @@ public class PopulationPyramidTableBuilder extends AbstractEditorialTableBuilder
         } catch (IOException e) {
             System.out.println("Error while writing PS-file...");
         }
+
+        if (fileType == FileTypes.pdf) {
+            LinkedList<String> newlyGeneratedFiles = new LinkedList<String>();
+            for (String fileN : generatedFiles) {
+                PsToPdfConverter pstopdf = new PsToPdfConverter(gspath);
+                newlyGeneratedFiles.add(pstopdf.convert(fileN));
+                // delete the ps file
+                File file = new File(fileN);
+                file.delete();
+            }
+            generatedFiles = newlyGeneratedFiles;
+        }
+
         return generatedFiles;
     }
 
@@ -307,10 +323,5 @@ public class PopulationPyramidTableBuilder extends AbstractEditorialTableBuilder
     @Override
     public StandardVariableNames[] getVariablesNeeded() {
         return null;
-    }
-
-    @Override
-    public FileTypes[] getFileTypesGenerated() {
-        return fileTypesGenerated;
     }
 }
