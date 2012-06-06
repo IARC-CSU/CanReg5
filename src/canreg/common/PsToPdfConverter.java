@@ -25,8 +25,8 @@ public class PsToPdfConverter {
             String filePath = psFile.getAbsolutePath();
 
             pdfFileName = filePath.substring(0, filePath.lastIndexOf(".")) + PDFEXT;
-            String command = GSCOMMAND + pdfFileName + " \"" + psFileName+"\"";
-            System.out.println(GSCOMMAND + pdfFileName + " \"" + psFileName+"\"");
+            String command = GSCOMMAND + "\"" + pdfFileName + "\" \"" + psFileName+"\"";
+            System.out.println(GSCOMMAND + "\"" + pdfFileName + "\" \"" + psFileName+"\"");
             // execute the Ghostscript command
             // this will create the pdf file.  
             Process p = Runtime.getRuntime().exec(command);
