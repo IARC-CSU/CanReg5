@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 public class PsToPdfConverter {
 
-    private String GSC = "\"C:\\Program Files\\gs\\gs9.05\\bin\\gswin64c.exe\"";
+    private String GSC = "";
     private String GSCARGS = " -q -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=";
     private static final String PDFEXT = ".pdf";
 
@@ -25,8 +25,9 @@ public class PsToPdfConverter {
             String filePath = psFile.getAbsolutePath();
 
             pdfFileName = filePath.substring(0, filePath.lastIndexOf(".")) + PDFEXT;
-            String command = GSCOMMAND + pdfFileName + " " + psFileName;
-            // execute the Ghostscript command  
+            String command = GSCOMMAND + pdfFileName + " \"" + psFileName+"\"";
+            System.out.println(GSCOMMAND + pdfFileName + " \"" + psFileName+"\"");
+            // execute the Ghostscript command
             // this will create the pdf file.  
             Process p = Runtime.getRuntime().exec(command);
             p.waitFor();
