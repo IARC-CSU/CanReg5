@@ -17,10 +17,13 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.common;
 
 // import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
+import canreg.common.database.DatabaseRecord;
+import canreg.common.database.Patient;
+import canreg.common.database.Source;
+import canreg.common.database.Tumour;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -43,6 +46,7 @@ public class GlobalToolBox {
     private DatabaseVariablesListElement[] databaseVariablesListElements;
     private Charset standardCharSet;
     private Translator translator;
+    private Map<String, DatabaseVariablesListElement> databaseVariableNameToDatabaseVariableListElementMap;
 
     /**
      * 
@@ -52,7 +56,8 @@ public class GlobalToolBox {
         this.doc = doc;
         groupIDToDatabaseGroupListElementMap = buildGroupMap(Tools.getGroupsListElements(doc, Globals.NAMESPACE));
         databaseVariablesListElements = Tools.getVariableListElements(doc, Globals.NAMESPACE);
-        standardVariableNameToDatabaseVariableListElementMap = buildVariablesMap(databaseVariablesListElements);
+        standardVariableNameToDatabaseVariableListElementMap = buildStandardVariablesMap(databaseVariablesListElements);
+        databaseVariableNameToDatabaseVariableListElementMap = buildDBVariablesMap(databaseVariablesListElements);
         standardCharSet = Tools.getStandardCharset(doc, Globals.NAMESPACE);
         translator = Tools.getTranslator(doc, Globals.NAMESPACE);
         // mapIARCstandardVariablesVariableName = Tools.getMapIARCstandardVariablesVariableName(doc, Globals.NAMESPACE);
@@ -76,6 +81,14 @@ public class GlobalToolBox {
      */
     public DatabaseVariablesListElement[] getVariables() {
         return databaseVariablesListElements;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public Map<String, DatabaseVariablesListElement> getVariablesMap() {
+        return databaseVariableNameToDatabaseVariableListElementMap;
     }
 
     /**
@@ -122,7 +135,7 @@ public class GlobalToolBox {
         return map;
     }
 
-    private static Map<String, DatabaseVariablesListElement> buildVariablesMap(DatabaseVariablesListElement[] listelements) {
+    private static Map<String, DatabaseVariablesListElement> buildStandardVariablesMap(DatabaseVariablesListElement[] listelements) {
         Map map = new LinkedHashMap();
         // First build the real variables
         for (DatabaseVariablesListElement dvle : listelements) {
@@ -136,15 +149,48 @@ public class GlobalToolBox {
         return map;
     }
 
+    private Map<String, DatabaseVariablesListElement> buildDBVariablesMap(DatabaseVariablesListElement[] listelements) {
+        Map map = new LinkedHashMap();
+        // First build the real variables
+        for (DatabaseVariablesListElement dvle : listelements) {
+            String dbVariableName = dvle.getDatabaseVariableName();
+            if (dbVariableName != null && dbVariableName.length() > 0) {
+                map.put(dbVariableName, dvle);
+            }
+        }
+        // Then build meta variables - i.e. behaviour as fifth digit in morphology ?
+        return map;
+    }
+
+    public String getPatientIDVariableName(DatabaseRecord record) {
+        String name = null;
+        if(record instanceof Patient){
+            DatabaseVariablesListElement element = translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
+            if (element!=null){
+                name = element.getDatabaseVariableName();
+            }
+        } else if(record instanceof Tumour){
+            DatabaseVariablesListElement element = translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString());
+            if (element!=null){
+                name = element.getDatabaseVariableName();
+            }
+        } else if(record instanceof Source){
+            DatabaseVariablesListElement element = translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString());
+            if (element!=null){
+                name = element.getDatabaseVariableName();
+            }
+        }
+        return name;
+    }
     /**
      * @return the mapIARCstandardVariablesVariableName
      * 
-//   Commented away to be able to disable the IARCtools package... 
-//    
-
-     
+    //   Commented away to be able to disable the IARCtools package... 
+    //    
+    
+    
     public Map<IARCStandardVariableNames, String> getMapIARCstandardVariablesVariableName() {
-        return mapIARCstandardVariablesVariableName;
+    return mapIARCstandardVariablesVariableName;
     }
      */
 }
