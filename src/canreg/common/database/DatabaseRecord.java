@@ -17,9 +17,10 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
+package canreg.common.database;
 
- package canreg.common.database;
-
+import canreg.client.CanRegClientApp;
+import canreg.common.Globals;
 import canreg.common.Translator;
 //   Commented away to be able to disable the IARCtools package... 
 //    
@@ -32,8 +33,7 @@ import java.util.HashMap;
  *
  * @author ervikm
  */
-public class DatabaseRecord implements Serializable 
-//   Commented away to be able to disable the IARCtools package... 
+public class DatabaseRecord implements Serializable //   Commented away to be able to disable the IARCtools package... 
 //    
 // , RecordInterface 
 {
@@ -41,6 +41,7 @@ public class DatabaseRecord implements Serializable
     private HashMap<String, Object> variables;
     // private EnumMap<IARCStandardVariableNames, String> map;
     private Translator translator;
+    protected String patientIDVariableName;
 
     /**
      * 
@@ -80,7 +81,6 @@ public class DatabaseRecord implements Serializable
 //    public void setMapIARCstandardVariablesVariableName(EnumMap<IARCStandardVariableNames, String> map) {
 //        this.map = map;
 //    }
-
     public void setTranslator(Translator translator) {
         this.translator = translator;
     }
@@ -99,4 +99,23 @@ public class DatabaseRecord implements Serializable
 //        }
 //        return value;
 //    }
+    public Object getPatientID() {
+        if (patientIDVariableName == null) {
+            patientIDVariableName = CanRegClientApp.getApplication().getGlobalToolBox().getPatientIDVariableName(this);
+        }
+        if (patientIDVariableName != null) {
+            return getVariable(patientIDVariableName);
+        } else {
+            return null;
+        }
+    }
+
+    public String getVariableAsString(String databaseVariableName) {
+        Object value = getVariable(databaseVariableName);
+        if (value == null) {
+            return new String();
+        } else {
+            return value.toString();
+        }
+    }
 }
