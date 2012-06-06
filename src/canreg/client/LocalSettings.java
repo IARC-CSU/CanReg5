@@ -132,6 +132,7 @@ public final class LocalSettings {
      * 
      */
     public static String R_PATH = "r_path";
+    public static String GS_PATH = "gs_path";
     /**
      * 
      */
@@ -362,7 +363,9 @@ public final class LocalSettings {
         String property = properties.getProperty(key);
         if (property == null
                 // Detect if R has been installed since last launch.
-                || (property.length() == 0 && key.equals(R_PATH))) {
+                || (property.length() == 0 && key.equals(R_PATH))
+                // Detect if GS has been installed since last launch.
+                || (property.length() == 0 && key.equals(GS_PATH))) {
             return getDefaultProperty(key);
         } else {
             return property;
@@ -393,6 +396,8 @@ public final class LocalSettings {
             property = Globals.DEFAULT_BACK_UP_EVERY;
         } else if (key.equalsIgnoreCase(R_PATH)) {
             property = tryToFindRInstalltionOnWindows();
+        } else if (key.equalsIgnoreCase(GS_PATH)) {
+            property = tryToFindGSInstalltionOnWindows();
         } else if (key.equalsIgnoreCase(FONT_NAME_KEY)) {
             property = FONT_NAME_DEFAULT;
         } else if (key.equalsIgnoreCase(FONT_SIZE_KEY)) {
@@ -410,24 +415,27 @@ public final class LocalSettings {
         setProperty(AUTO_BACKUP_KEY, getDefaultProperty(AUTO_BACKUP_KEY));
         setProperty(BACKUP_EVERY_KEY, getDefaultProperty(BACKUP_EVERY_KEY));
         setProperty(R_PATH, getDefaultProperty(R_PATH));
+        setProperty(GS_PATH, getDefaultProperty(GS_PATH));
         setProperty(FONT_NAME_KEY, getDefaultProperty(FONT_NAME_KEY));
         setProperty(FONT_SIZE_KEY, getDefaultProperty(FONT_SIZE_KEY));
         settingsChanged = true;
     }
 
     private static String setCanRegClientSettingsDir() {
-        // decide on the db system directory
-        String userHomeDir = System.getProperty("user.home", ".");
-        String systemDir = userHomeDir + System.getProperty("file.separator") + ".CanRegClient";
-
         // Create directory if missing
-        File settingsFileDir = new File(systemDir);
+        File settingsFileDir = new File(Globals.CANREG_CLIENT_FOLDER);
         if (!settingsFileDir.exists()) {
-            // create the db system directory
-            File fileSystemDir = new File(systemDir);
+            // create the client config folder
+            File fileSystemDir = new File(Globals.CANREG_CLIENT_FOLDER);
             fileSystemDir.mkdir();
         }
-        return systemDir;
+        File pdfsFileDir = new File(Globals.CANREG_PATIENT_PDFS_FOLDER);
+        if (!pdfsFileDir.exists()) {
+            // create the patient pdf dir
+            File fileSystemDir = new File(Globals.CANREG_PATIENT_PDFS_FOLDER);
+            fileSystemDir.mkdir();
+        }
+        return Globals.CANREG_CLIENT_FOLDER;
     }
 
     // Consider making private 
@@ -611,35 +619,70 @@ public final class LocalSettings {
 
     private static String tryToFindRInstalltionOnWindows() {
         String path = "";
-        boolean folderFound = false;
         // try windows 32
         String[] foldersToTry = new String[]{
+            Globals.FILE_SEPARATOR + "Program Files" + Globals.FILE_SEPARATOR + "R",
             System.getenv("ProgramFilesW6432") + Globals.FILE_SEPARATOR + "R",
             System.getenv("ProgramFiles") + Globals.FILE_SEPARATOR + "R",
             System.getenv("ProgramFiles(x86)") + Globals.FILE_SEPARATOR + "R"
         };
         File folder = null;
+        long lastModified = 0;
         for (String folderToTry : foldersToTry) {
             folder = new File(folderToTry);
-            if (folder.exists()) {
-                folderFound = true;
-                break;
-            }
-        }
-        if (folderFound && folder != null) {
-            File[] files = folder.listFiles();
-            long lastModified = 0;
-            // find the newest R installation
-            for (File thisFile : files) {
-                if (lastModified < thisFile.lastModified()) {
-                    File tempFile = new File(files[0].getPath() + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "R.exe");
-                    if (tempFile.exists()) {
-                        path = tempFile.getPath();
-                        lastModified = thisFile.lastModified();
+            if (folder != null && folder.exists()) {
+                File[] files = folder.listFiles();
+                // find the newest R installation
+                for (File thisFile : files) {
+                    if (lastModified < thisFile.lastModified()) {
+                        File tempFile = new File(files[0].getPath() + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "R.exe");
+                        if (tempFile.exists()) {
+                            path = tempFile.getPath();
+                            lastModified = thisFile.lastModified();
+                        }
                     }
                 }
             }
         }
+
+        //
+        return path;
+    }
+
+    private String tryToFindGSInstalltionOnWindows() {
+        String path = "";
+        // try windows 32
+        String[] foldersToTry = new String[]{
+            Globals.FILE_SEPARATOR + "Program Files" + Globals.FILE_SEPARATOR + "gs",
+            System.getenv("ProgramFilesW6432") + Globals.FILE_SEPARATOR + "gs",
+            System.getenv("ProgramFiles") + Globals.FILE_SEPARATOR + "gs",
+            System.getenv("ProgramFiles(x86)") + Globals.FILE_SEPARATOR + "gs"
+        };
+        File folder = null;
+        long lastModified = 0;
+        for (String folderToTry : foldersToTry) {
+            folder = new File(folderToTry);
+            if (folder != null && folder.exists()) {
+                File[] files = folder.listFiles();
+                // find the newest gs installation
+                for (File thisFile : files) {
+                    if (lastModified < thisFile.lastModified()) {
+                        File tempFile = new File(files[0].getPath() + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "gswin64c.exe");
+                        if (tempFile.exists()) {
+                            path = tempFile.getPath();
+                            lastModified = thisFile.lastModified();
+                        } else {
+                            tempFile = new File(files[0].getPath() + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "gswin32c.exe");
+                            if (tempFile.exists()) {
+                                path = tempFile.getPath();
+                                lastModified = thisFile.lastModified();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         //
         return path;
     }
