@@ -32,6 +32,7 @@ import org.jdesktop.application.Action;
  * @author ervikm
  */
 public class DatabaseVariablesPanel extends DatabaseElementsPanel {
+
     private DatabaseGroupsListElement defaultGroup;
 
     @Action
@@ -58,8 +59,12 @@ public class DatabaseVariablesPanel extends DatabaseElementsPanel {
     @Override
     public boolean removable(DatabaseElement dbe) {
         DatabaseVariablesListElement dve = (DatabaseVariablesListElement) dbe;
-        return Arrays.asList(
-                ModifyDatabaseStructureInternalFrame.listOfAutomaticlyGeneratedVariables).indexOf(Globals.StandardVariableNames.valueOf(dve.getStandardVariableName())) < 0;
+        if (dve.getStandardVariableName() == null) {
+            return true;
+        } else {
+            return Arrays.asList(
+                    ModifyDatabaseStructureInternalFrame.listOfAutomaticlyGeneratedVariables).indexOf(Globals.StandardVariableNames.valueOf(dve.getStandardVariableName())) < 0;
+        }
     }
 
     @Override
