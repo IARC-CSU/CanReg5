@@ -49,8 +49,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -767,7 +768,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             try {
                 File file = new File(fileName);
                 localSettings.setProperty("export_data_path", file.getParent());
-                bw = new BufferedWriter(new FileWriter(file));
+                bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF8")); // TODO: Make choice of encoding dynamic?
                 rowCount = resultTable.getRowCount();
                 columnCount = resultTable.getColumnCount();
             } catch (IOException ex) {
