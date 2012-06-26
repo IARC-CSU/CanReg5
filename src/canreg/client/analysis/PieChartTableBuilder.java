@@ -45,6 +45,8 @@ import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultKeyedValuesDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
@@ -70,6 +72,11 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
         FileTypes.svg,
         FileTypes.jchart
     };
+
+    public static enum ChartType {
+        PIE,
+        BAR
+    }
     private LinkedList[] cancerGroupsLocal;
     private String[] sexLabel;
     private JFreeChart[] charts = new JFreeChart[2];
@@ -85,6 +92,7 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
     private int allCancerGroupsIndex;
     private int allCancerGroupsButSkinIndex;
     private int topNLimit = 10;
+    private ChartType chartType;
 
     public PieChartTableBuilder() {
         ChartTheme chartTheme = new StandardChartTheme("sansserif");
@@ -113,6 +121,13 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
         String footerString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("TABLE BUILT ") + new Date() + java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString(" BY CANREG5.");
 
         LinkedList<String> generatedFiles = new LinkedList<String>();
+
+        if (Arrays.asList(engineParameters).contains("barchart")) {
+            chartType = ChartType.BAR;
+
+        } else {
+            chartType = ChartType.PIE;
+        }
 
         icdLabel = ConfigFieldsReader.findConfig("ICD_groups_labels",
                 configList);
@@ -153,6 +168,7 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
         double[] line;
         double[] casesLine;
 
+
         if (incidenceData != null) {
             String sexString, icdString, casesString;
             String morphologyString;
@@ -167,7 +183,6 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
             }
 
             for (Object[] dataLine : incidenceData) {
-
 
                 // Set default
                 icdIndex = -1;
@@ -221,7 +236,7 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
                 @Override
                 public int compare(CancerCasesCount o1, CancerCasesCount o2) {
                     if (o1.count == o2.count) {
-                        return  -o1.toString().compareTo(o2.toString());                                
+                        return -o1.toString().compareTo(o2.toString());
                     } else {
                         return -(o1.count.compareTo(o2.count));
                     }
@@ -234,7 +249,7 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
                 @Override
                 public int compare(CancerCasesCount o1, CancerCasesCount o2) {
                     if (o1.count == o2.count) {
-                        return  -o1.toString().compareTo(o2.toString());                                
+                        return -o1.toString().compareTo(o2.toString());
                     } else {
                         return -(o1.count.compareTo(o2.count));
                     }
@@ -295,82 +310,73 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
 
                 }
             }
+            for (int sexNumber : new int[] {0, 1}) {
+                int position = 0;
+                if (chartType == ChartType.BAR) {
+                    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+                    TreeSet<CancerCasesCount> topNTemp;
+                    if (sexNumber == 0) {
+                        topNTemp = topNMale;
+                    } else {
+                        topNTemp = topNFemale;
+                    }
+                    for (CancerCasesCount count : topNTemp) {
+                        dataset.addValue(count.getCount(),
+                                count.getLabel(),
+                                count.toString());
+                    }
+                    charts[sexNumber] = ChartFactory.createStackedBarChart(
+                            tableHeader + ", " + sexLabel[sexNumber],
+                            "Site",
+                            "Cases",
+                            dataset,
+                            PlotOrientation.HORIZONTAL,
+                            false, true, false);
+                } else { // assume piechart
+                    DefaultPieDataset dataset = new DefaultKeyedValuesDataset();
+                    TreeSet<CancerCasesCount> topNTemp;
+                    double restCount = sumUpTheRest(theRestMale, dontCount);
+                    if (sexNumber == 0) {
+                        topNTemp = topNMale;
+                    } else {
+                        topNTemp = topNFemale;
+                    }
+                    for (CancerCasesCount count : topNTemp) {
+                        // System.out.println(count);
+                        // restCount -= count.getCount();
 
-            // male
-            DefaultPieDataset dataset = new DefaultKeyedValuesDataset();
-            int position = 0;
-            int sexNumber = 0;
+                        dataset.insertValue(position++,
+                                count.toString()
+                                + " (" + format.format(count.getCount() / casesArray[allCancerGroupsIndex][sexNumber] * 100) + "%)",
+                                count.getCount());
+                    }
+                    dataset.insertValue(position++, "Other", restCount);
+                    charts[sexNumber] = ChartFactory.createPieChart(
+                            tableHeader + ", " + sexLabel[sexNumber],
+                            dataset, true, false, Locale.getDefault());
+                    if (sexNumber == 0) {
+                        setPlotColours((PiePlot) charts[sexNumber].getPlot(), topNLimit + 1, Color.BLUE.brighter());
 
-            double restCount = sumUpTheRest(theRestMale, dontCount);
-            for (CancerCasesCount count : topNMale) {
-                // System.out.println(count);
-                // restCount -= count.getCount();
-
-                dataset.insertValue(position++,
-                        count.toString()
-                        + " (" + format.format(count.getCount() / casesArray[allCancerGroupsIndex][sexNumber] * 100) + "%)",
-                        count.getCount());
-            }
-            dataset.insertValue(position++, "Other", restCount);
-
-            charts[0] = ChartFactory.createPieChart(
-                    tableHeader + ", " + sexLabel[sexNumber],
-                    dataset, true, false, Locale.getDefault());
-
-            setPlotColours((PiePlot) charts[0].getPlot(), topNLimit + 1, Color.BLUE.brighter());
-
-            String fileName = reportFileName + "-" + sexLabel[sexNumber];
-
-            File file = new File(fileName + "." + fileType.toString());
-
-            try {
-                if (fileType.equals(FileTypes.svg)) {
-                    Tools.exportChartAsSVG(charts[0], new Rectangle(1000, 1000), file);
-                } else if (fileType.equals(FileTypes.jchart)) {
-                    generatedFiles.add("OK - Male");
-                } else {
-                    ChartUtilities.saveChartAsPNG(file, charts[0], 1000, 1000);
+                    } else {
+                        setPlotColours((PiePlot) charts[sexNumber].getPlot(), topNLimit + 1, Color.RED.brighter());
+                    }
                 }
-                generatedFiles.add(file.getPath());
-            } catch (IOException ex) {
-                Logger.getLogger(PieChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
-            }
 
-            // female
-            dataset = new DefaultKeyedValuesDataset();
-            position = 0;
-            sexNumber = 1;
-            restCount = sumUpTheRest(theRestFemale, dontCount);
-            for (CancerCasesCount count : topNFemale) {
-                // System.out.println(count);
-                // restCount -= count.getCount();
-                dataset.insertValue(position++,
-                        count.toString() + " (" + format.format(count.getCount() / casesArray[allCancerGroupsIndex][sexNumber] * 100) + "%)",
-                        count.getCount());
-            }
-            dataset.insertValue(position++, "Other", restCount);
-            charts[1] = ChartFactory.createPieChart(
-                    tableHeader + ", " + sexLabel[sexNumber],
-                    dataset, true, false, Locale.getDefault());
+                String fileName = reportFileName + "-" + sexLabel[sexNumber];
+                File file = new File(fileName + "." + fileType.toString());
 
-            setPlotColours((PiePlot) charts[1].getPlot(), topNLimit + 1, Color.RED.brighter());
-
-            fileName = reportFileName + "-" + sexLabel[sexNumber];
-
-            file = new File(fileName + "." + fileType.toString());
-
-            try {
-                if (fileType.equals(FileTypes.svg)) {
-                    Tools.exportChartAsSVG(charts[1], new Rectangle(1000, 1000), file);
+                try {
+                    if (fileType.equals(FileTypes.svg)) {
+                        Tools.exportChartAsSVG(charts[sexNumber], new Rectangle(1000, 1000), file);
+                    } else if (fileType.equals(FileTypes.jchart)) {
+                        generatedFiles.add("OK - " + sexLabel[sexNumber]);
+                    } else {
+                        ChartUtilities.saveChartAsPNG(file, charts[sexNumber], 1000, 1000);
+                    }
                     generatedFiles.add(file.getPath());
-                } else if (fileType.equals(FileTypes.jchart)) {
-                    generatedFiles.add("OK - Female");
-                } else {
-                    ChartUtilities.saveChartAsPNG(file, charts[1], 1000, 1000);
-                    generatedFiles.add(file.getPath());
+                } catch (IOException ex) {
+                    Logger.getLogger(PieChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(PieChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return generatedFiles;
@@ -384,10 +390,12 @@ public class PieChartTableBuilder implements TableBuilderInterface, JChartTableB
     @Override
     public JFreeChart[] getCharts() {
 
-        // set the plots circular before returning them
-        for (JFreeChart chart : charts) {
-            PiePlot plot = (PiePlot) chart.getPlot();
-            plot.setCircular(true);
+        // set the plots circular before returning them if we have a pie chart
+        if (chartType == ChartType.PIE) {
+            for (JFreeChart chart : charts) {
+                PiePlot plot = (PiePlot) chart.getPlot();
+                plot.setCircular(true);
+            }
         }
 
         return charts;
