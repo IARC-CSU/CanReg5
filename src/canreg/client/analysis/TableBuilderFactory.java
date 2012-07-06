@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.client.analysis;
 
 import java.io.FileNotFoundException;
@@ -32,8 +31,8 @@ public class TableBuilderFactory {
             tableBuilder = new AgeSpecificCasesTableBuilder();
         } else if (tble.getEngineName().equalsIgnoreCase("populationpyramids")) {
             tableBuilder = new PopulationPyramidTableBuilder();
-        } else if (tble.getEngineName().equalsIgnoreCase("top10piechart")) {
-            tableBuilder = new PieChartTableBuilder();
+        } else if (tble.getEngineName().equalsIgnoreCase("top10chart") || tble.getEngineName().equalsIgnoreCase("top10piechart")) {
+            tableBuilder = new TopNChartTableBuilder();
         } else if (tble.getEngineName().equalsIgnoreCase("r-engine")) {
             tableBuilder = new RTableBuilder(tble.getConfigFileName());
         } else if (tble.getEngineName().equalsIgnoreCase("r-engine-grouped")) {
