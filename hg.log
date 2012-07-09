@@ -1,5 +1,30 @@
-changeset:   1021:f770343dad26
+changeset:   1026:729d807c227e
 tag:         tip
+user:        ErvikM@x90164
+date:        Mon Jun 25 16:51:44 2012 +0200
+summary:     Export now takes into account UTF-8 characters.
+
+changeset:   1025:9d472052ae4e
+user:        ErvikM@x90164
+date:        Thu Jun 14 14:12:06 2012 +0200
+summary:     The display now refreshes after removing a variable in the tool to edit the database structure.
+
+changeset:   1024:eef14d0bd5a3
+user:        ErvikM@x90164
+date:        Wed Jun 06 17:04:55 2012 +0200
+summary:     5.00.20b3
+
+changeset:   1023:42096df3954f
+user:        ErvikM@x90164
+date:        Wed Jun 06 16:53:47 2012 +0200
+summary:     Fixed a problem with blancs in the path of PS tables.
+
+changeset:   1022:bd9ea19f6b00
+user:        ErvikM@x90164
+date:        Wed Jun 06 14:41:24 2012 +0200
+summary:     5.00.20b2
+
+changeset:   1021:f770343dad26
 user:        ErvikM@x90164
 date:        Wed Jun 06 14:33:25 2012 +0200
 summary:     Updated the about.html

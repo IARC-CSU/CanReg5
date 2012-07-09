@@ -1,9 +1,12 @@
 Changelog
 
-5.00.20b2
+5.00.20
+- The display now refreshes after removing a variable in the tool to edit the database structure.
+- Export now takes into account UTF-8 characters.
 - Some tables, previously only available as PS, now also available as PDFs (if GhostScript is installed).
 - Data entry forms can now be written as a PDF.
 - Improved detection of R-path and added GhostScript-path.
+- Fixed a problem with blancs in the path of PS tables.
 - Other fixes.
 
 5.00.19
