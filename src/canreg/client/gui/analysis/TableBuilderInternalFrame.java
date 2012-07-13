@@ -1121,7 +1121,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 }
 
                 if (populationFilterString.length() != 0) {
-                    filterString += populationFilterString + " AND ";
+                    filterString += "( " +populationFilterString + " ) AND ";
                 }
 
                 // add the years to the filter
