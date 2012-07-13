@@ -92,9 +92,9 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
 
 //      double RegPop[][];
         double totalCasesPerHundredThousand[][];
-        double crudeRate[][];
+        // double crudeRate[][];
         double MV[][];
-        double ASR[][];
+        // double ASR[][];
         double ASRbyAgeGroup[][][];
         double ratei[][];
 //      double vASR[][];
@@ -189,8 +189,8 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
 
         casesArray = new double[numberOfCancerGroups][numberOfSexes][numberOfAgeGroups];
 
-        cumRate64 = new double[numberOfSexes][numberOfCancerGroups];
-        cumRate74 = new double[numberOfSexes][numberOfCancerGroups];
+        // cumRate64 = new double[numberOfSexes][numberOfCancerGroups];
+        // cumRate74 = new double[numberOfSexes][numberOfCancerGroups];
 
         populationArray = new double[numberOfSexes][numberOfAgeGroups];
         foundAgeGroups = new boolean[numberOfAgeGroups];
@@ -401,7 +401,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
         // Get our matrixes ready
 
         // Age standarized rate
-        ASR = new double[numberOfSexes][numberOfCancerGroups];
+        // ASR = new double[numberOfSexes][numberOfCancerGroups];
         ASRbyAgeGroup = new double[numberOfSexes][numberOfCancerGroups][numberOfAgeGroups];
         ASRluL = new double[numberOfSexes][numberOfCancerGroups][2];
         variL = new double[numberOfSexes][numberOfCancerGroups];
@@ -410,7 +410,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
         // Total casesPerHundredThousand
         totalCasesPerHundredThousand = new double[numberOfSexes][numberOfCancerGroups];
         // Crude rate
-        crudeRate = new double[numberOfSexes][numberOfCancerGroups];
+        // crudeRate = new double[numberOfSexes][numberOfCancerGroups];
 
         for (int sexNumber = 0; sexNumber < 2; sexNumber++) {
 
@@ -512,7 +512,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                                 (previousAgeGroupWstdPopulation
                                 + standardPopulationArray[sexNumber][ageGroupNumber]));
 
-                        ASR[sexNumber][icdGroup] += asr;
+                        // ASR[sexNumber][icdGroup] += asr;
 
                         ASRbyAgeGroup[sexNumber][icdGroup][ageGroupNumber] = asr;
 
@@ -554,7 +554,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                     double asr = calculateASR(lastAgeGroupCases,
                             lastAgeGroupPopulation,
                             lastAgeGroupWstdPopulation);
-                    ASR[sexNumber][icdGroup] += asr;
+                    // ASR[sexNumber][icdGroup] += asr;
 
                     ASRbyAgeGroup[sexNumber][icdGroup][highestPopulationAgeGroup] =
                             asr;
@@ -575,14 +575,6 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
 
                 if (totalCasesPerHundredThousand[sexNumber][icdGroup] > 0) {
 
-                    DCO[sexNumber][icdGroup] = 100 * (int) DCO[sexNumber][icdGroup]
-                            / totalCasesPerHundredThousand[sexNumber][icdGroup];
-                    MV[sexNumber][icdGroup] = 100 * (int) MV[sexNumber][icdGroup]
-                            / totalCasesPerHundredThousand[sexNumber][icdGroup];
-                    crudeRate[sexNumber][icdGroup] = totalCasesPerHundredThousand[sexNumber][icdGroup]
-                            * standardPopulationArray[sexNumber][allAgeGroupsIndex]
-                            / (populationArray[sexNumber][allAgeGroupsIndex]);
-
                     /* We don't use confidence intervals so this was removed 16.07.07
                     double[] asrlul = calculateASRluL(ASR[sex][icdGroup],
                     variL[sex][icdGroup], wstdPop[allAgeGroupsIndex]);
@@ -595,25 +587,15 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                     // Cum. Rates
                     if (highestPopulationAgeGroup > 13) {
                         for (int k = 1; k <= 13; k++) {
-                            cumRate64[sexNumber][icdGroup] += casesPerHundredThousand[sexNumber][k][icdGroup] * cumPop18[k] / 1000.0;
+                            // cumRate64[sexNumber][icdGroup] += casesPerHundredThousand[sexNumber][k][icdGroup] * cumPop18[k] / 1000.0;
                         }
                     }
                     if (highestPopulationAgeGroup > 15) {
                         for (int k = 1; k <= 15; k++) {
-                            cumRate74[sexNumber][icdGroup] += casesPerHundredThousand[sexNumber][k][icdGroup] * cumPop18[k] / 1000.0;
+                            // cumRate74[sexNumber][icdGroup] += casesPerHundredThousand[sexNumber][k][icdGroup] * cumPop18[k] / 1000.0;
                         }
                     }
 
-                    // adjust the ASR and cum rates for unknown ages
-                    if (ASR[sexNumber][icdGroup] > 0) {
-                        double ratio = totalCasesPerHundredThousand[sexNumber][icdGroup]
-                                / (totalCasesPerHundredThousand[sexNumber][icdGroup]
-                                - casesArray[icdGroup][sexNumber][unknownAgeGroupIndex]);
-                        ASR[sexNumber][icdGroup] *= ratio;
-                        cumRate64[sexNumber][icdGroup] *= ratio;
-                        cumRate74[sexNumber][icdGroup] *= ratio;
-
-                    }
                     /*                    if (!isSpecialized) {
                     cumRate64[sex][allCancerGroupsIndex] += cumRate64[sex][icdGroup];
                     cumRate74[sex][allCancerGroupsIndex] += cumRate74[sex][icdGroup];
@@ -669,11 +651,11 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                     line.add(ageLabel[age]);
                 }
 
-                line.add("CRUDE RATE");
+                // line.add("CRUDE RATE");
                 line.add("(%)");
-                line.add("CUM 0-64");
-                line.add("CUM 0-74");
-                line.add("ASR");
+                // line.add("CUM 0-64");
+                // line.add("CUM 0-74");
+                // line.add("ASR");
                 line.add("ICD (10th)");
                 csvOut.writeNext(line.toArray(new String[0]));
                 line.clear();
@@ -691,11 +673,11 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                                 line.add("0");
                             }
                         }
-                        line.add(formatNumber(crudeRate[sexNumber][j], 2));
+                        // line.add(formatNumber(crudeRate[sexNumber][j], 2));
                         line.add(formatNumber(100 * totalCasesPerHundredThousand[sexNumber][j] / totalCasesPerHundredThousand[sexNumber][allCancerGroupsButSkinIndex]));
-                        line.add(formatNumber(cumRate64[sexNumber][j], 2));
-                        line.add(formatNumber(cumRate74[sexNumber][j], 2));
-                        line.add(formatNumber(ASR[sexNumber][j]));
+                        // line.add(formatNumber(cumRate64[sexNumber][j], 2));
+                        // line.add(formatNumber(cumRate74[sexNumber][j], 2));
+                        // line.add(formatNumber(ASR[sexNumber][j]));
                         line.add(icd10GroupDescriptions[j]);
                         csvOut.writeNext(line.toArray(new String[0]));
                         line.clear();
@@ -860,111 +842,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                             k -= (tableFontSize);
                         }
                     }
-
-
-
-                    fw.write("/col col 0 sub def\n");
-                    fw.write("ASRfont SF\n");
-                    fw.write("0 496 MT (ASR) RS\n");
-                    fw.write("0 487 MT ((W)) RS\n");
-                    k = 475;
-                    for (int j = 0; j < numberOfCancerGroups; j++) {
-                        if (icdLabel[j].charAt(sexNumber) == '1') {
-                            if (isLineBreak(j - 1) != 0) {
-                                k -= 2;
-                            }
-                            if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex
-                                    || j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
-                                fw.write("ASRitalicsfont SF\n");
-                            } else {
-                                fw.write("ASRfont SF\n");
-                            }
-
-                            fw.write("0 " + k + " MT (" + formatNumber(ASR[sexNumber][j])
-                                    + ") RS\n");
-                            k -= (tableFontSize);
-                        }
-                    }
-
-                    fw.write("/col col 20 sub def\n");
-                    fw.write("Tablefont SF\n");
-                    fw.write("0 496 MT (CUM) RS\n");
-                    fw.write("0 487 MT (0-74) RS\n");
-                    k = 475;
-                    if (cumRate74[sexNumber][allCancerGroupsIndex] > 0) {
-                        for (int j = 0; j < numberOfCancerGroups; j++) {
-                            if (icdLabel[j].charAt(sexNumber) == '1') {
-                                if (isLineBreak(j - 1) != 0) {
-                                    k -= 2;
-                                }
-                                if (j == skinCancerGroupIndex
-                                        || j == ovaryCancerGroupIndex
-                                        || j == bladderCancerGroupIndex
-                                        || j == myelodysplasticSyndromesCancerGroupIndex
-                                        || j == myeloproliferativeDisordersCancerGroupIndex
-                                        || j == brainAndCentralNervousSystemCancerGroupIndex) {
-                                    fw.write("ICDfont SF\n");
-                                } else {
-                                    fw.write("Tablefont SF\n");
-                                }
-
-                                fw.write("0 " + k + " MT (" + formatNumber(cumRate74[sexNumber][j], 2)
-                                        + ") RS\n");
-                                k -= (tableFontSize);
-                            }
-                        }
-                    }
-
-
-                    fw.write("/col col 20 sub def\n");
-                    fw.write("Tablefont SF\n");
-                    fw.write("0 496 MT (CUM) RS\n");
-                    fw.write("0 487 MT (0-64) RS\n");
-                    k = 475;
-                    for (int j = 0; j < numberOfCancerGroups; j++) {
-                        if (icdLabel[j].charAt(sexNumber) == '1') {
-                            if (isLineBreak(j - 1) != 0) {
-                                k -= 2;
-                            }
-                            if (j == skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex
-                                    || j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
-                                fw.write("ICDfont SF\n");
-                            } else {
-                                fw.write("Tablefont SF\n");
-                            }
-
-                            fw.write("0 " + k + " MT (" + formatNumber(cumRate64[sexNumber][j], 2)
-                                    + ") RS\n");
-                            k -= (tableFontSize);
-                        }
-                    }
-                    /* No MVs shown
-                    fw.write("Tablefont SF\n");
-                    fw.write("/col col 20 sub def\n");
-                    fw.write("0 496 MT (MV) RS\n");
-                    fw.write("0 487 MT ((%)) RS\n");
-                    k = 475;
-                    for (int j = 0; j < numberOfCancerGroups; j++) {
-                    if (icdLabel[j].charAt(sex) == '1') {
-                    if (isLineBreak(j - 1)!=0) {
-                    k -= 2;
-                    }
                     
-                    if (j==skinCancerGroupIndex || j == ovaryCancerGroupIndex || j == bladderCancerGroupIndex || j == myelodysplasticSyndromesCancerGroupIndex ||
-                    j == myeloproliferativeDisordersCancerGroupIndex || j == brainAndCentralNervousSystemCancerGroupIndex) {
-                    fw.write("ICDfont SF\n");
-                    } else fw.write("Tablefont SF\n");
-                    
-                    if (CA[sex][j] >= 0) {
-                    fw.write("0 " + k + " MT (" +
-                    formatNumber(MV[sex][j]) + ") RS\n");
-                    } else {
-                    fw.write("0 " + k + " MT (      -) RS\n");
-                    }
-                    k -= (tableFontSize);
-                    }
-                    }
-                     */
                     fw.write("/col col 20 sub def\n");
                     fw.write("0 491 MT ((%)) RS\n");
                     k = 475;
@@ -994,31 +872,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                             k -= (tableFontSize);
                         }
                     }
-                    fw.write("/col col 20 sub def\n");
-                    fw.write("0 496 MT (CRUDE) RS\n");
-                    fw.write("0 487 MT (RATE) RS\n");
-                    k = 475;
-                    for (int j = 0; j < numberOfCancerGroups; j++) {
-                        if (icdLabel[j].charAt(sexNumber) == '1') {
-                            if (isLineBreak(j - 1) != 0) {
-                                k -= 2;
-                            }
-                            if (j == skinCancerGroupIndex
-                                    || j == ovaryCancerGroupIndex
-                                    || j == bladderCancerGroupIndex
-                                    || j == myelodysplasticSyndromesCancerGroupIndex
-                                    || j == myeloproliferativeDisordersCancerGroupIndex
-                                    || j == brainAndCentralNervousSystemCancerGroupIndex) {
-                                fw.write("ICDfont SF\n");
-                            } else {
-                                fw.write("Tablefont SF\n");
-                            }
-
-                            fw.write("0 " + k + " MT (" + formatNumber(crudeRate[sexNumber][j])
-                                    + ") RS\n");
-                            k -= (tableFontSize);
-                        }
-                    }
+                    
                     fw.write("/col 119 def\n");
                     fw.write("0 496 MT (ALL) RS\n");
                     fw.write("0 487 MT (AGES) RS\n");
