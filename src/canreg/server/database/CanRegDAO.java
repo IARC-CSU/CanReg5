@@ -2450,10 +2450,10 @@ public class CanRegDAO {
                 filterStringBuilder.append(" AND ").append("(").append(filterString);
                 parentesOverskudd++;
             } else {
-                filterStringBuilder.append(" WHERE ").append(filterString);
+                filterStringBuilder.append(" WHERE ").append("(").append(filterString).append(")");
             }
         } else {
-            filterStringBuilder = filterStringBuilder.append(filter.getFilterString());
+            filterStringBuilder = filterStringBuilder.append("(").append(filter.getFilterString()).append(")");
         }
 
         // Add the range part
