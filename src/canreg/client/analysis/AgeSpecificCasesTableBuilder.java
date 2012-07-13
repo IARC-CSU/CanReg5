@@ -91,21 +91,8 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
         double populationArray[][] = null; // contains population count in the following format: [sex][agegroup]
 
 //      double RegPop[][];
-        double totalCasesPerHundredThousand[][];
-        // double crudeRate[][];
-        double MV[][];
-        // double ASR[][];
-        double ASRbyAgeGroup[][][];
-        double ratei[][];
-//      double vASR[][];
-        double ASRluL[][][];
-        double variL[][];
-        double variLbyAgeGroup[][][];
+        double totalCases[][];
         double DCO[][];
-
-        char ASRf[][];
-        double ASRratio[][];
-        char MVf[][];
 
         String sexLabel[] = null;
         String tableLabel[] = null;
@@ -234,12 +221,6 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
         int records = 0;
         // generate statistics
 
-        // Generate based on death certificate only
-        DCO = new double[numberOfSexes][numberOfCancerGroups];
-
-        // and microscopical verification
-        MV = new double[numberOfSexes][numberOfCancerGroups];
-
         String sexString;
         String icdString;
         String yearString;
@@ -354,12 +335,6 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
 
                             casesArray[icdIndex][sex - 1][ageGroup] += cases;
 
-                            //
-                            if (basis == 00) {
-                                DCO[sex - 1][icdIndex] += cases;
-                            } else if (basis >= 10 && basis <= 19) {
-                                MV[sex - 1][icdIndex] += cases;
-                            }
                         } else {
                             if (otherCancerGroupsIndex >= 0) {
                                 casesArray[otherCancerGroupsIndex][sex
@@ -368,22 +343,12 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                         }
                         if (allCancerGroupsIndex >= 0) {
                             casesArray[allCancerGroupsIndex][sex - 1][ageGroup] += cases;
-                            if (basis == 0) {
-                                DCO[sex - 1][allCancerGroupsIndex] += cases;
-                            } else if (basis >= 10 && basis <= 19) {
-                                MV[sex - 1][allCancerGroupsIndex] += cases;
-                            }
                         }
                         if (allCancerGroupsButSkinIndex >= 0
                                 && skinCancerGroupIndex >= 0
                                 && icdIndex != skinCancerGroupIndex) {
                             casesArray[allCancerGroupsButSkinIndex][sex
                                     - 1][ageGroup] += cases;
-                            if (basis == 0) {
-                                DCO[sex - 1][allCancerGroupsButSkinIndex] += cases;
-                            } else if (basis >= 10 && basis <= 19) {
-                                MV[sex - 1][allCancerGroupsButSkinIndex] += cases;
-                            }
                         }
                         records += cases;
                         if (records % recordsPerFeedback == 0) {
@@ -398,17 +363,8 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
         }
         System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString("PROCESSED ") + records + java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesTableBuilder").getString(" RECORDS."));
 
-        // Get our matrixes ready
-
-        // Age standarized rate
-        // ASR = new double[numberOfSexes][numberOfCancerGroups];
-        ASRbyAgeGroup = new double[numberOfSexes][numberOfCancerGroups][numberOfAgeGroups];
-        ASRluL = new double[numberOfSexes][numberOfCancerGroups][2];
-        variL = new double[numberOfSexes][numberOfCancerGroups];
-        variLbyAgeGroup = new double[numberOfSexes][numberOfCancerGroups][numberOfAgeGroups];
-
         // Total casesPerHundredThousand
-        totalCasesPerHundredThousand = new double[numberOfSexes][numberOfCancerGroups];
+        totalCases = new double[numberOfSexes][numberOfCancerGroups];
         // Crude rate
         // crudeRate = new double[numberOfSexes][numberOfCancerGroups];
 
@@ -489,7 +445,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                 double lastAgeGroupPopulation = 0;
                 double lastAgeGroupWstdPopulation = 0;
 
-                totalCasesPerHundredThousand[sexNumber][icdGroup] += casesArray[icdGroup][sexNumber][0];
+                totalCases[sexNumber][icdGroup] += casesArray[icdGroup][sexNumber][0];
 
                 for (int ageGroupNumber = 1; ageGroupNumber < unknownAgeGroupIndex;
                         ageGroupNumber++) {
@@ -512,25 +468,6 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                                 (previousAgeGroupWstdPopulation
                                 + standardPopulationArray[sexNumber][ageGroupNumber]));
 
-                        // ASR[sexNumber][icdGroup] += asr;
-
-                        ASRbyAgeGroup[sexNumber][icdGroup][ageGroupNumber] = asr;
-
-                        /* We don't use confidence intervals so this was removed 16.07.07
-                        double varil =
-                        calculateVariL((previousAgeGroupCases +
-                        casesArray[icdGroup][sex][
-                        ageGroup]),
-                        (previousAgeGroupWstdPopulation +
-                        wstdPop[ageGroup]),
-                        (previousAgeGroupPopulation +
-                        populationArray[sex][ageGroup])
-                        );
-                        
-                        variL[sex][icdGroup] += varil;
-                        variLbyAgeGroup[sex][icdGroup][ageGroup] = varil;
-                         */
-
                         previousAgeGroupCases = 0;
                         previousAgeGroupPopulation = 0;
                         previousAgeGroupWstdPopulation = 0;
@@ -546,7 +483,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                         lastAgeGroupWstdPopulation += standardPopulationArray[sexNumber][ageGroupNumber];
                     }
 
-                    totalCasesPerHundredThousand[sexNumber][icdGroup] += casesArray[icdGroup][sexNumber][ageGroupNumber];
+                    totalCases[sexNumber][icdGroup] += casesArray[icdGroup][sexNumber][ageGroupNumber];
                 }
 
                 // We calculate the "leftovers" from the last age group
@@ -554,26 +491,14 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                     double asr = calculateASR(lastAgeGroupCases,
                             lastAgeGroupPopulation,
                             lastAgeGroupWstdPopulation);
-                    // ASR[sexNumber][icdGroup] += asr;
 
-                    ASRbyAgeGroup[sexNumber][icdGroup][highestPopulationAgeGroup] =
-                            asr;
-                    /* We don't use confidence intervals so this was removed 16.07.07
-                    double varil = calculateVariL(lastAgeGroupCases,
-                    lastAgeGroupWstdPopulation, lastAgeGroupPopulation);
-                    
-                    variL[sex][icdGroup] += varil;
-                    
-                    variLbyAgeGroup[sex][icdGroup][highestPopulationAgeGroup] =
-                    varil;
-                     */
 
                 }
 
                 // and take the unknown age group into account
-                totalCasesPerHundredThousand[sexNumber][icdGroup] += casesArray[icdGroup][sexNumber][unknownAgeGroupIndex];
+                totalCases[sexNumber][icdGroup] += casesArray[icdGroup][sexNumber][unknownAgeGroupIndex];
 
-                if (totalCasesPerHundredThousand[sexNumber][icdGroup] > 0) {
+                if (totalCases[sexNumber][icdGroup] > 0) {
 
                     /* We don't use confidence intervals so this was removed 16.07.07
                     double[] asrlul = calculateASRluL(ASR[sex][icdGroup],
@@ -608,10 +533,6 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                 }
             }
         }
-
-        // Get our matrixes ready
-
-        ASRf = new char[numberOfSexes][numberOfCancerGroups];
 
         // Adjust the age labels
         ageLabel[1] = "0-";
@@ -664,7 +585,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                 for (int j = 0; j < numberOfCancerGroups; j++) {
                     if (icdLabel[j].charAt(sexNumber) == '1') {
                         line.add(icdLabel[j].substring(3));
-                        line.add(formatNumber(totalCasesPerHundredThousand[sexNumber][j], 0));
+                        line.add(formatNumber(totalCases[sexNumber][j], 0));
                         line.add(formatNumber(casesArray[j][sexNumber][unknownAgeGroupIndex], 0));
                         for (int age = 1; age <= highestPopulationAgeGroup; age++) {
                             if (casesArray[j][sexNumber][age] > 0) {
@@ -674,7 +595,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                             }
                         }
                         // line.add(formatNumber(crudeRate[sexNumber][j], 2));
-                        line.add(formatNumber(100 * totalCasesPerHundredThousand[sexNumber][j] / totalCasesPerHundredThousand[sexNumber][allCancerGroupsButSkinIndex]));
+                        line.add(formatNumber(100 * totalCases[sexNumber][j] / totalCases[sexNumber][allCancerGroupsButSkinIndex]));
                         // line.add(formatNumber(cumRate64[sexNumber][j], 2));
                         // line.add(formatNumber(cumRate74[sexNumber][j], 2));
                         // line.add(formatNumber(ASR[sexNumber][j]));
@@ -842,7 +763,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                             k -= (tableFontSize);
                         }
                     }
-                    
+
                     fw.write("/col col 20 sub def\n");
                     fw.write("0 491 MT ((%)) RS\n");
                     k = 475;
@@ -865,14 +786,14 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
 
                             if (j != allCancerGroupsIndex && allCancerGroupsButSkinIndex >= 0) {
                                 fw.write("0 " + k + " MT ("
-                                        + formatNumber(100 * totalCasesPerHundredThousand[sexNumber][j]
-                                        / totalCasesPerHundredThousand[sexNumber][allCancerGroupsButSkinIndex])
+                                        + formatNumber(100 * totalCases[sexNumber][j]
+                                        / totalCases[sexNumber][allCancerGroupsButSkinIndex])
                                         + ") RS\n");
                             }
                             k -= (tableFontSize);
                         }
                     }
-                    
+
                     fw.write("/col 119 def\n");
                     fw.write("0 496 MT (ALL) RS\n");
                     fw.write("0 487 MT (AGES) RS\n");
@@ -894,7 +815,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                             }
 
                             fw.write("0 " + k + " MT ("
-                                    + formatNumber(totalCasesPerHundredThousand[sexNumber][j], 0) + ") RS\n");
+                                    + formatNumber(totalCases[sexNumber][j], 0) + ") RS\n");
                             k -= (tableFontSize);
                         }
                     }
