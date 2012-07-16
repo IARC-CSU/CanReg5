@@ -1,4 +1,4 @@
-#LyX 1.6.9 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.10 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -114,7 +114,7 @@ Database related
 \end_layout
 
 \begin_layout Itemize
-Move XML to the database so that we no longer have mismatch.
+Move (parts of) the XML to the database so that we no longer have mismatch.
 \end_layout
 
 \begin_deeper
@@ -130,6 +130,26 @@ During start up of server we first get the XML from the server.
 Stored as a BLOB?
 \end_layout
 
+\begin_layout Itemize
+Check compatibility of XML? 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+ruby code: 
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+h = {}; s.split(",").each {|b| a = b.split(" "); h[a[0]]=a[1..-1].join(" ")} 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+and compare the map/hash of the server and the file
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Itemize
 Better database connection security.
@@ -382,6 +402,14 @@ drops cases when highest age group cutoff < 85?
 \end_layout
 
 \end_deeper
+\begin_layout Itemize
+Bug in filter box - add parenthesis around expression to catch ORs.
+\end_layout
+
+\begin_layout Itemize
+Bug in import when Site/Topograpwhy (others) are missing(?)
+\end_layout
+
 \begin_layout Section*
 Code related improvements
 \end_layout
@@ -520,6 +548,16 @@ Analysis related
 Use of mortality data in analysis?
 \end_layout
 
+\begin_layout Itemize
+Survival?
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Link to the UN life tables for relative survival?
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Export excel files
 \end_layout
