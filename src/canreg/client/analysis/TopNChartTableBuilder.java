@@ -44,8 +44,13 @@ import org.jfree.chart.ChartTheme;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.DrawingSupplier;
 import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultKeyedValuesDataset;
 import org.jfree.data.general.DefaultPieDataset;
@@ -69,11 +74,13 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
         Globals.StandardVariableNames.Behaviour,};
     private static FileTypes[] fileTypesGenerated = {
         FileTypes.png,
+        FileTypes.pdf,
         FileTypes.svg,
         FileTypes.jchart
     };
 
     public static enum ChartType {
+
         PIE,
         BAR
     }
@@ -124,7 +131,6 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
 
         if (Arrays.asList(engineParameters).contains("barchart")) {
             chartType = ChartType.BAR;
-
         } else {
             chartType = ChartType.PIE;
         }
@@ -310,7 +316,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
 
                 }
             }
-            for (int sexNumber : new int[] {0, 1}) {
+            for (int sexNumber : new int[]{0, 1}) {
                 int position = 0;
                 if (chartType == ChartType.BAR) {
                     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -332,6 +338,11 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                             dataset,
                             PlotOrientation.HORIZONTAL,
                             false, true, false);
+                    if (sexNumber == 0) {
+                        setBarPlotColours(charts[sexNumber], topNLimit + 1, Color.BLUE.brighter());
+                    } else {
+                        setBarPlotColours(charts[sexNumber], topNLimit + 1, Color.RED.brighter());
+                    }
                 } else { // assume piechart
                     DefaultPieDataset dataset = new DefaultKeyedValuesDataset();
                     TreeSet<CancerCasesCount> topNTemp;
@@ -355,10 +366,9 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                             tableHeader + ", " + sexLabel[sexNumber],
                             dataset, true, false, Locale.getDefault());
                     if (sexNumber == 0) {
-                        setPlotColours((PiePlot) charts[sexNumber].getPlot(), topNLimit + 1, Color.BLUE.brighter());
-
+                        setPiePlotColours(charts[sexNumber], topNLimit + 1, Color.BLUE.brighter());
                     } else {
-                        setPlotColours((PiePlot) charts[sexNumber].getPlot(), topNLimit + 1, Color.RED.brighter());
+                        setPiePlotColours(charts[sexNumber], topNLimit + 1, Color.RED.brighter());
                     }
                 }
 
@@ -368,6 +378,8 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                 try {
                     if (fileType.equals(FileTypes.svg)) {
                         Tools.exportChartAsSVG(charts[sexNumber], new Rectangle(1000, 1000), file);
+                    } else if (fileType.equals(FileTypes.pdf)) {
+                        Tools.exportChartAsPDF(charts[sexNumber], new Rectangle(500, 400), file);
                     } else if (fileType.equals(FileTypes.jchart)) {
                         generatedFiles.add("OK - " + sexLabel[sexNumber]);
                     } else {
@@ -413,12 +425,23 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
         return theRest;
     }
 
-    private void setPlotColours(PiePlot plot, int numberOfSections, Color baseColor) {
+    private void setPiePlotColours(JFreeChart chart, int numberOfSections, Color baseColor) {
         Color color = baseColor;
+        PiePlot plot = (PiePlot) chart.getPlot();
         for (int i = 0; i < numberOfSections; i++) {
-            plot.setSectionOutlinePaint(i, baseColor.darker().darker().darker());
+            plot.setSectionOutlinePaint(plot.getDataset().getKey(i), baseColor.darker().darker().darker());
             color = darken(color);
-            plot.setSectionPaint(i, color);
+            plot.setSectionPaint(plot.getDataset().getKey(i), color);
+        }
+    }
+
+    private void setBarPlotColours(JFreeChart chart, int numberOfSections, Color baseColor) {
+        Color color = baseColor;
+        BarRenderer renderer = (BarRenderer) ((CategoryPlot) chart.getPlot()).getRenderer();
+        renderer.setBarPainter(new StandardBarPainter());
+        for (int i = 0; i < numberOfSections; i++) {
+            renderer.setSeriesPaint(i, color);
+            color = darken(color);
         }
     }
 
