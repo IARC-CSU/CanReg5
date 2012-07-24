@@ -235,7 +235,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
 
                 @Override
                 public int compare(CancerCasesCount o1, CancerCasesCount o2) {
-                    if (o1.count == o2.count) {
+                    if (o1.count.equals(o2.count)) {
                         return -o1.toString().compareTo(o2.toString());
                     } else {
                         return -(o1.count.compareTo(o2.count));
@@ -248,7 +248,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
 
                 @Override
                 public int compare(CancerCasesCount o1, CancerCasesCount o2) {
-                    if (o1.count == o2.count) {
+                    if (o1.count.equals(o2.count)) {
                         return -o1.toString().compareTo(o2.toString());
                     } else {
                         return -(o1.count.compareTo(o2.count));
