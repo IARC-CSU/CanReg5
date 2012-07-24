@@ -7,7 +7,13 @@ package canreg.client.analysis;
 import canreg.common.database.IncompatiblePopulationDataSetException;
 import canreg.common.database.PopulationDataset;
 import canreg.common.database.PopulationDatasetsEntry;
+import com.itextpdf.awt.DefaultFontMapper;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfTemplate;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -232,5 +238,40 @@ public class Tools {
         svgGenerator.stream(out, true /* use css */);
         outputStream.flush();
         outputStream.close();
+    }
+
+    public static void exportChartAsPDF(
+            JFreeChart chart,
+            Rectangle bounds,
+            File file) throws IOException {
+        
+        System.out.println(file.getPath());
+ 
+        PdfWriter writer = null;
+        com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+        
+        document.addCreator("CanReg5");
+        document.addCreationDate();
+        
+        try {
+            writer = PdfWriter.getInstance(document, new FileOutputStream(
+                    file));
+            document.open();
+            PdfContentByte contentByte = writer.getDirectContent();
+            PdfTemplate template = contentByte.createTemplate(bounds.width, bounds.height);
+            Graphics2D graphics2d = template.createGraphics(bounds.width, bounds.height,
+                    new DefaultFontMapper());
+            Rectangle2D rectangle2d = new Rectangle2D.Double(0, 0, bounds.width,
+                    bounds.height);
+
+            chart.draw(graphics2d, rectangle2d);
+
+            graphics2d.dispose();
+            contentByte.addTemplate(template, 0, 0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        document.close();
     }
 }
