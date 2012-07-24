@@ -309,48 +309,45 @@ public class Globals {
      */
     public static enum StandardVariableNames {
 
-        /**
-         * 
-         */
         TumourID,
         /**
-         * 
+         * Lenght Patient ID + 4
          */
         IncidenceDate,
         /**
-         * 
+         * Formatted as yyyyMMdd
          */
         BirthDate,
         /**
-         * 
+         * Formatted as yyyyMMdd
          */
         Age,
         /**
-         * 
+         * 2 or 3 digits (with age unknown as 99 or 999)
          */
         Sex,
         /**
-         * 
+         * Most registries use 1 and 2, some M and F.
          */
         Topography,
         /**
-         * 
+         * ICD-O-3, only the 3 digits
          */
         Morphology,
         /**
-         * 
+         * ICD-O-3, only the 4 digits
          */
         Behaviour,
         /**
-         * 
+         * ICD-O-3, 1 digit
          */
         BasisDiagnosis,
         /**
-         * 
+         * IACR/IARC standard, 1 digit
          */
         ICD10,
         /**
-         * 
+         * 4 characters (C or D followed by 3 digits)
          */
         MultPrimCode,
         /**
@@ -394,19 +391,20 @@ public class Globals {
          */
         Lastcontact,
         /**
-         * 
+         * Date of last contact, Formatted as yyyyMMdd
          */
         Grade,
         /**
-         * 
+         * ICD-O-3, 1 digit
          */
         ICCC,
         /**
-         * 
+         * Children classification, (max) 4 characters
          */
         AddressCode,
         /**
-         * 
+         * Any number of characters/digits. (Most registries would have 2 or 3 digits long, 
+         * though.)
          */
         MultPrimSeq,
         /**
@@ -418,35 +416,35 @@ public class Globals {
          */
         Stage,
         /**
-         * 
+         * Any coding is valid (as of now)
          */
         Source1,
         /**
-         * 
+         * Any coding is valid
          */
         Source2,
         /**
-         * 
+         * Any coding is valid
          */
         Source3,
         /**
-         * 
+         * Any coding is valid
          */
         Source4,
         /**
-         * 
+         * Any coding is valid
          */
         Source5,
         /**
-         * 
+         * Any coding is valid
          */
         Source6,
         /**
-         *
+         * Any coding is valid
          */
         PatientID,
         /**
-         *
+         * Most registries would have 8 digits, some characters and some longer
          */
         PatientRecordStatus,
         /**
@@ -496,7 +494,11 @@ public class Globals {
         /**
          * The count
          */
-        Count
+        Count,
+        /**
+         * The count
+         */
+        VitalStatus
     }
     public static String FILL_IN_STATUS_MANDATORY_STRING = "Mandatory";
     public static String FILL_IN_STATUS_AUTOMATIC_STRING = "Automatic";
