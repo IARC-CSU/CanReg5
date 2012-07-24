@@ -57,6 +57,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
     private static int CASES_COLUMN = 7;
     private double[][] standardPopulationArray;
     private String populationString;
+    private int DONT_COUNT = -999;
 
     public AgeSpecificCasesPerHundredThousandTableBuilder() {
         super();
@@ -317,6 +318,8 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
                                 icdIndex = myeloproliferativeDisordersCancerGroupIndex;
                             } else if ((int) (icdNumber / 10) == 46) {
                                 icdIndex = myelodysplasticSyndromesCancerGroupIndex;
+                            } else {
+                                icdIndex = DONT_COUNT;
                             }
                         }
 
@@ -341,7 +344,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
                     // Extract cases
                     cases = (Integer) line[CASES_COLUMN];
 
-                    if (year <= years[1] && year >= years[0]) {
+                    if (icdIndex != DONT_COUNT && year <= years[1] && year >= years[0]) {
 
                         // Basis of diagnosis
                         basisString = line[BASIS_DIAGNOSIS_COLUMN].toString();
