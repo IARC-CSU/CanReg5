@@ -45,6 +45,7 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
         // create new panel and add it
         chartPanel = new ChartPanel(chart);
         chartPanel.getPopupMenu().add(saveAsSVGAvtion, 4);
+        chartPanel.getPopupMenu().add(saveAsPDFAvtion, 5);
         jPanel1.add(chartPanel);
 
         chartPanel.setVisible(true);
@@ -64,6 +65,7 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
         saveAsSVGAvtion = new javax.swing.JMenuItem();
+        saveAsPDFAvtion = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
 
         jPopupMenu1.setName("jPopupMenu1"); // NOI18N
@@ -75,6 +77,11 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
         saveAsSVGAvtion.setName("saveAsSVGAvtion"); // NOI18N
         jPopupMenu1.add(saveAsSVGAvtion);
 
+        saveAsPDFAvtion.setAction(actionMap.get("saveAsPDFAction")); // NOI18N
+        saveAsPDFAvtion.setText(resourceMap.getString("saveAsPDFAvtion.text")); // NOI18N
+        saveAsPDFAvtion.setName("saveAsPDFAvtion"); // NOI18N
+        jPopupMenu1.add(saveAsPDFAvtion);
+
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
@@ -84,7 +91,7 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
         setName("Form"); // NOI18N
 
         jPanel1.setName("chartHolderPanel"); // NOI18N
-        jPanel1.setLayout(new java.awt.GridLayout());
+        jPanel1.setLayout(new java.awt.GridLayout(1, 0));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -94,7 +101,7 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
         );
 
         pack();
@@ -102,6 +109,7 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JMenuItem saveAsPDFAvtion;
     private javax.swing.JMenuItem saveAsSVGAvtion;
     // End of variables declaration//GEN-END:variables
 
@@ -130,6 +138,38 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
                         file = new File(file.getAbsolutePath() + ".svg"); //NOI18N
                     }
                     canreg.client.analysis.Tools.exportChartAsSVG(chart, new Rectangle(chartPanel.getWidth(), chartPanel.getHeight()), file);
+                } catch (IOException ex) {
+                    Logger.getLogger(JChartViewerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    @Action
+    public void saveAsPDFAction() {
+        if (chart != null) {
+            JFileChooser chooser = new JFileChooser();
+            FileFilter filter = new FileFilter() {
+
+                @Override
+                public boolean accept(File f) {
+                    return f.isDirectory() || f.getName().toLowerCase().endsWith("pdf"); //NOI18N
+                }
+
+                @Override
+                public String getDescription() {
+                    return "Portable Document Format (PDF) files";
+                }
+            };
+            chooser.setFileFilter(filter);
+            int result = chooser.showDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("CHOOSE FILENAME"));
+            if (result == JFileChooser.APPROVE_OPTION) {
+                try {
+                    File file = chooser.getSelectedFile();
+                    if (!file.getName().toLowerCase().endsWith("pdf")) { //NOI18N
+                        file = new File(file.getAbsolutePath() + ".pdf"); //NOI18N
+                    }
+                    canreg.client.analysis.Tools.exportChartAsPDF(chart, new Rectangle(chartPanel.getWidth(), chartPanel.getHeight()), file);
                 } catch (IOException ex) {
                     Logger.getLogger(JChartViewerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
