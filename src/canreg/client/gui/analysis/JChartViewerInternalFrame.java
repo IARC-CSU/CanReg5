@@ -158,7 +158,7 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
 
                 @Override
                 public String getDescription() {
-                    return "Portable Document Format (PDF) files";
+                    return java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PORTABLE DOCUMENT FORMAT (PDF) FILES");
                 }
             };
             chooser.setFileFilter(filter);
