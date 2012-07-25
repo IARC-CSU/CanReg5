@@ -24,6 +24,7 @@ import canreg.client.analysis.Tools.KeyCancerGroupsEnum;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.PopulationDataset;
+import com.itextpdf.text.DocumentException;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
@@ -45,9 +46,7 @@ import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.DrawingSupplier;
 import org.jfree.chart.plot.PiePlot;
-import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
@@ -78,6 +77,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
         FileTypes.svg,
         FileTypes.jchart
     };
+    private boolean legendOn = false;
 
     public static enum ChartType {
 
@@ -135,6 +135,10 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
             chartType = ChartType.PIE;
         }
 
+        if (Arrays.asList(engineParameters).contains("legend")) {
+            legendOn = true;
+        }
+
         icdLabel = ConfigFieldsReader.findConfig("ICD_groups_labels",
                 configList);
 
@@ -171,16 +175,14 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
 
         numberOfCancerGroups = cancerGroupsLocal.length;
 
-        double[] line;
         double[] casesLine;
 
-
         if (incidenceData != null) {
-            String sexString, icdString, casesString;
+            String sexString, icdString;
             String morphologyString;
             double casesArray[][] = new double[numberOfCancerGroups][numberOfSexes];
 
-            int sex, icdNumber, icdIndex, cases;
+            int sex, icdIndex, cases;
             List<Integer> dontCount = new LinkedList<Integer>();
             // all sites but skin?
             if (Arrays.asList(engineParameters).contains("noC44")) {
@@ -337,7 +339,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                             "Cases",
                             dataset,
                             PlotOrientation.HORIZONTAL,
-                            false, true, false);
+                            legendOn, true, false);
                     if (sexNumber == 0) {
                         setBarPlotColours(charts[sexNumber], topNLimit + 1, Color.BLUE.brighter());
                     } else {
@@ -364,7 +366,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                     dataset.insertValue(position++, "Other", restCount);
                     charts[sexNumber] = ChartFactory.createPieChart(
                             tableHeader + ", " + sexLabel[sexNumber],
-                            dataset, true, false, Locale.getDefault());
+                            dataset, legendOn, false, Locale.getDefault());
                     if (sexNumber == 0) {
                         setPiePlotColours(charts[sexNumber], topNLimit + 1, Color.BLUE.brighter());
                     } else {
@@ -387,6 +389,8 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                     }
                     generatedFiles.add(file.getPath());
                 } catch (IOException ex) {
+                    Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (DocumentException ex) {
                     Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
