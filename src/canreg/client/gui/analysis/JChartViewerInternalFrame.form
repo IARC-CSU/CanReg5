@@ -29,6 +29,14 @@
             <Property name="name" type="java.lang.String" value="saveAsPDFAvtion" noResource="true"/>
           </Properties>
         </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="copyDataToClipboardAvtion">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.analysis.JChartViewerInternalFrame" id="copyDataToClipboardAction" methodName="copyDataToClipboardAction"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="copyDataToClipboardAvtion" noResource="true"/>
+          </Properties>
+        </MenuItem>
       </SubComponents>
     </Container>
   </NonVisualComponents>

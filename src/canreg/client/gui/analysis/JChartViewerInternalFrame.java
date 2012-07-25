@@ -10,7 +10,11 @@
  */
 package canreg.client.gui.analysis;
 
+import com.itextpdf.text.DocumentException;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -46,6 +50,7 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
         chartPanel = new ChartPanel(chart);
         chartPanel.getPopupMenu().add(saveAsSVGAvtion, 4);
         chartPanel.getPopupMenu().add(saveAsPDFAvtion, 5);
+        chartPanel.getPopupMenu().add(copyDataToClipboardAvtion, 6);
         jPanel1.add(chartPanel);
 
         chartPanel.setVisible(true);
@@ -66,6 +71,7 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
         jPopupMenu1 = new javax.swing.JPopupMenu();
         saveAsSVGAvtion = new javax.swing.JMenuItem();
         saveAsPDFAvtion = new javax.swing.JMenuItem();
+        copyDataToClipboardAvtion = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
 
         jPopupMenu1.setName("jPopupMenu1"); // NOI18N
@@ -81,6 +87,10 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
         saveAsPDFAvtion.setText(resourceMap.getString("saveAsPDFAvtion.text")); // NOI18N
         saveAsPDFAvtion.setName("saveAsPDFAvtion"); // NOI18N
         jPopupMenu1.add(saveAsPDFAvtion);
+
+        copyDataToClipboardAvtion.setAction(actionMap.get("copyDataToClipboardAction")); // NOI18N
+        copyDataToClipboardAvtion.setName("copyDataToClipboardAvtion"); // NOI18N
+        jPopupMenu1.add(copyDataToClipboardAvtion);
 
         setClosable(true);
         setIconifiable(true);
@@ -107,6 +117,7 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem copyDataToClipboardAvtion;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JMenuItem saveAsPDFAvtion;
@@ -172,8 +183,18 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
                     canreg.client.analysis.Tools.exportChartAsPDF(chart, new Rectangle(chartPanel.getWidth(), chartPanel.getHeight()), file);
                 } catch (IOException ex) {
                     Logger.getLogger(JChartViewerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (DocumentException ex) {
+                    Logger.getLogger(JChartViewerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
+    }
+
+    @Action
+    public void copyDataToClipboardAction() {
+        String data = canreg.client.analysis.Tools.getChartData(chart, "\t");
+        StringSelection stsel = new StringSelection(data);
+        Clipboard system = Toolkit.getDefaultToolkit().getSystemClipboard();
+        system.setContents(stsel, stsel);
     }
 }
