@@ -39,7 +39,9 @@ public class TableBuilderFactory {
             tableBuilder = new RTableBuilderGrouped(tble.getConfigFileName());
         } else if (tble.getEngineName().equalsIgnoreCase("seer")) {
             tableBuilder = new SEERPrepFileTableBuilder(tble.getConfigFileName());
-        } else {
+        } else if (tble.getEngineName().equalsIgnoreCase("casesbyagechart")) {
+            tableBuilder = new CasesByAgeGroupChartTableBuilder();
+        }else {
             tableBuilder = null;
         }
         return tableBuilder;
