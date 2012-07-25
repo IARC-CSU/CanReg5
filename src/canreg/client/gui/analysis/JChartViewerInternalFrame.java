@@ -192,7 +192,7 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
 
     @Action
     public void copyDataToClipboardAction() {
-        String data = canreg.client.analysis.Tools.getChartData(chart, "\t");
+        String data = canreg.client.analysis.Tools.getChartData(chart, "\t", false);
         StringSelection stsel = new StringSelection(data);
         Clipboard system = Toolkit.getDefaultToolkit().getSystemClipboard();
         system.setContents(stsel, stsel);
