@@ -75,7 +75,8 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
         FileTypes.png,
         FileTypes.pdf,
         FileTypes.svg,
-        FileTypes.jchart
+        FileTypes.jchart,
+        FileTypes.csv
     };
     private boolean legendOn = false;
 
@@ -384,6 +385,8 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                         Tools.exportChartAsPDF(charts[sexNumber], new Rectangle(500, 400), file);
                     } else if (fileType.equals(FileTypes.jchart)) {
                         generatedFiles.add("OK - " + sexLabel[sexNumber]);
+                    } else if (fileType.equals(FileTypes.csv)) {
+                        Tools.exportChartAsCSV(charts[sexNumber], file);
                     } else {
                         ChartUtilities.saveChartAsPNG(file, charts[sexNumber], 1000, 1000);
                     }

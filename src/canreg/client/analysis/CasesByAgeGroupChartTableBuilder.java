@@ -75,7 +75,8 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
         FileTypes.png,
         FileTypes.pdf,
         FileTypes.svg,
-        FileTypes.jchart
+        FileTypes.jchart,
+        FileTypes.csv
     };
     private boolean legendOn = false;
 
@@ -87,7 +88,6 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
     private LinkedList[] cancerGroupsLocal;
     private String[] sexLabel;
     private JFreeChart[] charts = new JFreeChart[2];
-    private String[] icdLabel;
     private NumberFormat format;
     private String[] icd10GroupDescriptions;
     private int numberOfCancerGroups;
@@ -124,7 +124,7 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
             LinkedList<ConfigFields> configList,
             String[] engineParameters,
             FileTypes fileType) throws NotCompatibleDataException {
-        String footerString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("TABLE BUILT ") + new Date() + java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString(" BY CANREG5.");
+        // String footerString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("TABLE BUILT ") + new Date() + java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString(" BY CANREG5.");
 
         LinkedList<String> generatedFiles = new LinkedList<String>();
 
@@ -138,7 +138,10 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
             legendOn = true;
         }
 
-        sexLabel = new String[]{java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("MALE"), java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("FEMALE")};
+        sexLabel = new String[]{
+            java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("MALE"),
+            java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("FEMALE")
+        };
 
         icd10GroupDescriptions = ConfigFieldsReader.findConfig(
                 "ICD10_groups",
@@ -305,6 +308,8 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
                         Tools.exportChartAsPDF(charts[sexNumber], new Rectangle(500, 400), file);
                     } else if (fileType.equals(FileTypes.jchart)) {
                         generatedFiles.add("OK - " + sexLabel[sexNumber]);
+                    } else if (fileType.equals(FileTypes.csv)) {
+                        Tools.exportChartAsCSV(charts[sexNumber], file);
                     } else {
                         ChartUtilities.saveChartAsPNG(file, charts[sexNumber], 1000, 1000);
                     }
