@@ -6944,8 +6944,8 @@ CanReg5 Chart Editor
 
 \begin_layout Standard
 CanReg5 has a built in chart editor for charts that support it.
- Using this you can preview and modify the chart before saving it as PNG
- or SVG or printing it.
+ Using this you can preview and modify the chart before saving it as PNG,
+ PDF or SVG or printing it.
  (See figure 
 \begin_inset CommandInset ref
 LatexCommand vref

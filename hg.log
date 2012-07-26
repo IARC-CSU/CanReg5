@@ -1,5 +1,135 @@
-changeset:   1026:729d807c227e
+changeset:   1052:72c340828b14
 tag:         tip
+user:        ErvikM@x90164
+date:        Thu Jul 26 12:08:44 2012 +0200
+summary:     5.00.21b6
+
+changeset:   1051:1251faf37445
+user:        ErvikM@x90164
+date:        Thu Jul 26 12:06:04 2012 +0200
+summary:     Updated the counting and grouping algorithm of ICD10 codes.
+
+changeset:   1050:d790fbfefc9f
+user:        ErvikM@x90164
+date:        Thu Jul 26 11:35:34 2012 +0200
+summary:     PDSEditor: "Save as new" button added as suggested by Max Parkin. Also, if user enter name of PDS in standard format, the date is automatically filled/suggested.
+
+changeset:   1049:5f95346f769c
+user:        ErvikM@x90164
+date:        Wed Jul 25 15:29:36 2012 +0200
+summary:     The user can now copy the data behind the charts in the chartviewer to clipboard, ready to be pasted into general spread sheets, ie excel.
+
+changeset:   1048:2023f950d8aa
+user:        ErvikM@x90164
+date:        Wed Jul 25 15:28:52 2012 +0200
+summary:     Charts can now directly be written as csv files.
+
+changeset:   1047:b39af9c25bdb
+user:        ErvikM@x90164
+date:        Wed Jul 25 14:16:43 2012 +0200
+summary:     Legends are now optional in charts - and definable in the .conf file associated with the table.
+
+changeset:   1046:fd9117505956
+user:        ErvikM@x90164
+date:        Wed Jul 25 14:09:21 2012 +0200
+summary:     Cases by age group Pie and Bar charts added.
+
+changeset:   1045:144fb5a3ec56
+user:        ErvikM@x90164
+date:        Wed Jul 25 12:29:00 2012 +0200
+summary:     The user can now copy the data behind the charts in the chartviewer to clipboard, ready to be pasted into general spread sheets, ie excel.
+
+changeset:   1044:8d58db920ee9
+user:        ErvikM@x90164
+date:        Tue Jul 24 18:40:23 2012 +0200
+summary:     AgeSpecificCases tables no longer counts all D's into Others & Unspecified.
+
+changeset:   1043:df17721b88de
+user:        ErvikM@x90164
+date:        Tue Jul 24 14:29:33 2012 +0200
+summary:     Upgraded OpenCSV to version 2.3.
+
+changeset:   1042:6c99c90ddd23
+user:        ErvikM@x90164
+date:        Tue Jul 24 14:12:47 2012 +0200
+summary:     Internationalized some strings.
+
+changeset:   1041:b541b040b7e6
+user:        ErvikM@x90164
+date:        Tue Jul 24 14:10:28 2012 +0200
+summary:     Updated the top10bar preview image.
+
+changeset:   1040:6d96ed1f55f9
+user:        ErvikM@x90164
+date:        Tue Jul 24 14:08:39 2012 +0200
+summary:     Added a write to PDF function to the built in canreg5 chart viewer.
+
+changeset:   1039:3d0f8225653d
+user:        ErvikM@x90164
+date:        Tue Jul 24 14:08:19 2012 +0200
+summary:     Added a write to PDF function to the built in canreg5 chart viewer.
+
+changeset:   1038:149a24b2166b
+user:        ErvikM@x90164
+date:        Tue Jul 24 14:08:01 2012 +0200
+summary:     Improved the colours of the top N Bar Chart and added a write to PDF function to the built in canreg5 chart viewer.
+
+changeset:   1037:c9e5a6e3dbb9
+user:        ErvikM@x90164
+date:        Tue Jul 24 11:54:14 2012 +0200
+summary:     Upgraded JFreeChart to 1.00.14 and JCommons to 1.00.17.
+
+changeset:   1036:30d9ff87d9b6
+user:        ErvikM@x90164
+date:        Tue Jul 24 11:51:26 2012 +0200
+summary:     Fixed a bug in the top 10 cancers tables where sites with the same numbers of cases led to dropped data.
+
+changeset:   1035:3e72a785d2ab
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Mon Jul 16 10:18:14 2012 +0200
+summary:     Back from Malawi.
+
+changeset:   1034:a319647b2673
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jul 13 16:33:32 2012 +0200
+summary:     Removed the rates from the Cases table and tidied the code.
+
+changeset:   1033:dbb8adecd120
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jul 13 16:17:21 2012 +0200
+summary:     Removed the rates from the Cases table.
+
+changeset:   1032:8a326b456823
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jul 13 14:51:35 2012 +0200
+summary:     Added some parentheses to account for ORs in filters.
+
+changeset:   1031:698c082b5b64
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Jul 13 14:51:04 2012 +0200
+summary:     Added some parentheses to account for ORs in filters.
+
+changeset:   1030:9bbef77c13ac
+user:        ErvikM@x90164
+date:        Mon Jul 09 14:04:51 2012 +0200
+summary:     5.00.21b2
+
+changeset:   1029:dccf8a67ada5
+user:        ErvikM@x90164
+date:        Mon Jul 09 13:49:24 2012 +0200
+summary:     Renamed some analytical classes.
+
+changeset:   1028:ffa2cfc5a023
+user:        ErvikM@x90164
+date:        Fri Jul 06 12:13:43 2012 +0200
+summary:     Renamed some analytical classes.
+
+changeset:   1027:2b7b2b7177ad
+user:        ErvikM@x90164
+date:        Tue Jun 26 14:34:20 2012 +0200
+summary:     Top 10 cancer sites can now also be represented as bar a chart.
+
+changeset:   1026:729d807c227e
 user:        ErvikM@x90164
 date:        Mon Jun 25 16:51:44 2012 +0200
 summary:     Export now takes into account UTF-8 characters.

@@ -1,5 +1,25 @@
 Changelog
 
+5.00.21
+- Cases by age group Pie and Bar charts added.
+- Top 10 cancer sites can now also be represented as bar a chart.
+- Added a write to PDF function to the built in canreg5 chart viewer.
+- PDSEditor: "Save as new" button added as suggested by Max Parkin. 
+- If user enter name of PDS in standard format (Name, Year), the date is automatically filled/suggested.
+- Removed the rates from the Cases table.
+- Legends are now optional in charts - and definable in the .conf file associated with the table.
+- The user can now copy the data behind the charts in the chartviewer to clipboard, ready to be pasted into general spread sheets, ie excel.
+- Charts can now directly be written as csv files.
+- Added some parentheses to account for ORs in filters.
+- Fixed a bug in the top 10 cancers tables where sites with the same numbers of cases led to dropped data.
+- AgeSpecificCases tables no longer counts all D's into Others & Unspecified.
+- Upgraded JFreeChart to 1.00.14 and JCommons to 1.00.17.
+- Upgraded OpenCSV to version 2.3.
+- Improved the colours of the top N Bar Chart.
+- Updated the top10bar preview image.
+- Updated the counting and grouping algorithm of ICD10 codes.
+- Internationalized some strings.
+
 5.00.20
 - The display now refreshes after removing a variable in the tool to edit the database structure.
 - Export now takes into account UTF-8 characters.
