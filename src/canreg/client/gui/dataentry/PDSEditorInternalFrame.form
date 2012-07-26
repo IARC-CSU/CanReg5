@@ -117,10 +117,12 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="deleteButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="333" max="32767" attributes="0"/>
+              <EmptySpace pref="207" max="32767" attributes="0"/>
               <Component id="lockedToggleButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+              <Component id="saveAsNewButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="saveButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -138,21 +140,22 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="jTabbedPane1" pref="502" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="506" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="deleteButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="lockedToggleButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="deleteButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="saveAsNewButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="0" pref="271" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="273" max="32767" attributes="0"/>
                   <Component id="jInternalFrame1" min="-2" pref="0" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="271" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="273" max="32767" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -261,7 +264,7 @@
                           <Component id="standardPopulationComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="standardPopulationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="208" max="32767" attributes="0"/>
+                      <EmptySpace pref="212" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -377,11 +380,15 @@
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="resourceMap.getString(&quot;nameTextField.toolTipText&quot;)+Globals.PDS_DATABASE_NAME_LENGTH" type="code"/>
                 </Property>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.dataentry.PDSEditorInternalFrame" id="titleUpdatedAction" methodName="titleUpdatedAction"/>
+                </Property>
                 <Property name="name" type="java.lang.String" value="nameTextField" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="nameTextFieldMousePressed"/>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="nameTextFieldMouseReleased"/>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="nameTextFieldFocusLost"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="nameLabel">
@@ -421,7 +428,7 @@
             <Component class="javax.swing.JButton" name="editStandardPopulationButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.dataentry.PopulationDatasetEditorInternalFrame" id="editWorldPopulation" methodName="editWorldPopulation"/>
+                  <action class="canreg.client.gui.dataentry.PDSEditorInternalFrame" id="editWorldPopulation" methodName="editWorldPopulation"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="editStandardPopulationButton" noResource="true"/>
               </Properties>
@@ -461,12 +468,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="594" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="598" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="444" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="455" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -508,7 +515,7 @@
                                       <Component id="pdsTable" alignment="0" max="32767" attributes="1"/>
                                       <Component id="jSplitPane3" alignment="0" min="-2" pref="491" max="-2" attributes="1"/>
                                   </Group>
-                                  <EmptySpace pref="18" max="32767" attributes="0"/>
+                                  <EmptySpace pref="22" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -824,7 +831,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="pyramidPanelHolder" pref="434" max="32767" attributes="0"/>
+                      <Component id="pyramidPanelHolder" pref="438" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -874,8 +881,9 @@
     <Component class="javax.swing.JToggleButton" name="lockedToggleButton">
       <Properties>
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-          <action class="canreg.client.gui.dataentry.PopulationDatasetEditorInternalFrame" id="lockedAction" methodName="lockedAction"/>
+          <action class="canreg.client.gui.dataentry.PDSEditorInternalFrame" id="lockedAction" methodName="lockedAction"/>
         </Property>
+        <Property name="text" type="java.lang.String" resourceKey="lockedToggleButton.text"/>
         <Property name="name" type="java.lang.String" value="lockedToggleButton" noResource="true"/>
       </Properties>
       <Events>
@@ -887,6 +895,7 @@
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
           <action class="canreg.client.gui.dataentry.PDSEditorInternalFrame" id="deletePopulationDataSetAction" methodName="deletePopulationDataSetAction"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" resourceKey="deleteButton.toolTipText"/>
         <Property name="name" type="java.lang.String" value="deleteButton" noResource="true"/>
       </Properties>
     </Component>
@@ -1212,12 +1221,12 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane2" alignment="0" pref="267" max="32767" attributes="0"/>
+                      <Component id="jScrollPane2" alignment="0" pref="271" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane2" alignment="0" pref="247" max="32767" attributes="0"/>
+                      <Component id="jScrollPane2" alignment="0" pref="254" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -1623,5 +1632,13 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="saveAsNewButton">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="canreg.client.gui.dataentry.PDSEditorInternalFrame" id="saveAsNewAction" methodName="saveAsNewAction"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="saveAsNewButton" noResource="true"/>
+      </Properties>
+    </Component>
   </SubComponents>
 </Form>

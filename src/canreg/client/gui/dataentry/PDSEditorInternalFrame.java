@@ -45,6 +45,9 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -129,6 +132,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                     standardPopulationComboBox.setSelectedItem(worldPopulation);
                 }
             }
+            updateSaveAsNewAndDeleteButtons();
             lockTheFields();
         }
     }
@@ -308,6 +312,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         cancelButton1 = new javax.swing.JButton();
         lockedToggleButton1 = new javax.swing.JToggleButton();
         deleteButton1 = new javax.swing.JButton();
+        saveAsNewButton = new javax.swing.JButton();
 
         saveGraphicsPopupMenu.setName("saveGraphicsPopupMenu"); // NOI18N
 
@@ -446,6 +451,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
 
         nameTextField.setText(resourceMap.getString("nameTextField.text")); // NOI18N
         nameTextField.setToolTipText(resourceMap.getString("nameTextField.toolTipText")+Globals.PDS_DATABASE_NAME_LENGTH);
+        nameTextField.setAction(actionMap.get("titleUpdatedAction")); // NOI18N
         nameTextField.setName("nameTextField"); // NOI18N
         nameTextField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -453,6 +459,11 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
             }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 nameTextFieldMouseReleased(evt);
+            }
+        });
+        nameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                nameTextFieldFocusLost(evt);
             }
         });
 
@@ -544,7 +555,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                     .addComponent(editStandardPopulationButton)
                     .addComponent(standardPopulationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(standardPopulationLabel))
-                .addContainerGap(204, Short.MAX_VALUE))
+                .addContainerGap(212, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("detailsPanel.TabConstraints.tabTitle"), detailsPanel); // NOI18N
@@ -682,7 +693,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                     .addComponent(totalsTable, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pdsTable, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSplitPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -793,11 +804,11 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         dataSetPanel.setLayout(dataSetPanelLayout);
         dataSetPanelLayout.setHorizontalGroup(
             dataSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
         );
         dataSetPanelLayout.setVerticalGroup(
             dataSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(resourceMap.getString("dataSetPanel.TabConstraints.tabTitle"), dataSetPanel); // NOI18N
@@ -814,7 +825,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         jButton1.setName("jButton1"); // NOI18N
 
         pyramidPanelHolder.setName("pyramidPanelHolder"); // NOI18N
-        pyramidPanelHolder.setLayout(new java.awt.GridLayout());
+        pyramidPanelHolder.setLayout(new java.awt.GridLayout(1, 0));
 
         javax.swing.GroupLayout pyramidPanelLayout = new javax.swing.GroupLayout(pyramidPanel);
         pyramidPanel.setLayout(pyramidPanelLayout);
@@ -828,7 +839,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
             .addGroup(pyramidPanelLayout.createSequentialGroup()
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pyramidPanelHolder, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+                .addComponent(pyramidPanelHolder, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -842,6 +853,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         cancelButton.setName("cancelButton"); // NOI18N
 
         lockedToggleButton.setAction(actionMap.get("lockedAction")); // NOI18N
+        lockedToggleButton.setText(resourceMap.getString("lockedToggleButton.text")); // NOI18N
         lockedToggleButton.setName("lockedToggleButton"); // NOI18N
         lockedToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -850,6 +862,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         });
 
         deleteButton.setAction(actionMap.get("deletePopulationDataSetAction")); // NOI18N
+        deleteButton.setToolTipText(resourceMap.getString("deleteButton.toolTipText")); // NOI18N
         deleteButton.setName("deleteButton"); // NOI18N
 
         jInternalFrame1.setClosable(true);
@@ -1229,11 +1242,11 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         dataSetPanel1.setLayout(dataSetPanel1Layout);
         dataSetPanel1Layout.setHorizontalGroup(
             dataSetPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
         );
         dataSetPanel1Layout.setVerticalGroup(
             dataSetPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
         );
 
         jTabbedPane2.addTab(resourceMap.getString("dataSetPanel1.TabConstraints.tabTitle"), dataSetPanel1); // NOI18N
@@ -1308,6 +1321,9 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 .addContainerGap())
         );
 
+        saveAsNewButton.setAction(actionMap.get("saveAsNewAction")); // NOI18N
+        saveAsNewButton.setName("saveAsNewButton"); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1315,10 +1331,12 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(deleteButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 333, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 207, Short.MAX_VALUE)
                 .addComponent(lockedToggleButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cancelButton)
+                .addGap(11, 11, 11)
+                .addComponent(saveAsNewButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveButton)
                 .addContainerGap())
@@ -1332,19 +1350,20 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
+                    .addComponent(deleteButton)
                     .addComponent(cancelButton)
                     .addComponent(lockedToggleButton)
-                    .addComponent(deleteButton))
+                    .addComponent(saveAsNewButton))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 269, Short.MAX_VALUE)
+                    .addGap(0, 273, Short.MAX_VALUE)
                     .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 269, Short.MAX_VALUE)))
+                    .addGap(0, 273, Short.MAX_VALUE)))
         );
 
         pack();
@@ -1455,6 +1474,10 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(dateTextField, evt);
 }//GEN-LAST:event_dateChooserMouseReleased
 
+    private void nameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_nameTextFieldFocusLost
+        titleUpdatedAction();
+    }//GEN-LAST:event_nameTextFieldFocusLost
+
     /**
      *
      */
@@ -1495,18 +1518,24 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         ageGroupStructureComboBox.setModel(new javax.swing.DefaultComboBoxModel(Globals.defaultAgeGroupStructures));
         dateTextField = (JTextField) dateChooser.getDateEditor().getUiComponent();
         dateChooser.setDateFormatString(Globals.DATE_FORMAT_STRING);
-        dateChooser.setDate(new Date());
+        try {
+            dateChooser.setDate(new SimpleDateFormat(Globals.DATE_FORMAT_STRING).parse("20000701"));
+        } catch (ParseException ex) {
+            Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
         standardPopulationComboBox.setModel(new javax.swing.DefaultComboBoxModel(worldPopulations));
         refreshPopulationDataSetTable();
         updateChart();
         chartPanel = new ChartPanel(chart);
-        chartPanel.getPopupMenu().add(saveAsSVGMenuItem,4);
+        chartPanel.getPopupMenu().add(saveAsSVGMenuItem, 4);
         pyramidPanelHolder.add(chartPanel);
 
         chartPanel.setVisible(true);
         pyramidPanelHolder.doLayout();
 
         pyramidPanelHolder.validate();
+
+        updateSaveAsNewAndDeleteButtons();
     }
 
     @Override
@@ -1545,6 +1574,8 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         if (listener != null) {
             listener.actionPerformed(new ActionEvent(this, 1, "refresh"));
         }
+        updateSaveAsNewAndDeleteButtons();
+        lockTheFields();
     }
 
     private void buildPDSfromTable() {
@@ -1603,6 +1634,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
      */
     @Action
     public void lockedAction() {
+        updateSaveAsNewAndDeleteButtons();
         lockTheFields();
     }
 
@@ -1638,6 +1670,8 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         otherAgeGroupStructureButton.setEnabled(!lockedToggleButton.isSelected());
         descriptionTextArea.setEnabled(!lockedToggleButton.isSelected());
         dateChooser.setEnabled(!lockedToggleButton.isSelected());
+        deleteButton.setEnabled(!lockedToggleButton.isSelected());
+        saveAsNewButton.setEnabled(!lockedToggleButton.isSelected());
     }
 
     @Action
@@ -1646,7 +1680,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         if (result == JOptionPane.YES_OPTION) {
             try {
                 CanRegClientApp.getApplication().deletePopulationDataset(pds.getPopulationDatasetID());
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_SAVED_PDS:_") + pds.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_DELETED_PDS:_") + pds.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
                 if (listener != null) {
                     listener.actionPerformed(new ActionEvent(this, 1, "refresh"));
                 }
@@ -1786,6 +1820,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JLabel pyramidLabel1;
     private javax.swing.JPanel pyramidPanel;
     private javax.swing.JPanel pyramidPanelHolder;
+    private javax.swing.JButton saveAsNewButton;
     private javax.swing.JMenuItem saveAsPNGMenuItem;
     private javax.swing.JMenuItem saveAsSVGMenuItem;
     private javax.swing.JButton saveButton;
@@ -1921,5 +1956,33 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     @Action
     public void copyPyramidToClipboard() {
         Tools.setClipboard(chart.createBufferedImage(pyramidPanelHolder.getWidth(), pyramidPanelHolder.getHeight()));
+    }
+
+    @Action
+    public void saveAsNewAction() {
+        if (pds != null) {
+            pds.setPopulationDatasetID(-Integer.MAX_VALUE);
+        }
+        saveAction();
+    }
+
+    private void updateSaveAsNewAndDeleteButtons() {
+        saveAsNewButton.setEnabled(pds != null && pds.getPopulationDatasetID() >= 0);
+        deleteButton.setEnabled(pds != null && pds.getPopulationDatasetID() >= 0);
+    }
+
+    @Action
+    public void titleUpdatedAction() {
+        String text = nameTextField.getText();
+        if (text.trim().length() > 0) {
+            String[] array = text.split(",");            
+            try {
+                String potentialYear = array[array.length-1].trim();
+                Integer.parseInt(potentialYear);
+                dateChooser.setDate(new SimpleDateFormat(Globals.DATE_FORMAT_STRING).parse(potentialYear+"0701"));
+            } catch (ParseException ex) {
+                Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }
