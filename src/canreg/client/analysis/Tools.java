@@ -8,6 +8,7 @@ import canreg.common.database.IncompatiblePopulationDataSetException;
 import canreg.common.database.PopulationDataset;
 import canreg.common.database.PopulationDatasetsEntry;
 import com.itextpdf.awt.DefaultFontMapper;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -17,6 +18,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -26,6 +28,10 @@ import java.util.Map;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.general.PieDataset;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 
@@ -39,6 +45,51 @@ public class Tools {
      * 
      */
     public static int DONT_COUNT = -999;
+
+    public static String getChartData(JFreeChart chart, String separatingCharacter, boolean quotesOn) {
+
+        String endLine = "\n";
+        String quotes = "";
+        if (quotesOn) {
+            quotes = "\"";
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        String plotType = chart.getPlot().getPlotType();
+        // System.out.println("Plot Type: " + plotType);
+        
+        if (plotType.equalsIgnoreCase("Pie Plot")) {
+            PiePlot plot = (PiePlot) chart.getPlot();
+            PieDataset dataset = plot.getDataset();
+
+            Comparable key;
+
+            for (int i = 0; i < dataset.getKeys().size(); i++) {
+                key = dataset.getKey(i);
+                stringBuilder.append(quotes).append(key).append(quotes).append(separatingCharacter).append(quotes).append(dataset.getValue(key)).append(quotes).append(endLine);
+            }
+        } else if (plotType.equalsIgnoreCase("Category Plot")) {
+            CategoryPlot plot = (CategoryPlot) chart.getPlot();
+            CategoryDataset dataset = plot.getDataset();
+
+            Comparable rowkey;
+            Comparable columnkey;
+
+            for (int r = 0; r < dataset.getRowCount(); r++) {
+                rowkey = dataset.getRowKey(r);
+                columnkey = dataset.getColumnKey(r); // this is weird... but it works!
+                stringBuilder.append(quotes).append(columnkey).append(quotes).append(separatingCharacter).append(quotes).append(dataset.getValue(rowkey, columnkey)).append(quotes).append(endLine);
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    public static void exportChartAsCSV(JFreeChart jFreeChart, File file) throws IOException {
+        BufferedWriter bos = new BufferedWriter(new FileWriter(file));
+        bos.append(getChartData(jFreeChart, ",", true));
+        bos.flush();
+        bos.close();
+    }
 
     /**
      * 
@@ -140,7 +191,7 @@ public class Tools {
 
     /**
      * 
-     * @param keyGroupsMap
+     * @param keyGroupsMap - Important - needs a otherCancerGroupsIndex to be able to calculate all sites
      * @param icdString
      * @param morphologyString
      * @param cancerGroupsLocal
@@ -151,21 +202,21 @@ public class Tools {
             String icdString,
             String morphologyString,
             LinkedList[] cancerGroupsLocal) {
-        int icdIndex = -1;
-        int icdNumber = -1;
+        Integer icdIndex = null;
+        Integer icdNumber = -1;
 
         // try first only with morphology
         if (morphologyString.length() > 0) {
             int morphology = Integer.parseInt(morphologyString);
-            if (morphology == 9140) {
+            if (morphology == 9140 && keyGroupsMap.get(KeyCancerGroupsEnum.kaposiSarkomaCancerGroupIndex) != null) {
                 icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.kaposiSarkomaCancerGroupIndex);
-            } else if ((int) (morphology / 10) == 905) {
+            } else if ((int) (morphology / 10) == 905 && keyGroupsMap.get(KeyCancerGroupsEnum.mesotheliomaCancerGroupIndex) != null) {
                 icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.mesotheliomaCancerGroupIndex);
             }
         }
 
         // Not found only with morphology        
-        if (icdIndex < 0) {
+        if (icdIndex == null || icdIndex < 0) {
             if (icdString.length() > 0
                     && icdString.trim().substring(0, 1).equals("C")) {
                 icdString = icdString.trim().substring(1);
@@ -175,7 +226,7 @@ public class Tools {
                 }
                 icdIndex = EditorialTableTools.getICD10index(icdNumber, cancerGroupsLocal);
                 // Group still not found - put it in others...
-                if (icdIndex < 0 && keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex) >= 0) {
+                if (icdIndex < 0 && keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex) != null && keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex) >= 0) {
                     icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex);
                 }
             } else if (icdString.length() > 0
@@ -188,17 +239,17 @@ public class Tools {
                 }
                 if (icdNumber == 90 || icdNumber == 414) {
                     icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.bladderCancerGroupIndex);
-                    if (icdIndex < 0 && keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex) >= 0) {
+                    if (icdIndex == null || icdIndex < 0 && keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex) >= 0) {
                         icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex);
                     }
                 } else if ((int) (icdNumber / 10) == 45 || (int) (icdNumber / 10) == 47) {
                     icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.myeloproliferativeDisordersCancerGroupIndex);
-                    if (icdIndex < 0 && keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex) >= 0) {
+                    if (icdIndex == null || icdIndex < 0 && keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex) >= 0) {
                         icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex);
                     }
                 } else if ((int) (icdNumber / 10) == 46) {
                     icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.myelodysplasticSyndromesCancerGroupIndex);
-                    if (icdIndex < 0 && keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex) >= 0) {
+                    if (icdIndex == null || icdIndex < 0 && keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex) >= 0) {
                         icdIndex = keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex);
                     }
                 } else {
@@ -206,7 +257,15 @@ public class Tools {
                 }
             }
         }
-        return icdIndex;
+        if (icdIndex == null) {
+            if (keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex) != null) {
+                return keyGroupsMap.get(KeyCancerGroupsEnum.otherCancerGroupsIndex);
+            } else {
+                return -1;
+            }
+        } else {
+            return icdIndex;
+        }
     }
 
     /**
@@ -243,35 +302,31 @@ public class Tools {
     public static void exportChartAsPDF(
             JFreeChart chart,
             Rectangle bounds,
-            File file) throws IOException {
-        
+            File file) throws IOException, DocumentException {
+
         System.out.println(file.getPath());
- 
+
         PdfWriter writer = null;
         com.itextpdf.text.Document document = new com.itextpdf.text.Document();
-        
+
         document.addCreator("CanReg5");
         document.addCreationDate();
-        
-        try {
-            writer = PdfWriter.getInstance(document, new FileOutputStream(
-                    file));
-            document.open();
-            PdfContentByte contentByte = writer.getDirectContent();
-            PdfTemplate template = contentByte.createTemplate(bounds.width, bounds.height);
-            Graphics2D graphics2d = template.createGraphics(bounds.width, bounds.height,
-                    new DefaultFontMapper());
-            Rectangle2D rectangle2d = new Rectangle2D.Double(0, 0, bounds.width,
-                    bounds.height);
 
-            chart.draw(graphics2d, rectangle2d);
+        writer = PdfWriter.getInstance(document, new FileOutputStream(
+                file));
+        document.open();
+        PdfContentByte contentByte = writer.getDirectContent();
+        PdfTemplate template = contentByte.createTemplate(bounds.width, bounds.height);
+        Graphics2D graphics2d = template.createGraphics(bounds.width, bounds.height,
+                new DefaultFontMapper());
+        Rectangle2D rectangle2d = new Rectangle2D.Double(0, 0, bounds.width,
+                bounds.height);
 
-            graphics2d.dispose();
-            contentByte.addTemplate(template, 0, 0);
+        chart.draw(graphics2d, rectangle2d);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        graphics2d.dispose();
+        contentByte.addTemplate(template, 0, 0);
+
         document.close();
     }
 }
