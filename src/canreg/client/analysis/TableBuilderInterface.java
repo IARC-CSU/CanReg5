@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2011  International Agency for Research on Cancer
+ * Copyright (C) 2008-2012  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,11 @@ import java.util.LinkedList;
 
 public interface TableBuilderInterface {
 
+    public static String[] sexLabel = new String[]{
+        java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("MALE"),
+        java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("FEMALE")
+    };
+
     public enum FileTypes {
 
         ps,
@@ -38,6 +43,21 @@ public interface TableBuilderInterface {
         jchart,
         seer
     };
+
+    public static enum ChartType {
+
+        PIE,
+        BAR
+    }
+
+    public static enum CountType {
+
+        CUM64,
+        CUM74,
+        CASES,
+        PER_HUNDRED_THOUSAND,
+        ASR
+    }
 
     public StandardVariableNames[] getVariablesNeeded();
 
