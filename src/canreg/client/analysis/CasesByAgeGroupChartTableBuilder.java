@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2011  International Agency for Research on Cancer
+ * Copyright (C) 2008-2012  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,38 +19,30 @@
  */
 package canreg.client.analysis;
 
+import canreg.client.CanRegClientApp;
+import canreg.client.LocalSettings;
 import canreg.client.analysis.TableBuilderInterface.FileTypes;
 import canreg.client.analysis.Tools.KeyCancerGroupsEnum;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
+import canreg.common.database.IncompatiblePopulationDataSetException;
 import canreg.common.database.PopulationDataset;
 import com.itextpdf.text.DocumentException;
 import java.awt.Color;
-import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartTheme;
-import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
-import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.chart.renderer.category.StandardBarPainter;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.general.DefaultKeyedValuesDataset;
-import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
@@ -79,14 +71,7 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
         FileTypes.csv
     };
     private boolean legendOn = false;
-
-    public static enum ChartType {
-
-        PIE,
-        BAR
-    }
     private LinkedList[] cancerGroupsLocal;
-    private String[] sexLabel;
     private JFreeChart[] charts = new JFreeChart[2];
     private NumberFormat format;
     private String[] icd10GroupDescriptions;
@@ -99,6 +84,9 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
     private int allCancerGroupsIndex;
     private int allCancerGroupsButSkinIndex;
     private ChartType chartType;
+    private boolean useR = true;
+    private LocalSettings localSettings;
+    private String rpath;
 
     public CasesByAgeGroupChartTableBuilder() {
         ChartTheme chartTheme = new StandardChartTheme("sansserif");
@@ -137,11 +125,16 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
         if (Arrays.asList(engineParameters).contains("legend")) {
             legendOn = true;
         }
+        if (Arrays.asList(engineParameters).contains("r")) {
+            useR = true;
+        }
 
-        sexLabel = new String[]{
-            java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("MALE"),
-            java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("FEMALE")
-        };
+        localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        rpath = localSettings.getProperty(LocalSettings.R_PATH);
+        // does R exist?
+        if (rpath == null || rpath.isEmpty() || !new File(rpath).exists()) {
+            useR = false; // force false if R is not installed
+        }
 
         icd10GroupDescriptions = ConfigFieldsReader.findConfig(
                 "ICD10_groups",
@@ -180,6 +173,9 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
             String sexString, icdString;
             String morphologyString;
             double casesArray[][][] = new double[numberOfSexes][ageGroups.size()][numberOfCancerGroups];
+            double cum64Array[][][] = new double[numberOfSexes][ageGroups.size()][numberOfCancerGroups];
+            double cum74Array[][][] = new double[numberOfSexes][ageGroups.size()][numberOfCancerGroups];
+            double asrArray[][][] = new double[numberOfSexes][ageGroups.size()][numberOfCancerGroups];
 
             int sex, icdIndex, cases, age;
             List<Integer> dontCount = new LinkedList<Integer>();
@@ -241,9 +237,26 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
                 }
             }
 
+            //if (populations != null && populations.length > 0) {
+            //    // calculate pops
+            //    for (PopulationDataset pop : populations) {
+            //        for (AgeGroup ag : ageGroups) {
+            //            try {
+            //                addPopulationDataSetToAgeGroup(pop, ag);
+            //            } catch (IncompatiblePopulationDataSetException ex) {
+            //                Logger.getLogger(CasesByAgeGroupChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            //            }
+            //        }
+            //    }
+            // }
+
             format = NumberFormat.getInstance();
             format.setMaximumFractionDigits(1);
+
             for (int sexNumber : new int[]{0, 1}) {
+
+                String fileName = reportFileName + "-" + sexLabel[sexNumber] + "." + fileType.toString();
+                File file = new File(fileName);
 
                 List<CancerCasesCount> casesCounts = new LinkedList<CancerCasesCount>();
                 Double total = 0.0;
@@ -257,67 +270,31 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
                     casesLine = casesArray[sexNumber][group];
                     thisElement.setCount(thisElement.getCount() + casesLine[columnToCount]);
                     total += casesLine[columnToCount];
-
                     casesCounts.add(thisElement);
                 }
 
-                int position = 0;
-                if (chartType == ChartType.BAR) {
-                    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-                    for (CancerCasesCount count : casesCounts) {
-                        dataset.addValue(count.getCount().intValue(),
-                                count.getLabel(),
-                                count.toString() + " (" + format.format(count.getCount() / total * 100) + "%)");
-                    }
-                    charts[sexNumber] = ChartFactory.createStackedBarChart(
-                            tableHeader + ", " + sexLabel[sexNumber] + ", " + total.intValue() + " Cases",
-                            "Age group",
-                            "Cases",
-                            dataset,
-                            PlotOrientation.HORIZONTAL,
-                            legendOn, true, false);
+                if (useR
+                        && !fileType.equals(FileTypes.jchart)
+                        && !fileType.equals(FileTypes.csv)) {
+                    String header = tableHeader + ", \n" + TableBuilderInterface.sexLabel[sexNumber];
+                    generatedFiles.addAll(Tools.generateRChart(casesCounts, fileName, header, fileType, chartType, false, 0.0, rpath, false, "Age Group"));
+                } else {
+                    Color color;
                     if (sexNumber == 0) {
-                        setBarPlotColours(charts[sexNumber], ageGroups.size(), Color.BLUE.brighter());
+                        color = Color.BLUE;
                     } else {
-                        setBarPlotColours(charts[sexNumber], ageGroups.size(), Color.RED.brighter());
+                        color = Color.RED;
                     }
-                } else { // assume piechart
-                    DefaultPieDataset dataset = new DefaultKeyedValuesDataset();
-                    for (CancerCasesCount count : casesCounts) {
-                        dataset.insertValue(position++,
-                                count.toString() + " (" + format.format(count.getCount() / total * 100) + "%)",
-                                count.getCount());
-                    }
-                    charts[sexNumber] = ChartFactory.createPieChart(
-                            tableHeader + ", " + sexLabel[sexNumber] + ", " + total.intValue() + " Cases",
-                            dataset, legendOn, false, Locale.getDefault());
-                    if (sexNumber == 0) {
-                        setPiePlotColours(charts[sexNumber], ageGroups.size(), Color.BLUE.brighter());
-                    } else {
-                        setPiePlotColours(charts[sexNumber], ageGroups.size(), Color.RED.brighter());
-                    }
-                }
+                    String header = tableHeader + ", " + TableBuilderInterface.sexLabel[sexNumber];
 
-                String fileName = reportFileName + "-" + sexLabel[sexNumber];
-                File file = new File(fileName + "." + fileType.toString());
-
-                try {
-                    if (fileType.equals(FileTypes.svg)) {
-                        Tools.exportChartAsSVG(charts[sexNumber], new Rectangle(1000, 1000), file);
-                    } else if (fileType.equals(FileTypes.pdf)) {
-                        Tools.exportChartAsPDF(charts[sexNumber], new Rectangle(500, 400), file);
-                    } else if (fileType.equals(FileTypes.jchart)) {
-                        generatedFiles.add("OK - " + sexLabel[sexNumber]);
-                    } else if (fileType.equals(FileTypes.csv)) {
-                        Tools.exportChartAsCSV(charts[sexNumber], file);
-                    } else {
-                        ChartUtilities.saveChartAsPNG(file, charts[sexNumber], 1000, 1000);
+                    charts[sexNumber] = Tools.generateJChart(casesCounts, fileName, header, fileType, chartType, false, legendOn, 0.0, total, color, "Age Group");
+                    try {
+                        generatedFiles.add(Tools.writeJChartToFile(charts[sexNumber], file, fileType));
+                    } catch (IOException ex) {
+                        Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (DocumentException ex) {
+                        Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    generatedFiles.add(file.getPath());
-                } catch (IOException ex) {
-                    Logger.getLogger(CasesByAgeGroupChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (DocumentException ex) {
-                    Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -343,130 +320,29 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
         return charts;
     }
 
-    private void setPiePlotColours(JFreeChart chart, int numberOfSections, Color baseColor) {
-        Color color = baseColor;
-        PiePlot plot = (PiePlot) chart.getPlot();
-        for (int i = 0; i < numberOfSections; i++) {
-            plot.setSectionOutlinePaint(plot.getDataset().getKey(i), baseColor.darker().darker().darker());
-            color = darken(color);
-            plot.setSectionPaint(plot.getDataset().getKey(i), color);
-        }
-    }
-
-    private void setBarPlotColours(JFreeChart chart, int numberOfSections, Color baseColor) {
-        Color color = baseColor;
-        BarRenderer renderer = (BarRenderer) ((CategoryPlot) chart.getPlot()).getRenderer();
-        renderer.setBarPainter(new StandardBarPainter());
-        for (int i = 0; i < numberOfSections; i++) {
-            renderer.setSeriesPaint(i, color);
-            color = darken(color);
-        }
-    }
-
-    private Color darken(Color color) {
-        return new Color(
-                (int) Math.floor(color.getRed() * .9),
-                (int) Math.floor(color.getGreen() * .9),
-                (int) Math.floor(color.getBlue() * .9));
-    }
-
-    private class CancerCasesCount implements Comparable {
-
-        private String icd10;
-        private String label;
-        private Double count;
-        private int index;
-        private NumberFormat format;
-
-        private CancerCasesCount(String icd10, String label, Double count, int index) {
-            this.label = label;
-            this.count = count;
-            this.icd10 = icd10;
-            this.index = index;
-        }
-
-        @Override
-        public int compareTo(Object o) {
-            if (o instanceof CancerCasesCount) {
-                CancerCasesCount other = (CancerCasesCount) o;
-                return -getCount().compareTo(other.getCount());
-            } else {
-                return 0;
+    private void addPopulationDataSetToAgeGroup(PopulationDataset pds, AgeGroup ag) throws IncompatiblePopulationDataSetException {
+        Double count = 0.0;
+        Double refCount = 0.0;
+        for (int sex : new int[]{0, 1}) {
+            for (int age = ag.getMin(); age <= ag.getMax(); age++) {
+                int index = pds.getAgeGroupIndex(age);
+                count += pds.getAgeGroupCount(sex, index);
+                refCount += pds.getWorldPopulationForAgeGroupIndex(sex, index);
             }
-        }
-
-        /**
-         * @return the icd10
-         */
-        public String getIcd10() {
-            return icd10;
-        }
-
-        /**
-         * @param icd10 the icd10 to set
-         */
-        public void setIcd10(String icd10) {
-            this.icd10 = icd10;
-        }
-
-        /**
-         * @return the label
-         */
-        public String getLabel() {
-            return label;
-        }
-
-        /**
-         * @param label the label to set
-         */
-        public void setLabel(String label) {
-            this.label = label;
-        }
-
-        /**
-         * @return the count
-         */
-        public Double getCount() {
-            return count;
-        }
-
-        /**
-         * @param count the count to set
-         */
-        public void setCount(Double count) {
-            this.count = count;
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder s = new StringBuilder(label);
-            if (icd10 != null) {
-                s.append(" (").append(icd10).append(")");
-            }
-            s.append(": ").append(count.intValue());
-            return s.toString();
-        }
-
-        /**
-         * @return the index
-         */
-        public int getIndex() {
-            return index;
-        }
-
-        /**
-         * @param index the index to set
-         */
-        public void setIndex(int index) {
-            this.index = index;
+            ag.setPopulation(sex, count / (ag.getMax() - ag.getMin() + 1));
+            ag.setReferencePopulation(sex, refCount / (ag.getMax() - ag.getMin() + 1));
         }
     }
 
     private class AgeGroup {
 
         private Integer min, max;
+        private Double[] populationCount;
+        private Double[] referencePopulationCount;
 
         public AgeGroup(Integer min, Integer max) {
+            populationCount = new Double[2];
+            referencePopulationCount = new Double[2];
             this.min = min;
             if (max == null) {
                 this.max = Integer.MAX_VALUE;
@@ -486,6 +362,30 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
             } else {
                 return min + "+";
             }
+        }
+
+        public void setPopulation(int sex, Double population) {
+            populationCount[sex] = population;
+        }
+
+        public Double getPopulation(int sex) {
+            return populationCount[sex];
+        }
+
+        public void setReferencePopulation(int sex, Double population) {
+            this.referencePopulationCount[sex] = population;
+        }
+
+        public Double getReferencePopulation(int sex) {
+            return referencePopulationCount[sex];
+        }
+
+        private int getMin() {
+            return min;
+        }
+
+        private int getMax() {
+            return max;
         }
     }
 }

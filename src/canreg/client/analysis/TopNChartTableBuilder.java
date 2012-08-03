@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2011  International Agency for Research on Cancer
+ * Copyright (C) 2008-2012  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,40 +19,33 @@
  */
 package canreg.client.analysis;
 
+import canreg.client.CanRegClientApp;
+import canreg.client.LocalSettings;
 import canreg.client.analysis.TableBuilderInterface.FileTypes;
 import canreg.client.analysis.Tools.KeyCancerGroupsEnum;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
+import canreg.common.database.IncompatiblePopulationDataSetException;
 import canreg.common.database.PopulationDataset;
+import canreg.common.database.PopulationDatasetsEntry;
 import com.itextpdf.text.DocumentException;
 import java.awt.Color;
-import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
-import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartTheme;
-import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
-import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.chart.renderer.category.StandardBarPainter;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.general.DefaultKeyedValuesDataset;
-import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
@@ -65,12 +58,15 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
     private static int ICD10_COLUMN = 2;
     private static int MORPHOLOGY_COLUMN = 3;
     // private static int BEHAVIOUR_COLUMN = 4;
-    private static int CASES_COLUMN = 5;
+    private static int AGE_COLUMN = 5;
+    private static int CASES_COLUMN = 6;
     private static Globals.StandardVariableNames[] variablesNeeded = {
         Globals.StandardVariableNames.Sex,
         Globals.StandardVariableNames.ICD10,
         Globals.StandardVariableNames.Morphology,
-        Globals.StandardVariableNames.Behaviour,};
+        Globals.StandardVariableNames.Behaviour,
+        Globals.StandardVariableNames.Age
+    };
     private static FileTypes[] fileTypesGenerated = {
         FileTypes.png,
         FileTypes.pdf,
@@ -79,17 +75,12 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
         FileTypes.csv
     };
     private boolean legendOn = false;
-
-    public static enum ChartType {
-
-        PIE,
-        BAR
-    }
+    private boolean useR = true; //change this to false...
+    private LocalSettings localSettings;
+    private String rpath;
     private LinkedList[] cancerGroupsLocal;
-    private String[] sexLabel;
     private JFreeChart[] charts = new JFreeChart[2];
     private String[] icdLabel;
-    private NumberFormat format;
     private String[] icd10GroupDescriptions;
     private int numberOfCancerGroups;
     private int numberOfSexes = 2;
@@ -101,6 +92,9 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
     private int allCancerGroupsButSkinIndex;
     private int topNLimit = 10;
     private ChartType chartType;
+    private PopulationDataset periodPop;
+    private CountType countType = CountType.CASES;
+    private boolean includeOther = false;
 
     public TopNChartTableBuilder() {
         ChartTheme chartTheme = new StandardChartTheme("sansserif");
@@ -134,18 +128,39 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
             chartType = ChartType.BAR;
         } else {
             chartType = ChartType.PIE;
+            includeOther = true;
         }
 
         if (Arrays.asList(engineParameters).contains("legend")) {
             legendOn = true;
         }
 
+        if (Arrays.asList(engineParameters).contains("r")) {
+            useR = true;
+        }
+
+        if (Arrays.asList(engineParameters).contains("asr")) {
+            countType = CountType.ASR;
+        } else if (Arrays.asList(engineParameters).contains("cum64")) {
+            countType = CountType.CUM64;
+        } else if (Arrays.asList(engineParameters).contains("cum74")) {
+            countType = CountType.CUM74;
+        } else if (Arrays.asList(engineParameters).contains("per100000")) {
+            countType = CountType.PER_HUNDRED_THOUSAND;
+        } else {
+            // default to cases
+            countType = CountType.CASES;
+        }
+
+        localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        rpath = localSettings.getProperty(LocalSettings.R_PATH);
+        // does R exist?
+        if (rpath == null || rpath.isEmpty() || !new File(rpath).exists()) {
+            useR = false; // force false if R is not installed
+        }
+
         icdLabel = ConfigFieldsReader.findConfig("ICD_groups_labels",
                 configList);
-
-        // sexLabel = ConfigFieldsReader.findConfig("sex_label", configList);
-
-        sexLabel = new String[]{java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("MALE"), java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("FEMALE")};
 
         icd10GroupDescriptions = ConfigFieldsReader.findConfig(
                 "ICD10_groups",
@@ -176,14 +191,32 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
 
         numberOfCancerGroups = cancerGroupsLocal.length;
 
-        double[] casesLine;
+        double[] countsRow;
+
+        if (populations != null && populations.length > 0) {
+            if (populations[0].getPopulationDatasetID() < 0) {
+                countType = CountType.CASES;
+            } else {
+                // calculate period pop
+                periodPop = new PopulationDataset();
+                periodPop.setAgeGroupStructure(populations[0].getAgeGroupStructure());
+                periodPop.setWorldPopulation(populations[0].getWorldPopulation());
+                for (PopulationDatasetsEntry pde : populations[0].getAgeGroups()) {
+                    int count = 0;
+                    for (PopulationDataset pds : populations) {
+                        count += pds.getAgeGroupCount(pde.getSex(), pde.getAgeGroup());
+                    }
+                    periodPop.addAgeGroup(new PopulationDatasetsEntry(pde.getAgeGroup(), pde.getSex(), count));
+                }
+            }
+        }
 
         if (incidenceData != null) {
-            String sexString, icdString;
-            String morphologyString;
-            double casesArray[][] = new double[numberOfCancerGroups][numberOfSexes];
+            String sexString, icdString, morphologyString;
+            double countArray[][] = new double[numberOfCancerGroups][numberOfSexes];
 
-            int sex, icdIndex, cases;
+            int sex, icdIndex, numberOfCases, age;
+            double adjustedCases;
             List<Integer> dontCount = new LinkedList<Integer>();
             // all sites but skin?
             if (Arrays.asList(engineParameters).contains("noC44")) {
@@ -195,7 +228,8 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
 
                 // Set default
                 icdIndex = -1;
-                cases = 0;
+                numberOfCases = 0;
+                adjustedCases = 0.0;
 
                 // Unknown sex group = 3
                 sex = 3;
@@ -214,27 +248,48 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
 
                 icdIndex = Tools.assignICDGroupIndex(keyGroupsMap, icdString, morphologyString, cancerGroupsLocal);
 
+                age = (Integer) dataLine[AGE_COLUMN];
+
                 if (!dontCount.contains(icdIndex) && icdIndex != DONT_COUNT) {
                     // Extract cases
-                    cases = (Integer) dataLine[CASES_COLUMN];
+                    numberOfCases = (Integer) dataLine[CASES_COLUMN];
+                    if (countType == CountType.PER_HUNDRED_THOUSAND) {
+                        adjustedCases = (100000.0 * numberOfCases) / periodPop.getAgeGroupCount(sex, periodPop.getAgeGroupIndex(age));
+                    } else if (countType == CountType.ASR) {
+                        try {
+                            adjustedCases = 1000.0 * (periodPop.getWorldPopulationForAgeGroupIndex(sex, periodPop.getAgeGroupIndex(age)) * numberOfCases) / periodPop.getAgeGroupCount(sex, periodPop.getAgeGroupIndex(age));
+                        } catch (IncompatiblePopulationDataSetException ex) {
+                            Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else if (countType == CountType.CUM64) {
+                        if (age < 65) {
+                            adjustedCases = (100000.0 * numberOfCases) / periodPop.getAgeGroupCount(sex, periodPop.getAgeGroupIndex(age)) * 5.0 / 1000.0;
+                        }
+                    } else if (countType == CountType.CUM74) {
+                        if (age < 75) {
+                            adjustedCases = (100000.0 * numberOfCases) / periodPop.getAgeGroupCount(sex, periodPop.getAgeGroupIndex(age)) * 5.0 / 1000.0;
+                        }
+                    } else {
+                        adjustedCases = numberOfCases;
+                    }
 
                     if (sex <= numberOfSexes && icdIndex >= 0
                             && icdIndex <= cancerGroupsLocal.length) {
-                        casesArray[icdIndex][sex - 1] += cases;
+                        countArray[icdIndex][sex - 1] += adjustedCases;
                     } else {
                         if (otherCancerGroupsIndex >= 0) {
-                            casesArray[otherCancerGroupsIndex][sex
-                                    - 1] += cases;
+                            countArray[otherCancerGroupsIndex][sex
+                                    - 1] += adjustedCases;
                         }
                     }
                     if (allCancerGroupsIndex >= 0) {
-                        casesArray[allCancerGroupsIndex][sex - 1] += cases;
+                        countArray[allCancerGroupsIndex][sex - 1] += adjustedCases;
                     }
                     if (allCancerGroupsButSkinIndex >= 0
                             && skinCancerGroupIndex >= 0
                             && icdIndex != skinCancerGroupIndex) {
-                        casesArray[allCancerGroupsButSkinIndex][sex
-                                - 1] += cases;
+                        countArray[allCancerGroupsButSkinIndex][sex
+                                - 1] += adjustedCases;
                     }
                 }
             }
@@ -244,10 +299,10 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
 
                 @Override
                 public int compare(CancerCasesCount o1, CancerCasesCount o2) {
-                    if (o1.count.equals(o2.count)) {
+                    if (o1.getCount().equals(o2.getCount())) {
                         return -o1.toString().compareTo(o2.toString());
                     } else {
-                        return -(o1.count.compareTo(o2.count));
+                        return -(o1.getCount().compareTo(o2.getCount()));
                     }
                 }
             });
@@ -257,10 +312,10 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
 
                 @Override
                 public int compare(CancerCasesCount o1, CancerCasesCount o2) {
-                    if (o1.count.equals(o2.count)) {
+                    if (o1.getCount().equals(o2.getCount())) {
                         return -o1.toString().compareTo(o2.toString());
                     } else {
-                        return -(o1.count.compareTo(o2.count));
+                        return -(o1.getCount().compareTo(o2.getCount()));
                     }
                 }
             });
@@ -272,11 +327,8 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
             TreeSet<CancerCasesCount> topN;
             LinkedList<CancerCasesCount> theRest;
 
-            format = NumberFormat.getInstance();
-            format.setMaximumFractionDigits(1);
-
-            for (int icdGroupNumber = 0; icdGroupNumber < casesArray.length; icdGroupNumber++) {
-                casesLine = casesArray[icdGroupNumber];
+            for (int icdGroupNumber = 0; icdGroupNumber < countArray.length; icdGroupNumber++) {
+                countsRow = countArray[icdGroupNumber];
                 for (int sexNumber = 0; sexNumber < 2; sexNumber++) {
 
                     if (sexNumber == 0) {
@@ -287,11 +339,11 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                         theRest = theRestFemale;
                     }
 
-                    if (casesLine[sexNumber] > 0) {
+                    if (countsRow[sexNumber] > 0) {
                         thisElement = new CancerCasesCount(
                                 icd10GroupDescriptions[icdGroupNumber],
                                 icdLabel[icdGroupNumber].substring(3),
-                                casesLine[sexNumber],
+                                countsRow[sexNumber],
                                 icdGroupNumber);
 
                         // if this is the "other" group - add it immediately to "the rest"
@@ -316,85 +368,45 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                             }
                         }
                     }
-
                 }
             }
-            for (int sexNumber : new int[]{0, 1}) {
-                int position = 0;
-                if (chartType == ChartType.BAR) {
-                    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-                    TreeSet<CancerCasesCount> topNTemp;
-                    if (sexNumber == 0) {
-                        topNTemp = topNMale;
-                    } else {
-                        topNTemp = topNFemale;
-                    }
-                    for (CancerCasesCount count : topNTemp) {
-                        dataset.addValue(count.getCount(),
-                                count.getLabel(),
-                                count.toString());
-                    }
-                    charts[sexNumber] = ChartFactory.createStackedBarChart(
-                            tableHeader + ", " + sexLabel[sexNumber],
-                            "Site",
-                            "Cases",
-                            dataset,
-                            PlotOrientation.HORIZONTAL,
-                            legendOn, true, false);
-                    if (sexNumber == 0) {
-                        setBarPlotColours(charts[sexNumber], topNLimit + 1, Color.BLUE.brighter());
-                    } else {
-                        setBarPlotColours(charts[sexNumber], topNLimit + 1, Color.RED.brighter());
-                    }
-                } else { // assume piechart
-                    DefaultPieDataset dataset = new DefaultKeyedValuesDataset();
-                    TreeSet<CancerCasesCount> topNTemp;
-                    double restCount = sumUpTheRest(theRestMale, dontCount);
-                    if (sexNumber == 0) {
-                        topNTemp = topNMale;
-                    } else {
-                        topNTemp = topNFemale;
-                    }
-                    for (CancerCasesCount count : topNTemp) {
-                        // System.out.println(count);
-                        // restCount -= count.getCount();
 
-                        dataset.insertValue(position++,
-                                count.toString()
-                                + " (" + format.format(count.getCount() / casesArray[allCancerGroupsIndex][sexNumber] * 100) + "%)",
-                                count.getCount());
-                    }
-                    dataset.insertValue(position++, "Other", restCount);
-                    charts[sexNumber] = ChartFactory.createPieChart(
-                            tableHeader + ", " + sexLabel[sexNumber],
-                            dataset, legendOn, false, Locale.getDefault());
-                    if (sexNumber == 0) {
-                        setPiePlotColours(charts[sexNumber], topNLimit + 1, Color.BLUE.brighter());
-                    } else {
-                        setPiePlotColours(charts[sexNumber], topNLimit + 1, Color.RED.brighter());
-                    }
+            for (int sexNumber : new int[]{0, 1}) {
+                String fileName = reportFileName + "-" + sexLabel[sexNumber] + "." + fileType.toString();
+                File file = new File(fileName);
+
+                TreeSet<CancerCasesCount> casesCounts;
+                Double restCount = Tools.sumUpTheRest(theRestMale, dontCount);
+
+                if (sexNumber == 0) {
+                    casesCounts = topNMale;
+                } else {
+                    casesCounts = topNFemale;
                 }
 
-                String fileName = reportFileName + "-" + sexLabel[sexNumber];
-                File file = new File(fileName + "." + fileType.toString());
 
-                try {
-                    if (fileType.equals(FileTypes.svg)) {
-                        Tools.exportChartAsSVG(charts[sexNumber], new Rectangle(1000, 1000), file);
-                    } else if (fileType.equals(FileTypes.pdf)) {
-                        Tools.exportChartAsPDF(charts[sexNumber], new Rectangle(500, 400), file);
-                    } else if (fileType.equals(FileTypes.jchart)) {
-                        generatedFiles.add("OK - " + sexLabel[sexNumber]);
-                    } else if (fileType.equals(FileTypes.csv)) {
-                        Tools.exportChartAsCSV(charts[sexNumber], file);
+                if (useR
+                        && !fileType.equals(FileTypes.jchart)
+                        && !fileType.equals(FileTypes.csv)) {
+                    String header = "Top 10 by " + countType + ", \n" + tableHeader + ", " + TableBuilderInterface.sexLabel[sexNumber];
+                    generatedFiles.addAll(Tools.generateRChart(casesCounts, fileName, header, fileType, chartType, includeOther, restCount, rpath, true, "Site"));
+                } else {
+                    double allCount = countArray[allCancerGroupsIndex][sexNumber];
+                    Color color;
+                    if (sexNumber == 0) {
+                        color = Color.BLUE;
                     } else {
-                        ChartUtilities.saveChartAsPNG(file, charts[sexNumber], 1000, 1000);
+                        color = Color.RED;
                     }
-                    generatedFiles.add(file.getPath());
-                } catch (IOException ex) {
-                    Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (DocumentException ex) {
-                    Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    String header = "Top 10 by " + countType + ", " + tableHeader + ", " + TableBuilderInterface.sexLabel[sexNumber];
+                    charts[sexNumber] = Tools.generateJChart(casesCounts, fileName, header, fileType, chartType, includeOther, legendOn, restCount, allCount, color, "Site");
+                    try {
+                        generatedFiles.add(Tools.writeJChartToFile(charts[sexNumber], file, fileType));
+                    } catch (IOException ex) {
+                        Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (DocumentException ex) {
+                        Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
@@ -418,131 +430,5 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
         }
 
         return charts;
-    }
-
-    private double sumUpTheRest(LinkedList<CancerCasesCount> theRestList, List<Integer> dontCountIndexes) {
-        double theRest = 0;
-        for (CancerCasesCount count : theRestList) {
-            if (!dontCountIndexes.contains((Integer) count.getIndex())) {
-                theRest += count.getCount();
-            } else {
-                System.out.println("Found...");
-            }
-        }
-        return theRest;
-    }
-
-    private void setPiePlotColours(JFreeChart chart, int numberOfSections, Color baseColor) {
-        Color color = baseColor;
-        PiePlot plot = (PiePlot) chart.getPlot();
-        for (int i = 0; i < numberOfSections; i++) {
-            plot.setSectionOutlinePaint(plot.getDataset().getKey(i), baseColor.darker().darker().darker());
-            color = darken(color);
-            plot.setSectionPaint(plot.getDataset().getKey(i), color);
-        }
-    }
-
-    private void setBarPlotColours(JFreeChart chart, int numberOfSections, Color baseColor) {
-        Color color = baseColor;
-        BarRenderer renderer = (BarRenderer) ((CategoryPlot) chart.getPlot()).getRenderer();
-        renderer.setBarPainter(new StandardBarPainter());
-        for (int i = 0; i < numberOfSections; i++) {
-            renderer.setSeriesPaint(i, color);
-            color = darken(color);
-        }
-    }
-
-    private Color darken(Color color) {
-        return new Color(
-                (int) Math.floor(color.getRed() * .9),
-                (int) Math.floor(color.getGreen() * .9),
-                (int) Math.floor(color.getBlue() * .9));
-    }
-
-    private class CancerCasesCount implements Comparable {
-
-        private String icd10;
-        private String label;
-        private Double count;
-        private int index;
-        private NumberFormat format;
-
-        private CancerCasesCount(String icd10, String label, Double count, int index) {
-            this.label = label;
-            this.count = count;
-            this.icd10 = icd10;
-            this.index = index;
-        }
-
-        @Override
-        public int compareTo(Object o) {
-            if (o instanceof CancerCasesCount) {
-                CancerCasesCount other = (CancerCasesCount) o;
-                return -getCount().compareTo(other.getCount());
-            } else {
-                return 0;
-            }
-        }
-
-        /**
-         * @return the icd10
-         */
-        public String getIcd10() {
-            return icd10;
-        }
-
-        /**
-         * @param icd10 the icd10 to set
-         */
-        public void setIcd10(String icd10) {
-            this.icd10 = icd10;
-        }
-
-        /**
-         * @return the label
-         */
-        public String getLabel() {
-            return label;
-        }
-
-        /**
-         * @param label the label to set
-         */
-        public void setLabel(String label) {
-            this.label = label;
-        }
-
-        /**
-         * @return the count
-         */
-        public Double getCount() {
-            return count;
-        }
-
-        /**
-         * @param count the count to set
-         */
-        public void setCount(Double count) {
-            this.count = count;
-        }
-
-        @Override
-        public String toString() {
-            return label + " (" + icd10 + "): " + count.intValue();
-        }
-
-        /**
-         * @return the index
-         */
-        public int getIndex() {
-            return index;
-        }
-
-        /**
-         * @param index the index to set
-         */
-        public void setIndex(int index) {
-            this.index = index;
-        }
     }
 }
