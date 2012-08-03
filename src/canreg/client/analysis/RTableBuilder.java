@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2011  International Agency for Research on Cancer
+ * Copyright (C) 2008-2012  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -148,15 +147,15 @@ public class RTableBuilder implements TableBuilderInterface {
                 incoutput.close();
                 // filesCreated.add(incfile.getPath());
             }
-            File dir = new File(Globals.TABLES_CONF_PATH);
+            File dir = new File(Globals.R_SCRIPTS_PATH);
             // call R
 
             for (String rScript : rScripts) {
                 Runtime rt = Runtime.getRuntime();
                 String command = "\"" + rpath + "\""
                         + " --slave --file="
-                        + "\"" + dir.getAbsolutePath() + Globals.FILE_SEPARATOR
-                        + "r" + Globals.FILE_SEPARATOR
+                        + "\"" + dir.getAbsolutePath() 
+                        + Globals.FILE_SEPARATOR
                         + rScript
                         + "\" "
                         + "--args "
@@ -177,7 +176,7 @@ public class RTableBuilder implements TableBuilderInterface {
                 try {
                     pr.waitFor();
                     // convert the output to a string
-                    String theString = convertStreamToString(is);
+                    String theString = Tools.convertStreamToString(is);
                     Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
                     // System.out.println(theString);  
                     // and add all to the list of files to return
@@ -194,7 +193,7 @@ public class RTableBuilder implements TableBuilderInterface {
                 } catch (java.util.NoSuchElementException ex) {
                     Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
                     BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
-                    String errorMessage = convertStreamToString(errorStream);
+                    String errorMessage = Tools.convertStreamToString(errorStream);
                     System.out.println(errorMessage);
                     throw new TableErrorException("R says:\n \"" + errorMessage + "\"");
                 } finally {
@@ -210,10 +209,6 @@ public class RTableBuilder implements TableBuilderInterface {
         }
 
         return filesCreated;
-    }
-
-    private String convertStreamToString(InputStream is) throws java.util.NoSuchElementException {
-        return new Scanner(is).useDelimiter("\\A").next();
     }
 
     @Override
