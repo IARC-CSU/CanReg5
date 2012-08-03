@@ -1,9 +1,27 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CanReg5 - a tool to input, store, check and analyse cancer registry data.
+ * Copyright (C) 2008-2012  International Agency for Research on Cancer
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
 package canreg.client.analysis;
 
+import canreg.client.analysis.TableBuilderInterface.ChartType;
+import canreg.client.analysis.TableBuilderInterface.FileTypes;
+import canreg.common.Globals;
 import canreg.common.database.IncompatiblePopulationDataSetException;
 import canreg.common.database.PopulationDataset;
 import canreg.common.database.PopulationDatasetsEntry;
@@ -12,9 +30,11 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,14 +43,29 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.text.NumberFormat;
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultKeyedValuesDataset;
+import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -57,7 +92,7 @@ public class Tools {
         StringBuilder stringBuilder = new StringBuilder();
         String plotType = chart.getPlot().getPlotType();
         // System.out.println("Plot Type: " + plotType);
-        
+
         if (plotType.equalsIgnoreCase("Pie Plot")) {
             PiePlot plot = (PiePlot) chart.getPlot();
             PieDataset dataset = plot.getDataset();
@@ -89,6 +124,141 @@ public class Tools {
         bos.append(getChartData(jFreeChart, ",", true));
         bos.flush();
         bos.close();
+    }
+
+    public static String convertStreamToString(java.io.InputStream is) throws java.util.NoSuchElementException {
+        return new Scanner(is).useDelimiter("\\A").next();
+    }
+
+    public static LinkedList<String> generateRChart(
+            Collection<CancerCasesCount> casesCounts,
+            String fileName,
+            String header,
+            FileTypes fileType,
+            ChartType chartType,
+            boolean includeOther,
+            Double restCount,
+            String rpath,
+            boolean sortByCount, String xlab) {
+        LinkedList<String> generatedFiles = new LinkedList<String>();
+
+        RFileBuilder rff = new RFileBuilder();
+
+        File script = new File(Globals.R_SCRIPTS_PATH + "/makeSureGgplot2IsInstalled.R");
+        rff.appendHeader(script.getAbsolutePath());
+
+        rff.appendFileTypePart(fileType, fileName);
+
+        generatedFiles.add(fileName);
+
+        rff.appendData(casesCounts, restCount, includeOther);
+
+        int numberOfCategories = casesCounts.size();
+        if (includeOther) {
+            numberOfCategories += 1;
+        }
+        if (sortByCount) {
+            rff.appendSort(chartType, numberOfCategories, includeOther, restCount);
+        }
+
+        rff.appendPlots(chartType, header, xlab);
+        rff.appendWriteOut();
+
+        System.out.println(rff.getScript());
+
+        try {
+            File tempFile = File.createTempFile("script", ".R");
+            generatedFiles.add(tempFile.getPath());
+            FileWriter writer = new FileWriter(tempFile);
+            writer.append(rff.getScript());
+            writer.close();
+            Tools.callR(tempFile.getAbsolutePath(), rpath);
+        } catch (TableErrorException ex) {
+            Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return generatedFiles;
+    }
+
+    public static JFreeChart generateJChart(
+            Collection<CancerCasesCount> casesCounts,
+            String fileName,
+            String header,
+            FileTypes fileType,
+            ChartType chartType,
+            boolean includeOther,
+            boolean legendOn,
+            Double restCount,
+            Double allCount,
+            Color color,
+            String labelsCategoryName) {
+        JFreeChart chart;
+        if (chartType == ChartType.PIE) {
+            NumberFormat format = NumberFormat.getInstance();
+            format.setMaximumFractionDigits(1);
+            DefaultPieDataset dataset = new DefaultKeyedValuesDataset();
+            int position = 0;
+            for (CancerCasesCount count : casesCounts) {
+                dataset.insertValue(position++,
+                        count.toString()
+                        + " (" + format.format(count.getCount() / allCount * 100) + "%)",
+                        count.getCount());
+            }
+            if (includeOther) {
+                dataset.insertValue(position++,
+                        "Other: " + restCount.intValue()
+                        + " (" + format.format(restCount / allCount * 100) + "%)",
+                        restCount);
+            }
+            chart = ChartFactory.createPieChart(
+                    header,
+                    dataset, legendOn, false, Locale.getDefault());
+            Tools.setPiePlotColours(chart, casesCounts.size() + 1, color.brighter());
+
+        } else { // assume barchart
+            DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+            for (CancerCasesCount count : casesCounts) {
+                dataset.addValue(count.getCount(),
+                        count.getLabel(),
+                        count.toString());
+            }
+            if (includeOther) {
+                dataset.addValue(restCount.intValue(), "Other", "Other: " + restCount);
+            }
+            chart = ChartFactory.createStackedBarChart(
+                    header,
+                    labelsCategoryName,
+                    "Cases",
+                    dataset,
+                    PlotOrientation.HORIZONTAL,
+                    legendOn, true, false);
+
+            Tools.setBarPlotColours(chart, casesCounts.size() + 1, color.brighter());
+        }
+        return chart;
+    }
+
+    static String writeJChartToFile(JFreeChart chart, File file, FileTypes fileType) throws IOException, DocumentException {
+        String fileName = "";
+        if (fileType.equals(FileTypes.svg)) {
+            Tools.exportChartAsSVG(chart, new Rectangle(1000, 1000), file);
+            fileName = file.getPath();
+        } else if (fileType.equals(FileTypes.pdf)) {
+            Tools.exportChartAsPDF(chart, new Rectangle(500, 400), file);
+            fileName = file.getPath();
+        } else if (fileType.equals(FileTypes.jchart)) {
+            fileName = "OK";
+        } else if (fileType.equals(FileTypes.csv)) {
+            Tools.exportChartAsCSV(chart, file);
+            fileName = file.getPath();
+        } else {
+            ChartUtilities.saveChartAsPNG(file, chart, 1000, 1000);
+            fileName = file.getPath();
+        }
+        fileName = file.getPath();
+        return fileName;
     }
 
     /**
@@ -328,5 +498,88 @@ public class Tools {
         contentByte.addTemplate(template, 0, 0);
 
         document.close();
+    }
+
+    public static LinkedList<String> callR(String rScript, String rpath) throws TableErrorException {
+        LinkedList<String> filesCreated = new LinkedList<String>();
+
+        Runtime rt = Runtime.getRuntime();
+        String command = "\"" + rpath + "\""
+                + " --slave --file="
+                + "\"" + rScript + "\"";
+        Process pr = null;
+        try {
+            pr = rt.exec(command);
+            // collect the output from the R program in a stream
+            BufferedInputStream is = new BufferedInputStream(pr.getInputStream());
+            pr.waitFor();
+            // convert the output to a string
+            String theString = convertStreamToString(is);
+            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
+            // System.out.println(theString);  
+            // and add all to the list of files to return
+            for (String fileName : theString.split("\n")) {
+                if (fileName.startsWith("-outFile:")) {
+                    fileName = fileName.replaceFirst("-outFile:", "");
+                    if (new File(fileName).exists()) {
+                        filesCreated.add(fileName);
+                    }
+                }
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (java.util.NoSuchElementException ex) {
+            Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
+            String errorMessage = convertStreamToString(errorStream);
+            System.out.println(errorMessage);
+            throw new TableErrorException("R says:\n \"" + errorMessage + "\"");
+        } catch (IOException ex) {
+            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            System.out.println(pr.exitValue());
+        }
+
+        return filesCreated;
+
+    }
+
+    public static double sumUpTheRest(LinkedList<CancerCasesCount> theRestList, List<Integer> dontCountIndexes) {
+        double theRest = 0;
+        for (CancerCasesCount count : theRestList) {
+            if (!dontCountIndexes.contains((Integer) count.getIndex())) {
+                theRest += count.getCount();
+            } else {
+                System.out.println("Found...");
+            }
+        }
+        return theRest;
+    }
+
+    public static void setPiePlotColours(JFreeChart chart, int numberOfSections, Color baseColor) {
+        Color color = baseColor;
+        PiePlot plot = (PiePlot) chart.getPlot();
+        for (int i = 0; i < numberOfSections; i++) {
+            plot.setSectionOutlinePaint(plot.getDataset().getKey(i), baseColor.darker().darker().darker());
+            color = darken(color);
+            plot.setSectionPaint(plot.getDataset().getKey(i), color);
+        }
+    }
+
+    public static void setBarPlotColours(JFreeChart chart, int numberOfSections, Color baseColor) {
+        Color color = baseColor;
+        BarRenderer renderer = (BarRenderer) ((CategoryPlot) chart.getPlot()).getRenderer();
+        renderer.setBarPainter(new StandardBarPainter());
+        for (int i = 0; i < numberOfSections; i++) {
+            renderer.setSeriesPaint(i, color);
+            color = darken(color);
+        }
+    }
+
+    public static Color darken(Color color) {
+        return new Color(
+                (int) Math.floor(color.getRed() * .9),
+                (int) Math.floor(color.getGreen() * .9),
+                (int) Math.floor(color.getBlue() * .9));
     }
 }
