@@ -2452,9 +2452,10 @@ public class CanRegDAO {
             } else {
                 filterStringBuilder.append(" WHERE ").append("(").append(filterString).append(")");
             }
-        } else {
-            filterStringBuilder = filterStringBuilder.append("(").append(filter.getFilterString()).append(")");
-        }
+        } 
+        //else {
+        //    filterStringBuilder = filterStringBuilder.append("(").append(filter.getFilterString()).append(")");
+        // }
 
         // Add the range part
         if ((filter.getRangeStart() != null
