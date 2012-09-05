@@ -1,5 +1,70 @@
-changeset:   1052:72c340828b14
+changeset:   1065:0743a4591d8c
 tag:         tip
+user:        ErvikM@x90164
+date:        Wed Aug 29 14:21:59 2012 +0200
+summary:     Added too many parentheses in last update...
+
+changeset:   1064:353d64b2c91b
+user:        ErvikM@x90164
+date:        Fri Aug 03 17:04:20 2012 +0200
+summary:     5.00.22b1
+
+changeset:   1063:c19eaae4dca1
+user:        ErvikM@x90164
+date:        Fri Aug 03 14:33:02 2012 +0200
+summary:     5.00.22b1
+
+changeset:   1062:65c068b2e809
+user:        ErvikM@x90164
+date:        Fri Aug 03 14:32:09 2012 +0200
+summary:     New tables added. Previews updated.
+
+changeset:   1061:dba5c312c931
+user:        ErvikM@x90164
+date:        Fri Aug 03 14:31:22 2012 +0200
+summary:     "Top10" and "Cases by age group" charts can now be generated using R (with ggplot).Added some static paths to the globals.
+
+changeset:   1060:ce09832e78a0
+user:        ErvikM@x90164
+date:        Fri Aug 03 10:38:10 2012 +0200
+summary:     "Top10" and "Cases by age group" charts can now be generated using R (with ggplot).
+
+changeset:   1059:55253c4b7c3f
+user:        ErvikM@x90164
+date:        Fri Aug 03 10:36:10 2012 +0200
+summary:     Generators for R and JChart implemented plus helper functions.
+
+changeset:   1058:38e58633d038
+user:        ErvikM@x90164
+date:        Fri Aug 03 10:34:56 2012 +0200
+summary:     Added some static paths to the globals.
+
+changeset:   1057:3d6efa4155b3
+user:        ErvikM@x90164
+date:        Fri Aug 03 09:43:21 2012 +0200
+summary:     A builder for R files.
+
+changeset:   1056:2e7e77325c7a
+user:        ErvikM@x90164
+date:        Fri Aug 03 09:42:06 2012 +0200
+summary:     A class to count cancers.
+
+changeset:   1055:7d54eb9977aa
+user:        ErvikM@x90164.iarc.lan
+date:        Wed Aug 01 14:10:05 2012 +0200
+summary:     makeSureGgplot2IsInstalled script added.
+
+changeset:   1054:86f6c8cf1f4e
+user:        ErvikM@x90164
+date:        Tue Jul 31 14:32:57 2012 +0200
+summary:     Added charttype, filetype, couttype, and sexlabels to table builder interface.
+
+changeset:   1053:1c6c053644cc
+user:        ErvikM@x90164
+date:        Thu Jul 26 15:45:47 2012 +0200
+summary:     5.00.21
+
+changeset:   1052:72c340828b14
 user:        ErvikM@x90164
 date:        Thu Jul 26 12:08:44 2012 +0200
 summary:     5.00.21b6

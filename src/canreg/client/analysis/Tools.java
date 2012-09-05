@@ -168,7 +168,7 @@ public class Tools {
 
         try {
             File tempFile = File.createTempFile("script", ".R");
-            generatedFiles.add(tempFile.getPath());
+            // generatedFiles.add(tempFile.getPath());
             FileWriter writer = new FileWriter(tempFile);
             writer.append(rff.getScript());
             writer.close();

@@ -1,5 +1,16 @@
 Changelog
 
+5.00.22
+- Fixed a bug where the browser didn't work without a filter/range. (Added too many parentheses in last update.)
+- New tables added. Previews updated.
+- "Top10" and "Cases by age group" charts can now be generated using R (with ggplot).
+- Generators for R and JChart implemented plus helper functions.
+- A builder for R files added.
+- "makeSureGgplot2IsInstalled" script added.
+- Added some static paths to the globals.
+- Added chart-type, file-type, count-type, and sex-labels to table builder interface.
+- Other bug fixes
+
 5.00.21
 - Cases by age group Pie and Bar charts added.
 - Top 10 cancer sites can now also be represented as bar a chart.
