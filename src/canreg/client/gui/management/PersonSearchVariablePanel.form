@@ -23,7 +23,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="variablesComboBox" min="-2" pref="120" max="-2" attributes="0"/>
+              <Component id="variablesComboBox" pref="115" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -31,23 +31,29 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="weightTextField" pref="59" max="32767" attributes="0"/>
+              <Component id="weightTextField" min="-2" pref="33" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="discPowerjLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="discPowerTextField" min="-2" pref="35" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="removeButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="103" groupAlignment="3" attributes="0">
-              <Component id="removeButton" alignment="3" min="-2" max="-2" attributes="0"/>
               <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
               <Component id="variablesComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-              <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
               <Component id="weightTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
               <Component id="compareAlgorithmComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
               <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="discPowerTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="discPowerjLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="removeButton" alignment="3" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -112,6 +118,18 @@
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="jLabel3.text"/>
         <Property name="name" type="java.lang.String" value="jLabel3" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="discPowerTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="discPowerTextField.text"/>
+        <Property name="name" type="java.lang.String" value="discPowerTextField" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="discPowerjLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="discPowerjLabel.text"/>
+        <Property name="name" type="java.lang.String" value="discPowerjLabel" noResource="true"/>
       </Properties>
     </Component>
   </SubComponents>

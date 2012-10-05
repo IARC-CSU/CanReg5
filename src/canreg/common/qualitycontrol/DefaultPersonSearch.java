@@ -18,7 +18,6 @@
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  * @author Andy Cooke
  */
-
 package canreg.common.qualitycontrol;
 
 import canreg.common.DatabaseVariablesListElement;
@@ -78,39 +77,19 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     @Override
     public synchronized void setSearchVariables(PersonSearchVariable[] personSearchVariables) {
         int i = 0;
-        this.searchVariables = personSearchVariables;
-        String[] tempVariableNames = new String[personSearchVariables.length];
-        float[] tempVariableWeights = new float[personSearchVariables.length];
-        for (PersonSearchVariable psv : personSearchVariables) {
-            tempVariableNames[i] = psv.getName();
-            tempVariableWeights[i] = psv.getWeight();
-            i++;
-        }
-        setWeights(tempVariableNames, tempVariableWeights);
-    }
-
-    /**
-     * 
-     * @param variableNames
-     * @param variableWeigths
-     */
-
-    private synchronized void setWeights(String[] variableNames, float[] variableWeigths) {
-        this.variableNames = variableNames;
-        this.variableWeights = variableWeigths;
-
+        searchVariables = personSearchVariables;
+        variableNames = new String[personSearchVariables.length];
+        variableWeights = new float[personSearchVariables.length];
         discPower = new float[variableNames.length];
         reliability = new float[variableNames.length];
         presence = new float[variableNames.length];
-
-        // Temporarily we set all variables to 1.
-
-        // TODO Find a way to calculate weights of variables in person search efficiently...
-
-        for (int i = 0; i < variableNames.length; i++) {
-            discPower[i] = calculateDiscPower(variableNames[i]);
-            reliability[i] = calculateReliability(variableNames[i]);
-            presence[i] = calculatePresence(variableNames[i]);
+        for (PersonSearchVariable psv : personSearchVariables) {
+            variableNames[i] = psv.getName();
+            variableWeights[i] = psv.getWeight();
+            discPower[i] = psv.getDiscPower();
+            reliability[i] = psv.getWeight()/100; // weight is not in the formula!
+            presence[i] = psv.getPresence();
+            i++;
         }
 
         maximumTotalScore = 0;
@@ -125,24 +104,6 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
             float maxscore = scoreFunction(dis, rel, pres, sim);
             maximumTotalScore += maxscore;
         }
-    }
-
-    private float calculateDiscPower(String variableName) {
-        float tempDiscPower = 1;
-
-        return tempDiscPower;
-    }
-
-    private float calculateReliability(String variableName) {
-        float tempReliability = 1;
-
-        return tempReliability;
-    }
-
-    private float calculatePresence(String variableName) {
-        float tempPresence = 1;
-
-        return tempPresence;
     }
 
     /**
@@ -204,7 +165,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                     similarity = compareNumber(patient1data, patient2data);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.soundex)) {
                     similarity = compareSoundex(patient1data, patient2data);
-                }  else {
+                } else {
                     similarity = compareText(patient1data, patient2data);
                 }
 
@@ -309,7 +270,6 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                         SmallStr = SmallStr.replaceAll(sub, rep1);
                         BigStr = BigStr.replaceAll(sub, rep2);
                     } catch (Exception e) {
-                        
                     }
                     posB[matchCount] = posBig;
                     posS[matchCount] = posSmall;

@@ -563,6 +563,9 @@ public final class SystemDescription {
         Element element = doc.createElement(namespace + "search_variable");
         element.appendChild(createElement(namespace + "variable_name", variable.getName()));
         element.appendChild(createElement(namespace + "weigth", variable.getWeight() + ""));
+        element.appendChild(createElement(namespace + "disc_power", variable.getDiscPower() + ""));
+        element.appendChild(createElement(namespace + "reliability", variable.getReliability() + ""));
+        element.appendChild(createElement(namespace + "prescence", variable.getPresence() + ""));
         element.appendChild(createElement(namespace + "compare_algorithm", variable.getCompareAlgorithm().toString()));
         return element;
     }

@@ -147,6 +147,17 @@ public class Tools {
             }
             searchVariables[i].setVariable(element);
             searchVariables[i].setWeight(Float.parseFloat(e.getElementsByTagName(namespace + "weigth").item(0).getTextContent()));
+
+            if (e.getElementsByTagName(namespace + "prescence").item(0) != null) {
+                searchVariables[i].setPresence(Float.parseFloat(e.getElementsByTagName(namespace + "prescence").item(0).getTextContent()));
+            }
+            if (e.getElementsByTagName(namespace + "disc_power").item(0) != null) {
+                searchVariables[i].setDiscPower(Float.parseFloat(e.getElementsByTagName(namespace + "disc_power").item(0).getTextContent()));
+            }
+            if (e.getElementsByTagName(namespace + "reliability").item(0) != null) {
+                searchVariables[i].setReliability(Float.parseFloat(e.getElementsByTagName(namespace + "reliability").item(0).getTextContent()));
+            }
+
             NodeList compareAlgorithmElement = e.getElementsByTagName(namespace + "compare_algorithm");
             if (compareAlgorithmElement.getLength() > 0) {
                 searchVariables[i].setAlgorithm(CompareAlgorithms.valueOf(compareAlgorithmElement.item(0).getTextContent()));
@@ -893,7 +904,6 @@ public class Tools {
 // TODO reimplement method to access the IARCTools package...
 //   Commented away to be able to disable the IARCtools package... 
 //    
-    
 //    public static Map<IARCStandardVariableNames, String> getMapIARCstandardVariablesVariableName(Document doc, String NAMESPACE) {
 //        EnumMap<IARCStandardVariableNames, String> map = new EnumMap<IARCStandardVariableNames, String>(IARCStandardVariableNames.class);
 //        DatabaseVariablesListElement[] variables = getVariableListElements(doc, NAMESPACE);

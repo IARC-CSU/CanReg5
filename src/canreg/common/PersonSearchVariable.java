@@ -29,7 +29,10 @@ import java.io.Serializable;
  */
 public class PersonSearchVariable implements Serializable {
 
-    private float weight;
+    private float weight = 0.0f;
+    private float discPower = 1.0f;
+    private float reliability = 1.0f;
+    private float presence = 1.0f;
     private DatabaseVariablesListElement databaseVariablesListElement;
     private CompareAlgorithms compareAlgorithm;
 
@@ -91,5 +94,47 @@ public class PersonSearchVariable implements Serializable {
         } else {
             this.compareAlgorithm = CompareAlgorithms.alpha;
         }
+    }
+
+    /**
+     * @return the discPower
+     */
+    public float getDiscPower() {
+        return discPower;
+    }
+
+    /**
+     * @param discPower the discPower to set
+     */
+    public void setDiscPower(float discPower) {
+        this.discPower = discPower;
+    }
+
+    /**
+     * @return the reliability
+     */
+    public float getReliability() {
+        return reliability;
+    }
+
+    /**
+     * @param reliability the reliability to set
+     */
+    public void setReliability(float reliability) {
+        this.reliability = reliability;
+    }
+
+    /**
+     * @return the presence
+     */
+    public float getPresence() {
+        return presence;
+    }
+
+    /**
+     * @param presence the presence to set
+     */
+    public void setPresence(float presence) {
+        this.presence = presence;
     }
 }
