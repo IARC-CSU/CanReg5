@@ -239,7 +239,7 @@ Improve person search
 
 \begin_deeper
 \begin_layout Itemize
-Look into using the Duke library.
+Look into using the Duke library!
 \end_layout
 
 \begin_layout Itemize
@@ -269,6 +269,10 @@ Highlight differences between records.
 \end_deeper
 \begin_layout Itemize
 Accept all (without looking) after a search run?
+\end_layout
+
+\begin_layout Itemize
+Keep a table of all confirmed no matches?
 \end_layout
 
 \end_deeper

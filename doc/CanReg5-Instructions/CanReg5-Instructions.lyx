@@ -10726,6 +10726,84 @@ Verify that you have the same number of tumours in the tumour table as in
 \end_layout
 
 \begin_layout Chapter
+Advanced database management
+\end_layout
+
+\begin_layout Standard
+This appendix covers some advanced database management topics
+\end_layout
+
+\begin_layout Section
+The System definition file (the XML file)
+\end_layout
+
+\begin_layout Subsection
+Advanced options in the CanReg5 person search
+\end_layout
+
+\begin_layout Standard
+You have access to a couple of extra settings in the CanReg5 system definition
+ file to improve the detection of duplicate patients (in addition to 
+\emph on
+weight
+\emph default
+ and 
+\emph on
+discriminatory power
+\emph default
+), namely 
+\emph on
+reliability
+\emph default
+ and 
+\emph on
+presence
+\emph default
+.
+\end_layout
+
+\begin_layout Subsubsection
+Weight
+\end_layout
+
+\begin_layout Standard
+Does nothing at the moment!
+\end_layout
+
+\begin_layout Subsubsection
+Disciminatory power
+\end_layout
+
+\begin_layout Standard
+Discriminatory Power calculator: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://insilico.ehu.es/mini_tools/discriminatory_power/index.php"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Reliablity
+\end_layout
+
+\begin_layout Standard
+How reliable is the data.
+ Scale from 0 to 1.
+\end_layout
+
+\begin_layout Subsubsection
+Prescence
+\end_layout
+
+\begin_layout Standard
+How often is the variable filled.
+ Scale from 0 to 1.
+\end_layout
+
+\begin_layout Chapter
 Technical details on the Table Builder
 \end_layout
 
@@ -12315,6 +12393,47 @@ reference "sub:CanReg-and-SEER*stat"
 \end_inset
 
  for more information.)
+\end_layout
+
+\begin_layout Subsection
+PSPP
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+PSPP is a program for statistical analysis of sampled data.
+ It is a Free replacement for the proprietary program SPSS, and appears
+ very similar to it with a few exceptions.
+\begin_inset Quotes erd
+\end_inset
+
+ Available from 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.gnu.org/software/pspp/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+SOFA
+\end_layout
+
+\begin_layout Standard
+SOFA - Statistics Open For All The user-friendly, open-source statistics,
+ analysis, and reporting package.
+ Available from 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.sofastatistics.com/home.php"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
