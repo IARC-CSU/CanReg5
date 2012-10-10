@@ -18,7 +18,6 @@
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  * @author Andy Cooke
  */
-
 package canreg.common.conversions;
 
 import canreg.common.Globals.StandardVariableNames;
@@ -159,137 +158,141 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
         }
 
         String morphology5Code = morphologyCode + behaviourCode;
-        String morphologyLookUpLine = morphologyICD10Map.get(morphology5Code.substring(0, morphologyCodeLength));
-        if (morphologyLookUpLine == null) {
-            result[0].setMessage(morphologyCode + "/" + behaviourCode);
-            result[0].setResultCode(ConversionResult.ResultCode.Invalid);
-            return result;
-        }
-
-        //---------------------------------------------< extract conversion rule
-        int rule;
-        if (morphologyLookUpLine.charAt(0) > 58) //* 'E','F','G','H', 'K','L','M'
-        // (" - Rare Morphology/Behaviour combination")
-        {
-            rule = (int) morphologyLookUpLine.charAt(0) - 68;   // 1,2,3,4, 7,8,9
-        } else // '1','2','3','4','5',  '7','8','9'
-        {
-            rule = (int) morphologyLookUpLine.charAt(0) - 48; // 1,2,3,4,5, 7,8,9
-
-            //--------------------------------------------< act according to rule
-        }
-
-        if (rule <= 5) // conversion dependent on Topography code
-        {
-            String topographyLookUpLine = topographyICD10Map.get(topographyCode);
-            TopogConv(rule, topographyLookUpLine);
-        } else if (rule == 7) // conversion dependent on Morphology only
-        {
-            ICD10Male = morphologyLookUpLine.substring(1, morphologyLookUpLine.length());
-            if (ICD10Male.length()>3 && ICD10Male.charAt(3) == '*') {
-                ICD10Male = ICD10Male.substring(0, 3) + topographyCode.charAt(2);
-            }
-            if (morphologyLookUpLine.length() > 5) {
-                flag = morphologyLookUpLine.charAt(5);
-            }
-        } else if (rule == 8) // dependent on Top and Mor
-        {
-            boolean ret = Rule8(morphologyLookUpLine, topographyCode);
-            if (!ret) {
-                result[0].setMessage("Error - conversion Rule 8");
+        // we can only generate ICD10 if we have enough characters
+        if (morphology5Code.length() >= morphologyCodeLength) {
+            String morphologyLookUpLine = morphologyICD10Map.get(morphology5Code.substring(0, morphologyCodeLength));
+            if (morphologyLookUpLine == null) {
+                result[0].setMessage(morphologyCode + "/" + behaviourCode);
                 result[0].setResultCode(ConversionResult.ResultCode.Invalid);
                 return result;
             }
-        } else if (rule == 9) // dependent on Top, Mor and Sex
-        {
-            boolean ret = Rule9(morphologyLookUpLine, topographyCode);
-            if (!ret) {
-                result[0].setMessage("Error - conversion Rule 9");
-                result[0].setResultCode(ConversionResult.ResultCode.Invalid);
-                return result;
-            }
-        } else {
-            result[0].setMessage("Error - Wrong conversion Rule");
-            result[0].setResultCode(ConversionResult.ResultCode.Invalid);
-            return result;
-        }
-        //----------------------------------------------------< LIVER (Malignant)
-        if (topographyCode.startsWith("22") && behaviourCode.equals("3")) {
-            int MorphNum = Integer.parseInt(morphologyCode);
 
-            if ((MorphNum >= 9120 && MorphNum <= 9133) || MorphNum == 9161) {
-                ICD10Male = "C223";
-            } else if (MorphNum == 8970) {
-                ICD10Male = "C222";
-            } else if (MorphNum == 8160 || MorphNum == 8161 || MorphNum == 8162
-                    || MorphNum == 8140 || MorphNum == 8141 || MorphNum == 8260
-                    || MorphNum == 8440 || MorphNum == 8480 || MorphNum == 8481
-                    || MorphNum == 8490 || MorphNum == 8500 || MorphNum == 8550 || MorphNum == 8560) {
-                ICD10Male = "C221";
-            } else if (MorphNum == 8170 || MorphNum == 8171) {
-                ICD10Male = "C220";
-            } else if (MorphNum == 8000) {
-                ICD10Male = "C229";
-            } else if (MorphNum < 8800) {
-                ICD10Male = "C227";
-            } else if (MorphNum < 9590) {
-                ICD10Male = "C224";
-            }
-        }
 
-        if (ICD10Male.equals("D218")) {
-            ICD10Male = "D219";
-            // Icd10m = DEPedits.SetStringChar(Icd10m, '9', 3);
-        }
-        if (ICD10Male.startsWith("C50") && rule == 9) {
-            sexDependent = false;
-        }
-        ICD10 = ICD10Male;
-        ICD10 = ICD10.trim();
-        //if (PutDot && ICD10.length()>3)
-        //	ICD10 = ICD10.substring(0,3) + "." + ICD10.substring(3,4);
-
-        if (flag != ' ') {
-            if (flag == '+' && sexNumber != femaleCode) // female symbol
+            //---------------------------------------------< extract conversion rule
+            int rule;
+            if (morphologyLookUpLine.charAt(0) > 58) //* 'E','F','G','H', 'K','L','M'
+            // (" - Rare Morphology/Behaviour combination")
             {
-                //  Female Histology; Not Female Sex code
-                result[0].setMessage("Female Histology; Not Female Sex code " + morphologyCode);
-                result[0].setResultCode(ConversionResult.ResultCode.Invalid);
-                return result;
-            }
-            if (flag == '@' && sexNumber != maleCode) // male symbol
+                rule = (int) morphologyLookUpLine.charAt(0) - 68;   // 1,2,3,4, 7,8,9
+            } else // '1','2','3','4','5',  '7','8','9'
             {
-                //  Male Histology; Not Male Sex code
-                result[0].setMessage(" Male Histology; Not Male Sex code " + morphologyCode);
-                result[0].setResultCode(ConversionResult.ResultCode.Invalid);
-                return result;
-            }
-        }
+                rule = (int) morphologyLookUpLine.charAt(0) - 48; // 1,2,3,4,5, 7,8,9
 
-        if ((sexDependent) && (!ICD10Female.substring(0, 3).equals(ICD10Male.substring(0, 3)))) {
-            if (sexNumber == maleCode) {
-                result[0].setValue(tidyICD10code(ICD10));
-                return result;
-            } else if (sexNumber == femaleCode) //  overwrite ICD10Code[]
+                //--------------------------------------------< act according to rule
+            }
+
+            if (rule <= 5) // conversion dependent on Topography code
             {
-                ICD10 = ICD10Female;
-                ICD10 = ICD10.trim();
-                result[0].setValue(tidyICD10code(ICD10));
-                return result;
-            } else // SexVal is not MALE or FEMALE, yet conversion is SexDependant
+                String topographyLookUpLine = topographyICD10Map.get(topographyCode);
+                TopogConv(rule, topographyLookUpLine);
+            } else if (rule == 7) // conversion dependent on Morphology only
             {
-                result[0].setMessage("SexVal is not MALE or FEMALE, yet conversion is SexDependant " + morphologyCode);
+                ICD10Male = morphologyLookUpLine.substring(1, morphologyLookUpLine.length());
+                if (ICD10Male.length() > 3 && ICD10Male.charAt(3) == '*') {
+                    ICD10Male = ICD10Male.substring(0, 3) + topographyCode.charAt(2);
+                }
+                if (morphologyLookUpLine.length() > 5) {
+                    flag = morphologyLookUpLine.charAt(5);
+                }
+            } else if (rule == 8) // dependent on Top and Mor
+            {
+                boolean ret = Rule8(morphologyLookUpLine, topographyCode);
+                if (!ret) {
+                    result[0].setMessage("Error - conversion Rule 8");
+                    result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+                    return result;
+                }
+            } else if (rule == 9) // dependent on Top, Mor and Sex
+            {
+                boolean ret = Rule9(morphologyLookUpLine, topographyCode);
+                if (!ret) {
+                    result[0].setMessage("Error - conversion Rule 9");
+                    result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+                    return result;
+                }
+            } else {
+                result[0].setMessage("Error - Wrong conversion Rule");
                 result[0].setResultCode(ConversionResult.ResultCode.Invalid);
                 return result;
+            }
+            //----------------------------------------------------< LIVER (Malignant)
+            if (topographyCode.startsWith("22") && behaviourCode.equals("3")) {
+                int MorphNum = Integer.parseInt(morphologyCode);
+
+                if ((MorphNum >= 9120 && MorphNum <= 9133) || MorphNum == 9161) {
+                    ICD10Male = "C223";
+                } else if (MorphNum == 8970) {
+                    ICD10Male = "C222";
+                } else if (MorphNum == 8160 || MorphNum == 8161 || MorphNum == 8162
+                        || MorphNum == 8140 || MorphNum == 8141 || MorphNum == 8260
+                        || MorphNum == 8440 || MorphNum == 8480 || MorphNum == 8481
+                        || MorphNum == 8490 || MorphNum == 8500 || MorphNum == 8550 || MorphNum == 8560) {
+                    ICD10Male = "C221";
+                } else if (MorphNum == 8170 || MorphNum == 8171) {
+                    ICD10Male = "C220";
+                } else if (MorphNum == 8000) {
+                    ICD10Male = "C229";
+                } else if (MorphNum < 8800) {
+                    ICD10Male = "C227";
+                } else if (MorphNum < 9590) {
+                    ICD10Male = "C224";
+                }
+            }
+
+            if (ICD10Male.equals("D218")) {
+                ICD10Male = "D219";
+                // Icd10m = DEPedits.SetStringChar(Icd10m, '9', 3);
+            }
+            if (ICD10Male.startsWith("C50") && rule == 9) {
+                sexDependent = false;
+            }
+            ICD10 = ICD10Male;
+            ICD10 = ICD10.trim();
+            //if (PutDot && ICD10.length()>3)
+            //	ICD10 = ICD10.substring(0,3) + "." + ICD10.substring(3,4);
+
+            if (flag != ' ') {
+                if (flag == '+' && sexNumber != femaleCode) // female symbol
+                {
+                    //  Female Histology; Not Female Sex code
+                    result[0].setMessage("Female Histology; Not Female Sex code " + morphologyCode);
+                    result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+                    return result;
+                }
+                if (flag == '@' && sexNumber != maleCode) // male symbol
+                {
+                    //  Male Histology; Not Male Sex code
+                    result[0].setMessage(" Male Histology; Not Male Sex code " + morphologyCode);
+                    result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+                    return result;
+                }
+            }
+
+            if ((sexDependent) && (!ICD10Female.substring(0, 3).equals(ICD10Male.substring(0, 3)))) {
+                if (sexNumber == maleCode) {
+                    result[0].setValue(tidyICD10code(ICD10));
+                    return result;
+                } else if (sexNumber == femaleCode) //  overwrite ICD10Code[]
+                {
+                    ICD10 = ICD10Female;
+                    ICD10 = ICD10.trim();
+                    result[0].setValue(tidyICD10code(ICD10));
+                    return result;
+                } else // SexVal is not MALE or FEMALE, yet conversion is SexDependant
+                {
+                    result[0].setMessage("SexVal is not MALE or FEMALE, yet conversion is SexDependant " + morphologyCode);
+                    result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+                    return result;
+                }
             }
         }
         result[0].setValue(tidyICD10code(ICD10));
         return result;
     }
 
-    private String tidyICD10code(String code){
-        if (code.length()>=4){
-            code = code.substring(0,4);
+    private String tidyICD10code(String code) {
+        if (code.length() >= 4) {
+            code = code.substring(0, 4);
         }
         return code;
     }
@@ -342,7 +345,7 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
                 flag = topog8FileLine.charAt(8);
                 break;
             } // topographyCode is in the table with 2 digits and "-"
-            else if (topographyCode.substring(0, 2).equals(topog8FileLine.substring(1, 3)) && topog8FileLine.charAt(3) == '-') {
+            else if (topographyCode.length() == 3 && topographyCode.substring(0, 2).equals(topog8FileLine.substring(1, 3)) && topog8FileLine.charAt(3) == '-') {
                 ICD10Male = topog8FileLine.substring(4, 8);
                 if (ICD10Male.charAt(3) == '-') {
                     ICD10Male = setStringChar(ICD10Male, topographyCode.charAt(2), 3);
