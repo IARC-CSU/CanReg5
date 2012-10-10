@@ -35,6 +35,7 @@ import canreg.common.qualitycontrol.CheckResult;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -106,16 +107,14 @@ public class Import {
         Map<String, Integer> nameSexTable = server.getNameSexTables();
 
         try {
-            // Tro to detect the encoding...
             FileInputStream fis = new FileInputStream(file);
-            InputStreamReader isr = new InputStreamReader(fis, io.getFileCharset());
-            // Returns the name of the character encoding
+            BufferedReader bsr = new BufferedReader(new InputStreamReader(fis, io.getFileCharset()));
 
-            Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", isr.getEncoding());
+            // Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}");
 
             int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath());
 
-            reader = new CSVReader(new FileReader(file), io.getSeparator());
+            reader = new CSVReader(bsr, io.getSeparator());
             String[] lineElements;
 
             int linesToRead = io.getMaxLines();
