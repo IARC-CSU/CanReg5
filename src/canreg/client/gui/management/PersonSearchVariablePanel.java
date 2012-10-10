@@ -42,6 +42,8 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
     /** Creates new form PersonSearchVariablePanel */
     public PersonSearchVariablePanel() {
         initComponents();
+        discPowerTextField.setVisible(false);
+        discPowerjLabel.setVisible(false);
         compareAlgorithmComboBox.setModel(new javax.swing.DefaultComboBoxModel(CompareAlgorithms.values()));
     }
 
