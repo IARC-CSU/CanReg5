@@ -1,5 +1,5 @@
-#LyX 2.0 created this file. For more info see http://www.lyx.org/
-\lyxformat 413
+#LyX 1.6.10 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
 \begin_document
 \begin_header
 \textclass book
@@ -20,26 +20,18 @@
 \end_preamble
 \options portrait
 \use_default_options false
-\maintain_unincluded_children false
 \language english
-\language_package default
 \inputencoding latin1
-\fontencoding global
 \font_roman default
 \font_sans default
 \font_typewriter default
 \font_default_family default
-\use_non_tex_fonts false
 \font_sc false
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
 
 \graphics default
-\default_output_format default
-\output_sync 0
-\bibtex_command default
-\index_command default
 \paperfontsize 12
 \spacing single
 \use_hyperref true
@@ -60,31 +52,20 @@
 \use_geometry false
 \use_amsmath 1
 \use_esint 1
-\use_mhchem 1
-\use_mathdots 1
 \cite_engine basic
 \use_bibtopic false
-\use_indices false
 \paperorientation portrait
-\suppress_date false
-\use_refstyle 0
-\index Index
-\shortcut idx
-\color #008000
-\end_index
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
-\paragraph_indentation default
+\defskip medskip
 \quotes_language english
 \papercolumns 1
 \papersides 2
 \paperpagestyle headings
 \tracking_changes false
 \output_changes false
-\html_math_output 0
-\html_css_as_file 0
-\html_be_strict false
+\author "" 
 \end_header
 
 \begin_body
@@ -216,7 +197,7 @@ name "sub:A-short-introduction"
 \align left
 New in CanReg5 is the three level table structure.
  Where CanReg4
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -258,7 +239,7 @@ One way around this is to put all the fields related to the source table
 \align left
 The best way, but a more time consuming one, is to set up the source table
  (by editing the system definition XML
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -287,7 +268,7 @@ You can of course choose not to use the source table, as well - just record
 \family sans
 \series bold
 Forum
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -299,7 +280,7 @@ forum
 \end_inset
 
 , Issue tracker
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -311,7 +292,7 @@ issue tracker
 \end_inset
 
 , community site
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -329,7 +310,7 @@ site
 \end_inset
 
 , twitter
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -380,7 +361,7 @@ If you encounter any problems please provide a description of it along with
  speed etc.) Also it would be very useful if you can precise the 
 \series bold
 version
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -396,7 +377,7 @@ version
  and the
 \series bold
  build code
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -477,7 +458,7 @@ target "http://twitter.com/canreg"
 \family sans
 \series bold
 Getting hold of the latest version
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -577,7 +558,7 @@ Checking if you have the latest version of CanReg installed.
 \begin_layout Standard
 \align left
 (If you have version 4.99.0 or no CanReg5 at all you can 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -606,7 +587,7 @@ Logfile
 \begin_layout Standard
 \align left
 CanReg generates a 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -617,7 +598,7 @@ logfile
 
 logfile when you run it.
  This file is called 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -655,7 +636,6 @@ hor_pos "c"
 has_inner_box 1
 inner_pos "t"
 use_parbox 0
-use_makebox 0
 width "100col%"
 special "none"
 height "1in"
@@ -757,7 +737,7 @@ name "sec:Installing-and-running"
 
 \begin_layout Chapter
 Software installation
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -769,7 +749,7 @@ installation
 \end_inset
 
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -801,7 +781,7 @@ name "sub:Java-Runtime-Environment"
 Install a recent Java Runtime Environment
 \family default
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -823,7 +803,7 @@ Environment
 
 \series default
  
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -987,7 +967,7 @@ reference "sub:R"
 \family sans
 \series bold
 Un-install
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1009,7 +989,7 @@ If you wish to un-install CanReg5, delete the following folders (or rename
 \end_inset
 
 .CanRegClient
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1019,7 +999,7 @@ status open
 \end_inset
 
  and .CanRegServer
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1033,7 +1013,7 @@ status open
 
 \begin_layout Standard
 (On Windows you can get to your user folder
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1066,7 +1046,7 @@ First launch
 \family sans
 \series bold
 Run
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1164,7 +1144,7 @@ The welcome window
 
 \family sans
 \series bold
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1230,7 +1210,7 @@ name "sub:Install-a-new"
 \align left
 If you want to install an already provided system definition (for example
  the demo system
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1302,7 +1282,7 @@ Convert the CanReg4 system definitions
 \begin_layout Standard
 \align left
 If you have a CanReg4
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1312,7 +1292,7 @@ CanReg4
 \end_inset
 
  system you can use tools built into CanReg to help you migrate
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1528,7 +1508,7 @@ Save
 
 .
  You have now created an XML
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1567,7 +1547,7 @@ System.)
 \family sans
 \series bold
 Setting up or modifying a CanReg system
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1579,7 +1559,7 @@ modifying a CanReg system
 \end_inset
 
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1669,7 +1649,7 @@ Set up new database
 \begin_layout Standard
 \align left
 Please click Load XML
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1707,7 +1687,7 @@ Please note that certain modifications done using this tool will impact
 \align left
 When this has loaded you'll see all the info specifying this CanReg system.
  On the top you can specify the registry name, registry code
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1718,7 +1698,7 @@ registry code
 
  and region of the registry.
  Below you have a list of the Dictionaries
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1728,7 +1708,7 @@ dictionary
 \end_inset
 
 , then the Group
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1738,7 +1718,7 @@ group
 \end_inset
 
 s and then the Variable
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1780,7 +1760,7 @@ Clicking edit on any button related to a dictionary, group or variable brings
 
 \series bold
 Modifying a dictionary
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1809,7 +1789,7 @@ dictionary
 \begin_layout Standard
 \align left
 Using the dictionary editor
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1912,7 +1892,7 @@ Locked:
 
 \series bold
 Modifying a group
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1943,7 +1923,7 @@ group
 \begin_layout Standard
 \align left
 Using the group editor
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1969,7 +1949,7 @@ Name:
 
 \series bold
 Modifying a variable
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -1999,7 +1979,7 @@ variable
 \begin_layout Standard
 \align left
 Using the variable editor
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2218,7 +2198,7 @@ Dictionary
 \end_inset
 
  as type of variable you'll have to choose a dictionary
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2275,7 +2255,7 @@ Set up person search variables
 \align left
 Using this editor you can change the variables that come into play during
  person search
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2285,7 +2265,7 @@ person search
 \end_inset
 
  in CanReg5, and their respective weights
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2295,7 +2275,7 @@ weights
 \end_inset
 
  and minimum match
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2331,7 +2311,7 @@ Coding
 \begin_layout Standard
 \align left
 Here you can change some coding
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2367,7 +2347,7 @@ Settings
 \begin_layout Standard
 \align left
 Here you can change some settings
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2391,7 +2371,7 @@ Saving the system
 \begin_layout Standard
 \align left
 By clicking Save XML
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2418,7 +2398,7 @@ your system code
 \family sans
 \series bold
 Launching the CanReg server
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2444,7 +2424,7 @@ Login
 
  on the welcome screen of CanReg you get the login screen.
  To launch the CanReg server
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2489,7 +2469,7 @@ Launch Server
 \begin_layout Standard
 \align left
 If you get a java firewall
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2538,7 +2518,7 @@ If your database is encrypted you will get a message regarding this and
 \begin_layout Standard
 When the CanReg5 server is running on your machine you should see an icon
  in your notification area
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2565,7 +2545,7 @@ notification area
 \family sans
 \series bold
 Login
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2604,7 +2584,7 @@ Locally
 \begin_layout Standard
 \align left
 If you want to log in to a CanReg server running on your local machine
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2704,7 +2684,7 @@ In a network
 \align left
 If you want to log on to a CanReg server running on another machine in your
  network
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2715,7 +2695,7 @@ network
 
  you need to know the address of that machine.
  (Either it's IP address
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2725,7 +2705,7 @@ IP address
 \end_inset
 
  or name on the network
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -2927,7 +2907,7 @@ not
 \family sans
 \series bold
 Import the dictionaries
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -3130,7 +3110,7 @@ Edit dictionary
 \family sans
 \series bold
 Import the data
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -3154,7 +3134,7 @@ name "sub:Import-the-data"
 \begin_layout Standard
 \align left
 Make sure to export the most updated data from your 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -3372,7 +3352,7 @@ Open
 \end_inset
 
 File encoding
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -3398,7 +3378,7 @@ Set
 \end_inset
 
 Separating character
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -3550,7 +3530,7 @@ Refresh Table
 \family sans
 \series bold
 Import data from other programs
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -3628,7 +3608,7 @@ Welcome screen
 \begin_layout Standard
 \align left
 There are two options in this CanReg5 welcome screen
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -3819,7 +3799,7 @@ reference "sub:Install-a-new"
 
 \family sans
 \series bold
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -3897,7 +3877,7 @@ If you have made changes to the database, use this button to update the
 
 \begin_layout Subsection
 Table
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -3917,7 +3897,7 @@ This lets you select the table to look at.
 
 \begin_layout Subsection
 Sorty by
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -3944,7 +3924,7 @@ The records will be ordered (or sorted) by the variable chosen.
 
 \begin_layout Subsection
 Range
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4004,7 +3984,7 @@ Range End = 20019999
 
 \begin_layout Subsection
 Filter
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4042,7 +4022,7 @@ To select records.
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="10" columns="2">
-<features tabularvalignment="middle">
+<features>
 <column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="75line%">
 <row>
@@ -4051,7 +4031,7 @@ To select records.
 
 \begin_layout Plain Layout
 Operator
-\begin_inset Index idx
+\begin_inset Index
 status collapsed
 
 \begin_layout Plain Layout
@@ -4265,7 +4245,7 @@ If you know the exact value you want to return for at least one of the columns.
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="3" columns="2">
-<features tabularvalignment="middle">
+<features>
 <column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="0">
 <row>
@@ -4274,7 +4254,7 @@ If you know the exact value you want to return for at least one of the columns.
 
 \begin_layout Plain Layout
 Logical Operator
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4387,7 +4367,7 @@ topog LIKE '50%' (for all Breast cases.)
 
 \begin_layout Subsection
 Filter wizard
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4528,7 +4508,7 @@ Topog = ‘220’ AND (Basis=’1’ OR Basis=’2’)
 
 \begin_layout Subsection
 Display variables
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4573,7 +4553,7 @@ Click on a "radio button" above to display either:
 
 \begin_layout Subsection
 Navigate buttons
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4597,7 +4577,7 @@ Click on the Navigation buttons below to move record: Top, Bottom, Up, Down.
 
 \begin_layout Section
 Edit record
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4618,7 +4598,7 @@ record
 \begin_layout Standard
 \align left
 To get to a data entry form either press Create New Record
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4707,7 +4687,7 @@ With the mouse, simply click on the variable you wish to edit, or on the
 \begin_layout Standard
 \align left
 The pink fields
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4717,7 +4697,7 @@ pink fields
 \end_inset
 
  are the mandatory
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4737,7 +4717,7 @@ When you have finished entering the data, you must perform the checks as
 
 \begin_layout Subsection
 System variables
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4761,7 +4741,7 @@ After data entry, you must perform the following steps:
 
 \begin_layout Paragraph
 Person Search
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4785,7 +4765,7 @@ Searches for any records that might belong to the same person.
 
 \begin_layout Paragraph
 Check
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4812,7 +4792,7 @@ reference "sub:Check"
 
 \begin_layout Paragraph
 Record Status
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4840,7 +4820,7 @@ All new records are set to "Pending" and cannot be "Confirmed" until the
 
 \begin_layout Paragraph
 Save
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4875,7 +4855,7 @@ Obsolete button.
 \begin_layout Standard
 \align left
 This will flag the record as obsolete
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4885,7 +4865,7 @@ obsolete
 \end_inset
 
 , so that it will not show up in analysis
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4896,7 +4876,7 @@ analysis
 
 .
  It is a way to keep duplicate records
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4910,7 +4890,7 @@ duplicate records
 
 \begin_layout Subsection
 Check
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4951,7 +4931,7 @@ There are three sections to the checks:
 
 \begin_layout Paragraph
 Mandatory variable
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4978,7 +4958,7 @@ Indicates any variables, defined as mandatory for your Registry, that have
 
 \begin_layout Paragraph
 First Name
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -4990,7 +4970,7 @@ name
 \end_inset
 
  and Sex
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5013,7 +4993,7 @@ Checks the combination of First Name and Sex.
 
 \begin_layout Paragraph
 Cross checks
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5029,7 +5009,7 @@ checks
 \end_inset
 
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5067,7 +5047,7 @@ Prules.pdf
 
 \begin_layout Subsection
 Person search
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5105,7 +5085,7 @@ Otherwise, the computer only displays possibilities - YOU must decide if
 
 \begin_layout Section
 Dictionary editor
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5139,7 +5119,7 @@ The dictionary editor lets the supervisor users edit the coding schemes
 
 \begin_layout Subsection
 Export Dictionary
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5183,7 +5163,7 @@ This will import the dictionary picked by the user from the text area.
 
 \begin_layout Subsection
 Import Dictionary
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5226,7 +5206,7 @@ Population Dataset Editor
 \begin_layout Standard
 \align left
 The Population Dataset
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5236,7 +5216,7 @@ population dataset editor
 \end_inset
 
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5246,7 +5226,7 @@ population dataset
 \end_inset
 
  
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5334,7 +5314,7 @@ Some description (less than 255 characters)
 \begin_layout Itemize
 \align left
 Choose the age group structure
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5356,7 +5336,7 @@ Set the date when the population was at this amount.
 \begin_layout Itemize
 \align left
 The Standard population
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5366,7 +5346,7 @@ standard population
 \end_inset
 
  used for ASR
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5381,7 +5361,7 @@ s when building tables with this set.
 
 \begin_layout Standard
 "Age Standardised" rates
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5434,7 +5414,7 @@ Click save to save your population dataset to the database.
 
 \begin_layout Standard
 You can also take a look at the population pyramid
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5485,7 +5465,7 @@ And choosing a proper file name.
 
 \series bold
 Import population data set
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5516,7 +5496,7 @@ set
 \begin_layout Standard
 \align left
 Alternatively you can import population data sets from CanReg4
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5635,7 +5615,7 @@ Locked
 
 \begin_layout Section
 Import
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5673,7 +5653,7 @@ Data in an external file may be added to the CanReg database by importing.
 
 \begin_layout Itemize
 Tab delimited
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5687,7 +5667,7 @@ tab delimited
 
 \begin_layout Itemize
 Comma Separated Variables
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5701,7 +5681,7 @@ comma separated variables
 
 \begin_layout Itemize
 Character delimited
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5776,7 +5756,7 @@ lly.
 
 \begin_layout Subsection
 Discrepancies
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5865,7 +5845,7 @@ Perform Checks
 \begin_layout Standard
 If the data to import was not created using CanReg, or if it is a Pending
  case, then the Checks
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5888,7 +5868,7 @@ Perform Person Search
 
 \begin_layout Standard
 Normally, when importing CanReg data, the Person Search
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5909,7 +5889,7 @@ Query New First Name
 
 \begin_layout Standard
 For data that has not already passed the checks, the First Name
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5919,7 +5899,7 @@ name
 \end_inset
 
  and Sex
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5946,7 +5926,7 @@ If you are starting a new registry then you probably don't want all new
 \end_layout
 
 \begin_layout Chapter
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -5965,7 +5945,7 @@ Analysis
 \family sans
 \series bold
 Export data
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -6141,7 +6121,7 @@ Options
 
 \begin_layout Subsection
 Export file format
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -6199,7 +6179,7 @@ Excel
 
 \begin_layout Subsection
 Titles
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -6211,7 +6191,7 @@ titles
 \end_inset
 
 , variable names
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -6306,7 +6286,7 @@ name "sub:ExportVariablesSelector"
 
 \begin_layout Standard
 Select the variables to export
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -6348,7 +6328,7 @@ Date Format
 
 \begin_layout Standard
 Tick "Format Date
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -6362,7 +6342,7 @@ format date
 
 \begin_layout Standard
 Tick "Correct Unknown
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -6407,7 +6387,7 @@ This module is used to load previously made export settings or save the
 \family sans
 \series bold
 Table builder
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -6437,7 +6417,7 @@ reference "fig:Table-builder"
 \end_inset
 
 ) lets you build incidence tables
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -6564,7 +6544,7 @@ The incidence rate is defined as:
 \begin_layout Standard
 This gives an idea of the risk of getting each type of cancer - the tables
  consist of Incidence Rates by Sex, Age group and ICD10
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -6641,7 +6621,7 @@ Click
 \end_inset
 
 Population Data Set
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -6651,7 +6631,7 @@ population data set
 \end_inset
 
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -6733,7 +6713,7 @@ Then you can go to the Make tables tab to generate the actual tables.
 \end_inset
 
 Generate post script (PS) files
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7007,7 +6987,7 @@ name "sub:CanReg-and-SEER*stat"
 
 \begin_layout Standard
 CanReg provides a facility to export data to be used in the free SEER*stat
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7019,7 +6999,7 @@ SEER*Stat
 .
  (Windows only.) To do so you'll have to first get hold of and install SEER*Stat
  and SEER*Prep
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7053,7 +7033,6 @@ hor_pos "c"
 has_inner_box 1
 inner_pos "t"
 use_parbox 0
-use_makebox 0
 width "100col%"
 special "none"
 height "1in"
@@ -7441,7 +7420,7 @@ Temporary Files
 \family sans
 \series bold
 Frequency distributions
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7464,7 +7443,7 @@ distributions
 Frequencies distributions let you look at the data in your database as frequenci
 es by year.
  You can cross-tabulate
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7492,7 +7471,7 @@ cross-tabulate
 \begin_layout Standard
 \align left
 If you click Refresh table with no filter
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7543,7 +7522,7 @@ You can filter the result by adding a filter like for example on incidence
 
 \begin_layout Standard
 With the save table
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7553,7 +7532,7 @@ save table
 \end_inset
 
  button you can write the table to a comma separated file
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7563,7 +7542,7 @@ comma separated file
 \end_inset
 
  (.CSV
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7577,7 +7556,7 @@ CSV
 Excel
 \emph default
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7591,7 +7570,7 @@ Excel
 Stata
 \emph default
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7605,7 +7584,7 @@ Stata
 R
 \emph default
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7624,7 +7603,7 @@ The table can also be selected and copied and pasted into
 Excel
 \emph default
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7646,7 +7625,7 @@ Excel
 
 \begin_layout Chapter
 Management
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7670,7 +7649,7 @@ Back up and restore
 \begin_layout Standard
 \align left
 Backup
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7742,7 +7721,7 @@ Perform backup
 \end_inset
 
 Open folder containing Backup
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7761,7 +7740,7 @@ folder containing backup
 CanReg server
 \series default
  folder under Backup and 3 digit code
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7799,7 +7778,7 @@ TRN
 
 \series bold
 Restore from backup
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7957,7 +7936,7 @@ date
 \family sans
 \series bold
 Manage users
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -7980,7 +7959,7 @@ users
 \begin_layout Standard
 \align left
 The user manager
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8015,7 +7994,7 @@ Change your own password
 \begin_layout Standard
 \align left
 To change your own password
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8169,7 +8148,7 @@ Set database password
 
 \series bold
 User manager
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8192,7 +8171,7 @@ manager
 \begin_layout Standard
 \align left
 If you are logged in with Supervisor
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8211,7 +8190,7 @@ reference "fig:User-manager"
 
 .) This allows you to add and delete users.
  Each user has their own login name
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8221,7 +8200,7 @@ login name
 \end_inset
 
 , password
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8231,7 +8210,7 @@ password
 \end_inset
 
  and permission level
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8245,7 +8224,7 @@ permission level
 
 \begin_layout Itemize
 A Supervisor
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8259,7 +8238,7 @@ supervisor
 
 \begin_layout Itemize
 A Registrar
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8269,7 +8248,7 @@ registrar
 \end_inset
 
  can perform most of data entry except to confirm rare cases
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8285,7 +8264,7 @@ rare cases
 
 \begin_layout Itemize
 An Analyst
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8345,7 +8324,7 @@ User manager
 \begin_layout Standard
 \align left
 To add a new user, click “Add user
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8356,7 +8335,7 @@ add user
 
 ” fill in the user's login name.
  This will create a default user with registrar permissions
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8373,7 +8352,7 @@ permissions
 \begin_layout Standard
 \align left
 You can change a permission level for a user and hit "Update user
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8383,7 +8362,7 @@ update user
 \end_inset
 
 ", or delete a user
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8394,7 +8373,7 @@ delete user
 
  by selecting the user and then clicking the "Delete" button.
  The default password
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8409,7 +8388,7 @@ default password
 
 \begin_layout Section
 Quality control
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8442,7 +8421,7 @@ Name and sex
 
 \begin_layout Standard
 Click the button "Show First name
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8452,7 +8431,7 @@ name
 \end_inset
 
 s by Sex
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8494,7 +8473,7 @@ However, if you have made corrections and some names are in the wrong category,
 Person search
 \series medium
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8525,7 +8504,7 @@ Advanced
 
 \begin_layout Standard
 Change weights
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8535,7 +8514,7 @@ weights
 \end_inset
 
  and search variables
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8575,7 +8554,7 @@ Results from the search appears here as potential duplicates are found.
 
 \begin_layout Section
 Options
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8600,7 +8579,7 @@ options
 
 \begin_layout Subsection
 Language
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8621,7 +8600,7 @@ Change language of CanReg5.
 
 \begin_layout Subsection
 Look & Feel
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8671,7 +8650,7 @@ Show only outline
 
 \begin_layout Standard
 The “Show only outline
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8687,7 +8666,7 @@ only outline
 
 \begin_layout Subsection
 Periodic backup
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8716,7 +8695,7 @@ Reminder backup options
 
 \begin_layout Subsection
 CanReg version
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8745,7 +8724,7 @@ version
 
 \begin_layout Standard
 Let the program check to see if the latest version
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8818,7 +8797,7 @@ Appendix
 \family sans
 \series bold
 Frequently asked questions
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8842,7 +8821,7 @@ questions
 \end_inset
 
  (FAQ
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8860,7 +8839,7 @@ FAQ
 
 \series bold
 Server
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8887,7 +8866,7 @@ When I click the
 \end_inset
 
 Launch Server
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -8990,7 +8969,7 @@ When I try to log on to the CanReg server I get the message:
 
 Exception creating connection to: aaa.bbb.ccc.ddd; nested exception is: java.net.Sock
 etException: Malformed reply from SOCKS server
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9022,7 +9001,7 @@ A:
 Q: 
 \series default
 Is CanReg5 only designed for local networks or does it allow remote registration
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9042,7 +9021,7 @@ A:
 \series default
  CanReg5 is designed for local networks, yes, but traffic is over standard
  TCP/IP
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9052,7 +9031,7 @@ TCP/IP
 \end_inset
 
  so you can tunnel
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9062,7 +9041,7 @@ tunnel
 \end_inset
 
  this through secure channels (SSH
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9072,7 +9051,7 @@ SSH
 \end_inset
 
 /VPN
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9090,7 +9069,7 @@ VPN
 
 \series bold
 Conversion CanReg4
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9102,7 +9081,7 @@ CanReg4
 \end_inset
 
  to CanReg5
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9123,7 +9102,7 @@ conversion CanReg4 to CanReg5
 Q:
 \series default
  In what table should the variable age
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9181,7 +9160,7 @@ install
 \end_inset
 
  it afterwards as the XML
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9191,7 +9170,7 @@ XML
 \end_inset
 
  file is automatically copied to your system folder
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9211,7 +9190,7 @@ system folder
 Q: 
 \series default
 I get errors during import
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9232,7 +9211,7 @@ errors during import
 A: 
 \series default
 Try exporting your data with a comma separated variables
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9263,7 +9242,7 @@ In CanReg5, how do you clear previous data and import fresh ones from canreg4.
 A: 
 \series default
 To clear the previous data
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9274,7 +9253,7 @@ clear the previous data
 
  from CanReg5 you need to delete the database files.
  These can be found in your user folder
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9307,7 +9286,7 @@ Database ).
 
 \series bold
 Dictionary
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9328,7 +9307,7 @@ dictionary
 Q:
 \series default
  Can I import dictionaries
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9362,7 +9341,7 @@ name "sub:Tables"
 \end_inset
 
 Analysis
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9374,7 +9353,7 @@ analysis
 \end_inset
 
 /tables
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9395,7 +9374,7 @@ tables
 Q:
 \series default
  What program can I use to view the post script files
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9419,7 +9398,7 @@ A:
  and most Linux-distributions (Ubuntu, RedHat, SuSE etc) come with a tool
  to view them by default.
  On Windows the tool I recommend is the open sourced and free GSview
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9437,7 +9416,7 @@ target "http://pages.cs.wisc.edu/~ghost/gsview/"
 \end_inset
 
  ) To run GS View you need to install Ghostscript
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9498,7 +9477,7 @@ target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe"
 
 \series bold
 Import
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9531,7 +9510,7 @@ A:
 If the data is from a program that does not code the data using Unicode
  (for example previous versions of CanReg) you need to specify the coding
  scheme
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9545,7 +9524,7 @@ coding scheme
 \end_inset
 
 codepage
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9606,7 +9585,7 @@ reference "sub:Issues-with-memory"
 
 \begin_layout Section
 Database design
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9627,7 +9606,7 @@ database design
 Q: 
 \series default
 What is the minimum data set
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9679,7 +9658,7 @@ status open
 
 \begin_layout Itemize
 Name
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9700,7 +9679,7 @@ String, According to local usage, but at least one, eg First name, Middle
 \end_deeper
 \begin_layout Itemize
 Gender/Sex
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9838,7 +9817,7 @@ Minimum variables.
 Q:
 \series default
  In what database table
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9863,7 +9842,7 @@ patient
  table
 \series bold
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9891,7 +9870,7 @@ tumour
  table
 \series bold
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -9958,7 +9937,7 @@ First of all, before adding or removing variables using the built in tool
 
 \begin_layout Section
 Install/update CanReg5
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -10006,7 +9985,7 @@ Known issues
 \family sans
 \series bold
 Known bugs
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -10018,7 +9997,7 @@ bugs
 \end_inset
 
  (errors
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -10082,7 +10061,7 @@ Category: Tables
 \family sans
 \series bold
 Known limitations
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -10166,7 +10145,7 @@ Category: Database/Browser
 \end_deeper
 \begin_layout Chapter
 Migrating
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -10178,7 +10157,7 @@ migrate
 \end_inset
 
  from CanReg4
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -10207,7 +10186,7 @@ reference "sec:Installing-and-running"
 
 \begin_layout Section
 Step 1 - Import the variable definitions
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -10219,7 +10198,7 @@ import variable definitions
 \end_inset
 
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -10336,7 +10315,7 @@ The program presents an initial proposal that you might agree with, but
 \begin_layout Enumerate
 Click “Save”.
  You have now created an XML
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -10422,7 +10401,7 @@ Click “Login”.
 \end_deeper
 \begin_layout Section
 Step 2 - Import the dictionary
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -10434,7 +10413,7 @@ import dictionary
 \end_inset
 
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -10446,7 +10425,7 @@ dictionary
 \end_inset
 
  from your CanReg4
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -10558,7 +10537,7 @@ ies have been imported.
 
 \begin_layout Section
 Step 3 - Import the data
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -10570,7 +10549,7 @@ import data from CanReg4
 \end_inset
 
 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -10582,7 +10561,7 @@ import data
 \end_inset
 
  from your CanReg4
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -11431,7 +11410,7 @@ name "sub:CanReg-and-R"
 \end_inset
 
 CanReg and R
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12103,7 +12082,7 @@ Java Runtime Environment
 
 \begin_layout Standard
 To run CanReg at all you need a Java Runtime Environment
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12113,7 +12092,14 @@ Java Runtime Environment
 \end_inset
 
 .
- You can get it from http://java.com/en/download/manual.jsp.
+ You can get it from 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://java.com/en/download/manual.jsp"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -12222,7 +12208,7 @@ target "http://www.r-project.org/"
 
 \begin_layout Standard
 To download R
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12289,7 +12275,7 @@ Epi Info
 
 \begin_layout Standard
 From the Epi Info
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12354,7 +12340,7 @@ From the SEER website:
 \end_inset
 
 The SEER*Stat
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12375,7 +12361,7 @@ SEER*Stat
 
 \begin_layout Standard
 To get your data from CanReg to SEER*Stat you need to go via SEER*Prep
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12438,7 +12424,7 @@ target "http://www.sofastatistics.com/home.php"
 
 \begin_layout Section
 Data cleaning and record linkage
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12454,7 +12440,7 @@ data cleaning
 
 \begin_layout Subsection
 Google Refine
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12489,7 +12475,7 @@ target "http://code.google.com/p/google-refine/"
 
 \begin_layout Subsection
 Talend Open Studio
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12556,9 +12542,54 @@ target "http://fril.sourceforge.net/index.html"
 
 \end_layout
 
+\begin_layout Subsection
+LinkPlus
+\end_layout
+
+\begin_layout Standard
+From the CDC website:
+\end_layout
+
+\begin_layout Quote
+\begin_inset Quotes eld
+\end_inset
+
+Link Plus is a probabilistic record linkage program developed at CDC's Division
+ of Cancer Prevention and Control in support of CDC's National Program of
+ Cancer Registries (NPCR).
+ Link Plus is a record linkage tool for cancer registries.
+ It is an easy-to-use, standalone application for Microsoft® Windows® that
+ can run in two modes—
+\end_layout
+
+\begin_layout Quote
+To detect duplicates in a cancer registry database.
+ To link a cancer registry file with external files.
+ Although originally designed to be used by cancer registries, the program
+ can be used with any type of data in fixed width or delimited format.
+ Used extensively across a diversity of research disciplines, Link Plus
+ is rapidly becoming an essential linkage tool for researchers and organizations
+ that maintain public health data.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+More information about it on: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.cdc.gov/cancer/npcr/tools/registryplus/lp.htm"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Data security
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12574,7 +12605,7 @@ data security
 
 \begin_layout Subsection
 GnuPG
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12643,7 +12674,7 @@ Enigmail
 \end_deeper
 \begin_layout Subsection
 TrueCrypt
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12659,7 +12690,7 @@ TrueCrypt
 
 \begin_layout Itemize
 Free open-source disk encryption
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12705,7 +12736,7 @@ name "sub:PostScript-Viewer"
 \end_inset
 
 PostScript Viewer
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12723,7 +12754,7 @@ viewer
 
 \series default
  
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12744,7 +12775,7 @@ files
 \begin_layout Standard
 \align left
 Some of the tables generated by CanReg5 are PostScipt files
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12764,7 +12795,7 @@ postscipt files
 \begin_layout Standard
 \align left
 On Windows, the tool I recommend is the open sourced and free GSview
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -12780,7 +12811,7 @@ GSview
 \begin_layout Standard
 \align left
 To run GS View you need to install 
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -13416,7 +13447,7 @@ The Soundex library is copyright 1996-2002 Ian F.
 \family sans
 \series bold
 Changelog
-\begin_inset Index idx
+\begin_inset Index
 status open
 
 \begin_layout Plain Layout
@@ -13444,7 +13475,6 @@ lstparams "basicstyle={\\small},breaklines=true,lineskip=0pt"
 \begin_layout Standard
 \begin_inset CommandInset index_print
 LatexCommand printindex
-type "idx"
 
 \end_inset
 
