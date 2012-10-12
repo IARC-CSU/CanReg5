@@ -87,7 +87,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
             variableNames[i] = psv.getName();
             variableWeights[i] = psv.getWeight();
             discPower[i] = psv.getDiscPower();
-            reliability[i] = psv.getWeight()/100; // weight is not in the formula!
+            reliability[i] = psv.getReliability();
             presence[i] = psv.getPresence();
             i++;
         }
@@ -99,9 +99,10 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
             float dis = discPower[varb];
             float rel = reliability[varb];
             float pres = presence[varb];
+            float weigth = variableWeights[varb];
 
             int sim = 100;
-            float maxscore = scoreFunction(dis, rel, pres, sim);
+            float maxscore = scoreFunction(dis, rel, pres, sim, weigth);
             maximumTotalScore += maxscore;
         }
     }
@@ -176,10 +177,11 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                     float dis = discPower[link];
                     float rel = reliability[link];
                     float pres = presence[link];
-                    score = scoreFunction(dis, rel, pres, similarity);
+                    float weigth = variableWeights[link];
+                    score = scoreFunction(dis, rel, pres, similarity, weigth);
                 }
-                //String s = LinkField1[link]+", "+LinkField2[link]+"  Sim:"+Integer.toString(Similarity)+"  Score:"+undup.FloatToStr(Score, 1);
-                //DEPeditsInst.Warning (s);
+                // String s = LinkField1[link]+", "+LinkField2[link]+"  Sim:"+Integer.toString(Similarity)+"  Score:"+undup.FloatToStr(Score, 1);
+                // DEPeditsInst.Warning (s);
                 // similDisp[link] = Similarity;
                 // scoreDisp[link] = score;
                 TotalScore += score;
@@ -439,11 +441,16 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         return (int) score;
     }
 
-    private float scoreFunction(float dis, float rel, float pres, float sim) {
-        float Score = (sim / 5) * (2 + 4 * rel + 3 * dis) - 60 * rel - 20; // 2007
-        //float	Score = (sim / 6) * (2 +4*rel +3*dis + rel*dis) - 6*rel -2;	//	20/08/2003
+    private float scoreFunction(float dis, float rel, float pres, float sim, float weigth) {
+        float Score = sim * weigth; // 2012
         return Score;
     }
+    
+//    private float scoreFunction(float dis, float rel, float pres, float sim, float weigth) {
+//        float Score = (sim / 5) * (2 + 4 * rel + 3 * dis) - 60 * rel - 20; // 2007
+//        //float	Score = (sim / 6) * (2 +4*rel +3*dis + rel*dis) - 6*rel -2;	//	20/08/2003
+//        return Score;
+//    }
 
     /**
      * 
@@ -466,7 +473,11 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     private int compareSoundex(String patient1data, String patient2data) {
         String soundex1 = Soundex.soundex(patient1data);
         String soundex2 = Soundex.soundex(patient2data);
-        return compareCodes(soundex1, soundex2);
+        if (soundex1.equals(soundex2)) {
+            return 100;
+        } else {
+            return 0;
+        }
     }
 
     @Override
