@@ -137,6 +137,9 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
      */
     public String getFilter() {
         if (useFilterCheckBox.isSelected()) {
+            // since database is not case sensitive - we uppercase the filter using our standard method...
+            // TODO: Check this against Turkish.
+            // return Tools.toUpperCaseStandardized(filterComboBox.getSelectedItem().toString().trim());
             return filterComboBox.getSelectedItem().toString().trim();
         } else {
             return "";
