@@ -1,5 +1,70 @@
-changeset:   1065:0743a4591d8c
+changeset:   1078:d738afa7b6e3
 tag:         tip
+user:        ErvikM@x90164
+date:        Wed Oct 17 17:35:08 2012 +0200
+summary:     Instructions updated.
+
+changeset:   1077:157ab11a7f09
+user:        ErvikM@x90164
+date:        Wed Oct 17 14:46:59 2012 +0200
+summary:     Refactored the system definition converter.
+
+changeset:   1076:35f870a3181d
+user:        ErvikM@x90164
+date:        Wed Oct 17 14:45:45 2012 +0200
+summary:     Refactored the system definition converter.
+
+changeset:   1075:fdf2175c93cb
+user:        ErvikM@x90164
+date:        Wed Oct 17 14:44:23 2012 +0200
+summary:     Refactored the system definition converter and fixed a bug occurring when a short name of a variable was a registered word.
+
+changeset:   1074:474f451c60e9
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Oct 12 10:52:49 2012 +0200
+summary:     Back from Turkey.
+
+changeset:   1073:6bd8f1b86df9
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Oct 12 10:29:11 2012 +0200
+summary:     Some experiments with bugs in Turkish language. (Not activated yet.)
+
+changeset:   1072:444e4d6761ff
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Fri Oct 12 09:38:59 2012 +0200
+summary:     Fixed a bug in the person search where weights of the links were not taken into account.
+
+changeset:   1071:537d6ede74b4
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Oct 10 11:01:01 2012 +0200
+summary:     Fixed bug occuring when top or morph did not have the appropriate length in the ICD03 to 10 module.
+
+changeset:   1070:acaf04fc4979
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Oct 10 10:56:55 2012 +0200
+summary:     PersonSearchPanel: hide the disc power for now.
+
+changeset:   1069:15984d1fed87
+user:        Morten Johannes ERVIK <ervikm@iarc.fr>
+date:        Wed Oct 10 10:54:38 2012 +0200
+summary:     Fixed a bug in the import function where the character set of the imported files were sometimes not taken into consideration.
+
+changeset:   1068:d8557f73b07c
+user:        ErvikM@x90164
+date:        Fri Oct 05 16:21:58 2012 +0200
+summary:     Instructions and future updated.
+
+changeset:   1067:c7ea88bc4c9b
+user:        ErvikM@x90164
+date:        Fri Oct 05 16:20:22 2012 +0200
+summary:     Started working on fixes for the person search bug.
+
+changeset:   1066:97e4de94da49
+user:        ErvikM@x90164
+date:        Wed Sep 05 12:02:14 2012 +0200
+summary:     5.22
+
+changeset:   1065:0743a4591d8c
 user:        ErvikM@x90164
 date:        Wed Aug 29 14:21:59 2012 +0200
 summary:     Added too many parentheses in last update...
