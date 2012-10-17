@@ -256,7 +256,7 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
             sdc.setNameField(nameTextField);
             sdc.setCodeField(codeField);
             sdc.setFileEncoding((Charset) charsetsComboBox.getSelectedItem());
-            sdc.convert(fileNameTextField.getText());
+            sdc.convertAndSaveInSystemFolder(fileNameTextField.getText());
 
             int addServer = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("SUCCESSFULLY_CREATED_XML: ") + "\'"
                     + Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR
