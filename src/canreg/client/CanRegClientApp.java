@@ -1404,7 +1404,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                     Charset cs = Charset.forName(args[2]);
                     sdc.setFileEncoding(cs);
                 }
-                sdc.convert(args[1]);
+                sdc.convertAndSaveInSystemFolder(args[1]);
             } catch (FileNotFoundException ex) {
                 System.out.println(args[1] + " not found. " + ex);
                 Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
