@@ -38,7 +38,7 @@ public class DatabaseVariablesPanel extends DatabaseElementsPanel {
     @Action
     @Override
     public void addAction() {
-        DatabaseVariablesListElement variable = new DatabaseVariablesListElement(Globals.PATIENT_TABLE_NAME, 1, "Default name", Globals.VARIABLE_TYPE_ALPHA_NAME);
+        DatabaseVariablesListElement variable = new DatabaseVariablesListElement(Globals.PATIENT_TABLE_NAME, 1, "", Globals.VARIABLE_TYPE_ALPHA_NAME);
         variable.setGroup(defaultGroup);
         add(variable);
     }
@@ -88,6 +88,9 @@ public class DatabaseVariablesPanel extends DatabaseElementsPanel {
 
     public DatabaseVariablesListElement isThisStandardVariableAlreadyMapped(String variableName) {
         DatabaseVariablesListElement element;
+        if (variableName.trim().length()==0){
+            return null;
+        }
         for (DatabaseElementPanel elementPanel : elementPanelsSet) {
             element = (DatabaseVariablesListElement) elementPanel.getDatabaseElement();
             if (element.getStandardVariableName() != null && variableName.equalsIgnoreCase(element.getStandardVariableName())) {
