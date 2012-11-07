@@ -125,15 +125,19 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
     public void okAction() {
         try {
             databaseVariableEditor.refreshDatabaseVariablesListElement();
-            if (originalLength != databaseVariablesListElement.getVariableLength()
-                    || !originalName.equals(databaseVariablesListElement.getDatabaseVariableName())
-                    || !originalTable.equals(databaseVariablesListElement.getDatabaseTableName())
-                    || (originallyNumeric && !databaseVariablesListElement.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME))
-                    || (!originallyNumeric && databaseVariablesListElement.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME))) {
-                listener.actionPerformed(new ActionEvent(this, 0, DatabaseElementPanel.STRUCTURE_CHANGE_ACTION));
+            if (databaseVariablesListElement.getDatabaseVariableName().length() == 0) {
+                JOptionPane.showInternalMessageDialog(rootPane, "Short name can't be empty...");
+            } else {
+                if (originalLength != databaseVariablesListElement.getVariableLength()
+                        || !originalName.equals(databaseVariablesListElement.getDatabaseVariableName())
+                        || !originalTable.equals(databaseVariablesListElement.getDatabaseTableName())
+                        || (originallyNumeric && !databaseVariablesListElement.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME))
+                        || (!originallyNumeric && databaseVariablesListElement.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME))) {
+                    listener.actionPerformed(new ActionEvent(this, 0, DatabaseElementPanel.STRUCTURE_CHANGE_ACTION));
+                }
+                listener.actionPerformed(new ActionEvent(this, 0, UPDATED));
+                this.dispose();
             }
-            listener.actionPerformed(new ActionEvent(this, 0, UPDATED));
-            this.dispose();
         } catch (DatabaseVariablesListException ex) {
             JOptionPane.showInternalMessageDialog(rootPane, ex.getDatabaseVariablesListElement().getDatabaseVariableName() + " : " + ex.getError());
             Logger.getLogger(DatabaseVariableEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
