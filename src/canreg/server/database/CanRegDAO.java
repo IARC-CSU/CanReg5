@@ -535,8 +535,8 @@ public class CanRegDAO {
     public synchronized String performBackup() {
         String path = null;
         try {
-            path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + systemCode);
-            canreg.server.xml.Tools.writeXmlFile(doc, path + Globals.FILE_SEPARATOR + systemCode + ".xml");
+            path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + getSystemCode());
+            canreg.server.xml.Tools.writeXmlFile(doc, path + Globals.FILE_SEPARATOR + getSystemCode() + ".xml");
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -720,7 +720,7 @@ public class CanRegDAO {
         try {
             dbProperties.remove("shutdown");
             dbConnection.close(); // Close current connection.
-            dbProperties.put("restoreFrom", path + "/" + systemCode);
+            dbProperties.put("restoreFrom", path + "/" + getSystemCode());
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
             bRestored = true;
         } catch (SQLException ex2) {
@@ -733,8 +733,8 @@ public class CanRegDAO {
         if (bRestored) {
             try {
                 // install the xml
-                canreg.common.Tools.fileCopy(path + Globals.FILE_SEPARATOR + systemCode + ".xml",
-                        Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + systemCode + ".xml");
+                canreg.common.Tools.fileCopy(path + Globals.FILE_SEPARATOR + getSystemCode() + ".xml",
+                        Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getSystemCode() + ".xml");
             } catch (IOException ex1) {
                 Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex1);
             }
@@ -908,7 +908,7 @@ public class CanRegDAO {
      * @return String location of the database
      */
     public String getDatabaseLocation() {
-        String dbLocation = System.getProperty("derby.system.home") + "/" + systemCode;
+        String dbLocation = System.getProperty("derby.system.home") + "/" + getSystemCode();
         return dbLocation;
     }
 
@@ -917,7 +917,7 @@ public class CanRegDAO {
      * @return
      */
     public String getDatabaseUrl() {
-        String dbUrl = dbProperties.getProperty("derby.url") + systemCode;
+        String dbUrl = dbProperties.getProperty("derby.url") + getSystemCode();
         return dbUrl;
     }
 
@@ -2640,5 +2640,12 @@ public class CanRegDAO {
         success = true;
 
         return success;
+    }
+
+    /**
+     * @return the systemCode
+     */
+    public String getSystemCode() {
+        return systemCode;
     }
 }
