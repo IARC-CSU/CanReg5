@@ -567,6 +567,7 @@ public class Globals {
         "pt_PT",
         "es",
         "ru",
-        "zh"
+        "zh",
+        "tr"
     };
 }
