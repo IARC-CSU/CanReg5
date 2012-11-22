@@ -37,6 +37,7 @@ import org.w3c.dom.NodeList;
 import java.net.*;
 import java.io.*;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -1015,5 +1016,22 @@ public class Tools {
         T[] result = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, result, first.length, second.length);
         return result;
+    }
+
+    public static String combine(String[] s, String glue) {
+        int k = s.length;
+        if (k == 0) {
+            return null;
+        }
+        StringBuilder out = new StringBuilder();
+        out.append(s[0]);
+        for (int x = 1; x < k; ++x) {
+            out.append(glue).append(s[x]);
+        }
+        return out.toString();
+    }
+    
+    public static String combine(Collection<String> s, String glue){
+        return combine(s.toArray(new String[]{}), glue);
     }
 }
