@@ -560,9 +560,14 @@ public class Tools {
         Color color = baseColor;
         PiePlot plot = (PiePlot) chart.getPlot();
         for (int i = 0; i < numberOfSections; i++) {
-            plot.setSectionOutlinePaint(plot.getDataset().getKey(i), baseColor.darker().darker().darker());
-            color = darken(color);
-            plot.setSectionPaint(plot.getDataset().getKey(i), color);
+            try {
+                plot.setSectionOutlinePaint(plot.getDataset().getKey(i), baseColor.darker().darker().darker());
+                color = darken(color);
+                plot.setSectionPaint(plot.getDataset().getKey(i), color);
+            } catch (java.lang.IndexOutOfBoundsException ex){
+                // not data for all the categories - that is fine
+                Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.INFO, null, ex);
+            }
         }
     }
 
