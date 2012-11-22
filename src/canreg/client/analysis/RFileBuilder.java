@@ -24,6 +24,8 @@ import canreg.client.analysis.TableBuilderInterface.FileTypes;
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -61,34 +63,41 @@ public class RFileBuilder {
     }
 
     public void appendData(Collection<CancerCasesCount> counts, Double restCount, boolean includeOther) {
+        List<String> countsList = new LinkedList<String>();
+        List<String> labelsList = new LinkedList<String>();
+        
         StringBuilder countsLine = new StringBuilder();
         StringBuilder labelsLine = new StringBuilder();
+        
         countsLine.append("counts <- c(");
         labelsLine.append("labels <- factor(c(");
+        
         Iterator<CancerCasesCount> iter = counts.iterator();
         CancerCasesCount count;
+        
         while (iter.hasNext()) {
             count = iter.next();
-            if (count.getCount() < 1) {
-                numberFormat.setMaximumFractionDigits(2);
-                numberFormat.setMinimumFractionDigits(2);
-            } else {
-                numberFormat.setMaximumFractionDigits(1);
-                numberFormat.setMinimumFractionDigits(1);
-            }
-            countsLine.append(numberFormat.format(count.getCount()));
-            labelsLine.append("\"").append(count.getLabel()).append("\"");
-            if (iter.hasNext()) {
-                countsLine.append(", ");
-                labelsLine.append(", ");
+            if(count.getCount()>0){
+                if (count.getCount() < 1) {
+                    numberFormat.setMaximumFractionDigits(2);
+                    numberFormat.setMinimumFractionDigits(2);
+                } else {
+                    numberFormat.setMaximumFractionDigits(1);
+                    numberFormat.setMinimumFractionDigits(1);
+                }
+                countsList.add(numberFormat.format(count.getCount()));
+                labelsList.add("\""+count.getLabel()+"\"");
             }
         }
 
         if (includeOther) {
-            countsLine.append(", ").append(numberFormat.format(restCount));
-            labelsLine.append(", ").append("\"Other\"");
+            countsList.add(numberFormat.format(restCount));
+            labelsList.add("\"Other\"");
         }
 
+        countsLine.append(canreg.common.Tools.combine(countsList, ", "));
+        labelsLine.append(canreg.common.Tools.combine(labelsList, ", "));
+        
         rScript.append(countsLine).append(")\n");
         rScript.append(labelsLine).append("))\n");
         rScript.append("df = data.frame(labels, counts)\n");
@@ -129,9 +138,9 @@ public class RFileBuilder {
                     + "+ xlab(\"").append(xlab).append("\")"
                     + "+ ylab(\"Count\")"
                     + "+ geom_text(aes(label=counts), size = 3)"
-                    + "+ opts(title = \"").append(header).append("\")"
+                    + "+ labs(title = \"").append(header).append("\")"
                     + "+ scale_fill_discrete(guide=FALSE)"
-                    + "+ scale_fill_brewer(palette=\"Paired\")"
+                    + "+ scale_fill_brewer(palette=\"").append(palette).append("\")"
                     + "+ coord_flip()\n");
             // TODO: Add an option not to use ggplot?
             // rScript.append("barplot(counts, main=\"").append(header).append("\", horiz=TRUE, names.arg=labels, col=cols)\n");
@@ -147,10 +156,12 @@ public class RFileBuilder {
                     + "+ coord_polar(\"y\")"
                     + "+ ylab(\"Count\")"
                     + "+ geom_text(aes(x= 1.5, y=p, label=counts),vjust=0, size = 3)"
-                    + "+ opts(title = \"").append(header).append("\")\n");
+                    + "+ labs(title = \"").append(header).append("\")\n");
             // TODO: Add an option not to use ggplot?
             // rScript.append("pie(counts, labels = labels, main=\"").append(header).append("\", col=cols)\n");
         }
+        // common
+        
     }
 
     public void appendWriteOut() {
