@@ -48,6 +48,8 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1604,8 +1606,9 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
             for (int sex = 0; sex <= 1; sex++) {
                 Integer count;
                 try {
-
-                    count = Integer.parseInt(pdsTable.getValueAt(ageGroup, sex).toString());
+                    String s = pdsTable.getValueAt(ageGroup, sex).toString();
+                    s = s.replaceAll("[^0-9]", "");
+                    count = Integer.parseInt(s);
                 } catch (java.lang.NullPointerException npe) {
                     count = new Integer(0);
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Missing value in the pds...");
@@ -1844,31 +1847,23 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
 
     private DefaultKeyedValues2DDataset getJChartDataset() {
         DefaultKeyedValues2DDataset dataset = new DefaultKeyedValues2DDataset();
-
-        for (int i = pdsTable.getRowCount() - 1; i >= 0; i--) {
-
-            Object female = pdsTable.getValueAt(i, 1);
-            int femaleNumber = 0;
-            if (female != null) {
-                if (female instanceof Integer) {
-                    femaleNumber = (Integer) female;
-                } else {
-                    femaleNumber = Integer.parseInt(female.toString());
-                }
+        buildPDSfromTable(); // update the PDS
+        PopulationDatasetsEntry[] ageGroups = pds.getAgeGroups();
+        Arrays.sort(ageGroups, new Comparator<PopulationDatasetsEntry>() {
+            @Override
+            public int compare(PopulationDatasetsEntry o1, PopulationDatasetsEntry o2) {
+                return o2.getAgeGroup() - o1.getAgeGroup();
             }
-            dataset.addValue(femaleNumber, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("FEMALE"), ageGroupLabelsTable.getValueAt(i, 0).toString());
-
-            Object male = pdsTable.getValueAt(i, 0);
-            int maleNumber = 0;
-            if (male != null) {
-                if (male instanceof Integer) {
-                    maleNumber = (Integer) male;
-                } else {
-                    maleNumber = Integer.parseInt(male.toString());
-                }
+        });
+        for(PopulationDatasetsEntry entry : ageGroups){
+            String label = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("FEMALE");
+            int count = entry.getCount();
+            entry.getAgeGroup();            
+            if (entry.getSex() == 1) {
+                count = - count;
+                label = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("MALE");
             }
-            dataset.addValue(-maleNumber, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("MALE"), ageGroupLabelsTable.getValueAt(i, 0).toString());
-
+            dataset.addValue(count, label, ageGroupLabelsTable.getValueAt(entry.getAgeGroup(),0).toString());
         }
         return dataset;
     }
