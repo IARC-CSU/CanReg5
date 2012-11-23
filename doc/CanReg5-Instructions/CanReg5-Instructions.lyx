@@ -5065,6 +5065,14 @@ For more information on these checks please see: http://www.iacr.com.fr/TechRep4
 Prules.pdf
 \end_layout
 
+\begin_layout Standard
+(The following checks are implemented in CanReg5: "Age and Morphology",
+ "Age and Topography", "Age, IncidenceDate, and BirthDate", "Age, Topography,
+ and Morphology", "Basis", "DateOfLastContact", "Grade", "Morphology", "Sex
+ and Morphology", "Sex and Topography", "Topography and Behaviour", "Topography
+ and Morphology", and "Topography".)
+\end_layout
+
 \begin_layout Subsection
 Person search
 \begin_inset Index idx

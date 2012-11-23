@@ -1,5 +1,60 @@
-changeset:   1078:d738afa7b6e3
+changeset:   1089:487ab7fd460c
 tag:         tip
+user:        ErvikM@x90164
+date:        Fri Nov 23 10:10:41 2012 +0100
+summary:     Improved error handling in the population dataset editor.
+
+changeset:   1088:25dd0e2e7030
+user:        ErvikM@x90164
+date:        Thu Nov 22 17:38:22 2012 +0100
+summary:     The latest ggplot2 no longer allows options(title=”bladibla”), but you need to do labs(title=”bladibla”). Fixed this.
+
+changeset:   1087:eedb7ea45dd8
+user:        ErvikM@x90164
+date:        Thu Nov 22 17:37:19 2012 +0100
+summary:     The latest ggplot2 no longer allows options(title=”bladibla”), but you need to do labs(title=”bladibla”). Fixed this.
+
+changeset:   1086:2fcec7c9278d
+user:        ErvikM@x90164
+date:        Thu Nov 22 17:35:59 2012 +0100
+summary:     The latest ggplot2 no longer allows options(title=”bladibla”), but you need to do labs(title=”bladibla”). Fixed this.
+
+changeset:   1085:c10833ce75de
+user:        ErvikM@x90164
+date:        Fri Nov 16 10:49:04 2012 +0100
+summary:     Turkish translation started.
+
+changeset:   1084:c7ad268008eb
+user:        ErvikM@x90164
+date:        Fri Nov 16 10:48:33 2012 +0100
+summary:     Turkish translation started.
+
+changeset:   1083:17afeff64abb
+user:        ErvikM@x90164
+date:        Thu Nov 15 16:54:15 2012 +0100
+summary:     Added a getSystemCode function.
+
+changeset:   1082:9575ece9a69d
+user:        ErvikM@x90164
+date:        Wed Nov 07 10:18:54 2012 +0100
+summary:     Fixed a bug when selecting no standard variable.
+
+changeset:   1081:2a4d14733b6c
+user:        ErvikM@x90164
+date:        Wed Nov 07 10:18:08 2012 +0100
+summary:     Modify Database Structure: Short name of new variables no longer default to "Default name" and there is now a check to see if they are empty before saving.
+
+changeset:   1080:a7b405994175
+user:        ErvikM@x90164
+date:        Wed Oct 24 17:55:10 2012 +0200
+summary:     Removed the "experimental" tag on the single user mode on the login frame.
+
+changeset:   1079:70e8c5c52f09
+user:        ErvikM@x90164
+date:        Wed Oct 17 17:41:13 2012 +0200
+summary:     5.00.23
+
+changeset:   1078:d738afa7b6e3
 user:        ErvikM@x90164
 date:        Wed Oct 17 17:35:08 2012 +0200
 summary:     Instructions updated.

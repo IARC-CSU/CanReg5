@@ -1,5 +1,14 @@
 Changelog
 
+5.00.24
+- Fixed an error in ggplot pie charts occuring if any category had a 0 count.
+- Updated: The latest ggplot2 no longer allows options(title=””), but needs labs(title="").
+- Improved error handling in the population dataset editor.
+- Modify Database Structure: Short name of new variables no longer default to "Default name" and there is now a check to see if they are empty before saving.
+- Fixed a bug occuring when selecting no standard variable.
+- Turkish translation partially done.
+- Other fixes
+
 5.00.23
 - Fixed bug occuring when top or morph did not have the appropriate length in the ICD03 to 10 module.
 - Fixed a bug in the import function where the character set of the imported files were sometimes not taken into consideration.

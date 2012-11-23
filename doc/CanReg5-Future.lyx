@@ -272,7 +272,7 @@ Accept all (without looking) after a search run?
 \end_layout
 
 \begin_layout Itemize
-Keep a table of all confirmed no matches?
+Keep a table of all confirmed false positives?
 \end_layout
 
 \end_deeper
