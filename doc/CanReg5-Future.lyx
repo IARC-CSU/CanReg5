@@ -225,6 +225,11 @@ An intermediate question asking for sub pop when automatically picking populatio
 n data sets?
 \end_layout
 
+\begin_layout Itemize
+Create a package of R libraries that can be installed in parallell to the
+ CanReg5 installation.
+\end_layout
+
 \begin_layout Section*
 Quality control 
 \end_layout
@@ -432,10 +437,6 @@ drops cases when highest age group cutoff < 85?
 \end_layout
 
 \end_deeper
-\begin_layout Itemize
-Bug in import when Site/Topography (others) are missing(?)
-\end_layout
-
 \begin_layout Section*
 Code related improvements
 \end_layout
