@@ -47,7 +47,7 @@ import canreg.common.Globals;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.PopulationDataset;
 import canreg.server.database.UnknownTableException;
-import com.thebuzzmedia.imgscalr.Scalr;
+import org.imgscalr.Scalr;
 import java.awt.Cursor;
 import java.awt.image.BufferedImage;
 import java.io.File;
