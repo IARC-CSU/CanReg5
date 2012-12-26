@@ -20,9 +20,9 @@
 
 package canreg.client.gui.components;
 
-import java.util.List;
 import ca.odell.glazedlists.TextFilterator;
 import canreg.common.database.DictionaryEntry;
+import java.util.List;
 
 /**
  * Get the Strings to filter against for a given Issue.
