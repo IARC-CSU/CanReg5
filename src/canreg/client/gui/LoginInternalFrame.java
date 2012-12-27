@@ -25,10 +25,10 @@
  */
 package canreg.client.gui;
 
-import canreg.client.gui.tools.WaitFrame;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.ServerDescription;
+import canreg.client.gui.tools.WaitFrame;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.Globals;
 import canreg.exceptions.WrongCanRegVersionException;
