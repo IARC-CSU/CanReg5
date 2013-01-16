@@ -37,6 +37,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -172,7 +173,7 @@ public class Tools {
             FileWriter writer = new FileWriter(tempFile);
             writer.append(rff.getScript());
             writer.close();
-            Tools.callR(tempFile.getAbsolutePath(), rpath);
+            Tools.callR(tempFile.getAbsolutePath(), rpath, fileName + "-report.txt");
         } catch (TableErrorException ex) {
             Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -241,23 +242,17 @@ public class Tools {
     }
 
     static String writeJChartToFile(JFreeChart chart, File file, FileTypes fileType) throws IOException, DocumentException {
-        String fileName = "";
+        String fileName = file.getPath();
         if (fileType.equals(FileTypes.svg)) {
             Tools.exportChartAsSVG(chart, new Rectangle(1000, 1000), file);
-            fileName = file.getPath();
         } else if (fileType.equals(FileTypes.pdf)) {
             Tools.exportChartAsPDF(chart, new Rectangle(500, 400), file);
-            fileName = file.getPath();
         } else if (fileType.equals(FileTypes.jchart)) {
-            fileName = "OK";
         } else if (fileType.equals(FileTypes.csv)) {
             Tools.exportChartAsCSV(chart, file);
-            fileName = file.getPath();
         } else {
             ChartUtilities.saveChartAsPNG(file, chart, 1000, 1000);
-            fileName = file.getPath();
         }
-        fileName = file.getPath();
         return fileName;
     }
 
@@ -500,23 +495,25 @@ public class Tools {
         document.close();
     }
 
-    public static LinkedList<String> callR(String rScript, String rpath) throws TableErrorException {
+    public static LinkedList<String> callR(String rScript, String rpath, String reportFileName) throws TableErrorException {
         LinkedList<String> filesCreated = new LinkedList<String>();
-
         Runtime rt = Runtime.getRuntime();
         String command = "\"" + rpath + "\""
-                + " --slave --file="
-                + "\"" + rScript + "\"";
+                + " CMD BATCH --vanilla --slave "
+                + "\"" + rScript + "\" "
+                + "\"" + reportFileName + "\"";
+        System.out.println(command);
         Process pr = null;
         try {
             pr = rt.exec(command);
             // collect the output from the R program in a stream
-            BufferedInputStream is = new BufferedInputStream(pr.getInputStream());
+            // BufferedInputStream is = new BufferedInputStream(pr.getInputStream());
             pr.waitFor();
+            BufferedInputStream is = new BufferedInputStream(new FileInputStream(reportFileName));
             // convert the output to a string
             String theString = convertStreamToString(is);
             Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
-            // System.out.println(theString);  
+            // System.out.println(theString);
             // and add all to the list of files to return
             for (String fileName : theString.split("\n")) {
                 if (fileName.startsWith("-outFile:")) {
