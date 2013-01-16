@@ -60,6 +60,7 @@ public class RFileBuilder {
         } else {
             rScript.append("png(\"").append(fileNameForR).append("\")\n");
         }
+        rScript.append("cat(\"\n").append("-outFile:").append(fileNameForR).append("\n\")\n");
     }
 
     public void appendData(Collection<CancerCasesCount> counts, Double restCount, boolean includeOther) {
