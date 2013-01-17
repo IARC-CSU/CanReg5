@@ -461,10 +461,6 @@ General
 \end_layout
 
 \begin_layout Itemize
-Improved printing functionality.
-\end_layout
-
-\begin_layout Itemize
 Internalize some dictionaries (this has started, but can be taken further)
 \end_layout
 
@@ -473,6 +469,12 @@ Internalize some dictionaries (this has started, but can be taken further)
 ICD-O-3 (Topo, Morpho, Behaviour)
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Specialized fields?
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Record Status.
 \end_layout
@@ -491,9 +493,21 @@ The possibility to select premade dictionaries during set up?
 \end_layout
 
 \begin_layout Itemize
-Migrate GUI away from Swing Application Framework?
+Migrate GUI away from Swing Application Framework.
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Migrate towards other GUI designers?
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+JFormDesigner? ( http://www.formdev.com/jformdesigner/ )
+\end_layout
+
+\end_deeper
+\end_deeper
 \begin_layout Section*
 Data Entry related
 \end_layout
@@ -622,7 +636,7 @@ Format?
 
 \end_deeper
 \begin_layout Itemize
-Export as html with help of graph libraries?
+Export as HTML+JS with help of graph libraries?
 \end_layout
 
 \begin_deeper

@@ -33,3 +33,7 @@ doc/*.pdf
 *.lyx~
 doc/CanReg5-Instructions/*.pdf
 \.conflict\~$
+target/*
+.idea/*
+*.iml
+pom.xml
