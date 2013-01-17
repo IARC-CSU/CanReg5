@@ -1,19 +1,19 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2013  International Agency for Research on Cancer
+ * Copyright (C) 2008-2013 International Agency for Research on Cancer
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
@@ -48,7 +48,7 @@ import org.w3c.dom.Document;
 
 /**
  *
- * @author  ervikm
+ * @author ervikm
  */
 public final class RangeFilterPanel extends javax.swing.JPanel implements ActionListener {
 
@@ -67,22 +67,26 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
     private boolean rangeEnabled = true;
     private GlobalToolBox globalToolBox;
 
-    /** Creates new form RangeFilterPanel */
+    /**
+     * Creates new form RangeFilterPanel
+     */
     public RangeFilterPanel() {
         initComponents();
+        // comment the following lines away if you want to change the GUIs using this bean.
         globalToolBox = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox();
         setDeskTopPane(canreg.client.CanRegClientApp.getApplication().getDeskTopPane());
+        ////
     }
 
     /**
-     * 
+     *
      */
     public void close() {
         filterWizardInternalFrame.dispose();
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Document getDatabseDescription() {
@@ -99,7 +103,6 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
         sourceVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
 
         Comparator comparator = new Comparator<DatabaseVariablesListElement>() {
-
             @Override
             public int compare(DatabaseVariablesListElement object1, DatabaseVariablesListElement o2) {
                 return object1.toString().compareToIgnoreCase(o2.toString());
@@ -119,7 +122,6 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
     private static DatabaseVariablesListElement[] getArrayOfIndexedVariables(DatabaseIndexesListElement[] indexes) {
         Set<DatabaseVariablesListElement> set = new TreeSet<DatabaseVariablesListElement>(
                 new Comparator<DatabaseVariablesListElement>() {
-
                     @Override
                     public int compare(DatabaseVariablesListElement o1, DatabaseVariablesListElement o2) {
                         return o1.toString().compareTo(o2.toString());
@@ -132,7 +134,7 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getFilter() {
@@ -147,7 +149,7 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getSelectedTable() {
@@ -155,7 +157,7 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
     }
 
     /**
-     * 
+     *
      * @param dtp
      */
     public void setDeskTopPane(JDesktopPane dtp) {
@@ -163,7 +165,7 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
     }
 
     /**
-     * 
+     *
      * @param active
      */
     public void setFilterActive(boolean active) {
@@ -171,7 +173,7 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
     }
 
     /**
-     * 
+     *
      * @param enabled
      */
     public void setRefreshButtonEnabled(boolean enabled) {
@@ -179,7 +181,7 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
     }
 
     /**
-     * 
+     *
      * @param userVariable
      */
     public void setTableChooserVisible(boolean visible) {
@@ -188,17 +190,17 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
     }
 
     /**
-     * 
+     *
      * @param userVariable
      */
     public void setRecordPanelvisible(boolean visible) {
         recordsPanel.setVisible(visible);
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -277,11 +279,11 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rangeStartTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                .addComponent(rangeStartTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rangeEndTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
+                .addComponent(rangeEndTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         rangePanelLayout.setVerticalGroup(
             rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -323,10 +325,10 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
         filterPanel.setLayout(filterPanelLayout);
         filterPanelLayout.setHorizontalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(filterComboBox, 0, 311, Short.MAX_VALUE)
+            .addComponent(filterComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, filterPanelLayout.createSequentialGroup()
                 .addComponent(useFilterCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 127, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(wizardButton))
         );
         filterPanelLayout.setVerticalGroup(
@@ -355,7 +357,7 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
         recordsPanelLayout.setHorizontalGroup(
             recordsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, recordsPanelLayout.createSequentialGroup()
-                .addComponent(recordsShownField, javax.swing.GroupLayout.DEFAULT_SIZE, 6, Short.MAX_VALUE)
+                .addComponent(recordsShownField, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(recordsShownLabel))
         );
@@ -439,8 +441,8 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
                         .addComponent(sortByChooserPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(recordsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(andLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
-                    .addComponent(refreshTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE))
+                    .addComponent(andLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(refreshTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -452,7 +454,7 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
                     .addComponent(sortByChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tableChooserPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rangePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(rangePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(andLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -608,8 +610,8 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
     /**
      * Get the details on the range.
      *
-     * @return an array of Objects of the following format:
-     * [the database index list object, the start, the end]
+     * @return an array of Objects of the following format: [the database index
+     * list object, the start, the end]
      */
     public Object[] getRange() {
         Object[] range = new Object[3];
@@ -641,7 +643,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getToValue() {
@@ -649,7 +651,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getIndexName() {
@@ -706,7 +708,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
      */
     private void refreshFilterComboBox() {
         String[] filters = new String[1];
-        if (filterCollection.toArray(filters).length > 0) {
+        if (filterCollection != null && filterCollection.toArray(filters).length > 0) {
             filterComboBox.setModel(new javax.swing.DefaultComboBoxModel(filterCollection.toArray(filters)));
         } else {
             String[] str = new String[1];
@@ -717,6 +719,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
 
     /**
      * Adds a filter to the filter combobox if this is not already there.
+     *
      * @param String the filter to add
      * @return integer specifying the new filters position in the combobox
      */
@@ -731,7 +734,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
     }
 
     /**
-     * 
+     *
      */
     @Action
     public void refreshAction() {
@@ -749,8 +752,10 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
     }
 
     /**
-     * Adds a filter to the filter combobox if this is not already there and sets it as the current active filter.
-     * @param filter 
+     * Adds a filter to the filter combobox if this is not already there and
+     * sets it as the current active filter.
+     *
+     * @param filter
      * @param String the filter to add
      */
     public void setFilter(String filter) {
@@ -760,7 +765,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
     }
 
     /**
-     * 
+     *
      */
     @Action
     public void filterWizardAction() {
@@ -785,7 +790,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
     }
 
     /**
-     * 
+     *
      * @param rec
      */
     public void setRecordsShown(int rec) {
@@ -793,7 +798,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
     }
 
     /**
-     * 
+     *
      * @param userVariable
      */
     public void setSortByVariableShown(boolean visible) {
@@ -801,7 +806,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getSortByVariable() {
@@ -810,7 +815,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
     }
 
     /**
-     * 
+     *
      */
     @Action
     public void refreshTableAction() {
@@ -832,7 +837,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
     }
 
     /**
-     * 
+     *
      * @param actionListener
      */
     public void setActionListener(ActionListener actionListener) {
