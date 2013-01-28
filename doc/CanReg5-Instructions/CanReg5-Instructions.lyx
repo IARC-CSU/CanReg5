@@ -12310,11 +12310,11 @@ Download R...
 \end_inset
 
 .
- The latest as of the 13th of April 2011 is version 2.13.0 and you can get
+ The latest as of the 17th of January 2013 is version 2.15.2 and you can get
  more information on the installation procedure here: 
 \begin_inset CommandInset href
 LatexCommand href
-target "http://cran.univ-lyon1.fr/bin/windows/base/README.R-2.13.0"
+target "http://cran.univ-lyon1.fr/bin/windows/base/README.R-2.15.2"
 
 \end_inset
 
@@ -13154,7 +13154,7 @@ Copyright
 \end_layout
 
 \begin_layout Standard
-© 2008-2012 International Agency for Research on Cancer World Health Organizatio
+© 2008-2013 International Agency for Research on Cancer World Health Organizatio
 n All rights reserved.
 \end_layout
 
@@ -13179,12 +13179,12 @@ Andy Cooke (Original quality control module)
 \end_layout
 
 \begin_layout Itemize
-Jacques Ferlay (Original PostScript code, conversion tables and original
+Jacques Ferlay (Original PostScript code, conversion tables, and original
  quality control module)
 \end_layout
 
 \begin_layout Itemize
-Anahita Rahimi (R code for analysis)
+Anahita Rahimi (Some of the R code for analysis)
 \end_layout
 
 \begin_layout Subsection
@@ -13211,12 +13211,16 @@ Freddie Bray
 David Forman
 \end_layout
 
+\begin_layout Itemize
+Max Parkin
+\end_layout
+
 \begin_layout Subsection
 Consultants: 
 \end_layout
 
 \begin_layout Itemize
-Philippe Autier, IARC/BIO 
+Philippe Autier, IARC/BIO
 \end_layout
 
 \begin_layout Itemize
@@ -13228,7 +13232,7 @@ Joe Harford, NCI, USA
 \end_layout
 
 \begin_layout Itemize
-Hai-Rim Shin, IARC/DEA 
+Hai-Rim Shin, IARC/DEA
 \end_layout
 
 \begin_layout Itemize

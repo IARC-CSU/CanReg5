@@ -1,5 +1,30 @@
-changeset:   1100:8b8f747537ba
+changeset:   1105:b01e139fdc6f
 tag:         tip
+user:        ErvikM@x90164
+date:        Thu Jan 17 15:50:04 2013 +0100
+summary:     5.00.25 BETA 3
+
+changeset:   1104:d0e949b20bb5
+user:        ErvikM@x90164
+date:        Thu Jan 17 15:49:35 2013 +0100
+summary:     Updated copyright messages.
+
+changeset:   1103:a789f2a7814f
+user:        ErvikM@x90164
+date:        Thu Jan 17 15:49:14 2013 +0100
+summary:     Improved the "makeSureGgplot2IsInstalled.R" script by changing the repo to a dynamic one and the installation of packages to local folder more explicit.
+
+changeset:   1102:2cae957d8b70
+user:        ErvikM@x90164
+date:        Thu Jan 17 15:42:39 2013 +0100
+summary:     Fixed a bug in the range filter panel occuring when the list of previous filters was missing...
+
+changeset:   1101:46193c341eb0
+user:        ErvikM@x90164
+date:        Thu Jan 17 15:39:50 2013 +0100
+summary:     Made the export file window more dynamic.
+
+changeset:   1100:8b8f747537ba
 user:        ErvikM@x90164
 date:        Wed Jan 16 18:31:37 2013 +0100
 summary:     Reordered imports to follow style guides.
