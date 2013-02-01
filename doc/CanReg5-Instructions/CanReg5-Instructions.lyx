@@ -14,6 +14,7 @@
 \@ifundefined{definecolor}
  {\usepackage{color}}{}
 \usepackage{hyperref}
+\usepackage{breakurl}
 \usepackage{listings}
 \definecolor{lightyellow}{RGB}{255,255,200}
 %% \lfoot{\today}
@@ -1043,7 +1044,20 @@ user folder
 \end_inset
 
  by pressing Windows Key + R and then entering %UserProfile% and click OK.
- See http://en.wikipedia.org/wiki/Home_directory for more information.)
+ See 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+url{http://en.wikipedia.org/wiki/Home_directory}
+\end_layout
+
+\end_inset
+
+ for more information.)
 \end_layout
 
 \begin_layout Standard
@@ -5134,6 +5148,7 @@ editor
 \begin_layout Standard
 \begin_inset Graphics
 	filename dictionaryeditor.png
+	width 100col%
 
 \end_inset
 
@@ -5218,6 +5233,7 @@ Import a complete set of CanReg5 dictionaries from a tab-separated file.
 \align center
 \begin_inset Graphics
 	filename dictionaryimport.png
+	width 100col%
 
 \end_inset
 
@@ -5304,6 +5320,7 @@ Add one by clicking New.
 \align center
 \begin_inset Graphics
 	filename popeditor2.png
+	width 100col%
 
 \end_inset
 
@@ -5422,6 +5439,7 @@ Then fill the population dataset itself:
 \align center
 \begin_inset Graphics
 	filename popeditor3.png
+	width 100col%
 
 \end_inset
 
@@ -5457,6 +5475,7 @@ population pyramid
 \begin_layout Standard
 \begin_inset Graphics
 	filename popeditor4-pyram.png
+	width 100col%
 
 \end_inset
 
@@ -5739,6 +5758,7 @@ There are four main steps to importing a data file.
 \begin_layout Standard
 \begin_inset Graphics
 	filename importfilechooser.png
+	width 100col%
 
 \end_inset
 
@@ -5759,6 +5779,7 @@ lly.
 \begin_layout Standard
 \begin_inset Graphics
 	filename importfileidentifyvariable.png
+	width 100col%
 
 \end_inset
 
@@ -5772,6 +5793,7 @@ lly.
 \begin_layout Standard
 \begin_inset Graphics
 	filename importfileoptions.png
+	width 100col%
 
 \end_inset
 
@@ -6065,7 +6087,7 @@ You will be presented with a screen that resembles the browse-screen:
 \align center
 \begin_inset Graphics
 	filename export.png
-	scale 50
+	width 100col%
 
 \end_inset
 
@@ -6778,6 +6800,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename 44.png
+	width 100col%
 
 \end_inset
 
@@ -6848,7 +6871,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename 46.png
-	width 90col%
+	width 100col%
 
 \end_inset
 
@@ -6972,7 +6995,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename charteditor.png
-	width 90line%
+	width 100col%
 
 \end_inset
 
@@ -11600,8 +11623,12 @@ file.arg.name <- "--file="
 
 \begin_layout Plain Layout
 
-script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.optio
-ns)]) 
+script.name <- sub(file.arg.name, "", 
+\end_layout
+
+\begin_layout Plain Layout
+
+initial.options[grep(file.arg.name, initial.options)]) 
 \end_layout
 
 \begin_layout Plain Layout
@@ -12312,9 +12339,15 @@ Download R...
 .
  The latest as of the 17th of January 2013 is version 2.15.2 and you can get
  more information on the installation procedure here: 
-\begin_inset CommandInset href
-LatexCommand href
-target "http://cran.univ-lyon1.fr/bin/windows/base/README.R-2.15.2"
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+url{http://cran.univ-lyon1.fr/bin/windows/base/README.R-2.15.2}
+\end_layout
 
 \end_inset
 
@@ -12369,13 +12402,21 @@ target "http://wwwn.cdc.gov/epiinfo/"
 
 \begin_layout Standard
 The newest version of EpiInfo is windows based, but CDC also provides a
- DOS based version, Epi Info 6 (Available here: 
-\begin_inset CommandInset href
-LatexCommand href
-target "http://wwwn.cdc.gov/epiinfo/html/ei6_downloads.htm"
+ DOS based version, Epi Info 6.
+ (Available here: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+url{http://wwwn.cdc.gov/epiinfo/html/ei6_downloads.htm}
+\end_layout
 
 \end_inset
 
+.
  )
 \end_layout
 
@@ -12629,10 +12670,16 @@ To detect duplicates in a cancer registry database.
 \end_layout
 
 \begin_layout Standard
-More information about it on: 
-\begin_inset CommandInset href
-LatexCommand href
-target "http://www.cdc.gov/cancer/npcr/tools/registryplus/lp.htm"
+More information about it on:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+url{http://www.cdc.gov/cancer/npcr/tools/registryplus/lp.htm}
+\end_layout
 
 \end_inset
 
@@ -13075,8 +13122,11 @@ Example:
 \end_layout
 
 \begin_layout LyX-Code
-jruby --1.9 icd10grouper.rb -t Topography -m Morphology -b Behaviour -s Sex
- -c , -g Groups.conf -f LotsOfData.csv
+jruby --1.9 icd10grouper.rb -t Topography -m Morphology -b Behaviour 
+\end_layout
+
+\begin_layout LyX-Code
+-s Sex -c , -g Groups.conf -f LotsOfData.csv
 \end_layout
 
 \begin_layout Paragraph
@@ -13085,42 +13135,74 @@ Arguments:
 
 \begin_layout LyX-Code
 -t TOPOGRAPHY_COLUMN_NAME, Name of the column containing topography.
- Default: TOP --topography-column-name
+ 
+\end_layout
+
+\begin_layout LyX-Code
+Default: TOP --topography-column-name
 \end_layout
 
 \begin_layout LyX-Code
 -m MORPHOLOGY_COLUMN_NAME, Name of the column containing morphology.
- Default: MOR --morphology-column-name
+ 
+\end_layout
+
+\begin_layout LyX-Code
+Default: MOR --morphology-column-name
 \end_layout
 
 \begin_layout LyX-Code
 -b BEHAVIOUR_COLUMN_NAME, Name of the column containing behaviour.
- Default: BEH --behaviour-column-name 
+ 
+\end_layout
+
+\begin_layout LyX-Code
+Default: BEH --behaviour-column-name 
 \end_layout
 
 \begin_layout LyX-Code
 -s SEX_COLUMN_NAME, Name of the column containing sex.
- (Coded: 1-Male, 2-Female) Default: SEX --sex-column-name 
+ 
+\end_layout
+
+\begin_layout LyX-Code
+(Coded: 1-Male, 2-Female) Default: SEX --sex-column-name 
 \end_layout
 
 \begin_layout LyX-Code
 -c SEPARATING_CHARACTER, Separating character in the files.
- Default: tab --separating-character 
+ 
+\end_layout
+
+\begin_layout LyX-Code
+Default: tab --separating-character 
 \end_layout
 
 \begin_layout LyX-Code
 -g GROUP_CONF_FILE, File containing the definitions of the groups.
- Default: Groups.conf --group-conf-file 
+ 
+\end_layout
+
+\begin_layout LyX-Code
+Default: Groups.conf --group-conf-file 
 \end_layout
 
 \begin_layout LyX-Code
 -p PATH_TO_CANREG, Path to the CanReg.jar-file.
- Default: ../../CanReg.jar --path-to-canreg 
+ 
+\end_layout
+
+\begin_layout LyX-Code
+Default: ../../CanReg.jar --path-to-canreg 
 \end_layout
 
 \begin_layout LyX-Code
 -f, --in-file IN_FILE File to process.
- Default: 
+ 
+\end_layout
+
+\begin_layout LyX-Code
+Default: 
 \begin_inset Quotes eld
 \end_inset
 
@@ -13432,9 +13514,15 @@ References
 J Ferlay et al, Check and Conversion Programs for Cancer Registries (IARC/IACR
  Tools for Cancer Registries), IARC Technical Report No.
  42, Lyon, 2005 (Available at: 
-\begin_inset CommandInset href
-LatexCommand href
-target "http://www.iacr.com.fr/TR42.htm"
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+url{http://www.iacr.com.fr/TR42.htm}
+\end_layout
 
 \end_inset
 
@@ -13446,9 +13534,15 @@ O.M.
  Jensen et al, Cancer Registration: Principles and Methods, IARC Scientific
  Publication No.
  95, Lyon, 1991 (Available online at 
-\begin_inset CommandInset href
-LatexCommand href
-target "http://www.iarc.fr./en/publications/pdfs-online/epi/sp95/index.php"
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+url{http://www.iarc.fr./en/publications/pdfs-online/epi/sp95/index.php}
+\end_layout
 
 \end_inset
 
