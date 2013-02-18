@@ -220,7 +220,7 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
         for (String part:Globals.versionStringParts){
             versionString += appInfoProperties.getProperty(part);
         }
-        versionString += "b"+appInfoProperties.getProperty("program.BUILDNUM");
+        versionString += "build"+appInfoProperties.getProperty("program.BUILDNUM");
         versionString += " ("+appInfoProperties.getProperty("program.BUILDDATE")+")";
         appVersionLabel.setText(versionString);
 
