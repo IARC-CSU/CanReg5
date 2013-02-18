@@ -1,5 +1,6 @@
 # ddfile = "C:\\Program Files (x86)\\SEERPrep\\naaccr3339.ver12_1.d01252011.dd"
-ddfile = "C:\\Program Files (x86)\\SEERPrep\\naaccr1946.ver11_3.d02032011.dd"
+# ddfile = "C:\\Program Files (x86)\\SEERPrep\\naaccr1946.ver11_3.d02032011.dd"
+ddfile = "./naaccr1946.ver11_3.d02032011.dd"
 out_file = File.new("export_format_naaccr1946.ver11_3.d02032011.tsv","w+")
 
 class Ddelement  

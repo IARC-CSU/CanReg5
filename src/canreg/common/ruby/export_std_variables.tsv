@@ -18,7 +18,7 @@ Age at diagnosis	Age
 Race 1	na
 Spanish/Hispanic origin	na
 NHIA Derived Hisp Origin	na
-Year of last contact	na
+Year of last contact	Lastcontact[0,4]
 Year of birth	BirthDate[0,4]
 Month of diagnosis	IncidenceDate[4,2]
 Month of last contact	na
@@ -30,7 +30,7 @@ Census Tr Certainty 2000	na
 Census Tr Cert 1970/80/90	na
 Sequence number--central	na
 Diagnostic confirmation	na
-Vital status	Status
+Vital status	Vitalstatus
 SEER type of follow-up	na
 Type of Reporting Source	na
 Reporting hospital (last 6-digits)	na

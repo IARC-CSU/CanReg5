@@ -25,10 +25,15 @@ import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.AgeGroupStructure;
 import canreg.common.database.IncompatiblePopulationDataSetException;
 import canreg.common.database.PopulationDataset;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -85,13 +90,18 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
 
         try {
 
-            File baseFileName = new File(reportFileName);
+            File baseFileName = new File(reportFileName);            
 
+            String ddFileName = baseFileName.getParent() + Globals.FILE_SEPARATOR + baseFileName.getName()+".dd";             
+            String populationFileName = baseFileName.getParent() + Globals.FILE_SEPARATOR + "pop-" + baseFileName.getName()+".txd"; 
+            String casesFileName = baseFileName.getParent() + Globals.FILE_SEPARATOR + "cases-" + baseFileName.getName()+".txd"; 
+       
             AgeGroupStructure ageGroupStructure;
+            
             int thisYear = startYear;
             if (populations != null) {
                 FixedWidthFileWriter fwfw = new FixedWidthFileWriter(26, true); //TODO: make dynamic
-                fwfw.setOutputFileName(baseFileName.getParent() + Globals.FILE_SEPARATOR + "pop-" + baseFileName.getName()+".txd");
+                fwfw.setOutputFileName(populationFileName);
                 TreeMap map = new TreeMap();
                 // recode the address to XX
                 map.put(StandardVariableNames.AddressCode, "XX");
@@ -103,7 +113,7 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
                         throw (new IncompatiblePopulationDataSetException());
                     }
                     map.put(StandardVariableNames.IncidenceDate, (thisYear * 10000) + "");
-                    int offset = 0; // the difference between SEER age group count and CanReg
+                    int offset; // the difference between SEER age group count and CanReg
 
                     for (int sex = 1; sex <= 2; sex++) {
                         // first the two first groups
@@ -172,7 +182,7 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
 
             if (incidenceData != null) {
                 FixedWidthFileWriter fwfw = new FixedWidthFileWriter(1946); //TODO: make dynamic
-                fwfw.setOutputFileName(baseFileName.getParent() + Globals.FILE_SEPARATOR + "cases-" + baseFileName.getName()+".txd");
+                fwfw.setOutputFileName(casesFileName);
                 for (Object[] row : incidenceData) {
                     TreeMap map = new TreeMap();
                     // map.put(StandardVariableNames.IncidenceDate, row[0]);
@@ -197,11 +207,28 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
                 // filesCreated.add(reportFileName); //can't open it with the system.
             }
             // File dir = new File(Globals.TABLES_CONF_PATH);
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/canreg/common/ruby/naaccr1946.ver11_3.d02032011.dd")));
 
+            String line = bfr.readLine();
+            BufferedWriter bfw = new BufferedWriter
+                (new OutputStreamWriter(new FileOutputStream(ddFileName),"ASCII"));
+            
+            while (line!=null) {
+                line = line.replace("$NAME", tableHeader);
+                line = line.replace("$CASE_FILE", casesFileName);
+                line = line.replace("$POP_FILE", populationFileName);
+                bfw.write(line+"\n");
+                line = bfr.readLine();            
+            }
+            bfw.close();
+            bfr.close();
+            
+            filesCreated.add(ddFileName);
+            
         } catch (IOException ex) {
-            Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SEERPrepFileTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IncompatiblePopulationDataSetException ex) {
-            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING, null, ex);
+            Logger.getLogger(SEERPrepFileTableBuilder.class.getName()).log(Level.WARNING, null, ex);
             throw new NotCompatibleDataException();
         }
 

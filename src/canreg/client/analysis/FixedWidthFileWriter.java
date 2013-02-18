@@ -65,7 +65,8 @@ public class FixedWidthFileWriter implements FileWriterInterface {
         BufferedReader bfr;
 
         if (definitionFileName == null) {
-            bfr = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/canreg/client/analysis/export_format_naaccr1946.ver11_3.d02032011.tsv")));
+            bfr = new BufferedReader(new InputStreamReader(getClass()
+                    .getResourceAsStream("/canreg/common/ruby/export_format_naaccr1946.ver11_3.d02032011.tsv")));
         } else {
             bfr = new BufferedReader(new FileReader(definitionFileName));
         }
