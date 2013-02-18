@@ -720,6 +720,24 @@ public class CanRegDAO {
         try {
             dbProperties.remove("shutdown");
             dbConnection.close(); // Close current connection.
+            
+            // check to see if there is a database already - rename it
+            File databaseFolder = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + getSystemCode());
+            if(databaseFolder.exists()) {
+                int i = 0;
+                File folder2 = databaseFolder; 
+                while (folder2.exists()) {
+                    i++;
+                    folder2 = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + getSystemCode()+ i);
+                }
+                databaseFolder.renameTo(folder2);
+                try {
+                    canreg.common.Tools.fileCopy(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getSystemCode() + ".xml",
+                            Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getSystemCode() + i + ".xml");
+                } catch (IOException ex1) {
+                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
             dbProperties.put("restoreFrom", path + "/" + getSystemCode());
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
             bRestored = true;
