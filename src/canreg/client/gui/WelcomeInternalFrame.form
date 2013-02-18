@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.5" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <Properties>
@@ -80,7 +80,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="logoButton" min="-2" pref="274" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="aboutScrollPane" pref="94" max="32767" attributes="0"/>
+                          <Component id="aboutScrollPane" pref="102" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="versionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -188,6 +188,7 @@
                   <action class="canreg.client.gui.WelcomeInternalFrame" id="installNewSystemAction" methodName="installNewSystemAction"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" resourceKey="restoreBackupButton.toolTipText"/>
+                <Property name="actionCommand" type="java.lang.String" resourceKey="restoreBackupButton.actionCommand"/>
                 <Property name="name" type="java.lang.String" value="restoreBackupButton" noResource="true"/>
               </Properties>
             </Component>
