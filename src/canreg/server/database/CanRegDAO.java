@@ -19,25 +19,25 @@
  */
 package canreg.server.database;
 
-import canreg.common.database.User;
-import canreg.common.database.Patient;
-import canreg.common.database.PopulationDatasetsEntry;
-import canreg.common.database.Tumour;
-import canreg.common.database.PopulationDataset;
-import canreg.common.database.Source;
-import canreg.common.database.NameSexRecord;
-import canreg.common.database.Dictionary;
-import canreg.common.database.DictionaryEntry;
-import canreg.common.database.AgeGroupStructure;
-import canreg.common.database.DatabaseRecord;
 import canreg.common.DatabaseDictionaryListElement;
-import canreg.common.cachingtableapi.DistributedTableDataSource;
-import canreg.common.cachingtableapi.DistributedTableDescription;
-import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.cachingtableapi.DistributedTableDataSource;
+import canreg.common.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
+import canreg.common.database.AgeGroupStructure;
+import canreg.common.database.DatabaseRecord;
+import canreg.common.database.Dictionary;
+import canreg.common.database.DictionaryEntry;
+import canreg.common.database.NameSexRecord;
+import canreg.common.database.Patient;
+import canreg.common.database.PopulationDataset;
+import canreg.common.database.PopulationDatasetsEntry;
+import canreg.common.database.Source;
+import canreg.common.database.Tumour;
+import canreg.common.database.User;
 import canreg.server.DatabaseStats;
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,12 +45,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.rmi.RemoteException;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Collections;
@@ -74,9 +74,6 @@ public class CanRegDAO {
 
     private static boolean debug = false;
     private final DatabaseVariablesListElement[] variables;
-    StringBuilder counterStringBuilder = new StringBuilder();
-    StringBuilder getterStringBuilder = new StringBuilder();
-    StringBuilder filterStringBuilder = new StringBuilder();
 
     /**
      * 
@@ -147,8 +144,8 @@ public class CanRegDAO {
      */
     public synchronized Map<Integer, Dictionary> getDictionary() {
         // Map<Integer, Dictionary> dictionaryMap = new LinkedHashMap<Integer, Dictionary>();
-        Statement queryStatement = null;
-        ResultSet results = null;
+        Statement queryStatement;
+        ResultSet results;
 
         // rebuild dictionary map
         dictionaryMap = buildDictionaryMap(doc);
@@ -181,8 +178,8 @@ public class CanRegDAO {
     public synchronized Map<String, Integer> getNameSexTables() {
 
         Map<String, Integer> nameSexMap = new LinkedHashMap<String, Integer>();
-        Statement queryStatement = null;
-        ResultSet results = null;
+        Statement queryStatement;
+        ResultSet results;
 
         try {
             queryStatement = dbConnection.createStatement();
@@ -209,8 +206,8 @@ public class CanRegDAO {
         String value = null;
         try {
             String query = "SELECT * FROM " + Globals.SCHEMA_NAME + ".SYSTEM WHERE LOOKUP = '" + lookup + "'";
-            Statement queryStatement = null;
-            ResultSet results = null;
+            Statement queryStatement;
+            ResultSet results;
             queryStatement = dbConnection.createStatement();
             results = queryStatement.executeQuery(query);
             while (results.next()) {
@@ -231,7 +228,7 @@ public class CanRegDAO {
     public synchronized void setSystemPropery(String lookup, String value) {
         try {
             String query = "DELETE FROM " + Globals.SCHEMA_NAME + ".SYSTEM WHERE LOOKUP = '" + lookup + "'";
-            Statement queryStatement = null;
+            Statement queryStatement;
             queryStatement = dbConnection.createStatement();
             boolean result = queryStatement.execute(query);
         } catch (SQLException ex) {
@@ -239,7 +236,7 @@ public class CanRegDAO {
         }
         try {
             String query = "INSERT INTO " + Globals.SCHEMA_NAME + ".SYSTEM (LOOKUP, VALUE) VALUES ('" + lookup + "', '" + value + "')";
-            Statement queryStatement = null;
+            Statement queryStatement;
             queryStatement = dbConnection.createStatement();
             boolean result = queryStatement.execute(query);
         } catch (SQLException ex) {
@@ -267,7 +264,7 @@ public class CanRegDAO {
 
     private synchronized int editUser(User user) {
         int ID = user.getID();
-        ResultSet results = null;
+        ResultSet results;
         try {
             stmtEditUser.clearParameters();
             stmtEditUser.setString(1, user.getUserName());
@@ -294,7 +291,7 @@ public class CanRegDAO {
 
     private synchronized int saveNewUser(User user) {
         int ID = -1;
-        ResultSet results = null;
+        ResultSet results;
         try {
             stmtSaveNewUser.clearParameters();
             stmtSaveNewUser.setString(1, user.getUserName());
@@ -323,8 +320,8 @@ public class CanRegDAO {
      */
     public synchronized Map<String, User> getUsers() {
         Map<String, User> usersMap = new LinkedHashMap<String, User>();
-        Statement queryStatement = null;
-        ResultSet results = null;
+        Statement queryStatement;
+        ResultSet results;
         try {
             queryStatement = dbConnection.createStatement();
             results = queryStatement.executeQuery(strGetUsers);
@@ -358,8 +355,8 @@ public class CanRegDAO {
      */
     public synchronized Map<Integer, PopulationDataset> getPopulationDatasets() {
         Map<Integer, PopulationDataset> populationDatasetMap = new LinkedHashMap<Integer, PopulationDataset>();
-        Statement queryStatement = null;
-        ResultSet results = null;
+        Statement queryStatement;
+        ResultSet results;
 
         try {
             queryStatement = dbConnection.createStatement();
@@ -469,7 +466,7 @@ public class CanRegDAO {
         // distributedDataSources.remove(theUser);
         ResultSet result;
         Statement statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        int rowCount = 0;
+
         DistributedTableDataSource dataSource;
 
         activeStatements.put(resultSetID, statement);
@@ -512,7 +509,7 @@ public class CanRegDAO {
      * @throws RecordLockedException
      */
     public synchronized DatabaseRecord getRecord(int recordID, String tableName, boolean lock) throws RecordLockedException {
-        DatabaseRecord returnRecord = null;
+        DatabaseRecord returnRecord;
         if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             returnRecord = getPatient(recordID, lock);
         } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
@@ -593,7 +590,7 @@ public class CanRegDAO {
     }
 
     private Properties loadDBProperties() {
-        InputStream dbPropInputStream = null;
+        InputStream dbPropInputStream;
         dbPropInputStream = CanRegDAO.class.getResourceAsStream(Globals.DATABASE_CONFIG);
         dbProperties = new Properties();
         try {
@@ -606,7 +603,7 @@ public class CanRegDAO {
 
     private synchronized boolean createTables(Connection dbConnection) {
         boolean bCreatedTables = false;
-        Statement statement = null;
+        Statement statement;
         try {
             statement = dbConnection.createStatement();
 
@@ -955,7 +952,7 @@ public class CanRegDAO {
 
             if (tableNameDB.equalsIgnoreCase(tableName)) {
                 recordVariableNumber++;
-                int variableLength = 0;
+                int variableLength;
                 String variableType = variable.getVariableType();
                 variableLength = variable.getVariableLength();
                 String variableLenghtString = null;
@@ -1423,8 +1420,8 @@ public class CanRegDAO {
                 success = deleteSourceRecord(recordID);
             } else {
                 String idString = "ID";
-                Statement statement = null;
-                ResultSet results = null;
+                Statement statement;
+                ResultSet results;
                 statement = dbConnection.createStatement();
                 statement.execute("DELETE FROM " + Globals.SCHEMA_NAME + "." + tableName + " WHERE " + idString + " = " + recordID);
                 success = true;
@@ -1642,7 +1639,7 @@ public class CanRegDAO {
     }
 
     private synchronized boolean fillDictionariesTable() {
-        boolean bFilled = false;
+        boolean bFilled;
 
         // Go through all the variable definitions
         for (Dictionary dic : dictionaryMap.values()) {
@@ -2306,7 +2303,7 @@ public class CanRegDAO {
 
     private DistributedTableDataSource initiatePersonSearchQuery(DatabaseFilter filter, Statement statement) throws SQLException, DistributedTableDescriptionException {
         ResultSet result;
-        String query = "";
+        String query;
         String rangePart = "";
         int rowCount = -1;
         DistributedTableDataSource dataSource;
@@ -2430,10 +2427,12 @@ public class CanRegDAO {
         ResultSet result;
         int rowCount = -1;
         DistributedTableDataSource dataSource;
-
-        counterStringBuilder.delete(0, counterStringBuilder.length());
-        getterStringBuilder.delete(0, getterStringBuilder.length());
-        filterStringBuilder.delete(0, filterStringBuilder.length());
+        StringBuilder counterStringBuilder = new StringBuilder();
+        StringBuilder getterStringBuilder = new StringBuilder();
+        StringBuilder filterStringBuilder = new StringBuilder();
+        // counterStringBuilder.delete(0, counterStringBuilder.length());
+        // getterStringBuilder.delete(0, getterStringBuilder.length());
+        // filterStringBuilder.delete(0, filterStringBuilder.length());
 
         boolean joinedTables = false;
 
@@ -2631,7 +2630,7 @@ public class CanRegDAO {
     }
 
     public boolean addColumnToTable(String columnName, String columnType, String table) throws SQLException {
-        boolean success = false;
+        boolean success;
 
         Statement statement = dbConnection.createStatement();
         statement.execute(QueryGenerator.strAddColumnToTable(columnName, columnType, table));
@@ -2641,7 +2640,7 @@ public class CanRegDAO {
     }
 
     public boolean setColumnDataType(String columnName, String columnType, String table) throws SQLException {
-        boolean success = false;
+        boolean success;
 
         Statement statement = dbConnection.createStatement();
         statement.execute(QueryGenerator.strSetColumnDataType(columnName, columnType, table));
@@ -2651,7 +2650,7 @@ public class CanRegDAO {
     }
 
     public boolean dropColumnFromTable(String columnName, String table) throws SQLException {
-        boolean success = false;
+        boolean success;
 
         Statement statement = dbConnection.createStatement();
         statement.execute(QueryGenerator.strDropColumnFromTable(columnName, table));
