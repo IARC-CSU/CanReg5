@@ -3,7 +3,7 @@ load.fun <- function(x) {
   on.exit(options(repos = old.repos))               #this resets the repos option when the function exits 
   new.repos <- old.repos 
   new.repos["CRAN"] <- "http://cran.rstudio.com/"   #Rstudio, automatic redirection to servers worldwide , or set your favorite  CRAN Mirror here 
-  options(repos = new.repos) 
+  options(repos = new.repos)
   x <- as.character(substitute(x))
   dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
   rlibs = gsub("\\", "/", Sys.getenv("R_LIBS_USER"), fixed = T)
