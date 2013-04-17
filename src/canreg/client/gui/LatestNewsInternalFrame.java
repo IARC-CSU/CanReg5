@@ -169,7 +169,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
                 String calString = "";
                 try {
                     String date = item.getPubDate().toString();
-                    Calendar cal = canreg.common.DateHelper.parseTimestamp(date, "EEE, d MMM yyyy HH:mm:ss Z", null);
+                    Calendar cal = canreg.common.DateHelper.parseTimestamp(date, canreg.common.Globals.TWITTER_RSS_DATE_FORMAT_STRING, null);
                     calString = format.format(cal.getTime());
                 } catch (ParseException ex) {
                     Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
