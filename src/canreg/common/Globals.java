@@ -47,6 +47,7 @@ public class Globals {
     /**
      *
      */
+    public static String TWITTER_RSS_DATE_FORMAT_STRING = "EEE MMM d HH:mm:ss Z yyyy";
     static public String CANREG_TWITTER_RSS_URL = "http://www.twitter-rss.com/user_timeline.php?screen_name=canreg";
     // static public String CANREG_TWITTER_RSS_URL = "http://twitter.com/statuses/user_timeline/86306086.rss";
     // static public String CANREG_TWITTER_RSS_URL = "http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=canreg";
