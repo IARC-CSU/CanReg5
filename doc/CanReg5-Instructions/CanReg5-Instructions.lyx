@@ -280,7 +280,6 @@ XML
 You can of course choose not to use the source table, as well - just record
  the source information per tumour like you would in CanReg4.
  This can be set up while migrating your system definition files.
- 
 \end_layout
 
 \begin_layout Section
@@ -841,8 +840,8 @@ JRE
 \begin_layout Standard
 \align left
 Before you install and run CanReg5 for the first time it is recommended
- that you install the latest Java 6 Runtime Environment (May 2011: Version
- 6 Update 25 ) You can get that from here: 
+ that you install the latest Java 7 Runtime Environment (April 2013: Version
+ 7 Update 21 ) You can get that from here: 
 \begin_inset CommandInset href
 LatexCommand href
 target "http://java.com/en/download/manual.jsp"
@@ -5247,6 +5246,10 @@ Import a complete set of CanReg5 dictionaries from a tab-separated file.
 Population Dataset Editor
 \end_layout
 
+\begin_layout Subsection
+Manual entry/validation
+\end_layout
+
 \begin_layout Standard
 \align left
 The Population Dataset
@@ -6871,7 +6874,8 @@ status open
 \align center
 \begin_inset Graphics
 	filename 46.png
-	width 100col%
+	width 90col%
+	rotateAngle 90
 
 \end_inset
 
@@ -6986,7 +6990,7 @@ reference "fig:CanReg5-chart-editor"
 
 .) 
 \begin_inset Float figure
-placement h
+placement H
 wide false
 sideways false
 status open
@@ -6995,7 +6999,8 @@ status open
 \align center
 \begin_inset Graphics
 	filename charteditor.png
-	width 100col%
+	lyxscale 50
+	width 60col%
 
 \end_inset
 
@@ -7136,7 +7141,8 @@ Goiania1999-2001
 \end_inset
 
 .
- (CanReg will add 
+ (Please note that you can only use ASCII (English) characters in the paths
+ of the datafiles.) CanReg will add 
 \begin_inset Quotes eld
 \end_inset
 
@@ -7161,7 +7167,9 @@ pop-
 \begin_inset Quotes erd
 \end_inset
 
- so that SEER*Prep recognises the files.) 
+ so that SEER*Prep recognises the files.
+ CanReg will also create a file describing the data for SEER*Prep - a socalled
+ .dd-file.
 \end_layout
 
 \begin_layout Standard
@@ -7174,6 +7182,7 @@ In SEER*Prep
 
 \begin_layout Standard
 \begin_inset Float figure
+placement h
 wide false
 sideways false
 status open
@@ -7182,7 +7191,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename seerprep.png
-	width 100col%
+	width 90col%
 
 \end_inset
 
@@ -7207,9 +7216,28 @@ SEER*Prep in action
 \end_layout
 
 \begin_layout Standard
-You have to first specify that your files follow the NAACCR 1946 v11.3 format,
- by opening the corresponding .dd file from the folder you installed SEER*prep
- to.
+Load the .dd file you created with CanReg using the little folder icon.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+You can also do this manually.
+ You then have to first specify that your files follow the NAACCR 1946 v11.3
+ format, by opening the corresponding .dd file from the folder you installed
+ SEER*prep to.
  (Most probably 
 \begin_inset Quotes eld
 \end_inset
@@ -7229,7 +7257,7 @@ Database name:
  you can specify something more instructive than the default.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Then you add your case file and population files from above using the 
 \begin_inset Quotes eld
 \end_inset
@@ -7241,7 +7269,7 @@ Add...
  buttons.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Do the following choices under 
 \begin_inset Quotes eld
 \end_inset
@@ -7292,6 +7320,11 @@ Custom race
 
 \begin_layout Itemize
 Leave Population Count Location as it is (Start col 19, length 8)
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -8839,7 +8872,7 @@ R
 
 \end_layout
 
-\begin_layout Part*
+\begin_layout Part
 \start_of_appendix
 Appendix
 \end_layout

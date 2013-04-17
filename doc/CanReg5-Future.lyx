@@ -344,6 +344,10 @@ Topo, Morpho, Address etc.
 Variables grouped by table/on screen group
 \end_layout
 
+\begin_layout Itemize
+Detect duplicate variable names
+\end_layout
+
 \end_deeper
 \begin_layout Itemize
 Possibility to change the path of the database/other system variables.

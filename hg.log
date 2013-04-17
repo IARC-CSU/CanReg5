@@ -1,5 +1,85 @@
-changeset:   1105:b01e139fdc6f
+changeset:   1121:95f555f52a0d
 tag:         tip
+user:        ErvikM@x90164
+date:        Wed Apr 17 14:01:52 2013 +0200
+summary:     "Latest news" now working again. (The down time was doe to a change in Twitters API.)
+
+changeset:   1120:dd30cc6e5442
+user:        ErvikM@x90164
+date:        Wed Apr 17 14:01:44 2013 +0200
+summary:     "Latest news" now working again. (The down time was doe to a change in Twitters API.)
+
+changeset:   1119:b2b2cdc5e708
+user:        ErvikM@x90164
+date:        Wed Apr 17 13:52:38 2013 +0200
+summary:     "Latest news" now working again. (The down time was doe to a change in Twitters API.)
+
+changeset:   1118:c28573526e47
+user:        ErvikM@x90164.iarc.lan
+date:        Wed Apr 17 12:13:39 2013 +0200
+summary:     Removed old SEERstat file.
+
+changeset:   1117:4fe2d947bd5b
+user:        ErvikM@x90164.iarc.lan
+date:        Wed Apr 17 12:12:42 2013 +0200
+summary:     Updated R script.
+
+changeset:   1116:e7a35a6e8895
+user:        ErvikM@x90164
+date:        Wed Mar 13 10:09:10 2013 +0100
+summary:     CanRegDAO should now be more thread safe. Some minor code fixes.
+
+changeset:   1115:3700d0fb9eba
+user:        ErvikM@x90164
+date:        Mon Feb 18 16:41:22 2013 +0100
+summary:     The welcome screen now says install new system/restore from backup.
+
+changeset:   1114:448cb1bae9d9
+user:        ErvikM@x90164
+date:        Mon Feb 18 16:38:46 2013 +0100
+summary:     'build' now spelt out as 'build' instead of just 'b'.
+
+changeset:   1113:82fb00f89e5a
+user:        ErvikM@x90164
+date:        Mon Feb 18 16:38:03 2013 +0100
+summary:     When restoring from backup, CanReg5 now always renames existing folders and files instead of overwriting them.
+
+changeset:   1112:a55ad15501bb
+user:        ErvikM@x90164
+date:        Mon Feb 18 16:37:37 2013 +0100
+summary:     Improved the connection to SEER*stat.
+
+changeset:   1111:603165a4e182
+user:        ErvikM@x90164
+date:        Mon Feb 18 16:22:13 2013 +0100
+summary:     'build' now spelt out as 'build' instead of just 'b'.
+
+changeset:   1110:9b9cf5aefb26
+user:        ErvikM@x90164
+date:        Mon Feb 18 16:21:40 2013 +0100
+summary:     When restoring from backup, CanReg5 now always renames existing folders and files instead of overwriting them.
+
+changeset:   1109:b3ee23a62ee7
+user:        ErvikM@x90164
+date:        Fri Feb 01 15:31:19 2013 +0100
+summary:     Added Lastcontact and Vital Status to the SEERprep.conf file.
+
+changeset:   1108:207149e5d5f5
+user:        ErvikM@x90164.iarc.lan
+date:        Fri Feb 01 10:08:12 2013 +0100
+summary:     Updated to a more compact book layout.
+
+changeset:   1107:991bb3096970
+user:        ErvikM@x90164.iarc.lan
+date:        Fri Feb 01 09:37:17 2013 +0100
+summary:     Fixed some lines/graphics that went into the margins.
+
+changeset:   1106:b252f5b301ef
+user:        ErvikM@x90164
+date:        Mon Jan 28 14:07:22 2013 +0100
+summary:     5.00.25
+
+changeset:   1105:b01e139fdc6f
 user:        ErvikM@x90164
 date:        Thu Jan 17 15:50:04 2013 +0100
 summary:     5.00.25 BETA 3
