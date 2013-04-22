@@ -8,7 +8,7 @@ Changelog
 - Added Lastcontact and Vital Status to the SEERprep.conf file.
 - Handbook: Updated to a more compact book layout.
 - Handbook: Fixed some lines/graphics that went into the margins.
-- "Latest news" now working again. (The down time was doe to a change in Twitters API.)
+- "Latest news" now working again. (The down time was due to a change in Twitters API.)
 - Other minor fixes.
 
 5.00.25

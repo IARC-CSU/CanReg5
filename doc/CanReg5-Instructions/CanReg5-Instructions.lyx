@@ -1139,6 +1139,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegWelcomeScreen.png
+	lyxscale 50
 	width 90line%
 
 \end_inset
@@ -11410,6 +11411,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Graphics
 	filename pieChart.png
+	lyxscale 50
 	width 100line%
 
 \end_inset
