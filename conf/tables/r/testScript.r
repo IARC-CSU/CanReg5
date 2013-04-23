@@ -11,6 +11,7 @@ script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initia
 script.basename <- dirname(script.name)
 
 ## Load dependencies
+source(paste(sep="/", script.basename, "load.fun.R"))
 source(paste(sep="/", script.basename, "checkArgs.R"))
 source(paste(sep="/", script.basename, "makeFile.R"))
 ##
