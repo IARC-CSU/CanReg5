@@ -1,25 +1,26 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2013  International Agency for Research on Cancer
+ * Copyright (C) 2008-2013 International Agency for Research on Cancer
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
 package canreg.client;
 
 import canreg.common.Globals;
+import canreg.common.Tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,31 +50,31 @@ public final class LocalSettings {
     private boolean settingsChanged;
     // Key names
     /**
-     * 
+     *
      */
     public static String LAST_SERVER_ID_KEY = "last_server_id";
     /**
-     * 
+     *
      */
     public static String IMPORT_PATH_KEY = "import_path";
     /**
-     * 
+     *
      */
     public static String USERNAME_KEY = "username";
     /**
-     * 
+     *
      */
     public static String PASSWORD_KEY = "password";
     /**
-     * 
+     *
      */
     public static String LOCALE_KEY = "locale";
     /**
-     * 
+     *
      */
     public static String REMEMBER_PASSWORD_KEY = "remember_password";
     /**
-     * 
+     *
      */
     public static String OUTLINE_DRAG_MODE_KEY = "outline_drag_mode";
     /**
@@ -80,90 +82,90 @@ public final class LocalSettings {
      */
     public static final String TABLES_PATH_KEY = "tables_path";
     /**
-     * 
+     *
      */
     public static String WORKING_DIR_PATH_KEY = TABLES_PATH_KEY;
     /**
-     * 
+     *
      */
     public static String AUTO_START_SERVER_KEY = "auto_start_server";
     /**
-     * 
+     *
      */
     public static String SINGLE_USER_MODE_KEY = "single_user";
     /**
-     * 
+     *
      */
     public static String LOOK_AND_FEEL_KEY = "look_and_feel";
     /**
-     * 
+     *
      */
     public static String AUTO_BACKUP_KEY = "auto_backup";
     /**
-     * 
+     *
      */
     public static String BACKUP_EVERY_KEY = "backup_every";
     // Property names
     /**
-     * 
+     *
      */
     public static String YES_PROPERTY = "yes";
     /**
-     * 
+     *
      */
     public static String NO_PROPERTY = "no";
     /**
-     * 
+     *
      */
     public static String ON_PROPERTY = "on";
     /**
-     * 
+     *
      */
     public static String OFF_PROPERTY = "off";
     /**
-     * 
+     *
      */
     public static String TRUE_PROPERTY = "true";
     /**
-     * 
+     *
      */
     public static String FALSE_PROPERTY = "false";
     /**
-     * 
+     *
      */
     public static String R_PATH = "r_path";
     public static String GS_PATH = "gs_path";
     /**
-     * 
+     *
      */
     public static final String SEER_PREP_PATH = "seer_prep_path";
     /**
-     * 
+     *
      */
     public static final String FONT_NAME_KEY = "font_name";
     /**
-     * 
+     *
      */
     public static final String FONT_NAME_DEFAULT = "Default";
     /**
-     * 
+     *
      */
     public static final String FONT_SIZE_KEY = "font_size";
     /**
-     * 
+     *
      */
     public static final String FONT_SIZE_MEDIUM = "Medium";
     /**
-     * 
+     *
      */
     public static final String FONT_SIZE_SMALL = "Small";
     /**
-     * 
+     *
      */
     public static final String FONT_SIZE_BIG = "Big";
 
     /**
-     * 
+     *
      * @param localSettingsFileName
      * @throws java.io.IOException
      */
@@ -188,7 +190,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @param name
      * @param url
      * @param port
@@ -215,17 +217,17 @@ public final class LocalSettings {
     }
 
     /*
-    public String[] getLanguageList() {
-    String list[] = new String[Globals.LANGUAGES_AVAILABLE.length];
-    for (int i = 0; i < list.length; i++) {
-    Locale locale = new Locale(Globals.LANGUAGES_AVAILABLE[i]);
-    list[i] = locale.getDisplayLanguage();
-    }
-    return list;
-    }
+     public String[] getLanguageList() {
+     String list[] = new String[Globals.LANGUAGES_AVAILABLE.length];
+     for (int i = 0; i < list.length; i++) {
+     Locale locale = new Locale(Globals.LANGUAGES_AVAILABLE[i]);
+     list[i] = locale.getDisplayLanguage();
+     }
+     return list;
+     }
      */
     /**
-     * 
+     *
      * @return
      */
     public Locale getLocale() {
@@ -243,7 +245,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public boolean isAutoBackup() {
@@ -251,7 +253,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @param b
      */
     public void setAutomaticBackup(boolean b) {
@@ -263,7 +265,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @param localeCode
      */
     public void setLocale(String localeCode) {
@@ -303,7 +305,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public boolean writeSettings() {
@@ -340,7 +342,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @param key
      * @param string
      */
@@ -355,7 +357,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @param key
      * @return
      */
@@ -366,10 +368,40 @@ public final class LocalSettings {
                 || (property.length() == 0 && key.equals(R_PATH))
                 // Detect if GS has been installed since last launch.
                 || (property.length() == 0 && key.equals(GS_PATH))) {
-            return getDefaultProperty(key);
-        } else {
-            return property;
+            property = getDefaultProperty(key);
         }
+        // a way around update 21 in Java7 - on windows
+        // http://www.oracle.com/technetwork/java/javase/6u45-relnotes-1932876.html
+        // TODO: Create a more permanent solution
+
+        if (key.equals(R_PATH) || key.equals(GS_PATH)) {
+            // temporary hack for (english) windows machines...
+            if (System.getProperty("os.name").contains("Win")) {
+                String replaceBy = "";
+                String replace = "";
+                if (property.toLowerCase().contains("archivos de programa")) {
+                    replace = "archivos de programa";
+                    replaceBy = "archiv";
+                } else if (property.toLowerCase().contains("program files")) {
+                    replace = "program files";
+                    replaceBy = "progra";
+                } else if (property.toLowerCase().contains("arquivos de programas")) {
+                    replace = "arquivos de programas";
+                    replaceBy = "arquiv";
+                }
+                // transform the filename
+                // property = pathShorter(property);
+                if (replace.length() > 0) {
+                    int n = 0;
+                    String temp = property.toLowerCase().replace(replace, replaceBy + (n++));
+                    while (n < 10 && !(new File(temp).exists())) {
+                        temp = property.toLowerCase().replace(replace, replaceBy + (n++));
+                    }
+                    property = temp.toUpperCase();
+                }                
+            }
+        }
+        return property;
     }
 
     private String getDefaultProperty(String key) {
@@ -450,7 +482,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public LinkedList<ServerDescription> getServerDescriptions() {
@@ -501,7 +533,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String[] getServerNames() {
@@ -530,7 +562,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @param serverID
      * @return
      */
@@ -550,7 +582,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @param sd
      */
     public void addServerDescription(ServerDescription sd) {
@@ -561,7 +593,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getLanguage() {
@@ -571,7 +603,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getLanguageCode() {
@@ -579,7 +611,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public boolean isOutlineDragMode() {
@@ -592,7 +624,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @param outlineDragMode
      */
     public void setOutlineDragMode(boolean outlineDragMode) {
@@ -604,7 +636,7 @@ public final class LocalSettings {
     }
 
     /**
-     * 
+     *
      * @param dir
      */
     public void createWorkingDir(String dir) {
@@ -685,5 +717,42 @@ public final class LocalSettings {
 
         //
         return path;
+    }
+
+    private String pathShorter(String longPath) {
+        // this doesn't work yet
+        String shortPath = "";
+        StringTokenizer tokenizer = new StringTokenizer(longPath, "\\");
+        while (tokenizer.hasMoreTokens() == true) {
+            String temp = tokenizer.nextToken();
+            if (!tokenizer.hasMoreTokens() && temp.split(".").length > 1) {
+                // the last token has two parts
+                String[] a = temp.split(".");
+                String suffix = a[a.length - 1];
+                a[a.length - 1] = "";
+                temp = Tools.combine(a, "");
+                if (temp.length() >= 8) {
+                    temp = thingShorter(temp, 6, 1);
+                }
+                suffix = suffix.substring(0, Math.min(suffix.length(), 3));
+                shortPath += temp + "." + suffix;
+            } else {
+                if (temp.length() >= 8) {
+                    temp = thingShorter(temp, 6, 1);
+                }
+                shortPath += temp;
+                if (tokenizer.hasMoreTokens()) {
+                    shortPath += "\\";
+                }
+            }
+        }
+        return shortPath.toUpperCase();
+    }
+
+    private String thingShorter(String string, int length, int number) {
+        string = string.replaceAll("[\\s\\.]", "");
+        int len = Math.min(string.length(), length);
+        string = string.substring(0, len) + "~" + number;
+        return string;
     }
 }
