@@ -370,35 +370,13 @@ public final class LocalSettings {
                 || (property.length() == 0 && key.equals(GS_PATH))) {
             property = getDefaultProperty(key);
         }
-        // a way around update 21 in Java7 - on windows
+
+        // a way around update 21 in Java7 and update 45 in Java6 - on windows
         // http://www.oracle.com/technetwork/java/javase/6u45-relnotes-1932876.html
         // TODO: Create a more permanent solution
-
         if (key.equals(R_PATH) || key.equals(GS_PATH)) {
-            // temporary hack for (english) windows machines...
             if (System.getProperty("os.name").contains("Win")) {
-                String replaceBy = "";
-                String replace = "";
-                if (property.toLowerCase().contains("archivos de programa")) {
-                    replace = "archivos de programa";
-                    replaceBy = "archiv";
-                } else if (property.toLowerCase().contains("program files")) {
-                    replace = "program files";
-                    replaceBy = "progra";
-                } else if (property.toLowerCase().contains("arquivos de programas")) {
-                    replace = "arquivos de programas";
-                    replaceBy = "arquiv";
-                }
-                // transform the filename
-                // property = pathShorter(property);
-                if (replace.length() > 0) {
-                    int n = 0;
-                    String temp = property.toLowerCase().replace(replace, replaceBy + (n++));
-                    while (n < 10 && !(new File(temp).exists())) {
-                        temp = property.toLowerCase().replace(replace, replaceBy + (n++));
-                    }
-                    property = temp.toUpperCase();
-                }                
+                property = fixWindowsPath(property);
             }
         }
         return property;
@@ -754,5 +732,33 @@ public final class LocalSettings {
         int len = Math.min(string.length(), length);
         string = string.substring(0, len) + "~" + number;
         return string;
+    }
+
+    private String fixWindowsPath(String property) {
+        // temporary hack for (english) windows machines...
+        // based on http://en.wikipedia.org/wiki/Program_Files
+        String replaceBy = "";
+        String replace = "";
+        if (property.toLowerCase().contains("archivos de programa")) {
+            replace = "archivos de programa";
+            replaceBy = "archiv";
+        } else if (property.toLowerCase().contains("program files")) {
+            replace = "program files";
+            replaceBy = "progra";
+        } else if (property.toLowerCase().contains("arquivos de programas")) {
+            replace = "arquivos de programas";
+            replaceBy = "arquiv";
+        }
+        // transform the filename
+        // property = pathShorter(property);
+        if (replace.length() > 0) {
+            int n = 0;
+            String temp = property.toLowerCase().replace(replace, replaceBy + "~" + (n++));
+            while (n < 10 && !(new File(temp).exists())) {
+                temp = property.toLowerCase().replace(replace, replaceBy + "~" + (n++));
+            }
+            property = temp.toUpperCase();
+        }
+        return property;
     }
 }
