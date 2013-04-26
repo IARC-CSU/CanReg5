@@ -1,5 +1,9 @@
 Changelog
 
+5.00.27
+- The latest Java update (7u21 and 6u45) broke CanReg5 integration of R and GS due to a new restriction in spaces in file names. This is a quick work around that solves the problem on Windows machines, in most languages (including Spanish, Portuguese, and English).
+- Fixed a bug in the testScript.r where generate SVG or PNG did not work.
+
 5.00.26
 - CanRegDAO should now be more thread safe.
 - Improved the connection to SEER*stat.

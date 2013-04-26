@@ -1,5 +1,35 @@
-changeset:   1121:95f555f52a0d
+changeset:   1127:e9b674b5f00a
 tag:         tip
+user:        ErvikM@x90164
+date:        Fri Apr 26 13:32:29 2013 +0200
+summary:     5.00.27
+
+changeset:   1126:d3dd885cdd47
+user:        ErvikM@x90164
+date:        Fri Apr 26 13:31:05 2013 +0200
+summary:     Tidied the code for the java update fix.
+
+changeset:   1125:c239322e0859
+user:        ErvikM@x90164
+date:        Fri Apr 26 12:36:15 2013 +0200
+summary:     The latest Java update broke CanReg5 integration of R and GS due to a new restriction in spaces in file names. This is a quick work around that solves the problem on Windows machines, in Spanish, Portuguese and English.
+
+changeset:   1124:bf40556e7da5
+user:        ErvikM@x90164
+date:        Tue Apr 23 17:44:10 2013 +0200
+summary:     Fixed a bug in the testScript.r where generate SVG or PNG did not work.
+
+changeset:   1123:e5898c88c0aa
+user:        ErvikM@x90164
+date:        Mon Apr 22 14:05:58 2013 +0200
+summary:     5.00.26
+
+changeset:   1122:4a767c8b2cc7
+user:        ErvikM@x90164
+date:        Wed Apr 17 14:05:00 2013 +0200
+summary:     5.00.26
+
+changeset:   1121:95f555f52a0d
 user:        ErvikM@x90164
 date:        Wed Apr 17 14:01:52 2013 +0200
 summary:     "Latest news" now working again. (The down time was doe to a change in Twitters API.)
