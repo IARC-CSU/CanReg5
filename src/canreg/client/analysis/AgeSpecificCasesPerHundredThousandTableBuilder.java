@@ -212,9 +212,13 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
         }
 
         if (populations[0].getFilter().length() > 0) {
-            notesString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("FILTER USED:") + populations[0].getFilter();
+            notesString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("FILTER USED:") + " " + populations[0].getFilter();
         }
-
+        
+        if (populations.length>0) {
+            notesString += ", " + java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("REFERENCE POPULATION:") + " " + populations[0].getWorldPopulation().getPopulationDatasetName();
+        }
+        
         standardPopulationArray = new double[numberOfSexes][numberOfAgeGroups];
         for (PopulationDataset stdPopulation : standardPopulations) {
             stdPopulation.addPopulationDataToArrayForTableBuilder(standardPopulationArray, null, new AgeGroupStructure(5, 85, 1));
@@ -877,7 +881,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
                     fw.write("/col col 0 sub def\n");
                     fw.write("ASRfont SF\n");
                     fw.write("0 496 MT (ASR) RS\n");
-                    fw.write("0 487 MT ((W)) RS\n");
+                    fw.write("0 487 MT ( ) RS\n");
                     k = 475;
                     for (int j = 0; j < numberOfCancerGroups; j++) {
                         if (icdLabel[j].charAt(sexNumber) == '1') {
