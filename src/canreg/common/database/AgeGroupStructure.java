@@ -201,7 +201,7 @@ public class AgeGroupStructure implements Serializable {
             string += (year - 1);
             loop++;
         }
-        if (loop >= 3) {
+        if (loop >= 3 && year < getMaxAge()) {
             string += ", ...";
             year = getMaxAge();
         }
