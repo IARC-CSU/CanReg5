@@ -25,6 +25,7 @@
  */
 package canreg.client.gui.analysis;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.LocalSettings;
@@ -47,11 +48,9 @@ import canreg.server.database.UnknownTableException;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -718,10 +717,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
     private class WriteFileActionTask extends org.jdesktop.application.Task<Object, Void> {
 
-        BufferedWriter bw;
+        CSVWriter csvWriter;
         int rowCount;
         int columnCount;
-        private String separatingString;
         private boolean formatDate = false;
         private boolean correctUnknown = false;
         private boolean exportSources = false;
@@ -731,7 +729,6 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
         WriteFileActionTask(String fileName, org.jdesktop.application.Application app, String separatingString) {
             super(app);
-            this.separatingString = separatingString;
 
             Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
             setCursor(hourglassCursor);
@@ -766,7 +763,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             try {
                 File file = new File(fileName);
                 localSettings.setProperty("export_data_path", file.getParent());
-                bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8")); // TODO: Make choice of encoding dynamic?
+                FileWriter bw = new FileWriter(fileName); // TODO: Make choice of encoding dynamic?
+                csvWriter = new CSVWriter(bw, separatingString.charAt(0), '\"');
                 rowCount = resultTable.getRowCount();
                 columnCount = resultTable.getColumnCount();
             } catch (IOException ex) {
@@ -820,208 +818,193 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             // Here we do indeed reference the jtable. However as long as the user does not move the columns it should be ok...
             // TODO: reference the data source instead of the resultTable!
 
-            StringBuilder line = new StringBuilder();
+            LinkedList<String> line = new LinkedList<String>();
             VariablesExportDetailsPanel dvle;
             Object value;
             GregorianCalendarCanReg gregorianCanRegCalendar;
             Dictionary dict;
 
-            try {
+            for (int column = 0; column < columnCount; column++) {
+                dvle = variableChooserPanel.getVariablesExportDetailsPanelByName(resultTable.getColumnName(column));
+                boolean[] bools = dvle.getCheckboxes();
+                String columnName = resultTable.getColumnName(column);
+                //
+                if (variableNamesComboBox.getSelectedIndex() == VARIABLE_NAME_ENGLISH_INDEX) {
+                    columnName = dvle.getVariable().getEnglishName();
+                } else if (variableNamesComboBox.getSelectedIndex() == VARIABLE_NAME_FULL_INDEX) {
+                    columnName = dvle.getVariable().getFullName();
+                } else if (variableNamesComboBox.getSelectedIndex() == VARIABLE_NAME_STANDARD_INDEX) {
+                    String standardName = dvle.getVariable().getStandardVariableName();
+                    if (standardName != null) {
+                        columnName = standardName;
+                    } else {
+                        // add a star
+                        columnName += "*";
+                    }
+                } else if (variableNamesComboBox.getSelectedIndex() == VARIABLE_NAME_SHORT_INDEX) {
+                    // do nothing
+                }
+
+                // the raw name
+                if (bools[0]) {
+                    line.add(columnName);
+                }
+                // the category
+                if (bools[1]) {
+                    line.add(columnName + " (cat)");
+                }
+                // the description
+                if (bools[2]) {
+                    line.add(columnName + " (desc)");
+                }
+            }
+            // add the source bits if needed
+            if (exportSources) {
+                for (int i = 0; i < maxNumberOfSourcesPerTumour; i++) {
+                    for (String header : sourceVariableNames) {
+                        if (maxNumberOfSourcesPerTumour > 1) {
+                            line.add(header + (i + 1));
+                        } else {
+                            line.add(header);
+                        }
+                    }
+                }
+            }
+
+            csvWriter.writeNext(line.toArray(new String[0]));
+            line = new LinkedList<String>();
+            for (int row = 0; row < rowCount; row++) {
                 for (int column = 0; column < columnCount; column++) {
                     dvle = variableChooserPanel.getVariablesExportDetailsPanelByName(resultTable.getColumnName(column));
+                    value = resultTable.getValueAt(row, column);
                     boolean[] bools = dvle.getCheckboxes();
-                    String columnName = resultTable.getColumnName(column);
-                    //
-                    if (variableNamesComboBox.getSelectedIndex() == VARIABLE_NAME_ENGLISH_INDEX) {
-                        columnName = dvle.getVariable().getEnglishName();
-                    } else if (variableNamesComboBox.getSelectedIndex() == VARIABLE_NAME_FULL_INDEX) {
-                        columnName = dvle.getVariable().getFullName();
-                    } else if (variableNamesComboBox.getSelectedIndex() == VARIABLE_NAME_STANDARD_INDEX) {
-                        String standardName = dvle.getVariable().getStandardVariableName();
-                        if (standardName != null) {
-                            columnName = standardName;
-                        } else {
-                            // add a star
-                            columnName += "*";
-                        }
-                    } else if (variableNamesComboBox.getSelectedIndex() == VARIABLE_NAME_SHORT_INDEX) {
-                        // do nothing
-                    }
-
-                    // the raw name
+                    // the raw code
                     if (bools[0]) {
-                        line.append(columnName).append(separatingString);
+                        // Should we format the date?
+                        if (formatDate && dvle.getVariable().getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)) {
+                            try {
+                                gregorianCanRegCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg((String) value, Globals.DATE_FORMAT_STRING);
+                                if (correctUnknown && gregorianCanRegCalendar != null) {
+                                    if (gregorianCanRegCalendar.isUnknownMonth()) {
+                                        // Set month to July
+                                        gregorianCanRegCalendar.set(Calendar.MONTH, 7 - 1);
+                                        gregorianCanRegCalendar.setUnkownMonth(false);
+                                        // And day to first
+                                        gregorianCanRegCalendar.set(Calendar.DAY_OF_MONTH, 1);
+                                        gregorianCanRegCalendar.setUnknownDay(false);
+                                    } else if (gregorianCanRegCalendar.isUnknownDay()) {
+                                        // Set day to mid-month
+                                        gregorianCanRegCalendar.set(Calendar.DAY_OF_MONTH, 15);
+                                        gregorianCanRegCalendar.setUnknownDay(false);
+                                    }
+                                }
+                                if (gregorianCanRegCalendar != null) {
+                                    value = DateHelper.parseGregorianCalendarCanRegToDateString(gregorianCanRegCalendar, (String) dateFormatComboBox.getSelectedItem());
+                                }
+                            } catch (ParseException ex) {
+                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (IllegalArgumentException ex) {
+                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.WARNING, "Value: " + value, ex);
+                            }
+                        }
+                        line.add(value.toString());
                     }
                     // the category
                     if (bools[1]) {
-                        line.append(columnName).append(" (cat)").append(separatingString);
+                        String code = (String) value;
+                        String category = "Invalid category.";
+                        try {
+                            int categoryLength = dvle.getDictionary().getCodeLength();
+                            if (code.length() >= categoryLength) {
+                                category = dvle.getDictionary().getDictionaryEntries().get(code.substring(0, categoryLength)).getDescription();
+                            }
+                        } catch (NullPointerException npe) {
+                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, npe);
+                        }
+                        line.add(category);
                     }
                     // the description
                     if (bools[2]) {
-                        line.append(columnName).append(" (desc)").append(separatingString);
-                    }
-                    boolean last = (column == columnCount - 1);
-                    if (last) {
-                        // System.out.println("Sep string lenght: " + separatingString.length());
-                        line.replace(line.length() - separatingString.length(), line.length(), "");
-                        // line = line.substring(0, line.length() - separatingString.length());
+                        String code = (String) value;
+                        String description = "Invalid code.";
+                        try {
+                            int codeLength = dvle.getDictionary().getFullDictionaryCodeLength();
+                            if (code.length() == codeLength) {
+                                description = dvle.getDictionary().getDictionaryEntries().get(code).getDescription();
+                            }
+                        } catch (NullPointerException npe) {
+                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, npe);
+                        }
+                        line.add(description);
                     }
                 }
-                // add the source bits if needed
+                // if we should export the sources we do that here...
                 if (exportSources) {
-                    for (int i = 0; i < maxNumberOfSourcesPerTumour; i++) {
-                        for (String header : sourceVariableNames) {
-                            if (maxNumberOfSourcesPerTumour > 1) {
-                                line.append(separatingString).append(header).append(i + 1);
-                            } else {
-                                line.append(separatingString).append(header);
-                            }
-                        }
-                    }
-                }
+                    Object tumourIDobj = resultTable.getValueAt(row, tumourIDcolumn);
 
-                bw.write(line + Globals.newline);
-                line = new StringBuilder();
-                for (int row = 0; row < rowCount; row++) {
-                    for (int column = 0; column < columnCount; column++) {
-                        dvle = variableChooserPanel.getVariablesExportDetailsPanelByName(resultTable.getColumnName(column));
-                        value = resultTable.getValueAt(row, column);
-                        boolean[] bools = dvle.getCheckboxes();
-                        // the raw code
-                        if (bools[0]) {
-                            // Should we format the date?
-                            if (formatDate && dvle.getVariable().getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)) {
-                                try {
-                                    gregorianCanRegCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg((String) value, Globals.DATE_FORMAT_STRING);
-                                    if (correctUnknown && gregorianCanRegCalendar != null) {
-                                        if (gregorianCanRegCalendar.isUnknownMonth()) {
-                                            // Set month to July
-                                            gregorianCanRegCalendar.set(Calendar.MONTH, 7 - 1);
-                                            gregorianCanRegCalendar.setUnkownMonth(false);
-                                            // And day to first
-                                            gregorianCanRegCalendar.set(Calendar.DAY_OF_MONTH, 1);
-                                            gregorianCanRegCalendar.setUnknownDay(false);
-                                        } else if (gregorianCanRegCalendar.isUnknownDay()) {
-                                            // Set day to mid-month
-                                            gregorianCanRegCalendar.set(Calendar.DAY_OF_MONTH, 15);
-                                            gregorianCanRegCalendar.setUnknownDay(false);
-                                        }
-                                    }
-                                    if (gregorianCanRegCalendar != null) {
-                                        value = DateHelper.parseGregorianCalendarCanRegToDateString(gregorianCanRegCalendar, (String) dateFormatComboBox.getSelectedItem());
-                                    }
-                                } catch (ParseException ex) {
-                                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                                } catch (IllegalArgumentException ex) {
-                                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.WARNING, "Value: " + value, ex);
-                                }
-                            }
-                            line.append(value).append(separatingString);
-                        }
-                        // the category
-                        if (bools[1]) {
-                            String code = (String) value;
-                            String category = "Invalid category.";
-                            try {
-                                int categoryLength = dvle.getDictionary().getCodeLength();
-                                if (code.length() >= categoryLength) {
-                                    category = dvle.getDictionary().getDictionaryEntries().get(code.substring(0, categoryLength)).getDescription();
-                                }
-                            } catch (NullPointerException npe) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, npe);
-                            }
-                            line.append(category).append(separatingString);
-                        }
-                        // the description
-                        if (bools[2]) {
-                            String code = (String) value;
-                            String description = "Invalid code.";
-                            try {
-                                int codeLength = dvle.getDictionary().getFullDictionaryCodeLength();
-                                if (code.length() == codeLength) {
-                                    description = dvle.getDictionary().getDictionaryEntries().get(code).getDescription();
-                                }
-                            } catch (NullPointerException npe) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, npe);
-                            }
-                            line.append(description).append(separatingString);
-                        }
-                        boolean last = (column == columnCount - 1);
-                        if (last) {
-                            // line.replace(line.length()-2,line.length()-1,"");
-                            line.replace(line.length() - separatingString.length(), line.length(), "");
-                        }
-                    }
-                    // if we should export the sources we do that here...
-                    if (exportSources) {
-                        Object tumourIDobj = resultTable.getValueAt(row, tumourIDcolumn);
+                    /* int count = 0;
+                     int stopCount = 500;
+                     try 500 times before giving up...
+                     while (tumourIDobj==null&&count<stopCount){
+                     try {
+                     wait(5);
+                     count++;
+                     tumourIDobj = resultTable.getValueAt(row, tumourIDcolumn);
+                     catch (InterruptedException ex) {
+                     Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                     }
+                     }
+                     */
 
-                        /* int count = 0;
-                         int stopCount = 500;
-                         try 500 times before giving up...
-                         while (tumourIDobj==null&&count<stopCount){
-                         try {
-                         wait(5);
-                         count++;
-                         tumourIDobj = resultTable.getValueAt(row, tumourIDcolumn);
-                         catch (InterruptedException ex) {
-                         Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                         }
-                         }
-                         */
-
-                        String tumourID = null;
-                        if (tumourIDobj != null) {
-                            tumourID = tumourIDobj.toString();
-                            Tumour tumour;
-                            int numberOfSourcesWritten = 0;
-                            try {
-                                tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false);
-                                if (tumour != null && tumour.getSources() != null) {
-                                    for (Source source : tumour.getSources()) {
-                                        for (String variableName : sourceVariableNames) {
-                                            line.append(separatingString).append(source.getVariable(variableName));
-                                        }
-                                        numberOfSourcesWritten++;
-                                    }
-                                }
-                            } catch (DistributedTableDescriptionException ex) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (UnknownTableException ex) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (RemoteException ex) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (SecurityException ex) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (SQLException ex) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (RecordLockedException ex) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                            } finally {
-                                for (; numberOfSourcesWritten < maxNumberOfSourcesPerTumour;) {
+                    String tumourID = null;
+                    if (tumourIDobj != null) {
+                        tumourID = tumourIDobj.toString();
+                        Tumour tumour;
+                        int numberOfSourcesWritten = 0;
+                        try {
+                            tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false);
+                            if (tumour != null && tumour.getSources() != null) {
+                                for (Source source : tumour.getSources()) {
                                     for (String variableName : sourceVariableNames) {
-                                        line.append(separatingString);
+                                        line.add(source.getVariable(variableName).toString());
                                     }
                                     numberOfSourcesWritten++;
                                 }
                             }
-                        } else {
-                            return false;
+                        } catch (DistributedTableDescriptionException ex) {
+                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (UnknownTableException ex) {
+                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (RecordLockedException ex) {
+                            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        } finally {
+                            for (; numberOfSourcesWritten < maxNumberOfSourcesPerTumour;) {
+                                for (String variableName : sourceVariableNames) {
+                                    line.add("");
+                                }
+                                numberOfSourcesWritten++;
+                            }
                         }
+                    } else {
+                        return false;
                     }
-                    setProgress(100 * row / rowCount);
-                    // Garbage collect every 1000 rows?
-                    if (row % 1000 == 0) {
-                        System.gc();
-                    }
-                    bw.write(line + Globals.newline);
-                    line.delete(0, line.length());
-
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                return false;
+                setProgress(100 * row / rowCount);
+                // Garbage collect every 1000 rows?
+                if (row % 1000 == 0) {
+                    System.gc();
+                }
+
+                csvWriter.writeNext(line.toArray(new String[0]));
+                line.removeAll(line);
             }
+
             return true;  // return your result
         }
 
@@ -1035,8 +1018,8 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             try {
                 // Runs on the EDT.  Update the GUI based on
                 // the result computed by doInBackground().
-                bw.flush();
-                bw.close();
+                csvWriter.flush();
+                csvWriter.close();
 
                 rangeFilterPanel.setRefreshButtonEnabled(true);
                 resultPanel.setVisible(true);
@@ -1044,7 +1027,6 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
                 if (success) {
                     JOptionPane.showMessageDialog(dtp, "Data exported to : " + fileName, "Success", JOptionPane.INFORMATION_MESSAGE);
-
                     localSettings.writeSettings();
                 } else {
                     JOptionPane.showMessageDialog(dtp, "Something went wrong while exporting to : " + fileName, "Error", JOptionPane.ERROR_MESSAGE);
@@ -1065,6 +1047,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
     @Action
     public void exportSourceInformationTickBoxUpdated() {
+        // if tumourid is not selcted we need to refresh the table, so we hide the table as we have it...
+        if (!variableChooserPanel.isVariableDataSelected(tumourIDdbvle.getDatabaseVariableName())) {
+            resultPanel.setVisible(false);
+        }
         variableChooserPanel.setVariableDataSelected(tumourIDdbvle.getDatabaseVariableName(), true);
     }
 }

@@ -185,4 +185,8 @@ public class VariablesExportDetailsPanel extends javax.swing.JPanel {
         dictionaryCategoryCheckBox.setVisible(false);
         dictionaryDescriptionCheckBox.setVisible(false);
     }
+
+    public boolean isDataCheckBoxSelected() {
+        return dataCheckBox.isSelected();
+    }
 }
