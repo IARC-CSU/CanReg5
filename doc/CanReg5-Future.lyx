@@ -2,7 +2,7 @@
 \lyxformat 413
 \begin_document
 \begin_header
-\textclass article
+\textclass report
 \use_default_options true
 \maintain_unincluded_children false
 \language english
@@ -25,6 +25,7 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
+\spacing single
 \use_hyperref false
 \papersize default
 \use_geometry false
@@ -442,11 +443,19 @@ drops cases when highest age group cutoff < 85?
 
 \end_deeper
 \begin_layout Section*
-Code related improvements
+(Computer) Code related improvements
 \end_layout
 
 \begin_layout Itemize
 More unit tests.
+\end_layout
+
+\begin_layout Section*
+Coding related improvements
+\end_layout
+
+\begin_layout Itemize
+Update ICD-O 3 to the Dec 2011 version
 \end_layout
 
 \begin_layout Part*
