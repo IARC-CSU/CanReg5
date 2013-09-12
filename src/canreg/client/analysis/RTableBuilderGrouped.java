@@ -269,14 +269,22 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
             // filesCreated.add(incfile.getPath());
 
             File dir = new File(Globals.R_SCRIPTS_PATH);
+            File userDir = new File(Globals.USER_R_SCRIPTS_PATH);
             // call R
             for (String rScript : rScripts) {
-
+                File scriptFile = new File(userDir.getAbsolutePath() 
+                        + Globals.FILE_SEPARATOR
+                        + rScript);
+                if(!scriptFile.exists()){
+                    scriptFile = new File(dir.getAbsolutePath() 
+                        + Globals.FILE_SEPARATOR
+                        + rScript);
+                }
                 String command = "\"" + rpath + "\""
                         + " --slave --file="
-                        + "\"" + dir.getAbsolutePath() 
-                        + Globals.FILE_SEPARATOR
-                        + rScript
+                        + "\"" + scriptFile.getAbsolutePath() 
+//                        + Globals.FILE_SEPARATOR
+//                        + rScript
                         + "\" "
                         + "--args "
                         + "-ft=" + fileType + " "

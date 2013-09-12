@@ -1,23 +1,22 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2013  International Agency for Research on Cancer
+ * Copyright (C) 2008-2013 International Agency for Research on Cancer
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
-
 package canreg.common;
 
 import canreg.common.database.AgeGroupStructure;
@@ -29,19 +28,19 @@ import canreg.common.database.AgeGroupStructure;
 public class Globals {
 
     /**
-     * 
+     *
      */
     static public String APPINFO_PROPERTIES_PATH = "/appinfo.properties";
     /**
-     * 
+     *
      */
     static public String[] versionStringParts = new String[]{"program.VERSION"};
     /**
-     * 
+     *
      */
     static public String downloadCanRegURL = "http://www.iacr.com.fr/CanReg5/CanReg5.zip";
     /**
-     * 
+     *
      */
     static public String newestVersionURLString = "http://www.iacr.com.fr/version.txt";
     /**
@@ -52,15 +51,15 @@ public class Globals {
     // static public String CANREG_TWITTER_RSS_URL = "http://twitter.com/statuses/user_timeline/86306086.rss";
     // static public String CANREG_TWITTER_RSS_URL = "http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=canreg";
     /**
-     * 
+     *
      */
     static public String NAMESPACE = "ns3:";
     /**
-     * 
+     *
      */
     static public int RMI_PORT = 1199;
     /**
-     * 
+     *
      */
     static public boolean DEBUG = true;
     // FILES AND FOLDERS
@@ -72,11 +71,11 @@ public class Globals {
     static private String CANREG_SERVER_FOLDER_NAME = ".CanRegServer";
     static private String CANREG_CLIENT_FOLDER_NAME = ".CanRegClient";
     /**
-     * 
+     *
      */
     static public String DATABASE_CONFIG = "dbConfiguration.properties";
     /**
-     * 
+     *
      */
     static public String PASS_FILENAME = "Passwords.properties";
     /**
@@ -84,25 +83,20 @@ public class Globals {
      */
     static public String LEVELS_FILENAME = "Levels.properties";
     /**
-     * 
+     *
      */
     static public String POLICY_FILENAME = "./conf/CanRegPolicy.conf";
     /**
-     * 
+     *
      */
-    static public String LOGIN_FILENAME = "./conf/CanRegLogin.conf";
-    static final public String TABLES_CONF_PATH = "./conf/tables";
-    static final public String R_SCRIPTS_PATH = TABLES_CONF_PATH+"/r";
-    static public String TABLES_PREVIEW_PATH = "./conf/tables/previews";
-    static public String DEFAULT_PREVIEW_FILENAME = "blanc.png";
     static public String DEFAULT_SYSTEM_XML = "./conf/database/TRN.xml";
     public static String DEFAULT_DICTIONARIES_FOLDER = "/canreg/common/resources/dictionaries";
     /**
-     * 
+     *
      */
     static final public String CANREG_SERVER_FOLDER = Globals.CANREG_USER_FOLDER + Globals.FILE_SEPARATOR + Globals.CANREG_SERVER_FOLDER_NAME;
     static final public String CANREG_CLIENT_FOLDER = Globals.CANREG_USER_FOLDER + Globals.FILE_SEPARATOR + Globals.CANREG_CLIENT_FOLDER_NAME;
-    static final public String CANREG_PATIENT_PDFS_FOLDER = CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + Globals.PATIENT_TABLE_NAME+"-PDFS";
+    static final public String CANREG_PATIENT_PDFS_FOLDER = CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + Globals.PATIENT_TABLE_NAME + "-PDFS";
     static final private String CANREG_SERVER_SYSTEM_CONFIG_FOLDER_NAME = "System";
     static final private String CANREG_SERVER_DATABASE_FOLDER_NAME = "Database";
     static final private String CANREG_BACKUP_FOLDER_NAME = "Backup";
@@ -114,27 +108,41 @@ public class Globals {
     static public String CANREG_INSTRUCTIONS_LOCAL_FILE = "CanReg5-instructions.pdf";
     public static String CANREG_CHANGELOG_URL = "http://www.iacr.com.fr/CanReg5/changelog.txt";
     /**
-     * 
+     *
+     */
+    static public String LOGIN_FILENAME = "./conf/CanRegLogin.conf";
+    /**
+     *
+     */
+    static final public String TABLES_CONF_PATH = "./conf/tables";
+    static final public String R_SCRIPTS_PATH = TABLES_CONF_PATH + "/r";
+    static public String TABLES_PREVIEW_PATH = TABLES_CONF_PATH + "/previews";
+    public final static String USER_TABLES_CONF_PATH = CANREG_CLIENT_FOLDER + FILE_SEPARATOR + TABLES_CONF_PATH;
+    static final public String USER_R_SCRIPTS_PATH = USER_TABLES_CONF_PATH + "/r";
+    static public String USER_TABLES_PREVIEW_PATH = USER_TABLES_CONF_PATH + "/previews";
+    static public String DEFAULT_PREVIEW_FILENAME = "blanc.png";
+    /**
+     *
      */
     static public String CANREG_SERVER_SYSTEM_CONFIG_FOLDER = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + CANREG_SERVER_SYSTEM_CONFIG_FOLDER_NAME;
     /**
-     * 
+     *
      */
     static public String CANREG_SERVER_DATABASE_FOLDER = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + CANREG_SERVER_DATABASE_FOLDER_NAME;
     /**
-     * 
+     *
      */
     static public String CANREG_BACKUP_FOLDER = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + CANREG_BACKUP_FOLDER_NAME;
     /**
-     * 
+     *
      */
     public static String CANREG4_SYSTEM_FOLDER = "C:\\CR4SHARE\\CANREG4\\CR4-SYST\\";
     /**
-     * 
+     *
      */
     static public String SCHEMA_NAME = "APP";    // User levels
     /**
-     * 
+     *
      */
     public static int DEFAULT_PORT = 1199;
     /**
@@ -142,11 +150,11 @@ public class Globals {
      */
     public static String DEFAULT_SERVER_ADDRESS = "localhost";
     /**
-     * 
+     *
      */
     public static int NUMBER_OF_LINES_IN_IMPORT_PREVIEW = 100;
     /**
-     * 
+     *
      */
     public final static String TUMOUR_TABLE_NAME = "Tumour";
     public final static String PATIENT_TABLE_NAME = "Patient";
@@ -168,7 +176,7 @@ public class Globals {
         TUMOUR_TABLE_NAME,
         SOURCE_TABLE_NAME,};
     /**
-     * 
+     *
      */
     public static String DATE_FORMAT_STRING = "yyyyMMdd";
     public static String DATAENTRY_LANGUAGE_ENGLISH = "en";
@@ -203,7 +211,6 @@ public class Globals {
     public static String DEFAULT_BACK_UP_EVERY = "7";
     public static int GLOBAL_PERSON_SEARCH_STEP_SIZE = 1;
     // public static String CANREG_HELP_FILE_NAME = "CanReg5-functionality.html";
-
     public static int UNDUPLICATION_NOT_DONE_CODE = 0;
     public static int MAX_POPULATION_DATASETS_IN_TABLE = 50;
     public static String OBSOLETE_VALUE = "1";
@@ -220,39 +227,38 @@ public class Globals {
     public static String NAMESEX_TABLE_NAME = "NAMESEX";
     public static final int MAX_ERROR_LINES = 25;
     public static final String morphologicalFamiliesLookUpFileResource = "/canreg/common/resources/lookup/MorphFam.txt";
-    public static final String mustLookupFile= "/canreg/common/resources/lookup/Must.txt";
+    public static final String mustLookupFile = "/canreg/common/resources/lookup/Must.txt";
     public static final String mustNotLookupFile = "/canreg/common/resources/lookup/MustNot.txt";
     public static String newline = System.getProperty("line.separator");
 
-    
     /**
-     * 
+     *
      */
     static public enum UserRightLevels {
 
         /**
-         * 
+         *
          */
         NOT_LOGGED_IN,
         /**
-         * 
+         *
          */
         SUPERVISOR,
         /**
-         * 
+         *
          */
         REGISTRAR,
         /**
-         * 
+         *
          */
         ANALYST
     };
     /**
-     * 
+     *
      */
     static public String PATIENT_TABLE_RECORD_ID_VARIABLE_NAME = "PRID";
     /**
-     * 
+     *
      */
     static public String TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME = "TRID";
     /**
@@ -260,7 +266,7 @@ public class Globals {
      */
     static public String SOURCE_TABLE_RECORD_ID_VARIABLE_NAME = "SRID";
     /**
-     * 
+     *
      */
     static public AgeGroupStructure[] defaultAgeGroupStructures = {
         new AgeGroupStructure(5, 85),
@@ -273,43 +279,43 @@ public class Globals {
         new AgeGroupStructure(5, 20, 5, 20)
     };
     /**
-     * 
+     *
      */
     static public int[] standardWorldPopulationWeights = {120, 100, 90, 90, 80, 80, 60, 60, 60, 60, 50, 40, 40, 30, 20, 10, 5, 5};
     /**
-     * 
+     *
      */
     static public int[] standardEuropeanPopulationWeights = {80, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 60, 50, 40, 30, 20, 10, 10};
     /**
-     * 
+     *
      */
     static public int[] standardWHOPopulationWeights = {886, 869, 860, 847, 822, 793, 761, 715, 659, 604, 537, 455, 372, 296, 221, 152, 91, 63};
 
     /**
-     * 
+     *
      */
     public static enum SystemVariableNames {
 
         /**
-         * 
+         *
          */
         PRID,
         /**
-         * 
+         *
          */
         TRID,
         /**
-         * 
+         *
          */
         NEXT_RECORD_DB_ID,
         /**
-         * 
+         *
          */
         LAST_RECORD_DB_ID
     }
 
     /**
-     * 
+     *
      */
     public static enum StandardVariableNames {
 
@@ -355,27 +361,27 @@ public class Globals {
          */
         MultPrimCode,
         /**
-         * 
+         *
          */
         CheckStatus,
         /**
-         * 
+         *
          */
         PersonSearch,
         /**
-         * 
+         *
          */
         TumourRecordStatus,
         /**
-         * 
+         *
          */
         FirstName,
         /**
-         * 
+         *
          */
         Surname,
         /**
-         * 
+         *
          */
         PatientUpdateDate,
         /**
@@ -407,16 +413,16 @@ public class Globals {
          */
         AddressCode,
         /**
-         * Any number of characters/digits. (Most registries would have 2 or 3 digits long, 
-         * though.)
+         * Any number of characters/digits. (Most registries would have 2 or 3
+         * digits long, though.)
          */
         MultPrimSeq,
         /**
-         * 
+         *
          */
         MultPrimTot,
         /**
-         * 
+         *
          */
         Stage,
         /**
@@ -468,11 +474,11 @@ public class Globals {
          */
         PatientRecordIDTumourTable,
         /**
-         * 
+         *
          */
         // TumourRecordID,
         /**
-         * 
+         *
          */
         ObsoleteFlagTumourTable,
         /**
@@ -539,30 +545,29 @@ public class Globals {
         "8 - not assigned",
         "Training"
     };
+
     public static enum RecordStatusValues {
+
         Pending,
         Confirmed
     }
-
     public static String RECORD_STATUS_PENDING_CODE = "0";
     public static String RECORD_STATUS_CONFIRMED_CODE = "1";
 
     public static enum TurmourCheckStatusValues {
+
         Invalid,
         OK,
         Rare,
         Missing
     }
-
     public static String TUMOUR_CHECK_STATUS_INVALID_CODE = "0";
     public static String TUMOUR_CHECK_STATUS_OK_CODE = "1";
     public static String TUMOUR_CHECK_STATUS_RARE_CODE = "2";
     public static String TUMOUR_CHECK_STATUS_MISSING_CODE = "3";
 
     public static enum PatientUnduplicationStatusValues {
-
     }
-    
     public static String[] TRANSLATED_LOCALES = {
         "en",
         "fr",

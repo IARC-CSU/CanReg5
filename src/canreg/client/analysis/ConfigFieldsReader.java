@@ -43,7 +43,6 @@ public class ConfigFieldsReader extends DescriptionReader {
 
     private static ConfigFields readConfig(String fieldName,
                                    FileReader file) {
-        LinkedList list = new LinkedList();
         ConfigFields fieldDesc = new ConfigFields(
                 fieldName);
         String word;
@@ -57,8 +56,7 @@ public class ConfigFieldsReader extends DescriptionReader {
             } else if (word.equals("")) {
                 // Do nothing
             } else {
-                String trans = new String();
-                trans = word;
+                String trans = word;
                 fieldDesc.addValue(trans);
             }
         }
