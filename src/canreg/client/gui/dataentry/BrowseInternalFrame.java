@@ -740,6 +740,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     Tumour rec = new Tumour();
                     rec.setVariable(patientIDTumourTablelookupVariable, idString);
                     set.add(rec);
+//                    CanRegClientApp.getApplication().saveRecord(rec);
                 }
 
                 for (DatabaseRecord rec : set) {
