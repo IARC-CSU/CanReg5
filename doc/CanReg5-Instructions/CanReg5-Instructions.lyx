@@ -10934,8 +10934,32 @@ Configuration files
 \end_layout
 
 \begin_layout Standard
-The configuration files of these tables can be found in the conf/tables
+The default configuration files of these tables can be found in the 
+\begin_inset Quotes eld
+\end_inset
+
+conf/tables
+\begin_inset Quotes erd
+\end_inset
+
  folder in your CanReg5 installation.
+ The user provided ones are found in the 
+\begin_inset Quotes eld
+\end_inset
+
+conf/tables
+\begin_inset Quotes erd
+\end_inset
+
+ folder in the 
+\begin_inset Quotes eld
+\end_inset
+
+.CanRegClient
+\begin_inset Quotes erd
+\end_inset
+
+ folder.
  For each line in the Table Builder you will find a corresponding .conf-file.
  (See figure 
 \begin_inset CommandInset ref
@@ -11078,8 +11102,18 @@ preview_image
 \end_layout
 
 \begin_layout Standard
-This is the name of a file found in the previews folder that will displayed
- in CanReg when the user has selected this table.
+This is the name of a file found in one of the previews folders (within
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+conf/tables
+\begin_inset Quotes erd
+\end_inset
+
+ folders mentioned above) that will displayed in CanReg when the user has
+ selected this table.
+ The user provided previews override the system provided ones.
 \end_layout
 
 \begin_layout Subsubsection

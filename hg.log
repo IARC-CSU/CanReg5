@@ -1,5 +1,50 @@
-changeset:   1128:9d09682e0134
+changeset:   1137:3981d826b463
 tag:         tip
+user:        ErvikM@x90164
+date:        Tue Sep 24 10:37:58 2013 +0200
+summary:     Added support for line and bar charts.
+
+changeset:   1136:30511e20237e
+user:        ErvikM@x90164
+date:        Thu Sep 12 14:16:57 2013 +0200
+summary:     Improved readability of some text on screen.
+
+changeset:   1135:f3fbe2ca47a9
+user:        ErvikM@x90164
+date:        Thu Sep 12 11:59:24 2013 +0200
+summary:     Improved functionality for user created table definitions and R scripts.
+
+changeset:   1134:27bf36c02caa
+user:        ErvikM@x90164
+date:        Thu Sep 12 11:57:40 2013 +0200
+summary:     Improved handling of patients missing tumour records.
+
+changeset:   1133:17f2d62650ac
+user:        ErvikM@x90164
+date:        Tue Jul 09 09:48:04 2013 +0200
+summary:     5.28
+
+changeset:   1132:fd2690af363a
+user:        ErvikM@x90164
+date:        Fri Jul 05 15:36:26 2013 +0200
+summary:     Improved handling of separating characters within strings while exporting data.
+
+changeset:   1131:c01544db8429
+user:        ErvikM@x90164
+date:        Tue Jul 02 16:48:38 2013 +0200
+summary:     Reference population now displayed on Age Specific Rates per 100.000 table.
+
+changeset:   1130:27214bb4b077
+user:        ErvikM@x90164
+date:        Tue Jul 02 13:46:43 2013 +0200
+summary:     Added a new age group structure.
+
+changeset:   1129:0b2270a2a8c1
+user:        ErvikM@x90164
+date:        Tue Jul 02 13:46:09 2013 +0200
+summary:     Added a new age group structure and changed an inconsistency in the way that age group structures are displayed.
+
+changeset:   1128:9d09682e0134
 user:        ErvikM@x90164
 date:        Fri Apr 26 13:36:46 2013 +0200
 summary:     5.00.27

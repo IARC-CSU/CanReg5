@@ -654,11 +654,25 @@ Export as HTML+JS with help of graph libraries?
 
 \begin_deeper
 \begin_layout Itemize
+http://d3js.org
+\end_layout
+
+\begin_layout Itemize
 http://cyberpython.github.com/AwesomeChartJS/
 \end_layout
 
 \begin_layout Itemize
 http://code.google.com/p/flot/
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Launch a web server and serve a live view of the databaset?
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Using Spark? http://www.sparkjava.com/index.html
 \end_layout
 
 \end_deeper

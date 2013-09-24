@@ -1,5 +1,18 @@
 Changelog
 
+5.00.29
+- Improved handling of patients missing tumour records.
+- Improved functionality for user created table definitions and R scripts.
+- Improved readability of some text on screen.
+- Other minor fixes
+
+5.00.28
+- Improved handling of separating characters within strings while exporting data.
+- Reference population now displayed on Age Specific Rates per 100.000 table.
+- Added a new age group structure.
+- Changed an inconsistency in the way that age group structures were displayed.
+- Other minor fixes.
+
 5.00.27
 - The latest Java update (7u21 and 6u45) broke CanReg5 integration of R and GS due to a new restriction in spaces in file names. This is a quick work around that solves the problem on Windows machines, in most languages (including Spanish, Portuguese, and English).
 - Fixed a bug in the testScript.r where generate SVG or PNG did not work.
