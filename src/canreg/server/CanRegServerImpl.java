@@ -96,6 +96,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.rmi.RemoteException
      */
     public CanRegServerImpl(String systemCode) throws RemoteException {
+        
+        Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.INFO, "Java version: {0}", System.getProperty("java.version"));
+                
         this.systemCode = systemCode;
 
         // If we can we add a tray icon to show that the CanReg server is running.
