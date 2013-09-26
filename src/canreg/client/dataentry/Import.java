@@ -488,7 +488,7 @@ public class Import {
                     Object patientID = patient.getVariable(io.getPatientRecordIDVariableName());
                     Patient oldPatient = null;
                     try {
-                        oldPatient = CanRegClientApp.getApplication().getPatientRecordByID(
+                        oldPatient = CanRegClientApp.getApplication().getPatientRecord(
                                 (String) patientID, false);
                     } catch (DistributedTableDescriptionException ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
