@@ -1,19 +1,19 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2013  International Agency for Research on Cancer
+ * Copyright (C) 2008-2013 International Agency for Research on Cancer
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
@@ -37,7 +37,6 @@ import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
-import canreg.common.Tools;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Patient;
 import canreg.server.database.RecordLockedException;
@@ -69,7 +68,7 @@ import org.jdesktop.application.Task;
 
 /**
  *
- * @author  morten
+ * @author morten
  */
 public class BrowseInternalFrame extends javax.swing.JInternalFrame implements ActionListener {
 
@@ -80,7 +79,6 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
     private JScrollPane resultScrollPane;
     String sortByVariableName;
     private JTable resultTable = new JTable() {
-
         @Override
         public Component prepareRenderer(TableCellRenderer renderer,
                 int row, int column) {
@@ -100,20 +98,26 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
     private GlobalToolBox globalToolBox;
     private String patientIDlookupVariable;
     private String patientIDTumourTablelookupVariable;
+    private String patientRecordIDTumourTablelookupVariable;
     private String tumourIDlookupVariable;
     private String tumourIDSourceTableLookupVariable;
     int patientIDLength;
     int tumourIDLength;
-    private int highlightedColumnNumber = 0;
+    // private int highlightedColumnNumber = 0;
+    private String patientRecordIDVariable;
 
-    /** Creates new form BrowseInternalFrame
-     * @param dtp 
+    /**
+     * Creates new form BrowseInternalFrame
+     *
+     * @param dtp
      */
     public BrowseInternalFrame(JDesktopPane dtp) {
         this.dtp = dtp;
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
         patientIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
         patientIDTumourTablelookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName();
+        patientRecordIDTumourTablelookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
+        patientRecordIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
         tumourIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         tumourIDSourceTableLookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
         patientIDLength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getVariableLength();
@@ -126,10 +130,10 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
     ///
     // org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, new java.util.List(), jTable1);
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -337,7 +341,6 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         resultPanel.setVisible(false);
         resultTable.setName("resultTable"); // NOI18N
         resultTable.addMouseListener(new java.awt.event.MouseAdapter() {
-
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 rowClicked(evt);
@@ -366,16 +369,16 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
 
 private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_browserClosed
     /* Remove this for now since we only allow one browser and we reuse it...
-    rangeFilterPanel.close();
-    if (tableDatadescription != null) {
-    try {
-    CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
-    } catch (SecurityException ex) {
-    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (RemoteException ex) {
-    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    }
+     rangeFilterPanel.close();
+     if (tableDatadescription != null) {
+     try {
+     CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
+     } catch (SecurityException ex) {
+     Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+     } catch (RemoteException ex) {
+     Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+     }
+     }
      */
 }//GEN-LAST:event_browserClosed
 
@@ -548,7 +551,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 }
 
                 tableDatadescription = newTableDatadescription;
-                highlightedColumnNumber = Tools.findInArray(tableDatadescription.getColumnNames(), sortByVariableName);
+                // highlightedColumnNumber = Tools.findInArray(tableDatadescription.getColumnNames(), sortByVariableName);
 
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
 
@@ -651,7 +654,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
     }
 
     /**
-     * 
+     *
      */
     @Action
     public void editPatientID() {
@@ -675,83 +678,74 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         RecordEditor recordEditor = new RecordEditor(dtp);
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
-        DatabaseRecord record = null;
+        Patient patient = null;
         DatabaseFilter filter = new DatabaseFilter();
         filter.setFilterString(patientIDlookupVariable + " = '" + idString + "' ");
-        DistributedTableDescription distributedTableDescription;
+
+        Patient[] patients;
         Object[][] rows;
         DatabaseRecord[] tumourRecords;
 
         try {
-            distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
-            int numberOfRecords = distributedTableDescription.getRowCount();
 
-            if (numberOfRecords == 0) {
+            patients = CanRegClientApp.getApplication().getPatientRecordsByID(idString, false);
+
+            if (patients.length < 1) {
                 /*
-                If we don't get any records with that ID - we propose to create one.
+                 If we don't get any records with that ID - we propose to create one.
                  */
                 int answer = JOptionPane.showInternalConfirmDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NO_PATIENT_WITH_THAT_ID_FOUND,_DO_YOU_WANT_TO_CREATE_ONE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("PATIENT_ID_NOT_FOUND"), JOptionPane.YES_NO_OPTION);
                 if (answer == JOptionPane.YES_OPTION) {
-                    record = new Patient();
-                    record.setVariable(patientIDlookupVariable, idString);
-                    CanRegClientApp.getApplication().saveRecord(record);
-                    distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
-                    numberOfRecords = distributedTableDescription.getRowCount();
+                    patient = new Patient();
+                    patient.setVariable(patientIDlookupVariable, idString);
+                    CanRegClientApp.getApplication().saveRecord(patient);
+                    patients = CanRegClientApp.getApplication().getPatientRecordsByID(idString, false);
                 } else {
                     setCursor(normalCursor);
                     return;
                 }
             }
 
-            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
-            CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
-            String[] columnNames = distributedTableDescription.getColumnNames();
-            int ids[] = new int[numberOfRecords];
-            boolean found = false;
-            int idColumnNumber = 0;
-            // First get the patient IDs matching the tumour
-            while (!found && idColumnNumber < columnNames.length) {
-                found = columnNames[idColumnNumber++].equalsIgnoreCase(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
-            }
-            if (found) {
-                idColumnNumber--;
-                TreeSet<DatabaseRecord> set = new TreeSet<DatabaseRecord>(new Comparator<DatabaseRecord>() {
-
-                    @Override
-                    public int compare(DatabaseRecord o1, DatabaseRecord o2) {
-                        return (o1.getVariable(tumourIDlookupVariable).toString().compareTo(o2.getVariable(tumourIDlookupVariable).toString()));
-                    }
-                });
-                // Get all the tumour records for all the patient records...
-                for (int j = 0; j < numberOfRecords; j++) {
-                    ids[j] = (Integer) rows[j][idColumnNumber];
-                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME, true);
-                    recordEditor.addRecord(record);
-
-                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true);
-                    for (DatabaseRecord rec : tumourRecords) {
-                        // store them in a set, so we don't show them several times
-                        if (rec != null) {
-                            set.add(rec);
-                        }
+            TreeSet<DatabaseRecord> set = new TreeSet<DatabaseRecord>(new Comparator<DatabaseRecord>() {
+                @Override
+                public int compare(DatabaseRecord o1, DatabaseRecord o2) {
+                    return (o1.getVariable(tumourIDlookupVariable).toString().compareTo(o2.getVariable(tumourIDlookupVariable).toString()));
+                }
+            });
+            // Get all the tumour records for all the patient records...
+            for (Patient p : patients) {
+                recordEditor.addRecord(p);
+                tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true);
+                for (DatabaseRecord rec : tumourRecords) {
+                    // store them in a set, so we don't show them several times
+                    if (rec != null) {
+                        set.add(rec);
                     }
                 }
-                if (set.isEmpty()) {
-                    Tumour rec = new Tumour();
-                    rec.setVariable(patientIDTumourTablelookupVariable, idString);
-                    set.add(rec);
-//                    CanRegClientApp.getApplication().saveRecord(rec);
-                }
-
-                for (DatabaseRecord rec : set) {
-                    // store them in a map, so we don't show them several times
-                    recordEditor.addRecord(rec);
-                }
-                CanRegClientView.showAndPositionInternalFrame(dtp, recordEditor);
-                CanRegClientView.maximizeHeight(dtp, recordEditor);
-            } else {
-                JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD_NOT_FOUND"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             }
+
+            if (set.isEmpty()) {
+                // add a tumour record as well
+                if (patients.length > 0) {
+                    Tumour tumour = new Tumour();
+                    tumour.setVariable(patientIDTumourTablelookupVariable, idString);
+                    tumour.setVariable(patientRecordIDTumourTablelookupVariable, patients[0].getVariable(patientRecordIDVariable));
+                    CanRegClientApp.getApplication().saveRecord(tumour);
+                    set.add(tumour);
+                } else {
+                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, "Patient record not save properly?");
+                }
+            }
+
+            for (DatabaseRecord rec : set) {
+                // store them in a map, so we don't show them several times
+                recordEditor.addRecord(rec);
+            }
+            // make sure the records are locked...
+            CanRegClientApp.getApplication().getPatientRecordsByID(idString, true);
+            CanRegClientView.showAndPositionInternalFrame(dtp, recordEditor);
+            CanRegClientView.maximizeHeight(dtp, recordEditor);
+
         } catch (DistributedTableDescriptionException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownTableException ex) {
@@ -771,7 +765,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
     }
 
     /**
-     * 
+     *
      */
     @Action
     public void editTumourID() {
@@ -784,7 +778,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
     }
 
     /**
-     * 
+     *
      * @param idString
      */
     public void editTumourID(String idString) {
@@ -843,7 +837,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
     }
 
     /**
-     * 
+     *
      * @param idString
      * @param tableName
      */
