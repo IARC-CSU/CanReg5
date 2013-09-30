@@ -1,5 +1,9 @@
 Changelog
 
+5.00.30
+- Fixed a bug where some times a record would be locked and inaccessible after creating a new record specifying the ID.
+- Cleaned some code.
+
 5.00.29
 - Improved handling of patients missing tumour records.
 - Improved functionality for user created table definitions and R scripts.

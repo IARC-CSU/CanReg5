@@ -1,5 +1,40 @@
-changeset:   1137:3981d826b463
+changeset:   1144:5dc8bf95246d
 tag:         tip
+user:        ErvikM@x90164
+date:        Thu Sep 26 15:06:17 2013 +0200
+summary:     Cleaned some code.
+
+changeset:   1143:1655e06c926c
+user:        ErvikM@x90164
+date:        Thu Sep 26 15:06:00 2013 +0200
+summary:     Log JavaDB Version. Fixed a bug where some times a record would be locked and inaccessible after creating a new record specifying the ID.
+
+changeset:   1142:7b522379df5e
+user:        ErvikM@x90164
+date:        Thu Sep 26 15:00:30 2013 +0200
+summary:     Log Java Version.
+
+changeset:   1141:ea57fd4c0dbf
+user:        ErvikM@x90164
+date:        Thu Sep 26 15:00:11 2013 +0200
+summary:     Fixed a bug where some times a record would be locked and inaccessible after creating a new record specifying the ID.
+
+changeset:   1140:549beb854cad
+user:        ErvikM@x90164
+date:        Thu Sep 26 14:57:19 2013 +0200
+summary:     Cleaned some code.
+
+changeset:   1139:f6aa06e76610
+user:        ErvikM@x90164
+date:        Thu Sep 26 14:56:31 2013 +0200
+summary:     Cleaned some code.
+
+changeset:   1138:a43ec0eb5b9c
+user:        ErvikM@x90164
+date:        Tue Sep 24 10:49:50 2013 +0200
+summary:     5.00.29
+
+changeset:   1137:3981d826b463
 user:        ErvikM@x90164
 date:        Tue Sep 24 10:37:58 2013 +0200
 summary:     Added support for line and bar charts.
