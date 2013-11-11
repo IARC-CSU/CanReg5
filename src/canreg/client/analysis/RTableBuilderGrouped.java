@@ -310,10 +310,11 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                     // convert the output to a string
                     String theString = convertStreamToString(is);
                     Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
-                    // System.out.println(theString);             
+                    // System.out.println(theString.split("\\r?\\n").length);
                     // and add all to the list of files to return
-                    for (String fileName : theString.split("\n")) {
+                    for (String fileName : theString.split("\\r?\\n")) {
                         if (fileName.startsWith("-outFile:")) {
+                            // System.out.println(fileName);
                             fileName = fileName.replaceFirst("-outFile:", "");
                             if (new File(fileName).exists()) {
                                 filesCreated.add(fileName);
