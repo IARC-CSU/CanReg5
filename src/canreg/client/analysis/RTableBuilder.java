@@ -1,19 +1,19 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2013  International Agency for Research on Cancer
+ * Copyright (C) 2008-2013 International Agency for Research on Cancer
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
  */
@@ -48,6 +48,7 @@ public class RTableBuilder implements TableBuilderInterface {
     private String separator = "\t";
     private final LocalSettings localSettings;
     private final String rpath;
+    private final String[] tableLabel;
     private String[] rScripts;
     private String[] rScriptsArguments;
     private final String R_SCRIPTS_ARGUMENTS = "r_scripts_arguments";
@@ -85,6 +86,8 @@ public class RTableBuilder implements TableBuilderInterface {
             fileTypesList.add(FileTypes.valueOf(fileType));
         }
         fileTypesGenerated = fileTypesList.toArray(new FileTypes[0]);
+
+        tableLabel = ConfigFieldsReader.findConfig("table_label", configList);
     }
 
     @Override
@@ -152,26 +155,28 @@ public class RTableBuilder implements TableBuilderInterface {
             // call R
 
             for (String rScript : rScripts) {
-                File scriptFile = new File(userDir.getAbsolutePath() 
+                File scriptFile = new File(userDir.getAbsolutePath()
                         + Globals.FILE_SEPARATOR
                         + rScript);
-                if(!scriptFile.exists()){
-                    scriptFile = new File(dir.getAbsolutePath() 
-                        + Globals.FILE_SEPARATOR
-                        + rScript);
+                if (!scriptFile.exists()) {
+                    scriptFile = new File(dir.getAbsolutePath()
+                            + Globals.FILE_SEPARATOR
+                            + rScript);
                 }
                 Runtime rt = Runtime.getRuntime();
                 String command = "\"" + rpath + "\""
                         + " --slave --file="
-                        + "\"" + scriptFile.getAbsolutePath() 
-//                        + Globals.FILE_SEPARATOR
-//                        + rScript
+                        + "\"" + scriptFile.getAbsolutePath()
+                        //                        + Globals.FILE_SEPARATOR
+                        //                        + rScript
                         + "\" "
                         + "--args "
                         + "-ft=" + fileType + " "
                         + "-out=\"" + reportFileName + "\" "
                         + "-pop=\"" + popfile.getPath() + "\" "
-                        + "-inc=\"" + incfile.getPath() + "\" ";
+                        + "-inc=\"" + incfile.getPath() + "\" "
+                        + "-label=\"" + canreg.common.Tools.combine(tableLabel, "|") + "\" "
+                        + "-header=\"" + tableHeader + "\" ";
                 // add the rest of the arguments
                 if (rScriptsArguments != null) {
                     for (String arg : rScriptsArguments) {
@@ -189,8 +194,9 @@ public class RTableBuilder implements TableBuilderInterface {
                     Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
                     // System.out.println(theString);  
                     // and add all to the list of files to return
-                    for (String fileName : theString.split("\n")) {
+                    for (String fileName : theString.split("\\r?\\n")) {
                         if (fileName.startsWith("-outFile:")) {
+                            // System.out.println(fileName);
                             fileName = fileName.replaceFirst("-outFile:", "");
                             if (new File(fileName).exists()) {
                                 filesCreated.add(fileName);

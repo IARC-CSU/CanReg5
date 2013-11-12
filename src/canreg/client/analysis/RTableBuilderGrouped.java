@@ -287,10 +287,12 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
 //                        + rScript
                         + "\" "
                         + "--args "
-                        + "-ft=" + fileType + " "
-                        + "-out=\"" + reportFileName + "\" "
-                        + "-pop=\"" + popfile.getPath() + "\" "
-                        + "-inc=\"" + incfile.getPath() + "\" ";
+                        + "-ft="       + fileType          + " "
+                        + "-out=\""    + reportFileName    + "\" "
+                        + "-pop=\""    + popfile.getPath() + "\" "
+                        + "-inc=\""    + incfile.getPath() + "\" "
+                        + "-label=\""  + canreg.common.Tools.combine(tableLabel, "|")      + "\" "
+                        + "-header=\"" + tableHeader       + "\" ";
                 // add the rest of the arguments
                 if (rScriptsArguments != null) {
                     for (String arg : rScriptsArguments) {
