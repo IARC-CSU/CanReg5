@@ -1,1 +1,1 @@
-hg log > hg.log
+hg -v log > hg.log

@@ -1,8 +1,14 @@
 Changelog
 
+5.00.31
+- Table Header and Table Label now passed as arguments to the R scripts.
+- Improved detection of lines in output from R.
+- Other minor fixes.
+
 5.00.30
 - Fixed a bug where some times a record would be locked and inaccessible after creating a new record specifying the ID.
 - Cleaned some code.
+- Other minor fixes.
 
 5.00.29
 - Improved handling of patients missing tumour records.

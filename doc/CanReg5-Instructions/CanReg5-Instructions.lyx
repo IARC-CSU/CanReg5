@@ -3589,12 +3589,13 @@ You can import data from other programs than CanReg4 by using the import
 
 \begin_layout Itemize
 \align left
-Dates should be coded as year month day (yyyyMMdd)
+Dates should be coded as year month day (yyyyMMdd) -- ISO 8601
 \end_layout
 
 \begin_layout Itemize
 \align left
 Topography in 3 digits ICD-O-3 with no leading C.
+ 
 \end_layout
 
 \begin_layout Itemize
@@ -13365,6 +13366,10 @@ Jacques Ferlay (Original PostScript code, conversion tables, and original
 Anahita Rahimi (Some of the R code for analysis)
 \end_layout
 
+\begin_layout Itemize
+Sebastien Antoni (Some of the R code for analysis)
+\end_layout
+
 \begin_layout Subsection
 Additional design
 \end_layout
@@ -13600,6 +13605,14 @@ Chinese:
 Portugese, Portugal: 
 \series default
 Gonçalo Lacerda, Azores, Portugal
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Turkish:
+\series default
+ Cankut Yakut, Izmir Cancer Registry, Turkey
 \end_layout
 
 \begin_layout Section
