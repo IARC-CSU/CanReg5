@@ -21,9 +21,9 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
-OutputDir=C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\dist
-InfoBeforeFile=C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\changelog.txt
-LicenseFile=C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\src\canreg\client\gui\resources\gpl-3.0-standalone.txt
+OutputDir=C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg5\dist
+InfoBeforeFile=C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg5\changelog.txt
+LicenseFile=C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg5\src\canreg\client\gui\resources\gpl-3.0-standalone.txt
 AllowNoIcons=yes
 OutputBaseFilename=CanReg5-Setup
 Compression=lzma
@@ -42,15 +42,15 @@ Name: "norwegian"; MessagesFile: "compiler:Languages\Norwegian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: 
 
 [Files]
-Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\CanReg.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\conf\*"; DestDir: "{app}\conf"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\demo\*"; DestDir: "{app}\demo"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\scripts\*"; DestDir: "{app}\scripts"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\dist\lib\*"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\dist\CanReg.jar"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\dist\README.TXT"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\changelog.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\doc\CanReg5-Instructions\CanReg5-Instructions.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion
+Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg5\CanReg.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg5\conf\*"; DestDir: "{app}\conf"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg5\demo\*"; DestDir: "{app}\demo"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg5\scripts\*"; DestDir: "{app}\scripts"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg5\dist\lib\*"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg5\dist\CanReg.jar"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg5\dist\README.TXT"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg5\changelog.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg5\doc\CanReg5-Instructions\CanReg5-Instructions.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
