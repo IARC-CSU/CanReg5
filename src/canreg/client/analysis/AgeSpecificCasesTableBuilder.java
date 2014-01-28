@@ -38,24 +38,26 @@ import java.util.logging.Logger;
 
 public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder {
 
-    private static Globals.StandardVariableNames[] variablesNeeded = {
+    private static final Globals.StandardVariableNames[] variablesNeeded = {
         Globals.StandardVariableNames.Sex,
         Globals.StandardVariableNames.Age,
         Globals.StandardVariableNames.ICD10,
         Globals.StandardVariableNames.Morphology,
         Globals.StandardVariableNames.Behaviour,
         Globals.StandardVariableNames.BasisDiagnosis};
-    private static int YEAR_COLUMN = 0;
-    private static int SEX_COLUMN = 1;
-    private static int AGE_COLUMN = 2;
-    private static int ICD10_COLUMN = 3;
-    private static int MORPHOLOGY_COLUMN = 4;
-    private static int BEHAVIOUR_COLUMN = 5;
-    private static int BASIS_DIAGNOSIS_COLUMN = 6;
-    private static int CASES_COLUMN = 7;
+    private static final int YEAR_COLUMN = 0;
+    private static final int SEX_COLUMN = 1;
+    private static final int AGE_COLUMN = 2;
+    private static final int ICD10_COLUMN = 3;
+ //   private static final int MORPHOLOGY_COLUMN = 4;
+ //   private static final int BEHAVIOUR_COLUMN = 5;
+    private static final int BASIS_DIAGNOSIS_COLUMN = 6;
+    private static final int CASES_COLUMN = 7;
     private double[][] standardPopulationArray;
     private String populationString;
-    private int DONT_COUNT = -999;
+    private final int DONT_COUNT = -999;
+    private double[][][] casesArray;
+    private double[][] populationArray;
 
     public AgeSpecificCasesTableBuilder() {
         super();
@@ -87,21 +89,15 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
         String font = "Times";
 
         int[] years = {startYear, endYear};
-
-        double casesArray[][][] = null; // a 3D array of sex, icd and agegroup - with one extra layer in all dimensions containing a sum of all
-        double populationArray[][] = null; // contains population count in the following format: [sex][agegroup]
-
+        
 //      double RegPop[][];
         double totalCases[][];
-        double DCO[][];
 
         String sexLabel[] = null;
         String tableLabel[] = null;
         String icdLabel[] = null;
 
         LinkedList cancerGroupsLocal[] = null;
-
-        LinkedList<FieldDescription> incidenceFieldDescriptionList = null;
 
         boolean showSeeNotesNote = true;
 
@@ -287,6 +283,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                             }
                         } else if (icdString.length() > 0
                                 && icdString.trim().substring(0, 1).equals("D")) {
+                            icdIndex = DONT_COUNT; // set don't count as default
                             icdString = icdString.trim().substring(1);
                             icdNumber = Integer.parseInt(icdString);
                             if (icdString.length() < 3) {
@@ -294,12 +291,10 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                             }
                             if (icdNumber == 90 || icdNumber == 414) {
                                 icdIndex = bladderCancerGroupIndex;
-                            } else if ((int) (icdNumber / 10) == 45 || (int) (icdNumber / 10) == 47) {
+                            } else if (((int) (icdNumber / 10)) == 45 || ((int) (icdNumber / 10)) == 47) {
                                 icdIndex = myeloproliferativeDisordersCancerGroupIndex;
-                            } else if ((int) (icdNumber / 10) == 46) {
+                            } else if (((int) (icdNumber / 10)) == 46) {
                                 icdIndex = myelodysplasticSyndromesCancerGroupIndex;
-                            } else {
-                                icdIndex = DONT_COUNT;
                             }
                         }
                     }
