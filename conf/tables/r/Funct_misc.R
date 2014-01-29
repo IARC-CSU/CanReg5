@@ -59,12 +59,17 @@ GetAgeGroupLabels <- function(lastGr){
 		# Pivoting the data frame
 			data <- dcast(data, ICD10GROUP+SEX~BASIS, sum, value.var= "CASES")
 			
-		# Varifying that all columns exist
+		# Verifying that all columns exist
 			if(!"9" %in% colnames(data)){data$"9"<-0}
 			if(!"7" %in% colnames(data)){data$"7"<-0}
 			if(!"1" %in% colnames(data)){data$"1"<-0}
 			if(!"0" %in% colnames(data)){data$"0"<-0}
-					
+
+		# Renaming columns
+			colnames(data) <- c("ICD10GROUP","SEX","DCO(N)","CLIN(N)","MV(N)","UNK(N)")
+			
+			
+
 		return(data)
 	}
 

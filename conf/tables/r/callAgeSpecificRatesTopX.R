@@ -35,11 +35,14 @@
 	fileInc <- checkArgs(Args, "-inc")
 	dataInc <- read.table(fileInc, header=TRUE)
 	dataInc$ICD10GROUPLABEL <- substr(dataInc$ICD10GROUPLABEL,4,length(dataInc$ICD10GROUPLABEL))
-		
+
 ## Getting POPULATION data
 	filePop <- checkArgs(Args, "-pop")
 	dataPop <- read.table(filePop, header=TRUE)	
-			
+
+## Getting age group labels
+	agegrs <- unique(dataPop[,c("AGE_GROUP","AGE_GROUP_LABEL")])
+	
 ## Calculating Age Specific rates for all sites
 	data <- CalcAgeSpecRates(dataInc, dataPop)	
 	
@@ -82,7 +85,7 @@
 			if(fileType=="png"){png(filename1)}
 			if(fileType=="svg"){svg(filename1)}
 			if(fileType=="pdf"){pdf(filename1, width=7)}
-			graphM <- plotAgeSpecRates(dataM, logr, smooth, header, label, number)
+			graphM <- plotAgeSpecRates(dataM, logr, smooth, header, label, number, agegrs)
 			print(graphM)
 			dev.off()
 						
@@ -91,7 +94,7 @@
 			if(fileType=="png"){png(filename2)}
 			if(fileType=="svg"){svg(filename2)}
 			if(fileType=="pdf"){pdf(filename2, width=7)}
-			graphF <- plotAgeSpecRates(dataF, logr, smooth, header, label, number)
+			graphF <- plotAgeSpecRates(dataF, logr, smooth, header, label, number, agegrs)
 			print(graphF)
 			dev.off()
 			

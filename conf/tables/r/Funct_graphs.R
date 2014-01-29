@@ -1,6 +1,12 @@
 # Dependencies for graphics
-	#require(ggplot2)
-	source(paste(sep="/", script.basename, "makeSureGgplot2IsInstalled.R")) # Checking that Ggplot is installed
+		
+	# Check that ggplot is installed
+	source(paste(sep="/", script.basename, "Funct_misc.R"))  # Misc functions
+	if(!is.installed("ggplot2")){
+		load.fun("ggplot2")
+	}       
+	require(ggplot2) 
+	
 	
 # Add title and subtitle to a ggplot
 	addGGtitle <- function(pl, main="Main Title", sub="Missing"){
@@ -16,20 +22,20 @@
 
 	
 # Draws Age Spec Incidence Rates for the top X cancers
-	plotAgeSpecRates <- function(data, logr, smooth, header, label, number){
+	plotAgeSpecRates <- function(data, logr, smooth, header, label, number, agegrs){
 	
 		# Getting highest age group in dataset
 			maxGr <- max(data$AGE_GROUP)
 
 		# Getting age group labels
-			agegrs <- GetAgeGroupLabels(maxGr)
+			#agegrs <- GetAgeGroupLabels(maxGr)
 	
 		# Sex being plotted
 			sex <- data$SEX[1]
 			if(sex==1){sex <- "M"}else{sex <- "F"}
 	
 		# Merging age group labels with data
-			data <- merge(data,agegrs,by=c("AGE_GROUP"))
+			data <- merge(data,agegrs,by=c("AGE_GROUP"),all.y=TRUE)
 			colnames(data) <- c("AGE_GROUP","SEX","ICD10GROUP","ICD10GROUPLABEL","CASES","COUNT","RATE","LABEL")
 
 		# Sorting data
@@ -40,7 +46,7 @@
 			# Graph itself
 			#g1 <- ggplot(height=600, width=800, data=data, aes(x = LABEL, y = RATE, group=ICD10GROUPLABEL, colour=ICD10GROUPLABEL), plot.title=header)
 			g1 <- ggplot(height=600, width=800, data=data, aes(x = LABEL, y = RATE, group=ICD10GROUPLABEL, colour=ICD10GROUPLABEL))
-			g1 <- g1 + scale_x_discrete(limits=agegrs$label)
+			g1 <- g1 + scale_x_discrete(limits=agegrs$AGE_GROUP_LABEL)
 						
 			# Axis labels & ticks
 			g1 <- g1 + xlab("\nAge group") + ylab("Age-specific rates") +labs(colour="")

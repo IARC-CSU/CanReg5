@@ -52,11 +52,20 @@
 	data <- merge(data,dataB,by=c("ICD10GROUP","SEX"))	
 
 ## Calculating percentages
-	data$DCO <- round(data$"0" * 100 / data$N,2)
-	data$CLIN <- round(data$"1" * 100 / data$N,2)
-	data$MV <- round(data$"7" * 100 / data$N,2)
-	data$UNK <- round(data$"9" * 100 / data$N,2)
+	#data$DCO <- round(data$"0" * 100 / data$N,2)
+	#data$CLIN <- round(data$"1" * 100 / data$N,2)
+	#data$MV <- round(data$"7" * 100 / data$N,2)
+	#data$UNK <- round(data$"9" * 100 / data$N,2)
+	data$"DCO(%)" <- round(data$"DCO(N)" * 100 / data$N,2)
+	data$"CLIN(%)" <- round(data$"CLIN(N)" * 100 / data$N,2)
+	data$"MV(%)" <- round(data$"MV(N)" * 100 / data$N,2)
+	data$"UNK(%)" <- round(data$"UNK(N)" * 100 / data$N,2)
 	
+## Rounding results
+  data$asr <- format( round(data$asr,2), format='f', digits=2)
+  data$se <- format( round(data$se,2), format='f', digits=2)
+
+
 ## labels
 	males <- data[data$SEX==1,]
 	mlabs <- GetSiteLabels(dataInc,1)
@@ -68,18 +77,62 @@
 
 	
 	
-	
 ## If the file type is a figure
 	if(plotTables==FALSE){
 		
-		
-		
-		
-		
-		
-	
-
-			
+		# filename for output  
+	    filename <- paste(out,".", fileType, sep = "" ) 
+    
+    # Processing male data
+      dataOutM <- dataM[,c("ICD10GROUPLABEL","N","asr","se","MV(%)","CLIN(%)","DCO(%)","ICD10GROUP")]
+      dataOutM$ASR <- paste(dataOutM$asr," (",dataOutM$se,")",sep="")
+      dataOutM$PERC <- format( round(dataOutM$N*100/sum(dataOutM$N),2), format='f', digits=2) 
+      dataOutM <- dataOutM[,c("ICD10GROUPLABEL","N","PERC","ASR","MV(%)","CLIN(%)","DCO(%)","ICD10GROUP")]
+      colnames(dataOutM) <- c("SITE","Cases","% Total","ASR(se)","MV(%)","CLIN(%)","DCO(%)","ICD10")
+    
+    # Processing female data
+      dataOutF <- dataF[,c("ICD10GROUPLABEL","N","asr","se","MV(%)","CLIN(%)","DCO(%)","ICD10GROUP")]
+      dataOutF$ASR <- paste(dataOutF$asr," (",dataOutF$se,")",sep="")
+      dataOutF$PERC <- format( round(dataOutF$N*100/sum(dataOutF$N),2), format='f', digits=2) 
+      dataOutF <- dataOutF[,c("ICD10GROUPLABEL","N","PERC","ASR","MV(%)","CLIN(%)","DCO(%)","ICD10GROUP")]
+      colnames(dataOutF) <- c("SITE","Cases","% Total","ASR(se)","MV(%)","CLIN(%)","DCO(%)","ICD10"  )  
+    
+    # Checking that gplots is installed and if not, installs it and includes it
+      if(!is.installed("gplots")){
+        load.fun("gplots")
+      }       
+      require(gplots)    
+    
+    # Creating pdf 
+      if(fileType=="pdf"){
+        pdf(filename, width=8, height=11)
+      }
+   
+    # Getting header
+      header <- checkArgs(Args, "-header")
+    
+    # Graphical parameters
+      par(mfrow=c(2,1))
+      #par(mai=c(0.5,0.5,0.5,0.5))
+      par(mar=c(1,1,1,1)) ## margin of a plot
+      par(oma=c(1,1,6,1)) ## outer margin (of the whole plot series, not individual plots)
+    
+    # Male indicators
+      print(textplot(dataOutM, valign="top", show.rownames=F, cmar = 1, rmar=0.70, mar=c(1,1,2,1)))
+      print(title("MALE"))
+    
+    # Main graphic title
+      mtext("Data Quality Indicators",side=3,line=4, cex=1.3, font=2)
+      mtext(header,side=3,line=3, cex=1)
+    
+    # Female indicators
+      print(textplot(dataOutF, valign="top", show.rownames=F, cmar = 1, rmar=0.70, mar=c(1,1,2,1))) 
+      print(title("FEMALE"))
+    
+    # Finalizing and opening graph
+      dev.off()	
+      cat(paste("-outFile",filename,sep=":"))
+    
 						
 	}else{
 	
@@ -96,7 +149,6 @@
 		
 	}
 
-		#write.table(flabs, "ANTONI.csv", sep = ",", row.names = F) 
 
 
 	
