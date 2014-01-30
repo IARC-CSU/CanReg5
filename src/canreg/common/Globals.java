@@ -121,6 +121,7 @@ public class Globals {
     static final public String USER_R_SCRIPTS_PATH = USER_TABLES_CONF_PATH + "/r";
     static public String USER_TABLES_PREVIEW_PATH = USER_TABLES_CONF_PATH + "/previews";
     static public String DEFAULT_PREVIEW_FILENAME = "blanc.png";
+    public static String R_INSTALL_PACKAGES_SCRIPT = R_SCRIPTS_PATH + "/" + "r-packages/install_packages.R";
     /**
      *
      */
@@ -230,6 +231,7 @@ public class Globals {
     public static final String mustLookupFile = "/canreg/common/resources/lookup/Must.txt";
     public static final String mustNotLookupFile = "/canreg/common/resources/lookup/MustNot.txt";
     public static String newline = System.getProperty("line.separator");
+
 
     /**
      *
