@@ -1,5 +1,62 @@
-changeset:   1147:b1ccc8a34b3a
+changeset:   1154:00f9052941ba
 tag:         tip
+user:        ErvikM
+date:        Wed Jan 29 11:18:22 2014 +0100
+files:       conf/tables/r/DataQualityIndicators.R conf/tables/r/Funct_graphs.R conf/tables/r/Funct_misc.R conf/tables/r/callAgeSpecificRatesTopX.R
+description:
+Data Quality table added (SA) updated other R scripts.
+
+
+changeset:   1153:93fb8d71bd17
+user:        ErvikM
+date:        Tue Jan 28 10:45:27 2014 +0100
+files:       src/canreg/client/analysis/AgeSpecificCasesTableBuilder.java
+description:
+Tidied age specific cases code.
+
+
+changeset:   1152:34377e8fec72
+user:        ErvikM
+date:        Wed Jan 15 15:12:25 2014 +0100
+files:       src/canreg/client/LocalSettings.java src/canreg/client/gui/management/OptionsFrame.form src/canreg/client/gui/management/OptionsFrame.java src/canreg/client/gui/management/resources/OptionsFrame.properties
+description:
+Exportizer path added to options.
+
+
+changeset:   1151:5f4d9b344e1e
+user:        ErvikM
+date:        Wed Jan 15 15:11:45 2014 +0100
+files:       nbproject/private/private.properties nbproject/private/private.xml
+description:
+Reverted to Netbeans 7.0.1.
+
+
+changeset:   1150:e968116347e4
+user:        ErvikM@x130116
+date:        Tue Jan 14 16:46:27 2014 +0100
+files:       CanReg5-InnoSetup.iss appinfo.properties buildnumber.properties doc/CanReg5-Instructions/CanReg5-Instructions.zip nbproject/build-impl.xml nbproject/genfiles.properties nbproject/jnlp-impl.xml nbproject/jnlp-impl_backup.xml nbproject/private/private.properties nbproject/private/private.xml nbproject/project.properties
+description:
+Updated the build files.
+Moved all the library files to a lib folder.
+
+
+changeset:   1149:a48fdcb55055
+user:        ervikm@x90164
+date:        Fri Jan 10 10:39:08 2014 +0100
+files:       appinfo.properties buildnumber.properties changelog.txt doc/CanReg5-Instructions/CanReg5-Instructions.lyx generatehglog.bat hg.log inno-settings.txt nbproject/private/private.properties src/canreg/client/gui/resources/about.html version.txt
+description:
+5.00.31b2
+
+
+changeset:   1148:28d022e9531c
+user:        ervikm@x90164
+date:        Fri Jan 10 10:37:37 2014 +0100
+files:       conf/tables/AgeSpecificRatesTopX.conf conf/tables/DataQualityIndicators.conf conf/tables/r/DataQualityIndicators.R conf/tables/r/Funct_graphs.R conf/tables/r/Funct_misc.R conf/tables/r/Funct_rates.R conf/tables/r/callAgeSpecificRatesTopX.R
+description:
+More analytical tables added. (SA)
+
+
+changeset:   1147:b1ccc8a34b3a
 user:        ErvikM@x90164
 date:        Tue Nov 12 15:08:24 2013 +0100
 files:       src/canreg/client/analysis/RTableBuilder.java src/canreg/client/analysis/RTableBuilderGrouped.java

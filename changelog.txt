@@ -1,8 +1,12 @@
-Changelog
+﻿Changelog
 
 5.00.31
+- Age specific rates for top X cancer sites figure added (SA).
+- Data Quality table added (SA).
+- Updated other R scripts.
 - Table Header and Table Label now passed as arguments to the R scripts.
 - Improved detection of lines in output from R.
+- Exportizer path added to options.
 - Other minor fixes.
 
 5.00.30
@@ -14,7 +18,7 @@ Changelog
 - Improved handling of patients missing tumour records.
 - Improved functionality for user created table definitions and R scripts.
 - Improved readability of some text on screen.
-- Other minor fixes
+- Other minor fixes.
 
 5.00.28
 - Improved handling of separating characters within strings while exporting data.
