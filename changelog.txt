@@ -4,8 +4,10 @@
 - Age specific rates for top X cancer sites figure added (SA).
 - Data Quality table added (SA).
 - Updated other R scripts.
+- Added functionality to distribute R packages for CanReg5.
 - Table Header and Table Label now passed as arguments to the R scripts.
 - Improved detection of lines in output from R.
+- R now only installs needed dependencies - not recommended ones.
 - Exportizer path added to options.
 - Other minor fixes.
 

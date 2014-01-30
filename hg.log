@@ -1,5 +1,45 @@
-changeset:   1154:00f9052941ba
+changeset:   1159:8ce6ff27dd3a
 tag:         tip
+user:        ErvikM
+date:        Thu Jan 30 15:58:09 2014 +0100
+files:       src/canreg/client/gui/CanRegClientView.form src/canreg/client/gui/CanRegClientView.java src/canreg/client/gui/resources/CanRegClientView.properties src/canreg/common/Globals.java
+description:
+Added functionality to distribute R packages for CanReg5.
+
+
+changeset:   1158:781d8907cad1
+user:        ErvikM
+date:        Thu Jan 30 15:57:19 2014 +0100
+files:       conf/tables/r/Funct_misc.R conf/tables/r/makeSureGgplot2IsInstalled.R
+description:
+R now only installs needed dependencies - not recommended ones.
+
+
+changeset:   1157:3dffd531672f
+user:        ErvikM
+date:        Thu Jan 30 15:56:03 2014 +0100
+files:       CanReg5-R-packages-InnoSetup.iss inno-build.bat
+description:
+Added Scripts to distribute R packages for CanReg5.
+
+
+changeset:   1156:9ac83fb69e16
+user:        ErvikM
+date:        Thu Jan 30 15:55:47 2014 +0100
+files:       r-packages/RColorBrewer_1.0-5.zip r-packages/bitops_1.0-6.zip r-packages/caTools_1.16.zip r-packages/colorspace_1.2-4.zip r-packages/dichromat_2.0-0.zip r-packages/digest_0.6.4.zip r-packages/gdata_2.13.2.zip r-packages/ggplot2_0.9.3.1.zip r-packages/gplots_2.12.1.zip r-packages/gtable_0.1.2.zip r-packages/gtools_3.2.1.zip r-packages/install_packages.R r-packages/labeling_0.2.zip r-packages/munsell_0.4.2.zip r-packages/plyr_1.8.zip r-packages/proto_0.3-10.zip r-packages/reshape2_1.2.2.zip r-packages/scales_0.2.3.zip r-packages/stringr_0.6.2.zip
+description:
+Added Scripts to distribute R packages for CanReg5.
+
+
+changeset:   1155:215f45417420
+user:        ErvikM
+date:        Thu Jan 30 09:35:06 2014 +0100
+files:       appinfo.properties buildnumber.properties changelog.txt conf/tables/AgeSpecificRatesTopX.conf conf/tables/DataQualityIndicators.conf conf/tables/QualityIndicators.conf conf/tables/previews/Thumbs.db conf/tables/previews/qualityindicators.png conf/tables/previews/topXasr.png hg.log inno-settings.txt nbproject/private/private.properties nbproject/private/private.xml nbproject/project.properties version.txt
+description:
+5.00.31 RC1
+
+
+changeset:   1154:00f9052941ba
 user:        ErvikM
 date:        Wed Jan 29 11:18:22 2014 +0100
 files:       conf/tables/r/DataQualityIndicators.R conf/tables/r/Funct_graphs.R conf/tables/r/Funct_misc.R conf/tables/r/callAgeSpecificRatesTopX.R

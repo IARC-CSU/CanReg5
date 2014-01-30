@@ -1138,7 +1138,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegWelcomeScreen.png
+	filename CanRegWelcomeScreen.png
 	lyxscale 50
 	width 90line%
 
@@ -2699,7 +2699,7 @@ Launching the CanReg server
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegLoginScreen.png
+	filename CanRegLoginScreen.png
 
 \end_inset
 
@@ -3658,7 +3658,7 @@ welcome screen
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/CanRegWelcomeScreen.png
+	filename CanRegWelcomeScreen.png
 	scale 50
 
 \end_inset
@@ -4689,7 +4689,7 @@ or double click on any record in the browser.
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/DataEntryExample.png
+	filename DataEntryExample.png
 	scale 50
 
 \end_inset
@@ -10418,7 +10418,7 @@ The program presents an initial proposal that you might agree with, but
 \begin_deeper
 \begin_layout Enumerate
 \begin_inset Graphics
-	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/chooseTableForVariables.png
+	filename chooseTableForVariables.png
 
 \end_inset
 
@@ -10578,7 +10578,7 @@ Go to “File”, “Data Entry”, “Edit dictionary” in CanReg5
 \begin_deeper
 \begin_layout Enumerate
 \begin_inset Graphics
-	filename C:/Documents and Settings/ervikm/My Documents/NetBeansProjects/CanReg/doc/CanReg5-Instructions/dictionaryMenu.png
+	filename dictionaryMenu.png
 	clip
 
 \end_inset
