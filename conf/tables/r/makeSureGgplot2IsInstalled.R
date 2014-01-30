@@ -7,7 +7,7 @@ load.fun <- function(x) {
   x <- as.character(substitute(x))
   dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
   rlibs = gsub("\\", "/", Sys.getenv("R_LIBS_USER"), fixed = T)
-  eval(parse(text=paste("install.packages('", x, "', dep=TRUE, lib='", rlibs,"' )", sep=""))) 
+  eval(parse(text=paste("install.packages('", x, "', lib='", rlibs,"' )", sep=""))) 
   eval(parse(text=paste("require(", x, ", lib.loc = '", rlibs ,"')", sep="")))
 }
 
