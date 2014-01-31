@@ -46,8 +46,14 @@
 	data <- CalcASR(dataInc, dataPop, standpop)
 	
 ##	Getting basis of diagnosis distribution
-	dataB <- GetBasisDist(dataInc)
-	
+   #dataB <- GetBasisDist(dataInc)
+
+          ## ------------------------------------------------
+          # Removing cases of age unknown (TEMPORARY)
+          dataB <- dataInc[which(dataInc$AGE_GROUP!=19),]
+          dataB <- GetBasisDist(dataB)
+          ## ------------------------------------------------	
+
 ## Merging data frames
 	data <- merge(data,dataB,by=c("ICD10GROUP","SEX"))	
 
@@ -64,6 +70,13 @@
 ## Rounding results
   data$asr <- format( round(data$asr,2), format='f', digits=2)
   data$se <- format( round(data$se,2), format='f', digits=2)
+
+
+      ## ------------------------------------------------
+      ## Cases of unknown age
+        unk_males <- nrow(dataInc[which(dataInc$AGE_GROUP==19 & dataInc$SEX==1),])
+        unk_females <- nrow(dataInc[which(dataInc$AGE_GROUP==19 & dataInc$SEX==2),])
+      ## ------------------------------------------------
 
 
 ## labels
@@ -128,6 +141,8 @@
     # Female indicators
       print(textplot(dataOutF, valign="top", show.rownames=F, cmar = 1, rmar=0.70, mar=c(1,1,2,1))) 
       print(title("FEMALE"))
+    
+      mtext(paste("Cases of unknown age (", unk_males," M / ",unk_females," F) were excluded from these analyses", sep=""),side=1,line=1, cex=0.8, font=1)
     
     # Finalizing and opening graph
       dev.off()	
