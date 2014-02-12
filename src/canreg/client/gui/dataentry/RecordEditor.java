@@ -1179,6 +1179,11 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     String topographyB = (String) dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Topography.toString()).getDatabaseVariableName());
                     String morphologyB = (String) dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Morphology.toString()).getDatabaseVariableName());
                     int result = multiplePrimaryTester.multiplePrimaryTest(topographyA, morphologyA, topographyB, morphologyB);
+                    databaseRecordA.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PersonSearch.toString()).getDatabaseVariableName(), result);
+                    if (result == MultiplePrimaryTesterInterface.mptDuplicate ) {
+                        // set pending
+                        recordEditorPanel.setPending();
+                    }
                     JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("RESULT: ") + multiplePrimaryTester.mptCodes[result], java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("RESULT"), JOptionPane.WARNING_MESSAGE);
                 }
             }

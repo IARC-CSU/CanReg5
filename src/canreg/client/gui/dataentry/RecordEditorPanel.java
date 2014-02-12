@@ -46,6 +46,7 @@ import canreg.common.database.DictionaryEntry;
 import canreg.common.database.Patient;
 import canreg.common.database.Source;
 import canreg.common.database.Tumour;
+import canreg.common.qualitycontrol.MultiplePrimaryTesterInterface;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -122,8 +123,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     void refreshDatabaseRecord(DatabaseRecord record) {
         setRecord(record);
         setSaveNeeded(false);
-
-        // get record status and check status
 
         buildPanel();
 
@@ -217,6 +216,11 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         }
     }
 
+    void setPending(){
+         databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
+         refreshDatabaseRecord(databaseRecord);
+    }
+    
     void toggleObsolete(boolean confirmed) {
         if (confirmed) {
             DatabaseVariablesListElement dbvle = obsoleteFlagVariableListElement;
@@ -289,7 +293,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             }
         }
     }
-
+    
     private void refreshObsoleteStatus(DatabaseRecord record) {
         /*
          * Set the obsolete status
@@ -377,7 +381,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             sequenceTotalValueLabel.setText(tumourSequenceTotalString);
         }
     }
-
+    
     private enum panelTypes {
 
         PATIENT, TUMOUR, SOURCE
