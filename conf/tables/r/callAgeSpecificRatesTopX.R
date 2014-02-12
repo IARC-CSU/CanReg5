@@ -14,9 +14,9 @@
 
 ## Loading dependencies
 	source(paste(sep="/", script.basename, "checkArgs.R")) # Apparently this returns the arguments
-	source(paste(sep="/", script.basename, "Funct_graphs.R"))  # Graphics generating functions
 	source(paste(sep="/", script.basename, "Funct_rates.R"))  # Rates calculation functions
 	source(paste(sep="/", script.basename, "Funct_misc.R"))  # Misc functions
+	source(paste(sep="/", script.basename, "Funct_graphs.R"))  # Graphics generating functions
 	
 ## Filename & File type
 	out <- checkArgs(Args, "-out")
@@ -42,13 +42,17 @@
 
 ## Getting age group labels
 	agegrs <- unique(dataPop[,c("AGE_GROUP","AGE_GROUP_LABEL")])
+	standpop <- unique(dataPop[,c("AGE_GROUP","REFERENCE_COUNT")])
+	standpop$REFERENCE_COUNT <- standpop$REFERENCE_COUNT*100
 	
 ## Calculating Age Specific rates for all sites
 	data <- CalcAgeSpecRates(dataInc, dataPop)	
 	
 ## Calculating crude rates for all sites (sorted) 
 ## (this is used to define which sites will be considered the top x)
-	dataCR <- CalcCrudeRates(dataInc,dataPop)	
+	#dataCR <- CalcCrudeRates(dataInc,dataPop)	
+  dataCR <- CalcASR(dataInc,dataPop,standpop)  
+  dataCR <- dataCR[order(dataCR$SEX, -dataCR$asr), ]
 
 ## Getting the top X sites by sex (change once implemented)
 	number <- as.numeric(checkArgs(Args, "-number"))
