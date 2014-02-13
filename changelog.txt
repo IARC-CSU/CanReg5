@@ -1,5 +1,12 @@
 ﻿Changelog
 
+5.00.32
+- Russian translation updated.
+- AgeSpecificRatesTopX table now sorts cancers by ASR.
+- Improved the handling of obsolete cases in analysis.
+- Improved the handling of pending/deleted/duplicate cases in analysis.
+- Other minor fixes.
+
 5.00.31
 - Age specific rates for top X cancer sites figure added (SA).
 - Data Quality table added (SA).

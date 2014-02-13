@@ -1,5 +1,61 @@
-changeset:   1159:8ce6ff27dd3a
+changeset:   1166:33bea8a56a09
 tag:         tip
+user:        ErvikM
+date:        Thu Feb 13 10:26:49 2014 +0100
+files:       src/canreg/client/gui/analysis/TableBuilderInternalFrame.java
+description:
+Improved the handling of pending/deleted/duplicate cases in analysis.
+
+
+changeset:   1165:065248ae16c2
+user:        ErvikM
+date:        Wed Feb 12 15:23:30 2014 +0100
+files:       src/canreg/client/gui/resources/about.html
+description:
+Updated the about.html.
+
+
+changeset:   1164:7d3a95264600
+user:        ErvikM
+date:        Wed Feb 12 15:23:02 2014 +0100
+files:       src/canreg/client/gui/analysis/TableBuilderInternalFrame.java src/canreg/client/gui/dataentry/RecordEditor.java src/canreg/client/gui/dataentry/RecordEditorPanel.java
+description:
+Improved the handling of obsolete cases in analysis.
+
+
+changeset:   1163:0e563e526dab
+user:        ErvikM
+date:        Wed Feb 12 11:33:16 2014 +0100
+files:       appinfo.properties buildnumber.properties inno-settings.txt nbproject/private/private.xml src/canreg/client/analysis/resources/AbstractEditorialTableBuilder_ru.properties src/canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder_ru.properties src/canreg/client/analysis/resources/AgeSpecificCasesTableBuilder_ru.properties src/canreg/client/analysis/resources/TableBuilder_ru.properties src/canreg/client/gui/analysis/resources/ExportFrame_ru.properties src/canreg/client/gui/analysis/resources/ExportReportInternalFrame_ru.properties src/canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame_ru.properties src/canreg/client/gui/analysis/resources/JChartViewerInternalFrame_ru.properties src/canreg/client/gui/analysis/resources/TableBuilderInternalFrame_ru.properties src/canreg/client/gui/analysis/resources/TableInternalFrame_ru.properties src/canreg/client/gui/analysis/resources/VariableChooserPanel_ru.properties src/canreg/client/gui/analysis/resources/VariableExportDetailsPanel_ru.properties src/canreg/client/gui/components/resources/DictionaryElementChooser_ru.properties src/canreg/client/gui/components/resources/DisplayVariablesPanel_ru.properties src/canreg/client/gui/components/resources/FastFilterInternalFrame_ru.properties src/canreg/client/gui/components/resources/NavigationPanel_ru.properties src/canreg/client/gui/components/resources/PreviewFilePanel_ru.properties src/canreg/client/gui/components/resources/RangeFilterPanel_ru.properties src/canreg/client/gui/components/resources/VariableEditorPanel_ru.properties src/canreg/client/gui/components/resources/VariableMappingAlternativePanel_ru.properties src/canreg/client/gui/components/resources/VariableMappingPanel_ru.properties src/canreg/client/gui/components/resources/VariablesAssociationAlternativePanel_ru.properties src/canreg/client/gui/components/resources/VariablesAssociationPanel_ru.properties src/canreg/client/gui/components/resources/VariablesChooserPanel_ru.properties src/canreg/client/gui/components/resources/VariablesExportDetailsPanel_ru.properties src/canreg/client/gui/dataentry/resources/BrowseInternalFrame_ru.properties src/canreg/client/gui/dataentry/resources/EditChecksInternalFrame_ru.properties src/canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame_ru.properties src/canreg/client/gui/dataentry/resources/ExportInternalFrame_ru.properties src/canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame_ru.properties src/canreg/client/gui/dataentry/resources/ImportFilesView_ru.properties src/canreg/client/gui/dataentry/resources/ImportView_ru.properties src/canreg/client/gui/dataentry/resources/PDSChooserInternalFrame_ru.properties src/canreg/client/gui/dataentry/resources/PDSEditorInternalFrame_ru.properties src/canreg/client/gui/dataentry/resources/RecordEditorPanel_ru.properties src/canreg/client/gui/dataentry/resources/RecordEditor_ru.properties src/canreg/client/gui/dataentry/resources/SourcesPanel_ru.properties src/canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame_ru.properties src/canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame_ru.properties src/canreg/client/gui/management/resources/ComparePatientsInternalFrame_ru.properties src/canreg/client/gui/management/resources/DatabaseDictionaryEditorInternalFrame_ru.properties src/canreg/client/gui/management/resources/DatabaseDictionaryEditorPanel_ru.properties src/canreg/client/gui/management/resources/DatabaseElementPanel_ru.properties src/canreg/client/gui/management/resources/DatabaseGroupEditorInternalFrame_ru.properties src/canreg/client/gui/management/resources/DatabaseGroupEditorPanel_ru.properties src/canreg/client/gui/management/resources/DatabaseVariableEditorInternalFrame_ru.properties src/canreg/client/gui/management/resources/DatabaseVariableEditor_ru.properties src/canreg/client/gui/management/resources/EditDatabaseVariableInternalFrame_ru.properties src/canreg/client/gui/management/resources/EditDatabaseVariableJPanel_ru.properties src/canreg/client/gui/management/resources/EditDatabaseVariableTableAssociationInternalFrame_ru.properties src/canreg/client/gui/management/resources/EditDatabaseVariableTableAssociationJPanel_ru.properties src/canreg/client/gui/management/resources/FirstNameSexInternalFrame_ru.properties src/canreg/client/gui/management/resources/InstallNewSystemInternalFrame_ru.properties src/canreg/client/gui/management/resources/ModifyDatabaseStructureInternalFrame_ru.properties src/canreg/client/gui/management/resources/OptionsFrame_ru.properties src/canreg/client/gui/management/resources/PersonSearchFrame_1_ru.properties src/canreg/client/gui/management/resources/PersonSearchFrame_ru.properties src/canreg/client/gui/management/resources/PersonSearchVariablePanel_ru.properties src/canreg/client/gui/management/resources/PersonSearchVariablesPanel_ru.properties src/canreg/client/gui/management/resources/RestoreInternalFrame_ru.properties src/canreg/client/gui/management/resources/UserManagerInternalFrame_ru.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseDictionaryEditorInternalFrame_ru.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseDictionaryEditorPanel_ru.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseElementPanel_ru.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseElementsPanel_ru.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseGroupEditorInternalFrame_ru.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseGroupEditorPanel_ru.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseIndexEditorInternalFrame_ru.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseIndexEditorPanel_ru.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseVariableEditorInternalFrame_ru.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseVariableEditorPanel_ru.properties src/canreg/client/gui/management/systemeditor/resources/IndexedVariablePanel_ru.properties src/canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame_ru.properties src/canreg/client/gui/resources/CanRegClientAboutBox_ru.properties src/canreg/client/gui/resources/CanRegClientView_ru.properties src/canreg/client/gui/resources/ChangeLogInternalFrame_ru.properties src/canreg/client/gui/resources/LatestNewsInternalFrame_ru.properties src/canreg/client/gui/resources/LoginInternalFrame_ru.properties src/canreg/client/gui/resources/VariableMappingPanel_ru.properties src/canreg/client/gui/resources/WelcomeInternalFrame.properties src/canreg/client/gui/resources/WelcomeInternalFrame_es.properties src/canreg/client/gui/resources/WelcomeInternalFrame_fr.properties src/canreg/client/gui/resources/WelcomeInternalFrame_ru.properties src/canreg/client/gui/tools/globalpopup/resources/globalpopup_ru.properties src/canreg/client/gui/tools/resources/ExcelAdapter_ru.properties src/canreg/client/gui/tools/resources/StandardDialog_ru.properties src/canreg/client/resources/CanRegClientApp_ru.properties version.txt
+description:
+Russian translation updated.
+
+
+changeset:   1162:e29580f55317
+user:        ErvikM
+date:        Wed Feb 12 11:32:42 2014 +0100
+files:       conf/tables/r/callAgeSpecificRatesTopX.R
+description:
+AgeSpecificRatesTopX table now sorts cancers by ASR.
+
+
+changeset:   1161:36e399325f12
+user:        ErvikM
+date:        Fri Jan 31 14:05:21 2014 +0100
+files:       appinfo.properties buildnumber.properties conf/tables/r/DataQualityIndicators.R create-zip.bat doc/CanReg5-Instructions/CanReg5-Instructions.lyx
+description:
+5.00.31 RC3
+
+
+changeset:   1160:4b648b5851f8
+user:        ErvikM
+date:        Thu Jan 30 16:02:36 2014 +0100
+files:       appinfo.properties buildnumber.properties changelog.txt doc/CanReg5-Instructions/CanReg5-Instructions.lyx hg.log nbproject/private/private.xml
+description:
+5.00.31 RC2
+
+
+changeset:   1159:8ce6ff27dd3a
 user:        ErvikM
 date:        Thu Jan 30 15:58:09 2014 +0100
 files:       src/canreg/client/gui/CanRegClientView.form src/canreg/client/gui/CanRegClientView.java src/canreg/client/gui/resources/CanRegClientView.properties src/canreg/common/Globals.java
