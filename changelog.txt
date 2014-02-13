@@ -3,6 +3,7 @@
 5.00.32
 - Russian translation updated.
 - AgeSpecificRatesTopX table now sorts cancers by ASR.
+- Fixed a bug where ASR was by 1.000.000 instead of 100.000 in the charts of top 10 cancers.
 - Improved the handling of obsolete cases in analysis.
 - Improved the handling of pending/deleted/duplicate cases in analysis.
 - Other minor fixes.

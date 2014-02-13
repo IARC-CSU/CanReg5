@@ -1,5 +1,29 @@
-changeset:   1166:33bea8a56a09
+changeset:   1169:7e0760d010dc
 tag:         tip
+user:        ErvikM
+date:        Thu Feb 13 15:09:39 2014 +0100
+files:       src/canreg/client/analysis/TopNChartTableBuilder.java
+description:
+Fixed a bug where ASR was by 1.000.000 instead of 100.000 in the charts of top 10 cancers.
+
+
+changeset:   1168:313430367f59
+user:        ErvikM
+date:        Thu Feb 13 10:30:27 2014 +0100
+files:       appinfo.properties buildnumber.properties inno-settings.txt version.txt
+description:
+5.00.32BETA3
+
+
+changeset:   1167:8216f82b6853
+user:        ErvikM
+date:        Thu Feb 13 10:29:35 2014 +0100
+files:       appinfo.properties buildnumber.properties changelog.txt doc/CanReg5-Instructions/CanReg5-Instructions.lyx hg.log inno-settings.txt version.txt wholeChangelog.txt
+description:
+5.00.32BETA2
+
+
+changeset:   1166:33bea8a56a09
 user:        ErvikM
 date:        Thu Feb 13 10:26:49 2014 +0100
 files:       src/canreg/client/gui/analysis/TableBuilderInternalFrame.java
