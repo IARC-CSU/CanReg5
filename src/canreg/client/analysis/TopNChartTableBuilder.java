@@ -257,7 +257,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                         adjustedCases = (100000.0 * numberOfCases) / periodPop.getAgeGroupCount(sex, periodPop.getAgeGroupIndex(age));
                     } else if (countType == CountType.ASR) {
                         try {
-                            adjustedCases = 1000.0 * (periodPop.getWorldPopulationForAgeGroupIndex(sex, periodPop.getAgeGroupIndex(age)) * numberOfCases) / periodPop.getAgeGroupCount(sex, periodPop.getAgeGroupIndex(age));
+                            adjustedCases = 100.0 * (periodPop.getWorldPopulationForAgeGroupIndex(sex, periodPop.getAgeGroupIndex(age)) * numberOfCases) / periodPop.getAgeGroupCount(sex, periodPop.getAgeGroupIndex(age));
                         } catch (IncompatiblePopulationDataSetException ex) {
                             Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
                         }
