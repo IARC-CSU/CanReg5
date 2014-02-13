@@ -1142,7 +1142,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
                 // filter only the confirmed cases
                 DatabaseVariablesListElement recordStatus = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
-                filterString += " AND " + recordStatus.getDatabaseVariableName() + " <> '0'";
+                filterString += " AND " + recordStatus.getDatabaseVariableName() + " = '1'";
 
                 // filter away obsolete cases
                 DatabaseVariablesListElement recordObsoleteStatus = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString());
