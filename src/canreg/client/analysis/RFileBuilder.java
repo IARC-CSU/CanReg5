@@ -135,7 +135,7 @@ public class RFileBuilder {
             // rScript.append("par(las=2)\n"); // make label text perpendicular to axis
             rScript.append("ggplot(df, "
                     + "aes(labels, counts, fill = labels))"
-                    + "+ geom_bar(colour=\"White\", show_guide=FALSE)"
+                    + "+ geom_bar(colour=\"White\", show_guide=FALSE, stat=\"identity\" )"
                     + "+ xlab(\"").append(xlab).append("\")"
                     + "+ ylab(\"Count\")"
                     + "+ geom_text(aes(label=counts), size = 3)"
