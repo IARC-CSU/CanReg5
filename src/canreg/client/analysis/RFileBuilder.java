@@ -151,8 +151,8 @@ public class RFileBuilder {
                     + "aes(x=\"\", y = counts, fill = labels)) "
                     // + "+ scale_fill_discrete()"
                     + "+ scale_fill_brewer(palette=\"").append(palette).append("\", name=\"").append(xlab).append("\") "
-                    + "+ geom_bar() " // A hack to hide the slashes: first graph the bars with no outline and add the legend, then graph the bars again with outline, but with a blank legend. ( http://wiki.stdout.org/rcookbook/Graphs/Legends%20(ggplot2)/ ) 
-                    + "+ geom_bar(width = 1, colour=\"White\", show_guide=FALSE) "
+                    + "+ geom_bar(stat=\"identity\") " // A hack to hide the slashes: first graph the bars with no outline and add the legend, then graph the bars again with outline, but with a blank legend. ( http://wiki.stdout.org/rcookbook/Graphs/Legends%20(ggplot2)/ ) 
+                    + "+ geom_bar(width = 1, colour=\"White\", show_guide=FALSE, stat=\"identity\") "
                     // + "+ guides(fill = guide_legend(reverse=TRUE))"
                     + "+ coord_polar(\"y\")"
                     + "+ ylab(\"Count\")"
