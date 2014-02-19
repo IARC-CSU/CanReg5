@@ -1,5 +1,37 @@
-changeset:   1169:7e0760d010dc
+changeset:   1173:e9c4e32bcce7
 tag:         tip
+user:        ErvikM
+date:        Wed Feb 19 14:22:33 2014 +0100
+files:       conf/tables/r/DataQualityIndicators.R
+description:
+All sites but skin added to quality indicators.
+
+
+changeset:   1172:f4a36176034f
+user:        ErvikM
+date:        Tue Feb 18 17:12:03 2014 +0100
+files:       src/canreg/client/analysis/RFileBuilder.java
+description:
+Updated the code for piecharts to take into account future changes to ggplot.
+
+
+changeset:   1171:b5ed0a5b40bb
+user:        ErvikM
+date:        Tue Feb 18 17:06:59 2014 +0100
+files:       src/canreg/client/analysis/RFileBuilder.java
+description:
+Updated the code for barcharts to take into account future changes to ggplot.
+
+
+changeset:   1170:bcfd6e376380
+user:        ErvikM
+date:        Thu Feb 13 15:27:03 2014 +0100
+files:       appinfo.properties buildnumber.properties changelog.txt hg.log inno-settings.txt version.txt
+description:
+5.00.32BETA4
+
+
+changeset:   1169:7e0760d010dc
 user:        ErvikM
 date:        Thu Feb 13 15:09:39 2014 +0100
 files:       src/canreg/client/analysis/TopNChartTableBuilder.java
