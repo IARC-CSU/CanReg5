@@ -32,7 +32,7 @@
 ## Getting and Formatting INCIDENCE data
 	fileInc <- checkArgs(Args, "-inc")
 	dataInc <- read.table(fileInc, header=TRUE)
-			
+		
 ## Getting POPULATION data
 	filePop <- checkArgs(Args, "-pop")
 	dataPop <- read.table(filePop, header=TRUE)	
@@ -41,6 +41,15 @@
 	agegrs <- unique(dataPop[,c("AGE_GROUP","AGE_GROUP_LABEL")])
 	standpop <- unique(dataPop[,c("AGE_GROUP","REFERENCE_COUNT")])
 	standpop$REFERENCE_COUNT <- standpop$REFERENCE_COUNT*100
+	
+## Adding data for All Sites
+	dataAll <- dataInc[which(dataInc$ICD10GROUP!="C44"),]			
+	dataAll$ICD10GROUP <- "ALLbC44"
+	dataAll$ICD10GROUPLABEL <- "11 All sites but C44"
+	dataAll <- aggregate(dataAll$CASES, by=list(dataAll$YEAR,dataAll$ICD10GROUP,dataAll$ICD10GROUPLABEL,dataAll$SEX,dataAll$AGE_GROUP, dataAll$MORPHOLOGY ,dataAll$BEHAVIOUR,dataAll$BASIS), FUN=sum)
+	colnames(dataAll) <- c("YEAR", "ICD10GROUP","ICD10GROUPLABEL" ,"SEX", "AGE_GROUP","MORPHOLOGY","BEHAVIOUR" ,"BASIS","CASES")
+	dataInc <- rbind(dataInc,dataAll)
+	
 	
 ## Calculating ASR
 	data <- CalcASR(dataInc, dataPop, standpop)
@@ -87,8 +96,6 @@
 	females <- data[data$SEX==2,]
 	flabs <- GetSiteLabels(dataInc,2)
 	dataF <- merge(females,flabs,by=c("ICD10GROUP"))
-
-	
 	
 ## If the file type is a figure
 	if(plotTables==FALSE){
@@ -99,17 +106,36 @@
     # Processing male data
       dataOutM <- dataM[,c("ICD10GROUPLABEL","N","asr","se","MV(%)","CLIN(%)","DCO(%)","ICD10GROUP")]
       dataOutM$ASR <- paste(dataOutM$asr," (",dataOutM$se,")",sep="")
-      dataOutM$PERC <- format( round(dataOutM$N*100/sum(dataOutM$N),2), format='f', digits=2) 
+      dataOutM$PERC <- format( round(dataOutM$N*100/sum(males$N[males$ICD10GROUP!="ALLbC44"]),2), format='f', digits=2) 
       dataOutM <- dataOutM[,c("ICD10GROUPLABEL","N","PERC","ASR","MV(%)","CLIN(%)","DCO(%)","ICD10GROUP")]
       colnames(dataOutM) <- c("SITE","Cases","% Total","ASR(se)","MV(%)","CLIN(%)","DCO(%)","ICD10")
     
     # Processing female data
       dataOutF <- dataF[,c("ICD10GROUPLABEL","N","asr","se","MV(%)","CLIN(%)","DCO(%)","ICD10GROUP")]
       dataOutF$ASR <- paste(dataOutF$asr," (",dataOutF$se,")",sep="")
-      dataOutF$PERC <- format( round(dataOutF$N*100/sum(dataOutF$N),2), format='f', digits=2) 
-      dataOutF <- dataOutF[,c("ICD10GROUPLABEL","N","PERC","ASR","MV(%)","CLIN(%)","DCO(%)","ICD10GROUP")]
+      dataOutF$PERC <- format( round(dataOutF$N*100/sum(females$N[females$ICD10GROUP!="ALLbC44"]),2), format='f', digits=2) 
+	  dataOutF <- dataOutF[,c("ICD10GROUPLABEL","N","PERC","ASR","MV(%)","CLIN(%)","DCO(%)","ICD10GROUP")]
       colnames(dataOutF) <- c("SITE","Cases","% Total","ASR(se)","MV(%)","CLIN(%)","DCO(%)","ICD10"  )  
     
+	# Sorting data
+		
+		dataOutM$ICD10 <- as.character(dataOutM$ICD10)
+		dataOutF$ICD10 <- as.character(dataOutF$ICD10)
+		dataOutF$ICD10[dataOutF$ICD10=="C76-80"] <- "yC76-80"
+		dataOutM$ICD10[dataOutM$ICD10=="C76-80"] <- "yC76-80"
+		dataOutF$ICD10[dataOutF$ICD10=="ALLbC44"] <- "zALLbC44"
+		dataOutM$ICD10[dataOutM$ICD10=="ALLbC44"] <- "zALLbC44"
+		# ------
+		dataOutF <- dataOutF[order(dataOutF$ICD10),]
+		dataOutM <- dataOutM[order(dataOutM$ICD10),]
+		# ------
+		dataOutF$ICD10[dataOutF$ICD10=="yC76-80"] <- "C76-80"
+		dataOutM$ICD10[dataOutM$ICD10=="yC76-80"] <- "C76-80"	
+		dataOutF$ICD10[dataOutF$ICD10=="zALLbC44"] <- "ALLbC44"
+		dataOutM$ICD10[dataOutM$ICD10=="zALLbC44"] <- "ALLbC44"
+
+	
+	
     # Checking that gplots is installed and if not, installs it and includes it
       if(!is.installed("gplots")){
         load.fun("gplots")
@@ -131,15 +157,15 @@
       par(oma=c(1,1,6,1)) ## outer margin (of the whole plot series, not individual plots)
     
     # Male indicators
-      print(textplot(dataOutM, valign="top", show.rownames=F, cmar = 1, rmar=0.70, mar=c(1,1,2,1)))
+      print(textplot(dataOutM, valign="top", show.rownames=F, cex=0.8 ,cmar = 1, rmar=0.70, mar=c(1,1,2,1)))
       print(title("MALE"))
     
     # Main graphic title
-      mtext("Data Quality Indicators",side=3,line=4, cex=1.3, font=2)
-      mtext(header,side=3,line=3, cex=1)
+      mtext(header,side=3,line=4, cex=1.3, font=2)
+      mtext("Data Quality Indicators",side=3,line=3, cex=1)
     
     # Female indicators
-      print(textplot(dataOutF, valign="top", show.rownames=F, cmar = 1, rmar=0.70, mar=c(1,1,2,1))) 
+      print(textplot(dataOutF, valign="top", show.rownames=F, cex=0.8 , cmar = 1, rmar=0.70, mar=c(1,1,2,1))) 
       print(title("FEMALE"))
     
       mtext(paste("Cases of unknown age (", unk_males," M / ",unk_females," F) were excluded from these analyses", sep=""),side=1,line=1, cex=0.8, font=1)
@@ -166,28 +192,6 @@
 
 
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
