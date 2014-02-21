@@ -50,7 +50,6 @@
 	colnames(dataAll) <- c("YEAR", "ICD10GROUP","ICD10GROUPLABEL" ,"SEX", "AGE_GROUP","MORPHOLOGY","BEHAVIOUR" ,"BASIS","CASES")
 	dataInc <- rbind(dataInc,dataAll)
 	
-	
 ## Calculating ASR
 	data <- CalcASR(dataInc, dataPop, standpop)
 	
@@ -64,13 +63,9 @@
           ## ------------------------------------------------	
 
 ## Merging data frames
-	data <- merge(data,dataB,by=c("ICD10GROUP","SEX"))	
+	data <- merge(data,dataB,by=c("ICD10GROUP","SEX"), sort=F)	
 
 ## Calculating percentages
-	#data$DCO <- round(data$"0" * 100 / data$N,2)
-	#data$CLIN <- round(data$"1" * 100 / data$N,2)
-	#data$MV <- round(data$"7" * 100 / data$N,2)
-	#data$UNK <- round(data$"9" * 100 / data$N,2)
 	data$"DCO(%)" <- round(data$"DCO(N)" * 100 / data$N,2)
 	data$"CLIN(%)" <- round(data$"CLIN(N)" * 100 / data$N,2)
 	data$"MV(%)" <- round(data$"MV(N)" * 100 / data$N,2)
@@ -91,11 +86,12 @@
 ## labels
 	males <- data[data$SEX==1,]
 	mlabs <- GetSiteLabels(dataInc,1)
-	dataM <- merge(males,mlabs,by=c("ICD10GROUP"))
+	dataM <- merge(males,mlabs,by=c("ICD10GROUP"), sort=F)
 	
 	females <- data[data$SEX==2,]
 	flabs <- GetSiteLabels(dataInc,2)
-	dataF <- merge(females,flabs,by=c("ICD10GROUP"))
+	dataF <- merge(females,flabs,by=c("ICD10GROUP"), sort=F)
+	
 	
 ## If the file type is a figure
 	if(plotTables==FALSE){
@@ -116,26 +112,7 @@
       dataOutF$PERC <- format( round(dataOutF$N*100/sum(females$N[females$ICD10GROUP!="ALLbC44"]),2), format='f', digits=2) 
 	  dataOutF <- dataOutF[,c("ICD10GROUPLABEL","N","PERC","ASR","MV(%)","CLIN(%)","DCO(%)","ICD10GROUP")]
       colnames(dataOutF) <- c("SITE","Cases","% Total","ASR(se)","MV(%)","CLIN(%)","DCO(%)","ICD10"  )  
-    
-	# Sorting data
-		
-		dataOutM$ICD10 <- as.character(dataOutM$ICD10)
-		dataOutF$ICD10 <- as.character(dataOutF$ICD10)
-		dataOutF$ICD10[dataOutF$ICD10=="C76-80"] <- "yC76-80"
-		dataOutM$ICD10[dataOutM$ICD10=="C76-80"] <- "yC76-80"
-		dataOutF$ICD10[dataOutF$ICD10=="ALLbC44"] <- "zALLbC44"
-		dataOutM$ICD10[dataOutM$ICD10=="ALLbC44"] <- "zALLbC44"
-		# ------
-		dataOutF <- dataOutF[order(dataOutF$ICD10),]
-		dataOutM <- dataOutM[order(dataOutM$ICD10),]
-		# ------
-		dataOutF$ICD10[dataOutF$ICD10=="yC76-80"] <- "C76-80"
-		dataOutM$ICD10[dataOutM$ICD10=="yC76-80"] <- "C76-80"	
-		dataOutF$ICD10[dataOutF$ICD10=="zALLbC44"] <- "ALLbC44"
-		dataOutM$ICD10[dataOutM$ICD10=="zALLbC44"] <- "ALLbC44"
-
-	
-	
+        	
     # Checking that gplots is installed and if not, installs it and includes it
       if(!is.installed("gplots")){
         load.fun("gplots")

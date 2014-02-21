@@ -68,15 +68,14 @@ GetAgeGroupLabels <- function(lastGr){
 		# Renaming columns
 			colnames(data) <- c("ICD10GROUP","SEX","DCO(N)","CLIN(N)","MV(N)","UNK(N)")
 			
-			
-
 		return(data)
 	}
 
 
 	
-# Get the labels from a data frame for a specific sex	
+# Get the labels from a data frame for a specific sex (Returns only those that are to be included)
 	GetSiteLabels <- function(dataInc, sex){
+		
 		# Keeping data for that sex only
 		data <- dataInc[substr(dataInc$ICD10GROUPLABEL,sex,sex)==1,]
 		data <- data[,c("ICD10GROUP","ICD10GROUPLABEL")]
@@ -86,5 +85,24 @@ GetAgeGroupLabels <- function(lastGr){
 	}
 
 	
+# Get the labels from a data frame for a specific sex	
+	GetAllSiteLabels <- function(dataInc){
+		data <- dataInc[,c("ICD10GROUP","ICD10GROUPLABEL")]
+		data <- unique(data)
+		data$ICD10GROUPLABEL <- substr(data$ICD10GROUPLABEL,4,nchar(as.character(data$ICD10GROUPLABEL)))
+		return(data)
+	}
 
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 

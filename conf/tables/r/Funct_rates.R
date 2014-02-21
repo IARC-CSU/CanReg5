@@ -59,31 +59,33 @@ CalcCrudeRates <- function(dataInc, dataPop){
 }
 
 # Calculates ASR for all sites
-CalcASR <- function(dataInc, dataPop, standpop){
+CalcASR <- function(dataInc, dataPop, standpop, strat=c("SEX")){
 
-	# Aggregating the incidence data 
-		dataInc <- as.data.frame(aggregate(dataInc$CASES,by=list(dataInc$ICD10GROUP,dataInc$SEX,dataInc$AGE_GROUP),FUN=sum, na.rm=TRUE))
-		colnames(dataInc) <- c("ICD10GROUP","SEX","AGE_GROUP","CASES")
+  # Aggregating the incidence data 
+		stratInc <- c("ICD10GROUP",strat,"AGE_GROUP")
+		dataInc <- as.data.frame(aggregate(dataInc$CASES,by=eval(parse(text=paste("list(",paste(paste("dataInc$",stratInc,sep=""),collapse=","),")",sep=""))),FUN=sum, na.rm=TRUE))
+		colnames(dataInc) <- c(stratInc,"CASES")
 
 	# Aggregating the population data 
-		dataPop <- as.data.frame(aggregate(dataPop$COUNT,by=list(dataPop$SEX,dataPop$AGE_GROUP),FUN=sum, na.rm=TRUE))
-		colnames(dataPop) <- c("SEX","AGE_GROUP","COUNT")
-	
+		stratPop <- c(strat,"AGE_GROUP")
+		dataPop <- as.data.frame(aggregate(dataPop$COUNT,by=eval(parse(text=paste("list(",paste(paste("dataPop$",stratPop,sep=""),collapse=","),")",sep=""))),FUN=sum, na.rm=TRUE))
+		colnames(dataPop) <- c(stratPop,"COUNT")
+	   
 	# Merge population, incidence data and standard population data
-		data <- merge(dataInc,dataPop,by=c("SEX","AGE_GROUP"))	
+		data <- merge(dataInc,dataPop,by=stratPop)	
 		data <- merge(data,standpop,by=c("AGE_GROUP"))	
-		
+  
 	# Calculations	
 		data$exp <- data$CASES * data$REFERENCE_COUNT / data$COUNT
 		data$var <- data$CASES * ((data$REFERENCE_COUNT / data$COUNT) ^ 2)  
-		data <- aggregate(list(data$CASES,data$exp,data$var), by=list(data$ICD10GROUP, data$SEX), FUN=sum, na.rm=TRUE)
-		colnames(data) <- c("ICD10GROUP","SEX","N","asr","var")
+  
+		stratF <- c("ICD10GROUP",strat)
+		data <- aggregate(list(data$CASES,data$exp,data$var), by=eval(parse(text=paste("list(",paste(paste("data$",stratF,sep=""),collapse=","),")",sep=""))), FUN=sum, na.rm=TRUE)
+		colnames(data) <- c(stratF,"N","asr","var")
 		data$se <- sqrt(data$var)
 		data$lci <- round(data$asr - 1.96*data$se,2) 
 		data$uci <- round(data$asr + 1.96*data$se,2) 
-      
-    # Return value  
+
+  # Return value  
 		return(data)
-		
-	
 }

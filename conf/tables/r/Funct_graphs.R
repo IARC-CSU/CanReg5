@@ -32,7 +32,7 @@
 	
 		# Sex being plotted
 			sex <- data$SEX[1]
-			if(sex==1){sex <- "M"}else{sex <- "F"}
+			if(sex==1){sex <- "Males"}else{sex <- "Females"}
 	
 		# Merging age group labels with data
 			data <- merge(data,agegrs,by=c("AGE_GROUP"),all.y=TRUE)
@@ -59,8 +59,8 @@
 			# Titles
 			# OK (main title only): g1 <- g1 + ggtitle(eval(parse(text=paste("expression(atop(\"",header,"\",","))", sep=""))))
 			# OK (title and subtitle): g1 <- g1 + ggtitle(eval(parse(text=paste("expression(atop(\"",header,   "\",",  " atop(\"",  label , "\",\"\")))",  sep=""))))					
+			label <- paste(label," (",sex,")", sep="")
 			g1 <- addGGtitle(g1, header, label)
-			
 			
 			# Variable parameters
 			
@@ -82,3 +82,57 @@
 	return(g1)
 	
 }
+
+
+
+
+
+
+
+# Draws Time trends (ASR) for the top X cancers
+	plotTimeTrends <- function(data, logr, smooth, header, label, number){
+	
+		# Sex being plotted
+			sex <- data$SEX[1]
+			if(sex==1){sex <- "Males"}else{sex <- "Females"}
+				
+		# Sorting data
+			data <- data[order(data$SEX, data$YEAR, data$SITE), ]
+	
+		# Converting data
+			data$YEAR <- as.factor(data$YEAR)
+			data$ASR <- as.numeric(data$ASR)
+	
+		# Create graph
+			g1 <- ggplot(height=600, width=800, data=data, aes(x = YEAR, y = ASR, group=SITE ,colour=SITE))
+				
+		# Lines & Smoothing
+			if(smooth==TRUE){
+				g1 <- g1 + stat_smooth(se = FALSE) + geom_point()
+			}else{
+				g1 <- g1 + geom_line() + geom_point()
+			}	
+			
+		# Scale (log or not log)
+			if(logr==TRUE){
+				g1 <- g1 + scale_y_log10(breaks=c(1,5,10,20,50,100,200,500,1000)) 
+			}else{
+				g1 <- g1 + scale_y_continuous(breaks=c(0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,200))
+			}
+		# Axis labels & ticks
+			g1 <- g1 + xlab("\n") + ylab("Age-Standardized Rates (ASR) per 100,000") +labs(colour="")
+			g1 <- g1 + theme(axis.text.x = element_text(size=12, hjust=0.5, vjust=0.5))
+		
+		# Legend		
+			g1 <- g1 + theme(legend.position='bottom')
+			g1 <- g1 + guides(col = guide_legend(ncol = 3))
+
+		# Titles
+			label <- paste(label," (",sex,")", sep="")
+			g1 <- addGGtitle(g1, header, label)
+
+	return(g1)
+	
+}
+
+
