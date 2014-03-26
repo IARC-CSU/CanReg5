@@ -1,5 +1,93 @@
-changeset:   1173:e9c4e32bcce7
+changeset:   1183:8045e184563a
 tag:         tip
+user:        ErvikM
+date:        Wed Mar 26 16:30:18 2014 +0100
+files:       src/canreg/client/gui/analysis/TableBuilderInternalFrame.java
+description:
+Fixed a bug where records that did not have an obsolete flag did not show up in analysis.
+
+
+changeset:   1182:dbf7683c794e
+user:        ErvikM
+date:        Wed Mar 26 16:29:20 2014 +0100
+files:       src/canreg/common/Tools.java
+description:
+Fixed a bug where R would not be called in the background on Linux/OSX.
+
+
+changeset:   1181:79a6555636f2
+user:        ErvikM
+date:        Wed Mar 26 16:29:05 2014 +0100
+files:       src/canreg/client/analysis/RTableBuilder.java src/canreg/client/analysis/RTableBuilderGrouped.java src/canreg/client/analysis/Tools.java
+description:
+Fixed a bug where R would not be called in the background on Linux/OSX.
+
+
+changeset:   1180:a40d101c97cb
+user:        ErvikM
+date:        Wed Mar 26 16:27:55 2014 +0100
+files:       conf/tables/ASR Barchart for Top Cancers.conf conf/tables/AgeSpecificRatesTopX.conf conf/tables/CI5 Editorial Tables.conf conf/tables/DataQualityIndicators.conf conf/tables/PopulationPyramid.conf conf/tables/TimeTrends.conf
+description:
+CI5editorial tables added as an analysis option.
+Time Trends added.
+Poplation pyramid improved.
+ASR Top Cancers bar chart added.
+Other improvements and bug fixes of the analytical functions.
+
+
+changeset:   1179:958fdd728e97
+user:        ErvikM
+date:        Wed Mar 26 16:13:55 2014 +0100
+files:       conf/tables/r/ASR_TopCancers_BarChart.R conf/tables/r/CI5EditorialTables.R conf/tables/r/CI5EditorialTables.css conf/tables/r/CI5EditorialTablesPrint.css conf/tables/r/Funct_HTML.R conf/tables/r/Funct_graphs.R conf/tables/r/Funct_misc.R conf/tables/r/PopulationPyramid.R conf/tables/r/SRR.R conf/tables/r/TimeTrends.R conf/tables/r/callAgeSpecificRatesTopX.R
+description:
+CI5editorial tables added as an analysis option.
+Time Trends added.
+Poplation pyramid improved.
+ASR Top Cancers bar chart added.
+Other improvements and bug fixes of the analytical functions.
+
+
+changeset:   1178:f080ee587179
+user:        ErvikM
+date:        Wed Mar 26 15:45:22 2014 +0100
+files:       src/canreg/client/gui/CanRegClientView.java
+description:
+Fixed a bug where R would not be called in the background on Linux/OSX.
+
+
+changeset:   1177:4f934683f31e
+user:        ErvikM
+date:        Wed Mar 26 15:23:50 2014 +0100
+files:       conf/tables/AgeSpecificRatesTopX.conf conf/tables/SRR.conf conf/tables/r/Funct_graphs.R conf/tables/r/Funct_misc.R conf/tables/r/Funct_rates.R conf/tables/r/SRR.R conf/tables/r/TimeTrends.R conf/tables/r/callAgeSpecificRatesTopX.R
+description:
+R tables updated.
+
+
+changeset:   1176:3839e529c09d
+user:        ErvikM
+date:        Fri Feb 21 17:47:19 2014 +0100
+files:       appinfo.properties buildnumber.properties conf/tables/TimeTrends.conf conf/tables/r/DataQualityIndicators.R conf/tables/r/Funct_graphs.R conf/tables/r/Funct_misc.R conf/tables/r/Funct_rates.R conf/tables/r/TimeTrends.R
+description:
+Time trends added. R scripts updated.
+
+
+changeset:   1175:4afe23b558fe
+user:        ErvikM
+date:        Wed Feb 19 17:41:56 2014 +0100
+files:       appinfo.properties buildnumber.properties changelog.txt hg.log inno-settings.txt version.txt
+description:
+5.00.32RC1
+
+
+changeset:   1174:62a8a75d7838
+user:        ErvikM
+date:        Wed Feb 19 14:25:30 2014 +0100
+files:       conf/tables/DataQualityIndicators.conf
+description:
+All sites but skin added to quality indicators.
+
+
+changeset:   1173:e9c4e32bcce7
 user:        ErvikM
 date:        Wed Feb 19 14:22:33 2014 +0100
 files:       conf/tables/r/DataQualityIndicators.R

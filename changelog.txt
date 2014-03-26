@@ -1,12 +1,16 @@
-﻿Changelog
+Changelog
 
 5.00.32
 - Russian translation updated.
+- Time trends added. 
+- CI5editorial tables added as an analysis option.
 - AgeSpecificRatesTopX table now sorts cancers by ASR.
+- Other updates to the R scripts.
 - Fixed a bug where ASR was by 1.000.000 instead of 100.000 in the charts of top 10 cancers.
 - Improved the handling of obsolete cases in analysis.
 - Improved the handling of pending/deleted/duplicate cases in analysis.
 - All sites but skin added to quality indicators.
+- Fixed a bug where R would not be called in the background on Linux/OSX.
 - Updated the code for barcharts and piecharts to take into account upcoming changes to ggplot.
 - Other minor fixes.
 
