@@ -164,17 +164,15 @@ public class RTableBuilder implements TableBuilderInterface {
                             + rScript);
                 }
                 Runtime rt = Runtime.getRuntime();
-                String command = "\"" + rpath + "\""
+                String command = canreg.common.Tools.encapsulateIfNeeded(rpath)
                         + " --slave --file="
-                        + "\"" + scriptFile.getAbsolutePath()
-                        //                        + Globals.FILE_SEPARATOR
-                        //                        + rScript
-                        + "\" "
+                        + canreg.common.Tools.encapsulateIfNeeded(scriptFile.getAbsolutePath())
+                        + " "
                         + "--args "
                         + "-ft=" + fileType + " "
-                        + "-out=\"" + reportFileName + "\" "
-                        + "-pop=\"" + popfile.getPath() + "\" "
-                        + "-inc=\"" + incfile.getPath() + "\" "
+                        + "-out=" + canreg.common.Tools.encapsulateIfNeeded(reportFileName) + " "
+                        + "-pop=" + canreg.common.Tools.encapsulateIfNeeded(popfile.getPath()) + " "
+                        + "-inc=" + canreg.common.Tools.encapsulateIfNeeded(incfile.getPath()) + " "
                         + "-label=\"" + canreg.common.Tools.combine(tableLabel, "|") + "\" "
                         + "-header=\"" + tableHeader + "\" ";
                 // add the rest of the arguments

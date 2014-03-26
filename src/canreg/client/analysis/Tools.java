@@ -498,10 +498,10 @@ public class Tools {
     public static LinkedList<String> callR(String rScript, String rpath, String reportFileName) throws TableErrorException {
         LinkedList<String> filesCreated = new LinkedList<String>();
         Runtime rt = Runtime.getRuntime();
-        String command = "\"" + rpath + "\""
+        String command = canreg.common.Tools.encapsulateIfNeeded(rpath)
                 + " CMD BATCH --vanilla --slave "
-                + "\"" + rScript + "\" "
-                + "\"" + reportFileName + "\"";
+                + canreg.common.Tools.encapsulateIfNeeded(rScript) + " "
+                + canreg.common.Tools.encapsulateIfNeeded(reportFileName);
         System.out.println(command);
         Process pr = null;
         try {
