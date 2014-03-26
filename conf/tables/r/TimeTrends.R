@@ -38,16 +38,24 @@
 	filePop <- checkArgs(Args, "-pop")
 	dataPop <- read.table(filePop, header=TRUE)	
 
-## Restricting to age groups selected
+## Getting the list of age groups to analyze
 	groups <- checkArgs(Args, "-agegroup")
 	groups <- strsplit(groups,"-")[[1]]
-	dataInc <- dataInc[which(dataInc$AGE_GROUP>=as.integer(groups[1]) & dataInc$AGE_GROUP<=as.integer(groups[2])),]	
+  agerange <- c(groups[1]:groups[2])
+
+## Restricting incidence dataset
+  dataInc <- dataInc[which(dataInc$AGE_GROUP>=as.integer(groups[1]) & dataInc$AGE_GROUP<=as.integer(groups[2])),]	
 	
-## Getting age group labels
-	agegrs <- unique(dataPop[,c("AGE_GROUP","AGE_GROUP_LABEL")])
-	standpop <- unique(dataPop[,c("AGE_GROUP","REFERENCE_COUNT")])
+## Getting age group labels 
+  agegrs <- unique(dataPop[,c("AGE_GROUP","AGE_GROUP_LABEL")])
+
+## Processing standard population
+  standpop <- unique(dataPop[,c("AGE_GROUP","REFERENCE_COUNT")])
 	standpop$REFERENCE_COUNT <- standpop$REFERENCE_COUNT*100
-	
+	totalstandpop <- sum(standpop$REFERENCE_COUNT[standpop$AGE_GROUP %in% agerange])
+  standpop <- standpop[which(standpop$AGE_GROUP %in% agerange),]
+  standpop$REFERENCE_COUNT <- standpop$REFERENCE_COUNT*100000/totalstandpop # Adjustment for truncation
+
 ## Calculating ASR
 	data <- CalcASR(dataInc, dataPop, standpop, strat=c("YEAR", "SEX"))
 	

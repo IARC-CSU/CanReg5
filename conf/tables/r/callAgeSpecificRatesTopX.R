@@ -83,13 +83,14 @@
 			smooth <- checkArgs(Args, "-smooth")
 			label <- checkArgs(Args, "-label")
 			header <- checkArgs(Args, "-header")
+			color <- checkArgs(Args, "-color")
 	
 		## Plot for males
 			filename1 <- paste(out,"-Males.", fileType, sep = "" )
 			if(fileType=="png"){png(filename1)}
 			if(fileType=="svg"){svg(filename1)}
 			if(fileType=="pdf"){pdf(filename1, width=7)}
-			graphM <- plotAgeSpecRates(dataM, logr, smooth, header, label, number, agegrs)
+			graphM <- plotAgeSpecRates(dataM, logr, smooth, header, label, number, agegrs, color)
 			print(graphM)
 			dev.off()
 						
@@ -98,7 +99,7 @@
 			if(fileType=="png"){png(filename2)}
 			if(fileType=="svg"){svg(filename2)}
 			if(fileType=="pdf"){pdf(filename2, width=7)}
-			graphF <- plotAgeSpecRates(dataF, logr, smooth, header, label, number, agegrs)
+			graphF <- plotAgeSpecRates(dataF, logr, smooth, header, label, number, agegrs, color)
 			print(graphF)
 			dev.off()
 			

@@ -1,0 +1,47 @@
+body
+{
+	font-family:"Times New Roman",Times,serif;
+}
+
+
+table, th, td
+{
+	border: none;
+	border-collapse: collapse;
+	padding:0;
+	font-size:10px;
+}
+
+
+th
+{
+	background-color:#E0E0E0;
+	color:black;
+}
+
+
+h1 
+{
+	font-size:18px;
+}
+
+h2 
+{
+	font-size:15px;
+}
+
+h3 
+{
+	font-size:10px;
+}
+
+h4 
+{
+	font-size:10px;
+}
+
+div.img
+{
+	height:auto;
+	width:auto;
+}

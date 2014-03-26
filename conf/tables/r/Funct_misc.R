@@ -47,26 +47,27 @@ GetAgeGroupLabels <- function(lastGr){
 			load.fun("reshape2")
 		}
 		require(reshape2)
-	
+	    
 		# Replacing basis of diagnosis codes
 			dataInc$BASIS[dataInc$BASIS %in% c(1:4)] <- 1
 			dataInc$BASIS[dataInc$BASIS %in% c(5:8)] <- 7
-						
+	
 		# Getting the total number of cases by site and sex and basis of diag
 			data <- as.data.frame(aggregate(dataInc$CASES,by=list(dataInc$ICD10GROUP,dataInc$SEX, dataInc$BASIS),FUN=sum, na.rm=TRUE))
 			colnames(data) <- c("ICD10GROUP","SEX","BASIS","CASES")
-			
+		
 		# Pivoting the data frame
 			data <- dcast(data, ICD10GROUP+SEX~BASIS, sum, value.var= "CASES")
-			
+		
 		# Verifying that all columns exist
 			if(!"9" %in% colnames(data)){data$"9"<-0}
 			if(!"7" %in% colnames(data)){data$"7"<-0}
 			if(!"1" %in% colnames(data)){data$"1"<-0}
 			if(!"0" %in% colnames(data)){data$"0"<-0}
-
+    
 		# Renaming columns
-			colnames(data) <- c("ICD10GROUP","SEX","DCO(N)","CLIN(N)","MV(N)","UNK(N)")
+		data <- data[,c("ICD10GROUP","SEX","0","1","7","9")]	
+                colnames(data) <- c("ICD10GROUP","SEX","DCO(N)","CLIN(N)","MV(N)","UNK(N)")
 			
 		return(data)
 	}
