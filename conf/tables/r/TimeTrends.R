@@ -37,6 +37,11 @@
 ## Getting POPULATION data
 	filePop <- checkArgs(Args, "-pop")
 	dataPop <- read.table(filePop, header=TRUE)	
+
+## Restricting to age groups selected
+	groups <- checkArgs(Args, "-agegroup")
+	groups <- strsplit(groups,"-")[[1]]
+	dataInc <- dataInc[which(dataInc$AGE_GROUP>=as.integer(groups[1]) & dataInc$AGE_GROUP<=as.integer(groups[2])),]	
 	
 ## Getting age group labels
 	agegrs <- unique(dataPop[,c("AGE_GROUP","AGE_GROUP_LABEL")])

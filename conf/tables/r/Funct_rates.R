@@ -72,8 +72,8 @@ CalcASR <- function(dataInc, dataPop, standpop, strat=c("SEX")){
 		colnames(dataPop) <- c(stratPop,"COUNT")
 	   
 	# Merge population, incidence data and standard population data
-		data <- merge(dataInc,dataPop,by=stratPop)	
-		data <- merge(data,standpop,by=c("AGE_GROUP"))	
+		data <- merge(dataInc,dataPop,by=stratPop, sort=F)	
+		data <- merge(data,standpop,by=c("AGE_GROUP"), sort=F)	
   
 	# Calculations	
 		data$exp <- data$CASES * data$REFERENCE_COUNT / data$COUNT
@@ -89,3 +89,32 @@ CalcASR <- function(dataInc, dataPop, standpop, strat=c("SEX")){
   # Return value  
 		return(data)
 }
+
+
+# Calculates SRR 
+CalcSRR <- function(inc1,var1,inc2,var2) {
+
+	inc1 <- as.numeric(inc1)
+	inc2 <- as.numeric(inc2)
+	var1 <- as.numeric(var1)
+	var2 <- as.numeric(var2)
+
+	# IRR itself
+	  ratio <- as.numeric(inc1) / as.numeric(inc2)
+
+	# Confidence Interval
+	  z <- 1.96
+	  x1 <- (inc1 - inc2)
+	  x2 <- sqrt(var1 + var2)
+	  x <- x1 / x2
+
+	  lci <- ratio ^ (1 - z/x)	
+	  uci <- ratio ^ (1 + z/x)		
+
+	  result <- paste(round(ratio,2)," [",round(lci,2),"-",round(uci,2),"]",sep="")
+		
+	  return(result)
+}
+
+
+

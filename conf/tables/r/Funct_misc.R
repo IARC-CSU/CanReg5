@@ -30,7 +30,7 @@ GetAgeGroupLabels <- function(lastGr){
 		label[lastGr] <- paste(substr(label[lastGr],0,2),"+",sep="")
 	
 	# indexes
-		AGE_GROUP <- c(1:lastGr)
+		AGE_GROUP <- c(0:lastGr)
 	
 	# Merging
 		label <- as.data.frame(cbind(AGE_GROUP,label))
@@ -77,7 +77,9 @@ GetAgeGroupLabels <- function(lastGr){
 	GetSiteLabels <- function(dataInc, sex){
 		
 		# Keeping data for that sex only
-		data <- dataInc[substr(dataInc$ICD10GROUPLABEL,sex,sex)==1,]
+		if(sex==1 || sex==2){data <- dataInc[which(substr(dataInc$ICD10GROUPLABEL,sex,sex)==1),]}
+		if(sex==3){data <- dataInc[which(substr(dataInc$ICD10GROUPLABEL,1,2)!="00"),]}
+		
 		data <- data[,c("ICD10GROUP","ICD10GROUPLABEL")]
 		data <- unique(data)
 		data$ICD10GROUPLABEL <- substr(data$ICD10GROUPLABEL,4,nchar(as.character(data$ICD10GROUPLABEL)))

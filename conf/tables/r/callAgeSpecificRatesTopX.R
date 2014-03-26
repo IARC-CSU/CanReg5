@@ -80,7 +80,7 @@
 			#label <- "Age-specific incidence rates"
 			#header <- "Training System (English) (1999-2001)"
 			#smooth <- FALSE
-			smooth <- checkArgs(Args, "-smooth")=="TRUE"
+			smooth <- checkArgs(Args, "-smooth")
 			label <- checkArgs(Args, "-label")
 			header <- checkArgs(Args, "-header")
 	

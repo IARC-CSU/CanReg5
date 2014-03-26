@@ -7,7 +7,7 @@
 	}       
 	require(ggplot2) 
 	
-	
+		
 # Add title and subtitle to a ggplot
 	addGGtitle <- function(pl, main="Main Title", sub="Missing"){
 
@@ -27,9 +27,6 @@
 		# Getting highest age group in dataset
 			maxGr <- max(data$AGE_GROUP)
 
-		# Getting age group labels
-			#agegrs <- GetAgeGroupLabels(maxGr)
-	
 		# Sex being plotted
 			sex <- data$SEX[1]
 			if(sex==1){sex <- "Males"}else{sex <- "Females"}
@@ -65,8 +62,8 @@
 			# Variable parameters
 			
 				# Smoothing
-					if(smooth==TRUE){
-						g1 <- g1 + stat_smooth(se = FALSE) + geom_point()
+					if(smooth!=FALSE){
+						g1 <- g1 + stat_smooth(se = FALSE, n=smooth, na.rm=TRUE) #+ geom_point()
 					}else{
 						g1 <- g1 + geom_line() + geom_point()
 					}	
@@ -107,8 +104,9 @@
 			g1 <- ggplot(height=600, width=800, data=data, aes(x = YEAR, y = ASR, group=SITE ,colour=SITE))
 				
 		# Lines & Smoothing
-			if(smooth==TRUE){
-				g1 <- g1 + stat_smooth(se = FALSE) + geom_point()
+			if(smooth!=FALSE){
+				g1 <- g1 + stat_smooth(se = FALSE, n=smooth, na.rm=TRUE) #+ geom_point()
+
 			}else{
 				g1 <- g1 + geom_line() + geom_point()
 			}	
