@@ -1034,4 +1034,12 @@ public class Tools {
     public static String combine(Collection<String> s, String glue){
         return combine(s.toArray(new String[]{}), glue);
     }
+    
+    public static String encapsulateIfNeeded(String fileName){
+       if (fileName.contains(" ")) {
+            return "\"" + fileName + "\"";
+        } else {
+            return fileName;
+        }
+    }
 }
