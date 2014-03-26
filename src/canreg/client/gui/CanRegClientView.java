@@ -1573,9 +1573,9 @@ public final class CanRegClientView extends FrameView {
             } else {
                 File scriptFile = new File(Globals.R_INSTALL_PACKAGES_SCRIPT);
                 if (scriptFile.exists()) {
-                    String command = "\"" + rpath + "\""
+                    String command = canreg.common.Tools.encapsulateIfNeeded(rpath) 
                             + " --slave --file="
-                            + "\"" + scriptFile.getAbsolutePath();
+                            + canreg.common.Tools.encapsulateIfNeeded(scriptFile.getAbsolutePath());
                     System.out.println("Command: " + command);
                     System.out.flush();
 
