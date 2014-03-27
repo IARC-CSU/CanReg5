@@ -64,10 +64,10 @@ GetAgeGroupLabels <- function(lastGr){
 			if(!"7" %in% colnames(data)){data$"7"<-0}
 			if(!"1" %in% colnames(data)){data$"1"<-0}
 			if(!"0" %in% colnames(data)){data$"0"<-0}
-    
+
 		# Renaming columns
 		data <- data[,c("ICD10GROUP","SEX","0","1","7","9")]	
-                colnames(data) <- c("ICD10GROUP","SEX","DCO(N)","CLIN(N)","MV(N)","UNK(N)")
+    colnames(data) <- c("ICD10GROUP","SEX","DCO(N)","CLIN(N)","MV(N)","UNK(N)")
 			
 		return(data)
 	}
@@ -96,7 +96,27 @@ GetAgeGroupLabels <- function(lastGr){
 		return(data)
 	}
 
-
+  
+  
+# Adapts the standard population to a certain  
+	GetStandPop <- function(dataPop,agegroups=c(0:17)){
+	  
+    # Getting standpop from the population data
+	  standpop <- unique(dataPop[,c("AGE_GROUP","REFERENCE_COUNT")])
+	  standpop$REFERENCE_COUNT <- standpop$REFERENCE_COUNT*100
+	      
+    # Calculating total standard population (normally 100,000)
+	  totalstandpop <- sum(standpop$REFERENCE_COUNT[standpop$AGE_GROUP %in% agegroups])
+	  
+    # Restricting to selected age groups
+    standpop <- standpop[which(standpop$AGE_GROUP %in% agegroups),]
+	  
+    # Updating the standard population
+    standpop$REFERENCE_COUNT <- standpop$REFERENCE_COUNT*100000/totalstandpop # Adjustment for truncation
+	  
+    # Returning new pop
+    return(standpop)
+	}
 
 	
 	

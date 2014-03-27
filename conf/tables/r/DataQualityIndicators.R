@@ -39,8 +39,7 @@
 	
 ## Getting age group labels
 	agegrs <- unique(dataPop[,c("AGE_GROUP","AGE_GROUP_LABEL")])
-	standpop <- unique(dataPop[,c("AGE_GROUP","REFERENCE_COUNT")])
-	standpop$REFERENCE_COUNT <- standpop$REFERENCE_COUNT*100
+  standpop <- GetStandPop(dataPop)
 	
 ## Adding data for All Sites
 	dataAll <- dataInc[which(dataInc$ICD10GROUP!="C44"),]			

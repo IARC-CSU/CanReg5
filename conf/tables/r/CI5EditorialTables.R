@@ -71,9 +71,8 @@
 	
 	# GETTING AGE GROUP LABELS FOR STANDARD AND POPULATION DATA
 	agegrs <- unique(dataPop[,c("AGE_GROUP","AGE_GROUP_LABEL")])
-	standpop <- unique(dataPop[,c("AGE_GROUP","REFERENCE_COUNT")]) 
-	standpop$REFERENCE_COUNT <- standpop$REFERENCE_COUNT*100
-	dataPop <- dataPop[,c("YEAR","AGE_GROUP_LABEL","AGE_GROUP","SEX","COUNT")]
+	standpop <- GetStandPop(dataPop)
+  dataPop <- dataPop[,c("YEAR","AGE_GROUP_LABEL","AGE_GROUP","SEX","COUNT")]
 	
 	# ADDING DATA FOR BOTH SITES TOGETHER
 	dataAll <- dataPop			

@@ -50,11 +50,7 @@
   agegrs <- unique(dataPop[,c("AGE_GROUP","AGE_GROUP_LABEL")])
 
 ## Processing standard population
-  standpop <- unique(dataPop[,c("AGE_GROUP","REFERENCE_COUNT")])
-	standpop$REFERENCE_COUNT <- standpop$REFERENCE_COUNT*100
-	totalstandpop <- sum(standpop$REFERENCE_COUNT[standpop$AGE_GROUP %in% agerange])
-  standpop <- standpop[which(standpop$AGE_GROUP %in% agerange),]
-  standpop$REFERENCE_COUNT <- standpop$REFERENCE_COUNT*100000/totalstandpop # Adjustment for truncation
+  standpop <- GetStandPop(dataPop,agegroups=agerange)  
 
 ## Calculating ASR
 	data <- CalcASR(dataInc, dataPop, standpop, strat=c("YEAR", "SEX"))

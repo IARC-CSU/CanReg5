@@ -50,11 +50,15 @@
 ## Getting POPULATION data
 	filePop <- checkArgs(Args, "-pop")
 	dataPop <- read.table(filePop, header=TRUE)	
-	
+
+## Getting the list of age groups to analyze
+  groups <- checkArgs(Args, "-agegroup")
+  groups <- strsplit(groups,"-")[[1]]
+  agerange <- c(groups[1]:groups[2])
+
 ## Getting age group labels
-	standpop <- unique(dataPop[,c("AGE_GROUP","REFERENCE_COUNT")])
-	standpop$REFERENCE_COUNT <- standpop$REFERENCE_COUNT*100
-	
+  standpop <- GetStandPop(dataPop,agegroups=agerange)	
+
 ## Calculating ASR
 	data <- CalcASR(dataInc, dataPop, standpop)	
 	data$asr <- format( round(data$asr,2), format='f', digits=2)
