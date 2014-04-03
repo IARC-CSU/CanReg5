@@ -16,7 +16,6 @@
 		}else{
 			pl <- pl + ggtitle(eval(parse(text=paste("expression(atop(\"",main,   "\",",  " atop(\"",  sub , "\",\"\")))",  sep=""))))				
 		}
-		
 		return(pl)
 	}
 

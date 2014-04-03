@@ -84,7 +84,7 @@
 			label <- checkArgs(Args, "-label")
 			header <- checkArgs(Args, "-header")
 			color <- checkArgs(Args, "-color")
-	
+
 		## Plot for males
 			filename1 <- paste(out,"-Males.", fileType, sep = "" )
 			if(fileType=="png"){png(filename1)}
