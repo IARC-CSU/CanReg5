@@ -18,7 +18,14 @@
 	source(paste(sep="/", script.basename, "Funct_rates.R"))  # Rates calculation functions
 	source(paste(sep="/", script.basename, "Funct_misc.R"))  # Misc functions
 	source(paste(sep="/", script.basename, "Funct_graphs.R"))  # Graphics generating functions
-	
+
+## Getting the arguments from command line
+  logr <- checkArgs(Args, "-logr")	
+  smooth <- checkArgs(Args, "-smooth")
+  label <- checkArgs(Args, "-label")
+  header <- checkArgs(Args, "-header")
+  color <- checkArgs(Args, "-color")
+
 ## Filename & File type
 	out <- checkArgs(Args, "-out")
 	# This is in case the filename already contains .pdf, .svg or .png
@@ -36,7 +43,7 @@
 	fileInc <- checkArgs(Args, "-inc")
 	dataInc <- read.table(fileInc, header=TRUE)
 	dataInc$ICD10GROUPLABEL <- substr(dataInc$ICD10GROUPLABEL,4,length(dataInc$ICD10GROUPLABEL))
-
+  
 ## Getting POPULATION data
 	filePop <- checkArgs(Args, "-pop")
 	dataPop <- read.table(filePop, header=TRUE)	
@@ -48,10 +55,8 @@
 	
 ## Calculating Age Specific rates for all sites
 	data <- CalcAgeSpecRates(dataInc, dataPop)	
-	
-## Calculating crude rates for all sites (sorted) 
-## (this is used to define which sites will be considered the top x)
-	#dataCR <- CalcCrudeRates(dataInc,dataPop)	
+
+## Calculating ASR for all sites (sorted) 
   dataCR <- CalcASR(dataInc,dataPop,standpop)  
   dataCR <- dataCR[order(dataCR$SEX, -dataCR$asr), ]
 
@@ -66,26 +71,20 @@
 	# Females
 	females <- head(dataCR[dataCR$SEX==2,],number)
 	females <- females[,c("SEX","ICD10GROUP")]
-	
+
 ## Restricting our dataset to the sites selected	
 	dataM <- merge(data,males,by=c("SEX","ICD10GROUP"))
 	dataF <- merge(data,females,by=c("SEX","ICD10GROUP"))
 	data <- rbind(dataF,dataM)
-		
-	
+
+## Adding missing data 
+    dataM <- GenMissingAgeGrpData(dataM)
+    dataF <- GenMissingAgeGrpData(dataF)
+    data <- GenMissingAgeGrpData(data)
+
 ## If the file type is a figure
 	if(plotTables==FALSE){
 		
-		## Getting the scale (log or not), labels and smoothing
-			logr <- checkArgs(Args, "-logr")	
-			#label <- "Age-specific incidence rates"
-			#header <- "Training System (English) (1999-2001)"
-			#smooth <- FALSE
-			smooth <- checkArgs(Args, "-smooth")
-			label <- checkArgs(Args, "-label")
-			header <- checkArgs(Args, "-header")
-			color <- checkArgs(Args, "-color")
-	
 		## Plot for males
 			filename1 <- paste(out,"-Males.", fileType, sep = "" )
 			if(fileType=="png"){png(filename1)}

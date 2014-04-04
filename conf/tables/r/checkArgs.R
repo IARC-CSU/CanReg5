@@ -6,7 +6,7 @@ lengthVariable <- nchar(variable)
 		
 if(variable %in% substr(Args, 1, lengthVariable)){ 
 
-	if(variable %in% c("-logr")){
+  if(variable %in% c("-logr")){
 			return(as.logical(TRUE))
 	}else{
 			whichArgs <- which(substr(Args, 1, lengthVariable) == variable)

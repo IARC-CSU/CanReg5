@@ -37,3 +37,4 @@ target/*
 .idea/*
 *.iml
 pom.xml
+conf/tables/r/.Rhistory
