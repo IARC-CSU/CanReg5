@@ -45,6 +45,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -498,14 +500,24 @@ public class Tools {
     public static LinkedList<String> callR(String rScript, String rpath, String reportFileName) throws TableErrorException {
         LinkedList<String> filesCreated = new LinkedList<String>();
         Runtime rt = Runtime.getRuntime();
-        String command = canreg.common.Tools.encapsulateIfNeeded(rpath)
-                + " CMD BATCH --vanilla --slave "
-                + canreg.common.Tools.encapsulateIfNeeded(rScript) + " "
-                + canreg.common.Tools.encapsulateIfNeeded(reportFileName);
-        System.out.println(command);
+        ArrayList<String> commandList = new ArrayList<String>();
+        commandList.add(rpath);
+        commandList.add("CMD");
+        commandList.add("BATCH");
+        commandList.add("--vanilla");
+        commandList.add("--slave");
+        commandList.add(rScript);
+        commandList.add(reportFileName);
+
+        //String command = canreg.common.Tools.encapsulateIfNeeded(rpath)
+        //        + " CMD BATCH --vanilla --slave "
+        //        + canreg.common.Tools.encapsulateIfNeeded(rScript) + " "
+        //        + canreg.common.Tools.encapsulateIfNeeded(reportFileName);
+        
+        System.out.println(commandList);
         Process pr = null;
         try {
-            pr = rt.exec(command);
+            pr = rt.exec(commandList.toArray(new String[]{}));
             // collect the output from the R program in a stream
             // BufferedInputStream is = new BufferedInputStream(pr.getInputStream());
             pr.waitFor();

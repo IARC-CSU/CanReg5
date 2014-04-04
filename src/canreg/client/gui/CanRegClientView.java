@@ -57,6 +57,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1573,16 +1575,23 @@ public final class CanRegClientView extends FrameView {
             } else {
                 File scriptFile = new File(Globals.R_INSTALL_PACKAGES_SCRIPT);
                 if (scriptFile.exists()) {
-                    String command = canreg.common.Tools.encapsulateIfNeeded(rpath) 
-                            + " --slave --file="
-                            + canreg.common.Tools.encapsulateIfNeeded(scriptFile.getAbsolutePath());
-                    System.out.println("Command: " + command);
+                    
+                    ArrayList<String> commandList = new ArrayList();
+                    commandList.add(rpath);
+                    commandList.add("--vanilla");
+                    commandList.add("--slave");
+                    commandList.add("--file=" + scriptFile.getAbsolutePath());
+                    
+                  //  String command = canreg.common.Tools.encapsulateIfNeeded(rpath) 
+                //            + " --slave --file="
+                 //           + canreg.common.Tools.encapsulateIfNeeded(scriptFile.getAbsolutePath());
+                    System.out.println("Command: " + commandList);
                     System.out.flush();
 
                     Runtime rt = Runtime.getRuntime();
                     Process pr;
                     try {
-                        pr = rt.exec(command);
+                        pr = rt.exec(commandList.toArray(new String[]{}));
                     } catch (IOException ex) {
                         Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
                         return "Error - R script not found.";

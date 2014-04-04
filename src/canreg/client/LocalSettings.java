@@ -377,7 +377,8 @@ public final class LocalSettings {
         // TODO: Create a more permanent solution
         if (key.equals(R_PATH) || key.equals(GS_PATH)) {
             if (System.getProperty("os.name").contains("Win")) {
-                property = fixWindowsPath(property);
+                // Disable this for now...
+                // property = fixWindowsPath(property);
             }
         }
         return property;

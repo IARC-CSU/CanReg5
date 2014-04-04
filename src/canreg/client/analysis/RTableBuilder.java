@@ -34,6 +34,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -164,25 +166,23 @@ public class RTableBuilder implements TableBuilderInterface {
                             + rScript);
                 }
                 Runtime rt = Runtime.getRuntime();
-                String command = canreg.common.Tools.encapsulateIfNeeded(rpath)
-                        + " --slave --file="
-                        + canreg.common.Tools.encapsulateIfNeeded(scriptFile.getAbsolutePath())
-                        + " "
-                        + "--args "
-                        + "-ft=" + fileType + " "
-                        + "-out=" + canreg.common.Tools.encapsulateIfNeeded(reportFileName) + " "
-                        + "-pop=" + canreg.common.Tools.encapsulateIfNeeded(popfile.getPath()) + " "
-                        + "-inc=" + canreg.common.Tools.encapsulateIfNeeded(incfile.getPath()) + " "
-                        + "-label=\"" + canreg.common.Tools.combine(tableLabel, "|") + "\" "
-                        + "-header=\"" + tableHeader + "\" ";
+
+                ArrayList<String> commandList = new ArrayList();
+                commandList.add(rpath);
+                commandList.add("--vanilla");
+                commandList.add("--slave");
+                commandList.add("--file="+ canreg.common.Tools.encapsulateIfNeeded(scriptFile.getAbsolutePath()) );
+                commandList.add("--args");
+                commandList.add("-out="      + canreg.common.Tools.encapsulateIfNeeded(reportFileName));
+                commandList.add("-pop="      + canreg.common.Tools.encapsulateIfNeeded(popfile.getPath()));
+                commandList.add("-inc="      + canreg.common.Tools.encapsulateIfNeeded(incfile.getPath()));
+                commandList.add("-label="    + canreg.common.Tools.combine(tableLabel, "|"));
+                commandList.add("-header="   + tableHeader);
                 // add the rest of the arguments
-                if (rScriptsArguments != null) {
-                    for (String arg : rScriptsArguments) {
-                        command += arg + " ";
-                    }
-                }
-                System.out.println(command);
-                Process pr = rt.exec(command);
+                commandList.addAll(Arrays.asList(rScriptsArguments));
+                
+                System.out.println(commandList);
+                Process pr = rt.exec(commandList.toArray(new String[]{}));
                 // collect the output from the R program in a stream
                 is = new BufferedInputStream(pr.getInputStream());
                 try {

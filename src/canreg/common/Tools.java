@@ -1037,7 +1037,7 @@ public class Tools {
     
     public static String encapsulateIfNeeded(String fileName){
        if (fileName.contains(" ")) {
-            return "\"" + fileName + "\"";
+            return "\'" + fileName + "\'";
         } else {
             return fileName;
         }
