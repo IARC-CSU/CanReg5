@@ -48,9 +48,7 @@
 ## Calculating Age Specific rates for all sites
 	data <- CalcAgeSpecRates(dataInc, dataPop)	
 	
-## Calculating crude rates for all sites (sorted) 
-## (this is used to define which sites will be considered the top x)
-	#dataCR <- CalcCrudeRates(dataInc,dataPop)	
+## Calculating ASR for all sites (sorted) 
   dataCR <- CalcASR(dataInc,dataPop,standpop)  
   dataCR <- dataCR[order(dataCR$SEX, -dataCR$asr), ]
 
