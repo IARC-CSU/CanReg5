@@ -36,7 +36,7 @@
 
 		# Sorting data
 			data <- data[order(data$SEX, data$ICD10GROUP, data$AGE_GROUP), ]
-	
+    
 		# Create graph
 			
 			# Graph itself
@@ -69,7 +69,7 @@
             if(color==0){g1 <- g1 + geom_line(aes(linetype=ICD10GROUPLABEL)) + geom_point()}
 						if(color==1){g1 <- g1 + geom_line() + geom_point()}
 					}	
-
+		
 				# Scale (log or not log)
 					if(logr==TRUE){
 						g1 <- g1 + scale_y_log10(breaks=c(1,10,100,1000)) 

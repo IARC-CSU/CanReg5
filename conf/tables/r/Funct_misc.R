@@ -119,11 +119,36 @@ GetAgeGroupLabels <- function(lastGr){
 	}
 
 	
-	
-	
-	
-	
-	
+  
+# Generate missing age groups (TEMP function)   
+# This is used to plot the age specific rates
+#  it generates results for age groups without cases
+  GenMissingAgeGrpData <- function(data){
+    for(SEX in unique(data$SEX)){
+      for(SITE in unique(data$ICD10GROUP[data$SEX==SEX])){
+        
+        # temporary subset of data
+        temp <- data[which(data$ICD10GROUP==SITE & data$SEX==SEX),]
+        
+        # theorical age groups range
+        agegrps <- c(min(temp$AGE_GROUP):max(temp$AGE_GROUP))
+    
+        # Label for the site
+        misslabel <- temp$ICD10GROUPLABEL[1]
+	    
+	      # Ages that do not have any cases
+	      missingAges <- setdiff(agegrps,unique(temp$AGE_GROUP))
+	      	      
+        # Generates the fake data
+	      for(miss in missingAges){
+	        temp <- data.frame(SEX=SEX,ICD10GROUP=SITE,AGE_GROUP=miss,ICD10GROUPLABEL=misslabel,
+	                           CASES=0,COUNT=1,RATE=0.1,stringsAsFactors=FALSE)
+	        data <- rbind(data,temp)
+	      }
+	    }
+	  }
+		return(data)   
+	}
 	
 	
 	
