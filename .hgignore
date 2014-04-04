@@ -38,3 +38,4 @@ target/*
 *.iml
 pom.xml
 conf/tables/r/.Rhistory
+.Rhistory
