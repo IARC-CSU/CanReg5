@@ -61,7 +61,6 @@
 
 ## Getting the top X sites by sex (change once implemented)
 	number <- as.numeric(checkArgs(Args, "-number"))
-	#number <- 5	
 	
 	# Males
 	males <- head(dataCR[dataCR$SEX==1,],number)
@@ -79,7 +78,6 @@
 ## Adding missing data 
     dataM <- GenMissingAgeGrpData(dataM)
     dataF <- GenMissingAgeGrpData(dataF)
-    data <- GenMissingAgeGrpData(data)
 
 ## If the file type is a figure
 	if(plotTables==FALSE){
