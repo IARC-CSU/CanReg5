@@ -1,5 +1,96 @@
-changeset:   1183:8045e184563a
+changeset:   1193:d22fc8bbc2ea
 tag:         tip
+user:        ErvikM
+date:        Fri Apr 04 14:40:56 2014 +0200
+files:       .hgignore
+description:
+Updated hgignore.
+
+
+changeset:   1192:59bb8b27ac6f
+parent:      1191:0afcf4245c96
+parent:      1190:b4501196a2a9
+user:        ErvikM
+date:        Fri Apr 04 14:39:49 2014 +0200
+files:       conf/tables/r/callAgeSpecificRatesTopX.R
+description:
+Merge
+
+
+changeset:   1191:0afcf4245c96
+parent:      1187:7ba50e800de8
+user:        ErvikM
+date:        Fri Apr 04 14:38:55 2014 +0200
+files:       appinfo.properties buildnumber.properties conf/tables/r/callAgeSpecificRatesTopX.R inno-settings.txt version.txt
+description:
+5.00.32RC7
+
+
+changeset:   1190:b4501196a2a9
+user:        AntoniS
+date:        Fri Apr 04 13:48:55 2014 +0200
+files:       conf/tables/r/Funct_graphs.R conf/tables/r/Funct_misc.R conf/tables/r/callAgeSpecificRatesTopX.R
+description:
+Updated age-specific rates graphs
+- when there are no data for an age group, a rate of 0.1 is generated
+- This is done through the GenMissingAgeGrpData function in funct_misc.R
+
+Also moved the capture of the arguments to the top of the callAgeSpecificRatesTopX script
+
+
+changeset:   1189:9e1acdb32246
+user:        AntoniS
+date:        Fri Apr 04 10:51:14 2014 +0200
+files:       conf/tables/r/Funct_graphs.R conf/tables/r/callAgeSpecificRatesTopX.R
+description:
+Removed deprecated/commented code
+
+
+changeset:   1188:8f145db1f180
+parent:      1185:68f10da485a9
+user:        AntoniS
+date:        Thu Apr 03 16:34:54 2014 +0200
+files:       .hgignore conf/tables/r/Funct_graphs.R conf/tables/r/callAgeSpecificRatesTopX.R conf/tables/r/checkArgs.R
+description:
+Formatting
+
+
+changeset:   1187:7ba50e800de8
+user:        ErvikM
+date:        Fri Apr 04 10:11:40 2014 +0200
+files:       src/canreg/client/LocalSettings.java src/canreg/client/analysis/RTableBuilder.java src/canreg/client/analysis/RTableBuilderGrouped.java src/canreg/client/analysis/Tools.java src/canreg/client/gui/CanRegClientView.java src/canreg/client/gui/management/resources/OptionsFrame.properties src/canreg/common/PsToPdfConverter.java src/canreg/common/Tools.java
+description:
+Changed the way external programs are called.
+(Now calling with an array of strings instead of calling with just a string.)
+This solves problems on Mac and Linux, and improves security on Windows.
+
+
+changeset:   1186:c51c3da7b7e3
+user:        ErvikM
+date:        Thu Mar 27 09:43:17 2014 +0100
+files:       doc/CanReg5-Instructions/CanReg5-Instructions.lyx
+description:
+Doc updated.
+
+
+changeset:   1185:68f10da485a9
+user:        ErvikM
+date:        Thu Mar 27 09:37:59 2014 +0100
+files:       conf/tables/r/ASR_TopCancers_BarChart.R conf/tables/r/CI5EditorialTables.R conf/tables/r/DataQualityIndicators.R conf/tables/r/Funct_misc.R conf/tables/r/SRR.R conf/tables/r/TimeTrends.R
+description:
+Refactored the R files.
+Added truncation by age groups.
+
+
+changeset:   1184:a7dcca937fb3
+user:        ErvikM
+date:        Wed Mar 26 16:36:02 2014 +0100
+files:       appinfo.properties buildnumber.properties changelog.txt doc/CanReg5-Instructions/CanReg5-Instructions.lyx hg.log inno-settings.txt nbproject/private/private.xml version.txt
+description:
+5.00.32RC4
+
+
+changeset:   1183:8045e184563a
 user:        ErvikM
 date:        Wed Mar 26 16:30:18 2014 +0100
 files:       src/canreg/client/gui/analysis/TableBuilderInternalFrame.java
