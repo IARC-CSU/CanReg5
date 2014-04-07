@@ -2,7 +2,7 @@
 ## Population Pyramid
 ##
 ##	By Sebastien ANTONI
-##  Date: Mar 2014
+##  Date: April 2014
 ##
 ############################################################################################################
 
@@ -29,7 +29,9 @@
 	if(fileType %in% c("csv")){plotTables <- TRUE}else{plotTables <- FALSE}
 	header <- checkArgs(Args, "-header")
 	label <- checkArgs(Args, "-label")
-	
+  color <- checkArgs(Args, "-color")
+  numbers <- checkArgs(Args, "-numbers")	
+
 	# DATA FILES
 	filePop <- checkArgs(Args, "-pop")
 	dataPop <- read.table(filePop, header=TRUE)	
@@ -49,9 +51,9 @@
 		## Plot pyramid
 			filename <- paste(out, fileType, sep = "." )
 			if(fileType=="png"){png(filename)}
-			if(fileType=="svg"){jpeg(filename)}
+			if(fileType=="svg"){svg(filename)}
 			if(fileType=="pdf"){pdf(filename, width=7)}
-			graph <- plotPopulationPyramid(dataPop, header, label)   #, agegrs
+			graph <- plotPopulationPyramid(dataPop, header, label, numbers, color)   #, agegrs
 			#print(graph)
 			dev.off()
 			
