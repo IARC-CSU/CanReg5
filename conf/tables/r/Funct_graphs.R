@@ -36,7 +36,7 @@
 
 		# Sorting data
 			data <- data[order(data$SEX, data$ICD10GROUP, data$AGE_GROUP), ]
-	
+    
 		# Create graph
 			
 			# Graph itself
@@ -55,15 +55,8 @@
 			g1 <- g1 + theme(legend.position='bottom', legend.key = element_blank())
 			if(color==1){g1 <- g1 + guides(col = guide_legend(nrow = ceiling(number/3)))}
 			if(color==0){g1 <- g1 + guides(linetype = guide_legend(nrow = ceiling(number/3), title=NULL))}
-			
-			
-			#g1 <- g1 + guides(shape = guide_legend(nrow =))	  # 
-			
 		
-			
 			# Titles
-			# OK (main title only): g1 <- g1 + ggtitle(eval(parse(text=paste("expression(atop(\"",header,"\",","))", sep=""))))
-			# OK (title and subtitle): g1 <- g1 + ggtitle(eval(parse(text=paste("expression(atop(\"",header,   "\",",  " atop(\"",  label , "\",\"\")))",  sep=""))))					
 			label <- paste(label," (",sex,")", sep="")
 			g1 <- addGGtitle(g1, header, label)
 			
@@ -73,10 +66,10 @@
 					if(smooth!=FALSE){
 						g1 <- g1 + stat_smooth(se = FALSE, n=smooth, na.rm=TRUE) 
 					}else{
-						if(color==0){g1 <- g1 + geom_line(aes(linetype=ICD10GROUPLABEL)) + geom_point()}
+            if(color==0){g1 <- g1 + geom_line(aes(linetype=ICD10GROUPLABEL)) + geom_point()}
 						if(color==1){g1 <- g1 + geom_line() + geom_point()}
 					}	
-
+		
 				# Scale (log or not log)
 					if(logr==TRUE){
 						g1 <- g1 + scale_y_log10(breaks=c(1,10,100,1000)) 
