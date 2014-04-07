@@ -171,13 +171,14 @@ public class RTableBuilder implements TableBuilderInterface {
                 commandList.add(rpath);
                 commandList.add("--vanilla");
                 commandList.add("--slave");
-                commandList.add("--file="+ canreg.common.Tools.encapsulateIfNeeded(scriptFile.getAbsolutePath()) );
+                commandList.add("--file="+ scriptFile.getAbsolutePath() );
                 commandList.add("--args");
-                commandList.add("-out="      + canreg.common.Tools.encapsulateIfNeeded(reportFileName));
-                commandList.add("-pop="      + canreg.common.Tools.encapsulateIfNeeded(popfile.getPath()));
-                commandList.add("-inc="      + canreg.common.Tools.encapsulateIfNeeded(incfile.getPath()));
+                commandList.add("-out="      + reportFileName);
+                commandList.add("-pop="      + popfile.getPath());
+                commandList.add("-inc="      + incfile.getPath());
                 commandList.add("-label="    + canreg.common.Tools.combine(tableLabel, "|"));
                 commandList.add("-header="   + tableHeader);
+                commandList.add("-ft="       + fileType);
                 // add the rest of the arguments
                 commandList.addAll(Arrays.asList(rScriptsArguments));
                 
