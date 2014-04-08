@@ -184,13 +184,13 @@
 
 
 # Draws Population Pyramid
-	plotPopulationPyramid <- function(data, header, label){
+	plotPopulationPyramid <- function(data, header, label, numbers=1, color=0){
 	
 		# Margins & Layout
-		par(mai=c(1,1,1,.2))	
-		layout(matrix(1:2,nrow=1))
+		par(oma=c(1,1,3,1), mai=c(1,1,1,.2))  # oma is outed margin, mai is inner margin
+		layout(matrix(1:2,nrow=1))  # 1 row, but two graphs
 
-		# Data 
+		# Data (counts)
 		males <- data$COUNT[data$SEX==1]
 		males2 <- -males
 		females <- data$COUNT[data$SEX==2]
@@ -198,42 +198,68 @@
 		# Percentage data for the axis
 		malesPerc <- males * 100 / sum(males)
 		femalesPerc <- females * 100 / sum(females)
+    
+    # Max percent value and values for axis
 		maxPerc <- max(max(malesPerc),max(femalesPerc))
-		axisVals <- seq(0,maxPerc+5, by=5)
+		axisVals <- seq(0,maxPerc+6, by=5)
 		
-		
-		# Males plot
+		if(color==1){col <- c("#006699","#CC6666")}else{col <- c("grey","grey")}
+    
+		# Males plot --------------------------------
 		xlimM <- c(-max(axisVals),0)
 		barplot(-malesPerc,
           horiz=T,main="Males",
           space=0,
-          col="grey",
+          col=col[1],
           xlim=xlimM,
           axes=F,
           axisnames=F,
           cex.axis =0.7,
-          xaxt="n", yaxt="n")
+          cex.main =0.8,
+          xaxt="n", yaxt="n", 
+          line=1)
 		
+    # Percentages labels
 		axis(1,at=-axisVals, labels=sprintf("%1.1f",axisVals),cex.axis =0.7)
 		
-		# Females plot
+    # Number of cases for males (on the side of the graph)
+    if(numbers==1){text(x = -max(axisVals), y = as.numeric(unique(data$AGE_GROUP))+0.5,labels=males, cex=0.6, adj=0)}
+    		
+    # Subtitle (down) of the graph
+    mtext(text = "% of the male population", side = 1, line = 3, outer = F, cex = 0.7, font = 1)
+		
+    
+		# Females plot --------------------------------
 		xlimF <- c(0,max(axisVals))
 		par(mai=c(1,.2,1,1))
 		barplot(femalesPerc,
           horiz=T,
           main="Females",
-          space=0,col="grey",
+          space=0,col=col[2],
           xlim=xlimF,
           axes=F,axisnames=F,
-          cex.axis =0.7)
+          cex.axis =0.7,
+          cex.main =0.8, 
+          line=1)
 		
+    # Percentages labels
 		axis(1,at=axisVals, labels=sprintf("%1.1f",axisVals),cex.axis =0.7)
 		
+		# Number of cases for females (on the side of the graph)
+		if(numbers==1){text(x = max(axisVals), y = as.numeric(unique(data$AGE_GROUP))+0.5,labels=females, cex=0.6, adj=1)}
+		
+    # Subtitle (down) of the graph
+		mtext(text = "% of the female population", side = 1, line = 3, outer = F, cex = 0.7, font = 1)
+    
+    
+    # Overall plot stuff  --------------------------------
+    
+    # Labels for age groups
 		mylabels <- as.character(unique(data$AGE_GROUP_LABEL))
-		#mylabels[nchar(mylabels)==3]<- paste(" ",mylabels[nchar(mylabels)==3]," ",sep="")
-				
-		axis(2, at=as.numeric(unique(data$AGE_GROUP)+0.5), labels=mylabels, tcl=0, lty=0, las=1,cex.axis =0.6, pos=0.5)   #
+		axis(2, at=as.numeric(unique(data$AGE_GROUP)+0.5), labels=mylabels, tcl=0, lty=0, las=1, cex.axis =0.6, pos=0, hadj=0.5)   
 	
+		# Main title of the graph
+		mtext(text = header, side = 3, line = 0, outer = TRUE, cex = 1.2, font = 2)
 }
 
 			

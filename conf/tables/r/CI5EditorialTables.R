@@ -17,7 +17,6 @@
 	script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
 	script.basename <- dirname(script.name)
 	
-
 	
 	# DEPENDENCIES
 	source(paste(sep="/", script.basename, "checkArgs.R")) # Apparently this returns the arguments
@@ -30,8 +29,10 @@
 
 	# OUTPUT FILE NAME & HEADER
 	out <- checkArgs(Args, "-out")		
-	if(substr(out,nchar(out)-3,nchar(out)) %in% c(".csv",".pdf",".txt")){out <- substr(out,1,nchar(out)-4)}
-	fileType <- checkArgs(Args, "-ft")
+  if(substr(out,nchar(out)-3,nchar(out)) %in% c(".csv",".pdf",".txt")){out <- substr(out,1,nchar(out)-4)}
+  if(substr(out,nchar(out)-4,nchar(out)) %in% c(".html")){out <- substr(out,1,nchar(out)-5)}
+
+  fileType <- checkArgs(Args, "-ft")
 	if(fileType %in% c("csv")){plotTables <- TRUE}else{plotTables <- FALSE}
 	header <- checkArgs(Args, "-header")
 	
@@ -89,9 +90,7 @@
 	data <- CalcASR(dataInc, dataPop, standpop, strat=c("YEAR", "SEX"))		# ASR etc
 	data$asr <- format( round(data$asr,2), format='f', digits=2)			# Rounding
 	data$se <- format( round(data$se,2), format='f', digits=2)
-	
-
-	
+		
 	
 	# STARTING THE HTML REPORT
 	filename <- paste(out,".", fileType, sep = "" ) 

@@ -33,7 +33,7 @@
 ## Filename & File type
 	out <- checkArgs(Args, "-out")
 	# This is in case the filename already contains .pdf, .svg or .png
-	if(substr(out,nchar(out)-3,nchar(out)) %in% c(".csv",".pdf")){out <- substr(out,1,nchar(out)-4)}
+	if(substr(out,nchar(out)-3,nchar(out)) %in% c(".svg",".csv",".pdf")){out <- substr(out,1,nchar(out)-4)}
 	fileType <- checkArgs(Args, "-ft")
 	
 ## Is the output file a table or a picture		
@@ -90,7 +90,7 @@
 		# Plotting the ASR Pyramid
 		filename <- paste(out, fileType, sep = "." )
 		if(fileType=="png"){png(filename)}
-		if(fileType=="svg"){jpeg(filename)}
+		if(fileType=="svg"){svg(filename)}
 		if(fileType=="pdf"){pdf(filename,height=5 ,width=7)}
 		graph <- plotASRPyramid(data, header, label, number)   
 		dev.off()
