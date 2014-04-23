@@ -37,7 +37,7 @@
 		# Sorting data
 			data <- data[order(data$SEX, data$ICD10GROUP, data$AGE_GROUP), ]
     
-		# Create graph
+       	# Create graph
 			
 			# Graph itself
 			#g1 <- ggplot(height=600, width=800, data=data, aes(x = LABEL, y = RATE, group=ICD10GROUPLABEL, colour=ICD10GROUPLABEL), plot.title=header)
@@ -66,7 +66,7 @@
 					if(smooth!=FALSE){
 						g1 <- g1 + stat_smooth(se = FALSE, n=smooth, na.rm=TRUE) 
 					}else{
-            if(color==0){g1 <- g1 + geom_line(aes(linetype=ICD10GROUPLABEL)) + geom_point()}
+                        if(color==0){g1 <- g1 + geom_line(aes(linetype=ICD10GROUPLABEL)) + geom_point()}
 						if(color==1){g1 <- g1 + geom_line() + geom_point()}
 					}	
 		
@@ -77,8 +77,7 @@
 						g1 <- g1 + scale_y_continuous(breaks=c(0,100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000))
 					}
 
-
-	return(g1)
+    return(g1)
 	
 }
 
@@ -262,8 +261,58 @@
 		mtext(text = header, side = 3, line = 0, outer = TRUE, cex = 1.2, font = 2)
 }
 
-			
-			
-			
-			
 
+    
+    
+			
+# PLOTS AGE SPECIFIC TRENDS
+	plotAgeSpecificTrends <- function(data, logr, smooth, header, label){
+	    
+	    # Sex being plotted
+	    sex <- data$SEX[1]
+	    if(sex==1){sex <- "Males"}else{sex <- "Females"}
+	    
+        # Site being plotted
+	    site <- data$SITE[1]
+        
+	    # Sorting data
+	    data <- data[order(data$SEX, data$YEAR, data$AGE_GROUP), ]
+	    
+	    # Converting data
+	    data$YEAR <- as.factor(data$YEAR)
+	    data$AGE_GROUP <- as.factor(data$AGE_GROUP)
+	    data$RATE <- as.numeric(data$RATE)
+	    
+	    # Create graph
+	    g1 <- ggplot(height=600, width=800, data=data, aes(x = YEAR, y = RATE, group=AGE_GROUP ,colour=AGE_GROUP))
+	    g1 <- g1 + theme_bw()
+        
+	    # Lines & Smoothing
+	    if(smooth!=FALSE){
+	        g1 <- g1 + stat_smooth(se = FALSE, n=smooth, na.rm=TRUE) #+ geom_point()
+	        
+	    }else{
+	        g1 <- g1 + geom_line() + geom_point()
+	    }	
+	    
+	    # Scale (log or not log)
+	    if(logr==TRUE){
+	        g1 <- g1 + scale_y_log10(breaks=c(1,5,10,20,50,100,200,500,1000)) 
+	    }else{
+	        g1 <- g1 + scale_y_continuous(breaks=c(0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,200))
+	    }
+	    # Axis labels & ticks
+	    g1 <- g1 + xlab("\n") + ylab("Age-Specific Rates per 100,000") +labs(colour="")
+	    g1 <- g1 + theme(axis.text.x = element_text(size=12, hjust=0.5, vjust=0.5, angle=90))
+	    g1 <- g1 + theme(panel.grid.minor = element_blank(),panel.grid.major.x = element_blank())
+        
+	    # Legend		
+	    g1 <- g1 + theme(legend.position='bottom')
+	    g1 <- g1 + guides(col = guide_legend(ncol = 3))
+	    g1 <- g1 + theme(legend.key = element_blank())
+	    # Titles
+	    label <- paste(label," (",sex,"), ",site, sep="")
+	    g1 <- addGGtitle(g1, header, label)
+	    
+	    return(g1)
+	}    

@@ -1,10 +1,10 @@
 
 # Calculates age specific incidence rates for all sites
-CalcAgeSpecRates <- function(dataInc, dataPop){
+CalcAgeSpecRates <- function(dataInc, dataPop, strat=c("SEX")){
 
 	# Restricting files to used variables
-		dataInc <- subset(dataInc, select = c("ICD10GROUP", "ICD10GROUPLABEL", "SEX", "AGE_GROUP", "CASES"))
-		dataPop <- subset(dataPop, select = c("AGE_GROUP", "SEX", "COUNT"))
+		dataInc <- subset(dataInc, select = c("ICD10GROUP", "ICD10GROUPLABEL", strat, "AGE_GROUP", "CASES"))
+		dataPop <- subset(dataPop, select = c("AGE_GROUP", strat, "COUNT"))
 		
 	# Formatting variables	
 		dataInc$CASES <- as.numeric(dataInc$CASES)
@@ -13,14 +13,17 @@ CalcAgeSpecRates <- function(dataInc, dataPop){
 	## AGE SPECIFIC RATES	
 			
 	# Aggregating the number of cases in the incidence/population files
-		dataInc <- aggregate(dataInc$CASES, by=list(dataInc$ICD10GROUP,dataInc$ICD10GROUPLABEL,dataInc$SEX,dataInc$AGE_GROUP), FUN=sum)
-		colnames(dataInc) <- c("ICD10GROUP", "ICD10GROUPLABEL", "SEX", "AGE_GROUP", "CASES")
+	    stratInc <- c("ICD10GROUP","ICD10GROUPLABEL",strat,"AGE_GROUP") 
+        dataInc <- as.data.frame(aggregate(dataInc$CASES,by=eval(parse(text=paste("list(",paste(paste("dataInc$",stratInc,sep=""),collapse=","),")",sep=""))),FUN=sum, na.rm=TRUE))
+    	colnames(dataInc) <- c(stratInc, "CASES")
 		
-		dataPop <- aggregate(dataPop$COUNT, by=list(dataPop$AGE_GROUP,dataPop$SEX), FUN=sum)
-		colnames(dataPop) <- c("AGE_GROUP", "SEX", "COUNT")
+	    stratPop <- c(strat,"AGE_GROUP") 
+	    dataPop <- as.data.frame(aggregate(dataPop$COUNT,
+            by=eval(parse(text=paste("list(",paste(paste("dataPop$",stratPop,sep=""),collapse=","),")",sep=""))),FUN=sum, na.rm=TRUE))
+		colnames(dataPop) <- c(stratPop, "COUNT")
 		
 	# Merging incidence and population
-		data <- merge(dataInc,dataPop,by=c("AGE_GROUP","SEX"))
+		data <- merge(dataInc,dataPop,by=c("AGE_GROUP",strat))
 		
 	# Calculate Age Spec Rates
 		data$RATE <- round((data$CASES / data$COUNT) * 100000,2)

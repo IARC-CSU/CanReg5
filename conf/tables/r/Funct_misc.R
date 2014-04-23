@@ -123,7 +123,9 @@ GetAgeGroupLabels <- function(lastGr){
 # Generate missing age groups (TEMP function)   
 # This is used to plot the age specific rates
 #  it generates results for age groups without cases
+    
   GenMissingAgeGrpData <- function(data){
+    
     for(SEX in unique(data$SEX)){
       for(SITE in unique(data$ICD10GROUP[data$SEX==SEX])){
         
@@ -152,5 +154,34 @@ GetAgeGroupLabels <- function(lastGr){
 	
 	
 	
+    
+    
+    
+GenMissingData <- function(data, strat=c(""), longvar="",val="RATE"){
+    
+    # Strat are the variables on the left, longvar the one on the top
+    # val, the one in the cells (to be generated if missing)
+    if(!is.installed("reshape2")){
+        load.fun("reshape2")
+    }
+    require(reshape2)
+    
+    # Casting data
+    data <- dcast(data, eval(parse(text=paste(paste(strat, collapse="+"),"~",
+                                    longvar,sep=""))), value.var=val)
+   
+    data[is.na(data)]<-0
+    
+    data <- melt(data, id=c(strat), variable.name=longvar, value.name=val)
+
+    #write.csv(data, "c:/Users/antonis/Desktop/seb3.csv", row.names = F) 
+    
+    
+     return(data)
+}
+	
+    
+    
+    
 	
 
