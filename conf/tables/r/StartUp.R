@@ -36,10 +36,11 @@
 ############################### ARGUMENTS #####################################
 
 ## GRAPHIC RELATED ARGUMENTS
-logr <- checkArgs(Args, "-logr")        # Log scale or not
-smooth <- checkArgs(Args, "-smooth")    # Use smoothing or not
+logr <- checkArgs(Args, "-logr")        # Log scale or not (TRUE/FALSE)
+smooth <- checkArgs(Args, "-smooth")    # Use smoothing or not (TRUE/FALSE)
 label <- checkArgs(Args, "-label")      # Label
 header <- checkArgs(Args, "-header")    # Header
+color <- checkArgs(Args, "-color")      # Color or B&W (1 = color, 0 = B&W)
 
 ## MISC ARGUMENTS
 number <- checkArgs(Args, "-number")    # Number of cancers to be included

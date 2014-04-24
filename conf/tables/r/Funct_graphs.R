@@ -119,11 +119,12 @@ StartGraph <- function(filename, filetype, height=5, width=7 ){
 	
 		# Converting data
 			data$YEAR <- as.factor(data$YEAR)
-			data$ASR <- as.numeric(data$ASR)
+			data$ASR <- as.numeric(data$asr)
 	
 		# Create graph
 			g1 <- ggplot(height=600, width=800, data=data, aes(x = YEAR, y = ASR, group=SITE ,colour=SITE))
-				
+		    g1 <- g1 + theme_bw()
+        
 		# Lines & Smoothing
 			if(smooth!=FALSE){
 				g1 <- g1 + stat_smooth(se = FALSE, n=smooth, na.rm=TRUE) #+ geom_point()
@@ -140,12 +141,14 @@ StartGraph <- function(filename, filetype, height=5, width=7 ){
 			}
 		# Axis labels & ticks
 			g1 <- g1 + xlab("\n") + ylab("Age-Standardized Rates (ASR) per 100,000") +labs(colour="")
-			g1 <- g1 + theme(axis.text.x = element_text(size=12, hjust=0.5, vjust=0.5))
+			g1 <- g1 + theme(axis.text.x = element_text(size=12, hjust=0.5, vjust=0.5, angle=90))
+			g1 <- g1 + theme(panel.grid.minor = element_blank(),panel.grid.major.x = element_blank())
 		
 		# Legend		
 			g1 <- g1 + theme(legend.position='bottom')
 			g1 <- g1 + guides(col = guide_legend(ncol = 3))
-
+		    g1 <- g1 + theme(legend.key = element_blank())
+        
 		# Titles
 			label <- paste(label," (",sex,")", sep="")
 			g1 <- addGGtitle(g1, header, label)
@@ -306,7 +309,7 @@ StartGraph <- function(filename, filetype, height=5, width=7 ){
 	    # Create graph
 	    g1 <- ggplot(height=600, width=800, data=data, aes(x = YEAR, y = RATE, group=AGE_GROUP ,colour=AGE_GROUP))
 	    g1 <- g1 + theme_bw()
-        
+	    
 	    # Lines & Smoothing
 	    if(smooth!=FALSE){
 	        g1 <- g1 + stat_smooth(se = FALSE, n=smooth, na.rm=TRUE) #+ geom_point()

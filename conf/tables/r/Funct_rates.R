@@ -1,4 +1,71 @@
 
+############################## NEW FUNCTIONS ############################## 
+
+# Calculates ASR 
+CalcASR <- function(dataInc, dataPop, standpop, strat=c("SEX")){
+    
+    # Aggregating the incidence data 
+    stratInc <- c("ICD10GROUP",strat,"AGE_GROUP")
+    dataInc <- as.data.frame(aggregate(dataInc$CASES,by=eval(parse(text=paste("list(",paste(paste("dataInc$",stratInc,sep=""),collapse=","),")",sep=""))),FUN=sum, na.rm=TRUE))
+    colnames(dataInc) <- c(stratInc,"CASES")
+    
+    # Aggregating the population data 
+    stratPop <- c(strat,"AGE_GROUP")
+    dataPop <- as.data.frame(aggregate(dataPop$COUNT,by=eval(parse(text=paste("list(",paste(paste("dataPop$",stratPop,sep=""),collapse=","),")",sep=""))),FUN=sum, na.rm=TRUE))
+    colnames(dataPop) <- c(stratPop,"COUNT")
+    
+    # Merge population, incidence data and standard population data
+    data <- merge(dataInc,dataPop,by=stratPop, sort=F)	
+    data <- merge(data,standpop,by=c("AGE_GROUP"), sort=F)	
+    
+    # Calculations	
+    data$exp <- data$CASES * data$REFERENCE_COUNT / data$COUNT
+    data$var <- data$CASES * ((data$REFERENCE_COUNT / data$COUNT) ^ 2)  
+    
+    stratF <- c("ICD10GROUP",strat)
+    data <- aggregate(list(data$CASES,data$exp,data$var), by=eval(parse(text=paste("list(",paste(paste("data$",stratF,sep=""),collapse=","),")",sep=""))), FUN=sum, na.rm=TRUE)
+    colnames(data) <- c(stratF,"N","asr","var")
+    data$se <- sqrt(data$var)
+    data$lci <- round(data$asr - 1.96*data$se,2) 
+    data$uci <- round(data$asr + 1.96*data$se,2) 
+    data$asr <- round(data$asr,2)
+    data$se <- round(data$se,2)	
+    data$var <- round(data$var,2)	
+    
+    
+    # Return value  
+    return(data)
+}
+
+
+# Get the top cancers for each sex (from already calculated rates)
+GetTopCancers <- function(data, number=5){
+
+    # Sorting by sex and decreasing ASR
+    data <- data[order(data$SEX, -data$asr), ]
+    
+    dataM <- head(data[data$SEX==1,],number)
+    dataF <- head(data[data$SEX==2,],number)
+    dataBoth <- head(data[data$SEX==3,],number)
+    
+    topcancers <- rbind(dataM, dataF, dataBoth)
+    topcancers <- topcancers[,c("SEX","ICD10GROUP")]
+    
+    return(topcancers)
+}
+
+
+
+
+
+
+
+
+############################## OLD FUNCTIONS ############################## 
+
+
+
+
 # Calculates age specific incidence rates for all sites
 CalcAgeSpecRates <- function(dataInc, dataPop, strat=c("SEX")){
 
@@ -61,41 +128,7 @@ CalcCrudeRates <- function(dataInc, dataPop){
 	
 }
 
-# Calculates ASR for all sites
-CalcASR <- function(dataInc, dataPop, standpop, strat=c("SEX")){
 
-  # Aggregating the incidence data 
-		stratInc <- c("ICD10GROUP",strat,"AGE_GROUP")
-		dataInc <- as.data.frame(aggregate(dataInc$CASES,by=eval(parse(text=paste("list(",paste(paste("dataInc$",stratInc,sep=""),collapse=","),")",sep=""))),FUN=sum, na.rm=TRUE))
-		colnames(dataInc) <- c(stratInc,"CASES")
-
-	# Aggregating the population data 
-		stratPop <- c(strat,"AGE_GROUP")
-		dataPop <- as.data.frame(aggregate(dataPop$COUNT,by=eval(parse(text=paste("list(",paste(paste("dataPop$",stratPop,sep=""),collapse=","),")",sep=""))),FUN=sum, na.rm=TRUE))
-		colnames(dataPop) <- c(stratPop,"COUNT")
-	   
-	# Merge population, incidence data and standard population data
-		data <- merge(dataInc,dataPop,by=stratPop, sort=F)	
-		data <- merge(data,standpop,by=c("AGE_GROUP"), sort=F)	
-  
-	# Calculations	
-		data$exp <- data$CASES * data$REFERENCE_COUNT / data$COUNT
-		data$var <- data$CASES * ((data$REFERENCE_COUNT / data$COUNT) ^ 2)  
-  
-		stratF <- c("ICD10GROUP",strat)
-		data <- aggregate(list(data$CASES,data$exp,data$var), by=eval(parse(text=paste("list(",paste(paste("data$",stratF,sep=""),collapse=","),")",sep=""))), FUN=sum, na.rm=TRUE)
-		colnames(data) <- c(stratF,"N","asr","var")
-		data$se <- sqrt(data$var)
-		data$lci <- round(data$asr - 1.96*data$se,2) 
-		data$uci <- round(data$asr + 1.96*data$se,2) 
-	    data$asr <- round(data$asr,2)
-	    data$se <- round(data$se,2)	
-    	data$var <- round(data$var,2)	
-	
-    
-  # Return value  
-		return(data)
-}
 
 
 # Calculates SRR 

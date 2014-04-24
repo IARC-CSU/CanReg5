@@ -30,7 +30,9 @@
 
 ## LOADING INCIDENCE AND POPULATION DATA
 	dataInc <- read.table(fileInc, header=TRUE)
-	dataPop <- read.table(filePop, header=TRUE)	
+    dataInc <- dataInc[which(dataInc$AGE_GROUP>=as.integer(agegroups[1]) & 
+                  dataInc$AGE_GROUP<=as.integer(agegroups[length(agegroups)])),]
+    dataPop <- read.table(filePop, header=TRUE)	
 
 ## LOADING STANDARD POPULATION (For selected age groups, if relevant)
     standpop <- GetStandPop(dataPop,agegroups=agegroups)    

@@ -45,8 +45,29 @@
         	    
 	    return(labels)
 	}  
-   
+ 
+
+# Adapts the standard population to a certain age range 
+GetStandPop <- function(dataPop,agegroups=c(0:17)){
     
+    # Getting standpop from the population data
+    standpop <- unique(dataPop[,c("AGE_GROUP","REFERENCE_COUNT")])
+    standpop$REFERENCE_COUNT <- standpop$REFERENCE_COUNT*100
+    
+    # Calculating total standard population (normally 100,000)
+    totalstandpop <- 
+        sum(standpop$REFERENCE_COUNT[standpop$AGE_GROUP %in% agegroups])
+    
+    # Restricting to selected age groups
+    standpop <- standpop[which(standpop$AGE_GROUP %in% agegroups),]
+    
+    # Updating the standard population
+    standpop$REFERENCE_COUNT <- 
+        standpop$REFERENCE_COUNT*100000/totalstandpop # Adj for missing ages
+    
+    # Returning new pop
+    return(standpop)
+}   
 
 
 
@@ -148,25 +169,7 @@ GetAgeGroupLabels <- function(lastGr){
 
   
   
-# Adapts the standard population to a certain  
-	GetStandPop <- function(dataPop,agegroups=c(0:17)){
-	  
-    # Getting standpop from the population data
-	  standpop <- unique(dataPop[,c("AGE_GROUP","REFERENCE_COUNT")])
-	  standpop$REFERENCE_COUNT <- standpop$REFERENCE_COUNT*100
-	      
-    # Calculating total standard population (normally 100,000)
-	  totalstandpop <- sum(standpop$REFERENCE_COUNT[standpop$AGE_GROUP %in% agegroups])
-	  
-    # Restricting to selected age groups
-    standpop <- standpop[which(standpop$AGE_GROUP %in% agegroups),]
-	  
-    # Updating the standard population
-    standpop$REFERENCE_COUNT <- standpop$REFERENCE_COUNT*100000/totalstandpop # Adjustment for truncation
-	  
-    # Returning new pop
-    return(standpop)
-	}
+
 
 	
   
