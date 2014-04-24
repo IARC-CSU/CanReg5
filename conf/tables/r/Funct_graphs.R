@@ -18,6 +18,10 @@ StartGraph <- function(filename, filetype, height=5, width=7 ){
     
 } 
     
+  
+    
+    
+    
     
     
     
@@ -206,8 +210,8 @@ StartGraph <- function(filename, filetype, height=5, width=7 ){
 
 
 # Draws Population Pyramid
-	plotPopulationPyramid <- function(data, header, label, numbers=1, color=0){
-	
+	plotPopulationPyramid <- function(data, header, label, showvals=1, color=0){
+		    
 		# Margins & Layout
 		par(oma=c(1,1,3,1), mai=c(1,1,1,.2))  # oma is outed margin, mai is inner margin
 		layout(matrix(1:2,nrow=1))  # 1 row, but two graphs
@@ -245,7 +249,7 @@ StartGraph <- function(filename, filetype, height=5, width=7 ){
 		axis(1,at=-axisVals, labels=sprintf("%1.1f",axisVals),cex.axis =0.7)
 		
     # Number of cases for males (on the side of the graph)
-    if(numbers==1){text(x = -max(axisVals), y = as.numeric(unique(data$AGE_GROUP))+0.5,labels=males, cex=0.6, adj=0)}
+    if(showvals==1){text(x = -max(axisVals), y = as.numeric(unique(data$AGE_GROUP))+0.5,labels=males, cex=0.6, adj=0)}
     		
     # Subtitle (down) of the graph
     mtext(text = "% of the male population", side = 1, line = 3, outer = F, cex = 0.7, font = 1)
@@ -268,7 +272,7 @@ StartGraph <- function(filename, filetype, height=5, width=7 ){
 		axis(1,at=axisVals, labels=sprintf("%1.1f",axisVals),cex.axis =0.7)
 		
 		# Number of cases for females (on the side of the graph)
-		if(numbers==1){text(x = max(axisVals), y = as.numeric(unique(data$AGE_GROUP))+0.5,labels=females, cex=0.6, adj=1)}
+		if(showvals==1){text(x = max(axisVals), y = as.numeric(unique(data$AGE_GROUP))+0.5,labels=females, cex=0.6, adj=1)}
 		
     # Subtitle (down) of the graph
 		mtext(text = "% of the female population", side = 1, line = 3, outer = F, cex = 0.7, font = 1)

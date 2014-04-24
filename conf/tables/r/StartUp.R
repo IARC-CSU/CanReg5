@@ -41,6 +41,7 @@ smooth <- checkArgs(Args, "-smooth")    # Use smoothing or not (TRUE/FALSE)
 label <- checkArgs(Args, "-label")      # Label
 header <- checkArgs(Args, "-header")    # Header
 color <- checkArgs(Args, "-color")      # Color or B&W (1 = color, 0 = B&W)
+showvals <- checkArgs(Args, "-showvals")# Show values on graph (1 = YES, 0 = NO)
 
 ## MISC ARGUMENTS
 number <- checkArgs(Args, "-number")    # Number of cancers to be included
@@ -71,9 +72,12 @@ filePop <- checkArgs(Args, "-pop")
 if(fileType %in% c("csv")){plotTables <- TRUE}else{plotTables <- FALSE}	
 
 ## LIST OF AGE GROUPS TO INCLUDE IN ANALYSIS
+if(agegroups==FALSE){
+    agegroups <- "0-17"   
+}
 agegroups <- strsplit(agegroups,"-")[[1]]
 agegroups <- c(agegroups[1]:agegroups[2])
-    
+
     
     
     

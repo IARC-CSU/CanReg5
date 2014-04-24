@@ -1,80 +1,75 @@
-############################################################################################################
-## Population Pyramid
-##
-##	By Sebastien ANTONI
-##  Date: April 2014
-##
-############################################################################################################
+###############################################################################
+## POPULATION PYRAMID 
+## (for CanReg 5)
+## 
+## Author: Sebastien Antoni
+## Last update: 24/04/2014
+###############################################################################
 
-# ----------------------------------------------------------------------------------------------------------
-# Loading dependencies	& Getting the arguments from CanReg	
-# ----------------------------------------------------------------------------------------------------------
-	
-	# CANREG BASIC ARGUMENTS
-	Args <- commandArgs(TRUE)
-	initial.options <- commandArgs(trailingOnly = FALSE)
-	file.arg.name <- "--file="
-	script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
-	script.basename <- dirname(script.name)
-		
-	# DEPENDENCIES
-	source(paste(sep="/", script.basename, "checkArgs.R")) # Apparently this returns the arguments
-	source(paste(sep="/", script.basename, "Funct_graphs.R"))  # Graphic functions
-	
-	
-	# OUTPUT FILE NAME & HEADER
-	out <- checkArgs(Args, "-out")		
-	if(substr(out,nchar(out)-3,nchar(out)) %in% c(".csv",".pdf",".txt")){out <- substr(out,1,nchar(out)-4)}
-	fileType <- checkArgs(Args, "-ft")
-	if(fileType %in% c("csv")){plotTables <- TRUE}else{plotTables <- FALSE}
-	header <- checkArgs(Args, "-header")
-	label <- checkArgs(Args, "-label")
-  color <- checkArgs(Args, "-color")
-  numbers <- checkArgs(Args, "-numbers")	
 
-	# DATA FILES
-	filePop <- checkArgs(Args, "-pop")
-	dataPop <- read.table(filePop, header=TRUE)	
-	dataPop <- dataPop[,c("YEAR","AGE_GROUP_LABEL","AGE_GROUP","SEX","COUNT")]
-		
-	years <- paste(min(dataPop$YEAR),"-",max(dataPop$YEAR), sep="")
-		
-	# AGGREGATING DATA
-	dataPop <- aggregate(dataPop$COUNT, by=list(dataPop$AGE_GROUP_LABEL,dataPop$AGE_GROUP,dataPop$SEX), FUN=mean)
-	colnames(dataPop) <- c("AGE_GROUP_LABEL","AGE_GROUP" ,"SEX", "COUNT")
-	dataPop$COUNT <- round(dataPop$COUNT,0)	
-	dataPop$YEAR <- years	
-	
-	# GRAPHIC (IF RELEVANT)
-	if(!plotTables){
-							
-		## Plot pyramid
-			filename <- paste(out, fileType, sep = "." )
-			if(fileType=="png"){png(filename)}
-			if(fileType=="svg"){svg(filename)}
-			if(fileType=="pdf"){pdf(filename, width=7)}
-			graph <- plotPopulationPyramid(dataPop, header, label, numbers, color)   #, agegrs
-			#print(graph)
-			dev.off()
-			
-		## This is used by CanReg to open the files that were just created	
-			cat(paste("-outFile",filename,sep=":"))
-		
+
+############################ ARGUMENTS AND OPTIONS ############################ 
+
+## LIST OF ARGUMENTS FROM THE COMMAND LINE (CANREG) + SCRIPT DIRECTORY
+    Args <- commandArgs(TRUE)
+    initial.options <- commandArgs(trailingOnly = FALSE)
+    file.arg.name <- "--file="
+    script.name <- sub(file.arg.name, "", 
+                       initial.options[grep(file.arg.name, initial.options)])
+    script.basename <- dirname(script.name)
+
+## LOADING DEPENDENCIES
+    source(paste(sep="/", script.basename, "StartUp.R")) 
+   
+
+
+############################### FORMATING DATA ############################### 
+
+## LOADING POPULATION DATA
+    dataPop <- read.table(filePop, header=TRUE)    
+    dataPop <- dataPop[,c("YEAR","AGE_GROUP_LABEL","AGE_GROUP","SEX","COUNT")]
+
+
+
+################################## ANALYSIS ################################## 
+
+# Label for all years together
+    periodlabel <- paste(min(dataPop$YEAR),"-",max(dataPop$YEAR), sep="")
+
+# Aggregating data
+    dataPop <- aggregate(dataPop$COUNT, by=list(dataPop$AGE_GROUP_LABEL,
+                                            dataPop$AGE_GROUP,dataPop$SEX), 
+                         FUN=mean)
+    colnames(dataPop) <- c("AGE_GROUP_LABEL","AGE_GROUP" ,"SEX", "COUNT")
+
+# Formatting results
+    dataPop$COUNT <- round(dataPop$COUNT,0)	
+    dataPop$YEAR <- periodlabel	
+
+
+############################ GENERATION OF OUTPUT ############################# 
+
+## FILENAME
+    filename <- paste(out, fileType, sep = "." )
+
+## PLOT OR TABLE
+    if(plotTables==FALSE){
+
+        # Plotting
+        StartGraph(filename,fileType, height=5, width=7 )      # Starting graph
+        graph <- plotPopulationPyramid(dataPop, header, label, showvals, color)
+        dev.off()           
 	
 	}else{
 		
-		data <- dataPop
+		# Writting CSV file
+		write.table(dataPop, filename, sep = ",", row.names = F) 
 		
-		# EXPORTING
-		filename <- paste(out, fileType, sep = "." )
-		write.table(data, filename, sep = ",", row.names = F) 
-		cat(paste("-outFile",filename,sep=":"))
 	}
 
-		
+# OPEN OUTPUT FILE
+    cat(paste("-outFile",filename,sep=":"))
 
-		
-	
 	
 	
 	

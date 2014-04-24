@@ -83,7 +83,7 @@
 	}else{
 		
         write.table(data, filename, sep = ",", row.names = F) 
-        
+
 	}
 
 # OPEN OUTPUT FILE
