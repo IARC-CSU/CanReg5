@@ -7,7 +7,27 @@
 	}       
 	require(ggplot2) 
 	
-		
+	
+############################## NEW FUNCTIONS ############################## 	
+    
+StartGraph <- function(filename, filetype, height=5, width=7 ){
+    
+    if(filetype=="png"){png(filename)}
+    if(filetype=="svg"){svg(filename)}
+    if(filetype=="pdf"){pdf(filename,height=height ,width=width)}
+    
+} 
+    
+    
+    
+    
+    
+    
+    
+    
+############################## OLD FUNCTIONS ############################## 
+    
+    
 # Add title and subtitle to a ggplot
 	addGGtitle <- function(pl, main="Main Title", sub="Missing"){
 

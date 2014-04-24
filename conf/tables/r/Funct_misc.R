@@ -1,4 +1,6 @@
 
+############################## NEW FUNCTIONS ############################## 
+
 # Install a package		
 	load.fun <- function(x) { 
 		old.repos <- getOption("repos") 
@@ -17,6 +19,54 @@
 # Check that a package is installed		
 	is.installed <- function(mypkg) is.element(mypkg, installed.packages()[,1]) 
 
+    
+# Get the labels from a data frame for a specific sex    
+	GetICDLabels <- function(data){
+	    
+	    # Unique combinations of ICD codes / labels
+        labels <- unique(data[,c("ICD10GROUP","ICD10GROUPLABEL")])
+	    
+        # Males and females labels
+        labelsM <- labels[substr(labels$ICD10GROUPLABEL,1,1)==1,]
+        labelsM$SEX <- 1
+        
+        labelsF <- labels[substr(labels$ICD10GROUPLABEL,2,2)==1,]
+        labelsF$SEX <- 2
+        
+        labelsBoth <- rbind(labelsM, labelsF)
+        labelsBoth$SEX <- 3
+        
+        labels <- rbind(labelsM,labelsF,labelsBoth)
+        
+        # Removing leading values
+        labels$ICD10GROUPLABEL <- 
+            substr(labels$ICD10GROUPLABEL,4,
+                   nchar(as.character(labels$ICD10GROUPLABEL)))
+        	    
+	    return(labels)
+	}  
+   
+    
+
+
+
+
+    
+    
+############################## OLD FUNCTIONS ############################## 
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 # Gets the labels for age groups
 GetAgeGroupLabels <- function(lastGr){

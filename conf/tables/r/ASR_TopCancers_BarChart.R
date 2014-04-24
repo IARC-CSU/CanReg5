@@ -1,122 +1,88 @@
-############################################################################################################
-## GETS ASR IN TOP CANCERS AND PRESENT RESULTS ON 5 BAR CHART FOR BOTH SEXES
-############################################################################################################
+###############################################################################
+## AGE STANDARDIZED RATES (ASR), TOP X CANCERS 
+## PRESENTED ON A TWO SIDED BARCHART
+## (for CanReg 5)
+## 
+## Author: Sebastien Antoni
+## Last update: 24/04/2014
+###############################################################################
 
-## Catching the arguments sent to the script by CanReg
-	Args <- commandArgs(TRUE)
-		
-## Directory of the script
-	initial.options <- commandArgs(trailingOnly = FALSE)
-	file.arg.name <- "--file="
-	script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
-	script.basename <- dirname(script.name)
 
-## Loading dependencies
-	source(paste(sep="/", script.basename, "checkArgs.R")) # Apparently this returns the arguments
-	source(paste(sep="/", script.basename, "Funct_rates.R"))  # Rates calculation functions
-	source(paste(sep="/", script.basename, "Funct_graphs.R"))  # Graphics functions
-	source(paste(sep="/", script.basename, "Funct_misc.R"))  # Misc functions
-	
-# Dependencies for reshape
-	if(!is.installed("reshape2")){
-		load.fun("reshape2")
-	}       
-	require(reshape2) 	
-	
-# Number of cancers to include
-	number <- checkArgs(Args, "-number")
-	
-# Labels and headers	
-	label <- checkArgs(Args, "-label")		
-	header <- checkArgs(Args, "-header")	
-	
-## Filename & File type
-	out <- checkArgs(Args, "-out")
-	# This is in case the filename already contains .pdf, .svg or .png
-	if(substr(out,nchar(out)-3,nchar(out)) %in% c(".svg",".csv",".pdf")){out <- substr(out,1,nchar(out)-4)}
-	fileType <- checkArgs(Args, "-ft")
-	
-## Is the output file a table or a picture		
-	if(fileType %in% c("csv")){
-		plotTables <- TRUE
-	}else{
-		plotTables <- FALSE
-	}	
 
-## Getting and Formatting INCIDENCE data
-	fileInc <- checkArgs(Args, "-inc")
+############################ ARGUMENTS AND OPTIONS ############################ 
+
+## LIST OF ARGUMENTS FROM THE COMMAND LINE (CANREG) + SCRIPT DIRECTORY
+    Args <- commandArgs(TRUE)
+    initial.options <- commandArgs(trailingOnly = FALSE)
+    file.arg.name <- "--file="
+    script.name <- sub(file.arg.name, "", 
+                        initial.options[grep(file.arg.name, initial.options)])
+    script.basename <- dirname(script.name)
+
+## LOADING DEPENDENCIES
+    source(paste(sep="/", script.basename, "StartUp.R")) 
+    if(!is.installed("reshape2")){load.fun("reshape2")}      
+    require(reshape2) 
+
+
+
+############################### FORMATING DATA ############################### 
+
+## LOADING INCIDENCE AND POPULATION DATA
 	dataInc <- read.table(fileInc, header=TRUE)
-		
-## Getting POPULATION data
-	filePop <- checkArgs(Args, "-pop")
 	dataPop <- read.table(filePop, header=TRUE)	
 
-## Getting the list of age groups to analyze
-  groups <- checkArgs(Args, "-agegroup")
-  groups <- strsplit(groups,"-")[[1]]
-  agerange <- c(groups[1]:groups[2])
+## LOADING STANDARD POPULATION (For selected age groups, if relevant)
+    standpop <- GetStandPop(dataPop,agegroups=agegroups)    
 
-## Getting age group labels
-  standpop <- GetStandPop(dataPop,agegroups=agerange)	
 
-## Calculating ASR
+
+################################## ANALYSIS ################################## 
+
+## CALCULATING ASR
 	data <- CalcASR(dataInc, dataPop, standpop)	
-	data$asr <- format( round(data$asr,2), format='f', digits=2)
-	data$se <- format( round(data$se,2), format='f', digits=2)	
-	
-# Casting dataframe
-	data <- data[,c("ICD10GROUP","SEX","asr")]
-	data$asr <- as.numeric(data$asr)
-	data <- dcast(data, ICD10GROUP~SEX, sum )
-	colnames(data)<- c("ICD10GROUP","ASR_M","ASR_F")
-				
-# Adding labels
-	labels <- unique(dataInc[,c("ICD10GROUP","ICD10GROUPLABEL")])
-	labels <- labels[which(substr(labels$ICD10GROUPLABEL,1,1)==1 | substr(labels$ICD10GROUPLABEL,2,2)==1),]
-	labels$ICD10GROUPLABEL <- substr(labels$ICD10GROUPLABEL,4,nchar(as.character(labels$ICD10GROUPLABEL)))
-	data <- merge(data,labels,by=c("ICD10GROUP"), sort=F)
-				
-# Ordering dataset
-	data$ASR_M <- as.numeric(data$ASR_M)
-	data$ASR_F <- as.numeric(data$ASR_F)
-	data$both <- data$ASR_M+data$ASR_F
+	data$asr <- format(data$asr, format='f', digits=2)
+	data$se <- format(data$se, format='f', digits=2)	
+
+
+
+############################ PREPARATION OF OUTPUT ############################# 
+
+# PREPARATION OF DATAFRAME
+    data <- data[,c("ICD10GROUP","SEX","asr")]
+    data$asr <- as.numeric(data$asr)
+    data <- dcast(data, ICD10GROUP~SEX, sum )
+    colnames(data)<- c("ICD10GROUP","ASR_M","ASR_F")
+
+## ADDING LABELS
+    labels <- GetICDLabels(dataInc)
+    labels <- unique(labels[,c("ICD10GROUP","ICD10GROUPLABEL")])
+    data <- merge(data,labels,by=c("ICD10GROUP"), sort=F)
+
+## SORTING DATAFRAME
+	data$both <- as.numeric(data$ASR_M)+as.numeric(data$ASR_F)
 	data <- data[order(data$both, decreasing = T), ]	
 	data <- data[,c("ICD10GROUP","ICD10GROUPLABEL","ASR_M","ASR_F")]
 	
-	
-## If the file type is a figure (not used here)
-	if(plotTables==FALSE){
-		
-		# Plotting the ASR Pyramid
-		filename <- paste(out, fileType, sep = "." )
-		if(fileType=="png"){png(filename)}
-		if(fileType=="svg"){svg(filename)}
-		if(fileType=="pdf"){pdf(filename,height=5 ,width=7)}
-		graph <- plotASRPyramid(data, header, label, number)   
-		dev.off()
-			
-		## This is used by CanReg to open the files that were just created	
-		cat(paste("-outFile",filename,sep=":"))
-		
-	}else{
-	
-	## If a table, we create a CSV table file	
 
-		# Creating CSV file
-		filename <- paste(out,".",fileType, sep = "" )
-		write.table(data, filename, sep = ",", row.names = F) 
+
+############################ GENERATION OF OUTPUT ############################# 
+
+## FILENAME
+    filename <- paste(out, fileType, sep = "." )
+
+## PLOT OR TABLE
+	if(plotTables==FALSE){
+
+        StartGraph(filename,fileType, height=5, width=7 )      # Starting graph
+        graph <- plotASRPyramid(data, header, label, number)   # Adding plot
+		dev.off()                                              # Closing graph
+        
+	}else{
 		
-		## This is used by CanReg to open the files that were just created	
-		cat(paste("-outFile",filename,sep=":"))		
-		
+        write.table(data, filename, sep = ",", row.names = F) 
+        
 	}
 
-
-
-	
-	
-	
-	
-	
-	
-	
+# OPEN OUTPUT FILE
+    cat(paste("-outFile",filename,sep=":"))

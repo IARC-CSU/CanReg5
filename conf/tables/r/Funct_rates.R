@@ -88,7 +88,11 @@ CalcASR <- function(dataInc, dataPop, standpop, strat=c("SEX")){
 		data$se <- sqrt(data$var)
 		data$lci <- round(data$asr - 1.96*data$se,2) 
 		data$uci <- round(data$asr + 1.96*data$se,2) 
-
+	    data$asr <- round(data$asr,2)
+	    data$se <- round(data$se,2)	
+    	data$var <- round(data$var,2)	
+	
+    
   # Return value  
 		return(data)
 }
