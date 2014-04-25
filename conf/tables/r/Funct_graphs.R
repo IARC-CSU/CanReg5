@@ -21,14 +21,6 @@ StartGraph <- function(filename, filetype, height=5, width=7 ){
   
     
     
-    
-    
-    
-    
-    
-    
-    
-    
 ############################## OLD FUNCTIONS ############################## 
     
     
@@ -47,13 +39,13 @@ StartGraph <- function(filename, filetype, height=5, width=7 ){
 # Draws Age Spec Incidence Rates for the top X cancers
 	plotAgeSpecRates <- function(data, logr, smooth, header, label, number, agegrs, color){
 	
-		# Getting highest age group in dataset
+        # Getting highest age group in dataset
 			maxGr <- max(data$AGE_GROUP)
 
 		# Sex being plotted
 			sex <- data$SEX[1]
 			if(sex==1){sex <- "Males"}else{sex <- "Females"}
-	
+    
 		# Merging age group labels with data
 			data <- merge(data,agegrs,by=c("AGE_GROUP"),all.y=TRUE)
 			colnames(data) <- c("AGE_GROUP","SEX","ICD10GROUP","ICD10GROUPLABEL","CASES","COUNT","RATE","LABEL")
@@ -64,42 +56,45 @@ StartGraph <- function(filename, filetype, height=5, width=7 ){
        	# Create graph
 			
 			# Graph itself
-			#g1 <- ggplot(height=600, width=800, data=data, aes(x = LABEL, y = RATE, group=ICD10GROUPLABEL, colour=ICD10GROUPLABEL), plot.title=header)
 			if(color==1){g1 <- ggplot(height=600, width=800, data=data, aes(x = LABEL, y = RATE, group=ICD10GROUPLABEL, colour=ICD10GROUPLABEL))}
 			if(color==0){g1 <- ggplot(height=600, width=800, data=data, aes(x = LABEL, y = RATE, group=ICD10GROUPLABEL))}
 			
-			g1 <- g1 + scale_x_discrete(limits=agegrs$AGE_GROUP_LABEL)
-						
-			# Axis labels & ticks
-			g1 <- g1 + xlab("\nAge group") + ylab("Age-specific rates") +labs(colour="")
-			if(color==0){g1 <- g1+ theme_bw()}
-			g1 <- g1 + theme(axis.text.x = element_text(angle=90, size=8, hjust=0.5, vjust=0.5))
-						
-			# Legend
-			g1 <- g1 + theme(legend.position='bottom', legend.key = element_blank())
-			if(color==1){g1 <- g1 + guides(col = guide_legend(nrow = ceiling(number/3)))}
-			if(color==0){g1 <- g1 + guides(linetype = guide_legend(nrow = ceiling(number/3), title=NULL))}
+		g1 <- g1 + scale_x_discrete(limits=agegrs$AGE_GROUP_LABEL)
 		
-			# Titles
-			label <- paste(label," (",sex,")", sep="")
-			g1 <- addGGtitle(g1, header, label)
-			
-			# Variable parameters
-			
-				# Smoothing
-					if(smooth!=FALSE){
-						g1 <- g1 + stat_smooth(se = FALSE, n=smooth, na.rm=TRUE) 
-					}else{
-                        if(color==0){g1 <- g1 + geom_line(aes(linetype=ICD10GROUPLABEL)) + geom_point()}
-						if(color==1){g1 <- g1 + geom_line() + geom_point()}
-					}	
+		# Axis labels & ticks
+		g1 <- g1 + xlab("\nAge group") + ylab("Age-specific rates") +labs(colour="")
+		if(color==0){g1 <- g1+ theme_bw()}
+		g1 <- g1 + theme(axis.text.x = element_text(angle=90, size=8, hjust=0.5, vjust=0.5))
 		
-				# Scale (log or not log)
-					if(logr==TRUE){
-						g1 <- g1 + scale_y_log10(breaks=c(1,10,100,1000)) 
-					}else{
-						g1 <- g1 + scale_y_continuous(breaks=c(0,100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000))
-					}
+		# Legend
+		g1 <- g1 + theme(legend.position='bottom', legend.key = element_blank())
+		if(color==1){g1 <- g1 + guides(col = guide_legend(nrow = ceiling(number/3)))}
+		if(color==0){g1 <- g1 + guides(linetype = guide_legend(nrow = ceiling(number/3), title=NULL))}
+		
+		# Titles
+		label <- paste(label," (",sex,")", sep="")
+		g1 <- addGGtitle(g1, header, label)
+        
+		# Variable parameters
+		
+		#write.csv(data,"c:/Users/antonis/Desktop/debug.csv",row.names=F)
+		
+        
+		# Smoothing
+		if(smooth!=FALSE){
+		    g1 <- g1 + stat_smooth(se = FALSE, n=smooth, na.rm=TRUE) 
+		}else{
+		    if(color==0){g1 <- g1 + geom_line(aes(linetype=ICD10GROUPLABEL)) + geom_point()}
+		    if(color==1){g1 <- g1 + geom_line() + geom_point()}
+		}    
+		
+		# Scale (log or not log)
+		if(logr==TRUE){
+		    g1 <- g1 + scale_y_log10(breaks=c(1,10,100,1000)) 
+		}else{
+		    g1 <- g1 + scale_y_continuous(breaks=c(0,100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000))
+		}
+		
 
     return(g1)
 	

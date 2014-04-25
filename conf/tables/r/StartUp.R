@@ -78,7 +78,10 @@ if(agegroups==FALSE){
 agegroups <- strsplit(agegroups,"-")[[1]]
 agegroups <- c(agegroups[1]:agegroups[2])
 
-    
+## CONVERTING NUMBER TO NUMERIC
+if(number!=FALSE){
+    number <- as.numeric(number)
+}    
     
     
     

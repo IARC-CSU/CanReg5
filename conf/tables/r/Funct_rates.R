@@ -54,6 +54,13 @@ GetTopCancers <- function(data, number=5){
     return(topcancers)
 }
 
+GetAgeGroupsLabels <- function(dataPop){
+ 
+    labels <- unique(dataPop[,c("AGE_GROUP","AGE_GROUP_LABEL")])
+    return(labels)
+    
+}
+
 
 
 
