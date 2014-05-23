@@ -29,6 +29,10 @@
 ## ANALYSIS RELATED FUNCTIONS
     source(paste(sep="/", script.basename, "Funct_rates.R"))  
 
+## HTML PERSONAL FUNCTIONS
+    source(paste(sep="/", script.basename, "Funct_HTML.R"))  
+
+
 ###############################################################################
 
 
@@ -83,8 +87,10 @@ if(number!=FALSE){
     number <- as.numeric(number)
 }    
     
-    
-    
+
+
+
+   
     
     
     
