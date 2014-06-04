@@ -195,7 +195,7 @@
 			    maximum <- max(as.numeric(dataOut3[which(dataOut3$SITE=="All sites but C44 (ALLbC44)"),2:ncol(dataOut3)]))
 			    values <- as.numeric(dataOut3[which(dataOut3$SITE=="All sites but C44 (ALLbC44)"),2:ncol(dataOut3)]) * 100 / maximum
 			    myplot <- barplot(values, names.arg=colnames(dataOut3)[2:ncol(dataOut3)],cex.names=0.8,cex.axis=0.8)
-			    text(myplot, values-15, paste(round(values, 1),"%",sep=""),cex=0.8,pos=3) 
+			    #text(myplot, values-15, paste(round(values, 1),"%",sep=""),cex=0.8,pos=3) 
 			    print(myplot)
 			    dev.off()
 			
