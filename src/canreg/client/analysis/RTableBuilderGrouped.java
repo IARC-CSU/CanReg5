@@ -43,6 +43,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import canreg.client.analysis.Tools.KeyCancerGroupsEnum;
 import canreg.common.database.IncompatiblePopulationDataSetException;
+import java.util.ArrayList;
 
 public class RTableBuilderGrouped implements TableBuilderInterface {
 
@@ -280,31 +281,34 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                         + Globals.FILE_SEPARATOR
                         + rScript);
                 }
-                String command = canreg.common.Tools.encapsulateIfNeeded(rpath);
+                // String command = canreg.common.Tools.encapsulateIfNeeded(rpath);
                 
-                command += " --slave --file="
-                        + canreg.common.Tools.encapsulateIfNeeded(scriptFile.getAbsolutePath()) 
-//                        + Globals.FILE_SEPARATOR
-//                        + rScript
-                        + " --args "
-                        + "-ft="       + fileType          + " "
-                        + "-out="      + canreg.common.Tools.encapsulateIfNeeded(reportFileName)    + " "
-                        + "-pop="      + canreg.common.Tools.encapsulateIfNeeded(popfile.getPath()) + " "
-                        + "-inc="      + canreg.common.Tools.encapsulateIfNeeded(incfile.getPath()) + " "
-                        + "-label=\""  + canreg.common.Tools.combine(tableLabel, "|")      + "\" "
-                        + "-header=\"" + tableHeader       + "\" ";
+                ArrayList<String> commandList = new ArrayList();
+                commandList.add(rpath);
+                commandList.add("--vanilla");
+                commandList.add("--slave");
+                commandList.add("--file="+ scriptFile.getAbsolutePath() );
+                commandList.add("--args");
+                commandList.add("-out="      + reportFileName);
+                commandList.add("-pop="      + popfile.getPath());
+                commandList.add("-inc="      + incfile.getPath());
+                commandList.add("-label="    + canreg.common.Tools.combine(tableLabel, "|"));
+                commandList.add("-header="   + tableHeader);
+                commandList.add("-ft="       + fileType);
                 // add the rest of the arguments
-                if (rScriptsArguments != null) {
-                    for (String arg : rScriptsArguments) {
-                        command += arg + " ";
-                    }
-                }
+                commandList.addAll(Arrays.asList(rScriptsArguments));
+               // if (rScriptsArguments != null) {
+               //     for (String arg : rScriptsArguments) {
+               //         commandList.add(arg);
+               //     }
+               // }
 
-                System.out.println(command);
+                System.out.println(commandList);
                 System.out.flush();
 
                 Runtime rt = Runtime.getRuntime();
-                Process pr = rt.exec(command);
+                Process pr = rt.exec(commandList.toArray(new String[]{}));
+
                 // collect the output from the R program in a stream
                 is = new BufferedInputStream(pr.getInputStream());
                 try {

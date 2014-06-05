@@ -1,17 +1,21 @@
 Changelog
 
 5.00.32
-- Russian translation updated.
 - Time trends added. 
 - CI5editorial tables added as an analysis option.
 - AgeSpecificRatesTopX table now sorts cancers by ASR.
-- Other updates to the R scripts.
+- Poplation pyramid improved.
+- ASR Top Cancers bar chart added.
 - Fixed a bug where ASR was by 1.000.000 instead of 100.000 in the charts of top 10 cancers.
+- Fixed a bug where R would not be called in the background on Linux/OSX.
 - Improved the handling of obsolete cases in analysis.
 - Improved the handling of pending/deleted/duplicate cases in analysis.
 - All sites but skin added to quality indicators.
-- Fixed a bug where R would not be called in the background on Linux/OSX.
+- Added truncation by age groups.
+- Changed the way external programs are called. (Now calling with an array of strings instead of calling with just a string.) This solves problems on Mac and Linux, and improves security on Windows.
+- Other updates to the R scripts/analytical functions.
 - Updated the code for barcharts and piecharts to take into account upcoming changes to ggplot.
+- Russian translation updated.
 - Other minor fixes.
 
 5.00.31
