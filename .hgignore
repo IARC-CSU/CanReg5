@@ -38,3 +38,7 @@ target/*
 *.iml
 pom.xml
 conf/tables/r/.Rhistory
+.Rhistory
+CanReg5.zip.tmp
+CanReg5.zip.tmp1
+Rplots.pdf
