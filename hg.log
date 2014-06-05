@@ -1,5 +1,274 @@
-changeset:   1193:d22fc8bbc2ea
+changeset:   1224:863c057e6d62
 tag:         tip
+user:        ErvikM
+date:        Thu Jun 05 16:16:02 2014 +0200
+files:       appinfo.properties buildnumber.properties inno-settings.txt version.txt
+description:
+5.00.33
+
+
+changeset:   1223:27d9e1780de6
+parent:      1222:662143183410
+parent:      1209:a3d97fd963a9
+user:        ErvikM
+date:        Thu Jun 05 15:49:18 2014 +0200
+files:       .hgignore appinfo.properties buildnumber.properties conf/tables/PopulationPyramid.conf conf/tables/r/callAgeSpecificRatesTopX.R
+description:
+Merge
+
+
+changeset:   1222:662143183410
+user:        ErvikM
+date:        Thu Jun 05 15:48:25 2014 +0200
+files:       .hgignore appinfo.properties buildnumber.properties
+description:
+Updated .hgignore.
+
+
+changeset:   1221:b99dd8ba8f88
+user:        AntoniS
+date:        Wed Jun 04 09:53:51 2014 +0200
+files:       conf/tables/r/CI5EditorialTables.R
+description:
+Temporarily removed values in barchart (bug)
+
+
+changeset:   1220:66d97326723f
+user:        AntoniS
+date:        Fri May 23 17:03:15 2014 +0200
+files:       conf/tables/r/CI5EditorialTables.R conf/tables/r/StartUp.R
+description:
+Cleaned CI5 Editorial Tables Script
+
+
+changeset:   1219:bdfe18074a68
+user:        AntoniS
+date:        Fri Apr 25 10:15:47 2014 +0200
+files:       conf/tables/r/Funct_graphs.R conf/tables/r/Funct_rates.R conf/tables/r/StartUp.R conf/tables/r/callAgeSpecificRatesTopX.R
+description:
+Cleaned Age Specific Graph script
+
+
+changeset:   1218:a68e6e325373
+user:        AntoniS
+date:        Thu Apr 24 15:17:41 2014 +0200
+files:       conf/tables/PopulationPyramid.conf conf/tables/r/ASR_TopCancers_BarChart.R conf/tables/r/Funct_graphs.R conf/tables/r/PopulationPyramid.R conf/tables/r/StartUp.R
+description:
+Cleaned Population Pyramid Script
+Fixed a minor issue in StartUp Script (agegroups was being processed but could be undefined)
+
+
+changeset:   1217:405403b02d84
+user:        AntoniS
+date:        Thu Apr 24 14:02:21 2014 +0200
+files:       conf/tables/r/ASR_TopCancers_BarChart.R conf/tables/r/Funct_graphs.R conf/tables/r/Funct_misc.R conf/tables/r/Funct_rates.R conf/tables/r/StartUp.R conf/tables/r/TimeTrends.R
+description:
+Cleaned Time Trends script
+Allowed the used of the agegroup argument in ASR_TopCancers_BarChart and TimeTrends
+Added the Color argument to StartUp script
+Fixed minor issues in Functions scripts
+
+
+changeset:   1216:40b9d83efbf2
+user:        AntoniS
+date:        Thu Apr 24 12:00:56 2014 +0200
+files:       conf/tables/r/ASR_TopCancers_BarChart.R conf/tables/r/Funct_graphs.R conf/tables/r/Funct_misc.R conf/tables/r/Funct_rates.R conf/tables/r/StartUp.R
+description:
+Cleaned ASR Barchart script
+Added a Startup script to be used by all scripts
+
+
+changeset:   1215:bac764f68dcd
+user:        AntoniS
+date:        Wed Apr 23 18:01:24 2014 +0200
+files:       conf/tables/TimeTrendsAgeSpecific.conf conf/tables/r/Funct_graphs.R conf/tables/r/Funct_misc.R conf/tables/r/Funct_rates.R conf/tables/r/TimeTrendsAgeSpecific.R
+description:
+Added Beta Version of Time Trends (Age Specific) + Other functions
+
+
+changeset:   1214:c08494188480
+parent:      1205:a8e6d36b16b2
+user:        AntoniS
+date:        Wed Apr 23 11:25:12 2014 +0200
+files:       conf/tables/r/TimeTrends.R
+description:
+Cleaned Time Trends Script (R)
+
+
+changeset:   1213:6b71e7f040eb
+branch:      New EditorialTableTools
+user:        ErvikM
+date:        Wed May 28 10:32:32 2014 +0200
+files:       doc/CanReg5-Instructions/CanReg5-Instructions.lyx nbproject/private/private.xml src/canreg/client/analysis/AnalysisGroup.java src/canreg/client/analysis/EditorialTableTools.java src/canreg/client/analysis/RTableBuilderGrouped.java src/canreg/client/dataentry/Import.java
+description:
+Backed out changeset: e597f603245d
+
+
+changeset:   1212:e597f603245d
+branch:      New EditorialTableTools
+user:        ErvikM
+date:        Wed May 28 10:29:57 2014 +0200
+files:       doc/CanReg5-Instructions/CanReg5-Instructions.lyx nbproject/private/private.xml src/canreg/client/analysis/AnalysisGroup.java src/canreg/client/analysis/EditorialTableTools.java src/canreg/client/analysis/RTableBuilderGrouped.java src/canreg/client/dataentry/Import.java
+description:
+Backed out changeset: 3155f2b3ce3f
+
+
+changeset:   1211:3155f2b3ce3f
+branch:      New EditorialTableTools
+user:        ErvikM
+date:        Wed May 28 10:08:14 2014 +0200
+files:       doc/CanReg5-Instructions/CanReg5-Instructions.lyx nbproject/private/private.xml src/canreg/client/analysis/AnalysisGroup.java src/canreg/client/analysis/EditorialTableTools.java src/canreg/client/analysis/RTableBuilderGrouped.java src/canreg/client/dataentry/Import.java
+description:
+Started work on analytical tables by morphological group.
+
+
+changeset:   1210:2b8a18b34615
+branch:      New EditorialTableTools
+user:        ErvikM
+date:        Fri Apr 25 16:54:54 2014 +0200
+files:       conf/tables/ASR Barchart for Top Cancers.conf.json conf/tables/AgeSpecificRatesLinear.conf.json conf/tables/AgeSpecificRatesLinearAll.conf.json conf/tables/AgeSpecificRatesLogaritmic.conf.json conf/tables/AgeSpecificRatesLogaritmicAll.conf.json conf/tables/AgeSpecificRatesTopX.conf.json conf/tables/CI5 Editorial Tables.conf.json conf/tables/CasesByAgeGroupBarChart.conf.json conf/tables/CasesByAgeGroupBarChartNoC44.conf.json conf/tables/CasesByAgeGroupPieChart.conf.json conf/tables/CasesByAgeGroupPieChartNoC44.conf.json conf/tables/CasesPeriod.conf.json conf/tables/DataQualityIndicators.conf.json conf/tables/IncidenceRatesPeriod.conf.json conf/tables/MajorGroupsASR.conf.json conf/tables/MajorGroupsNumberOfCases.conf.json conf/tables/PopulationPyramid.conf.json conf/tables/Pyramids.conf.json conf/tables/RTest.conf.json conf/tables/SEERprep.conf.json conf/tables/SRR.conf.json conf/tables/TimeTrends.conf.json conf/tables/Top10ICD10BarChart.conf.json conf/tables/Top10ICD10BarChartASR.conf.json conf/tables/Top10ICD10BarChartCUM64.conf.json conf/tables/Top10ICD10BarChartCUM74.conf.json conf/tables/Top10ICD10BarChartNoC44.conf.json conf/tables/Top10ICD10PieChart.conf.json conf/tables/Top10ICD10PieChartNoC44.conf.json conf/tables/conf_to_json.rb
+description:
+Started migrating tables configuration files to .json format.
+
+
+changeset:   1209:a3d97fd963a9
+user:        ErvikM
+date:        Wed Apr 23 10:06:55 2014 +0200
+files:       appinfo.properties nbproject/private/private.xml
+description:
+Preparing fork.
+
+
+changeset:   1208:c5d7ef6befe0
+user:        ErvikM
+date:        Thu Apr 17 10:36:10 2014 +0200
+files:       src/canreg/common/Globals.java
+description:
+Added some more default age group structures. (Cut off at 70 and 60.)
+
+
+changeset:   1207:e561a0a16a0c
+user:        ErvikM
+date:        Tue Apr 08 09:23:38 2014 +0200
+files:       .hgignore
+description:
+hgignore updated
+
+
+changeset:   1206:f8f1d9b9f5f3
+parent:      1199:a61167d8ebe0
+parent:      1205:a8e6d36b16b2
+user:        ErvikM
+date:        Tue Apr 08 09:22:54 2014 +0200
+files:       conf/tables/ASR Barchart for Top Cancers.conf conf/tables/PopulationPyramid.conf conf/tables/r/callAgeSpecificRatesTopX.R
+description:
+Merge
+
+
+changeset:   1205:a8e6d36b16b2
+user:        AntoniS
+date:        Mon Apr 07 17:39:44 2014 +0200
+files:       conf/tables/PopulationPyramid.conf conf/tables/r/Funct_graphs.R conf/tables/r/PopulationPyramid.R
+description:
+Improved Population Pyramid script
+- Labels are aligned
+- Population counts (option)
+- SVG saving
+- Color (option)
+
+
+changeset:   1204:6380405878c3
+user:        AntoniS
+date:        Mon Apr 07 15:39:45 2014 +0200
+files:       conf/tables/ASR Barchart for Top Cancers.conf conf/tables/r/ASR_TopCancers_BarChart.R conf/tables/r/CI5EditorialTables.R conf/tables/r/Funct_graphs.R conf/tables/r/Funct_misc.R conf/tables/r/callAgeSpecificRatesTopX.R
+description:
+Backed out changeset: acca1cfe5c28
+
+
+changeset:   1203:acca1cfe5c28
+user:        AntoniS
+date:        Mon Apr 07 15:39:22 2014 +0200
+files:       conf/tables/ASR Barchart for Top Cancers.conf conf/tables/r/ASR_TopCancers_BarChart.R conf/tables/r/CI5EditorialTables.R conf/tables/r/Funct_graphs.R conf/tables/r/Funct_misc.R conf/tables/r/callAgeSpecificRatesTopX.R
+description:
+Errors
+
+
+changeset:   1202:636a4eec7888
+user:        AntoniS
+date:        Mon Apr 07 11:41:10 2014 +0200
+files:       conf/tables/ASR Barchart for Top Cancers.conf conf/tables/r/ASR_TopCancers_BarChart.R
+description:
+Added SVG saving option to the Top Cancers Barchart script
+
+
+changeset:   1201:cd4d8f44258e
+user:        AntoniS
+date:        Mon Apr 07 10:14:30 2014 +0200
+files:       conf/tables/r/CI5EditorialTables.R
+description:
+Removes the double extension from output files if HTML is selected (e.g. test.html.html)
+
+
+changeset:   1200:6a4c2e96c044
+parent:      1190:b4501196a2a9
+user:        AntoniS
+date:        Mon Apr 07 10:09:39 2014 +0200
+files:       conf/tables/r/callAgeSpecificRatesTopX.R
+description:
+Corrected the Age Specific Rates script
+(was generating fake values, used for graphs, when exporting as CSV)
+
+
+changeset:   1199:a61167d8ebe0
+user:        ErvikM
+date:        Mon Apr 07 15:55:08 2014 +0200
+files:       appinfo.properties buildnumber.properties changelog.txt inno-settings.txt version.txt
+description:
+5.00.32
+
+
+changeset:   1198:503279db1a4e
+user:        ErvikM
+date:        Mon Apr 07 10:19:03 2014 +0200
+files:       CanReg5.zip.tmp2 appinfo.properties buildnumber.properties changelog.txt hg.log inno-settings.txt nbproject/private/private.xml version.txt
+description:
+5.00.32RC9
+
+
+changeset:   1197:c432c7f8c2e2
+user:        ErvikM
+date:        Mon Apr 07 09:32:23 2014 +0200
+files:       src/canreg/client/analysis/RTableBuilder.java src/canreg/client/analysis/RTableBuilderGrouped.java src/canreg/common/Tools.java
+description:
+Removed encapsulateIfNeeded function as it is no longer needed.
+Added -ft as an argument again as that had been temporarily forgotten.
+
+
+changeset:   1196:60613f30cd02
+user:        ErvikM
+date:        Mon Apr 07 09:30:44 2014 +0200
+files:       conf/tables/PopulationPyramid.conf conf/tables/TimeTrends.conf conf/tables/previews/casesbyagebar.png conf/tables/previews/casesbyagepie.png conf/tables/previews/new_populationpyramid.png conf/tables/previews/top10bar.png conf/tables/previews/top10pie.png conf/tables/previews/trends.png
+description:
+Preview images for table builder updated/added.
+
+
+changeset:   1195:846bbac6ae0a
+user:        ErvikM
+date:        Fri Apr 04 17:41:07 2014 +0200
+files:       conf/tables/CI5 Editorial Tables.conf conf/tables/DataQualityIndicators.conf
+description:
+Updated previews of tables.
+
+
+changeset:   1194:925ec8a1b672
+user:        ErvikM
+date:        Fri Apr 04 16:54:12 2014 +0200
+files:       conf/tables/ASR Barchart for Top Cancers.conf conf/tables/AgeSpecificRatesTopX.conf conf/tables/previews/ci5table.png conf/tables/previews/topcancersasrbar.png
+description:
+Updated previews of tables.
+
+
+changeset:   1193:d22fc8bbc2ea
 user:        ErvikM
 date:        Fri Apr 04 14:40:56 2014 +0200
 files:       .hgignore

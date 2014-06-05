@@ -1,5 +1,15 @@
 Changelog
 
+5.00.33
+- Corrected the Age Specific Rates script (was generating fake values, used for graphs, when exporting as CSV)
+- Removes the double extension from output files if HTML is selected (e.g. test.html.html)
+- Added SVG saving option to the Top Cancers Barchart script
+- Improved Population Pyramid script
+- Added some more default age group structures. (Cut off at 70 and 60.)
+- Added Beta Version of Time Trends (Age Specific) + Other functions
+- Temporarily removed values in barchart (bug)
+- Other minor fixes
+
 5.00.32
 - Time trends added. 
 - CI5editorial tables added as an analysis option.
