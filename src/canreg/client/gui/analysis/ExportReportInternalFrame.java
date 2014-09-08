@@ -48,9 +48,13 @@ import canreg.server.database.UnknownTableException;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -763,7 +767,11 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             try {
                 File file = new File(fileName);
                 localSettings.setProperty("export_data_path", file.getParent());
-                FileWriter bw = new FileWriter(fileName); // TODO: Make choice of encoding dynamic?
+                // FileWriter bw = new FileWriter(fileName); // TODO: Make choice of encoding dynamic?
+                
+                Writer bw = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(fileName), "UTF-8"));
+                
                 csvWriter = new CSVWriter(bw, separatingString.charAt(0), '\"');
                 rowCount = resultTable.getRowCount();
                 columnCount = resultTable.getColumnCount();
