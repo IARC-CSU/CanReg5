@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2013  International Agency for Research on Cancer
+ * Copyright (C) 2008-2011  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -486,9 +486,9 @@ public class Import {
                     // debugOut(tumour.toString());
                     // add patient to the database
                     Object patientID = patient.getVariable(io.getPatientRecordIDVariableName());
-                    Patient oldPatient = null;
+                    Patient oldPatientRecord = null;
                     try {
-                        oldPatient = CanRegClientApp.getApplication().getPatientRecord(
+                        oldPatientRecord = CanRegClientApp.getApplication().getPatientRecord(
                                 (String) patientID, false);
                     } catch (DistributedTableDescriptionException ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
@@ -505,31 +505,31 @@ public class Import {
                     }
 
 
-                    if (oldPatient != null) {
-                        // deal with discrepancies
+                    if (oldPatientRecord != null) {
+                        // deal with discrepancies                        
                         switch (io.getDiscrepancies()) {
                             case ImportOptions.REJECT:
                                 savePatient = false;
                                 break;
                             case ImportOptions.UPDATE:
-                                String updateReport = updateRecord(oldPatient, patient);
+                                String updateReport = updateRecord(oldPatientRecord, patient);
                                 if (updateReport.length() > 0) {
                                     reportWriter.write(patient.getVariable(
                                             io.getTumourIDVariablename()) + Globals.newline + updateReport);
                                 }
-                                oldPatientDatabaseRecordID = (Integer) oldPatient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
-                                patient = oldPatient;
+                                oldPatientDatabaseRecordID = (Integer) oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                                patient = oldPatientRecord;
                                 savePatient = true;
                                 break;
                             case ImportOptions.OVERWRITE:
                                 // deleteTumour;
-                                oldPatientDatabaseRecordID = (Integer) oldPatient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
-                                String overWriteReport = overwriteRecord(oldPatient, patient);
+                                oldPatientDatabaseRecordID = (Integer) oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                                String overWriteReport = overwriteRecord(oldPatientRecord, patient);
                                 if (overWriteReport.length() > 0) {
                                     reportWriter.write(patient.getVariable(
                                             io.getTumourIDVariablename()) + Globals.newline + overWriteReport);
                                 }
-                                patient = oldPatient;
+                                patient = oldPatientRecord;
                                 savePatient = true;
                                 break;
                         }
