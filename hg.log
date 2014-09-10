@@ -1,5 +1,175 @@
-changeset:   1224:863c057e6d62
+changeset:   1243:14ec0ad17516
 tag:         tip
+user:        ErvikM
+date:        Wed Sep 10 09:21:00 2014 +0200
+files:       appinfo.properties buildnumber.properties inno-settings.txt nbproject/private/private.xml version.txt
+description:
+5.00.34RC1
+
+
+changeset:   1242:5519ef5ddd60
+user:        ErvikM
+date:        Wed Sep 10 09:20:41 2014 +0200
+files:       src/canreg/client/gui/dataentry/ImportView.java src/canreg/common/GlobalToolBox.java
+description:
+Tidied some code and added some null-pointer protection.
+
+
+changeset:   1241:b8caba0bf90f
+user:        ErvikM
+date:        Wed Sep 10 09:19:41 2014 +0200
+files:       src/canreg/client/analysis/resources/AgeSpecificCasesTableBuilder_tr.properties src/canreg/client/gui/analysis/resources/JChartViewerInternalFrame_tr.properties src/canreg/client/gui/analysis/resources/TableBuilderInternalFrame_tr.properties src/canreg/client/gui/analysis/resources/VariableExportDetailsPanel_tr.properties src/canreg/client/gui/components/resources/DictionaryElementChooser_tr.properties src/canreg/client/gui/components/resources/LabelAndComboBoxJPanel_tr.properties src/canreg/client/gui/components/resources/RangeFilterPanel_tr.properties src/canreg/client/gui/components/resources/VariablesExportDetailsPanel_tr.properties src/canreg/client/gui/dataentry/resources/BrowseInternalFrame_tr.properties src/canreg/client/gui/dataentry/resources/EditChecksInternalFrame_tr.properties src/canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame_tr.properties src/canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame_tr.properties src/canreg/client/gui/dataentry/resources/ImportFilesView_tr.properties src/canreg/client/gui/dataentry/resources/ImportView_tr.properties src/canreg/client/gui/dataentry/resources/PDSChooserInternalFrame_tr.properties src/canreg/client/gui/dataentry/resources/PDSEditorInternalFrame_tr.properties src/canreg/client/gui/dataentry/resources/RecordEditorPanel_tr.properties src/canreg/client/gui/dataentry/resources/RecordEditor_tr.properties src/canreg/client/gui/dataentry/resources/SourcesPanel_tr.properties src/canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame_tr.properties src/canreg/client/gui/management/resources/DatabaseDictionaryEditorInternalFrame_tr.properties src/canreg/client/gui/management/resources/DatabaseElementPanel_tr.properties src/canreg/client/gui/management/resources/DatabaseElementsPanel_tr.properties src/canreg/client/gui/management/resources/DatabaseGroupEditorInternalFrame_tr.properties src/canreg/client/gui/management/resources/DatabaseVariableEditorInternalFrame_tr.properties src/canreg/client/gui/management/resources/DatabaseVariableEditor_tr.properties src/canreg/client/gui/management/resources/InstallNewSystemInternalFrame_tr.properties src/canreg/client/gui/management/resources/ModifyDatabaseStructureInternalFrame_tr.properties src/canreg/client/gui/management/resources/OptionsFrame_tr.properties src/canreg/client/gui/management/resources/PersonSearchFrame_1_tr.properties src/canreg/client/gui/management/resources/PersonSearchFrame_tr.properties src/canreg/client/gui/management/resources/PersonSearchVariablePanel_tr.properties src/canreg/client/gui/management/resources/PersonSearchVariablesPanel_tr.properties src/canreg/client/gui/management/resources/RestoreInternalFrame_tr.properties src/canreg/client/gui/management/resources/UserManagerInternalFrame_tr.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseDictionaryEditorInternalFrame_tr.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseDictionaryEditorPanel_tr.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseElementPanel_tr.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseElementsPanel_tr.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseGroupEditorInternalFrame_tr.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseIndexEditorInternalFrame_tr.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseIndexEditorPanel_tr.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseVariableEditorInternalFrame_tr.properties src/canreg/client/gui/management/systemeditor/resources/DatabaseVariableEditorPanel_tr.properties src/canreg/client/gui/management/systemeditor/resources/IndexedVariablePanel_tr.properties src/canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame_tr.properties src/canreg/client/gui/resources/CanRegClientAboutBox_tr.properties src/canreg/client/gui/resources/CanRegClientView_tr.properties src/canreg/client/gui/resources/ChangeLogInternalFrame_tr.properties src/canreg/client/gui/resources/LatestNewsInternalFrame_tr.properties src/canreg/client/gui/resources/LoginInternalFrame_tr.properties src/canreg/client/gui/resources/VariableMappingPanel_tr.properties src/canreg/client/gui/resources/WelcomeInternalFrame_tr.properties src/canreg/client/gui/tools/globalpopup/resources/globalpopup_tr.properties src/canreg/client/gui/tools/resources/StandardDialog_tr.properties src/canreg/client/resources/CanRegClientApp_tr.properties
+description:
+Turkish translation updated.
+
+
+changeset:   1240:fce9bcb375b5
+parent:      1239:9cc97ec59a4c
+parent:      1236:9d667ba531d0
+user:        ErvikM
+date:        Mon Sep 08 10:07:31 2014 +0200
+files:       appinfo.properties buildnumber.properties inno-settings.txt version.txt
+description:
+Merge
+
+
+changeset:   1239:9cc97ec59a4c
+user:        ErvikM@x110224
+date:        Mon Sep 08 10:02:09 2014 +0200
+files:       appinfo.properties buildnumber.properties inno-settings.txt nbproject/private/private.xml version.txt
+description:
+Back from Cairo.
+
+
+changeset:   1238:2784b48abd53
+user:        ErvikM@x110224
+date:        Mon Sep 08 09:59:31 2014 +0200
+files:       src/canreg/client/dataentry/Import.java
+description:
+Fixed a bug related to import of patients with multipe tumours.
+
+
+changeset:   1237:755585243d5a
+parent:      1233:4f6142c7d387
+user:        ErvikM@x110224
+date:        Mon Sep 08 09:57:53 2014 +0200
+files:       src/canreg/client/gui/analysis/ExportReportInternalFrame.java
+description:
+Fixed a bug where some non-Latin characters were not exported correctly, but showed up as question-marks. Now properly implemented as unicode (UTF-8).
+
+
+changeset:   1236:9d667ba531d0
+user:        ErvikM
+date:        Tue Jun 10 11:19:25 2014 +0200
+files:       appinfo.properties buildnumber.properties inno-settings.txt version.txt
+description:
+5.00.34-BETA1
+
+
+changeset:   1235:4b6a6d75b8c1
+parent:      1233:4f6142c7d387
+user:        ErvikM
+date:        Tue Jun 10 11:12:26 2014 +0200
+files:       .hgignore
+description:
+Ignore file updated.
+
+
+changeset:   1234:c8d7fca43f01
+branch:      Migration tools
+parent:      1232:b6c14ab4d4bf
+user:        ErvikM
+date:        Tue Jun 10 11:08:12 2014 +0200
+files:       doc/CanReg5-Instructions/CanReg5-Instructions.lyx
+description:
+Backed out changeset: c5efc4b141f9
+
+
+changeset:   1233:4f6142c7d387
+parent:      1226:be551571019c
+user:        AntoniS
+date:        Tue Jun 10 10:44:33 2014 +0200
+files:       conf/tables/TimeTrendsAgeSpecific.conf conf/tables/r/TimeTrendsAgeSpecific.R
+description:
+Fixed (Temporarily) the Age-Specific Time Trends script.
+It now computes rates/trends for age groups >=40 and for all sites together only
+
+
+changeset:   1232:b6c14ab4d4bf
+branch:      Migration tools
+user:        ErvikM
+date:        Tue Jun 10 11:02:27 2014 +0200
+files:       .hgtags
+description:
+Added tag Release 5.00.33 for changeset be551571019c
+
+
+changeset:   1231:c5efc4b141f9
+branch:      Migration tools
+user:        ErvikM
+date:        Tue Jun 10 10:56:20 2014 +0200
+files:       doc/CanReg5-Instructions/CanReg5-Instructions.lyx
+description:
+Backed out changeset: be551571019c
+
+
+changeset:   1230:d9c248e09273
+branch:      Migration tools
+parent:      1229:6341cd57a635
+parent:      1228:b71abe4f5791
+user:        ErvikM
+date:        Tue Jun 10 10:52:55 2014 +0200
+description:
+Merge with default
+
+
+changeset:   1229:6341cd57a635
+branch:      Migration tools
+parent:      1227:e2d407317d29
+user:        ErvikM
+date:        Tue Jun 10 10:50:56 2014 +0200
+files:       .hgignore appinfo.properties buildnumber.properties inno-settings.txt nbproject/project.properties src/canreg/client/gui/CanRegClientView.java version.txt
+description:
+5.00.33-DEBUG-AR
+
+
+changeset:   1228:b71abe4f5791
+parent:      1221:b99dd8ba8f88
+user:        AntoniS
+date:        Tue Jun 10 10:44:33 2014 +0200
+files:       conf/tables/TimeTrendsAgeSpecific.conf conf/tables/r/TimeTrendsAgeSpecific.R
+description:
+Fixed (Temporarily) the Age-Specific Time Trends script.
+It now computes rates/trends for age groups >=40 and for all sites together only
+
+
+changeset:   1227:e2d407317d29
+branch:      Migration tools
+user:        ErvikM
+date:        Fri Jun 06 09:14:27 2014 +0200
+files:       lib/nblibraries.properties nbproject/build-impl.xml nbproject/private/private.properties src/canreg/client/CanRegClientApp.java src/canreg/client/dataentry/Convert.java src/canreg/client/gui/CanRegClientView.form src/canreg/client/gui/CanRegClientView.java src/canreg/client/gui/LoginInternalFrame.form src/canreg/client/gui/LoginInternalFrame.java src/canreg/client/gui/management/CanReg4MigrationToolInternalFrame.form src/canreg/client/gui/management/CanReg4MigrationToolInternalFrame.java src/canreg/client/gui/management/resources/CanReg4MigrationToolInternalFrame.properties src/canreg/client/gui/resources/CanRegClientView.properties
+description:
+Migration tool started.
+
+
+changeset:   1226:be551571019c
+tag:         Release 5.00.33
+user:        ErvikM
+date:        Thu Jun 05 17:33:52 2014 +0200
+files:       appinfo.properties buildnumber.properties doc/CanReg5-Instructions/CanReg5-Instructions.lyx inno-settings.txt version.txt
+description:
+5.00.33
+
+
+changeset:   1225:e46c865a7c8f
+user:        ErvikM
+date:        Thu Jun 05 16:19:40 2014 +0200
+files:       changelog.txt hg.log
+description:
+5.00.33
+
+
+changeset:   1224:863c057e6d62
 user:        ErvikM
 date:        Thu Jun 05 16:16:02 2014 +0200
 files:       appinfo.properties buildnumber.properties inno-settings.txt version.txt
