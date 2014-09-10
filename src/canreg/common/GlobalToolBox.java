@@ -99,6 +99,19 @@ public class GlobalToolBox {
     public DatabaseVariablesListElement translateStandardVariableNameToDatabaseListElement(String standardVariableName) {
         return standardVariableNameToDatabaseVariableListElementMap.get(standardVariableName);
     }
+    
+        /**
+     * 
+     * @param standardVariableName
+     * @return
+     */
+    public String translateStandardVariableNameToDatabaseVariableName(String standardVariableName) {
+        DatabaseVariablesListElement temp = translateStandardVariableNameToDatabaseListElement(standardVariableName);
+        if (temp==null)
+            return null;
+        else
+            return temp.getDatabaseVariableName();
+    }
 
     /**
      * 
