@@ -69,14 +69,15 @@ import org.w3c.dom.NodeList;
  */
 public class Import {
 
-    private static String namespace = "ns3:";
-    private static boolean debug = true;
+    private static final String namespace = Globals.NAMESPACE;
+    private static final boolean debug = Globals.DEBUG;
     public static String FINISHED = "finished";
     public static String PROGRESS = "progress";
     public static String RECORD = "record";
     public static String PATIENTS = "patients";
     public static String TUMOURS = "tumours";
     public static String SOURCES = "sources";
+    
 
     /**
      * 
@@ -90,6 +91,7 @@ public class Import {
      */
     public static boolean importFile(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
         boolean success = false;
+        
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
 
         noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientIDVariableName()));
@@ -398,11 +400,13 @@ public class Import {
                 }
             }
         }
-        task.firePropertyChange("finished", null, null);
+        if (task!=null)
+            task.firePropertyChange("finished", null, null);
         return success;
     }
 
     public static boolean importFiles(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File[] files, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
+        int numberOfLinesRead = 0;
         Writer reportWriter = new BufferedWriter(new OutputStreamWriter(System.out));
         if (io.getReportFileName() != null && io.getReportFileName().trim().length() > 0) {
             try {
@@ -416,16 +420,16 @@ public class Import {
         noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientIDVariableName()));
         noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientRecordIDVariableName()));
         // HashMap mpCodes = new HashMap();
-        int numberOfLinesRead = 0;
-        int linesToRead = io.getMaxLines();
         String[] lineElements = null;
         ResultCode worstResultCodeFound;
         CSVReader csvReader = null;
 
         try {
             // first we get the patients
-            task.firePropertyChange(PROGRESS, 0, 0);
-            task.firePropertyChange(PATIENTS, 0, 0);
+            if (task != null) {
+                task.firePropertyChange(PROGRESS, 0, 0);
+                task.firePropertyChange(PATIENTS, 0, 0);
+            }
             if (files[0] != null) {
                 reportWriter.write("Starting to import patients from " + files[0].getAbsolutePath() + Globals.newline);
                 FileInputStream patientFIS = new FileInputStream(files[0]);
@@ -436,7 +440,8 @@ public class Import {
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", patientISR.getEncoding());
 
                 int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[0].getAbsolutePath());
-
+                int linesToRead = io.getMaxLines();
+                numberOfLinesRead = 0;
                 // Skip first line
                 csvReader.readNext();
 
@@ -571,11 +576,16 @@ public class Import {
                 reportWriter.write("Finished reading patients." + Globals.newline + Globals.newline);
                 reportWriter.flush();
             }
-            task.firePropertyChange(PATIENTS, 100, 100);
-            task.firePropertyChange("progress", 33, 34);
+            if (task != null) {
+                task.firePropertyChange(PATIENTS, 100, 100);
+                task.firePropertyChange("progress", 33, 34);
+            }
 
-            // then we get the tumours
-            task.firePropertyChange(TUMOURS, 0, 0);
+            // then we get the tumours            
+            if (task != null) {    
+                task.firePropertyChange(TUMOURS, 0, 0);
+            }
+            
             if (files[1] != null) {
                 reportWriter.write("Starting to import tumours from " + files[1].getAbsolutePath() + Globals.newline);
 
@@ -585,13 +595,14 @@ public class Import {
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", tumourISR.getEncoding());
 
                 int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[1].getAbsolutePath());
+                int linesToRead = io.getMaxLines();
+                
+                numberOfLinesRead = 0;
+
                 csvReader = new CSVReader(tumourISR, io.getSeparators()[1]);
 
                 // Skip first line
                 csvReader.readNext();
-
-                // reset the number of lines read
-                numberOfLinesRead = 0;
 
                 if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
                     linesToRead = numberOfRecordsInFile;
@@ -786,11 +797,14 @@ public class Import {
                 reportWriter.write("Finished reading tumours." + Globals.newline + Globals.newline);
                 reportWriter.flush();
             }
-            task.firePropertyChange(TUMOURS, 100, 100);
-
+            if (task != null) {
+                task.firePropertyChange(TUMOURS, 100, 100);
+            }
             // then at last we get the sources
-            task.firePropertyChange(SOURCES, 0, 0);
-            task.firePropertyChange(PROGRESS, 66, 66);
+            if (task != null) {
+                task.firePropertyChange(SOURCES, 0, 0);
+                task.firePropertyChange(PROGRESS, 66, 66);
+            }
             if (files[2] != null) {
                 reportWriter.write("Starting to import sources from " + files[2].getAbsolutePath() + Globals.newline);
 
@@ -800,13 +814,13 @@ public class Import {
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", sourceISR.getEncoding());
 
                 int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[2].getAbsolutePath());
+                int linesToRead = io.getMaxLines();
+                numberOfLinesRead = 0;
+                
                 csvReader = new CSVReader(sourceISR, io.getSeparators()[2]);
 
                 // Skip first line
                 csvReader.readNext();
-
-                // reset the number of lines read
-                numberOfLinesRead = 0;
 
                 if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
                     linesToRead = numberOfRecordsInFile;
@@ -816,16 +830,15 @@ public class Import {
 
                 while (lineElements != null && (numberOfLinesRead < linesToRead)) {
                     // We allow for null tasks...
-                    boolean needToSavePatientAgain = true;
-                    int patientDatabaseRecordID = -1;
-
                     if (task != null) {
                         task.firePropertyChange(PROGRESS, 67 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 67 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
                         task.firePropertyChange(SOURCES, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
                     }
-
+                    
+                    boolean needToSavePatientAgain = true;
+                    int patientDatabaseRecordID = -1;
+                    
                     // Build source part
-
                     Source source = new Source();
                     for (int i = 0; i < map.size(); i++) {
                         Relation rel = map.get(i);
@@ -896,10 +909,12 @@ public class Import {
                 reportWriter.flush();
                 csvReader.close();
             }
-            task.firePropertyChange(SOURCES, 100, 100);
-            task.firePropertyChange(PROGRESS, 100, 100);
-            while (!task.isProgressPropertyValid()) {
-                // wait untill progress has been updated...
+            if (task != null) {
+                task.firePropertyChange(SOURCES, 100, 100);
+                task.firePropertyChange(PROGRESS, 100, 100);
+                while (!task.isProgressPropertyValid()) {
+                    // wait untill progress has been updated...
+                }
             }
             reportWriter.write("Finished" + Globals.newline);
             reportWriter.flush();
@@ -931,8 +946,10 @@ public class Import {
                 }
             }
         }
-        task.firePropertyChange(PROGRESS, 100, 100);
-        task.firePropertyChange("finished", null, null);
+        if (task!=null){
+            task.firePropertyChange(PROGRESS, 100, 100);
+            task.firePropertyChange("finished", null, null);
+        }
         return success;
     }
 
