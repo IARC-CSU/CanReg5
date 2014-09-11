@@ -39,7 +39,7 @@ import javax.security.auth.login.LoginException;
  */
 public class CanRegLoginModule implements LoginModule {
 
-    private boolean debug = Globals.DEBUG;
+    private final boolean debug = Globals.DEBUG;
 
     // validation objects
     private Subject subject;
