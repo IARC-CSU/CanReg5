@@ -231,7 +231,7 @@ public class Globals {
     public static final String mustLookupFile = "/canreg/common/resources/lookup/Must.txt";
     public static final String mustNotLookupFile = "/canreg/common/resources/lookup/MustNot.txt";
     public static String newline = System.getProperty("line.separator");
-    public static boolean SHOW_GARBLER = true;
+    public static boolean SHOW_GARBLER = false;
 
 
     /**
