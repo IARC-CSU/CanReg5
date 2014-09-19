@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  *
@@ -35,7 +36,7 @@ public class RFileBuilder {
 
     StringBuilder rScript;
     String palette = "Paired";
-    NumberFormat numberFormat = NumberFormat.getInstance();
+    NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.ENGLISH);
 
     public RFileBuilder() {
         rScript = new StringBuilder();
