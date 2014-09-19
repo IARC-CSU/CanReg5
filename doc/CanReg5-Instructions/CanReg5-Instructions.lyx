@@ -10161,12 +10161,6 @@ limitations
 
 \begin_layout Itemize
 \align left
-Date fields not yet properly formatted.
- 
-\end_layout
-
-\begin_layout Itemize
-\align left
 You need a population dataset with 5 years age groups for many of the tables
  to work properly\SpecialChar \ldots{}
  
@@ -10219,35 +10213,12 @@ Priority: Low
 
 \begin_layout Itemize
 \align left
-Category: Database/Browser
+Category: Database/Browse
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
 \align left
-Java 7 update 21 and Java 6 update 45 broke the integration of R and GhostScript
- on Windows.
- A temporary solution have been created, but if you still have problems,
- please install R and GhostScript in folders without spaces, or use the
- old windows file names (socalled 8.3, i.e.
- 
-\begin_inset Quotes eld
-\end_inset
-
-Program Files
-\begin_inset Quotes erd
-\end_inset
-
- is 
-\begin_inset Quotes eld
-\end_inset
-
-PROGRA~1
-\begin_inset Quotes erd
-\end_inset
-
-).
- 
 \begin_inset Newpage newpage
 \end_inset
 
@@ -10280,6 +10251,27 @@ CanReg4
 \end_inset
 
  - Step by Step
+\end_layout
+
+\begin_layout Standard
+(For a video demonstration of this process, please see webinar 3 - available
+ from the GICR website under 
+\begin_inset Quotes eld
+\end_inset
+
+Resources
+\begin_inset Quotes erd
+\end_inset
+
+.
+ (
+\begin_inset CommandInset href
+LatexCommand href
+target "http://gicr.iarc.fr/en/resources.php#TRAINING"
+
+\end_inset
+
+))
 \end_layout
 
 \begin_layout Standard

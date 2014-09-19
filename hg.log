@@ -1,5 +1,37 @@
-changeset:   1243:14ec0ad17516
+changeset:   1247:182479084b03
 tag:         tip
+user:        ErvikM
+date:        Fri Sep 12 11:34:26 2014 +0200
+files:       appinfo.properties buildnumber.properties inno-settings.txt src/canreg/common/Globals.java version.txt
+description:
+5.00.35-RC2
+
+
+changeset:   1246:ea579b7a9b9b
+user:        ErvikM
+date:        Thu Sep 11 15:12:00 2014 +0200
+files:       src/canreg/client/dataentry/Import.java
+description:
+Fixed a bug in the import of datasets split in three tables where sometimes not all cases were imported.
+
+
+changeset:   1245:3e7f5dd388cd
+user:        ErvikM
+date:        Thu Sep 11 11:55:49 2014 +0200
+files:       appinfo.properties buildnumber.properties inno-settings.txt src/canreg/client/gui/CanRegClientView.java src/canreg/common/Globals.java src/canreg/server/CanRegLoginModule.java version.txt
+description:
+5.00.34AR - with Garbler activated for AR
+
+
+changeset:   1244:4a8a404d90a8
+user:        ErvikM
+date:        Wed Sep 10 10:11:09 2014 +0200
+files:       appinfo.properties buildnumber.properties changelog.txt hg.log
+description:
+5.00.34
+
+
+changeset:   1243:14ec0ad17516
 user:        ErvikM
 date:        Wed Sep 10 09:21:00 2014 +0200
 files:       appinfo.properties buildnumber.properties inno-settings.txt nbproject/private/private.xml version.txt

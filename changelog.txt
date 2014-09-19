@@ -1,5 +1,8 @@
 Changelog
 
+5.00.35
+- Fixed a bug in the import of datasets split in three tables where sometimes not all cases were imported.
+
 5.00.34
 - Fixed (Temporarily) the Age-Specific Time Trends script. (It now computes rates/trends for age groups >=40 and for all sites together only)
 - Fixed a bug where some non-Latin characters were not exported correctly, but showed up as question-marks. Now properly implemented as unicode (UTF-8).
