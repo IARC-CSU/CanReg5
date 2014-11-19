@@ -39,6 +39,7 @@ import canreg.client.gui.management.PersonSearchFrame;
 import canreg.client.gui.management.RestoreInternalFrame;
 import canreg.client.gui.management.UserManagerInternalFrame;
 import canreg.client.gui.management.systemeditor.ModifyDatabaseStructureInternalFrame;
+import canreg.client.gui.management.CanReg4MigrationInternalFrame;
 import canreg.client.gui.tools.StandardDialog;
 import canreg.client.gui.tools.WaitFrame;
 import canreg.client.management.DatabaseGarbler;
@@ -258,6 +259,7 @@ public final class CanRegClientView extends FrameView {
         setUpDatabaseMenuItem = new javax.swing.JMenuItem();
         installRPackagesMenuItem = new javax.swing.JMenuItem();
         garbleDatabaseMenuItem = new javax.swing.JMenuItem();
+        canreg4migrationMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -343,7 +345,7 @@ public final class CanRegClientView extends FrameView {
         handbookButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(handbookButton);
 
-        toolBar.setBounds(0, 0, 800, 43);
+        toolBar.setBounds(0, 0, 800, -1);
         desktopPane.add(toolBar, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jScrollPane1.setViewportView(desktopPane);
@@ -549,6 +551,11 @@ public final class CanRegClientView extends FrameView {
         garbleDatabaseMenuItem.setAction(actionMap.get("garbleDatabaseAction")); // NOI18N
         garbleDatabaseMenuItem.setName("garbleDatabaseMenuItem"); // NOI18N
         toolsMenu.add(garbleDatabaseMenuItem);
+
+        canreg4migrationMenuItem.setAction(actionMap.get("canreg4Migration")); // NOI18N
+        canreg4migrationMenuItem.setText(resourceMap.getString("canreg4migrationMenuItem.text")); // NOI18N
+        canreg4migrationMenuItem.setName("canreg4migrationMenuItem"); // NOI18N
+        toolsMenu.add(canreg4migrationMenuItem);
 
         menuBar.add(toolsMenu);
 
@@ -1640,12 +1647,19 @@ public final class CanRegClientView extends FrameView {
         return new Scanner(is).useDelimiter("\\A").next();
     }
 
+    @Action
+    public void canreg4Migration() {
+        JInternalFrame internalFrame = new CanReg4MigrationInternalFrame(desktopPane);
+        showAndPositionInternalFrame(desktopPane, internalFrame);        
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;
     private javax.swing.JMenuItem backupMenuItem;
     private javax.swing.JButton browseEditButton;
     private javax.swing.JMenuItem browseEditMenuItem;
+    private javax.swing.JMenuItem canreg4migrationMenuItem;
     private javax.swing.JMenuItem convertCR4SystDefMenuItem;
     private javax.swing.JButton createNewRecordButton;
     private javax.swing.JMenu dataEntryMenu;

@@ -488,6 +488,15 @@
                 <Property name="name" type="java.lang.String" value="garbleDatabaseMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="canreg4migrationMenuItem">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.CanRegClientView" id="canreg4Migration" methodName="canreg4Migration"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="canreg4migrationMenuItem.text"/>
+                <Property name="name" type="java.lang.String" value="canreg4migrationMenuItem" noResource="true"/>
+              </Properties>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="helpMenu">

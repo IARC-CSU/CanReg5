@@ -775,7 +775,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         return importTask;
     }
 
-    private class ImportActionTask extends org.jdesktop.application.Task<Object, Void> {
+    private class ImportActionTask extends org.jdesktop.application.Task<Object, String> {
 
         ImportActionTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that

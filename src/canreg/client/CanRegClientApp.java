@@ -655,7 +655,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param io
      * @throws java.rmi.RemoteException
      */
-    public boolean importFile(Task<Object, Void> task, Document doc, List<Relation> map, File file, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
+    public boolean importFile(Task<Object, String> task, Document doc, List<Relation> map, File file, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
         try {
             return canreg.client.dataentry.Import.importFile(task, doc, map, file, server, io);
         } catch (RemoteException ex) {
@@ -686,6 +686,60 @@ public class CanRegClientApp extends SingleFrameApplication {
             }
         }
         return false;
+    }
+
+    /**
+     * 
+     * @param task
+     * @param filepath
+     * @param dictionaryfile
+     * @param regcode
+     */
+    public boolean convertDictionary(Task<Object, String> task, String filepath, String dictionaryfile, String regcode) {
+       boolean dicsuccess = false;
+       try {
+           dicsuccess =  canreg.client.dataentry.Convert.convertDictionary(task, filepath, dictionaryfile, regcode);
+           //dicsuccess =  canreg.client.dataentry.Convert.convertDictionary(filepath, dictionaryfile, regcode);
+        }
+        catch(Exception ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return dicsuccess;
+    }
+
+    /**
+     *
+     * @param task
+     * @param filepath
+     * @param datafile
+     * @param regcode
+     */
+    public boolean convertData(Task<Object, String> task, String filepath, String datafile, String regcode) {
+       boolean datsuccess = false;
+       try {
+            datsuccess =  canreg.client.dataentry.Convert.convertData(task, filepath, datafile, regcode);
+        }
+        catch(Exception ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return datsuccess;
+    }
+
+    /**
+     *
+     * @param task
+     * @param dictionaryfile
+     */
+    public Map importDictionary(Task<Object, String> task, String dictionaryfile) {
+        //boolean dicimpstatus = false;
+         Map<Integer, Map<Integer, String>> allErrors = null;
+        try {
+            allErrors = canreg.client.dataentry.Convert.importDictionary(task, dictionaryfile);
+        }
+         catch(Exception ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return allErrors;
     }
 
     /**

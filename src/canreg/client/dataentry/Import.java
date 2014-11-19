@@ -62,6 +62,7 @@ import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  *
@@ -89,7 +90,7 @@ public class Import {
      * @param io
      * @return
      */
-    public static boolean importFile(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
+    public static boolean importFile(Task<Object, String> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
         boolean success = false;
         
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
@@ -115,6 +116,8 @@ public class Import {
             // Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}");
 
             int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath());
+
+            debugOut("Importing data from "+file);
 
             reader = new CSVReader(bsr, io.getSeparator());
             String[] lineElements;
@@ -154,7 +157,7 @@ public class Import {
                                     }
                                 }
                             } else {
-                                patient.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
+                                patient.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(lineElements[rel.getFileColumnNumber()]));
                             }
                         } else {
                             Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with patient part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
@@ -179,7 +182,7 @@ public class Import {
                                     }
                                 }
                             } else {
-                                tumour.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
+                                tumour.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(lineElements[rel.getFileColumnNumber()]));
                             }
                         } else {
                             Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with tumour part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
@@ -204,7 +207,7 @@ public class Import {
                                     }
                                 }
                             } else {
-                                source.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
+                                source.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(lineElements[rel.getFileColumnNumber()]));
                             }
                         } else {
                             Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with source part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
@@ -374,6 +377,7 @@ public class Import {
                     throw new InterruptedException();
                 }
             }
+            task.firePropertyChange("finished", null, null);
             success = true;
         } catch (IOException ex) {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
@@ -400,8 +404,7 @@ public class Import {
                 }
             }
         }
-        if (task!=null)
-            task.firePropertyChange("finished", null, null);
+
         return success;
     }
 

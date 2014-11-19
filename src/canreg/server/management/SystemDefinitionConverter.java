@@ -1126,4 +1126,12 @@ public class SystemDefinitionConverter {
         }
         return dictionaryListElement;
     }
+    
+    public String getRegistryName() {
+        return registryName;
+    }
+
+    public String getServerCode() {
+        return registryCode;
+    }
 }
