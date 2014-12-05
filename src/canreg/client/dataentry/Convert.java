@@ -59,6 +59,7 @@ import org.paradox.metadata.ParadoxTable;
 import org.paradox.data.TableData;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import org.xml.sax.SAXException;
 
 public class Convert {
     
@@ -67,7 +68,7 @@ public class Convert {
     static BufferedWriter txt_bw, csv_bw;
     static ParadoxConnection pconn;
 
-    public static boolean convertDictionary(Task<Object, String> task, String filepath, String dictionaryfile, String regcode) throws Exception {
+    public static boolean convertDictionary(Task<Object, String> task, String filepath, String dictionaryfile, String regcode) {
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -132,7 +133,16 @@ public class Convert {
         catch(IOException ex) {
             Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch(Exception ex) {
+        catch (NumberFormatException ex) {
+            Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        catch (ParserConfigurationException ex) {
+            Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        catch (DOMException ex) {
+            Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        catch (SAXException ex) {
             Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
         }
         return success;
@@ -162,23 +172,27 @@ public class Convert {
         catch(SQLException ex) {
             Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch(Exception ex) {
+       
+        catch(IOException ex) {
             Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
         }
+        catch (NumberFormatException ex) {
+            Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
 
-    public static boolean convertData(Task<Object, String> task, String filepath, String datafile, String regcode) throws Exception {
-        Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs_hdr = null;
-        ResultSet rs_data = null;
+    public static boolean convertData(Task<Object, String> task, String filepath, String datafile, String regcode) {
+        Connection conn;
+        Statement stmt;
+        ResultSet rs_hdr;
+        ResultSet rs_data;
         boolean success = false;
         int totalrowcount = 0;
 
         String csv = filepath+Globals.FILE_SEPARATOR+regcode+".csv";
-        CSVWriter writer = new CSVWriter(new FileWriter(csv), ',', CSVWriter.DEFAULT_ESCAPE_CHARACTER);
-
+        
         try {
+            CSVWriter writer = new CSVWriter(new FileWriter(csv), ',', CSVWriter.DEFAULT_ESCAPE_CHARACTER);
             debugOut("Migrating data "+datafile);
             pconn = (ParadoxConnection) DriverManager.getConnection("jdbc:paradox:///"+filepath.replaceAll("\\\\", "/"));
             final ParadoxTable table = TableData.listTables(pconn, datafile).get(0);
@@ -258,9 +272,6 @@ public class Convert {
             Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch(IOException ex) {
-            Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch(Exception ex) {
             Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
         }
         return success;
