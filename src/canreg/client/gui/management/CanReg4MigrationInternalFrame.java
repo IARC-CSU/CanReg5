@@ -100,6 +100,13 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
 
     @Action
     private void initActions() {
+        for (int i = 0; i<10; i++) {
+            String fileName = CR4Path.replaceFirst("C", new String(Character.toChars(67+i)));
+            if (new File(fileName).exists()) {
+                CR4Path = fileName;
+                break;
+            }
+        }
         ssdTask = new SearchSystemDefTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class), CR4Path);
         ssdTask.execute();
     }
@@ -126,18 +133,21 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        regSelectButton = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
-        sysDefTextField = new javax.swing.JTextField();
-        cr4Label = new javax.swing.JLabel();
-        browseCR4Button = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         taskOutput = new javax.swing.JTextArea();
         ProgressBar = new javax.swing.JProgressBar();
+        tabbedPane = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList();
+        jPanel2 = new javax.swing.JPanel();
+        browseCR4Button = new javax.swing.JButton();
+        cr4Label = new javax.swing.JLabel();
+        sysDefTextField = new javax.swing.JTextField();
+        regSelectButton = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
+        setClosable(true);
         setMaximizable(true);
         setResizable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(CanReg4MigrationInternalFrame.class);
@@ -145,17 +155,21 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
         setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
 
+        jScrollPane2.setName("jScrollPane2"); // NOI18N
+
+        taskOutput.setColumns(20);
+        taskOutput.setFont(resourceMap.getFont("taskOutput.font")); // NOI18N
+        taskOutput.setRows(5);
+        taskOutput.setName("taskOutput"); // NOI18N
+        jScrollPane2.setViewportView(taskOutput);
+
+        ProgressBar.setName("ProgressBar"); // NOI18N
+        ProgressBar.setStringPainted(true);
+
+        tabbedPane.setName("tabbedPane"); // NOI18N
+
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Select Registry For Migration"));
         jPanel1.setName("jPanel1"); // NOI18N
-
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(CanReg4MigrationInternalFrame.class, this);
-        regSelectButton.setAction(actionMap.get("MigrationAction")); // NOI18N
-        regSelectButton.setText(resourceMap.getString("regSelectButton.text")); // NOI18N
-        regSelectButton.setName("regSelectButton"); // NOI18N
-
-        jButton2.setAction(actionMap.get("cancelAction")); // NOI18N
-        jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
-        jButton2.setName("jButton2"); // NOI18N
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
@@ -171,95 +185,97 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(jList1);
 
-        sysDefTextField.setName("sysDefTextField"); // NOI18N
-
-        cr4Label.setText(resourceMap.getString("cr4Label.text")); // NOI18N
-        cr4Label.setName("cr4Label"); // NOI18N
-
-        browseCR4Button.setAction(actionMap.get("browseDefAction")); // NOI18N
-        browseCR4Button.setText(resourceMap.getString("browseCR4Button.text")); // NOI18N
-        browseCR4Button.setName("browseCR4Button"); // NOI18N
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(regSelectButton)
-                    .addComponent(jButton2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(cr4Label)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sysDefTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(browseCR4Button)))
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(84, Short.MAX_VALUE)))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(regSelectButton)
-                .addGap(11, 11, 11)
-                .addComponent(jButton2)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cr4Label, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sysDefTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(browseCR4Button))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(69, Short.MAX_VALUE)))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
         );
 
-        jScrollPane2.setName("jScrollPane2"); // NOI18N
+        tabbedPane.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
 
-        taskOutput.setColumns(20);
-        taskOutput.setFont(resourceMap.getFont("taskOutput.font")); // NOI18N
-        taskOutput.setRows(5);
-        taskOutput.setName("taskOutput"); // NOI18N
-        jScrollPane2.setViewportView(taskOutput);
+        jPanel2.setName("jPanel2"); // NOI18N
 
-        ProgressBar.setName("ProgressBar"); // NOI18N
-        ProgressBar.setStringPainted(true);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(CanReg4MigrationInternalFrame.class, this);
+        browseCR4Button.setAction(actionMap.get("browseDefAction")); // NOI18N
+        browseCR4Button.setText(resourceMap.getString("browseCR4Button.text")); // NOI18N
+        browseCR4Button.setName("browseCR4Button"); // NOI18N
+
+        cr4Label.setText(resourceMap.getString("cr4Label.text")); // NOI18N
+        cr4Label.setName("cr4Label"); // NOI18N
+
+        sysDefTextField.setName("sysDefTextField"); // NOI18N
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cr4Label)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(sysDefTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(browseCR4Button)))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cr4Label, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sysDefTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(browseCR4Button))
+                .addContainerGap(140, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
+
+        regSelectButton.setAction(actionMap.get("MigrationAction")); // NOI18N
+        regSelectButton.setText(resourceMap.getString("regSelectButton.text")); // NOI18N
+        regSelectButton.setName("regSelectButton"); // NOI18N
+
+        jButton2.setAction(actionMap.get("cancelAction")); // NOI18N
+        jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
+        jButton2.setName("jButton2"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ProgressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE))
-                .addContainerGap(12, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
+                    .addComponent(ProgressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
+                    .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(regSelectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(169, 169, 169)
+                .addContainerGap()
+                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(regSelectButton)
+                    .addComponent(jButton2))
+                .addGap(11, 11, 11)
                 .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(219, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -595,6 +611,7 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
         else {
             publish("CanReg4 system definition file not found at default location.\nClick on \"Browse\" to locate system definition file.\n");
             debugOut("System definition file not found at default location.");
+            tabbedPane.setSelectedIndex(1);
             browseCR4Button.setEnabled(true);
             status = false;
         }
@@ -633,10 +650,12 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
     private javax.swing.JButton jButton2;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton regSelectButton;
     private javax.swing.JTextField sysDefTextField;
+    private javax.swing.JTabbedPane tabbedPane;
     public javax.swing.JTextArea taskOutput;
     // End of variables declaration//GEN-END:variables
 
