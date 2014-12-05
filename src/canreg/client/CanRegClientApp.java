@@ -269,8 +269,9 @@ public class CanRegClientApp extends SingleFrameApplication {
 
         show(canRegClientView);
 
-        ExitListener maybeExit = new ExitListener() {
-
+        ExitListener maybeExit;
+        maybeExit = new ExitListener() {
+            
             @Override
             public boolean canExit(EventObject e) {
                 int option = JOptionPane.NO_OPTION;
@@ -413,8 +414,8 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param serverObjectString The address to a server
      * @param username The username of the user
      * @param password The password of the user
-     * @return CanReg System's name if successfull - null if not
-     * @throws javax.security.auth.loginRMI.LoginException
+     * @return CanReg System's na
+     * @throws javax.security.auth.login.LoginException  if successfull - null if not
      * @throws java.lang.NullPointerException
      * @throws java.rmi.NotBoundException
      * @throws java.net.MalformedURLException
@@ -653,7 +654,10 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param map
      * @param file
      * @param io
+     * @return 
+     * @throws java.sql.SQLException
      * @throws java.rmi.RemoteException
+     * @throws canreg.server.database.RecordLockedException
      */
     public boolean importFile(Task<Object, String> task, Document doc, List<Relation> map, File file, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
         try {
@@ -674,7 +678,10 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param map
      * @param files
      * @param io
+     * @return 
+     * @throws java.sql.SQLException
      * @throws java.rmi.RemoteException
+     * @throws canreg.server.database.RecordLockedException
      */
     public boolean importFiles(Task<Object, Void> task, Document doc, List<Relation> map, File[] files, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
         try {
@@ -694,17 +701,12 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param filepath
      * @param dictionaryfile
      * @param regcode
+     * @return 
      */
     public boolean convertDictionary(Task<Object, String> task, String filepath, String dictionaryfile, String regcode) {
        boolean dicsuccess = false;
-       try {
-           dicsuccess =  canreg.client.dataentry.Convert.convertDictionary(task, filepath, dictionaryfile, regcode);
-           //dicsuccess =  canreg.client.dataentry.Convert.convertDictionary(filepath, dictionaryfile, regcode);
-        }
-        catch(Exception ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return dicsuccess;
+       dicsuccess =  canreg.client.dataentry.Convert.convertDictionary(task, filepath, dictionaryfile, regcode);
+       return dicsuccess;
     }
 
     /**
@@ -713,6 +715,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param filepath
      * @param datafile
      * @param regcode
+     * @return 
      */
     public boolean convertData(Task<Object, String> task, String filepath, String datafile, String regcode) {
        boolean datsuccess = false;
@@ -729,16 +732,12 @@ public class CanRegClientApp extends SingleFrameApplication {
      *
      * @param task
      * @param dictionaryfile
+     * @return 
      */
     public Map importDictionary(Task<Object, String> task, String dictionaryfile) {
         //boolean dicimpstatus = false;
-         Map<Integer, Map<Integer, String>> allErrors = null;
-        try {
-            allErrors = canreg.client.dataentry.Convert.importDictionary(task, dictionaryfile);
-        }
-         catch(Exception ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Map<Integer, Map<Integer, String>> allErrors;
+        allErrors = canreg.client.dataentry.Convert.importDictionary(task, dictionaryfile);
         return allErrors;
     }
 
@@ -768,6 +767,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     /**
      * 
+     * @throws java.rmi.RemoteException
      */
     public void logOut() throws RemoteException {
         try {
@@ -826,6 +826,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     /**
      * 
      * @return
+     * @throws java.rmi.RemoteException
      */
     public String performBackup() throws RemoteException {
         String path = null;
@@ -888,8 +889,9 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @return
      * @throws java.sql.SQLException
      * @throws java.rmi.RemoteException
+     * @throws canreg.server.database.UnknownTableException
+     * @throws canreg.common.cachingtableapi.DistributedTableDescriptionException
      * @throws java.lang.SecurityException
-     * @throws java.lang.Exception
      */
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, SecurityException, UnknownTableException, DistributedTableDescriptionException, RemoteException {
         try {
@@ -907,8 +909,10 @@ public class CanRegClientApp extends SingleFrameApplication {
      * 
      * @param recordID
      * @param tableName
+     * @param lock
      * @return
      * @throws java.lang.SecurityException
+     * @throws canreg.server.database.RecordLockedException
      * @throws java.rmi.RemoteException
      */
     public DatabaseRecord getRecord(int recordID, String tableName, boolean lock) throws SecurityException, RecordLockedException, RemoteException {
@@ -930,7 +934,10 @@ public class CanRegClientApp extends SingleFrameApplication {
     /**
      * 
      * @param databaseRecord
+     * @return 
      * @throws java.lang.SecurityException
+     * @throws java.sql.SQLException
+     * @throws canreg.server.database.RecordLockedException
      * @throws java.rmi.RemoteException
      */
     public int saveRecord(DatabaseRecord databaseRecord) throws SecurityException, SQLException, RecordLockedException, RemoteException {
@@ -968,6 +975,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * 
      * @param databaseRecord
      * @throws java.lang.SecurityException
+     * @throws canreg.server.database.RecordLockedException
      * @throws java.rmi.RemoteException
      */
     public void editRecord(DatabaseRecord databaseRecord) throws SecurityException, RecordLockedException, RemoteException {
@@ -1104,12 +1112,14 @@ public class CanRegClientApp extends SingleFrameApplication {
     /**
      * 
      * @param idString
-     * @param tableName
+     * @param lock
      * @return
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
+     * @throws canreg.server.database.RecordLockedException
+     * @throws canreg.common.cachingtableapi.DistributedTableDescriptionException
+     * @throws canreg.server.database.UnknownTableException
      * @throws java.sql.SQLException
-     * @throws java.lang.Exception
      */
     public Tumour[] getTumourRecordsBasedOnPatientID(String idString, boolean lock) throws SecurityException, SQLException, RecordLockedException, DistributedTableDescriptionException, UnknownTableException, RemoteException {
         Tumour[] records = null;
@@ -1221,8 +1231,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             LookAndFeelInfo[] lnfs = UIManager.getInstalledLookAndFeels();
             boolean found = false;
-            for (int i = 0; i < lnfs.length; i++) {
-                if (lnfs[i].getName().equals("JGoodies Plastic 3D")) {
+            for (LookAndFeelInfo lnf : lnfs) {
+                if (lnf.getName().equals("JGoodies Plastic 3D")) {
                     found = true;
                 }
             }
@@ -1231,7 +1241,43 @@ public class CanRegClientApp extends SingleFrameApplication {
                         "com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
             }
             UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
-        } catch (Throwable t) {
+        } catch (ClassNotFoundException t) {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnsupportedLookAndFeelException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (IllegalAccessException t) {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnsupportedLookAndFeelException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (InstantiationException t) {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnsupportedLookAndFeelException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (UnsupportedLookAndFeelException t) {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch (ClassNotFoundException ex) {
@@ -1280,7 +1326,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @return
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
-     * @throws java.lang.Exception
+     * @throws DistributedTableDescriptionException
      */
     public Object[][] retrieveRows(String resultSetID, int from, int to) throws SecurityException, DistributedTableDescriptionException, RemoteException {
         try {
@@ -1298,6 +1344,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * 
      * @param resultSetID
      * @throws java.lang.SecurityException
+     * @throws java.sql.SQLException
      * @throws java.rmi.RemoteException
      */
     public void releaseResultSet(String resultSetID) throws SecurityException, SQLException, RemoteException {
@@ -1377,6 +1424,8 @@ public class CanRegClientApp extends SingleFrameApplication {
     /**
      * 
      * @param searcher
+     * @param rangeStart
+     * @param rangeEnd
      * @return
      * @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
