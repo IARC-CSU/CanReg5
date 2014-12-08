@@ -226,11 +226,6 @@ An intermediate question asking for sub pop when automatically picking populatio
 n data sets?
 \end_layout
 
-\begin_layout Itemize
-Create a package of R libraries that can be installed in parallell to the
- CanReg5 installation.
-\end_layout
-
 \begin_layout Section*
 Quality control 
 \end_layout
@@ -354,84 +349,10 @@ Detect duplicate variable names
 Possibility to change the path of the database/other system variables.
 \end_layout
 
-\begin_layout Itemize
-Migration wizard:
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Ask user to export data from CanReg.
-\end_layout
-
-\begin_layout Itemize
-Ask user to export dictionary from CanReg.
-\end_layout
-
-\begin_layout Itemize
-Ask user to find the system definition file.
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Convert it and ask if the user would like to optionally change some elements
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Import the dictionary.
-\end_layout
-
-\begin_layout Itemize
-Take backup.
- (Make copy as empty.)
-\end_layout
-
-\begin_layout Itemize
-Offer to import population dataset.
-\end_layout
-
-\begin_layout Itemize
-Take backup.
-\end_layout
-
-\begin_layout Itemize
-Import the data.
-\end_layout
-
-\begin_layout Itemize
-Take backup.
-\end_layout
-
-\end_deeper
 \begin_layout Section*
 Pending bugs
 \end_layout
 
-\begin_layout Itemize
-Import bugs should not break import when 
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-unclosed double quotes
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
-
-empty lines
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-lines with too few elements 
-\end_layout
-
-\end_deeper
 \begin_layout Itemize
 Bug in R script:
 \end_layout
