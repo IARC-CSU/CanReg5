@@ -15,7 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Hemant Dharam Dhivar, IARC-Mumbai Regional Hub, hemant_dhivar@yahoo.com
+ * @author Hemant Dharam Dhivar, IARC Regional Hub, Mumbai.
+ * hemant_dhivar@yahoo.com
  */
 package canreg.client.gui.management;
 
@@ -40,6 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.List;
 import java.awt.Cursor;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.nio.charset.Charset;
@@ -71,6 +73,7 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
     private String dictionary, data;
     private static String defpath, filepath;
     private String regcode;
+    private JList list;
     private DefaultListModel<String> dlm = new DefaultListModel();
     private ArrayList<String> deflist = new ArrayList();
     private ArrayList<String> paths = new ArrayList();
@@ -110,6 +113,7 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
         ssdTask = new SearchSystemDefTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class), CR4Path);
         ssdTask.execute();
     }
+
     @Action
     public void cancelAction() {
         if (mTask != null) {
@@ -240,6 +244,7 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
 
         regSelectButton.setAction(actionMap.get("MigrationAction")); // NOI18N
         regSelectButton.setText(resourceMap.getString("regSelectButton.text")); // NOI18N
+        regSelectButton.setEnabled(false);
         regSelectButton.setName("regSelectButton"); // NOI18N
 
         jButton2.setAction(actionMap.get("cancelAction")); // NOI18N
@@ -250,16 +255,20 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
-                    .addComponent(ProgressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
-                    .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(regSelectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
+                            .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(regSelectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(89, 89, 89)
+                        .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 642, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -271,10 +280,10 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(regSelectButton)
                     .addComponent(jButton2))
-                .addGap(11, 11, 11)
-                .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -282,11 +291,10 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-    /* Populating Registry for Migration automatically from default location
-     * and manaully using browse option. 
+    /** Populating Registries from default location.
     */
 
-    JList list = (JList) evt.getSource();
+    list = (JList) evt.getSource();
         if ( list.getModel().getSize() > 0 ) {
             if ( list.isSelectedIndex(list.getSelectedIndex()) ) {
                 regSelectButton.setEnabled(true);
@@ -313,29 +321,6 @@ private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN
                    }
                 }
             }
-            try {
-                EditDatabaseVariableTableAssociationInternalFrame edvif = new EditDatabaseVariableTableAssociationInternalFrame();
-                int addServer = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("SUCCESSFULLY_CREATED_XML: ") + "\'" + Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + "\'.\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("ADD_IT_TO_FAV_SERVERS?"), "Success", JOptionPane.YES_NO_OPTION);
-                if (addServer == JOptionPane.YES_OPTION) {
-                    localSettings = CanRegClientApp.getApplication().getLocalSettings();
-                    localSettings.addServerToServerList(dlm.get(list.getSelectedIndex()), "localhost", Globals.DEFAULT_PORT, regcode);
-                    localSettings.writeSettings();
-                }
-                edvif.setTitle("Variables and Tables for "+WordUtils.capitalize(dlm.get(list.getSelectedIndex()).toLowerCase()));
-                edvif.loadSystemDefinition(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + ".xml");
-                edvif.setDesktopPane(desktopPane);
-
-                CanRegClientView.showAndPositionInternalFrame(desktopPane, edvif);
-            }
-            catch (IOException ex) {
-                  Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            catch (ParserConfigurationException ex) {
-                  Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            catch (SAXException ex) {
-                   Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
         else {
             debugOut("List is empty.");
@@ -343,22 +328,49 @@ private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN
 }//GEN-LAST:event_jList1ValueChanged
 
 @Action
-public Task MigrationAction() {
-    ProgressBar.setStringPainted(true);
+public void MigrationAction() {
     regSelectButton.setEnabled(false);
-    mTask = new MigrationTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+    EditDatabaseVariableTableAssociationInternalFrame edvif = new EditDatabaseVariableTableAssociationInternalFrame();
+    int addServer = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("SUCCESSFULLY_CREATED_XML: ") + "\'" + Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + "\'.\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("ADD_IT_TO_FAV_SERVERS?"), "Success", JOptionPane.YES_NO_OPTION);
+    if (addServer == JOptionPane.YES_OPTION) {
+       localSettings = CanRegClientApp.getApplication().getLocalSettings();
+       localSettings.addServerToServerList(dlm.get(list.getSelectedIndex()), "localhost", Globals.DEFAULT_PORT, regcode);
+       localSettings.writeSettings();
+    }
+    try {
+       edvif.setTitle("Variables and Tables for "+WordUtils.capitalize(dlm.get(list.getSelectedIndex()).toLowerCase()));
+       edvif.loadSystemDefinition(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + ".xml");
+       edvif.setDesktopPane(desktopPane);
+       CanRegClientView.showAndPositionInternalFrame(desktopPane, edvif);
+    }
+    catch (IOException ex) {
+       Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    catch (ParserConfigurationException ex) {
+       Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    catch (SAXException ex) {
+       Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+    }
 
-    mTask.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if ("progress".equals(evt.getPropertyName())) {
-                    ProgressBar.setValue((Integer) evt.getNewValue());
-                    ProgressBar.setString(evt.getNewValue().toString() + "%");
-                } else if ("finished".equals(evt.getPropertyName())) {
-                    dispose();
-                }
-            }
+    edvif.saveButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ProgressBar.setStringPainted(true);
+            mTask = new MigrationTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+            mTask.execute();
+            mTask.addPropertyChangeListener(new PropertyChangeListener() {
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        if ("progress".equals(evt.getPropertyName())) {
+                            ProgressBar.setValue((Integer) evt.getNewValue());
+                            ProgressBar.setString(evt.getNewValue().toString() + "%");
+                        } else if ("finished".equals(evt.getPropertyName())) {
+                            dispose();
+                        }
+                    }
+            });
+        }
     });
-    return mTask;
 }
 
 private class MigrationTask extends org.jdesktop.application.Task<Object, String> {
@@ -371,6 +383,7 @@ private class MigrationTask extends org.jdesktop.application.Task<Object, String
         Cursor hourglassCursor = new Cursor(Cursor.DEFAULT_CURSOR);
         setCursor(hourglassCursor);
     }
+
     @Override
     public Object doInBackground() {
         boolean dic_status = false;
@@ -435,7 +448,7 @@ private class MigrationTask extends org.jdesktop.application.Task<Object, String
                     JDesktopPane jdp = new JDesktopPane();
                     jdp = CanRegClientApp.getApplication().getDeskTopPane();
                     JInternalFrame[] frames = jdp.getAllFrames();
-                    // Close WelcomeInternalFrame
+                    // Closing WelcomeInternalFrame
                     for(JInternalFrame jf: frames) {
                         debugOut("frames name: "+jf.getName());
                         if ( (jf.getClass().getName()).equals("canreg.client.gui.WelcomeInternalFrame")) {
@@ -578,7 +591,7 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
 	boolean cr4exists = canreg4.exists();
 
         if(cr4exists && searchdef) {
-            publish("Loading and migrating system definition file from default location for.\n");
+            publish("Loading and migrating system definition file from default location.\n");
             File folder = new File(canreg4Path);
             File[] listOfFiles = folder.listFiles();
             for (int i = 0; i < listOfFiles.length; i++) {
@@ -593,7 +606,7 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
                             try {
                                 sdc.setFileEncoding(Charset.forName(Globals.CHARSET_ENGLISH));
                                 sdc.convertAndSaveInSystemFolder(defpath);
-                                publish(WordUtils.capitalize(sdc.getRegistryName().toLowerCase())+"\n");
+                                publish("\""+WordUtils.capitalize(sdc.getRegistryName().toLowerCase())+"\"\n");
                             }
                             catch (IOException ex) {
                                     Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -609,7 +622,7 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
             status = true;
         }
         else {
-            publish("CanReg4 system definition file not found at default location.\nClick on \"Browse\" to locate system definition file.\n");
+            publish("CanReg4 system definition file not found at default location.\nPlease click \"Browse\" to locate system definition file.\n");
             debugOut("System definition file not found at default location.");
             tabbedPane.setSelectedIndex(1);
             browseCR4Button.setEnabled(true);
@@ -660,7 +673,8 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
     // End of variables declaration//GEN-END:variables
 
     @Action
-    public Task browseDefAction() {
+    //public Task browseDefAction() {
+    public void browseDefAction() {
         String defname = null;
         chooser = new JFileChooser();
         // Filter only the DEF-files.
@@ -676,7 +690,9 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
                 Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return new BrowseDefActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class), defname);
+        BrowseDefActionTask bTask = new BrowseDefActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class), defname);
+        bTask.execute();
+        //return new BrowseDefActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class), defname);
     }
 
     private class BrowseDefActionTask extends org.jdesktop.application.Task<Object, String> {
@@ -691,7 +707,8 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
             Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
             setCursor(hourglassCursor);
         }
-        @Override protected Object doInBackground() {
+        @Override
+        protected Object doInBackground() {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
@@ -701,7 +718,7 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
                     publish("Migrating System Definition File for ");
                     sdc.setFileEncoding(Charset.forName(Globals.CHARSET_ENGLISH));
                     sdc.convertAndSaveInSystemFolder(defname);
-                    publish(WordUtils.capitalize(sdc.getRegistryName().toLowerCase())+".\n");
+                    publish("\""+WordUtils.capitalize(sdc.getRegistryName().toLowerCase())+"\".\n");
                     registryCodes.add(sdc.getServerCode());
                     //deflist.add(defname);
                     File f = new File(defname);
@@ -724,23 +741,25 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
                 taskOutput.append(string);
             }
         }
-        @Override protected void succeeded(Object result) {
+        @Override
+        protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
-        Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-        setCursor(normalCursor);
-        try {
-            if( result.equals(true) ) {
-                taskOutput.append("Migration of System Definition Done Successfully.\n");
-                taskOutput.append("Select Registry and then click 'Ok' for Migration.\n");
-                JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration of System Definition Done Successfully.", "Migration of System Definition", JOptionPane.PLAIN_MESSAGE);
-                //regSelectButton.setEnabled(true);
+            Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+            setCursor(normalCursor);
+            try {
+                if( result.equals(true) ) {
+                    taskOutput.append("Migration of System Definition Done Successfully.\n");
+                    taskOutput.append("Select Registry and then click 'Ok' for Migration.\n");
+                    JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration of System Definition Done Successfully.", "Migration of System Definition", JOptionPane.PLAIN_MESSAGE);
+                    tabbedPane.setSelectedIndex(0);
+                    //regSelectButton.setEnabled(true);
+                }
             }
-        }
-        catch(Exception ex) {
-            Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        ssdTask = null;
+            catch(Exception ex) {
+                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ssdTask = null;
         }
     }
 
