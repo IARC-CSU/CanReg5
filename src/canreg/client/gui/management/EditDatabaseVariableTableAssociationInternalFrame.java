@@ -139,10 +139,10 @@ public class EditDatabaseVariableTableAssociationInternalFrame extends javax.swi
         variablesAndTablesPanelLayout.setHorizontalGroup(
             variablesAndTablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(variablesAndTablesPanelLayout.createSequentialGroup()
-                .addComponent(variablesLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                .addComponent(variablesLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
                 .addGap(217, 217, 217)
                 .addComponent(tableLabel))
-            .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
+            .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
         );
         variablesAndTablesPanelLayout.setVerticalGroup(
             variablesAndTablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,7 +151,7 @@ public class EditDatabaseVariableTableAssociationInternalFrame extends javax.swi
                     .addComponent(variablesLabel)
                     .addComponent(tableLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
+                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
         );
 
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
@@ -187,7 +187,6 @@ public class EditDatabaseVariableTableAssociationInternalFrame extends javax.swi
     @Action
     public void saveAction() {
         //for each variable of the doc update the Table information...
-
         TreeMap<String, String> variablesToTableMap = new TreeMap<String, String>();
 
         NodeList nl = doc.getElementsByTagName(Globals.NAMESPACE + "variable");
@@ -258,7 +257,7 @@ public class EditDatabaseVariableTableAssociationInternalFrame extends javax.swi
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JButton saveButton;
+    protected javax.swing.JButton saveButton;
     private javax.swing.JLabel tableLabel;
     private javax.swing.JPanel variablesAndTableEditorsPanel;
     private javax.swing.JPanel variablesAndTablesPanel;

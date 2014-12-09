@@ -61,6 +61,9 @@
         <Property name="text" type="java.lang.String" resourceKey="saveButton.text"/>
         <Property name="name" type="java.lang.String" value="saveButton" noResource="true"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
+      </AuxValues>
     </Component>
     <Container class="javax.swing.JPanel" name="variablesAndTablesPanel">
       <Properties>
@@ -76,11 +79,11 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Component id="variablesLabel" pref="230" max="32767" attributes="0"/>
+                  <Component id="variablesLabel" pref="242" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="217" max="-2" attributes="0"/>
                   <Component id="tableLabel" min="-2" max="-2" attributes="0"/>
               </Group>
-              <Component id="variablesScrollPane" alignment="0" pref="522" max="32767" attributes="0"/>
+              <Component id="variablesScrollPane" alignment="0" pref="534" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -91,7 +94,7 @@
                       <Component id="tableLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="variablesScrollPane" pref="239" max="32767" attributes="0"/>
+                  <Component id="variablesScrollPane" pref="251" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
