@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * JChartViewerInternalFrame.java
  *
  * Created on 23-May-2011, 14:15:27

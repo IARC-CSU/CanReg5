@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Morten Johannes Ervik, CIN/IARC, ervikm@iarc.fr
+ * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
  */
 package canreg.client.dataentry;
 
