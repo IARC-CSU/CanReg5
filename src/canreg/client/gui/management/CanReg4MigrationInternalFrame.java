@@ -34,6 +34,7 @@ import canreg.client.dataentry.ImportOptions;
 
 import java.io.*;
 import java.io.File;
+import java.util.Random;
 import java.util.Map;
 import java.util.LinkedList;
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ import org.jdesktop.application.Task;
 
 public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
 
+    public static boolean isPaused;
     private static String namespace = "ns3:";
     private JDesktopPane desktopPane;
     private static boolean debug = true;
@@ -79,7 +81,8 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
     private ArrayList<String> paths = new ArrayList();
     private ArrayList<String> registryCodes = new ArrayList();
     private SearchSystemDefTask ssdTask;
-    private MigrationTask mTask;
+    //private MigrationTask mTask;
+    private MigrationTask cTask;
     private String CR4Path = Globals.CANREG4_SYSTEM_FOLDER;
     private File inFile;
     private LocalSettings localSettings;
@@ -116,17 +119,21 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
 
     @Action
     public void cancelAction() {
-        if (mTask != null) {
+        isPaused = true;
+        if (cTask != null) {
             if (JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("REALLY_CANCEL?"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("PLEASE_CONFIRM."), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                mTask.cancel(true);
+                cTask.cancel(true);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("IMPORT_OF_FILE_INTERUPTED"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("WARNING"), JOptionPane.WARNING_MESSAGE);
-                mTask = null;
+                cTask = null;
                 this.dispose();
+            }
+            else {
+                isPaused = false;
             }
         } else {
             this.dispose();
         }
-    }    
+   }
      
     /** This method is called from within the constructor to
      * initialize the form.
@@ -148,8 +155,10 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
         browseCR4Button = new javax.swing.JButton();
         cr4Label = new javax.swing.JLabel();
         sysDefTextField = new javax.swing.JTextField();
-        regSelectButton = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        TotalProgressBar = new javax.swing.JProgressBar();
+        doneButton = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -242,14 +251,26 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
 
         tabbedPane.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
 
-        regSelectButton.setAction(actionMap.get("MigrationAction")); // NOI18N
-        regSelectButton.setText(resourceMap.getString("regSelectButton.text")); // NOI18N
-        regSelectButton.setEnabled(false);
-        regSelectButton.setName("regSelectButton"); // NOI18N
+        okButton.setAction(actionMap.get("MigrationAction")); // NOI18N
+        okButton.setText(resourceMap.getString("okButton.text")); // NOI18N
+        okButton.setToolTipText(resourceMap.getString("okButton.toolTipText")); // NOI18N
+        okButton.setActionCommand(resourceMap.getString("okButton.actionCommand")); // NOI18N
+        okButton.setEnabled(false);
+        okButton.setName("okButton"); // NOI18N
 
-        jButton2.setAction(actionMap.get("cancelAction")); // NOI18N
-        jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
-        jButton2.setName("jButton2"); // NOI18N
+        cancelButton.setAction(actionMap.get("cancelAction")); // NOI18N
+        cancelButton.setText(resourceMap.getString("cancelButton.text")); // NOI18N
+        cancelButton.setEnabled(false);
+        cancelButton.setName("cancelButton"); // NOI18N
+
+        TotalProgressBar.setName("TotalProgressBar"); // NOI18N
+        TotalProgressBar.setString(resourceMap.getString("TotalProgressBar.string")); // NOI18N
+        TotalProgressBar.setStringPainted(true);
+
+        doneButton.setAction(actionMap.get("DoneAction")); // NOI18N
+        doneButton.setText(resourceMap.getString("doneButton.text")); // NOI18N
+        doneButton.setEnabled(false);
+        doneButton.setName("doneButton"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -257,18 +278,25 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
-                            .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(regSelectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(doneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(89, 89, 89)
+                        .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 642, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(89, 89, 89)
-                        .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 642, Short.MAX_VALUE)))
+                        .addComponent(TotalProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 642, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -276,14 +304,17 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(regSelectButton)
-                    .addComponent(jButton2))
+                    .addComponent(okButton)
+                    .addComponent(cancelButton)
+                    .addComponent(doneButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(TotalProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -297,7 +328,7 @@ private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN
     list = (JList) evt.getSource();
         if ( list.getModel().getSize() > 0 ) {
             if ( list.isSelectedIndex(list.getSelectedIndex()) ) {
-                regSelectButton.setEnabled(true);
+                okButton.setEnabled(true);
             }
 
             regcode = registryCodes.get(list.getSelectedIndex());
@@ -329,7 +360,10 @@ private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN
 
 @Action
 public void MigrationAction() {
-    regSelectButton.setEnabled(false);
+    okButton.setEnabled(false);
+    doneButton.setEnabled(false);
+    cancelButton.setEnabled(true);
+    jList1.setEnabled(false);
     EditDatabaseVariableTableAssociationInternalFrame edvif = new EditDatabaseVariableTableAssociationInternalFrame();
     int addServer = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("SUCCESSFULLY_CREATED_XML: ") + "\'" + Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + "\'.\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("ADD_IT_TO_FAV_SERVERS?"), "Success", JOptionPane.YES_NO_OPTION);
     if (addServer == JOptionPane.YES_OPTION) {
@@ -356,16 +390,42 @@ public void MigrationAction() {
     edvif.saveButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+            //logout from canreg system before conversion
+            if(CanRegClientApp.getApplication().loggedIn){
+               try {
+                  CanRegClientApp.getApplication().logOut();
+               }
+               catch(RemoteException ex) {
+                  Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+               }
+            }
+            //check to see if there is a database already - rename it
+            File databaseFolder = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + regcode);
+            if (databaseFolder.exists()) {
+                int i = 0;
+                File folder2 = databaseFolder;
+                while (folder2.exists()) {
+                   i++;
+                   folder2 = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + regcode + i);
+                }
+                databaseFolder.renameTo(folder2);
+                debugOut("database: "+databaseFolder);
+                try {
+                   canreg.common.Tools.fileCopy(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + ".xml",
+                   Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + i + ".xml");
+                }
+                catch (IOException ex) {
+                   Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             ProgressBar.setStringPainted(true);
-            mTask = new MigrationTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
-            mTask.execute();
-            mTask.addPropertyChangeListener(new PropertyChangeListener() {
+            cTask = new ProgressTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+            cTask.execute();
+            cTask.addPropertyChangeListener(new PropertyChangeListener() {
                     public void propertyChange(PropertyChangeEvent evt) {
                         if ("progress".equals(evt.getPropertyName())) {
                             ProgressBar.setValue((Integer) evt.getNewValue());
                             ProgressBar.setString(evt.getNewValue().toString() + "%");
-                        } else if ("finished".equals(evt.getPropertyName())) {
-                            dispose();
                         }
                     }
             });
@@ -373,82 +433,151 @@ public void MigrationAction() {
     });
 }
 
-private class MigrationTask extends org.jdesktop.application.Task<Object, String> {
-
-    String filename;
-    Map dicimport = null;
-
-    MigrationTask(org.jdesktop.application.Application app) {
-        super(app);
-        Cursor hourglassCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-        setCursor(hourglassCursor);
+private class ProgressTask extends MigrationTask {
+    
+    ProgressTask(org.jdesktop.application.Application app) {
     }
 
     @Override
-    public Object doInBackground() {
+    protected void process(List<Progress> chunks) {
+            if (!isDisplayable()) {
+                System.out.println("process: DISPOSE_ON_CLOSE");
+                cancel(true);
+                return;
+            }
+            for (Progress s: chunks) {
+                //System.out.println(s.component+" "+s.value);
+                switch (s.component) {
+                  case TOTAL:
+                      TotalProgressBar.setValue((Integer) s.value);
+                      TotalProgressBar.setString(s.value.toString()+"%");
+                      break;
+                  case FILE:  ProgressBar.setValue((Integer) s.value); break;
+                  case LOG:   taskOutput.append((String) s.value);    break;
+                  default: throw new AssertionError("Unknown Progress");
+                }
+            }
+    }
+
+    @Override
+    public void done() {
+        try {
+            String result = get();
+            cancelButton.setEnabled(false);
+            doneButton.setEnabled(true);
+            publish(new Progress(Component.LOG, "Migration done Successfully.\n"));
+            JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration done Successfully.", "Migration done Successfully.", JOptionPane.PLAIN_MESSAGE);
+            int deleteTemp = JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you want to delete temporary files ?", "Delete temporary files.", JOptionPane.YES_NO_OPTION);
+            if ( deleteTemp == JOptionPane.YES_OPTION) {
+                String abspath = inFile.getAbsolutePath();
+                File dicFile = new File(abspath.substring(0, abspath.lastIndexOf('.'))+".txt");
+                inFile.delete();
+                dicFile.delete();
+            }
+        }
+        catch (InterruptedException ex) {
+            doneButton.setEnabled(true);
+            cancelButton.setEnabled(false);
+            Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            publish(new Progress(Component.LOG, "Migration failed with "+ex.getCause()));
+            JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration failed.", "Migration failed.", JOptionPane.PLAIN_MESSAGE);
+        }
+        catch (java.util.concurrent.ExecutionException ex) {
+            doneButton.setEnabled(true);
+            cancelButton.setEnabled(false);
+            Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            publish(new Progress(Component.LOG, "Migration failed with "+ex.getCause()));
+            JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration failed.", "Migration failed.", JOptionPane.PLAIN_MESSAGE);
+        }
+        catch (java.util.concurrent.CancellationException ex) {
+            Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            publish(new Progress(Component.LOG, "Migration cancelled.\n"));
+        }
+    }
+}
+
+enum Component { TOTAL, FILE, LOG }
+
+class Progress {
+    public final Object value;
+    public final Component component;
+    public Progress(Component component, Object value) {
+        this.component = component;
+        this.value = value;
+    }
+}
+
+public class MigrationTask extends SwingWorker<String, Progress> {
+    String filename;
+    Map dicimport = null;
+    private final Random r = new Random();
+
+    public boolean isIsPaused() {
+       return isPaused;
+    }
+
+    @Override
+    public String doInBackground() {
+        int subtask = 1;
+        int lengthOfTask = 5; //filelist.size();
+        publish(new Progress(Component.LOG, "--------------------------------------------------------------------------\n"));
+
+        while (subtask <= lengthOfTask && !isCancelled()) {
+            try {
+                migrate(subtask);
+            } catch (InterruptedException ie) {
+                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ie);
+                return "Interrupted with "+ie;
+            }
+            publish(new Progress(Component.TOTAL, 100 * subtask / lengthOfTask));
+            subtask++;
+        }
+        return "Done";
+    }
+
+    private void migrate(int subtask) throws InterruptedException {
         boolean dic_status = false;
         boolean data_status = false;
         boolean dicimport_status = false;
         boolean dataimport_status = false;
-        boolean total_status = false;
-
-        try {
-            publish("Starting migration process...\n");
-            debugOut("Starting migration process...");
-            while(!dic_status) {
-                dic_status = CanRegClientApp.getApplication().convertDictionary(mTask, filepath, dictionary, regcode);
-            }
-            if(dic_status) {
-                publish("Successfully converted dictionary.\n");
-                debugOut("Successfully converted dictionary.");
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_MIGRATED_FILE") + " Dictionary to " + filepath +Globals.FILE_SEPARATOR+regcode+ ".txt", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DIC_EXPORT"), JOptionPane.INFORMATION_MESSAGE);
-            }
-
-            while(!data_status) {
-                data_status = CanRegClientApp.getApplication().convertData(mTask, filepath, data, regcode);
-            }
-            if(data_status) {
-                publish("Successfully converted data.\n");
-                debugOut("Successfully converted data.");
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_MIGRATED_FILE") + " Data to " + filepath +Globals.FILE_SEPARATOR+regcode+ ".csv", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DATA_EXPORT"), JOptionPane.INFORMATION_MESSAGE);
-            }
-
-            if (CanRegClientApp.getApplication().loggedIn) {
-                publish("Logout from \""+CanRegClientApp.getApplication().getSystemName()+"\"\n");
-                CanRegClientApp.getApplication().logOut();
-            }
-           
-            if (!CanRegClientApp.getApplication().loggedIn) {
+        int current = subtask;
+        int lengthOfTask = 10 + r.nextInt(50); 
+        
+        while (current <= lengthOfTask && !isCancelled()) {
+            if (isPaused) {
                 try {
-                    // check to see if there is a database already - rename it
-                    File databaseFolder = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + regcode);
-                    if (databaseFolder.exists()) {
-                        int i = 0;
-                        File folder2 = databaseFolder;
-                        while (folder2.exists()) {
-                            i++;
-                            folder2 = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + regcode + i);
-                        }
-                        databaseFolder.renameTo(folder2);
-                        debugOut("database: "+databaseFolder);
-                        try {
-                            canreg.common.Tools.fileCopy(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + ".xml",
-                                    Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + i + ".xml");
-                        } catch (IOException ex1) {
-                            Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex1);
-                        }
-                    }
+                    Thread.sleep(500);
+                } catch (InterruptedException ie) {
+                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ie);
+                    return;
+                }
+                continue;
+            }
 
-                    String canregSystem = CanRegClientApp.getApplication().loginDirect(regcode, "morten", password);
+            //dictionary conversion task
+            while(!dic_status && subtask == 1) {
+                publish(new Progress(Component.LOG, "Migrating dictionary...\n"));
+                debugOut("Migrating dictionary...");
+                dic_status = CanRegClientApp.getApplication().convertDictionary(cTask, filepath, dictionary, regcode);
+            }
 
-                    if ( canregSystem != null ) {
-                        publish("Login to \""+CanRegClientApp.getApplication().getSystemName()+"\"\n");
-                    }
+            //data conversion task
+            while(!data_status && subtask == 2) {
+                publish(new Progress(Component.LOG, "Migrating data...\n"));
+                debugOut("Migrating data...");
+                data_status = CanRegClientApp.getApplication().convertData(cTask, filepath, data, regcode);
+            }
 
+            //login to canreg system
+            while(!CanRegClientApp.getApplication().loggedIn && subtask == 3) {
+                publish(new Progress(Component.LOG, "Login to CanReg5 System.\n"));
+                String canregSystem = null;
+                try {
+                    canregSystem = CanRegClientApp.getApplication().loginDirect(regcode, "morten", password);
+                    // Closing WelcomeInternalFrame
                     JDesktopPane jdp = new JDesktopPane();
                     jdp = CanRegClientApp.getApplication().getDeskTopPane();
                     JInternalFrame[] frames = jdp.getAllFrames();
-                    // Closing WelcomeInternalFrame
                     for(JInternalFrame jf: frames) {
                         debugOut("frames name: "+jf.getName());
                         if ( (jf.getClass().getName()).equals("canreg.client.gui.WelcomeInternalFrame")) {
@@ -456,99 +585,89 @@ private class MigrationTask extends org.jdesktop.application.Task<Object, String
                         }
                     }
                 }
-                catch (RemoteException ex) {
-                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                catch (MalformedURLException ex) {
-                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
                 catch (LoginException ex) {
                     Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 catch (NotBoundException ex) {
                     Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                catch (MalformedURLException ex) {
+                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                catch (RemoteException ex) {
+                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                catch (java.net.UnknownHostException ex) {
+                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 catch (WrongCanRegVersionException ex) {
                     Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                if(canregSystem != null) {
+                    JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_LOGIN"), "Login", JOptionPane.INFORMATION_MESSAGE);
+                    publish(new Progress(Component.LOG, "Successfully Login to \""+CanRegClientApp.getApplication().getSystemName()+"\"\n"));
+                }
             }
 
-            if ( dic_status && data_status ) {
-                publish("Starting import of migrated files...\n");
-                debugOut("Starting import of migrated files.");
-                publish("Importing dictionary...\n");
-            }
-
-            while(!dicimport_status) {
+            //import dictionary to canreg system
+            while(!dicimport_status && subtask == 4) {
+                publish(new Progress(Component.LOG, "Importing dictionary...\n"));
                 inFile = new File(filepath+Globals.FILE_SEPARATOR+regcode+".txt");
                 filename = filepath+Globals.FILE_SEPARATOR+regcode+".txt";
-                dicimport = CanRegClientApp.getApplication().importDictionary(mTask, filename);
+                dicimport = CanRegClientApp.getApplication().importDictionary(cTask, filename);
                 if(dicimport.isEmpty()) {
                     dicimport_status = true;
                 }
             }
-            if(dicimport_status) {
-                publish("Successfully imported dictionary.\n");
-                debugOut("Successfully imported dictionary.");
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_IMPORTED_FILE") + " Dictionary from " + inFile.getAbsolutePath() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DIC_IMPORT"), JOptionPane.INFORMATION_MESSAGE);
-            }
 
-            inFile = new File(filepath+Globals.FILE_SEPARATOR+regcode+".csv");
-            doc = CanRegClientApp.getApplication().getDatabseDescription();
-            variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
-            globalToolBox = new GlobalToolBox(doc);
-            initializeVariableMapping();
-            publish("Importing data...\n");
-
-            while( !dataimport_status ) {
-                  dataimport_status = CanRegClientApp.getApplication().importFile(mTask, doc, buildMap(), inFile, buildImportOptions());
-            }
-
-            if(dic_status && data_status && dicimport_status && dataimport_status) {
-                publish("Successfully imported data file "+inFile+"\n");
-                total_status = true;
-            }
-
-        }
-        catch(Exception ex) {
-            Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return total_status;
-    }
-    @Override
-    protected void process(final List<String> chunks) {
-        // Updates the messages text area
-        for (final String string : chunks) {
-            taskOutput.append(string);
-        }
-    }
-    @Override
-    protected void succeeded(Object migstatus) {
-        //Map<Integer, Map<Integer, String>> allErrors = (Map<Integer, Map<Integer, String>>) dicimport;
-        setCursor(null);
-        try {
-            if (!(Boolean) migstatus) {
-                JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration failed.", "Migration failed.", JOptionPane.PLAIN_MESSAGE);
-            }
-            else {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_IMPORTED_FILE") + " Data from " + inFile.getAbsolutePath() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DATA_IMPORT"), JOptionPane.INFORMATION_MESSAGE);
-                JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration done successfully.", "Migration done successfully.", JOptionPane.PLAIN_MESSAGE);
-                debugOut("Migration done successfully.");
-                int deleteTemp = JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you want to delete temporary files ?", "Delete temporary files.", JOptionPane.YES_NO_OPTION);
-                if ( deleteTemp == JOptionPane.YES_OPTION) {
-                    String abspath = inFile.getAbsolutePath();
-                    File dicFile = new File(abspath.substring(0, abspath.lastIndexOf('.'))+".txt");
-                    inFile.delete();
-                    dicFile.delete();
+            //import data to canreg system
+            while(!dataimport_status && subtask == 5) {
+                inFile = new File(filepath+Globals.FILE_SEPARATOR+regcode+".csv");
+                doc = CanRegClientApp.getApplication().getDatabseDescription();
+                variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+                globalToolBox = new GlobalToolBox(doc);
+                initializeVariableMapping();
+                
+                try {
+                    dataimport_status = CanRegClientApp.getApplication().importCRFile(cTask, doc, buildMap(), inFile, buildImportOptions());
+                }
+                catch(java.sql.SQLException ex) {
+                   Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                catch(canreg.server.database.RecordLockedException ex) {
+                   Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                catch(RemoteException ex) {
+                   Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+
+            int iv = 100 * current / lengthOfTask;
+            Thread.sleep(20); 
+            publish(new Progress(Component.FILE, iv + 1));
+            current++;
         }
-        catch(Exception ex) {
-            Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        if(dic_status) {
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_MIGRATED_FILE") + " Dictionary to " + filepath +Globals.FILE_SEPARATOR+regcode+ ".txt", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DIC_EXPORT"), JOptionPane.INFORMATION_MESSAGE);
+            publish(new Progress(Component.LOG, "Successfully converted dictionary.\n"));
         }
-        mTask = null;
+        if(data_status) {
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_MIGRATED_FILE") + " Data to " + filepath +Globals.FILE_SEPARATOR+regcode+ ".csv", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DATA_EXPORT"), JOptionPane.INFORMATION_MESSAGE);
+            publish(new Progress(Component.LOG, "Successfully converted data.\n"));
+        }
+        if(dicimport_status) {
+            publish(new Progress(Component.LOG, "Successfully imported dictionary.\n"));
+            debugOut("Successfully imported dictionary.");
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_IMPORTED_FILE") + " Dictionary from " + inFile.getAbsolutePath() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DIC_IMPORT"), JOptionPane.INFORMATION_MESSAGE);
+            publish(new Progress(Component.LOG, "Importing data...\n"));
+        }
+        if(dataimport_status) {
+            publish(new Progress(Component.LOG, "Successfully imported data.\n"));
+            debugOut("Successfully imported data.");
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_IMPORTED_FILE") + " Data from " + inFile.getAbsolutePath() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DATA_IMPORT"), JOptionPane.INFORMATION_MESSAGE);
+        }
     }
-}
+  }
 
 private boolean searchSysDef(String canreg4Path) {
     boolean search = false;
@@ -658,15 +777,17 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JProgressBar ProgressBar;
+    private javax.swing.JProgressBar TotalProgressBar;
     private javax.swing.JButton browseCR4Button;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JLabel cr4Label;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton doneButton;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JButton regSelectButton;
+    private javax.swing.JButton okButton;
     private javax.swing.JTextField sysDefTextField;
     private javax.swing.JTabbedPane tabbedPane;
     public javax.swing.JTextArea taskOutput;
@@ -935,8 +1056,6 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
         return list;
     }
 
-
-
     /**
      * Simple console trace to system.out for debug purposes only.
      *
@@ -946,5 +1065,10 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
         if (debug) {
             Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.INFO, msg);
         }
+    }
+
+    @Action
+    public void DoneAction() {
+        this.dispose();
     }
 }

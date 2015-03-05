@@ -795,13 +795,17 @@ public class ImportView extends javax.swing.JInternalFrame {
             try {
                 // Calls the client app import action with the file parameters provided,
                 success = CanRegClientApp.getApplication().importFile(this, doc, buildMap(), inFile, buildImportOptions());
-            } catch (SecurityException ex) {
+            }
+            catch (SecurityException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RecordLockedException ex) {
+            }
+            catch (RecordLockedException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
+            }
+            catch (RemoteException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
+            }
+            catch (SQLException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
                 success = false;
             }

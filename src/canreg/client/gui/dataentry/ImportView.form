@@ -48,7 +48,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="383" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="387" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -186,9 +186,9 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="numberOfRecordsShownLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="numberOfRecordsShownTextField" pref="102" max="32767" attributes="0"/>
+                          <Component id="numberOfRecordsShownTextField" pref="106" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="previewTableScrollPane" alignment="0" pref="523" max="32767" attributes="0"/>
+                      <Component id="previewTableScrollPane" alignment="0" pref="527" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -201,7 +201,7 @@
                               <Component id="numberOfRecordsShownTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="previewTableScrollPane" pref="219" max="32767" attributes="0"/>
+                          <Component id="previewTableScrollPane" pref="230" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -363,7 +363,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jSplitPane1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="variablesScrollPane" pref="305" max="32767" attributes="0"/>
+                      <Component id="variablesScrollPane" pref="309" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -581,7 +581,7 @@
                               <Component id="queryNewNameCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="previousCanRegDataCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="94" max="32767" attributes="0"/>
+                          <EmptySpace pref="106" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -705,7 +705,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="progressBar" alignment="0" pref="523" max="32767" attributes="0"/>
+                      <Component id="progressBar" alignment="0" pref="527" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">

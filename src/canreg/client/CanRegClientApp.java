@@ -660,8 +660,22 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws canreg.server.database.RecordLockedException
      */
     public boolean importFile(Task<Object, String> task, Document doc, List<Relation> map, File file, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
+    //public boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, Document doc, List<Relation> map, File file, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
         try {
             return canreg.client.dataentry.Import.importFile(task, doc, map, file, server, io);
+            //return canreg.client.dataentry.Convert.importFile(task, doc, map, file, server, io);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex)) {
+                throw ex;
+            }
+        }
+        return false;
+    }
+
+    public boolean importCRFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, Document doc, List<Relation> map, File file, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
+        try {
+            return canreg.client.dataentry.Convert.importFile(task, doc, map, file, server, io);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
@@ -703,7 +717,8 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param regcode
      * @return 
      */
-    public boolean convertDictionary(Task<Object, String> task, String filepath, String dictionaryfile, String regcode) {
+    //public boolean convertDictionary(Task<Object, String> task, String filepath, String dictionaryfile, String regcode) {
+    public boolean convertDictionary(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, String filepath, String dictionaryfile, String regcode) {
        boolean dicsuccess = false;
        dicsuccess =  canreg.client.dataentry.Convert.convertDictionary(task, filepath, dictionaryfile, regcode);
        return dicsuccess;
@@ -717,7 +732,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param regcode
      * @return 
      */
-    public boolean convertData(Task<Object, String> task, String filepath, String datafile, String regcode) {
+    public boolean convertData(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, String filepath, String datafile, String regcode) {
        boolean datsuccess = false;
        try {
             datsuccess =  canreg.client.dataentry.Convert.convertData(task, filepath, datafile, regcode);
@@ -734,7 +749,8 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param dictionaryfile
      * @return 
      */
-    public Map importDictionary(Task<Object, String> task, String dictionaryfile) {
+    //public Map importDictionary(Task<Object, String> task, String dictionaryfile) {
+    public Map importDictionary(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, String dictionaryfile) {
         //boolean dicimpstatus = false;
         Map<Integer, Map<Integer, String>> allErrors;
         allErrors = canreg.client.dataentry.Convert.importDictionary(task, dictionaryfile);

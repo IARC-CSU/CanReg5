@@ -91,6 +91,7 @@ public class Import {
      * @return
      */
     public static boolean importFile(Task<Object, String> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
+    //public static boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
         boolean success = false;
         
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
@@ -117,7 +118,6 @@ public class Import {
 
             int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath());
 
-            debugOut("Importing data from "+file);
 
             reader = new CSVReader(bsr, io.getSeparator());
             String[] lineElements;
