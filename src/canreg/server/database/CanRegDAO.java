@@ -72,7 +72,7 @@ import org.w3c.dom.*;
  */
 public class CanRegDAO {
 
-    private static boolean debug = false;
+    private static final boolean debug = false;
     private final DatabaseVariablesListElement[] variables;
     StringBuilder counterStringBuilder = new StringBuilder();
     StringBuilder getterStringBuilder = new StringBuilder();
@@ -766,7 +766,9 @@ public class CanRegDAO {
 
     /**
      *
-     * @return @throws RemoteException
+     * @return
+     * @throws java.sql.SQLException
+     * @throws java.rmi.RemoteException
      */
     public boolean connect() throws SQLException, RemoteException {
         String dbUrl = getDatabaseUrl();
@@ -901,6 +903,8 @@ public class CanRegDAO {
 
     /**
      *
+     * @return 
+     * @throws java.sql.SQLException
      */
     public boolean disconnect() throws SQLException {
         boolean shutdownSuccess = false;
@@ -991,7 +995,7 @@ public class CanRegDAO {
                     if (obj != null) {
                         try {
                             Integer intObj = (Integer) obj;
-                            stmtSaveNewRecord.setInt(recordVariableNumber, intObj.intValue());
+                            stmtSaveNewRecord.setInt(recordVariableNumber, intObj);
                         } catch (java.lang.ClassCastException cce) {
                             debugOut("Number " + variableType + " " + obj);
                             throw cce;
@@ -1023,12 +1027,12 @@ public class CanRegDAO {
         DatabaseVariablesListElement patientRecordIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString());
         String patientID = (String) patient.getVariable(patientIDVariable.getDatabaseVariableName());
         String patientRecordID = (String) patient.getVariable(patientRecordIDVariable.getDatabaseVariableName());
-        if (patientID == null || patientID.toString().trim().length() == 0) {
+        if (patientID == null || patientID.trim().length() == 0) {
             patientID = getNextPatientID();
             patient.setVariable(patientIDVariable.getDatabaseVariableName(), patientID);
             patientRecordID = getNextPatientRecordID(patientID);
             patient.setVariable(patientRecordIDVariable.getDatabaseVariableName(), patientRecordID);
-        } else if (patientRecordID == null || patientRecordID.toString().trim().length() == 0) {
+        } else if (patientRecordID == null || patientRecordID.trim().length() == 0) {
             patientRecordID = getNextPatientRecordID(patientID);
             patient.setVariable(patientRecordIDVariable.getDatabaseVariableName(), patientRecordID);
             patient.setVariable(patientRecordIDVariable.getDatabaseVariableName(), getNextPatientRecordID(patientID));
@@ -1061,7 +1065,7 @@ public class CanRegDAO {
         if (tumourID == null
                 || tumourID.toString().trim().length() == 0 // || !tumourID.toString().trim().startsWith(patientRecordID) // TODO: fix this! For now - disable it... (Maybe that is the best solution in the long run as well...)
                 ) {
-            if (patientRecordID == null || patientRecordID.toString().trim().length() == 0) {
+            if (patientRecordID == null || patientRecordID.trim().length() == 0) {
             }
             tumourID = getNextTumourID(patientRecordID);
             tumour.setVariable(tumourIDVariableName, tumourID);
@@ -1414,6 +1418,7 @@ public class CanRegDAO {
      * @param tableName
      * @return
      * @throws RecordLockedException
+     * @throws java.sql.SQLException
      */
     public synchronized boolean deleteRecord(int recordID, String tableName) throws RecordLockedException, SQLException {
         boolean success = false;
@@ -1539,7 +1544,7 @@ public class CanRegDAO {
                         if (obj != null) {
                             try {
                                 Integer intObj = (Integer) obj;
-                                stmtEditRecord.setInt(variableNumber, intObj.intValue());
+                                stmtEditRecord.setInt(variableNumber, intObj);
                                 // System.out.println(
                                 //        element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
                                 //        ": " + obj.toString());
@@ -2080,12 +2085,12 @@ public class CanRegDAO {
     private Connection dbConnection;
     private Properties dbProperties;
     private boolean isConnected;
-    private String systemCode;
-    private Document doc;
+    private final String systemCode;
+    private final Document doc;
     private Map<Integer, Dictionary> dictionaryMap;
-    private Map<String, Set<Integer>> locksMap;
-    private Map<String, DistributedTableDataSource> distributedDataSources;
-    private Map<String, Statement> activeStatements;
+    private final Map<String, Set<Integer>> locksMap;
+    private final Map<String, DistributedTableDataSource> distributedDataSources;
+    private final Map<String, Statement> activeStatements;
     private boolean tableOfDictionariesFilled = true;
     private boolean tableOfPopulationDataSets = true;
     private PreparedStatement stmtSaveNewPatient;
@@ -2130,40 +2135,40 @@ public class CanRegDAO {
     private PreparedStatement stmtGetHighestTumourRecordID;
     private PreparedStatement stmtGetHighestSourceRecordID;
     private PreparedStatement stmtMaxNumberOfSourcesPerTumourRecord;
-    private String ns = Globals.NAMESPACE;
+    private final String ns = Globals.NAMESPACE;
     private static final String strGetPatient =
             "SELECT * FROM APP.PATIENT "
             + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
-    private String strGetPatients =
+    private final String strGetPatients =
             "SELECT * FROM APP.PATIENT";
-    private String strGetUsers =
+    private final String strGetUsers =
             "SELECT * FROM APP.USERS";
-    private String strCountPatients =
+    private final String strCountPatients =
             "SELECT COUNT(*) FROM APP.PATIENT";
-    private String strCountSources =
+    private final String strCountSources =
             "SELECT COUNT(*) FROM APP.SOURCE";
-    private String strGetSources =
+    private final String strGetSources =
             "SELECT * FROM APP.SOURCE";
-    private String strGetPatientsAndTumours;
-    private String strCountPatientsAndTumours;
-    private String strGetSourcesAndTumours;
-    private String strCountSourcesAndTumours;
-    private String strGetSourcesAndTumoursAndPatients;
-    private String strCountSourcesAndTumoursAndPatients;
+    private final String strGetPatientsAndTumours;
+    private final String strCountPatientsAndTumours;
+    private final String strGetSourcesAndTumours;
+    private final String strCountSourcesAndTumours;
+    private final String strGetSourcesAndTumoursAndPatients;
+    private final String strCountSourcesAndTumoursAndPatients;
     private static final String strGetTumour =
             "SELECT * FROM APP.TUMOUR "
             + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private static final String strGetSource =
             "SELECT * FROM APP.Source "
             + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
-    private String strGetTumours =
+    private final String strGetTumours =
             "SELECT * FROM APP.TUMOUR";
-    private String strCountTumours =
+    private final String strCountTumours =
             "SELECT COUNT(*) FROM APP.TUMOUR";
     private static final String strGetDictionary =
             "SELECT * FROM APP.DICTIONARIES "
             + "WHERE ID = ?";
-    private String strGetDictionaries =
+    private final String strGetDictionaries =
             "SELECT * FROM APP.DICTIONARIES ";
     private static final String strGetDictionaryEntry =
             "SELECT * FROM APP.DICTIONARY "
@@ -2219,7 +2224,7 @@ public class CanRegDAO {
     /* We don't use tumour record ID...
      private String strGetHighestTumourRecordID;
      */
-    private GlobalToolBox globalToolBox;
+    private final GlobalToolBox globalToolBox;
 
     private synchronized void saveSources(Object tumourID, Set<Source> sources) throws SQLException {
         if (sources != null) {
@@ -2371,7 +2376,7 @@ public class CanRegDAO {
         if (filterVariables.size() > 0) {
             for (DatabaseVariablesListElement variable : filterVariables) {
                 if (variable != null) {
-                    variablesList += ", " + variable.getDatabaseVariableName();
+                    variablesList += ", APP." + variable.getDatabaseTableName() + "." + variable.getDatabaseVariableName();
                 }
             }
 
@@ -2497,11 +2502,11 @@ public class CanRegDAO {
             filterStringBuilder.append(")");
         }
 
-        /* debug stuff
+        /* debug stuff */
          System.out.println("filterString: " + filterStringBuilder);
-         System.out.println("getterString: " + getterString);
-         System.out.println("counterString: " + counterString);
-         */
+         System.out.println("getterString: " + getterStringBuilder);
+         System.out.println("counterString: " + counterStringBuilder);
+         /* */
 
         ResultSet countRowSet;
         try {

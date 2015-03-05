@@ -26,7 +26,6 @@
  */
 package canreg.client.gui.components;
 
-import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.common.database.Dictionary;
@@ -112,14 +111,15 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
 
     /**
      * Initialize the variable panel, i.e. fill it with VariablesExportDetailsPanels.
+     * @param dictionary
      */
     public void initPanel(Map<Integer, Dictionary> dictionary) {
-        panelMap = (Map<String, VariablesExportDetailsPanel>) new TreeMap();
+        panelMap = new TreeMap<String, VariablesExportDetailsPanel>();
         // Remove all variable mappings
         panel.removeAll();
-        DatabaseVariablesListElement[] patientVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
-        DatabaseVariablesListElement[] tumourVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
-        DatabaseVariablesListElement[] sourceVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
+        // DatabaseVariablesListElement[] patientVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
+        // DatabaseVariablesListElement[] tumourVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
+        // DatabaseVariablesListElement[] sourceVariablesInDB = canreg.common.Tools.getVariableListElements(CanRegClientApp.getApplication().getDatabseDescription(), Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
 
         // Add the panels
         for (DatabaseVariablesListElement variable : variablesInTable) {
@@ -169,7 +169,7 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
      */
     public LinkedList<String> getSelectedVariableNames(String tableName) {
         LinkedList<String> variables = new LinkedList<String>();
-        DatabaseVariablesListElement element = null;
+        DatabaseVariablesListElement element;
         for (VariablesExportDetailsPanel ved : panelMap.values()) {
             boolean[] checkBoxes = ved.getCheckboxes();
             //Take into account all the checkboxes when returning the checked variables.
@@ -201,7 +201,7 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
     }
 
     /**
-     * @param table the table to set
+     * @param tableName the table to set
      */
     public void setTableName(String tableName) {
         this.tableName = tableName;

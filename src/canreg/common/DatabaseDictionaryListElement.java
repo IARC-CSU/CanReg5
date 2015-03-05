@@ -37,7 +37,6 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     private int fullDictionaryCodeLength;
     private int fullDictionaryCategoryDescriptionLength;
     private boolean locked = false;
-    private boolean compound = false;
     private String unknownCode = null;
 
     /**
