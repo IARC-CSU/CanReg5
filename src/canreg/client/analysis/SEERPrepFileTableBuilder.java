@@ -45,6 +45,7 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
     public static String FILE_TYPES_GENERATED = "file_types_generated";
     private StandardVariableNames[] variablesNeeded;
     private FileTypes[] fileTypesGenerated;
+    private int unknownAgeCode = Globals.DEFAULT_UNKNOWN_AGE_CODE;
 
     public SEERPrepFileTableBuilder(String configFileName) throws FileNotFoundException {
         // parse configFile
@@ -246,5 +247,10 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
             }
         }
         return true;
+    }
+    
+    @Override
+    public void setUnknownAgeCode(int unknownAgeCode) {
+        this.unknownAgeCode = unknownAgeCode;
     }
 }

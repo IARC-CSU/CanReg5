@@ -39,14 +39,14 @@ import org.w3c.dom.Document;
  */
 public class GlobalToolBox {
 
-    private Document doc;
-    private Map<String, DatabaseVariablesListElement> standardVariableNameToDatabaseVariableListElementMap;
-    private Map<Integer, DatabaseGroupsListElement> groupIDToDatabaseGroupListElementMap;
+    private final Document doc;
+    private final Map<String, DatabaseVariablesListElement> standardVariableNameToDatabaseVariableListElementMap;
+    private final Map<Integer, DatabaseGroupsListElement> groupIDToDatabaseGroupListElementMap;
     // private Map<IARCStandardVariableNames, String> mapIARCstandardVariablesVariableName;
-    private DatabaseVariablesListElement[] databaseVariablesListElements;
-    private Charset standardCharSet;
-    private Translator translator;
-    private Map<String, DatabaseVariablesListElement> databaseVariableNameToDatabaseVariableListElementMap;
+    private final DatabaseVariablesListElement[] databaseVariablesListElements;
+    private final Charset standardCharSet;
+    private final Translator translator;
+    private final Map<String, DatabaseVariablesListElement> databaseVariableNameToDatabaseVariableListElementMap;
 
     /**
      * 
@@ -140,7 +140,8 @@ public class GlobalToolBox {
     private static Map<Integer, DatabaseGroupsListElement> buildGroupMap(DatabaseGroupsListElement[] listElements) {
         Map map = new LinkedHashMap();
         for (DatabaseGroupsListElement dvle : listElements) {
-            Integer groupID = dvle.getGroupIndex();
+            Integer groupID;
+            groupID = dvle.getGroupIndex();
             if (groupID != null) {
                 map.put(groupID, dvle);
             }
@@ -206,4 +207,18 @@ public class GlobalToolBox {
     return mapIARCstandardVariablesVariableName;
     }
      */
+    
+    public int getUnknownAgeCode() {
+        int code = 999;
+        DatabaseVariablesListElement element = translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Age.toString());
+        if (element!=null){
+            int codeLenght = element.getVariableLength();
+            code = 0;
+            for (int i = 0; i<codeLenght;i++){
+                code += 9*Math.pow(10, i);
+            }
+        }
+        System.out.println("Unknown age code = "+code);
+        return code;
+    }
 }

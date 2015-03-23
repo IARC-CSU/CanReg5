@@ -54,6 +54,7 @@ public class RTableBuilder implements TableBuilderInterface {
     private String[] rScripts;
     private String[] rScriptsArguments;
     private final String R_SCRIPTS_ARGUMENTS = "r_scripts_arguments";
+    private int unknownAgeCode = Globals.DEFAULT_UNKNOWN_AGE_CODE;
 
     public RTableBuilder(String configFileName) throws FileNotFoundException {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -228,5 +229,9 @@ public class RTableBuilder implements TableBuilderInterface {
     @Override
     public boolean areThesePopulationDatasetsCompatible(PopulationDataset[] populations) {
         return true;
+    }
+    @Override
+    public void setUnknownAgeCode(int unknownAgeCode) {
+        this.unknownAgeCode = unknownAgeCode;
     }
 }

@@ -21,6 +21,7 @@ package canreg.client.analysis;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
+import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.PopulationDataset;
 import java.io.FileReader;
@@ -71,7 +72,7 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
     int numberOfAgeGroups = 21;
     int allAgeGroupsIndex = 20;
     static int unknownAgeGroupIndex = 19;
-    int unknownAgeInt = 99; // TODO: Make this dynamic!
+    int unknownAgeInt = Globals.DEFAULT_UNKNOWN_AGE_CODE;
     static double microscopicallyVerifiedTestTreshold = 1.96;
     static double mortallityIncidenceTestTreshold = 1.96;
     static int highestPopulationAgeGroup = 18;
@@ -925,5 +926,10 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
             fileTypes = list.toArray(new FileTypes[]{});
         }
         return fileTypes;
+    }
+    
+    @Override
+    public void setUnknownAgeCode(int unknownAgeCode) {
+        this.unknownAgeInt = unknownAgeCode;
     }
 }

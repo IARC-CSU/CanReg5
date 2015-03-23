@@ -24,7 +24,7 @@ import canreg.common.database.PopulationDataset;
 import java.util.LinkedList;
 
 public interface TableBuilderInterface {
-
+    
     public static String[] sexLabel = new String[]{
         java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("MALE"),
         java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("FEMALE")
@@ -79,4 +79,6 @@ public interface TableBuilderInterface {
             throws NotCompatibleDataException, TableErrorException;
 
     public boolean areThesePopulationDatasetsCompatible(PopulationDataset[] populations);
+    
+    public void setUnknownAgeCode(int unknownAgeCode);
 }

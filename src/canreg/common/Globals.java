@@ -67,9 +67,9 @@ public class Globals {
      *
      */
     static final public String FILE_SEPARATOR = System.getProperty("file.separator", ".");
-    static private String CANREG_USER_FOLDER = System.getProperty("user.home", ".");
-    static private String CANREG_SERVER_FOLDER_NAME = ".CanRegServer";
-    static private String CANREG_CLIENT_FOLDER_NAME = ".CanRegClient";
+    private static final String CANREG_USER_FOLDER = System.getProperty("user.home", ".");
+    private static final String CANREG_SERVER_FOLDER_NAME = ".CanRegServer";
+    private static final String CANREG_CLIENT_FOLDER_NAME = ".CanRegClient";
     /**
      *
      */
@@ -232,6 +232,7 @@ public class Globals {
     public static final String mustNotLookupFile = "/canreg/common/resources/lookup/MustNot.txt";
     public static String newline = System.getProperty("line.separator");
     public static boolean SHOW_GARBLER = false;
+    public static int DEFAULT_UNKNOWN_AGE_CODE = 999;
 
 
     /**

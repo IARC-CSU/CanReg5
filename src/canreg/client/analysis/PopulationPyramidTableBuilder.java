@@ -49,7 +49,7 @@ public class PopulationPyramidTableBuilder extends AbstractEditorialTableBuilder
     private String[] sexLabel;
     private Globals.StandardVariableNames[] variablesNeeded = null;
     private String populationString;
-
+    
     public PopulationPyramidTableBuilder() {
         super();
         fileTypesGenerated = new FileTypes[]{FileTypes.ps};
