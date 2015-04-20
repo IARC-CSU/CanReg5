@@ -118,7 +118,7 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
     }
 
     @Action
-    public void cancelAction() throws RemoteException, IOException{
+    public void cancelAction() {
         isPaused = true;
         if (cTask != null) {
             if (JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("REALLY_CANCEL?"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("PLEASE_CONFIRM."), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -191,9 +191,9 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
         jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jList1.setName("jList1"); // NOI18N
         jList1.setSelectedIndex(0);
-        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jList1MouseClicked(evt);
+        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList1ValueChanged(evt);
             }
         });
         jScrollPane1.setViewportView(jList1);
@@ -314,66 +314,49 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TotalProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
-    // TODO add your handling code here:
+private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
+    /** Populating Registries from default location.
+    */
+
     list = (JList) evt.getSource();
-    if ( list.getModel().getSize() > 0 ) {
-        if ( list.isSelectedIndex(list.getSelectedIndex()) ) {
-            okButton.setEnabled(true);
-        }
-        regcode = registryCodes.get(list.getSelectedIndex());
-        filepath = paths.get(list.getSelectedIndex());
-        File folder = new File(paths.get(list.getSelectedIndex()));
-        File[] fList = folder.listFiles();
-        DBSearch dbs = new DBSearch(fList);
+        if ( list.getModel().getSize() > 0 ) {
+            if ( list.isSelectedIndex(list.getSelectedIndex()) ) {
+                okButton.setEnabled(true);
+            }
 
-        int dbfile = (dbs.searchDB()) ? 1: 0;
-        int dicdb = (dbs.checkDicDB()) ? 1: 0;
-        int datdb = (dbs.checkDatDB()) ? 1: 0;
+            regcode = registryCodes.get(list.getSelectedIndex());
+            filepath = paths.get(list.getSelectedIndex());
+            debugOut("Loading: "+dlm.get(list.getSelectedIndex())+" with code: "+regcode+" from path: "+paths.get(list.getSelectedIndex()));
+            File folder = new File(paths.get(list.getSelectedIndex()));
+            File[] fList = folder.listFiles();
 
-        switch ( dbfile ) {
-            case 0:
-                JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), regcode+" DB files are missing, Please confirm.", "Missing DB Files.", JOptionPane.PLAIN_MESSAGE);
-                okButton.setEnabled(false);
-                break;
-            case 1:
-                switch ( dicdb ) {
-                    case 0:
-                        JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), regcode+" Dictionary file is not proper, Please confirm.", "Incorect Dictionary file format.", JOptionPane.PLAIN_MESSAGE);
-                        okButton.setEnabled(false);
-                        switch ( datdb ) {
-                          case 0:
-                               JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), regcode+" Data file is not proper, Please confirm.", "Incorect Data file format.", JOptionPane.PLAIN_MESSAGE);
-                               okButton.setEnabled(false);
-                               break;
-                          case 1:
-                               okButton.setEnabled(false);
-                               break;
-                        }
-                        break;
-                    case 1:
-                      switch ( datdb ) {
-                        case 0:
-                            JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), regcode+" Data file is not proper, Please confirm.", "Incorect Data file format.", JOptionPane.PLAIN_MESSAGE);
-                            okButton.setEnabled(false);
-                            break;
-                        case 1:
-                            okButton.setEnabled(true);
-                            break;
-                    }
-                    break;
+            for (File file : fList){
+                String filename = file.getName();
+                if (filename.endsWith(".db") || filename.endsWith(".DB")) {
+                   switch (filename.charAt(filename.indexOf(".") - 1)) {
+                      case 'D':
+                          dictionary = filename;
+                          debugOut("Loading Dictionary File : "+dictionary);
+                      break;
+                      case 'M':
+                          data = filename;
+                          debugOut("Loading Data File : "+data);
+                      break;
+                   }
                 }
-                break;
+            }
         }
-    }
-}//GEN-LAST:event_jList1MouseClicked
+        else {
+            debugOut("List is empty.");
+        }
+}//GEN-LAST:event_jList1ValueChanged
 
 @Action
 public void MigrationAction() {
@@ -524,52 +507,6 @@ class Progress {
     }
 }
 
-private class DBSearch {
-
-    private File[] fList;
-    private boolean searchDB = false;
-    private boolean dicDB = false;
-    private boolean datDB = false;
-    
-    DBSearch(File[] fList) {
-        this.fList = fList;
-    }
-
-    private boolean searchDB() {
-        for (File files : fList) {
-            if ( files.getName().endsWith("db") || files.getName().endsWith("DB") ) {
-                    searchDB = true;
-            }
-        }
-        return searchDB;
-    }
-
-    private boolean checkDicDB() {
-        for (File files : fList) {
-             if ( files.getName().endsWith("db") || files.getName().endsWith("DB") ) {
-                 if ( files.getName().charAt(files.getName().indexOf(".") - 1) == 'D' ) {
-                     dictionary = files.getName();
-                     dicDB = true;
-                 }
-             }
-        }
-        return dicDB;
-    }
-
-    private boolean checkDatDB() {
-        for (File files : fList) {
-             if ( files.getName().endsWith("db") || files.getName().endsWith("DB") ) {
-                 if ( files.getName().charAt(files.getName().indexOf(".") - 1) == 'M' ) {
-                     data = files.getName();
-                     datDB = true;
-                 }
-             }
-        }
-        return datDB;
-    }
-
-}
-
 public class MigrationTask extends SwingWorker<String, Progress> {
     String filename;
     Map dicimport = null;
@@ -605,7 +542,7 @@ public class MigrationTask extends SwingWorker<String, Progress> {
         boolean dataimport_status = false;
         int current = subtask;
         int lengthOfTask = 10 + r.nextInt(50); 
-
+        
         while (current <= lengthOfTask && !isCancelled()) {
             if (isPaused) {
                 try {
@@ -619,9 +556,9 @@ public class MigrationTask extends SwingWorker<String, Progress> {
 
             //dictionary conversion task
             while(!dic_status && subtask == 1) {
-                    publish(new Progress(Component.LOG, "Migrating dictionary...\n"));
-                    debugOut("Migrating dictionary...");
-                    dic_status = CanRegClientApp.getApplication().convertDictionary(cTask, filepath, dictionary, regcode);
+                publish(new Progress(Component.LOG, "Migrating dictionary...\n"));
+                debugOut("Migrating dictionary...");
+                dic_status = CanRegClientApp.getApplication().convertDictionary(cTask, filepath, dictionary, regcode);
             }
 
             //data conversion task
@@ -733,7 +670,7 @@ public class MigrationTask extends SwingWorker<String, Progress> {
   }
 
 private boolean searchSysDef(String canreg4Path) {
-    boolean defsearch = false;
+    boolean search = false;
     File canreg4=new File(canreg4Path);
     boolean exists = canreg4.exists();
 
@@ -747,13 +684,13 @@ private boolean searchSysDef(String canreg4Path) {
              for (File file : fList){
                   String filename = file.getName();
                   if (filename.endsWith(".def") || filename.endsWith(".DEF")) {
-                      defsearch = true;
+                      search = true;
                   }
              }
          }
       }
    }
-   return defsearch;
+   return search;
 }
 
 private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, String> {
@@ -1134,6 +1071,4 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
     public void DoneAction() {
         this.dispose();
     }
-
-
 }

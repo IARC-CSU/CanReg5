@@ -425,9 +425,11 @@ public class Convert {
 
                 if (task != null) {
                     if(canreg.client.gui.management.CanReg4MigrationInternalFrame.isPaused) {
+                        debugOut("Paused in import");
                         task.firePropertyChange("paused", false, true);
                     }
                     if(!canreg.client.gui.management.CanReg4MigrationInternalFrame.isPaused) {
+                        debugOut("resume import");
                         task.firePropertyChange("paused", true, false);
                         task.firePropertyChange("progress", (numberOfLinesRead - 1) * 100 / linesToRead, (numberOfLinesRead) * 100 / linesToRead);
                     }
