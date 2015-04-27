@@ -25,6 +25,7 @@ package canreg.common;
  * @author ervikm
  */
 public interface CalendarCanReg {
+    
      /**
      * @return the unkownMonth
      */

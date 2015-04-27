@@ -38,14 +38,14 @@ import java.util.logging.Logger;
  */
 public class ConversionICDO3toICD10 implements ConversionInterface {
 
-    private static ConversionName conversionName = ConversionName.ICDO3toICD10;
-    private static StandardVariableNames[] variablesNeeded = new StandardVariableNames[]{
+    private static final ConversionName conversionName = ConversionName.ICDO3toICD10;
+    private static final StandardVariableNames[] variablesNeeded = new StandardVariableNames[]{
         StandardVariableNames.Sex,
         StandardVariableNames.Topography,
         StandardVariableNames.Morphology,
         StandardVariableNames.Behaviour
     };
-    private static StandardVariableNames[] variablesCreated = new StandardVariableNames[]{
+    private static final StandardVariableNames[] variablesCreated = new StandardVariableNames[]{
         StandardVariableNames.ICD10
     };
     /**
