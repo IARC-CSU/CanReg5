@@ -74,7 +74,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="TotalProgressBar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane2" pref="184" max="32767" attributes="0"/>
+              <Component id="jScrollPane2" pref="200" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -175,7 +175,7 @@
                     </Property>
                   </Properties>
                   <Events>
-                    <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="jList1ValueChanged"/>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jList1MouseClicked"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -259,7 +259,6 @@
         <Property name="text" type="java.lang.String" resourceKey="okButton.text"/>
         <Property name="toolTipText" type="java.lang.String" resourceKey="okButton.toolTipText"/>
         <Property name="actionCommand" type="java.lang.String" resourceKey="okButton.actionCommand"/>
-        <Property name="enabled" type="boolean" value="false"/>
         <Property name="name" type="java.lang.String" value="okButton" noResource="true"/>
       </Properties>
       <AuxValues>
@@ -272,7 +271,6 @@
           <action class="canreg.client.gui.management.CanReg4MigrationInternalFrame" id="cancelAction" methodName="cancelAction"/>
         </Property>
         <Property name="text" type="java.lang.String" resourceKey="cancelButton.text"/>
-        <Property name="enabled" type="boolean" value="false"/>
         <Property name="name" type="java.lang.String" value="cancelButton" noResource="true"/>
       </Properties>
     </Component>
@@ -289,7 +287,6 @@
           <action class="canreg.client.gui.management.CanReg4MigrationInternalFrame" id="DoneAction" methodName="DoneAction"/>
         </Property>
         <Property name="text" type="java.lang.String" resourceKey="doneButton.text"/>
-        <Property name="enabled" type="boolean" value="false"/>
         <Property name="name" type="java.lang.String" value="doneButton" noResource="true"/>
       </Properties>
     </Component>
