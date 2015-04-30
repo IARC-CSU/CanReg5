@@ -1,5 +1,5 @@
-#LyX 2.0 created this file. For more info see http://www.lyx.org/
-\lyxformat 413
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
 \begin_document
 \begin_header
 \textclass report
@@ -12,13 +12,13 @@
 \font_roman default
 \font_sans default
 \font_typewriter default
+\font_math auto
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
-
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -29,15 +29,24 @@
 \use_hyperref false
 \papersize default
 \use_geometry false
-\use_amsmath 1
-\use_esint 1
-\use_mhchem 1
-\use_mathdots 1
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
 \cite_engine basic
+\cite_engine_type default
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
 \suppress_date false
+\justification true
 \use_refstyle 0
 \index Index
 \shortcut idx
@@ -61,7 +70,7 @@
 \begin_body
 
 \begin_layout Title
-CanReg 5 Future Improvements
+CanReg Future Improvements
 \end_layout
 
 \begin_layout Author
@@ -88,7 +97,7 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-This document is a road map for the development of CanReg5.
+This document is a road map for the development of CanReg.
 \end_layout
 
 \begin_layout Part*
@@ -110,10 +119,22 @@ Data Entry related
 Improve detection of changes to a record.
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Logged?
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Only one save button for all records for a patient?
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Not sure that is a good idea...
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Implement shortcuts in the data entry form:
 \end_layout
@@ -349,20 +370,46 @@ Detect duplicate variable names
 Possibility to change the path of the database/other system variables.
 \end_layout
 
+\begin_layout Itemize
+Run as a service
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Using Apache Commons (
+\begin_inset CommandInset href
+LatexCommand href
+target "https://commons.apache.org/proper/commons-daemon/index.html"
+
+\end_inset
+
+) or 
+\begin_inset Quotes eld
+\end_inset
+
+The Java Service Wrapper
+\begin_inset Quotes erd
+\end_inset
+
+(
+\begin_inset CommandInset href
+LatexCommand href
+target "http://wrapper.tanukisoftware.com/doc/english/introduction.html"
+
+\end_inset
+
+) ?
+\end_layout
+
+\end_deeper
 \begin_layout Section*
 Pending bugs
 \end_layout
 
 \begin_layout Itemize
-Bug in R script:
+None known
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-drops cases when highest age group cutoff < 85?
-\end_layout
-
-\end_deeper
 \begin_layout Section*
 (Computer) Code related improvements
 \end_layout
@@ -418,9 +465,19 @@ Check Status.
 \end_layout
 
 \begin_layout Itemize
-Person Search Status.
+Person Search Status
 \end_layout
 
+\begin_layout Itemize
+TNM
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Specialized form?
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Itemize
 The possibility to select premade dictionaries during set up?
@@ -569,34 +626,6 @@ Format?
 \end_layout
 
 \end_deeper
-\begin_layout Itemize
-Export as HTML+JS with help of graph libraries?
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-http://d3js.org
-\end_layout
-
-\begin_layout Itemize
-http://cyberpython.github.com/AwesomeChartJS/
-\end_layout
-
-\begin_layout Itemize
-http://code.google.com/p/flot/
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Launch a web server and serve a live view of the databaset?
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Using Spark? http://www.sparkjava.com/index.html
-\end_layout
-
-\end_deeper
 \begin_layout Section*
 Management related
 \end_layout
@@ -641,6 +670,54 @@ Limitations: only A-Z
 \end_layout
 
 \end_deeper
+\end_deeper
+\begin_layout Part*
+Proposals for CanReg 6.0
+\end_layout
+
+\begin_layout Standard
+Ideas/fixes for CanReg 6.0.
+\end_layout
+
+\begin_layout Section*
+General
+\end_layout
+
+\begin_layout Itemize
+Web based data entry
+\end_layout
+
+\begin_layout Section*
+Analysis related
+\end_layout
+
+\begin_layout Itemize
+Export as HTML+JS with help of graph libraries?
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+http://d3js.org
+\end_layout
+
+\begin_layout Itemize
+http://cyberpython.github.com/AwesomeChartJS/
+\end_layout
+
+\begin_layout Itemize
+http://code.google.com/p/flot/
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Launch a web server and serve a live view of the databaset?
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Using Spark? http://www.sparkjava.com/index.html
+\end_layout
+
 \end_deeper
 \end_body
 \end_document
