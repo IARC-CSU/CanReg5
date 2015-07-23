@@ -20,6 +20,7 @@
 
 package canreg.common;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class GregorianCalendarCanReg extends GregorianCalendar implements CalendarCanReg  {
@@ -27,6 +28,17 @@ public class GregorianCalendarCanReg extends GregorianCalendar implements Calend
     private boolean unknownDay = false;
     private boolean unknownYear = false;
 
+        /**
+     * @param cal
+
+     */
+    public GregorianCalendarCanReg(Calendar cal) {
+        super();
+        this.setTime(cal.getTime());
+    }
+    public GregorianCalendarCanReg() {
+        super();
+    }
     /**
      * @return the unkownMonth
      */
@@ -73,5 +85,14 @@ public class GregorianCalendarCanReg extends GregorianCalendar implements Calend
     @Override
     public void setUnknownYear(boolean unknownYear) {
         this.unknownYear = unknownYear;
+    }
+    
+    @Override
+    public GregorianCalendarCanReg clone() {
+        GregorianCalendarCanReg newDate = new GregorianCalendarCanReg(this);
+        newDate.setUnknownDay(unknownDay);
+        newDate.setUnkownMonth(unkownMonth);
+        newDate.setUnknownYear(unknownYear);
+        return newDate;
     }
 }
