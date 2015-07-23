@@ -130,7 +130,7 @@ public class CheckAgeIncidenceDateBirthDate extends CheckInterface {
 
             // System.out.println("Calculated age:"+ calculatedAge);
 
-            if (calculatedAge < 0) {
+            if (calculatedAge + allowedDifference < 0) {
                 result.setMessage("Incidence date before birth date.");
                 result.setResultCode(CheckResult.ResultCode.Invalid);
                 return result;
