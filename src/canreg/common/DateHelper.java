@@ -1,23 +1,22 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015 International Agency for Research on Cancer
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
  */
-
 package canreg.common;
 
 import java.text.DecimalFormat;
@@ -198,8 +197,8 @@ public class DateHelper {
         return newString;
     }
 
-    public static long daysBetween(Calendar startDate, Calendar endDate) {
-        Calendar date = (Calendar) startDate.clone();
+    public static long daysBetween(GregorianCalendarCanReg startDate, GregorianCalendarCanReg endDate) {
+        GregorianCalendarCanReg date = (GregorianCalendarCanReg) startDate.clone();
         long daysBetween = 0;
         while (date.before(endDate) || date.equals(endDate)) {
             date.add(Calendar.DAY_OF_MONTH, 1);
@@ -208,8 +207,10 @@ public class DateHelper {
         return daysBetween - 1;
     }
 
-    public static long yearsBetween(Calendar startDate, Calendar endDate) {
-        Calendar date = (Calendar) startDate.clone();
+    public static long yearsBetween(GregorianCalendarCanReg startDate, GregorianCalendarCanReg endDate) {
+        startDate = correctUnknown(startDate);
+        endDate = correctUnknown(endDate);
+        GregorianCalendarCanReg date = startDate.clone();
         long yearsBetween = 0;
         while (date.before(endDate) || date.equals(endDate)) {
             date.add(Calendar.YEAR, 1);
@@ -218,11 +219,29 @@ public class DateHelper {
         return yearsBetween - 1;
     }
 
+    public static GregorianCalendarCanReg correctUnknown(GregorianCalendarCanReg date) {
+        GregorianCalendarCanReg newDate = date.clone();
+        // for calculations "correct unknown"
+        if (date.isUnknownMonth()) {
+            // Set month to July
+            date.set(Calendar.MONTH, 7 - 1);
+            date.setUnkownMonth(false);
+            // And day to first
+            date.set(Calendar.DAY_OF_MONTH, 1);
+            date.setUnknownDay(false);
+        } else if (date.isUnknownDay()) {
+            // Set day to mid-month
+            date.set(Calendar.DAY_OF_MONTH, 15);
+            date.setUnknownDay(false);
+        }
+        return date;
+    }
+
     public static Calendar parseTimestamp(String timestamp, String dateFormat, Locale locale) throws ParseException {
         /*
          ** we specify Locale.US since months are in english
          */
-        if (locale == null){
+        if (locale == null) {
             locale = Locale.getDefault();
         }
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, locale);
