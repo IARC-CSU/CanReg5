@@ -125,7 +125,8 @@ public class CheckDateOfLastContact extends CheckInterface {
             }
 
             // check for todays date
-            calculatedDifference = DateHelper.yearsBetween(dlc, Calendar.getInstance());
+            GregorianCalendarCanReg today = new GregorianCalendarCanReg(Calendar.getInstance());
+            calculatedDifference = DateHelper.yearsBetween(dlc, today);
             if (calculatedDifference < 0) {
                 result.setMessage("Date of last contact after todays date.");
                 result.setResultCode(CheckResult.ResultCode.Invalid);
