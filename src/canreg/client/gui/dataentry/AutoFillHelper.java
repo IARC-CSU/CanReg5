@@ -23,6 +23,7 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DateHelper;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.GregorianCalendarCanReg;
 import canreg.common.database.DatabaseRecord;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -63,8 +64,8 @@ class AutoFillHelper {
                 }
 
                 if (birthValue != null && incValue != null) {
-                    Calendar birthDate;
-                    Calendar incDate;
+                    GregorianCalendarCanReg birthDate;
+                    GregorianCalendarCanReg incDate;
                     try {
                         birthDate = DateHelper.parseDateStringToGregorianCalendarCanReg(birthValue.toString(), Globals.DATE_FORMAT_STRING);
                         incDate = DateHelper.parseDateStringToGregorianCalendarCanReg(incValue.toString(), Globals.DATE_FORMAT_STRING);
