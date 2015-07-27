@@ -16,7 +16,7 @@ Changelog
 5.00.34
 - Fixed (Temporarily) the Age-Specific Time Trends script. (It now computes rates/trends for age groups >=40 and for all sites together only)
 - Fixed a bug where some non-Latin characters were not exported correctly, but showed up as question-marks. Now properly implemented as unicode (UTF-8).
-- Fixed a bug related to import of patients with multipe tumours.
+- Fixed a bug related to import of patients with multiple tumours.
 - Turkish translation updated.
 - Other minor fixes.
 
