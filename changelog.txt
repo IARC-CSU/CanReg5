@@ -1,5 +1,15 @@
 Changelog
 
+5.00.36
+- Fixed a bug occurring in some tables if the decimal point was not '.' (ie. Russian locale.)
+- Saving frequency tables now also produces pivot tables.
+- Hid "Other" age group structure button.
+- Unknown age code is now dynamic.
+- DLC check now with improved handling of unknown dates.
+- Allow a lenience for a date being prior to another date in the case of unknown dates.
+- DateHelper function "years between" two dates now takes better into account unknown dates.
+- Other small fixes.
+
 5.00.35
 - Fixed a bug in the import of datasets split in three tables where sometimes not all cases were imported.
 
