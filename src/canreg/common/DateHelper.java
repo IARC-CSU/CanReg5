@@ -198,25 +198,41 @@ public class DateHelper {
     }
 
     public static long daysBetween(GregorianCalendarCanReg startDate, GregorianCalendarCanReg endDate) {
+        int sign = 1;
+        if (startDate.after(endDate)){
+            GregorianCalendarCanReg tempDate = startDate;
+            startDate = endDate;
+            endDate = tempDate;
+            sign = -1;
+        }
         GregorianCalendarCanReg date = (GregorianCalendarCanReg) startDate.clone();
         long daysBetween = 0;
-        while (date.before(endDate) || date.equals(endDate)) {
+        while (date.compareTo(endDate)<=0) {
             date.add(Calendar.DAY_OF_MONTH, 1);
             daysBetween++;
         }
-        return daysBetween - 1;
+        return sign * (daysBetween - 1);
     }
 
     public static long yearsBetween(GregorianCalendarCanReg startDate, GregorianCalendarCanReg endDate) {
         startDate = correctUnknown(startDate);
         endDate = correctUnknown(endDate);
+        
+        int sign = 1;
+        if (startDate.after(endDate)){
+            GregorianCalendarCanReg tempDate = startDate;
+            startDate = endDate;
+            endDate = tempDate;
+            sign = -1;
+        }
+        
         GregorianCalendarCanReg date = startDate.clone();
         long yearsBetween = 0;
-        while (date.before(endDate) || date.equals(endDate)) {
+        while (date.compareTo(endDate)<=0) {
             date.add(Calendar.YEAR, 1);
             yearsBetween++;
         }
-        return yearsBetween - 1;
+        return (yearsBetween -1) * sign;
     }
 
     public static GregorianCalendarCanReg correctUnknown(GregorianCalendarCanReg date) {
