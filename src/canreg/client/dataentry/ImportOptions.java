@@ -72,6 +72,7 @@ public class ImportOptions {
     private String reportFileName;
     private String firstNameVariableName;
     private String sexVariableName;
+    private String sourceIDVariablename;
 
     /**
      * 
@@ -243,6 +244,20 @@ public class ImportOptions {
         this.tumourIDVariablename = tumourIDVariablename;
     }
 
+        /**
+     * @return the tumourIDVariablename
+     */
+    public String getSourceIDVariablename() {
+        return sourceIDVariablename;
+    }
+
+    /**
+     * @param tumourIDVariablename the tumourIDVariablename to set
+     */
+    public void setSourceIDVariablename(String sourceIDVariablename) {
+        this.sourceIDVariablename = sourceIDVariablename;
+    }
+    
     /**
      * @return the tumourUpdateDateVariableName
      */
