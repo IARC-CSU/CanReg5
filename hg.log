@@ -1,6 +1,78 @@
-changeset:   1287:d77c66e0774c
+changeset:   1295:c1c789b8d850
 branch:      Migration Wizard
 tag:         tip
+user:        ErvikM
+date:        Fri Aug 28 11:57:27 2015 +0200
+files:       inno-settings.txt src/canreg/client/dataentry/Import.java src/canreg/client/dataentry/ImportOptions.java src/canreg/client/gui/dataentry/ImportFilesView.java src/canreg/client/gui/dataentry/ImportView.java src/canreg/client/gui/management/CanReg4MigrationInternalFrame.java
+description:
+Fixed a bug where updates to Source records were sometimes not imported.
+
+
+changeset:   1294:9cc78a2b438d
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Aug 27 14:59:58 2015 +0200
+files:       src/canreg/common/DateHelper.java src/canreg/common/qualitycontrol/CheckAgeIncidenceDateBirthDate.java src/canreg/common/qualitycontrol/CheckDateOfLastContact.java
+description:
+Fixed a bug in the Date of Last contact check introduced in the previous version.
+
+
+changeset:   1293:2fb69ccc58fb
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Jul 27 17:06:58 2015 +0200
+files:       appinfo.properties buildnumber.properties
+description:
+5.00.36
+
+
+changeset:   1292:ef3625d365c6
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Jul 27 16:55:21 2015 +0200
+files:       appinfo.properties buildnumber.properties src/canreg/client/LocalSettings.java src/canreg/client/gui/management/OptionsFrame.form src/canreg/client/gui/management/OptionsFrame.java src/canreg/client/gui/management/resources/OptionsFrame.properties src/canreg/client/gui/management/resources/OptionsFrame_tr.properties
+description:
+Removed Exportizer from the options.
+
+
+changeset:   1291:484fa25ed2d2
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Jul 27 16:34:21 2015 +0200
+files:       appinfo.properties buildnumber.properties changelog.txt doc/CanReg5-Instructions/CanReg5-Instructions.lyx doc/CanReg5-Instructions/CanReg5-Instructions.tex
+description:
+5.00.36
+
+
+changeset:   1290:4884bc16a99a
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Jul 27 16:31:54 2015 +0200
+files:       appinfo.properties buildnumber.properties inno-settings.txt version.txt
+description:
+5.00.36
+
+
+changeset:   1289:147d39b3201c
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Jul 27 16:30:56 2015 +0200
+files:       appinfo.properties buildnumber.properties changelog.txt conf/tables/DataQualityIndicators.conf hg.log inno-settings.txt src/canreg/common/Globals.java version.txt
+description:
+5.00.36
+
+
+changeset:   1288:1e727c3bd4c0
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Jul 27 16:29:53 2015 +0200
+files:       doc/CanReg5-Instructions/CanReg5-Instructions.lyx doc/CanReg5-Instructions/pivot-table.png
+description:
+Updated the handbook
+
+
+changeset:   1287:d77c66e0774c
+branch:      Migration Wizard
 user:        ErvikM
 date:        Fri Jul 24 17:31:05 2015 +0200
 files:       src/canreg/client/gui/CanRegClientView.java
