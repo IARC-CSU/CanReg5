@@ -1,5 +1,11 @@
 Changelog
 
+5.00.38BETA1
+- Improved handling of non-standard database filenames.
+- Improved error messages.
+- Escaped character in export file header
+- Other bugfixes.
+
 5.00.37
 - Fixed a bug in the Date of Last contact check introduced in the previous version.
 - Fixed a bug where updates to Source records were sometimes not imported.

@@ -1,6 +1,65 @@
-changeset:   1295:c1c789b8d850
+changeset:   1301:be2381bc796f
 branch:      Migration Wizard
 tag:         tip
+user:        ErvikM
+date:        Tue Sep 29 16:50:37 2015 +0200
+files:       appinfo.properties buildnumber.properties
+description:
+5.00.38BETA1
+
+
+changeset:   1300:6b7ed1433b96
+branch:      Migration Wizard
+user:        ErvikM
+date:        Tue Sep 29 16:50:19 2015 +0200
+files:       src/canreg/common/Globals.java
+description:
+Debug set to true for BETA build.
+
+
+changeset:   1299:e93eb39df148
+branch:      Migration Wizard
+user:        ErvikM
+date:        Tue Sep 29 16:49:51 2015 +0200
+files:       src/canreg/client/gui/management/CanReg4MigrationInternalFrame.java
+description:
+Improved handling of non-standard database filenames.
+Improved error messages.
+Other bugfixes.
+
+
+changeset:   1298:2ac94aae199c
+branch:      Migration Wizard
+user:        ErvikM
+date:        Tue Sep 29 16:48:44 2015 +0200
+files:       src/canreg/client/dataentry/Convert.java
+description:
+Escaped character in export file header
+Other bugfixes.
+
+
+changeset:   1297:fb44db13ad91
+branch:      Migration Wizard
+parent:      1296:c749f4cf375b
+parent:      1277:d2fd11477fe3
+user:        ErvikM
+date:        Wed Sep 02 15:45:02 2015 +0200
+files:       appinfo.properties buildnumber.properties doc/CanReg5-Future.lyx
+description:
+Merge
+
+
+changeset:   1296:c749f4cf375b
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Aug 31 14:54:19 2015 +0200
+files:       appinfo.properties buildnumber.properties changelog.txt doc/CanReg5-Future.lyx doc/CanReg5-Instructions/CanReg5-Instructions.lyx hg.log inno-settings.txt version.txt
+description:
+3.00.37
+
+
+changeset:   1295:c1c789b8d850
+branch:      Migration Wizard
 user:        ErvikM
 date:        Fri Aug 28 11:57:27 2015 +0200
 files:       inno-settings.txt src/canreg/client/dataentry/Import.java src/canreg/client/dataentry/ImportOptions.java src/canreg/client/gui/dataentry/ImportFilesView.java src/canreg/client/gui/dataentry/ImportView.java src/canreg/client/gui/management/CanReg4MigrationInternalFrame.java
