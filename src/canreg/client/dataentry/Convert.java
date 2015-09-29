@@ -77,6 +77,7 @@ import org.paradox.metadata.ParadoxTable;
 import org.paradox.data.TableData;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import org.paradox.data.table.value.FieldValue;
 import org.xml.sax.SAXException;
 
 public class Convert {
@@ -197,6 +198,7 @@ public class Convert {
         ResultSet rs_data;
         boolean success = false;
         int totalrowcount = 0;
+        int rowsImported = 0;
 
         String csv = filepath+Globals.FILE_SEPARATOR+regcode+".csv";
         
@@ -206,7 +208,7 @@ public class Convert {
             pconn = (ParadoxConnection) DriverManager.getConnection("jdbc:paradox:///"+filepath.replaceAll("\\\\", "/"));
             final ParadoxTable table = TableData.listTables(pconn, datafile).get(0);
             totalrowcount = table.getRowCount();
-
+            
             SystemDescription sd = new SystemDescription(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + ".xml");
             DatabaseVariablesListElement[] variableListElements;
             variableListElements = sd.getDatabaseVariableListElements();
@@ -224,13 +226,14 @@ public class Convert {
             }
 
             conn = DriverManager.getConnection("jdbc:paradox:///"+filepath.replaceAll("\\\\", "/"));
+
             final DatabaseMetaData meta = conn.getMetaData();
             rs_hdr = meta.getColumns("", "", datafile, "%");
 
             //Comparing variables in file and database
             while ( rs_hdr.next() ) {
                 for (String dbvar : dbvle) {
-                    if (rs_hdr.getString("COLUMN_NAME").equals(dbvar)) {
+                    if (rs_hdr.getString("COLUMN_NAME").equals(dbvar) || rs_hdr.getString("COLUMN_NAME").replaceAll(" ","_").equals(dbvar)) {
                         cols.add(rs_hdr.getString("COLUMN_NAME"));
                     }
                 }
@@ -243,15 +246,17 @@ public class Convert {
             for ( int i = 0; i < cols.size(); i++ ) {
                 strheader[i] = cols.get(i).toString();
                 if ( i == cols.size()-1) {
-                    query += strheader[i];
+                    query += "\"" + strheader[i] + "\"";
                 }
                 else {
-                    query += strheader[i]+",";
+                    query += "\"" + strheader[i]+"\",";
                 }
             }
 
             query += " FROM  \""+datafile+"\"";
 
+            debugOut(query);
+            
             writer.writeNext(strheader);
 
             int hdrsize = strheader.length;
@@ -261,6 +266,13 @@ public class Convert {
             stmt = conn.createStatement();
             rs_data = stmt.executeQuery(query);
 
+            if (Globals.DEBUG){
+                Statement stmt2 = conn.createStatement();
+                String q = "SELECT RecNum FROM \"" + datafile + "\"";
+                ResultSet rs_all_data = stmt2.executeQuery(q);
+                debugOut(rs_all_data.toString());
+            }
+           
             while (rs_data.next()) {
                 for ( int i = 1; i < rs_data.getMetaData().getColumnCount()+1; i++ ) {
                     switch (rs_data.getMetaData().getColumnType(i)) {
@@ -273,6 +285,7 @@ public class Convert {
                     }
                 }
                 writer.writeNext(strdata);
+                rowsImported++;
             }
 	    writer.close();
             success = true;
@@ -283,6 +296,7 @@ public class Convert {
         catch(IOException ex) {
             Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
         }
+        success = success && (rowsImported == totalrowcount);
         return success;
     }
 
