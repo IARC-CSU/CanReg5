@@ -567,7 +567,7 @@ private class DBSearch {
     private String getDicDB(File[] fList) {
         for (File files : fList) {
              if ( files.getName().endsWith("db") || files.getName().endsWith("DB") ) {
-                  if ( files.getName().substring(0, files.getName().lastIndexOf(".")).contains("D") ) {
+                  if ( files.getName().substring(0, files.getName().lastIndexOf(".")).endsWith("D") ) {
                      dicname = files.getName();
                  }
              }
@@ -578,7 +578,7 @@ private class DBSearch {
     private String getDatDB(File[] fList) {
         for (File files : fList) {
              if ( files.getName().endsWith("db") || files.getName().endsWith("DB") ) {
-                 if ( files.getName().substring(0, files.getName().lastIndexOf(".")).contains("M") ) {
+                 if ( files.getName().substring(0, files.getName().lastIndexOf(".")).endsWith("M") ) {
                      dataname = files.getName();
                  }
              }
@@ -642,10 +642,14 @@ public class MigrationTask extends SwingWorker<String, Progress> {
             }
 
             //data conversion task
-            while(!data_status && subtask == 2) {
+            if(subtask == 2) {
                 publish(new Progress(Component.LOG, "Migrating data...\n"));
                 debugOut("Migrating data...");
                 data_status = CanRegClientApp.getApplication().convertData(cTask, filepath, data, regcode);
+                if(!data_status) {
+                    JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration failed. Could not read CanReg4 database.", "Migration failed.", JOptionPane.PLAIN_MESSAGE);
+                    return;
+                }
             }
 
             //login to canreg system
@@ -1147,11 +1151,9 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
             Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.INFO, msg);
         }
     }
-
+    
     @Action
     public void DoneAction() {
         this.dispose();
     }
-
-
 }
