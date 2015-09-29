@@ -61,7 +61,7 @@ public class Globals {
     /**
      *
      */
-    static public boolean DEBUG = false;
+    static public boolean DEBUG = true;
     // FILES AND FOLDERS
     /**
      *
