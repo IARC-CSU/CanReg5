@@ -2367,11 +2367,15 @@ public class CanRegDAO {
             } else {
                 filterString = " AND ( " + filterString + " )";
             }
-        }
+        } 
 
         // Add the range part
         if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-            filterString += " AND ";
+            if (!filterString.isEmpty()) 
+                filterString += " AND ";
+            else { 
+                filterString += " WHERE ";
+            }
             String rangeFilterString = QueryGenerator.buildRangePart(filter);
             filterString += rangeFilterString;
         }
