@@ -376,7 +376,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         // rangeFilterPanel.setTableChooserVisible(false);
         rangeFilterPanel.setRecordPanelvisible(false);
         rangeFilterPanel.setSortByVariableShown(false);
-        rangeFilterPanel.setTablesToChooseFrom(Globals.DEFAULT_TABLE_CHOOSER_TABLE_LIST);
+        rangeFilterPanel.setTablesToChooseFrom(Globals.DEFAULT_FREQUENCY_BY_YEAR_TABLE_CHOOSER_TABLE_LIST);
         rangeFilterPanel.setSelectedTable(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME);
         resultScrollPane.setVisible(false);
 

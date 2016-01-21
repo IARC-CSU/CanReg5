@@ -692,7 +692,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
             variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length];
             variablesInTable = sourceVariablesInDB;
-        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
+        } else  { // default to returning all  if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
             LinkedList<DatabaseVariablesListElement> variablesInTableList = new LinkedList<DatabaseVariablesListElement>();
             variablesInTableList.addAll(Arrays.asList(patientVariablesInDB));
             variablesInTableList.addAll(Arrays.asList(tumourVariablesInDB));
