@@ -2362,7 +2362,11 @@ public class CanRegDAO {
         String filterString = filter.getFilterString();
 
         if (!filterString.isEmpty()) {
-            filterString = " AND ( " + filterString + " )";
+            if ((tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME))) {
+                filterString = " WHERE ( " + filterString + " )";
+            } else {
+                filterString = " AND ( " + filterString + " )";
+            }
         }
 
         // Add the range part
