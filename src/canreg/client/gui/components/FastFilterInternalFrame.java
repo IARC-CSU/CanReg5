@@ -396,6 +396,11 @@ private void variableComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//
             variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length + tumourVariablesInDB.length];
             System.arraycopy(sourceVariablesInDB, 0, variablesInTable, 0, sourceVariablesInDB.length);
             System.arraycopy(tumourVariablesInDB, 0, variablesInTable, sourceVariablesInDB.length, tumourVariablesInDB.length);
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
+            variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length + tumourVariablesInDB.length + sourceVariablesInDB.length];
+            System.arraycopy(sourceVariablesInDB, 0, variablesInTable, 0, sourceVariablesInDB.length);
+            System.arraycopy(tumourVariablesInDB, 0, variablesInTable, sourceVariablesInDB.length, tumourVariablesInDB.length);
+            System.arraycopy(patientVariablesInDB, 0, variablesInTable, sourceVariablesInDB.length + tumourVariablesInDB.length, sourceVariablesInDB.length);
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
             variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length];
             variablesInTable = patientVariablesInDB;
