@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2016  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import canreg.common.Globals;
 import canreg.common.GregorianCalendarCanReg;
 import com.toedter.calendar.JDateChooser;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,6 +62,12 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         splitPane1.setTopComponent(dateChooser);
         dateField = (JTextField) dateChooser.getDateEditor().getUiComponent();
         codeTextField = dateField;
+        codeTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                codeTextFieldKeyTyped(evt);
+            }
+        });
+        
 
         String fillInStatus = databaseListElement.getFillInStatus();
         if (fillInStatus.equalsIgnoreCase(Globals.FILL_IN_STATUS_AUTOMATIC_STRING)) {
@@ -107,6 +114,12 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(dateField, evt);
     }
 
+    private void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {                                       
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
+            transferFocusToNext();
+        }
+    } 
+    
     /**
      * 
      * @param value

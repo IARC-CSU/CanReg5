@@ -603,7 +603,7 @@ private void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         });
     }
 
-    private void transferFocusToNext() {
+    protected void transferFocusToNext() {
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
