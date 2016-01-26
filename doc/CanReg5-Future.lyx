@@ -74,7 +74,7 @@ CanReg 5 Future Improvements
 \end_layout
 
 \begin_layout Author
-By: Morten Johannes Ervik, CIN, IARC
+By: Morten Johannes Ervik, CSU, IARC
 \end_layout
 
 \begin_layout Standard
@@ -455,6 +455,10 @@ JFormDesigner? ( http://www.formdev.com/jformdesigner/ )
 \end_layout
 
 \end_deeper
+\begin_layout Itemize
+Migrate to browser based GUI?
+\end_layout
+
 \end_deeper
 \begin_layout Section*
 Data Entry related
@@ -529,6 +533,20 @@ automatic linkage proposals with patients already in the database
 \end_layout
 
 \end_deeper
+\begin_layout Itemize
+Data entry using smart phones/tablets?
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Proof of concept ready using open source tools
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Browser based data entry?
+\end_layout
+
 \begin_layout Section*
 Database related
 \end_layout
