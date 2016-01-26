@@ -51,7 +51,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
     public static String FILE_TYPES_GENERATED = "file_types_generated";
     public static String R_SCRIPTS = "r_scripts";
     public static String R_SCRIPTS_ARGUMENTS = "r_scripts_arguments";
-    private static Globals.StandardVariableNames[] variablesNeeded = {
+    private static final Globals.StandardVariableNames[] variablesNeeded = {
         Globals.StandardVariableNames.Sex,
         Globals.StandardVariableNames.Age,
         Globals.StandardVariableNames.ICD10,
@@ -60,22 +60,22 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
         Globals.StandardVariableNames.BasisDiagnosis
     };
     private FileTypes[] fileTypesGenerated;
-    private String separator = "\t";
+    private final String separator = "\t";
     private final LocalSettings localSettings;
     private final String rpath;
     private final String[] tableLabel;
     private final String[] icdGroupLabels;
     private final String[] icd10GroupDescriptions;
     private final LinkedList[] cancerGroupsLocal;
-    private static int YEAR_COLUMN = 0;
-    private static int SEX_COLUMN = 1;
-    private static int AGE_COLUMN = 2;
-    private static int ICD10_COLUMN = 3;
-    private static int MORPHOLOGY_COLUMN = 4;
-    private static int BEHAVIOUR_COLUMN = 5;
-    private static int BASIS_DIAGNOSIS_COLUMN = 6;
-    private static int CASES_COLUMN = 7;
-    private int unknownAgeInt = 999;
+    private static final int YEAR_COLUMN = 0;
+    private static final int SEX_COLUMN = 1;
+    private static final int AGE_COLUMN = 2;
+    private static final int ICD10_COLUMN = 3;
+    private static final int MORPHOLOGY_COLUMN = 4;
+    private static final int BEHAVIOUR_COLUMN = 5;
+    private static final int BASIS_DIAGNOSIS_COLUMN = 6;
+    private static final int CASES_COLUMN = 7;
+    private int unknownAgeInt;
     static int numberOfAgeGroups = 21;
     static int allAgeGroupsIndex = 20;
     static int unknownAgeGroupIndex = 19;
@@ -84,6 +84,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
     private final String[] rScriptsArguments;
 
     public RTableBuilderGrouped(String configFileName) throws FileNotFoundException {
+        this.unknownAgeInt = Globals.DEFAULT_UNKNOWN_AGE_CODE;
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
         rpath = localSettings.getProperty(LocalSettings.R_PATH);
 
@@ -156,7 +157,8 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
         LinkedList<String> filesCreated = new LinkedList<String>();
         InputStream is;
 
-        List<Integer> dontCount = new LinkedList<Integer>();
+        List<Integer> dontCount;
+        dontCount = new LinkedList<Integer>();
 
         // all sites but skin?
         if (engineParameters != null) {
@@ -358,5 +360,10 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
     @Override
     public boolean areThesePopulationDatasetsCompatible(PopulationDataset[] populations) {
         return true;
+    }
+    
+    @Override
+    public void setUnknownAgeCode(int unknownAgeCode) {
+        this.unknownAgeInt = unknownAgeCode;
     }
 }

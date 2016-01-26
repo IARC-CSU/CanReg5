@@ -1,5 +1,498 @@
-changeset:   1247:182479084b03
+changeset:   1301:be2381bc796f
+branch:      Migration Wizard
 tag:         tip
+user:        ErvikM
+date:        Tue Sep 29 16:50:37 2015 +0200
+files:       appinfo.properties buildnumber.properties
+description:
+5.00.38BETA1
+
+
+changeset:   1300:6b7ed1433b96
+branch:      Migration Wizard
+user:        ErvikM
+date:        Tue Sep 29 16:50:19 2015 +0200
+files:       src/canreg/common/Globals.java
+description:
+Debug set to true for BETA build.
+
+
+changeset:   1299:e93eb39df148
+branch:      Migration Wizard
+user:        ErvikM
+date:        Tue Sep 29 16:49:51 2015 +0200
+files:       src/canreg/client/gui/management/CanReg4MigrationInternalFrame.java
+description:
+Improved handling of non-standard database filenames.
+Improved error messages.
+Other bugfixes.
+
+
+changeset:   1298:2ac94aae199c
+branch:      Migration Wizard
+user:        ErvikM
+date:        Tue Sep 29 16:48:44 2015 +0200
+files:       src/canreg/client/dataentry/Convert.java
+description:
+Escaped character in export file header
+Other bugfixes.
+
+
+changeset:   1297:fb44db13ad91
+branch:      Migration Wizard
+parent:      1296:c749f4cf375b
+parent:      1277:d2fd11477fe3
+user:        ErvikM
+date:        Wed Sep 02 15:45:02 2015 +0200
+files:       appinfo.properties buildnumber.properties doc/CanReg5-Future.lyx
+description:
+Merge
+
+
+changeset:   1296:c749f4cf375b
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Aug 31 14:54:19 2015 +0200
+files:       appinfo.properties buildnumber.properties changelog.txt doc/CanReg5-Future.lyx doc/CanReg5-Instructions/CanReg5-Instructions.lyx hg.log inno-settings.txt version.txt
+description:
+3.00.37
+
+
+changeset:   1295:c1c789b8d850
+branch:      Migration Wizard
+user:        ErvikM
+date:        Fri Aug 28 11:57:27 2015 +0200
+files:       inno-settings.txt src/canreg/client/dataentry/Import.java src/canreg/client/dataentry/ImportOptions.java src/canreg/client/gui/dataentry/ImportFilesView.java src/canreg/client/gui/dataentry/ImportView.java src/canreg/client/gui/management/CanReg4MigrationInternalFrame.java
+description:
+Fixed a bug where updates to Source records were sometimes not imported.
+
+
+changeset:   1294:9cc78a2b438d
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Aug 27 14:59:58 2015 +0200
+files:       src/canreg/common/DateHelper.java src/canreg/common/qualitycontrol/CheckAgeIncidenceDateBirthDate.java src/canreg/common/qualitycontrol/CheckDateOfLastContact.java
+description:
+Fixed a bug in the Date of Last contact check introduced in the previous version.
+
+
+changeset:   1293:2fb69ccc58fb
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Jul 27 17:06:58 2015 +0200
+files:       appinfo.properties buildnumber.properties
+description:
+5.00.36
+
+
+changeset:   1292:ef3625d365c6
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Jul 27 16:55:21 2015 +0200
+files:       appinfo.properties buildnumber.properties src/canreg/client/LocalSettings.java src/canreg/client/gui/management/OptionsFrame.form src/canreg/client/gui/management/OptionsFrame.java src/canreg/client/gui/management/resources/OptionsFrame.properties src/canreg/client/gui/management/resources/OptionsFrame_tr.properties
+description:
+Removed Exportizer from the options.
+
+
+changeset:   1291:484fa25ed2d2
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Jul 27 16:34:21 2015 +0200
+files:       appinfo.properties buildnumber.properties changelog.txt doc/CanReg5-Instructions/CanReg5-Instructions.lyx doc/CanReg5-Instructions/CanReg5-Instructions.tex
+description:
+5.00.36
+
+
+changeset:   1290:4884bc16a99a
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Jul 27 16:31:54 2015 +0200
+files:       appinfo.properties buildnumber.properties inno-settings.txt version.txt
+description:
+5.00.36
+
+
+changeset:   1289:147d39b3201c
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Jul 27 16:30:56 2015 +0200
+files:       appinfo.properties buildnumber.properties changelog.txt conf/tables/DataQualityIndicators.conf hg.log inno-settings.txt src/canreg/common/Globals.java version.txt
+description:
+5.00.36
+
+
+changeset:   1288:1e727c3bd4c0
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Jul 27 16:29:53 2015 +0200
+files:       doc/CanReg5-Instructions/CanReg5-Instructions.lyx doc/CanReg5-Instructions/pivot-table.png
+description:
+Updated the handbook
+
+
+changeset:   1287:d77c66e0774c
+branch:      Migration Wizard
+user:        ErvikM
+date:        Fri Jul 24 17:31:05 2015 +0200
+files:       src/canreg/client/gui/CanRegClientView.java
+description:
+Hid the "Migration Wizard" from the menus -- for now.
+
+
+changeset:   1286:5fcf1b1622a9
+branch:      Migration Wizard
+user:        ErvikM
+date:        Fri Jul 24 14:22:24 2015 +0200
+files:       src/canreg/client/gui/resources/CanRegClientView.properties
+description:
+Added a BETA-label to the migration wizard.
+
+
+changeset:   1285:4ad44f1d2361
+branch:      Migration Wizard
+user:        ErvikM
+date:        Fri Jul 24 14:19:31 2015 +0200
+files:       src/canreg/client/analysis/AbstractEditorialTableBuilder.java
+description:
+Formatting.
+
+
+changeset:   1284:4094a9674e11
+branch:      Migration Wizard
+user:        ErvikM
+date:        Fri Jul 24 14:18:42 2015 +0200
+files:       src/canreg/client/gui/dataentry/AutoFillHelper.java
+description:
+Calendar is now locked to the CanReg-improved Gregorian Calendar.
+
+
+changeset:   1283:78f785b44d08
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Jul 23 15:17:54 2015 +0200
+files:       src/canreg/common/DateHelper.java
+description:
+DateHelper function "years between" two dates now takes better into account unknown dates.
+Correct Unknown implemented as a helper function.
+
+
+changeset:   1282:b057dea786d8
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Jul 23 15:16:52 2015 +0200
+files:       src/canreg/common/qualitycontrol/CheckDateOfLastContact.java
+description:
+DLC check now takes into account unknown dates.
+
+
+changeset:   1281:62c97c694e1b
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Jul 23 15:16:16 2015 +0200
+files:       src/canreg/common/qualitycontrol/CheckAgeIncidenceDateBirthDate.java
+description:
+Allow a lenience for a date being prior to another date in the case of unknown dates.
+
+
+changeset:   1280:b9df87391526
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Jul 23 15:15:13 2015 +0200
+files:       src/canreg/common/GregorianCalendarCanReg.java
+description:
+Implemented a proper clone function.
+Added a new constructor based on a Calendar object.
+
+
+changeset:   1279:dad3b15768ec
+branch:      Migration Wizard
+user:        ErvikM
+date:        Tue Jul 21 10:50:22 2015 +0200
+files:       src/canreg/client/gui/dataentry/PDSEditorInternalFrame.java
+description:
+Hid "Other" age group structure button.
+
+
+changeset:   1278:1c9d1e2e48f8
+branch:      Migration Wizard
+parent:      1275:cd4a45eeb74d
+user:        Hemant Divar <hemant.dhivar@gmail.com>
+date:        Thu Apr 30 12:48:11 2015 +0530
+files:       src/canreg/client/dataentry/Convert.java src/canreg/client/gui/management/CanReg4MigrationInternalFrame.form src/canreg/client/gui/management/CanReg4MigrationInternalFrame.java
+description:
+Updated Handling for DB files for missing and incorrect file name format before migration.
+
+
+changeset:   1277:d2fd11477fe3
+branch:      Migration Wizard
+user:        Hemant Divar <hemant.dhivar@gmail.com>
+date:        Thu Apr 30 12:48:11 2015 +0530
+files:       src/canreg/client/dataentry/Convert.java src/canreg/client/gui/management/CanReg4MigrationInternalFrame.form src/canreg/client/gui/management/CanReg4MigrationInternalFrame.java
+description:
+Updated Handling for DB files for missing and incorrect file name format before migration.
+
+
+changeset:   1276:d697f6fdc9ec
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Apr 30 11:05:35 2015 +0200
+files:       appinfo.properties buildnumber.properties doc/CanReg5-Future.lyx
+description:
+Future doc updated.
+
+
+changeset:   1275:cd4a45eeb74d
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Apr 27 14:16:38 2015 +0200
+files:       src/canreg/client/analysis/Tools.java src/canreg/common/CalendarCanReg.java src/canreg/common/conversions/ConversionICDO3toICD10.java
+description:
+Minor changes.
+
+
+changeset:   1274:cbef4e869d5a
+branch:      Migration Wizard
+parent:      1273:20f389af19f6
+parent:      1272:e7fcd2588ae5
+user:        ErvikM
+date:        Mon Apr 20 11:21:07 2015 +0200
+description:
+Merge
+
+
+changeset:   1273:20f389af19f6
+branch:      Migration Wizard
+parent:      1271:d5821bfc6108
+user:        ErvikM
+date:        Mon Apr 20 11:20:47 2015 +0200
+files:       src/canreg/client/dataentry/Convert.java src/canreg/client/gui/management/CanReg4MigrationInternalFrame.form src/canreg/client/gui/management/CanReg4MigrationInternalFrame.java
+description:
+Backed out changeset: d5821bfc6108
+
+
+changeset:   1272:e7fcd2588ae5
+branch:      Migration Wizard
+parent:      1270:808ce2490225
+user:        ErvikM
+date:        Mon Apr 20 11:18:46 2015 +0200
+files:       appinfo.properties buildnumber.properties
+description:
+5.00.36beta4
+
+
+changeset:   1271:d5821bfc6108
+branch:      Migration Wizard
+user:        Hemant Divar <hemant.dhivar@gmail.com>
+date:        Thu Apr 16 15:58:29 2015 +0530
+files:       src/canreg/client/dataentry/Convert.java src/canreg/client/gui/management/CanReg4MigrationInternalFrame.form src/canreg/client/gui/management/CanReg4MigrationInternalFrame.java
+description:
+Handled DB files for missing and incorrect file format before migration.
+
+
+changeset:   1270:808ce2490225
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Apr 20 11:08:45 2015 +0200
+files:       appinfo.properties buildnumber.properties inno-settings.txt src/canreg/client/gui/analysis/ExportReportInternalFrame.java version.txt
+description:
+Properly handles null values in the DB.
+
+
+changeset:   1269:fb94baff0f85
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Mar 23 16:25:46 2015 +0100
+files:       src/canreg/client/analysis/AbstractEditorialTableBuilder.java src/canreg/client/analysis/CasesByAgeGroupChartTableBuilder.java src/canreg/client/analysis/PopulationPyramidTableBuilder.java src/canreg/client/analysis/QualityIndicatorsTableBuilder.java src/canreg/client/analysis/RTableBuilder.java src/canreg/client/analysis/RTableBuilderGrouped.java src/canreg/client/analysis/SEERPrepFileTableBuilder.java src/canreg/client/analysis/TableBuilderInterface.java src/canreg/client/analysis/TopNChartTableBuilder.java src/canreg/client/gui/analysis/TableBuilderInternalFrame.java src/canreg/common/GlobalToolBox.java src/canreg/common/Globals.java
+description:
+Unknown age code is now dynamic.
+Other fixes.
+
+
+changeset:   1268:8add2b5c20a0
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Mar 05 11:38:34 2015 +0100
+files:       src/canreg/client/gui/resources/WelcomeInternalFrame.properties
+description:
+Updated some on screen text.
+
+
+changeset:   1267:730f9ad824ba
+branch:      Migration Wizard
+user:        Hemant Divar <hemant.dhivar@gmail.com>
+date:        Thu Mar 05 15:10:04 2015 +0530
+files:       src/canreg/client/CanRegClientApp.java src/canreg/client/dataentry/Convert.java src/canreg/client/dataentry/Import.java src/canreg/client/gui/dataentry/ImportView.form src/canreg/client/gui/dataentry/ImportView.java src/canreg/client/gui/management/CanReg4MigrationInternalFrame.form src/canreg/client/gui/management/CanReg4MigrationInternalFrame.java src/canreg/client/gui/management/resources/CanReg4MigrationInternalFrame.properties
+description:
+UI is blocked to disallow more than one migration task simultaneously, Migration stops completely when cancel button is clicked, Multiple migration is now possible
+
+
+changeset:   1266:67f629b60e1c
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Mar 05 11:05:56 2015 +0100
+files:       .hgignore
+description:
+Updated .hgignore
+
+
+changeset:   1265:9b454d281fbb
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Mar 05 11:05:35 2015 +0100
+files:       nbproject/private/private.xml
+description:
+Forget private.xml.
+
+
+changeset:   1264:9088191f113c
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Mar 05 10:59:25 2015 +0100
+files:       appinfo.properties buildnumber.properties inno-settings.txt src/canreg/client/gui/analysis/FrequenciesByYearInternalFrame.java src/canreg/client/gui/components/VariablesChooserPanel.java src/canreg/common/DatabaseDictionaryListElement.java src/canreg/server/database/CanRegDAO.java version.txt
+description:
+Saving frequency tables now also produces pivot tables.
+Other small fixes.
+
+
+changeset:   1263:219b782abab3
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Feb 09 10:50:55 2015 +0100
+files:       appinfo.properties buildnumber.properties nbproject/build-impl.xml nbproject/genfiles.properties nbproject/jnlp-impl.xml nbproject/jnlp-impl_backup.xml nbproject/private/private.properties nbproject/private/private.xml src/canreg/client/CanRegClientApp.java src/canreg/client/DistributedTableDataSourceClient.java src/canreg/client/LocalSettings.java src/canreg/client/LockFile.java src/canreg/client/ServerDescription.java src/canreg/client/analysis/AbstractEditorialTableBuilder.java src/canreg/client/analysis/AgeSpecificCasesPerHundredThousandTableBuilder.java src/canreg/client/analysis/AgeSpecificCasesTableBuilder.java src/canreg/client/analysis/CancerCasesCount.java src/canreg/client/analysis/CasesByAgeGroupChartTableBuilder.java src/canreg/client/analysis/ConfigFields.java src/canreg/client/analysis/ConfigFieldsReader.java src/canreg/client/analysis/DescriptionReader.java src/canreg/client/analysis/EditorialTableTools.java src/canreg/client/analysis/FieldDescription.java src/canreg/client/analysis/FieldDescriptionReader.java src/canreg/client/analysis/FileWriterInterface.java src/canreg/client/analysis/FixedWidthFileWriter.java src/canreg/client/analysis/JChartTableBuilderInterface.java src/canreg/client/analysis/NotCompatibleDataException.java src/canreg/client/analysis/PopulationPyramidTableBuilder.java src/canreg/client/analysis/QualityIndicatorsTableBuilder.java src/canreg/client/analysis/RFileBuilder.java src/canreg/client/analysis/RTableBuilder.java src/canreg/client/analysis/RTableBuilderGrouped.java src/canreg/client/analysis/SEERPrepFileTableBuilder.java src/canreg/client/analysis/TableBuilderFactory.java src/canreg/client/analysis/TableBuilderInterface.java src/canreg/client/analysis/TableBuilderListElement.java src/canreg/client/analysis/TableErrorException.java src/canreg/client/analysis/Tools.java src/canreg/client/analysis/TopNChartTableBuilder.java src/canreg/client/dataentry/Convert.java src/canreg/client/dataentry/DictionaryHelper.java src/canreg/client/dataentry/Import.java src/canreg/client/dataentry/ImportOptions.java src/canreg/client/dataentry/PopulationDataSetHelper.java src/canreg/client/dataentry/Relation.java src/canreg/client/gui/CanRegClientAboutBox.java src/canreg/client/gui/CanRegClientView.java src/canreg/client/gui/ChangeLogInternalFrame.java src/canreg/client/gui/LatestNewsInternalFrame.java src/canreg/client/gui/LoginInternalFrame.java src/canreg/client/gui/WelcomeInternalFrame.java src/canreg/client/gui/analysis/ExportReportInternalFrame.java src/canreg/client/gui/analysis/FrequenciesByYearInternalFrame.java src/canreg/client/gui/analysis/JChartViewerInternalFrame.java src/canreg/client/gui/analysis/TableBuilderInternalFrame.java src/canreg/client/gui/analysis/TableInternalFrame.java src/canreg/client/gui/components/DateVariableEditorPanel.java src/canreg/client/gui/components/DictionaryElementChooser.java src/canreg/client/gui/components/DictionaryElementTextFilterator.java src/canreg/client/gui/components/DisplayVariablesPanel.java src/canreg/client/gui/components/FastFilterInternalFrame.java src/canreg/client/gui/components/LabelAndComboBoxJPanel.java src/canreg/client/gui/components/NavigationPanel.java src/canreg/client/gui/components/PreviewFilePanel.java src/canreg/client/gui/components/RangeFilterPanel.java src/canreg/client/gui/components/TextFieldVariableEditorPanel.java src/canreg/client/gui/components/VariableEditorGroupPanel.java src/canreg/client/gui/components/VariableEditorPanel.java src/canreg/client/gui/components/VariableEditorPanelInterface.java src/canreg/client/gui/components/VariableMappingAlternativePanel.java src/canreg/client/gui/components/VariableMappingPanel.java src/canreg/client/gui/components/VariablesAssociationPanel.java src/canreg/client/gui/components/VariablesChooserPanel.java src/canreg/client/gui/components/VariablesExportDetailsPanel.java src/canreg/client/gui/dataentry/AutoFillHelper.java src/canreg/client/gui/dataentry/BrowseInternalFrame.java src/canreg/client/gui/dataentry/EditChecksInternalFrame.java src/canreg/client/gui/dataentry/EditDictionaryInternalFrame.java src/canreg/client/gui/dataentry/ImportCompleteDictionaryInternalFrame.java src/canreg/client/gui/dataentry/ImportFilesView.java src/canreg/client/gui/dataentry/ImportView.java src/canreg/client/gui/dataentry/PDSChooserInternalFrame.java src/canreg/client/gui/dataentry/PDSEditorInternalFrame.java src/canreg/client/gui/dataentry/RecordEditor.java src/canreg/client/gui/dataentry/RecordEditorPanel.java src/canreg/client/gui/dataentry/SourcesPanel.java src/canreg/client/gui/management/BackUpInternalFrame.java src/canreg/client/gui/management/CanReg4MigrationInternalFrame.java src/canreg/client/gui/management/CanReg4PDSImporterInternalFrame.java src/canreg/client/gui/management/CanReg4SystemConverterInternalFrame.java src/canreg/client/gui/management/ComparePatientsInternalFrame.java src/canreg/client/gui/management/EditDatabaseVariableTableAssociationInternalFrame.form src/canreg/client/gui/management/EditDatabaseVariableTableAssociationInternalFrame.java src/canreg/client/gui/management/EditDatabaseVariableTableAssociationJPanel.java src/canreg/client/gui/management/FirstNameSexInternalFrame.java src/canreg/client/gui/management/InstallNewSystemInternalFrame.java src/canreg/client/gui/management/OptionsFrame.java src/canreg/client/gui/management/PersonSearchFrame.java src/canreg/client/gui/management/PersonSearchListener.java src/canreg/client/gui/management/PersonSearchVariablePanel.java src/canreg/client/gui/management/PersonSearchVariablesPanel.java src/canreg/client/gui/management/RestoreInternalFrame.java src/canreg/client/gui/management/UserManagerInternalFrame.java src/canreg/client/gui/management/systemeditor/DatabaseDictionariesPanel.java src/canreg/client/gui/management/systemeditor/DatabaseDictionaryEditorInternalFrame.java src/canreg/client/gui/management/systemeditor/DatabaseDictionaryEditorPanel.java src/canreg/client/gui/management/systemeditor/DatabaseElementPanel.java src/canreg/client/gui/management/systemeditor/DatabaseElementsPanel.java src/canreg/client/gui/management/systemeditor/DatabaseGroupEditorInternalFrame.java src/canreg/client/gui/management/systemeditor/DatabaseGroupEditorPanel.java src/canreg/client/gui/management/systemeditor/DatabaseGroupsPanel.java src/canreg/client/gui/management/systemeditor/DatabaseIndexEditorInternalFrame.java src/canreg/client/gui/management/systemeditor/DatabaseIndexEditorPanel.java src/canreg/client/gui/management/systemeditor/DatabaseIndexPanel.java src/canreg/client/gui/management/systemeditor/DatabaseVariableEditorInternalFrame.java src/canreg/client/gui/management/systemeditor/DatabaseVariableEditorPanel.java src/canreg/client/gui/management/systemeditor/DatabaseVariablesListException.java src/canreg/client/gui/management/systemeditor/DatabaseVariablesPanel.java src/canreg/client/gui/management/systemeditor/IndexedVariablePanel.java src/canreg/client/gui/management/systemeditor/ModifyDatabaseStructureInternalFrame.java src/canreg/client/gui/resources/WelcomeInternalFrame.properties src/canreg/client/gui/resources/WelcomeInternalFrame_fr.properties src/canreg/client/gui/resources/about.html src/canreg/client/gui/tools/IconHelper.java src/canreg/client/gui/tools/PrintUtilities.java src/canreg/client/gui/tools/StandardDialog.java src/canreg/client/gui/tools/UITools.java src/canreg/client/gui/tools/WaitFrame.java src/canreg/client/gui/tools/globalpopup/CopyAction.java src/canreg/client/gui/tools/globalpopup/CutAction.java src/canreg/client/gui/tools/globalpopup/DeleteAction.java src/canreg/client/gui/tools/globalpopup/MyEventQueue.java src/canreg/client/gui/tools/globalpopup/MyPopUpMenu.java src/canreg/client/gui/tools/globalpopup/PasteAction.java src/canreg/client/gui/tools/globalpopup/SelectAllAction.java src/canreg/client/management/DatabaseGarbler.java src/canreg/common/BuddhistCalendarCanReg.java src/canreg/common/CalendarCanReg.java src/canreg/common/DatabaseDictionaryListElement.java src/canreg/common/DatabaseElement.java src/canreg/common/DatabaseFilter.java src/canreg/common/DatabaseGroupsListElement.java src/canreg/common/DatabaseIndexesListElement.java src/canreg/common/DatabaseVariablesListElement.java src/canreg/common/DatabaseVariablesListElementPositionSorter.java src/canreg/common/DateHelper.java src/canreg/common/GlobalToolBox.java src/canreg/common/Globals.java src/canreg/common/GregorianCalendarCanReg.java src/canreg/common/LookUpLoader.java src/canreg/common/Pair.java src/canreg/common/PasswordService.java src/canreg/common/PersonSearchVariable.java src/canreg/common/RulesLoader.java src/canreg/common/ServerLauncher.java src/canreg/common/Tools.java src/canreg/common/TranslatableListElement.java src/canreg/common/Translation.java src/canreg/common/Translator.java src/canreg/common/conversions/CalculateAge.java src/canreg/common/conversions/ConversionICDO3toICCC3.java src/canreg/common/conversions/ConversionICDO3toICD10.java src/canreg/common/conversions/ConversionInterface.java src/canreg/common/conversions/ConversionResult.java src/canreg/common/conversions/Converter.java src/canreg/common/database/AgeGroupStructure.java src/canreg/common/database/DatabaseRecord.java src/canreg/common/database/Dictionary.java src/canreg/common/database/DictionaryEntry.java src/canreg/common/database/IncompatiblePopulationDataSetException.java src/canreg/common/database/NameSexRecord.java src/canreg/common/database/Patient.java src/canreg/common/database/PopulationDataset.java src/canreg/common/database/PopulationDatasetsEntry.java src/canreg/common/database/Source.java src/canreg/common/database/Tools.java src/canreg/common/database/Tumour.java src/canreg/common/database/User.java src/canreg/common/qualitycontrol/CheckAgeIncidenceDateBirthDate.java src/canreg/common/qualitycontrol/CheckAgeMorphology.java src/canreg/common/qualitycontrol/CheckAgeTopography.java src/canreg/common/qualitycontrol/CheckAgeTopographyMorphology.java src/canreg/common/qualitycontrol/CheckBasis.java src/canreg/common/qualitycontrol/CheckDateOfLastContact.java src/canreg/common/qualitycontrol/CheckGrade.java src/canreg/common/qualitycontrol/CheckInterface.java src/canreg/common/qualitycontrol/CheckMorphology.java src/canreg/common/qualitycontrol/CheckResult.java src/canreg/common/qualitycontrol/CheckSexMorphology.java src/canreg/common/qualitycontrol/CheckSexTopography.java src/canreg/common/qualitycontrol/CheckTopography.java src/canreg/common/qualitycontrol/CheckTopographyBehaviour.java src/canreg/common/qualitycontrol/CheckTopographyMorphology.java src/canreg/common/qualitycontrol/Checker.java src/canreg/common/qualitycontrol/DefaultMultiplePrimaryTester.java src/canreg/common/qualitycontrol/DefaultPersonSearch.java src/canreg/common/qualitycontrol/GlobalPersonSearchHandler.java src/canreg/common/qualitycontrol/MultiplePrimaryTesterInterface.java src/canreg/common/qualitycontrol/PersonSearcher.java src/canreg/exceptions/SystemUnavailableException.java src/canreg/exceptions/WrongCanRegVersionException.java src/canreg/server/CanRegLoginImpl.java src/canreg/server/CanRegLoginInterface.java src/canreg/server/CanRegLoginModule.java src/canreg/server/CanRegServerImpl.java src/canreg/server/CanRegServerInterface.java src/canreg/server/CanRegServerProxy.java src/canreg/server/DatabaseStats.java src/canreg/server/RMILoginPrincipal.java src/canreg/server/RemoteCallbackHandler.java src/canreg/server/ServerPermission.java src/canreg/server/SystemSettings.java src/canreg/server/database/CanRegDAO.java src/canreg/server/database/DistributedTableDataSourceResultSetImpl.java src/canreg/server/database/Migrator.java src/canreg/server/database/QueryGenerator.java src/canreg/server/database/RecordLockedException.java src/canreg/server/database/Relation.java src/canreg/server/database/UnknownTableException.java src/canreg/server/database/derby/Backup.java src/canreg/server/database/derby/Restore.java src/canreg/server/management/Database.java src/canreg/server/management/SystemDefinitionConverter.java src/canreg/server/management/SystemDescription.java src/canreg/server/management/UserManagerNew.java src/canreg/server/management/Variable.java src/canreg/server/security/ValidateMethodCall.java src/canreg/server/xml/DOMElements.java src/canreg/server/xml/MySAXApp.java src/canreg/server/xml/Tools.java
+description:
+Updated copyright texts.
+
+
+changeset:   1262:2aa9394320a4
+branch:      Migration Wizard
+user:        Hemant Divar <hemant.dhivar@gmail.com>
+date:        Tue Dec 09 14:30:51 2014 +0530
+files:       src/canreg/client/gui/management/EditDatabaseVariableTableAssociationInternalFrame.form src/canreg/client/gui/management/EditDatabaseVariableTableAssociationInternalFrame.java
+description:
+Displayed Variables and Tables mapping windows after user click "Ok" button.
+
+
+changeset:   1261:c955613302fb
+branch:      Migration Wizard
+user:        Hemant Divar <hemant.dhivar@gmail.com>
+date:        Tue Dec 09 14:30:41 2014 +0530
+files:       src/canreg/client/gui/management/CanReg4MigrationInternalFrame.form src/canreg/client/gui/management/CanReg4MigrationInternalFrame.java
+description:
+Displayed Variables and Tables mapping windows after user click "Ok" button.
+
+
+changeset:   1260:e05699116625
+branch:      Migration Wizard
+user:        ErvikM
+date:        Mon Dec 08 09:22:00 2014 +0100
+files:       appinfo.properties buildnumber.properties doc/CanReg5-Future.lyx nbproject/private/private.properties nbproject/private/private.xml nbproject/project.properties
+description:
+Handbook updated.
+
+
+changeset:   1259:d44dc147a3df
+branch:      Migration Wizard
+user:        ErvikM
+date:        Fri Dec 05 10:45:04 2014 +0100
+files:       src/canreg/client/CanRegClientApp.java
+description:
+Improved the exception handling and code documentation.
+
+
+changeset:   1258:fbac306492d1
+branch:      Migration Wizard
+user:        ErvikM
+date:        Fri Dec 05 10:44:33 2014 +0100
+files:       src/canreg/client/dataentry/Convert.java
+description:
+Improved the exception handling.
+
+
+changeset:   1257:747be4123167
+branch:      Migration Wizard
+user:        ErvikM
+date:        Fri Dec 05 10:43:43 2014 +0100
+files:       src/canreg/client/gui/management/resources/CanReg4MigrationInternalFrame.properties
+description:
+Updated the UI of the migration tool.
+
+
+changeset:   1256:a9e1e1e94341
+branch:      Migration Wizard
+user:        ErvikM
+date:        Fri Dec 05 10:43:10 2014 +0100
+files:       src/canreg/client/gui/management/CanReg4MigrationInternalFrame.form src/canreg/client/gui/management/CanReg4MigrationInternalFrame.java
+description:
+Updated the UI of the migration tool. Added code to detect the CR4 folder also on other drives than C.
+
+
+changeset:   1255:6f7a230b7ddc
+branch:      Migration Wizard
+parent:      1251:a3ba3d456e51
+user:        ErvikM
+date:        Wed Nov 19 11:26:23 2014 +0100
+files:       appinfo.properties buildnumber.properties nbproject/private/private.properties nbproject/project.properties src/canreg/client/CanRegClientApp.java src/canreg/client/dataentry/Convert.java src/canreg/client/dataentry/Import.java src/canreg/client/gui/CanRegClientView.form src/canreg/client/gui/CanRegClientView.java src/canreg/client/gui/dataentry/ImportView.java src/canreg/client/gui/management/CanReg4MigrationInternalFrame.form src/canreg/client/gui/management/CanReg4MigrationInternalFrame.java src/canreg/client/gui/management/resources/CanReg4MigrationInternalFrame.properties src/canreg/client/gui/resources/CanRegClientView.properties src/canreg/server/management/SystemDefinitionConverter.java
+description:
+First draft of "Migration Wizard" code from Hemant Dhivar added.
+
+
+changeset:   1254:a8fd5120bf01
+user:        ErvikM
+date:        Wed Nov 19 11:15:50 2014 +0100
+files:       appinfo.properties buildnumber.properties nbproject/private/private.properties
+description:
+Cleaning folders.
+
+
+changeset:   1253:81a6ce1863ab
+user:        ErvikM
+date:        Wed Nov 19 11:15:10 2014 +0100
+files:       nbproject/private/private.xml
+description:
+Added settingsfile again...
+
+
+changeset:   1252:6b783e5fd2f6
+user:        ErvikM
+date:        Wed Nov 19 11:14:20 2014 +0100
+files:       nbproject/private/private.xml
+description:
+Removed settings-file.
+
+
+changeset:   1251:a3ba3d456e51
+user:        ErvikM
+date:        Fri Sep 19 15:39:26 2014 +0200
+files:       appinfo.properties buildnumber.properties
+description:
+5.00.36beta1
+
+
+changeset:   1250:bba1f1c13536
+user:        ErvikM
+date:        Fri Sep 19 15:27:29 2014 +0200
+files:       appinfo.properties buildnumber.properties inno-settings.txt version.txt
+description:
+Fixed a bug occurring in some tables if the decimal point was not '.' (ie. Russian locale.)
+
+
+changeset:   1249:f3c6266b870e
+user:        ErvikM
+date:        Fri Sep 19 15:25:47 2014 +0200
+files:       src/canreg/client/analysis/RFileBuilder.java
+description:
+Fixed a bug occurring in some tables if the decimal point was not '.' (ie. Russian locale.)
+
+
+changeset:   1248:b55b969891af
+user:        ErvikM
+date:        Fri Sep 19 11:36:26 2014 +0200
+files:       appinfo.properties buildnumber.properties changelog.txt doc/CanReg5-Instructions/CanReg5-Instructions.lyx hg.log inno-settings.txt nbproject/private/private.xml version.txt
+description:
+5.00.35
+
+
+changeset:   1247:182479084b03
 user:        ErvikM
 date:        Fri Sep 12 11:34:26 2014 +0200
 files:       appinfo.properties buildnumber.properties inno-settings.txt src/canreg/common/Globals.java version.txt

@@ -77,6 +77,7 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
     private String[] icd10GroupDescriptions;
     private int numberOfCancerGroups;
     private int numberOfSexes = 2;
+
     private int DONT_COUNT = -999;
     private EnumMap<KeyCancerGroupsEnum, Integer> keyGroupsMap;
     private int otherCancerGroupsIndex;
@@ -87,6 +88,7 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
     private boolean useR = true;
     private LocalSettings localSettings;
     private String rpath;
+    private int unknownAgeInt = Globals.DEFAULT_UNKNOWN_AGE_CODE;
 
     public CasesByAgeGroupChartTableBuilder() {
         ChartTheme chartTheme = new StandardChartTheme("sansserif");
@@ -387,5 +389,9 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
         private int getMax() {
             return max;
         }
+    }
+    @Override
+    public void setUnknownAgeCode(int unknownAgeCode) {
+        this.unknownAgeInt = unknownAgeCode;
     }
 }

@@ -915,6 +915,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.WARNING, "Value: " + value, ex);
                             }
                         }
+                        if (value == null) {
+                            value = "";
+                        }
                         line.add(value.toString());
                     }
                     // the category

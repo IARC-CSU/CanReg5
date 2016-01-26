@@ -126,11 +126,11 @@ public class CheckAgeIncidenceDateBirthDate extends CheckInterface {
                     || incidenceDate.isUnknownMonth() || incidenceDate.isUnknownDay()) {
                 allowedDifference = 1;
             }
+
             long calculatedAge = DateHelper.yearsBetween(birthDate, incidenceDate);
 
             // System.out.println("Calculated age:"+ calculatedAge);
-
-            if (calculatedAge < 0) {
+            if (DateHelper.daysBetween(birthDate, incidenceDate) + allowedDifference*365 < 0) {
                 result.setMessage("Incidence date before birth date.");
                 result.setResultCode(CheckResult.ResultCode.Invalid);
                 return result;

@@ -1,19 +1,19 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015 International Agency for Research on Cancer
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
  */
@@ -21,6 +21,7 @@ package canreg.client.analysis;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
+import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.PopulationDataset;
 import java.io.FileReader;
@@ -34,6 +35,7 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 
 public abstract class AbstractEditorialTableBuilder implements TableBuilderInterface {
+
     public final String gspath;
 
     public AbstractEditorialTableBuilder() {
@@ -63,15 +65,15 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
         java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AbstractEditorialTableBuilder").getString("OCEANIA")};
     // childCancerReference[sex][age][l/u]
     static double[][][] childCancerReference = {{{12.3, 24.7}, {8.5, 15.6},
-            {8.5, 15.0}
-        }, {{9.7, 21.4}, {6.9, 12.0}, {6.8, 13.6}
-        }
+    {8.5, 15.0}
+    }, {{9.7, 21.4}, {6.9, 12.0}, {6.8, 13.6}
+    }
     };
     // Deafault number of Age groups = 0 year group + 85/5 + '85+' + unknown age + total = 21
     int numberOfAgeGroups = 21;
     int allAgeGroupsIndex = 20;
     static int unknownAgeGroupIndex = 19;
-    int unknownAgeInt = 99; // TODO: Make this dynamic!
+    int unknownAgeInt = Globals.DEFAULT_UNKNOWN_AGE_CODE;
     static double microscopicallyVerifiedTestTreshold = 1.96;
     static double mortallityIncidenceTestTreshold = 1.96;
     static int highestPopulationAgeGroup = 18;
@@ -339,13 +341,11 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
         String boxCode = new String();
 
         /* Example code
-        newpath
-        40 730 MT 40 573 LT
-        40 573 MT 196 573 LT
-        closepath
+         newpath
+         40 730 MT 40 573 LT
+         40 573 MT 196 573 LT
+         closepath
          */
-
-
         if (outLine) {
             boxCode += "newpath\n";
 
@@ -396,12 +396,11 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
         String boxCode = new String();
 
         /* Example code
-        newpath
-        40 730 MT 40 573 LT
-        40 573 MT 196 573 LT
-        closepath
+         newpath
+         40 730 MT 40 573 LT
+         40 573 MT 196 573 LT
+         closepath
          */
-
         boxCode += "newpath\n";
 
         boxCode += xy1[0] + " " + xy1[1] + " MT " + xy2[0] + " " + xy2[1]
@@ -918,12 +917,17 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
     public FileTypes[] getFileTypesGenerated() {
         // add pdf if the gsview is installed
         FileTypes[] fileTypes = fileTypesGenerated;
-        if (gspath!=null&&gspath.length()>0) {
+        if (gspath != null && gspath.trim().length() > 0) {
             LinkedList<FileTypes> list = new LinkedList();
             list.addAll(Arrays.asList(fileTypes));
             list.add(FileTypes.pdf);
             fileTypes = list.toArray(new FileTypes[]{});
         }
         return fileTypes;
+    }
+
+    @Override
+    public void setUnknownAgeCode(int unknownAgeCode) {
+        this.unknownAgeInt = unknownAgeCode;
     }
 }

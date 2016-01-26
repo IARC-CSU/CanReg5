@@ -135,7 +135,6 @@ public final class LocalSettings {
      */
     public static String R_PATH = "r_path";
     public static String GS_PATH = "gs_path";
-    public static String EXPORTIZER_PATH = "exportizer_path";
     /**
      *
      */
@@ -410,8 +409,6 @@ public final class LocalSettings {
             property = tryToFindRInstalltionOnWindows();
         } else if (key.equalsIgnoreCase(GS_PATH)) {
             property = tryToFindGSInstalltionOnWindows();
-        } else if (key.equalsIgnoreCase(EXPORTIZER_PATH)) {
-            property = tryToFindExportizerInstalltionOnWindows();
         } else if (key.equalsIgnoreCase(FONT_NAME_KEY)) {
             property = FONT_NAME_DEFAULT;
         } else if (key.equalsIgnoreCase(FONT_SIZE_KEY)) {
@@ -430,7 +427,6 @@ public final class LocalSettings {
         setProperty(BACKUP_EVERY_KEY, getDefaultProperty(BACKUP_EVERY_KEY));
         setProperty(R_PATH, getDefaultProperty(R_PATH));
         setProperty(GS_PATH, getDefaultProperty(GS_PATH));
-        setProperty(EXPORTIZER_PATH, getDefaultProperty(EXPORTIZER_PATH));
         setProperty(FONT_NAME_KEY, getDefaultProperty(FONT_NAME_KEY));
         setProperty(FONT_SIZE_KEY, getDefaultProperty(FONT_SIZE_KEY));
         settingsChanged = true;
@@ -765,37 +761,5 @@ public final class LocalSettings {
             property = temp.toUpperCase();
         }
         return property;
-    }
-
-    private String tryToFindExportizerInstalltionOnWindows() {
-        String path = "";
-        // try windows 32
-        String[] foldersToTry = new String[]{
-            Globals.FILE_SEPARATOR + "Program Files" + Globals.FILE_SEPARATOR + "Exportizer 5",
-            System.getenv("ProgramFilesW6432") + Globals.FILE_SEPARATOR + "Exportizer 5",
-            System.getenv("ProgramFiles") + Globals.FILE_SEPARATOR + "Exportizer 5",
-            System.getenv("ProgramFiles(x86)") + Globals.FILE_SEPARATOR + "Exportizer 5"
-        };
-        File folder = null;
-        long lastModified = 0;
-        for (String folderToTry : foldersToTry) {
-            folder = new File(folderToTry);
-            if (folder != null && folder.exists()) {
-                File[] files = folder.listFiles();
-                // find the newest R installation
-                for (File thisFile : files) {
-                    if (lastModified < thisFile.lastModified()) {
-                        File tempFile = new File(files[0].getPath() + Globals.FILE_SEPARATOR + "exptizer.exe");
-                        if (tempFile.exists()) {
-                            path = tempFile.getPath();
-                            lastModified = thisFile.lastModified();
-                        }
-                    }
-                }
-            }
-        }
-
-        //
-        return path;
     }
 }

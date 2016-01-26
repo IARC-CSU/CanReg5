@@ -94,6 +94,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         this.worldPopulations = worldPopulations;
         this.listener = listener;
         initComponents();
+        otherAgeGroupStructureButton.setVisible(false);
         initValues();
     }
 

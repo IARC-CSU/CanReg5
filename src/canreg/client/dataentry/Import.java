@@ -422,8 +422,8 @@ public class Import {
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
         noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientIDVariableName()));
         noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientRecordIDVariableName()));
-        // HashMap mpCodes = new HashMap();
-        String[] lineElements = null;
+
+        String[] lineElements;
         ResultCode worstResultCodeFound;
         CSVReader csvReader = null;
 
@@ -838,9 +838,6 @@ public class Import {
                         task.firePropertyChange(SOURCES, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
                     }
                     
-                    boolean needToSavePatientAgain = true;
-                    int patientDatabaseRecordID = -1;
-                    
                     // Build source part
                     Source source = new Source();
                     for (int i = 0; i < map.size(); i++) {
@@ -884,16 +881,44 @@ public class Import {
                     if (task != null) {
                         task.firePropertyChange(RECORD, 50, 75);
                     }
+                    boolean addSource = true;
+                    
                     if (tumour != null) {
                         Set<Source> sources = tumour.getSources();
-                        sources.add(source);
-                        // get the tumour...
+                        Object sourceRecordID = source.getVariable(io.getSourceIDVariablename());
+                        // look for source in sources
+                        for (Source oldSource:sources){
+                            if (oldSource.getVariable(io.getSourceIDVariablename()).equals(sourceRecordID)) {
+                                // deal with discrepancies
+                                switch (io.getDiscrepancies()) {
+                                    case ImportOptions.REJECT:
+                                        addSource = false;
+                                        break;
+                                    case ImportOptions.UPDATE:
+                                        String updateReport = updateRecord(oldSource, source);
+                                        if (updateReport.length() > 0) {
+                                            reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + Globals.newline + updateReport);
+                                        }
+                                        source = oldSource;
+                                        addSource = false;
+                                        break;
+                                    case ImportOptions.OVERWRITE:
+                                        // deleteTumour;
+                                        sources.remove(oldSource);
+                                        addSource = true;
+                                        break;
+                                }
+                            }
+                        }
+                        if (addSource) {
+                            sources.add(source);
+                        }                        
                         tumour.setSources(sources);
                         if (!io.isTestOnly()) {
                             server.editTumour(tumour);
                         }
                     } else {
-                        //implement an error report
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, "No tumour for source record.");
                     }
                     if (task != null) {
                         task.firePropertyChange(RECORD, 75, 100);

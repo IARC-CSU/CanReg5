@@ -1,5 +1,5 @@
-#LyX 2.0 created this file. For more info see http://www.lyx.org/
-\lyxformat 413
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
 \begin_document
 \begin_header
 \textclass scrbook
@@ -24,18 +24,18 @@
 \maintain_unincluded_children false
 \language english
 \language_package default
-\inputencoding latin1
+\inputencoding iso8859-1
 \fontencoding global
 \font_roman default
 \font_sans default
 \font_typewriter default
+\font_math auto
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
-
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -59,15 +59,24 @@
 \pdf_pdfusetitle true
 \papersize a4paper
 \use_geometry false
-\use_amsmath 1
-\use_esint 1
-\use_mhchem 1
-\use_mathdots 1
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
 \cite_engine basic
+\cite_engine_type default
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
 \suppress_date false
+\justification true
 \use_refstyle 0
 \index Index
 \shortcut idx
@@ -554,7 +563,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 Checking if you have the latest version of CanReg installed.
@@ -1167,7 +1176,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -1411,7 +1420,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -3723,7 +3732,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -4076,8 +4085,8 @@ To select records.
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="10" columns="2">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top" width="0">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
 <column alignment="center" valignment="top" width="75line%">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
@@ -4299,9 +4308,9 @@ If you know the exact value you want to return for at least one of the columns.
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="3" columns="2">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top" width="0">
-<column alignment="center" valignment="top" width="0">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -4456,7 +4465,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -6525,7 +6534,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -6582,7 +6591,7 @@ status collapsed
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -6658,7 +6667,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -6753,7 +6762,7 @@ status collapsed
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -6832,7 +6841,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -6904,7 +6913,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -7011,10 +7020,10 @@ reference "fig:CanReg5-chart-editor"
 
 .) 
 \begin_inset Float figure
-placement H
+placement h
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -7029,7 +7038,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -7203,7 +7212,6 @@ In SEER*Prep
 
 \begin_layout Standard
 \begin_inset Float figure
-placement h
 wide false
 sideways false
 status open
@@ -7220,7 +7228,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 SEER*Prep in action
@@ -7722,7 +7730,32 @@ Excel
  (No right-click shortcut for that is implemented yet, but you can select
  the lines you want and press Ctrl-C (on Windows and Linux) or Apple-C (on
  Mac) and paste it into other programs.
- 
+\end_layout
+
+\begin_layout Subsection
+Pivot tables
+\end_layout
+
+\begin_layout Standard
+\align left
+If you save a table with only one stratifier (selected variable) CanReg5
+ also saves a pivot table based on the data in the table.
+ Here's an example with the sex variable:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename pivot-table.png
+	width 75col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align left
 \begin_inset Newpage newpage
 \end_inset
 
@@ -8139,7 +8172,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -8224,7 +8257,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -8401,7 +8434,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -9894,7 +9927,7 @@ Note: Registries can choose to collect Date of Birth OR Age, but most choose
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -10975,7 +11008,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -11471,7 +11504,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 \begin_inset CommandInset label
@@ -13322,7 +13355,7 @@ Copyright
 \end_layout
 
 \begin_layout Standard
-© 2008-2013 International Agency for Research on Cancer World Health Organizatio
+© 2008-2015 International Agency for Research on Cancer World Health Organizatio
 n All rights reserved.
 \end_layout
 
@@ -13357,6 +13390,10 @@ Anahita Rahimi (R code for analysis)
 
 \begin_layout Itemize
 Sebastien Antoni (R code for analysis)
+\end_layout
+
+\begin_layout Itemize
+Hemant Dhivar (Migration Tool)
 \end_layout
 
 \begin_layout Subsection
@@ -13541,7 +13578,11 @@ Cankut Yakut, Izmir Cancer Registry, Turkey
 \end_layout
 
 \begin_layout Itemize
-Antoine Buemi, Registre des Cancers du Haut-Rhin
+Antoine Buemi, Registre des Cancers du Haut-Rhin, France
+\end_layout
+
+\begin_layout Itemize
+Gonçalo Forjaz, Azores Cancer Registry, Portugal
 \end_layout
 
 \begin_layout Subsection

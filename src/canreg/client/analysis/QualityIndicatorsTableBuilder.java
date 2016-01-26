@@ -46,16 +46,17 @@ public class QualityIndicatorsTableBuilder extends AbstractEditorialTableBuilder
         Globals.StandardVariableNames.Morphology,
         Globals.StandardVariableNames.Behaviour,
         Globals.StandardVariableNames.BasisDiagnosis};
+    private final int unknownAgeCode = Globals.DEFAULT_UNKNOWN_AGE_CODE;
     private static int YEAR_COLUMN = 0;
     private static int SEX_COLUMN = 1;
     private static int AGE_COLUMN = 2;
     private static int ICD10_COLUMN = 3;
     private static int MORPHOLOGY_COLUMN = 4;
     private static int BEHAVIOUR_COLUMN = 5;
-    private static int BASIS_DIAGNOSIS_COLUMN = 6;
-    private static int CASES_COLUMN = 7;
+    private static final int BASIS_DIAGNOSIS_COLUMN = 6;
+    private static final int CASES_COLUMN = 7;
     private double[][] standardPopulationArray;
-    private static FileTypes[] fileTypesGenerated = {
+    private static final FileTypes[] fileTypesGenerated = {
         FileTypes.ps
     };
     /*

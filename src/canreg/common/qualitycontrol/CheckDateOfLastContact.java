@@ -115,9 +115,10 @@ public class CheckDateOfLastContact extends CheckInterface {
             if (incidenceDate.isUnknownMonth() || incidenceDate.isUnknownDay()) {
                 allowedDifference = 1;
             }
-            long calculatedDifference = DateHelper.yearsBetween(incidenceDate, dlc);
+            long calculatedDifference = DateHelper.daysBetween(incidenceDate, dlc);
 
-            // System.out.println("Calculated age:"+ calculatedAge);
+            System.out.println("Calculated differnce:"+ calculatedDifference);
+                        
             if (calculatedDifference < 0) {
                 result.setMessage("Date of last contact before incidence date.");
                 result.setResultCode(CheckResult.ResultCode.Invalid);
@@ -125,7 +126,8 @@ public class CheckDateOfLastContact extends CheckInterface {
             }
 
             // check for todays date
-            calculatedDifference = DateHelper.yearsBetween(dlc, Calendar.getInstance());
+            GregorianCalendarCanReg today = new GregorianCalendarCanReg(Calendar.getInstance());
+            calculatedDifference = DateHelper.daysBetween(dlc, today);
             if (calculatedDifference < 0) {
                 result.setMessage("Date of last contact after todays date.");
                 result.setResultCode(CheckResult.ResultCode.Invalid);

@@ -973,6 +973,7 @@ public final class CanRegClientView extends FrameView {
         }
 
         garbleDatabaseMenuItem.setVisible(management && Globals.SHOW_GARBLER);
+        canreg4migrationMenuItem.setVisible(DEBUG);
 
         installRPackagesMenuItem.setVisible(new File(Globals.R_INSTALL_PACKAGES_SCRIPT).exists());
     }
@@ -1734,9 +1735,9 @@ public final class CanRegClientView extends FrameView {
     private int busyIconIndex = 0;
     private JDialog aboutBox;
     private Globals.UserRightLevels userRightsLevel = Globals.UserRightLevels.NOT_LOGGED_IN;
-    private static boolean DEBUG = Globals.DEBUG;
+    private static final boolean DEBUG = Globals.DEBUG;
     LocalSettings localSettings;
-    private static int xOffset = 30, yOffset = 30;
-    private static int toolBarHeight = 80;
+    private static final int xOffset = 30, yOffset = 30;
+    private static final int toolBarHeight = 80;
     private BrowseInternalFrame browseInternalFrame;
 }

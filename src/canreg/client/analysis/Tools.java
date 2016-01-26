@@ -46,7 +46,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -324,6 +323,7 @@ public class Tools {
      * @param populations
      * @param separator
      * @throws IOException
+     * @throws canreg.common.database.IncompatiblePopulationDataSetException
      */
     public static void writePopulationsToFile(
             BufferedWriter popoutput,
@@ -539,18 +539,20 @@ public class Tools {
             Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
         } catch (java.util.NoSuchElementException ex) {
             Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
-            BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
-            String errorMessage = convertStreamToString(errorStream);
-            System.out.println(errorMessage);
-            throw new TableErrorException("R says:\n \"" + errorMessage + "\"");
+            if (pr != null) {
+                BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
+                String errorMessage = convertStreamToString(errorStream);
+                System.out.println(errorMessage);
+                throw new TableErrorException("R says:\n \"" + errorMessage + "\"");
+            }      
         } catch (IOException ex) {
             Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            System.out.println(pr.exitValue());
+            if (pr != null) {
+                System.out.println(pr.exitValue());
+            }
         }
-
         return filesCreated;
-
     }
 
     public static double sumUpTheRest(LinkedList<CancerCasesCount> theRestList, List<Integer> dontCountIndexes) {

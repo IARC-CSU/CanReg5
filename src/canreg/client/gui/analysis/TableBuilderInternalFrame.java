@@ -1074,7 +1074,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 populations = getSelectedPopulations();
             }
             PopulationDataset[] standardPopulations = new PopulationDataset[populations.length];
-
+            tableBuilder.setUnknownAgeCode(CanRegClientApp.getApplication().getGlobalToolBox().getUnknownAgeCode());
+            
             if (tableBuilder.areThesePopulationDatasetsCompatible(populations)) {
                 String fileName = null;
                 // Choose file name;

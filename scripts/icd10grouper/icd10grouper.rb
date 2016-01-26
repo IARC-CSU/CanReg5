@@ -131,7 +131,11 @@ in_file.each do |line|
   
   map = HashMap.new
   map.put(Globals::StandardVariableNames::Sex, line[options[:sex_column]])
-  map.put(Globals::StandardVariableNames::Topography, line[options[:top_column]].delete("C"))
+  top = line[options[:top_column]].delete("C")
+  while top.length<3
+    top = "0" + top
+  end
+  map.put(Globals::StandardVariableNames::Topography, top)
   map.put(Globals::StandardVariableNames::Morphology, line[options[:mor_column]])
   map.put(Globals::StandardVariableNames::Behaviour, line[options[:beh_column]])
   icd10 = conversion.performConversion(map)[0].getValue

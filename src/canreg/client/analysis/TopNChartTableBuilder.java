@@ -95,6 +95,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
     private PopulationDataset periodPop;
     private CountType countType = CountType.CASES;
     private boolean includeOther = false;
+    private int unknownAgeCode = Globals.DEFAULT_UNKNOWN_AGE_CODE;
 
     public TopNChartTableBuilder() {
         ChartTheme chartTheme = new StandardChartTheme("sansserif");
@@ -430,5 +431,10 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
         }
 
         return charts;
+    }
+
+    @Override
+    public void setUnknownAgeCode(int unknownAgeCode) {
+        this.unknownAgeCode = unknownAgeCode;
     }
 }
