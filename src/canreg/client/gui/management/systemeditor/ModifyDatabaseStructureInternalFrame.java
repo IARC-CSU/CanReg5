@@ -563,6 +563,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
 
     @Action
     public void saveXML() {
+        jButton2.setEnabled(false);
         // first check to see if all minimum required variables are present
         Set<String> missingStandardVariables = Tools.getMissingStandardVariables((DatabaseVariablesListElement[]) databaseVariablePanel.getDatabaseElements());
         // In this editor we only warn - during database boot we will stop if not all variables are there...
@@ -617,6 +618,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                 message += "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame").getString("OLD_FILE_BACKED_UP_AS_") + oldFile.getAbsolutePath();
             }
             JOptionPane.showMessageDialog(this, message, "Saved", JOptionPane.INFORMATION_MESSAGE);
+            
         } else {
             // Rename XML to error...
             file = new File(fileName);
@@ -628,6 +630,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             String message = "Something went wrong... Please look into the links between dictionaries, indexes, person search and variables";
             JOptionPane.showMessageDialog(this, message, "Not saved", JOptionPane.INFORMATION_MESSAGE);
         }
+        jButton2.setEnabled(true);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox basisCodesCheckBox;
