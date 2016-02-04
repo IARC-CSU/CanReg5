@@ -21,7 +21,12 @@
 package canreg.server.xml;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -92,10 +97,10 @@ public class Tools {
         // TransformerHandler transformHandler;
         Transformer serializer;
         StreamResult result = null;
-        File file;
+        OutputStreamWriter file;
         try {
             // Prepare the output file
-            file = new File(filename);
+            file = new OutputStreamWriter(new FileOutputStream(filename), "UTF-8");
             result = new StreamResult(file);
 
             serializer = tfactory.newTransformer();
@@ -125,6 +130,10 @@ public class Tools {
             }
             Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, npe);
             throw new RuntimeException(npe);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (result != null && result.getWriter() != null) {
