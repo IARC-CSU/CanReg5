@@ -1,6 +1,135 @@
-changeset:   1301:be2381bc796f
+changeset:   1315:ac0df27a3367
 branch:      Migration Wizard
 tag:         tip
+user:        ErvikM
+date:        Thu Feb 04 15:31:36 2016 +0100
+files:       src/canreg/server/xml/Tools.java
+description:
+System definition files are now always saved in UTF-8.
+
+
+changeset:   1314:ee69cfa9b6a4
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Feb 04 15:30:58 2016 +0100
+files:       src/canreg/client/gui/management/systemeditor/ModifyDatabaseStructureInternalFrame.java
+description:
+[ModifuDatabaseStructureInternalFrame] Save button now disabled while saving a file.
+
+
+changeset:   1313:233081119548
+branch:      Migration Wizard
+user:        ErvikM
+date:        Tue Jan 26 13:40:41 2016 +0100
+files:       src/canreg/client/gui/components/DateVariableEditorPanel.java src/canreg/client/gui/components/VariableEditorPanel.java
+description:
+Enter moves to next field also for dates.
+
+
+changeset:   1312:ea379b3de0c5
+branch:      Migration Wizard
+user:        ErvikM
+date:        Tue Jan 26 12:09:00 2016 +0100
+files:       appinfo.properties nbproject/jnlp-impl.xml
+description:
+Merged
+
+
+changeset:   1311:ac2912bad503
+branch:      Migration Wizard
+parent:      1310:dcfdef9e6060
+parent:      1304:e598524fc26e
+user:        ErvikM
+date:        Tue Jan 26 12:03:46 2016 +0100
+files:       appinfo.properties nbproject/jnlp-impl.xml nbproject/jnlp-impl_backup.xml nbproject/private/private.xml src/canreg/common/Globals.java
+description:
+Merged
+
+
+changeset:   1310:dcfdef9e6060
+branch:      Migration Wizard
+user:        ErvikM
+date:        Tue Jan 26 11:44:44 2016 +0100
+files:       src/canreg/client/gui/analysis/FrequenciesByYearInternalFrame.java src/canreg/client/gui/components/FastFilterInternalFrame.java src/canreg/client/gui/components/RangeFilterPanel.java src/canreg/client/gui/components/VariableEditorPanel.java src/canreg/client/gui/resources/LoginInternalFrame.properties src/canreg/client/gui/resources/LoginInternalFrame_es.properties src/canreg/client/gui/resources/LoginInternalFrame_fr.properties src/canreg/client/gui/resources/LoginInternalFrame_pt.properties src/canreg/client/gui/resources/LoginInternalFrame_pt_PT.properties src/canreg/common/Globals.java src/canreg/server/database/CanRegDAO.java
+description:
+After masterclass.
+
+
+changeset:   1309:8e1857eb2c86
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Jan 21 14:37:08 2016 +0100
+files:       src/canreg/server/database/CanRegDAO.java
+description:
+Range and filters now work again when selecting only Tumour table in frequencies by year.
+
+
+changeset:   1308:80784b10dd30
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Jan 21 14:17:43 2016 +0100
+files:       src/canreg/server/database/CanRegDAO.java
+description:
+Range and filters now work again when selecting only Tumour table in frequencies by year.
+
+
+changeset:   1307:01ff831388fd
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Jan 21 14:11:50 2016 +0100
+files:       src/canreg/client/gui/analysis/FrequenciesByYearInternalFrame.java src/canreg/client/gui/components/RangeFilterPanel.java src/canreg/common/Globals.java
+description:
+Frequencies by year now does not allow selection of patients or sources alone.
+
+
+changeset:   1306:f3b55089f649
+branch:      Migration Wizard
+user:        ErvikM
+date:        Thu Jan 21 14:10:49 2016 +0100
+files:       src/canreg/client/gui/components/FastFilterInternalFrame.java
+description:
+Fixed a bug in the filter wizard where it would not pick up the change of table when changing to a join of all three tables.
+
+
+changeset:   1305:b1ab8ff71224
+branch:      Migration Wizard
+parent:      1267:730f9ad824ba
+user:        ErvikM
+date:        Thu Jan 21 13:45:41 2016 +0100
+files:       src/canreg/client/gui/components/VariableEditorPanel.java
+description:
+Enter now skips to next field during data entry.
+
+
+changeset:   1304:e598524fc26e
+branch:      Migration Wizard
+user:        ErvikM
+date:        Tue Jan 26 10:23:08 2016 +0100
+files:       appinfo.properties buildnumber.properties doc/CanReg5-Future.lyx inno-settings.txt version.txt
+description:
+5.00.38BETA2
+
+
+changeset:   1303:0839432a29b3
+branch:      Migration Wizard
+user:        ErvikM
+date:        Wed Nov 04 18:20:06 2015 +0100
+files:       scripts/icd10grouper/icd10grouper.rb
+description:
+Improved the icd10grouper Ruby script to add leading zeros to topography codes (if they have been removed by, for example Excel.)
+
+
+changeset:   1302:94c11e7d27d2
+branch:      Migration Wizard
+user:        ErvikM
+date:        Tue Sep 29 16:55:39 2015 +0200
+files:       appinfo.properties buildnumber.properties changelog.txt hg.log inno-settings.txt version.txt
+description:
+5.00.38BETA1
+
+
+changeset:   1301:be2381bc796f
+branch:      Migration Wizard
 user:        ErvikM
 date:        Tue Sep 29 16:50:37 2015 +0200
 files:       appinfo.properties buildnumber.properties

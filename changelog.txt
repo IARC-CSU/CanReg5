@@ -1,5 +1,14 @@
 Changelog
 
+3.00.39ALPHA2
+- System definition files are now always saved in UTF-8.
+- [ModifuDatabaseStructureInternalFrame] Save button now disabled while saving a file.
+- Enter now skips to next field during data entry.
+- Fixed a bug in the filter wizard where it would not pick up the change of table when changing to a join of all three tables.
+- Frequencies by year now does not allow selection of patients or sources alone.
+- Range and filters now work again when selecting only Tumour table in frequencies by year.
+- Other improvements.
+
 5.00.38BETA1
 - Improved handling of non-standard database filenames.
 - Improved error messages.
