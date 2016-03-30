@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2016  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ package canreg.client.gui.dataentry;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
+import static canreg.client.gui.CanRegClientView.maximizeHeight;
 import canreg.client.gui.management.ComparePatientsInternalFrame;
 import canreg.client.gui.tools.PrintUtilities;
 import canreg.client.gui.tools.WaitFrame;
@@ -35,6 +36,7 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.JComponentToPDF;
+import canreg.common.Tools;
 import canreg.common.conversions.ConversionResult;
 import canreg.common.conversions.Converter;
 import canreg.common.qualitycontrol.CheckResult;
@@ -60,6 +62,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
@@ -83,6 +86,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     public static final String DELETE = "delete";
     public static final String SAVE = "save";
     public static final String RUN_MP = "runMP";
+    public static final String RUN_EXACT = "runExact";
     public static final String OBSOLETE = "obsolete";
     public static final String CHANGE_PATIENT_RECORD = "changePatientRecord";
     public static final String CALC_AGE = "calcAge";
@@ -91,11 +95,11 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     public static String REQUEST_FOCUS = "request focus";
     private Document doc;
     private Map<Integer, Dictionary> dictionary;
-    private Set<DatabaseRecord> patientRecords;
-    private TreeMap<Object, RecordEditorPanel> patientRecordsMap;
-    private Set<DatabaseRecord> tumourRecords;
+    private final Set<DatabaseRecord> patientRecords;
+    private final TreeMap<Object, RecordEditorPanel> patientRecordsMap;
+    private final Set<DatabaseRecord> tumourRecords;
     private boolean changesDone = false;
-    private JDesktopPane desktopPane;
+    private final JDesktopPane desktopPane;
     private GlobalToolBox globalToolBox;
     private boolean titleSet = false;
     private String tumourObsoleteVariableName = null;
@@ -106,7 +110,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private String tumourIDVariableName = null;
     private String patientIDVariableName = null;
     private String patientRecordIDVariableName = null;
-    private String patientRecordIDTumourTableVariableName = null;
+    private final String patientRecordIDTumourTableVariableName = null;
+    private BrowseInternalFrame browseInternalFrame;
 
     /** Creates new form RecordEditor
      * @param desktopPane 
@@ -642,6 +647,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 }
             } else if (e.getActionCommand().equalsIgnoreCase(RUN_MP)) {
                 runMPsearch((RecordEditorPanel) source);
+            } else if (e.getActionCommand().equalsIgnoreCase(RUN_EXACT)) {
+                runExactSearch((RecordEditorPanel) source);            
             } else if (e.getActionCommand().equalsIgnoreCase(CALC_AGE)) {
                 // this should be called at any time any of the fields birth date or incidence date gets changed
                 RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
@@ -1329,6 +1336,71 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             canreg.common.Tools.openFile(fileName);
         } catch (IOException ex) {
             Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void runExactSearch(RecordEditorPanel recordEditorPanel) {
+        DatabaseRecord record = recordEditorPanel.getDatabaseRecord();
+        String[] variables = record.getVariableNames();
+        LinkedList searchStringComponents = new LinkedList<String>();
+        Map<String, DatabaseVariablesListElement> map = globalToolBox.getVariablesMap();
+        // make a list of variables to skip
+        // and numbers
+        Set<String> skippable = new TreeSet<String>();
+        Set<String> numbers = new TreeSet<String>();
+        for(String key:map.keySet()) {
+            DatabaseVariablesListElement databaseVariable = map.get(key);
+            String stdVarbName = databaseVariable.getStandardVariableName();
+            if (stdVarbName == null) stdVarbName = "";
+            if (
+                !stdVarbName.equals(Globals.StandardVariableNames.PatientCheckStatus.toString())   &&    
+                !stdVarbName.equals(Globals.StandardVariableNames.PatientID.toString())   &&     
+                !stdVarbName.equals(Globals.StandardVariableNames.PatientRecordID.toString())   &&     
+                !stdVarbName.equals(Globals.StandardVariableNames.PatientRecordStatus.toString())   &&     
+                !stdVarbName.equals(Globals.StandardVariableNames.PatientUpdateDate.toString())   &&     
+                !stdVarbName.equals(Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString())   &&     
+                !stdVarbName.equals(Globals.StandardVariableNames.PatientUpdatedBy.toString())
+                ) {
+                skippable.add(canreg.common.Tools.toLowerCaseStandardized(key));
+            } 
+            if (!databaseVariable.getVariableType().equals(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
+                numbers.add(canreg.common.Tools.toLowerCaseStandardized(key));
+            }
+        }
+        
+        for (String varb:variables) {
+            String content = record.getVariableAsString(varb);
+            DatabaseVariablesListElement databaseVariable = map.get(varb);
+            if (!content.trim().isEmpty() && skippable.contains(canreg.common.Tools.toLowerCaseStandardized(varb))) {
+                if(!numbers.contains(canreg.common.Tools.toLowerCaseStandardized(varb))){
+                    searchStringComponents.add(varb + "=" + content);
+                } else {
+                    searchStringComponents.add(varb + " LIKE " + "'%" + content + "%'");
+                }
+            }
+        }
+        
+        String searchString = Tools.combine(searchStringComponents, " AND ");
+
+        if (searchString.trim().isEmpty()) {
+            JOptionPane.showInternalMessageDialog(this, 
+//                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("THIS RECORD HAS OTHER RECORDS ASSIGNED TO IT.PLEASE DELETE OR MOVE THOSE FIRST.")
+                    "Please enter some data first."
+            );
+        } else {
+            if (browseInternalFrame == null) {
+                browseInternalFrame = new BrowseInternalFrame(desktopPane);
+            } else {
+                browseInternalFrame.close();
+                desktopPane.remove(browseInternalFrame);
+                desktopPane.validate();
+                browseInternalFrame = new BrowseInternalFrame(desktopPane);
+            }
+            CanRegClientView.showAndPositionInternalFrame(desktopPane, browseInternalFrame);
+            maximizeHeight(desktopPane, browseInternalFrame);
+            browseInternalFrame.setFilterField(searchString);
+            browseInternalFrame.setTable(Globals.PATIENT_TABLE_NAME);
+            browseInternalFrame.actionPerformed(new ActionEvent(this,1,"refresh"));
         }
     }
 }
