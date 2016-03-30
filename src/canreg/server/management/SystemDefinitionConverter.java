@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2016 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -142,15 +142,15 @@ public class SystemDefinitionConverter {
     1 char			Basis Diag. Codes  (0-IARC; 1-Local)
     
      */
-    private static boolean debug = true;
-    private String namespace = "ns3:";
+    private static final boolean debug = true;
+    private final String namespace = "ns3:";
     private Document doc;
     private DataInputStream dataStream;
     private JTextField nameTextField = null;
     private JTextField codeTextField = null;
     private String registryName;
     private String registryCode;
-    private String[] standardVariablesCR4 = {
+    private final String[] standardVariablesCR4 = {
         Globals.StandardVariableNames.PatientID.toString(),
         Globals.StandardVariableNames.IncidenceDate.toString(),
         Globals.StandardVariableNames.BirthDate.toString(),
@@ -182,28 +182,28 @@ public class SystemDefinitionConverter {
         Globals.StandardVariableNames.Source5.toString(),
         Globals.StandardVariableNames.Source6.toString()
     };
-    private String[] dictionaryFontTypeValues = {
+    private final String[] dictionaryFontTypeValues = {
         "Latin",
         "Asian"
     };
-    private String[] dictionaryTypeValues = {
+    private final String[] dictionaryTypeValues = {
         "Simple",
         "Compound"
     };
-    private String[] fillInStatusValues = {
+    private final String[] fillInStatusValues = {
         Globals.FILL_IN_STATUS_OPTIONAL_STRING,
         Globals.FILL_IN_STATUS_MANDATORY_STRING,
         Globals.FILL_IN_STATUS_AUTOMATIC_STRING,
         Globals.FILL_IN_STATUS_SYSTEM_STRING
     };
-    private String[] variableTypeValues = {
+    private final String[] variableTypeValues = {
         Globals.VARIABLE_TYPE_NUMBER_NAME,
         Globals.VARIABLE_TYPE_ALPHA_NAME,
         Globals.VARIABLE_TYPE_DATE_NAME,
         Globals.VARIABLE_TYPE_DICTIONARY_NAME,
         Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME
     };
-    private String[] mpCopyValues = {
+    private final String[] mpCopyValues = {
         "Must",
         "Prob",
         "Intr",
