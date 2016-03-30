@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2016 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -195,6 +194,8 @@ public class Tools {
      * 
      * @param doc
      * @param namespace
+     * @param dictionaryMap
+     * @param groupsMap
      * @return
      */
     public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace, TreeMap<String, DatabaseDictionaryListElement> dictionaryMap, TreeMap<String, DatabaseGroupsListElement> groupsMap) {
@@ -287,10 +288,9 @@ public class Tools {
     public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace, String tableName) {
         DatabaseVariablesListElement[] variablesInTable = getVariableListElements(doc, namespace);
         LinkedList<DatabaseVariablesListElement> tempVariablesInTable = new LinkedList<DatabaseVariablesListElement>();
-        for (int i = 0; i
-                < variablesInTable.length; i++) {
-            if (variablesInTable[i].getDatabaseTableName().equalsIgnoreCase(tableName)) {
-                tempVariablesInTable.add(variablesInTable[i]);
+        for (DatabaseVariablesListElement variablesInTable1 : variablesInTable) {
+            if (variablesInTable1.getDatabaseTableName().equalsIgnoreCase(tableName)) {
+                tempVariablesInTable.add(variablesInTable1);
             }
         }
         variablesInTable = new DatabaseVariablesListElement[tempVariablesInTable.size()];
@@ -309,6 +309,7 @@ public class Tools {
      * 
      * @param doc
      * @param namespace
+     * @param variablesMap
      * @return
      */
     public static DatabaseIndexesListElement[] getIndexesListElements(Document doc, String namespace, TreeMap<String, DatabaseVariablesListElement> variablesMap) {
@@ -581,7 +582,9 @@ public class Tools {
             //FileWriter always assumes default encoding is OK!
             output.write(getFileFromURL(url));
         } finally {
-            output.close();
+            if (output != null) {
+                output.close();
+            }
         }
         return file;
     }
@@ -601,7 +604,9 @@ public class Tools {
             //FileWriter always assumes default encoding is OK!
             output.write(getFileFromURL(urlString));
         } finally {
-            output.close();
+            if (output != null){
+                output.close();
+            }
         }
         return file;
     }
@@ -897,7 +902,7 @@ public class Tools {
         // TODO scan the doc for things coded non-standard and build a translator
         // for now just return an empty translator
         Translator translator = new Translator();
-        DatabaseVariablesListElement[] variables = getVariableListElements(doc, NAMESPACE);
+        // DatabaseVariablesListElement[] variables = getVariableListElements(doc, NAMESPACE);
 
         return translator;
     }
@@ -1021,7 +1026,7 @@ public class Tools {
     public static String combine(String[] s, String glue) {
         int k = s.length;
         if (k == 0) {
-            return null;
+            return "";
         }
         StringBuilder out = new StringBuilder();
         out.append(s[0]);
