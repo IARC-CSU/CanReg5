@@ -1,12 +1,19 @@
 Changelog
 
-3.00.39ALPHA2
+3.00.39BETA1
+- Users can now perform "Exact search" while entering a new case.
 - System definition files are now always saved in UTF-8.
 - [ModifuDatabaseStructureInternalFrame] Save button now disabled while saving a file.
+- Slight restructure of the main menus to make them more consistent.
+  - Options are now always visible - even when not logged in.
+  - Migrate from CR4 is a separate sub-menu under Tools.
+  - Import under data entry always wants data in CR5 format, the CR4 import function is under Tools->Migrate from CR4.
 - Enter now skips to next field during data entry.
 - Fixed a bug in the filter wizard where it would not pick up the change of table when changing to a join of all three tables.
+- Fixed a bug where the date was sometimes not saved if it was unparsable.
 - Frequencies by year now does not allow selection of patients or sources alone.
 - Range and filters now work again when selecting only Tumour table in frequencies by year.
+- Versioning system changed from Mercurial to Git.
 - Other improvements.
 
 5.00.38BETA1
