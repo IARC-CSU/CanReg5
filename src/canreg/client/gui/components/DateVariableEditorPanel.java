@@ -174,19 +174,21 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         if (valueString.length() > 0) {
             try {
                 String dateFormatString = dateChooser.getDateFormatString();
-                // valueObject = Integer.parseInt(valueString.trim());
                 GregorianCalendarCanReg tempCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg(valueString, dateFormatString);
                 if (tempCalendar != null) {
                     valueObjectString = DateHelper.parseGregorianCalendarCanRegToDateString(tempCalendar, Globals.DATE_FORMAT_STRING);
-                }
-                // valueObject = Integer.parseInt(valueObjectString.trim());
+                } 
             } catch (ParseException ex) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException ex) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + valueString + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString(", DATE FORMAT: ") + dateChooser.getDateFormatString(), ex);
+            } finally {
+                // if the date is malformed we just return the data as is.
+                if (valueObjectString == null || valueObjectString.isEmpty()) {
+                    valueObjectString = codeTextField.getText().trim();
+                }
             }
         }
-
         return valueObjectString;
     }
 }
