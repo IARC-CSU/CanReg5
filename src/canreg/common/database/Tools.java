@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2016 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import java.util.Set;
 public class Tools {
 
     // Ref: http://db.apache.org/derby/docs/10.1/ref/rrefkeywords29722.html    
-    private static String[] reservedWordsSQL = {"ADD",
+    private static final String[] reservedWordsSQL = {"ADD",
         "ALL",
         "ALLOCATE",
         "ALTER",
@@ -257,7 +257,7 @@ public class Tools {
      *
      * @param newRecord
      * @param oldRecord
-     * @param variablesToSkip
+     * @param variablesToSkip set of lower cased names of variables to be skipped
      * @return
      */
     static public boolean newRecordContainsNewInfo(DatabaseRecord newRecord, DatabaseRecord oldRecord, Set<String> variablesToSkip) {
