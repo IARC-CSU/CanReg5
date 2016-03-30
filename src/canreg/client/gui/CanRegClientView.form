@@ -227,12 +227,12 @@
                 <Property name="name" type="java.lang.String" value="browseMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem6">
+            <MenuItem class="javax.swing.JMenuItem" name="createNewRecordMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="createNewRecordSetAction" methodName="createNewRecordSetAction"/>
                 </Property>
-                <Property name="name" type="java.lang.String" value="jMenuItem6" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="createNewRecordMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="editDictionaryMenuItem">
@@ -245,13 +245,13 @@
                 <Property name="name" type="java.lang.String" value="dictionaryMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+            <MenuItem class="javax.swing.JMenuItem" name="editPDSMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="editPopulationDataSets" methodName="editPopulationDataSets"/>
                 </Property>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="jMenuItem1.toolTipText"/>
-                <Property name="name" type="java.lang.String" value="jMenuItem1" noResource="true"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="editPDSMenuItem.toolTipText"/>
+                <Property name="name" type="java.lang.String" value="editPDSMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="importDataMenuItem">
@@ -438,21 +438,57 @@
             <Property name="name" type="java.lang.String" value="toolsMenu" noResource="true"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="convertCR4SystDefMenuItem">
+            <Menu class="javax.swing.JMenu" name="migrateMenu">
               <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.CanRegClientView" id="convertCanReg4SystemAction" methodName="convertCanReg4SystemAction"/>
-                </Property>
-                <Property name="name" type="java.lang.String" value="convertCR4SystDefMenuItem" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="migrateMenu.text"/>
+                <Property name="name" type="java.lang.String" value="migrateMenu" noResource="true"/>
               </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="convertCR4SystDefMenuItem">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.CanRegClientView" id="convertCanReg4SystemAction" methodName="convertCanReg4SystemAction"/>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="convertCR4SystDefMenuItem" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="importFromCR4MenuItem">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.CanRegClientView" id="importDataFromCR4" methodName="importDataFromCR4"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" resourceKey="importFromCR4MenuItem.text"/>
+                    <Property name="name" type="java.lang.String" value="importFromCR4MenuItem" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="migratePopulationSetMenuItem">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.CanRegClientView" id="loadCanReg4PDS" methodName="loadCanReg4PDS"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" resourceKey="migratePopulationSetMenuItem.text"/>
+                    <Property name="name" type="java.lang.String" value="migratePopulationSetMenuItem" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator2">
+                  <Properties>
+                    <Property name="name" type="java.lang.String" value="jSeparator2" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="canreg4migrationMenuItem">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.CanRegClientView" id="canreg4Migration" methodName="canreg4Migration"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" resourceKey="canreg4migrationMenuItem.text"/>
+                    <Property name="name" type="java.lang.String" value="canreg4migrationMenuItem" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+              </SubComponents>
+            </Menu>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator4">
               <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.CanRegClientView" id="loadCanReg4PDS" methodName="loadCanReg4PDS"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="jMenuItem2.text"/>
-                <Property name="name" type="java.lang.String" value="jMenuItem2" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="jSeparator4" noResource="true"/>
               </Properties>
             </MenuItem>
             <Menu class="javax.swing.JMenu" name="databaseStructureMenu">
@@ -486,15 +522,6 @@
                   <action class="canreg.client.gui.CanRegClientView" id="garbleDatabaseAction" methodName="garbleDatabaseAction"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="garbleDatabaseMenuItem" noResource="true"/>
-              </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="canreg4migrationMenuItem">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.CanRegClientView" id="canreg4Migration" methodName="canreg4Migration"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="canreg4migrationMenuItem.text"/>
-                <Property name="name" type="java.lang.String" value="canreg4migrationMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
           </SubComponents>
