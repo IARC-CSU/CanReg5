@@ -26,10 +26,10 @@ import canreg.common.PsToPdfConverter;
 import canreg.common.database.AgeGroupStructure;
 import canreg.common.database.PopulationDataset;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.LinkedList;
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Date;
@@ -551,8 +551,8 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                 String tabReportFileName = "";
                 try {
                     tabReportFileName = reportFileName + sexLabel[sexNumber] + ".tsv";
-                    System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("WRITING TO ") + tabReportFileName);
-                    reportFileWriter = new FileWriter(tabReportFileName);
+                    System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("WRITING TO ") + tabReportFileName);    
+                    reportFileWriter = new OutputStreamWriter(new FileOutputStream(tabReportFileName), "UTF-8");
                 } catch (IOException ioe) {
                     System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("ERROR IN REPORTFILE: ") + tabReportFileName);
                     reportFileWriter = new OutputStreamWriter(System.out);
@@ -619,7 +619,8 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                 String psFileName = reportFileName + "-" + sexLabel[sexNumber] + ".ps";
                 generatedFiles.add(psFileName);
                 try {
-                    FileWriter fw = new FileWriter(psFileName);
+                    Writer fw = new OutputStreamWriter(new FileOutputStream(psFileName), "UTF-8");
+                    
                     nf.setMaximumFractionDigits(1);
                     nf.setMinimumFractionDigits(1);
 
@@ -874,7 +875,6 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                                 } else {
                                     fw.write("Tablefont SF\n");
                                 }
-
 
                                 if (casesArray[j][sexNumber][age] > 0) {
                                     fw.write("0 " + k + " MT ("
