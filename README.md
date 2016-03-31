@@ -12,6 +12,6 @@ It was designed with an emphasis on user friendliness, it has a modern user inte
 
 Is available in several languages. (English, French, Spanish, Portuguese, Russian, Turkish, Georgian, and Chinese.)
 
-[CanReg5 Web Site](http://www.iarc.com.fr/CanReg5)
+[CanReg5 Web Site](http://www.iacr.com.fr/CanReg5)
 
 [Follow @canreg](http://twitter.com/canreg)
