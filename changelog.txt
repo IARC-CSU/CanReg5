@@ -1,6 +1,6 @@
 Changelog
 
-3.00.39BETA2
+5.00.39
 - Users can now perform "Exact search" while entering a new case.
 - System definition files are now always saved in UTF-8.
 - [ModifuDatabaseStructureInternalFrame] Save button now disabled while saving a file.
@@ -15,6 +15,7 @@ Changelog
 - Range and filters now work again when selecting only Tumour table in frequencies by year.
 - Fixed a bug where pie-charts and bar-charts would not be generated if any cases were recorded with unknown sex codes.
 - Versioning system changed from Mercurial to Git.
+- Better handling of Unicode characters in output files.
 - Other improvements.
 
 5.00.38
