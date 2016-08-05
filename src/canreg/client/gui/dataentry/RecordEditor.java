@@ -269,7 +269,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 regnoString += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" (OBSOLETE)");
             }
             // patientTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
-            patientTabbedPane.addTab(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("PATIENT") + ": " + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" RECORD ") + (patientTabbedPane.getTabCount() + 1), rePanel);
+            patientTabbedPane.addTab(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("PATIENT") 
+                                     + ": " + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" RECORD ") 
+                                     + (patientTabbedPane.getTabCount() + 1), rePanel);
             if (!titleSet) {
                 Object patno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
                 String patnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("N/A");
@@ -296,7 +298,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 regnoString += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" (OBSOLETE)");
             }
             // tumourTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
-            tumourTabbedPane.addTab(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("TUMOUR") + " " + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" RECORD ") + (tumourTabbedPane.getTabCount() + 1), rePanel);
+            tumourTabbedPane.addTab(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("TUMOUR") 
+                                    + ": " + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" RECORD ") 
+                                    + (tumourTabbedPane.getTabCount() + 1), rePanel);
         }
         refreshShowObsolete();
     }
