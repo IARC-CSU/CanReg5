@@ -1,5 +1,46 @@
 Changelog
 
+5.00.38
+- Improved handling of non-standard database filenames.
+- Improved error messages.
+- Escaped character in export file header
+- Other bugfixes.
+
+5.00.37
+- Fixed a bug in the Date of Last contact check introduced in the previous version.
+- Fixed a bug where updates to Source records were sometimes not imported.
+- Other minor fixes.
+
+5.00.36
+- Fixed a bug occurring in some tables if the decimal point was not '.' (ie. Russian locale.)
+- Saving frequency tables now also produces pivot tables.
+- Hid "Other" age group structure button.
+- Unknown age code is now dynamic.
+- DLC check now with improved handling of unknown dates.
+- Allow a lenience for a date being prior to another date in the case of unknown dates.
+- DateHelper function "years between" two dates now takes better into account unknown dates.
+- Other minor fixes.
+
+5.00.35
+- Fixed a bug in the import of datasets split in three tables where sometimes not all cases were imported.
+
+5.00.34
+- Fixed (Temporarily) the Age-Specific Time Trends script. (It now computes rates/trends for age groups >=40 and for all sites together only)
+- Fixed a bug where some non-Latin characters were not exported correctly, but showed up as question-marks. Now properly implemented as unicode (UTF-8).
+- Fixed a bug related to import of patients with multiple tumours.
+- Turkish translation updated.
+- Other minor fixes.
+
+5.00.33
+- Corrected the Age Specific Rates script (was generating fake values, used for graphs, when exporting as CSV)
+- Removes the double extension from output files if HTML is selected (e.g. test.html.html)
+- Added SVG saving option to the Top Cancers Barchart script
+- Improved Population Pyramid script
+- Added some more default age group structures. (Cut off at 70 and 60.)
+- Added Beta Version of Time Trends (Age Specific) + Other functions
+- Temporarily removed values in barchart (bug)
+- Other minor fixes
+
 5.00.32
 - Russian translation updated.
 - AgeSpecificRatesTopX table now sorts cancers by ASR.

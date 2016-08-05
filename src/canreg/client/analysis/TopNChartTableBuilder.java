@@ -54,20 +54,20 @@ import org.jfree.chart.plot.PiePlot;
 public class TopNChartTableBuilder implements TableBuilderInterface, JChartTableBuilderInterface {
 
     // private static int YEAR_COLUMN = 0;
-    private static int SEX_COLUMN = 1;
-    private static int ICD10_COLUMN = 2;
-    private static int MORPHOLOGY_COLUMN = 3;
+    private static final int SEX_COLUMN = 1;
+    private static final int ICD10_COLUMN = 2;
+    private static final int MORPHOLOGY_COLUMN = 3;
     // private static int BEHAVIOUR_COLUMN = 4;
-    private static int AGE_COLUMN = 5;
-    private static int CASES_COLUMN = 6;
-    private static Globals.StandardVariableNames[] variablesNeeded = {
+    private static final int AGE_COLUMN = 5;
+    private static final int CASES_COLUMN = 6;
+    private static final Globals.StandardVariableNames[] variablesNeeded = {
         Globals.StandardVariableNames.Sex,
         Globals.StandardVariableNames.ICD10,
         Globals.StandardVariableNames.Morphology,
         Globals.StandardVariableNames.Behaviour,
         Globals.StandardVariableNames.Age
     };
-    private static FileTypes[] fileTypesGenerated = {
+    private static final FileTypes[] fileTypesGenerated = {
         FileTypes.png,
         FileTypes.pdf,
         FileTypes.svg,
@@ -79,18 +79,18 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
     private LocalSettings localSettings;
     private String rpath;
     private LinkedList[] cancerGroupsLocal;
-    private JFreeChart[] charts = new JFreeChart[2];
+    private final JFreeChart[] charts = new JFreeChart[2];
     private String[] icdLabel;
     private String[] icd10GroupDescriptions;
     private int numberOfCancerGroups;
-    private int numberOfSexes = 2;
-    private int DONT_COUNT = -999;
+    private final int numberOfSexes = 3;
+    private final int DONT_COUNT = -999;
     private EnumMap<KeyCancerGroupsEnum, Integer> keyGroupsMap;
     private int otherCancerGroupsIndex;
     private Integer skinCancerGroupIndex;
     private int allCancerGroupsIndex;
     private int allCancerGroupsButSkinIndex;
-    private int topNLimit = 10;
+    private final int topNLimit = 10;
     private ChartType chartType;
     private PopulationDataset periodPop;
     private CountType countType = CountType.CASES;
@@ -228,18 +228,13 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
             for (Object[] dataLine : incidenceData) {
 
                 // Set default
-                icdIndex = -1;
-                numberOfCases = 0;
                 adjustedCases = 0.0;
 
-                // Unknown sex group = 3
-                sex = 3;
                 // Extract data
                 sexString = (String) dataLine[SEX_COLUMN];
                 sex = Integer.parseInt(sexString.trim());
 
                 // sex = 3 is unknown sex
-
                 if (sex > 2) {
                     sex = 3;
                 }
@@ -322,8 +317,8 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
             });
             LinkedList<CancerCasesCount> theRestFemale = new LinkedList<CancerCasesCount>();
 
-            CancerCasesCount otherElement = null;
-            CancerCasesCount thisElement = null;
+            CancerCasesCount otherElement;
+            CancerCasesCount thisElement;
 
             TreeSet<CancerCasesCount> topN;
             LinkedList<CancerCasesCount> theRest;

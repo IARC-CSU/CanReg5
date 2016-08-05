@@ -4,7 +4,7 @@
 ## (for CanReg 5)
 ## 
 ## Author: Sebastien Antoni
-## Last update: 24/04/2014
+## Last update: 07/07/2016 by Morten Ervik
 ###############################################################################
 
 
@@ -44,7 +44,7 @@
 
 ## GETTING LIST OF TOP CANCERS IN MEN AND WOMEN
     datatop <- CalcASR(dataInc, dataPop, standpop, strat=c("SEX"))
-    topcancers <- GetTopCancers(datatop) 
+    topcancers <- GetTopCancers(datatop, number) 
   
 ## RESTRICTING OUR DATASET TO TOP CANCERS
     data <- merge(data,topcancers, by=c("ICD10GROUP","SEX"), sort=F)

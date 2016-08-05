@@ -233,3 +233,4 @@ lib/*.jar
 hs_err_pid*
 >>>>>>> 44b8277ddbc52201ca93a186c83ca6276489237d
 /nbproject/private/
+*.lyx#

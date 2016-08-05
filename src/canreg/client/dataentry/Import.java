@@ -39,7 +39,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -89,6 +88,9 @@ public class Import {
      * @param server
      * @param io
      * @return
+     * @throws java.sql.SQLException
+     * @throws java.rmi.RemoteException
+     * @throws canreg.server.database.RecordLockedException
      */
     public static boolean importFile(Task<Object, String> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
     //public static boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
@@ -96,8 +98,8 @@ public class Import {
         
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
 
-        noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientIDVariableName()));
-        noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientRecordIDVariableName()));
+        noNeedToLookAtPatientVariables.add(io.getPatientIDVariableName());
+        noNeedToLookAtPatientVariables.add(io.getPatientRecordIDVariableName());
 
         String firstNameVariableName = io.getFirstNameVariableName();
         String sexVariableName = io.getSexVariableName();
@@ -168,8 +170,7 @@ public class Import {
 
                 // Build tumour part
                 Tumour tumour = new Tumour();
-                for (int i = 0; i < map.size(); i++) {
-                    Relation rel = map.get(i);
+                for (canreg.client.dataentry.Relation rel : map) {
                     if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour") && rel.getFileColumnNumber() < lineElements.length) {
                         if (rel.getFileColumnNumber() < lineElements.length) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
@@ -193,8 +194,7 @@ public class Import {
                 // Build source part
                 Set<Source> sources = Collections.synchronizedSet(new LinkedHashSet<Source>());
                 Source source = new Source();
-                for (int i = 0; i < map.size(); i++) {
-                    Relation rel = map.get(i);
+                for (canreg.client.dataentry.Relation rel : map) {
                     if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME) && rel.getFileColumnNumber() < lineElements.length) {
                         if (rel.getFileColumnNumber() < lineElements.length) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
@@ -214,7 +214,6 @@ public class Import {
                         }
 
                     }
-
                 }
                 sources.add(source);
                 tumour.setSources(sources);

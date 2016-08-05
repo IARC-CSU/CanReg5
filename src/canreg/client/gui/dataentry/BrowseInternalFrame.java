@@ -72,13 +72,13 @@ import org.jdesktop.application.Task;
  */
 public class BrowseInternalFrame extends javax.swing.JInternalFrame implements ActionListener {
 
-    private JDesktopPane dtp;
+    private final JDesktopPane dtp;
     private DistributedTableDescription tableDatadescription;
     private DistributedTableDataSourceClient tableDataSource;
     private TableModel tableDataModel;
     private JScrollPane resultScrollPane;
     String sortByVariableName;
-    private JTable resultTable = new JTable() {
+    private final JTable resultTable = new JTable() {
         @Override
         public Component prepareRenderer(TableCellRenderer renderer,
                 int row, int column) {
@@ -95,16 +95,16 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
     };
     private XTableColumnModel tableColumnModel;
     private LinkedList<String> variablesToShow;
-    private GlobalToolBox globalToolBox;
-    private String patientIDlookupVariable;
-    private String patientIDTumourTablelookupVariable;
-    private String patientRecordIDTumourTablelookupVariable;
-    private String tumourIDlookupVariable;
-    private String tumourIDSourceTableLookupVariable;
+    private final GlobalToolBox globalToolBox;
+    private final String patientIDlookupVariable;
+    private final String patientIDTumourTablelookupVariable;
+    private final String patientRecordIDTumourTablelookupVariable;
+    private final String tumourIDlookupVariable;
+    private final String tumourIDSourceTableLookupVariable;
     int patientIDLength;
     int tumourIDLength;
     // private int highlightedColumnNumber = 0;
-    private String patientRecordIDVariable;
+    private final String patientRecordIDVariable;
 
     /**
      * Creates new form BrowseInternalFrame
@@ -869,5 +869,14 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             Task refreshTask = refresh();
             refreshTask.execute();
         }
+    }
+    
+    public void setFilterField(String filter) {
+        rangeFilterPanel.setFilterActive(!filter.trim().isEmpty());
+        rangeFilterPanel.setFilter(filter);
+    }
+    
+    public void setTable(String tableName) {
+        rangeFilterPanel.setTable(tableName);
     }
 }

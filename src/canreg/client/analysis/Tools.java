@@ -171,7 +171,8 @@ public class Tools {
         try {
             File tempFile = File.createTempFile("script", ".R");
             // generatedFiles.add(tempFile.getPath());
-            FileWriter writer = new FileWriter(tempFile);
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+			new FileOutputStream(tempFile), "UTF8"));
             writer.append(rff.getScript());
             writer.close();
             Tools.callR(tempFile.getAbsolutePath(), rpath, fileName + "-report.txt");

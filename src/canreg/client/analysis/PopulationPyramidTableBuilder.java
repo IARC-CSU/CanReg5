@@ -19,16 +19,16 @@
  */
 package canreg.client.analysis;
 
-import canreg.client.CanRegClientApp;
-import canreg.client.LocalSettings;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.PsToPdfConverter;
 import canreg.common.database.AgeGroupStructure;
 import canreg.common.database.PopulationDataset;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -126,7 +126,8 @@ public class PopulationPyramidTableBuilder extends AbstractEditorialTableBuilder
         System.out.println("Constructing " + tableFileName + ".");
 
         try {
-            FileWriter fw = new FileWriter(tableFileName);
+            Writer fw = new OutputStreamWriter(new FileOutputStream(tableFileName), "UTF-8");
+            
             NumberFormat nf = NumberFormat.getInstance();
             nf.setMaximumFractionDigits(1);
             nf.setMinimumFractionDigits(1);

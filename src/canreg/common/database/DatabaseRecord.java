@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2016  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@
 package canreg.common.database;
 
 import canreg.client.CanRegClientApp;
-import canreg.common.Globals;
 import canreg.common.Translator;
 //   Commented away to be able to disable the IARCtools package... 
 //    
@@ -38,7 +37,7 @@ public class DatabaseRecord implements Serializable //   Commented away to be ab
 // , RecordInterface 
 {
 
-    private HashMap<String, Object> variables;
+    private final HashMap<String, Object> variables;
     // private EnumMap<IARCStandardVariableNames, String> map;
     private Translator translator;
     protected String patientIDVariableName;

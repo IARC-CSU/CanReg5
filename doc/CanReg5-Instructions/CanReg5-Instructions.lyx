@@ -849,8 +849,8 @@ JRE
 \begin_layout Standard
 \align left
 Before you install and run CanReg5 for the first time it is recommended
- that you install the latest Java 7 Runtime Environment (April 2013: Version
- 7 Update 21 ) You can get that from here: 
+ that you install the latest Java 7 Runtime Environment (March 2016: Version
+ 8 Update 77 ) You can get that from here: 
 \begin_inset CommandInset href
 LatexCommand href
 target "http://java.com/en/download/manual.jsp"
@@ -2602,6 +2602,67 @@ notification area
 
 \end_layout
 
+\begin_layout Subsection
+Launching server from 
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+command line
+\end_layout
+
+\end_inset
+
+command line
+\end_layout
+
+\begin_layout Standard
+To launch CanReg5 from command line, you'll have to open command line on
+ your computer (Windows: Win+R, 
+\begin_inset Quotes eld
+\end_inset
+
+cmd
+\begin_inset Quotes erd
+\end_inset
+
+) change into the folder you have 
+\emph on
+installed
+\emph default
+ CanReg5 (Windows: 
+\begin_inset Quotes eld
+\end_inset
+
+cd %programfiles(x86)%
+\backslash
+CanReg5
+\begin_inset Quotes erd
+\end_inset
+
+) and type the following to launch the server:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+java -jar CanReg5.jar <registry-code>
+\begin_inset Quotes erd
+\end_inset
+
+ (where <registry-code> should be replace by the code of your registry,
+ ie 
+\begin_inset Quotes eld
+\end_inset
+
+java -jar CanReg5.jar TRN-E
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
 \begin_layout Section
 
 \family sans
@@ -2980,7 +3041,7 @@ import dictionaries
 
 \end_inset
 
-
+ from CanReg4
 \end_layout
 
 \begin_layout Standard
@@ -6618,7 +6679,7 @@ The incidence rate is defined as:
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $\frac{incidence\: cases\: per\: year}{population\: at\: risk}\times10000$
+\begin_inset Formula $\frac{incidence\:cases\:per\:year}{population\:at\:risk}\times10000$
 \end_inset
 
 

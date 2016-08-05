@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2016 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,6 @@ import canreg.common.database.DictionaryEntry;
 import canreg.common.database.Patient;
 import canreg.common.database.Source;
 import canreg.common.database.Tumour;
-import canreg.common.qualitycontrol.MultiplePrimaryTesterInterface;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -84,7 +83,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     private Map<String, VariableEditorPanelInterface> variableEditorPanels;
     private Map<Integer, Dictionary> dictionary;
     private DatabaseGroupsListElement[] groupListElements;
-    private GlobalToolBox globalToolBox;
+    private final GlobalToolBox globalToolBox;
     private boolean hasChanged = false;
     private ActionListener actionListener;
     private DatabaseVariablesListElement recordStatusVariableListElement;
@@ -103,7 +102,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     private DatabaseVariablesListElement tumourSequenceTotalVariableListElement;
     private SourcesPanel sourcesPanel;
     private final SimpleDateFormat dateFormat;
-    private LinkedList<DatabaseVariablesListElement> autoFillList;
+    private final LinkedList<DatabaseVariablesListElement> autoFillList;
 
     boolean areAllVariablesPresent() {
         boolean allPresent = true;
@@ -507,7 +506,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
         if (panelType == panelTypes.PATIENT) {
             tableName = Globals.PATIENT_TABLE_NAME;
-            mpPanel.setVisible(false);
+//            mpPanel.setVisible(false);
+            mpPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Exact Search")); // This hack works, but is far from ideal...
             changePatientRecordMenuItem.setVisible(false);
             obsoleteToggleButton.setVisible(false);
             checksPanel.setVisible(false);
@@ -1153,7 +1153,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
     @Action
     public void runMultiplePrimarySearch() {
-        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.RUN_MP));
+        if ( panelType == panelTypes.TUMOUR )
+            actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.RUN_MP));
+        else 
+            actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.RUN_EXACT));
     }
 
     @Action

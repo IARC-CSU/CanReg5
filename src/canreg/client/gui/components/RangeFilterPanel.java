@@ -65,7 +65,7 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
     private DatabaseVariablesListElement[] tumourVariablesInDB;
     private DatabaseVariablesListElement[] sourceVariablesInDB;
     private boolean rangeEnabled = true;
-    private GlobalToolBox globalToolBox;
+    private final GlobalToolBox globalToolBox;
 
     /**
      * Creates new form RangeFilterPanel
@@ -182,7 +182,7 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
 
     /**
      *
-     * @param userVariable
+     * @param visible
      */
     public void setTableChooserVisible(boolean visible) {
         tableChooserPanel.setVisible(visible);
@@ -191,7 +191,7 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
 
     /**
      *
-     * @param userVariable
+     * @param visible
      */
     public void setRecordPanelvisible(boolean visible) {
         recordsPanel.setVisible(visible);
@@ -471,11 +471,9 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
         // TODO: tidy this for sources
         if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
             LinkedList<DatabaseIndexesListElement> tempIndexesInTable = new LinkedList<DatabaseIndexesListElement>();
-            for (int i = 0; i
-                    < indexesInDB.length; i++) {
-                if (indexesInDB[i].getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)
-                        || indexesInDB[i].getDatabaseTableName().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-                    tempIndexesInTable.add(indexesInDB[i]);
+            for (DatabaseIndexesListElement indexesInDB1 : indexesInDB) {
+                if (indexesInDB1.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME) || indexesInDB1.getDatabaseTableName().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+                    tempIndexesInTable.add(indexesInDB1);
                 }
             }
             indexesInTableTemp = new DatabaseIndexesListElement[tempIndexesInTable.size()];
@@ -485,11 +483,9 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
             }
         } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
             LinkedList<DatabaseIndexesListElement> tempIndexesInTable = new LinkedList<DatabaseIndexesListElement>();
-            for (int i = 0; i
-                    < indexesInDB.length; i++) {
-                if (indexesInDB[i].getDatabaseTableName().equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)
-                        || indexesInDB[i].getDatabaseTableName().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-                    tempIndexesInTable.add(indexesInDB[i]);
+            for (DatabaseIndexesListElement indexesInDB1 : indexesInDB) {
+                if (indexesInDB1.getDatabaseTableName().equalsIgnoreCase(Globals.PATIENT_TABLE_NAME) || indexesInDB1.getDatabaseTableName().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+                    tempIndexesInTable.add(indexesInDB1);
                 }
             }
             indexesInTableTemp = new DatabaseIndexesListElement[tempIndexesInTable.size()];
@@ -501,10 +497,9 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
             indexesInTableTemp = indexesInDB;
         } else {
             LinkedList<DatabaseIndexesListElement> tempIndexesInTable = new LinkedList<DatabaseIndexesListElement>();
-            for (int i = 0; i
-                    < indexesInDB.length; i++) {
-                if (indexesInDB[i].getDatabaseTableName().equalsIgnoreCase(tableName)) {
-                    tempIndexesInTable.add(indexesInDB[i]);
+            for (DatabaseIndexesListElement indexesInDB1 : indexesInDB) {
+                if (indexesInDB1.getDatabaseTableName().equalsIgnoreCase(tableName)) {
+                    tempIndexesInTable.add(indexesInDB1);
                 }
             }
             indexesInTableTemp = new DatabaseIndexesListElement[tempIndexesInTable.size()];
@@ -756,7 +751,6 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
      * sets it as the current active filter.
      *
      * @param filter
-     * @param String the filter to add
      */
     public void setFilter(String filter) {
         int position = addFilterToComboBox(filter);
@@ -799,7 +793,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
 
     /**
      *
-     * @param userVariable
+     * @param visible
      */
     public void setSortByVariableShown(boolean visible) {
         sortByChooserPanel.setVisible(visible);
@@ -877,5 +871,9 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
             int n = Arrays.binarySearch(variablesInTable, globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()));
             sortByChooserComboBox.setSelectedItem(variablesInTable[n]);
         }
+    }
+
+    public void setTable(String tableName) {
+        tableChooserComboBox.setSelectedItem(tableName);
     }
 }

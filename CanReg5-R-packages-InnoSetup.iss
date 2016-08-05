@@ -6,6 +6,7 @@
 #define MyAppPublisher "IARC"
 #define MyAppURL "http://www.iacr.com.fr"
 #define MyAppExeName "CanReg.exe"
+#define CanReg5Dir "C:\Users\ervikm\Documents\GitHub\CanReg5"
 #include "inno-settings.txt"
 
 [Setup]
@@ -22,9 +23,9 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyParentAppName}
 DefaultGroupName={#MyParentAppName}
-OutputDir=C:\Users\ervikm\Documents\NetBeansProjects\CanReg5\dist
-; InfoBeforeFile=C:\Users\ervikm\Documents\NetBeansProjects\CanReg5\changelog.txt
-LicenseFile=C:\Users\ervikm\Documents\NetBeansProjects\CanReg5\src\canreg\client\gui\resources\gpl-3.0-standalone.txt
+OutputDir={#CanReg5Dir}\dist
+; InfoBeforeFile={#CanReg5Dir}\changelog.txt
+LicenseFile={#CanReg5Dir}\src\canreg\client\gui\resources\gpl-3.0-standalone.txt
 AllowNoIcons=yes
 OutputBaseFilename=CanReg5-R-Packages-Setup
 Compression=lzma
@@ -44,7 +45,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: "C:\Users\ervikm\Documents\NetBeansProjects\CanReg5\r-packages\*"; DestDir: "{app}\conf\tables\r\r-packages"; Flags: ignoreversion
+Source: "{#CanReg5Dir}\r-packages\*"; DestDir: "{app}\conf\tables\r\r-packages"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

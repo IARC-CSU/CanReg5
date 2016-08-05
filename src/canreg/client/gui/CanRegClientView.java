@@ -227,9 +227,9 @@ public final class CanRegClientView extends FrameView {
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         dataEntryMenu = new javax.swing.JMenu();
         browseEditMenuItem = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
+        createNewRecordMenuItem = new javax.swing.JMenuItem();
         editDictionaryMenuItem = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        editPDSMenuItem = new javax.swing.JMenuItem();
         importDataMenuItem = new javax.swing.JMenuItem();
         analysisMenu = new javax.swing.JMenu();
         frequenciesMenuItem = new javax.swing.JMenuItem();
@@ -253,13 +253,17 @@ public final class CanRegClientView extends FrameView {
         jSeparator5 = new javax.swing.JSeparator();
         optionsMenuItem = new javax.swing.JMenuItem();
         toolsMenu = new javax.swing.JMenu();
+        migrateMenu = new javax.swing.JMenu();
         convertCR4SystDefMenuItem = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        importFromCR4MenuItem = new javax.swing.JMenuItem();
+        migratePopulationSetMenuItem = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        canreg4migrationMenuItem = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
         databaseStructureMenu = new javax.swing.JMenu();
         setUpDatabaseMenuItem = new javax.swing.JMenuItem();
         installRPackagesMenuItem = new javax.swing.JMenuItem();
         garbleDatabaseMenuItem = new javax.swing.JMenuItem();
-        canreg4migrationMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -345,7 +349,7 @@ public final class CanRegClientView extends FrameView {
         handbookButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(handbookButton);
 
-        toolBar.setBounds(0, 0, 800, -1);
+        toolBar.setBounds(0, 0, 800, 43);
         desktopPane.add(toolBar, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jScrollPane1.setViewportView(desktopPane);
@@ -405,9 +409,9 @@ public final class CanRegClientView extends FrameView {
         browseEditMenuItem.setName("browseMenuItem"); // NOI18N
         dataEntryMenu.add(browseEditMenuItem);
 
-        jMenuItem6.setAction(actionMap.get("createNewRecordSetAction")); // NOI18N
-        jMenuItem6.setName("jMenuItem6"); // NOI18N
-        dataEntryMenu.add(jMenuItem6);
+        createNewRecordMenuItem.setAction(actionMap.get("createNewRecordSetAction")); // NOI18N
+        createNewRecordMenuItem.setName("createNewRecordMenuItem"); // NOI18N
+        dataEntryMenu.add(createNewRecordMenuItem);
 
         editDictionaryMenuItem.setAction(actionMap.get("editDictionaryAction")); // NOI18N
         editDictionaryMenuItem.setText(resourceMap.getString("dictionaryMenuItem.text")); // NOI18N
@@ -415,10 +419,10 @@ public final class CanRegClientView extends FrameView {
         editDictionaryMenuItem.setName("dictionaryMenuItem"); // NOI18N
         dataEntryMenu.add(editDictionaryMenuItem);
 
-        jMenuItem1.setAction(actionMap.get("editPopulationDataSets")); // NOI18N
-        jMenuItem1.setToolTipText(resourceMap.getString("jMenuItem1.toolTipText")); // NOI18N
-        jMenuItem1.setName("jMenuItem1"); // NOI18N
-        dataEntryMenu.add(jMenuItem1);
+        editPDSMenuItem.setAction(actionMap.get("editPopulationDataSets")); // NOI18N
+        editPDSMenuItem.setToolTipText(resourceMap.getString("editPDSMenuItem.toolTipText")); // NOI18N
+        editPDSMenuItem.setName("editPDSMenuItem"); // NOI18N
+        dataEntryMenu.add(editPDSMenuItem);
 
         importDataMenuItem.setAction(actionMap.get("importData")); // NOI18N
         importDataMenuItem.setToolTipText(resourceMap.getString("importMenuItem.toolTipText")); // NOI18N
@@ -525,14 +529,35 @@ public final class CanRegClientView extends FrameView {
         toolsMenu.setText(resourceMap.getString("toolsMenu.text")); // NOI18N
         toolsMenu.setName("toolsMenu"); // NOI18N
 
+        migrateMenu.setText(resourceMap.getString("migrateMenu.text")); // NOI18N
+        migrateMenu.setName("migrateMenu"); // NOI18N
+
         convertCR4SystDefMenuItem.setAction(actionMap.get("convertCanReg4SystemAction")); // NOI18N
         convertCR4SystDefMenuItem.setName("convertCR4SystDefMenuItem"); // NOI18N
-        toolsMenu.add(convertCR4SystDefMenuItem);
+        migrateMenu.add(convertCR4SystDefMenuItem);
 
-        jMenuItem2.setAction(actionMap.get("loadCanReg4PDS")); // NOI18N
-        jMenuItem2.setText(resourceMap.getString("jMenuItem2.text")); // NOI18N
-        jMenuItem2.setName("jMenuItem2"); // NOI18N
-        toolsMenu.add(jMenuItem2);
+        importFromCR4MenuItem.setAction(actionMap.get("importDataFromCR4")); // NOI18N
+        importFromCR4MenuItem.setText(resourceMap.getString("importFromCR4MenuItem.text")); // NOI18N
+        importFromCR4MenuItem.setName("importFromCR4MenuItem"); // NOI18N
+        migrateMenu.add(importFromCR4MenuItem);
+
+        migratePopulationSetMenuItem.setAction(actionMap.get("loadCanReg4PDS")); // NOI18N
+        migratePopulationSetMenuItem.setText(resourceMap.getString("migratePopulationSetMenuItem.text")); // NOI18N
+        migratePopulationSetMenuItem.setName("migratePopulationSetMenuItem"); // NOI18N
+        migrateMenu.add(migratePopulationSetMenuItem);
+
+        jSeparator2.setName("jSeparator2"); // NOI18N
+        migrateMenu.add(jSeparator2);
+
+        canreg4migrationMenuItem.setAction(actionMap.get("canreg4Migration")); // NOI18N
+        canreg4migrationMenuItem.setText(resourceMap.getString("canreg4migrationMenuItem.text")); // NOI18N
+        canreg4migrationMenuItem.setName("canreg4migrationMenuItem"); // NOI18N
+        migrateMenu.add(canreg4migrationMenuItem);
+
+        toolsMenu.add(migrateMenu);
+
+        jSeparator4.setName("jSeparator4"); // NOI18N
+        toolsMenu.add(jSeparator4);
 
         databaseStructureMenu.setText(resourceMap.getString("databaseStructureMenu.text")); // NOI18N
         databaseStructureMenu.setName("databaseStructureMenu"); // NOI18N
@@ -551,11 +576,6 @@ public final class CanRegClientView extends FrameView {
         garbleDatabaseMenuItem.setAction(actionMap.get("garbleDatabaseAction")); // NOI18N
         garbleDatabaseMenuItem.setName("garbleDatabaseMenuItem"); // NOI18N
         toolsMenu.add(garbleDatabaseMenuItem);
-
-        canreg4migrationMenuItem.setAction(actionMap.get("canreg4Migration")); // NOI18N
-        canreg4migrationMenuItem.setText(resourceMap.getString("canreg4migrationMenuItem.text")); // NOI18N
-        canreg4migrationMenuItem.setName("canreg4migrationMenuItem"); // NOI18N
-        toolsMenu.add(canreg4migrationMenuItem);
 
         menuBar.add(toolsMenu);
 
@@ -951,8 +971,13 @@ public final class CanRegClientView extends FrameView {
         editDictionaryMenuItem.setEnabled(management);
 
         analysisMenu.setEnabled(analysis);
-        managementMenu.setEnabled(loggedIn);
+        managementMenu.setEnabled(true);
 
+        backupMenuItem.setEnabled(loggedIn);
+        restoreMenuItem.setEnabled(management);
+        
+        usersMenuItem.setEnabled(loggedIn);
+        
         advancedMenu.setEnabled(management);
         qualityControlMenu.setEnabled(management);
 
@@ -960,6 +985,9 @@ public final class CanRegClientView extends FrameView {
         logOutMenuItem.setEnabled(loggedIn);
 
         importDataMenuItem.setEnabled(management);
+        importFromCR4MenuItem.setEnabled(management);
+        
+        migratePopulationSetMenuItem.setEnabled(analysis);
 
         // If we are accessing a remote CanReg system not all things are available to us...
         if (!CanRegClientApp.getApplication().isCanRegServerRunningOnThisMachine()) {
@@ -1018,7 +1046,6 @@ public final class CanRegClientView extends FrameView {
 
     /**
      *
-     * @throws java.io.IOException
      */
     @Action
     public void openIacrWebsite() {
@@ -1072,17 +1099,27 @@ public final class CanRegClientView extends FrameView {
     @Action
     public void importData() {
         JInternalFrame importInternalFrame;
-        int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DO YOU HAVA ALL YOUR DATA IN ONE FILE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("ONE FILE?"), JOptionPane.YES_NO_OPTION);
-        if (i == JOptionPane.YES_OPTION) {
-            importInternalFrame = new ImportView();
-        } else {
-            importInternalFrame = new ImportFilesView();
-        }
+        // int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DO YOU HAVA ALL YOUR DATA IN ONE FILE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("ONE FILE?"), JOptionPane.YES_NO_OPTION);
+        // if (i == JOptionPane.YES_OPTION) {
+        //    importInternalFrame = new ImportView();
+        //} else {
+        importInternalFrame = new ImportFilesView();
+        //}
 
         showAndPositionInternalFrame(desktopPane, importInternalFrame);
         maximizeHeight(desktopPane, importInternalFrame);
     }
 
+        /**
+     *
+     */
+    @Action
+    public void importDataFromCR4() {
+        JInternalFrame importInternalFrame = new ImportView();
+        showAndPositionInternalFrame(desktopPane, importInternalFrame);
+        maximizeHeight(desktopPane, importInternalFrame);
+    }
+    
     /**
      *
      */
@@ -1552,7 +1589,7 @@ public final class CanRegClientView extends FrameView {
     private class InstallRpackagesActionTask extends org.jdesktop.application.Task<Object, Void> {
 
         private BufferedInputStream is;
-        private WaitFrame waitFrame;
+        private final WaitFrame waitFrame;
 
         InstallRpackagesActionTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
@@ -1663,11 +1700,13 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem canreg4migrationMenuItem;
     private javax.swing.JMenuItem convertCR4SystDefMenuItem;
     private javax.swing.JButton createNewRecordButton;
+    private javax.swing.JMenuItem createNewRecordMenuItem;
     private javax.swing.JMenu dataEntryMenu;
     private javax.swing.JMenu databaseStructureMenu;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenuItem duplicateSearchMenuItem;
     private javax.swing.JMenuItem editDictionaryMenuItem;
+    private javax.swing.JMenuItem editPDSMenuItem;
     private javax.swing.JMenuItem encrWebsiteMenuItem;
     private javax.swing.JMenuItem exportDataReportsMenuItem;
     private javax.swing.JMenuItem frequenciesMenuItem;
@@ -1676,17 +1715,15 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem iacrWebsiteMenuItem;
     private javax.swing.JMenuItem icdo3DocumentationWebsiteMenuItem;
     private javax.swing.JMenuItem importDataMenuItem;
+    private javax.swing.JMenuItem importFromCR4MenuItem;
     private javax.swing.JMenuItem incidenceTablesMenuItem;
     private javax.swing.JMenuItem installRPackagesMenuItem;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem18;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
@@ -1698,7 +1735,9 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JToolBar.Separator jSeparator13;
     private javax.swing.JToolBar.Separator jSeparator14;
     private javax.swing.JToolBar.Separator jSeparator15;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
@@ -1709,6 +1748,8 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenu managementMenu;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenu migrateMenu;
+    private javax.swing.JMenuItem migratePopulationSetMenuItem;
     private javax.swing.JMenuItem nameSexMenuItem;
     private javax.swing.JButton optionsButton;
     private javax.swing.JMenuItem optionsMenuItem;

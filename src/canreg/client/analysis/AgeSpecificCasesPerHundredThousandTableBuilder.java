@@ -26,6 +26,7 @@ import canreg.common.PsToPdfConverter;
 import canreg.common.database.AgeGroupStructure;
 import canreg.common.database.PopulationDataset;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.LinkedList;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -666,7 +667,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
                 try {
                     tabReportFileName = reportFileName + sexLabel[sexNumber] + ".tsv";
                     System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("WRITING TO ") + tabReportFileName);
-                    reportFileWriter = new FileWriter(tabReportFileName);
+                    reportFileWriter = new OutputStreamWriter(new FileOutputStream(tabReportFileName), "UTF-8");
                 } catch (IOException ioe) {
                     System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("ERROR IN REPORTFILE: ") + tabReportFileName);
                     reportFileWriter = new OutputStreamWriter(System.out);
@@ -733,7 +734,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
                 String psFileName = reportFileName + "-" + sexLabel[sexNumber] + ".ps";
                 generatedFiles.add(psFileName);
                 try {
-                    FileWriter fw = new FileWriter(psFileName);
+                    Writer fw = new OutputStreamWriter(new FileOutputStream(psFileName), "UTF-8");
                     nf.setMaximumFractionDigits(1);
                     nf.setMinimumFractionDigits(1);
 
