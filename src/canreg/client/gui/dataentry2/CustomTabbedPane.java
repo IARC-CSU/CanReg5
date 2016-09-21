@@ -122,18 +122,18 @@ public class CustomTabbedPane extends JTabbedPane {
                 if (getModel().isPressed()) {
                     g2.translate(1, 1);
                 }
-                g2.setStroke(new BasicStroke(2));
+                
                 g2.setColor(Color.BLACK);
                 if (getModel().isRollover()) {
                     g2.setColor(Color.RED);
                 }
                 int delta = 5;
                 //coordinates for the points x1, y1, x2, y2. Draws a line that joins those points.
-                g2.setStroke(new BasicStroke(2));
+                g2.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
                 g2.drawLine(delta, delta, getWidth() - delta, getHeight() - delta);
                 //we change the stroke because otherwise
                 //SOME reason it's not drawn with the same thickness (java BUG)
-                g2.setStroke(new BasicStroke(2.1f));
+                g2.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
                 g2.drawLine(getWidth() - delta, delta, delta, getHeight() - delta);
                 g2.dispose();
             }
