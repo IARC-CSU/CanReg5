@@ -287,6 +287,7 @@ public class Globals {
         new AgeGroupStructure(5, 60),
         new AgeGroupStructure(10, 75, 15),
         new AgeGroupStructure(10, 65, 15),
+        new AgeGroupStructure(5, 15, 15),
         new AgeGroupStructure(5, 15, 1, 15),
         new AgeGroupStructure(5, 20, 5, 20)
     };
