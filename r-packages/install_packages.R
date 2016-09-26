@@ -10,7 +10,26 @@ dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
 rlibs = gsub("\\", "/", Sys.getenv("R_LIBS_USER"), fixed = T)
 
 ## TODO: Make this dynamic...
-packages = c("bitops_1.0-6.zip","caTools_1.16.zip","colorspace_1.2-4.zip","dichromat_2.0-0.zip","digest_0.6.4.zip","gdata_2.13.2.zip","ggplot2_0.9.3.1.zip","gplots_2.12.1.zip","gtable_0.1.2.zip","gtools_3.2.1.zip","labeling_0.2.zip","munsell_0.4.2.zip","plyr_1.8.zip","proto_0.3-10.zip","RColorBrewer_1.0-5.zip","reshape2_1.2.2.zip","scales_0.2.3.zip","stringr_0.6.2.zip")
+packages = c(
+    "bitops_1.0-6.zip",
+    "caTools_1.17.1.zip",
+    "colorspace_1.2-4.zip",
+    "dichromat_2.0-0.zip",
+    "digest_0.6.4.zip",
+    "gdata_2.13.2.zip",
+    "ggplot2_0.9.3.1.zip",
+    "gplots_2.14.2.zip",
+    "gtable_0.1.2.zip",
+    "gtools_3.4.1.zip",
+    "labeling_0.2.zip",
+    "munsell_0.4.2.zip",
+    "plyr_1.8.zip",
+    "proto_0.3-10.zip",
+    "RColorBrewer_1.0-5.zip",
+    "reshape2_1.2.2.zip",
+    "scales_0.4.0.zip",
+    "stringr_0.6.2.zip"
+)
 
 for(x in packages) {
 	eval(parse(text=paste("install.packages('", x, "', lib='", rlibs,"', repos = NULL  )", sep=""))) 
