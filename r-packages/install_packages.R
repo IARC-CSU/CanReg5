@@ -16,7 +16,7 @@ packages = c(
     "colorspace_1.2-4.zip",
     "dichromat_2.0-0.zip",
     "digest_0.6.4.zip",
-    "gdata_2.13.2.zip",
+    "gdata_2.13.3.zip",
     "ggplot2_0.9.3.1.zip",
     "gplots_2.14.2.zip",
     "gtable_0.1.2.zip",
@@ -28,7 +28,8 @@ packages = c(
     "RColorBrewer_1.0-5.zip",
     "reshape2_1.2.2.zip",
     "scales_0.4.0.zip",
-    "stringr_0.6.2.zip"
+    "stringr_0.6.2.zip",
+    "Rcpp_0.12.7.zip"
 )
 
 for(x in packages) {
