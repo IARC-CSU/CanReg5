@@ -38,19 +38,29 @@ public class RecordEditorSource extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        dataScrollPane = new javax.swing.JScrollPane();
+        dataPanel = new javax.swing.JPanel();
+        variableEditorGroupPanel1 = new canreg.client.gui.dataentry2.components.VariableEditorGroupPanel();
+        variableEditorGroupPanel2 = new canreg.client.gui.dataentry2.components.VariableEditorGroupPanel();
+
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
+
+        dataScrollPane.setBorder(null);
+
+        dataPanel.setLayout(new javax.swing.BoxLayout(dataPanel, javax.swing.BoxLayout.PAGE_AXIS));
+        dataPanel.add(variableEditorGroupPanel1);
+        dataPanel.add(variableEditorGroupPanel2);
+
+        dataScrollPane.setViewportView(dataPanel);
+
+        add(dataScrollPane);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel dataPanel;
+    private javax.swing.JScrollPane dataScrollPane;
+    private canreg.client.gui.dataentry2.components.VariableEditorGroupPanel variableEditorGroupPanel1;
+    private canreg.client.gui.dataentry2.components.VariableEditorGroupPanel variableEditorGroupPanel2;
     // End of variables declaration//GEN-END:variables
 }

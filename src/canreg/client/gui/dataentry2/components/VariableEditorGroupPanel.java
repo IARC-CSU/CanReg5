@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package canreg.client.gui.dataentry2;
+package canreg.client.gui.dataentry2.components;
 
 /**
  *
@@ -44,13 +44,13 @@ public class VariableEditorGroupPanel extends javax.swing.JPanel {
         groupName = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jSeparator3 = new javax.swing.JSeparator();
-        variableEditorPanel1 = new canreg.client.gui.dataentry2.VariableEditorPanel();
-        variableEditorPanel2 = new canreg.client.gui.dataentry2.VariableEditorPanel();
-        variableEditorPanel3 = new canreg.client.gui.dataentry2.VariableEditorPanel();
-        variableEditorPanel4 = new canreg.client.gui.dataentry2.VariableEditorPanel();
-        variableEditorPanel5 = new canreg.client.gui.dataentry2.VariableEditorPanel();
-        variableEditorPanel6 = new canreg.client.gui.dataentry2.VariableEditorPanel();
-        variableEditorPanel7 = new canreg.client.gui.dataentry2.VariableEditorPanel();
+        variableEditorPanel1 = new canreg.client.gui.dataentry2.components.VariableEditorPanel();
+        variableEditorPanel2 = new canreg.client.gui.dataentry2.components.VariableEditorPanel();
+        variableEditorPanel3 = new canreg.client.gui.dataentry2.components.VariableEditorPanel();
+        variableEditorPanel4 = new canreg.client.gui.dataentry2.components.VariableEditorPanel();
+        variableEditorPanel5 = new canreg.client.gui.dataentry2.components.VariableEditorPanel();
+        variableEditorPanel6 = new canreg.client.gui.dataentry2.components.VariableEditorPanel();
+        variableEditorPanel7 = new canreg.client.gui.dataentry2.components.VariableEditorPanel();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -91,12 +91,12 @@ public class VariableEditorGroupPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator3;
-    private canreg.client.gui.dataentry2.VariableEditorPanel variableEditorPanel1;
-    private canreg.client.gui.dataentry2.VariableEditorPanel variableEditorPanel2;
-    private canreg.client.gui.dataentry2.VariableEditorPanel variableEditorPanel3;
-    private canreg.client.gui.dataentry2.VariableEditorPanel variableEditorPanel4;
-    private canreg.client.gui.dataentry2.VariableEditorPanel variableEditorPanel5;
-    private canreg.client.gui.dataentry2.VariableEditorPanel variableEditorPanel6;
-    private canreg.client.gui.dataentry2.VariableEditorPanel variableEditorPanel7;
+    private canreg.client.gui.dataentry2.components.VariableEditorPanel variableEditorPanel1;
+    private canreg.client.gui.dataentry2.components.VariableEditorPanel variableEditorPanel2;
+    private canreg.client.gui.dataentry2.components.VariableEditorPanel variableEditorPanel3;
+    private canreg.client.gui.dataentry2.components.VariableEditorPanel variableEditorPanel4;
+    private canreg.client.gui.dataentry2.components.VariableEditorPanel variableEditorPanel5;
+    private canreg.client.gui.dataentry2.components.VariableEditorPanel variableEditorPanel6;
+    private canreg.client.gui.dataentry2.components.VariableEditorPanel variableEditorPanel7;
     // End of variables declaration//GEN-END:variables
 }

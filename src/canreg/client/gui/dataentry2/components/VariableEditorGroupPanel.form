@@ -59,19 +59,19 @@
         </Container>
       </SubComponents>
     </Container>
-    <Component class="canreg.client.gui.dataentry2.VariableEditorPanel" name="variableEditorPanel1">
+    <Component class="canreg.client.gui.dataentry2.components.VariableEditorPanel" name="variableEditorPanel1">
     </Component>
-    <Component class="canreg.client.gui.dataentry2.VariableEditorPanel" name="variableEditorPanel2">
+    <Component class="canreg.client.gui.dataentry2.components.VariableEditorPanel" name="variableEditorPanel2">
     </Component>
-    <Component class="canreg.client.gui.dataentry2.VariableEditorPanel" name="variableEditorPanel3">
+    <Component class="canreg.client.gui.dataentry2.components.VariableEditorPanel" name="variableEditorPanel3">
     </Component>
-    <Component class="canreg.client.gui.dataentry2.VariableEditorPanel" name="variableEditorPanel4">
+    <Component class="canreg.client.gui.dataentry2.components.VariableEditorPanel" name="variableEditorPanel4">
     </Component>
-    <Component class="canreg.client.gui.dataentry2.VariableEditorPanel" name="variableEditorPanel5">
+    <Component class="canreg.client.gui.dataentry2.components.VariableEditorPanel" name="variableEditorPanel5">
     </Component>
-    <Component class="canreg.client.gui.dataentry2.VariableEditorPanel" name="variableEditorPanel6">
+    <Component class="canreg.client.gui.dataentry2.components.VariableEditorPanel" name="variableEditorPanel6">
     </Component>
-    <Component class="canreg.client.gui.dataentry2.VariableEditorPanel" name="variableEditorPanel7">
+    <Component class="canreg.client.gui.dataentry2.components.VariableEditorPanel" name="variableEditorPanel7">
     </Component>
   </SubComponents>
 </Form>

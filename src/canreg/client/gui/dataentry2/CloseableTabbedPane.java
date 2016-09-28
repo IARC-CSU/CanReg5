@@ -27,7 +27,7 @@ import javax.swing.plaf.basic.BasicButtonUI;
  * @version 1.00.000
  * last modification: 05/08/2016
  */
-public class CustomTabbedPane extends JTabbedPane {
+public class CloseableTabbedPane extends JTabbedPane {
     
     private final JTabbedPane pane = this;
     private int lastTabIndex = 0;

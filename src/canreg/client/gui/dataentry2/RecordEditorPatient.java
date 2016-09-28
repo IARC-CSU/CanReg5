@@ -51,17 +51,25 @@ public class RecordEditorPatient extends javax.swing.JPanel {
         mpButton = new javax.swing.JButton();
         dataScrollPane = new javax.swing.JScrollPane();
         dataPanel = new javax.swing.JPanel();
-        variableEditorGroupPanel1 = new canreg.client.gui.dataentry2.VariableEditorGroupPanel();
-        variableEditorGroupPanel2 = new canreg.client.gui.dataentry2.VariableEditorGroupPanel();
-        tumourTabbedPane = new canreg.client.gui.dataentry2.CustomTabbedPane();
+        variableEditorGroupPanel1 = new canreg.client.gui.dataentry2.components.VariableEditorGroupPanel();
+        variableEditorGroupPanel2 = new canreg.client.gui.dataentry2.components.VariableEditorGroupPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        addTumourRecordButton = new javax.swing.JButton();
+        filler6 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
+        tumourMenuButton = new javax.swing.JButton();
+        filler8 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
+        jPanel6 = new javax.swing.JPanel();
+        tumoursTabbedPane = new canreg.client.gui.dataentry2.FixWidthRowTabbedPane();
         recordEditorTumour1 = new canreg.client.gui.dataentry2.RecordEditorTumour();
-        recordEditorTumour2 = new canreg.client.gui.dataentry2.RecordEditorTumour();
 
         setPreferredSize(new java.awt.Dimension(1200, 510));
 
-        jSplitPane1.setDividerLocation(400);
+        jSplitPane1.setDividerLocation(425);
         jSplitPane1.setDividerSize(7);
-        jSplitPane1.setResizeWeight(0.4);
+        jSplitPane1.setResizeWeight(0.275);
 
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -75,7 +83,7 @@ public class RecordEditorPatient extends javax.swing.JPanel {
 
         userLabel.setText("<username>");
 
-        dateLabel.setText("<username>");
+        dateLabel.setText("41/42/5123 ge:51:5df pm");
 
         javax.swing.GroupLayout updatedByPanelLayout = new javax.swing.GroupLayout(updatedByPanel);
         updatedByPanel.setLayout(updatedByPanelLayout);
@@ -88,7 +96,7 @@ public class RecordEditorPatient extends javax.swing.JPanel {
                         .addComponent(byLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE))
+                    .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         updatedByPanelLayout.setVerticalGroup(
@@ -131,7 +139,7 @@ public class RecordEditorPatient extends javax.swing.JPanel {
                 .addGroup(systemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(updatedByPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGap(8, 8, 8))
         );
 
         jPanel2.add(systemPanel);
@@ -148,42 +156,99 @@ public class RecordEditorPatient extends javax.swing.JPanel {
 
         jSplitPane1.setLeftComponent(jPanel2);
 
-        tumourTabbedPane.addTab("Tumour Record 1", recordEditorTumour1);
-        tumourTabbedPane.addTab("Tumour Record 2", recordEditorTumour2);
+        jPanel3.setLayout(new javax.swing.OverlayLayout(jPanel3));
 
-        jSplitPane1.setRightComponent(tumourTabbedPane);
+        jPanel4.setOpaque(false);
+
+        jPanel5.setMaximumSize(new java.awt.Dimension(32767, 36));
+        jPanel5.setMinimumSize(new java.awt.Dimension(428, 36));
+        jPanel5.setOpaque(false);
+        jPanel5.setPreferredSize(new java.awt.Dimension(0, 36));
+        jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel5.add(filler2);
+
+        addTumourRecordButton.setText("Add tumour record");
+        jPanel5.add(addTumourRecordButton);
+        jPanel5.add(filler6);
+
+        tumourMenuButton.setText("Menu\n");
+        jPanel5.add(tumourMenuButton);
+        jPanel5.add(filler8);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(584, Short.MAX_VALUE))
+        );
+
+        jPanel3.add(jPanel4);
+
+        tumoursTabbedPane.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        tumoursTabbedPane.addTab("tab1", recordEditorTumour1);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tumoursTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 767, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(tumoursTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE))
+        );
+
+        jPanel3.add(jPanel6);
+
+        jSplitPane1.setRightComponent(jPanel3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1200, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1313, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
+            .addComponent(jSplitPane1)
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addTumourRecordButton;
     private javax.swing.JLabel byLabel;
     private javax.swing.JPanel dataPanel;
     private javax.swing.JScrollPane dataScrollPane;
     private javax.swing.JLabel dateLabel;
     private javax.swing.Box.Filler filler1;
+    private javax.swing.Box.Filler filler2;
+    private javax.swing.Box.Filler filler6;
+    private javax.swing.Box.Filler filler8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JButton mpButton;
     private canreg.client.gui.dataentry2.RecordEditorTumour recordEditorTumour1;
-    private canreg.client.gui.dataentry2.RecordEditorTumour recordEditorTumour2;
     private javax.swing.JButton searchButton;
     private javax.swing.JPanel systemPanel;
-    private canreg.client.gui.dataentry2.CustomTabbedPane tumourTabbedPane;
+    private javax.swing.JButton tumourMenuButton;
+    private canreg.client.gui.dataentry2.FixWidthRowTabbedPane tumoursTabbedPane;
     private javax.swing.JPanel updatedByPanel;
     private javax.swing.JLabel userLabel;
-    private canreg.client.gui.dataentry2.VariableEditorGroupPanel variableEditorGroupPanel1;
-    private canreg.client.gui.dataentry2.VariableEditorGroupPanel variableEditorGroupPanel2;
+    private canreg.client.gui.dataentry2.components.VariableEditorGroupPanel variableEditorGroupPanel1;
+    private canreg.client.gui.dataentry2.components.VariableEditorGroupPanel variableEditorGroupPanel2;
     // End of variables declaration//GEN-END:variables
 }
