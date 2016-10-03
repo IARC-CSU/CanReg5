@@ -694,7 +694,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     separatingString = "\t";
                     // append standard file extension
                     if (!(fileName.endsWith(".tsv") || fileName.endsWith(".TSV"))
-                            && !(fileName.endsWith(".txt") || fileName.endsWith(".TXT"))) {
+                            && !(fileName.endsWith(".csv") || fileName.endsWith(".CSV")) 
+                            && !(fileName.endsWith(".txt") || fileName.endsWith(".TXT"))) 
+                    {
                         fileName += ".txt";
                     }
                 }
