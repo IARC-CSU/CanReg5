@@ -20,7 +20,7 @@ package canreg.client.gui.dataentry2;
  *
  * @author patri_000
  */
-public class RecordEditorSource extends javax.swing.JPanel {
+public class RecordEditorSource extends javax.swing.JPanel implements RecordEditorPanel {
 
     /**
      * Creates new form RecordEditorPatient

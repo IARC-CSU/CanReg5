@@ -107,10 +107,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private String tumourSequenceVariableName = null;
     private String tumourSequenceTotalVariableName = null;
     AutoFillHelper autoFillHelper;
-    private String tumourIDVariableName = null;
+    //unused private String tumourIDVariableName = null;
     private String patientIDVariableName = null;
     private String patientRecordIDVariableName = null;
-    private final String patientRecordIDTumourTableVariableName = null;
+    //unused private final String patientRecordIDTumourTableVariableName = null;
     private BrowseInternalFrame browseInternalFrame;
 
     /** Creates new form RecordEditor
@@ -126,12 +126,12 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         autoFillHelper = new AutoFillHelper();
 
         addInternalFrameListener(new InternalFrameAdapter() {
-
             @Override
             public void internalFrameClosing(InternalFrameEvent e) {
                 int option = JOptionPane.NO_OPTION;
                 // Go through all panels and ask if any changes has been done
-                // TODO improve the detection of changes...
+                // TODO 
+                // - Patients changes are not detected properly
                 boolean changesDone = false;
                 for (Component component : patientTabbedPane.getComponents()) {
                     RecordEditorPanel panel = (RecordEditorPanel) component;
@@ -145,11 +145,11 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("REALLY CLOSE?CHANGES MADE WILL BE LOST."), "Warning!", JOptionPane.YES_NO_OPTION);
                     if (option == JOptionPane.YES_OPTION) {
                         releaseRecords();
-                        close();
+                        dispose();
                     }
                 } else {
                     releaseRecords();
-                    close();
+                    dispose();
                 }
             }
         });
@@ -185,10 +185,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         }
     }
 
-    private void changesDone() {
-
-        changesDone = true;
-    }
+    //unused
+//    private void changesDone() {
+//        changesDone = true;
+//    }
 
     private void setActiveRecord(RecordEditorPanel rep) {
         DatabaseRecord dbr = rep.getDatabaseRecord();
@@ -215,7 +215,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         tumourSequenceVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimSeq.toString()).getDatabaseVariableName();
         tumourSequenceTotalVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimTot.toString()).getDatabaseVariableName();
 
-        tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+        //unused tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
         patientRecordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
 
@@ -631,7 +631,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             }
         } else if (source instanceof RecordEditorPanel) {
             if (e.getActionCommand().equalsIgnoreCase(CHANGED)) {
-                changesDone();
+                this.changesDone = true;
             } else if (e.getActionCommand().equalsIgnoreCase(DELETE)) {
                 deleteRecord((RecordEditorPanel) source);
             } else if (e.getActionCommand().equalsIgnoreCase(CHECKS)) {
