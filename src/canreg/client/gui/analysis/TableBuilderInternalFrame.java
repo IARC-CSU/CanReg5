@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015 International Agency for Research on Cancer
+ * Copyright (C) 2008-2016 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -49,6 +49,7 @@ import canreg.common.database.PopulationDataset;
 import canreg.server.database.UnknownTableException;
 import org.imgscalr.Scalr;
 import java.awt.Cursor;
+import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,6 +72,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jdesktop.application.Action;
@@ -742,25 +744,25 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     }
 
     private void startYearChooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_startYearChooserPropertyChange
-        if (startYearChooser.getYear() > endYearChooser.getYear()) {
-            endYearChooser.setYear(startYearChooser.getYear());
-            warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("START_BEFORE_END_MOVING_END"));
-        } else if (startYearChooser.getYear() <= endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE) {
-            endYearChooser.setYear(startYearChooser.getYear() + Globals.MAX_POPULATION_DATASETS_IN_TABLE);
-            warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("MAX_SPAN_ALLOWED_IS_") + Globals.MAX_POPULATION_DATASETS_IN_TABLE + java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("_MOVING_END."));
-        }
-        updateRangeFields();
+//        if (startYearChooser.getYear() > endYearChooser.getYear()) {
+//            endYearChooser.setYear(startYearChooser.getYear());
+//            warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("START_BEFORE_END_MOVING_END"));
+//        } else if (startYearChooser.getYear() <= endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE) {
+//            endYearChooser.setYear(startYearChooser.getYear() + Globals.MAX_POPULATION_DATASETS_IN_TABLE);
+//            warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("MAX_SPAN_ALLOWED_IS_") + Globals.MAX_POPULATION_DATASETS_IN_TABLE + java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("_MOVING_END."));
+//        }
+//        updateRangeFields();
     }//GEN-LAST:event_startYearChooserPropertyChange
 
     private void endYearChooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_endYearChooserPropertyChange
-        if (startYearChooser.getYear() > endYearChooser.getYear()) {
-            startYearChooser.setYear(endYearChooser.getYear());
-            warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("END_BEFORE_START_MOVING_START"));
-        } else if (startYearChooser.getYear() <= endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE) {
-            startYearChooser.setYear(endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE);
-            warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("MAX_SPAN_ALLOWED_IS_") + Globals.MAX_POPULATION_DATASETS_IN_TABLE + java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("_MOVING_START."));
-        }
-        updateRangeFields();
+//        if (startYearChooser.getYear() > endYearChooser.getYear()) {
+//            startYearChooser.setYear(endYearChooser.getYear());
+//            warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("END_BEFORE_START_MOVING_START"));
+//        } else if (startYearChooser.getYear() <= endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE) {
+//            startYearChooser.setYear(endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE);
+//            warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("MAX_SPAN_ALLOWED_IS_") + Globals.MAX_POPULATION_DATASETS_IN_TABLE + java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("_MOVING_START."));
+//        }
+//        updateRangeFields();
     }//GEN-LAST:event_endYearChooserPropertyChange
 
     private void tableTypeListPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tableTypeListPropertyChange
@@ -790,7 +792,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 // first try load a user provided image.
                 File imageFile = new File(Globals.USER_TABLES_PREVIEW_PATH + "/" + tble.getPreviewImageFilename());
                 // if that does not exist, try to load a system file.
-                if (!imageFile.exists()){
+                if (!imageFile.exists()) {
                     imageFile = new File(Globals.TABLES_PREVIEW_PATH + "/" + tble.getPreviewImageFilename());
                 }
                 if (imageFile.exists()) {
@@ -925,6 +927,47 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     // End of variables declaration//GEN-END:variables
 
     private void initData() {
+        JSpinner spinnerStart = (JSpinner) startYearChooser.getSpinner();
+        spinnerStart.getEditor()
+                .addFocusListener(new java.awt.event.FocusAdapter() {
+                    @Override
+                    public void focusLost(java.awt.event.FocusEvent evt) {
+                        startYearChooserFocusLost(evt);
+                    }
+                    private void startYearChooserFocusLost(FocusEvent evt) {
+                        if (startYearChooser.getYear() > endYearChooser.getYear()) {
+                            endYearChooser.setYear(startYearChooser.getYear());
+                            warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("START_BEFORE_END_MOVING_END"));
+                        } else if (startYearChooser.getYear() <= endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE) {
+                            endYearChooser.setYear(startYearChooser.getYear() + Globals.MAX_POPULATION_DATASETS_IN_TABLE);
+                            warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("MAX_SPAN_ALLOWED_IS_") + Globals.MAX_POPULATION_DATASETS_IN_TABLE + java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("_MOVING_END."));
+                        } else {
+                            warningLabel.setText("");
+                        }
+                        updateRangeFields();
+                    }
+                });
+        JSpinner spinnerEnd = (JSpinner) endYearChooser.getSpinner();
+        spinnerEnd.getEditor().addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                endYearChooserFocusLost(evt);
+            }
+
+            private void endYearChooserFocusLost(FocusEvent evt) {
+                if (startYearChooser.getYear() > endYearChooser.getYear()) {
+                    startYearChooser.setYear(endYearChooser.getYear());
+                    warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("END_BEFORE_START_MOVING_START"));
+                } else if (startYearChooser.getYear() <= endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE) {
+                    startYearChooser.setYear(endYearChooser.getYear() - Globals.MAX_POPULATION_DATASETS_IN_TABLE);
+                    warningLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("MAX_SPAN_ALLOWED_IS_") + Globals.MAX_POPULATION_DATASETS_IN_TABLE + java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("_MOVING_START."));
+                } else {
+                    warningLabel.setText("");
+                }
+                updateRangeFields();
+            }
+        });
+
         rangeFilterPanel.setDatabaseDescription(canreg.client.CanRegClientApp.getApplication().getDatabseDescription());
 
         // get population datasets
@@ -964,7 +1007,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     }
 
     private void refreshTableTypeList() {
-        
+
         FilenameFilter filter = new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -976,25 +1019,24 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         // get directories of .confs
         File[] dirs = {
-            new File(Globals.TABLES_CONF_PATH), 
+            new File(Globals.TABLES_CONF_PATH),
             new File(Globals.USER_TABLES_CONF_PATH)
         };
-        
-        for(File dir:dirs){
-            if (dir.exists()){
-                for(String fileName:dir.list(filter)){
-                    children.add(dir.getAbsolutePath()+Globals.FILE_SEPARATOR+fileName);
+
+        for (File dir : dirs) {
+            if (dir.exists()) {
+                for (String fileName : dir.list(filter)) {
+                    children.add(dir.getAbsolutePath() + Globals.FILE_SEPARATOR + fileName);
                 }
             }
         }
-        
+
         // LinkedList<TableBuilderListElement> tableTypeLinkedList = new LinkedList<TableBuilderListElement>();
         DefaultListModel listModel = new DefaultListModel();
         //open one by one using configreader
         //make list
-        for (String configFileName:children) {
+        for (String configFileName : children) {
             // Get filename of file or directory
-
             try {
                 String[] tempArray;
                 FileReader fileReader = new FileReader(configFileName);
@@ -1075,7 +1117,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             }
             PopulationDataset[] standardPopulations = new PopulationDataset[populations.length];
             tableBuilder.setUnknownAgeCode(CanRegClientApp.getApplication().getGlobalToolBox().getUnknownAgeCode());
-            
+
             if (tableBuilder.areThesePopulationDatasetsCompatible(populations)) {
                 String fileName = null;
                 // Choose file name;
@@ -1148,7 +1190,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 // filter away obsolete cases
                 DatabaseVariablesListElement recordObsoleteStatus = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString());
                 filterString += " AND " + recordObsoleteStatus.getDatabaseVariableName() + " != '1'";
-                
+
                 filter.setFilterString(filterString);
 
                 System.out.println(filterString);
@@ -1171,18 +1213,18 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     }
 
                     // Build the table(s)
-                    LinkedList<String> filesGenerated =
-                            tableBuilder.buildTable(
-                            heading,
-                            fileName,
-                            startYear,
-                            endYear,
-                            incidenceData,
-                            populations,
-                            standardPopulations,
-                            tble.getConfigFields(),
-                            tble.getEngineParameters(),
-                            filetype);
+                    LinkedList<String> filesGenerated
+                            = tableBuilder.buildTable(
+                                    heading,
+                                    fileName,
+                                    startYear,
+                                    endYear,
+                                    incidenceData,
+                                    populations,
+                                    standardPopulations,
+                                    tble.getConfigFields(),
+                                    tble.getEngineParameters(),
+                                    filetype);
 
                     if (filetype != FileTypes.jchart) {
 
