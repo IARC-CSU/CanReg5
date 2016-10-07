@@ -19,6 +19,8 @@
  */
 package canreg.common;
 
+import canreg.client.CanRegClientApp;
+import canreg.client.LocalSettings;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.tools.ImageSelection;
 import canreg.common.Globals.StandardVariableNames;
@@ -199,6 +201,10 @@ public class Tools {
      * @return
      */
     public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace, TreeMap<String, DatabaseDictionaryListElement> dictionaryMap, TreeMap<String, DatabaseGroupsListElement> groupsMap) {
+        LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
+                
+        String dateFormatString = localSettings.getDateFormatString();
+
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
         // DatabaseVariablesListElement[] variables = new DatabaseVariablesListElement[nl.getLength()];
         LinkedList<DatabaseVariablesListElement> variablesList = new LinkedList<DatabaseVariablesListElement>();
@@ -266,7 +272,9 @@ public class Tools {
             if (unknownValueVariableNameNodeList != null && unknownValueVariableNameNodeList.getLength() > 0) {
                 variable.setUnknownCode(unknownValueVariableNameNodeList.item(0).getTextContent());
             }
-
+            if (variable.getVariableType().equalsIgnoreCase("Date")) {
+                variable.setDateFormatString(dateFormatString);
+            }
             // Add variable to the list.
             variablesList.add(variable);
         }

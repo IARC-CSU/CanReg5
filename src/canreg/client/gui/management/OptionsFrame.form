@@ -29,7 +29,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="tabbedPane" alignment="1" pref="482" max="32767" attributes="0"/>
+                  <Component id="tabbedPane" alignment="1" pref="478" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jButton2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -44,7 +44,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="306" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="285" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -97,11 +97,11 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="languagePanel" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="lookAndFeelPanel" alignment="0" max="32767" attributes="0"/>
+                          <Component id="languagePanel" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -111,10 +111,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="languagePanel" min="-2" max="-2" attributes="0"/>
+                      <Component id="languagePanel" min="-2" pref="75" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lookAndFeelPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="108" max="32767" attributes="0"/>
+                      <EmptySpace pref="66" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -135,11 +135,17 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="languageLabel" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="languageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="languageLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="languageComboBox" pref="0" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="dateFormatComboBox" alignment="0" pref="284" max="32767" attributes="0"/>
+                              <Component id="languageComboBox" alignment="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -152,6 +158,11 @@
                               <Component id="languageComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="dateFormatComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="languageLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -175,6 +186,26 @@
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" resourceKey="languageComboBox.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="languageComboBox" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="dateFormatComboBox">
+                  <Properties>
+                    <Property name="editable" type="boolean" value="true"/>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="0"/>
+                    </Property>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="dateFormatComboBox.toolTipText"/>
+                    <Property name="name" type="java.lang.String" value="dateFormatComboBox" noResource="true"/>
+                    <Property name="opaque" type="boolean" value="false"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="dateFormatComboBoxMousePressed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="languageLabel1">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="languageLabel1.text"/>
+                    <Property name="name" type="java.lang.String" value="languageLabel1" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -205,13 +236,13 @@
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="fontSizeComboBox" alignment="1" pref="365" max="32767" attributes="0"/>
-                                      <Component id="fontNameTextField" alignment="0" pref="365" max="32767" attributes="0"/>
+                                      <Component id="fontSizeComboBox" alignment="1" pref="361" max="32767" attributes="0"/>
+                                      <Component id="fontNameTextField" alignment="0" pref="361" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="showOutlineCheckBox" pref="417" max="32767" attributes="0"/>
+                                  <Component id="showOutlineCheckBox" pref="413" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -307,7 +338,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="automaticBackupPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="176" max="32767" attributes="0"/>
+                      <EmptySpace pref="155" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -333,7 +364,7 @@
                               <Group type="102" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="automaticbackupCheckBox" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="203" max="32767" attributes="0"/>
+                                  <EmptySpace pref="199" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
@@ -447,7 +478,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="versionPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="173" max="32767" attributes="0"/>
+                      <EmptySpace pref="152" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -478,11 +509,11 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="downloadLatestButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="51" max="32767" attributes="0"/>
+                                  <EmptySpace pref="47" max="32767" attributes="0"/>
                                   <Component id="downloadLatestButton1" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="latestVersionTextField" alignment="1" pref="243" max="32767" attributes="1"/>
-                              <Component id="versionInstalledTextField" alignment="1" pref="243" max="32767" attributes="1"/>
+                              <Component id="latestVersionTextField" alignment="1" pref="239" max="32767" attributes="1"/>
+                              <Component id="versionInstalledTextField" alignment="1" pref="239" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="checkButton" min="-2" max="-2" attributes="0"/>
@@ -618,7 +649,7 @@
                       <Component id="rPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="gsPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="169" max="32767" attributes="0"/>
+                      <EmptySpace pref="148" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -642,7 +673,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="rInstallationLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="rInstallationTextField" pref="326" max="32767" attributes="0"/>
+                          <Component id="rInstallationTextField" pref="322" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="rInstallationBrowseButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -702,7 +733,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="gsInstallationLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="gsInstallationTextField" pref="322" max="32767" attributes="0"/>
+                          <Component id="gsInstallationTextField" pref="318" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="gsInstallationBrowseButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>

@@ -1,5 +1,12 @@
 Changelog
 
+5.00.40 BETA
+- Updated R libraries and R script for installation of those.
+- Added another common population format for children ([0,5>,[5,10>,[10,15>).
+- Fixed a bug in that hindered user setting number of cancers in top N cancer trends. (R tables configuration files.)
+- Updated Spanish translation.
+- Various fixes.
+
 5.00.39
 - Users can now perform "Exact search" while entering a new case.
 - System definition files are now always saved in UTF-8.
