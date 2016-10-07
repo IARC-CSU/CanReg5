@@ -363,11 +363,19 @@ public final class LocalSettings {
      */
     public String getProperty(String key) {
         String property = properties.getProperty(key);
-        if (property == null
-                // Detect if R has been installed since last launch.
-                || (property.length() == 0 && key.equals(R_PATH))
-                // Detect if GS has been installed since last launch.
-                || (property.length() == 0 && key.equals(GS_PATH))) {
+
+        if (key.equals(R_PATH) || key.equals(GS_PATH)) {
+            if (property != null && property.length() > 0) {
+                File tempFile = new File(property);
+                if (!tempFile.exists()) {
+                    property = null;
+                }
+            } else {
+                property = null;
+            }
+        }
+
+        if (property == null) {
             property = getDefaultProperty(key);
         }
 
@@ -470,7 +478,6 @@ public final class LocalSettings {
 
         // First we find all strings mentioning server in our properties
         // ie. server.0.name
-
         Iterator<String> i = set.iterator();
         Set foundServers = new HashSet();
 
