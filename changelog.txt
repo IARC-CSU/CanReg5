@@ -1,6 +1,6 @@
 Changelog
 
-5.00.40 BETA
+5.00.40
 - Date format for data entry can now be chosen at user level. (Under "Options".)
 - Added detection of uninstallation/reinstallation/updates of R/GS software.
 - Improved year selection in table builder.

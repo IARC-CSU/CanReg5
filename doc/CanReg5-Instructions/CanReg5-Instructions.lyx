@@ -12737,7 +12737,7 @@ data cleaning
 \end_layout
 
 \begin_layout Subsection
-Google Refine
+Open Refine
 \begin_inset Index idx
 status open
 
@@ -12753,7 +12753,7 @@ Google Refine
 \end_layout
 
 \begin_layout Standard
-Google Refine is a free and open source tool that allows you to standardise
+Open Refine is a free and open source tool that allows you to standardise
  and clean your data prior to importing it into CanReg5.
  Please note that even though you access and manipulate your data using
  a web browser your data is kept locally on your machine.
@@ -12764,7 +12764,7 @@ Google Refine is a free and open source tool that allows you to standardise
 More information about it on: 
 \begin_inset CommandInset href
 LatexCommand href
-target "http://code.google.com/p/google-refine/"
+target "https://github.com/OpenRefine"
 
 \end_inset
 
