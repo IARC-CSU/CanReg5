@@ -49,7 +49,7 @@ public final class SystemDescription {
     private Document doc;
     // private DOMParser parser;
     private String namespace = "ns3:";
-    private String[] canreg4dateFormats = new String[]{"dd/mm/yyyy", "mm/dd/yyyy", "budhist", "yyyy/mm/dd"};
+    private String[] canreg4dateFormats = new String[]{"dd/MM/yyyy", "MM/dd/yyyy", "budhist", "yyyy/MM/dd"};
     private DatabaseDictionaryListElement[] dictionaryListElements;
     private DatabaseGroupsListElement[] groupListElements;
     private DatabaseVariablesListElement[] variableListElements;

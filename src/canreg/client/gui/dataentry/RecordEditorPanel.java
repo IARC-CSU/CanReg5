@@ -26,6 +26,7 @@
 package canreg.client.gui.dataentry;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.LocalSettings;
 import canreg.client.gui.components.DateVariableEditorPanel;
 import canreg.client.gui.components.TextFieldVariableEditorPanel;
 import canreg.client.gui.components.VariableEditorGroupPanel;
@@ -386,7 +387,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         PATIENT, TUMOUR, SOURCE
     }
 
-    /** Creates new form RecordEditorPanel */
+    /** Creates new form RecordEditorPanel
+     * @param listener */
     public RecordEditorPanel(ActionListener listener) {
         initComponents();
 
@@ -394,6 +396,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
         globalToolBox =
                 CanRegClientApp.getApplication().getGlobalToolBox();
+        
         saveButton.setEnabled(true);
         // setChecksResultCode(resultCode);
         // Remove this for now?
@@ -404,7 +407,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         searchLabel.setVisible(false);
         mpLabel.setVisible(false);
 
-        dateFormat = new SimpleDateFormat("yyyyMMdd");
+        dateFormat = new SimpleDateFormat(Globals.DATE_FORMAT_STRING);
 
         autoFillList = new LinkedList<DatabaseVariablesListElement>();
     }
@@ -504,20 +507,26 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
         String tableName = null;
 
-        if (panelType == panelTypes.PATIENT) {
-            tableName = Globals.PATIENT_TABLE_NAME;
-//            mpPanel.setVisible(false);
-            mpPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Exact Search")); // This hack works, but is far from ideal...
-            changePatientRecordMenuItem.setVisible(false);
-            obsoleteToggleButton.setVisible(false);
-            checksPanel.setVisible(false);
-            sequencePanel.setVisible(false);
-        } else if (panelType == panelTypes.TUMOUR) {
-            tableName = Globals.TUMOUR_TABLE_NAME;
-            personSearchPanel.setVisible(false);
-        } else if (panelType == panelTypes.SOURCE) {
-            tableName = Globals.SOURCE_TABLE_NAME;
-            systemPanel.setVisible(false);
+        if (null != panelType) switch (panelType) {
+            case PATIENT:
+                tableName = Globals.PATIENT_TABLE_NAME;
+                //            mpPanel.setVisible(false);
+                mpPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Exact Search")); // This hack works, but is far from ideal...
+                changePatientRecordMenuItem.setVisible(false);
+                obsoleteToggleButton.setVisible(false);
+                checksPanel.setVisible(false);
+                sequencePanel.setVisible(false);
+                break;
+            case TUMOUR:
+                tableName = Globals.TUMOUR_TABLE_NAME;
+                personSearchPanel.setVisible(false);
+                break;
+            case SOURCE:
+                tableName = Globals.SOURCE_TABLE_NAME;
+                systemPanel.setVisible(false);
+                break;
+            default:
+                break;
         }
         variablesInTable =
                 canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
