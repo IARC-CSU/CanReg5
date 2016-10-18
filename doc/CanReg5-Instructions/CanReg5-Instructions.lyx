@@ -200,12 +200,6 @@ CanReg5 is an open source tool to input, store, check and analyse cancer
  Also included is a tool to facilitate the set up of a new or modification
  of an existing database by adding new variables, tailoring the data entry
  forms etc.
- 
-\end_layout
-
-\begin_layout Standard
-\align left
-Version 5 of CanReg is now ready for download.
 \end_layout
 
 \begin_layout Section
@@ -354,11 +348,12 @@ twitter
 
 \begin_layout Standard
 \align left
-We have created a project page at SourceForge to help us keep track of issues
+We have created a project page at GitHub to help us keep track of issues
  with CanReg5: 
 \begin_inset CommandInset href
 LatexCommand href
-target "http://sourceforge.net/projects/canreg/"
+name "https://github.com/IARC-CSU/CanReg5"
+target "https://github.com/IARC-CSU/CanReg5"
 
 \end_inset
 
@@ -442,7 +437,8 @@ About
 \begin_layout Standard
 \align left
 Please be aware that some problems can be avoided by installing the latest
- version of the Java Runtime Environment (Version 6) before you start.
+ version of the Java Runtime Environment (Version 6 or newer) before you
+ start.
  (Available from 
 \begin_inset CommandInset href
 LatexCommand href
@@ -6482,6 +6478,9 @@ format date
 \end_inset
 
 ", for example, to export "21/04/2001" instead of numeric form "20010421".
+ (The date format can be any format specified by a text string using dd
+ for days, MM for months, and yyyy for year, for example: “yyyyMMdd” (the
+ default), “dd/MM/yyyy”, or “MM.dd.yyyy”.)
 \end_layout
 
 \begin_layout Standard
@@ -8778,7 +8777,7 @@ options
 \end_layout
 
 \begin_layout Subsection
-Language
+[UPDATED]Language
 \begin_inset Index idx
 status open
 
@@ -8794,8 +8793,34 @@ language
 \end_layout
 
 \begin_layout Standard
-Change language of CanReg5.
- You need to restart your CanReg5 system if you change language.
+Change the program language and date format (for data entry) of CanReg5.
+ (You need to restart your CanReg5 system if you change program language.)
+ The date format can be any format specified by a text string using dd for
+ days, MM for months, and yyyy for year, for example: 
+\begin_inset Quotes eld
+\end_inset
+
+yyyyMMdd
+\begin_inset Quotes erd
+\end_inset
+
+ (the default), 
+\begin_inset Quotes eld
+\end_inset
+
+dd/MM/yyyy
+\begin_inset Quotes erd
+\end_inset
+
+, or 
+\begin_inset Quotes eld
+\end_inset
+
+MM.dd.yyyy
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
