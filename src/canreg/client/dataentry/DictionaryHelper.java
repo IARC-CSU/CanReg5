@@ -259,4 +259,15 @@ public class DictionaryHelper {
         }
         return entriesList.toArray(new DictionaryEntry[0]);
     }
+    
+    public static DictionaryEntry getDictionaryEntryBestMatchingSubcode(String code, DictionaryEntry[] dictionaryEntries) {       
+        for(int i = (code.length() - 1); i > 0; i--) {
+            String possibleMatch = code.substring(0, i);
+            for(DictionaryEntry entry : dictionaryEntries) {   
+                if(entry.getCode().equalsIgnoreCase(possibleMatch))
+                    return entry;
+            }    
+        }
+        return null;
+    }
 }

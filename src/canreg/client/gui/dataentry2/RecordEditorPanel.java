@@ -16,8 +16,11 @@
  */
 package canreg.client.gui.dataentry2;
 
+import canreg.common.DatabaseVariablesListElement;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Dictionary;
+import canreg.common.qualitycontrol.CheckResult;
+import java.util.LinkedList;
 import java.util.Map;
 import org.w3c.dom.Document;
 
@@ -27,10 +30,20 @@ import org.w3c.dom.Document;
  */
 public interface RecordEditorPanel {
     
+    enum panelTypes {
+        PATIENT, TUMOUR, SOURCE
+    }
+    
     boolean isSaveNeeded();
-    void setDatabaseRecord();
+    void setSaveNeeded(boolean saveNeeded);
+    void setDatabaseRecord(DatabaseRecord record);
     DatabaseRecord getDatabaseRecord();
+    void refreshDatabaseRecord(DatabaseRecord record);
     void setDictionary(Map<Integer, Dictionary> dictionary);
     void setDocument(Document doc);
-    void toggleObsolete(boolean confirmed);
+    //void toggleObsolete(boolean confirmed);
+    LinkedList<DatabaseVariablesListElement> getAutoFillList();
+    void setVariable(DatabaseVariablesListElement variable, String value);
+    boolean areAllVariablesPresent();
+    void setResultCodeOfVariable(String databaseVariableName, CheckResult.ResultCode resultCode);
 }

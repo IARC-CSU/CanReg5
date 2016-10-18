@@ -19,7 +19,6 @@
  */
 package canreg.client.gui.dataentry2;
 
-import canreg.client.gui.dataentry.*;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DateHelper;
 import canreg.common.GlobalToolBox;

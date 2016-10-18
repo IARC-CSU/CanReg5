@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -11,7 +11,7 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,55,0,0,4,69"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,55,0,0,4,121"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
@@ -60,8 +60,14 @@
             <Property name="axis" type="int" value="3"/>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="searchButton">
+            <Component class="javax.swing.JButton" name="checksButton">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.dataentry2.RecordEditorTumour" id="runChecksAction" methodName="runChecksAction"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="0" red="ff" type="rgb"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Verified: NO"/>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[200, 45]"/>
@@ -86,6 +92,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="mpButton">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.dataentry2.RecordEditorTumour" id="runMultiplePrimarySearch" methodName="runMultiplePrimarySearch"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="MP Search"/>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[200, 45]"/>
@@ -110,7 +119,105 @@
             <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.HorizontalStrut"/>
           </AuxValues>
         </Component>
-        <Container class="javax.swing.JPanel" name="jPanel2">
+        <Container class="javax.swing.JPanel" name="tumourLinkedPanel">
+          <Properties>
+            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[32767, 95]"/>
+            </Property>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 50]"/>
+            </Property>
+          </Properties>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
+            <Property name="axis" type="int" value="3"/>
+          </Layout>
+          <SubComponents>
+            <Container class="javax.swing.JPanel" name="jPanel12">
+              <Properties>
+                <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[200, 45]"/>
+                </Property>
+              </Properties>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="jLabel3">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Tahoma" size="11" style="1"/>
+                    </Property>
+                    <Property name="horizontalAlignment" type="int" value="2"/>
+                    <Property name="text" type="java.lang.String" value="Tumour linked to"/>
+                    <Property name="verticalAlignment" type="int" value="3"/>
+                    <Property name="horizontalTextPosition" type="int" value="2"/>
+                    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[200, 100]"/>
+                    </Property>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[68, 23]"/>
+                    </Property>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Component class="javax.swing.Box$Filler" name="filler10">
+              <Properties>
+                <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[32767, 4]"/>
+                </Property>
+                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[0, 4]"/>
+                </Property>
+                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[0, 4]"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.VerticalStrut"/>
+              </AuxValues>
+            </Component>
+            <Container class="javax.swing.JPanel" name="jPanel13">
+              <Properties>
+                <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[200, 45]"/>
+                </Property>
+              </Properties>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+              <SubComponents>
+                <Component class="javax.swing.JComboBox" name="patientTabsOpenCombo">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="new javax.swing.DefaultComboBoxModel(new String[] { &quot;Coming Soon!&quot; })" type="code"/>
+                    </Property>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox()"/>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                  </AuxValues>
+                </Component>
+              </SubComponents>
+            </Container>
+          </SubComponents>
+        </Container>
+        <Component class="javax.swing.Box$Filler" name="filler11">
+          <Properties>
+            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[8, 32767]"/>
+            </Property>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[8, 0]"/>
+            </Property>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[8, 0]"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.HorizontalStrut"/>
+          </AuxValues>
+        </Component>
+        <Container class="javax.swing.JPanel" name="recordStatusPanel">
           <Properties>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[32767, 95]"/>
@@ -140,6 +247,7 @@
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="text" type="java.lang.String" value="Record Status"/>
+                    <Property name="verticalAlignment" type="int" value="3"/>
                     <Property name="horizontalTextPosition" type="int" value="2"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[200, 100]"/>
@@ -176,13 +284,16 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JCheckBox" name="confirmedCheck">
+                <Component class="javax.swing.JComboBox" name="recordStatusComboBox">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Confirmed"/>
-                    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[200, 23]"/>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="new javax.swing.DefaultComboBoxModel(new String[] { &quot;Item 1&quot;, &quot;Item 2&quot;, &quot;Item 3&quot;, &quot;Item 4&quot; })" type="code"/>
                     </Property>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox()"/>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                  </AuxValues>
                 </Component>
               </SubComponents>
             </Container>
@@ -228,11 +339,11 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="byLabel1" min="-2" max="-2" attributes="0"/>
+                              <Component id="byLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="userLabel1" pref="344" max="32767" attributes="0"/>
+                              <Component id="userLabel" pref="276" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="dateLabel1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="dateLabel" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -242,39 +353,39 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="byLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="userLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="byLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="userLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="dateLabel1" min="-2" max="-2" attributes="0"/>
+                      <Component id="dateLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="byLabel1">
+            <Component class="javax.swing.JLabel" name="byLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="By:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="userLabel1">
+            <Component class="javax.swing.JLabel" name="userLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&lt;username&gt;"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="dateLabel1">
+            <Component class="javax.swing.JLabel" name="dateLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&lt;username&gt;"/>
               </Properties>
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="sequencePanel">
+        <Container class="javax.swing.JPanel" name="updatedByPanel1">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Sequence">
+                <TitledBorder title="Updated">
                   <Font PropertyName="font" name="Dialog" size="11" style="0"/>
                 </TitledBorder>
               </Border>
@@ -292,9 +403,14 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="sequenceTotalDescriptionLabel" max="32767" attributes="0"/>
+                          <Component id="sequenceNumberDescriptionLabel" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="dateLabel" alignment="0" max="32767" attributes="0"/>
-                          <Component id="userLabel" alignment="0" pref="354" max="32767" attributes="0"/>
+                          <Component id="sequenceNumberValueLabel" pref="274" max="32767" attributes="0"/>
+                          <Component id="sequenceTotalValueLabel" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -303,21 +419,37 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="userLabel" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="sequenceNumberDescriptionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="sequenceNumberValueLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="dateLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="sequenceTotalDescriptionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="sequenceTotalValueLabel" alignment="3" min="-2" pref="14" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="22" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="userLabel">
+            <Component class="javax.swing.JLabel" name="sequenceNumberDescriptionLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Number: "/>
+                <Property name="text" type="java.lang.String" value="Number:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="dateLabel">
+            <Component class="javax.swing.JLabel" name="sequenceNumberValueLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&lt;username&gt;"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="sequenceTotalDescriptionLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Total: "/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="sequenceTotalValueLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Total: "/>
               </Properties>
@@ -359,6 +491,7 @@
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="null"/>
                 </Property>
+                <Property name="horizontalScrollBarPolicy" type="int" value="31"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
@@ -373,12 +506,6 @@
                   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
                     <Property name="axis" type="int" value="3"/>
                   </Layout>
-                  <SubComponents>
-                    <Component class="canreg.client.gui.dataentry2.components.VariableEditorGroupPanel" name="variableEditorGroupPanel1">
-                    </Component>
-                    <Component class="canreg.client.gui.dataentry2.components.VariableEditorGroupPanel" name="variableEditorGroupPanel2">
-                    </Component>
-                  </SubComponents>
                 </Container>
               </SubComponents>
             </Container>
@@ -397,14 +524,14 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanel9" alignment="1" pref="666" max="32767" attributes="0"/>
+                          <Component id="jPanel9" alignment="1" pref="627" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jPanel9" min="-2" pref="36" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="445" max="32767" attributes="0"/>
+                              <EmptySpace pref="445" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -438,6 +565,9 @@
                         </Component>
                         <Component class="javax.swing.JButton" name="addSourceRecordButton">
                           <Properties>
+                            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                              <action class="canreg.client.gui.dataentry2.RecordEditorTumour" id="addSourceAction" methodName="addSourceAction"/>
+                            </Property>
                             <Property name="text" type="java.lang.String" value="Add source record"/>
                             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                               <Dimension value="[220, 23]"/>
@@ -496,28 +626,27 @@
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanel10">
 
-                  <Layout>
-                    <DimensionLayout dim="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="sourcesTabbedPane" alignment="0" pref="666" max="32767" attributes="0"/>
-                      </Group>
-                    </DimensionLayout>
-                    <DimensionLayout dim="1">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                              <Component id="sourcesTabbedPane" pref="472" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                    </DimensionLayout>
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
+                    <Property name="axis" type="int" value="3"/>
                   </Layout>
                   <SubComponents>
-                    <Container class="canreg.client.gui.dataentry2.FixWidthRowTabbedPane" name="sourcesTabbedPane">
+                    <Component class="javax.swing.Box$Filler" name="filler12">
                       <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Tahoma" size="12" style="0"/>
+                        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="[32767, 10]"/>
+                        </Property>
+                        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="[0, 10]"/>
+                        </Property>
+                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="[0, 10]"/>
                         </Property>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.VerticalStrut"/>
+                      </AuxValues>
+                    </Component>
+                    <Container class="canreg.client.gui.dataentry2.components.FixedWidthRowTabbedPane" name="sourcesTabbedPane">
 
                       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
                     </Container>
