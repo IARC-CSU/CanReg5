@@ -13128,27 +13128,27 @@ Ghostscript first.
  This can be for example be downloaded from here: 
 \begin_inset CommandInset href
 LatexCommand href
-target "http://pages.cs.wisc.edu/~ghost/doc/GPL/gpl900.htm"
+target "http://www.ghostscript.com/download/gsdnld.html"
 
 \end_inset
 
- (Scroll all the way down, under the heading Microsoft windows and download
- the 
+ (Look under the heading 
 \begin_inset Quotes eld
 \end_inset
 
-GPL Ghostscript 9.00 for 32-bit Windows (the common variety)
+Platform
 \begin_inset Quotes erd
 \end_inset
 
- (
-\begin_inset CommandInset href
-LatexCommand href
-target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs900/gs900w32.exe"
-
+ and download the 
+\begin_inset Quotes eld
 \end_inset
 
-) 
+GPL Ghostscript 9.xx for Windows (32-bit)
+\begin_inset Quotes erd
+\end_inset
+
+ AGPL Release.
 \end_layout
 
 \begin_layout Standard
@@ -13161,20 +13161,12 @@ Run this file to install Ghostscript.
 Then you can get GS View from here: 
 \begin_inset CommandInset href
 LatexCommand href
-target "http://pages.cs.wisc.edu/~ghost/gsview/get49.htm"
+target "http://pages.cs.wisc.edu/~ghost/gsview/get50.htm"
 
 \end_inset
 
  (Most probably, you should pick the Win32 self extracting archive - the
- first download option.
- 
-\begin_inset CommandInset href
-LatexCommand href
-target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe"
-
-\end_inset
-
-) 
+ first download option.)
 \end_layout
 
 \begin_layout Standard
