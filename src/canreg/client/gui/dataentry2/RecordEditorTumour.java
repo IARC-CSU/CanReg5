@@ -732,11 +732,12 @@ public class RecordEditorTumour extends javax.swing.JPanel
         } else {
             //checksLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorPanel").getString("DONE:_") + resultCode.toString());
             checksButton.setText(resourceMap.getString("checksPanel.border.title") + " " +
-                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("DONE:_") + resultCode.toString());
-            checksButton.setForeground(Color.GREEN);
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("DONE:_") + resultCode.toString());            
             if (resultCode == ResultCode.OK || resultCode == ResultCode.Query) {
+                checksButton.setForeground(Color.GREEN);
                 canBeConfirmed = true;
             } else if (resultCode == ResultCode.Rare) {
+                checksButton.setForeground(Color.YELLOW);
                 if (CanRegClientApp.getApplication().getUserRightLevel() == Globals.UserRightLevels.SUPERVISOR) {
                     canBeConfirmed = true;
                 }
@@ -851,8 +852,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditorTumour.class, this);
         checksButton.setAction(actionMap.get("runChecksAction")); // NOI18N
-        checksButton.setForeground(new java.awt.Color(255, 0, 0));
         checksButton.setText("Verified: NO");
+        checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 2));
         checksButton.setMaximumSize(new java.awt.Dimension(200, 45));
         jPanel1.add(checksButton);
         jPanel1.add(filler1);
@@ -1009,6 +1010,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
 
+        jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane2.setResizeWeight(0.5);
         jSplitPane2.setContinuousLayout(true);
 
@@ -1048,13 +1050,13 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1143, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(445, Short.MAX_VALUE))
+                .addContainerGap(185, Short.MAX_VALUE))
         );
 
         jPanel7.add(jPanel8);
