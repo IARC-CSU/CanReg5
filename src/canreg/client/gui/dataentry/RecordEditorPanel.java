@@ -26,17 +26,11 @@
 package canreg.client.gui.dataentry;
 
 import canreg.client.CanRegClientApp;
-/*import canreg.client.gui.components.DateVariableEditorPanel;
+import canreg.client.gui.components.DateVariableEditorPanel;
 import canreg.client.gui.components.TextFieldVariableEditorPanel;
 import canreg.client.gui.components.VariableEditorGroupPanel;
 import canreg.client.gui.components.VariableEditorPanel;
-import canreg.client.gui.components.VariableEditorPanelInterface;*/
-import canreg.client.gui.dataentry2.components.DateVariableEditorPanel;
-import canreg.client.gui.dataentry2.components.TextFieldVariableEditorPanel;
-import canreg.client.gui.dataentry2.components.VariableEditorGroupPanel;
-import canreg.client.gui.dataentry2.components.VariableEditorPanel;
 import canreg.client.gui.components.VariableEditorPanelInterface;
-import canreg.client.gui.dataentry2.components.DictionaryVariableEditorPanel;
 import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.DatabaseVariablesListElementPositionSorter;
@@ -561,7 +555,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
             String variableType = currentVariable.getVariableType();
 
-            /*if (Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)) {
+            if (Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)) {
                 vep = new DateVariableEditorPanel(this);
             } else if (Globals.VARIABLE_TYPE_TEXT_AREA_NAME.equalsIgnoreCase(variableType)) {
                 vep = new TextFieldVariableEditorPanel(this);
@@ -582,27 +576,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
             } else {
                 vep.setDictionary(null);
-            }*/
-            
-            if (Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)) {
-                vep = new DateVariableEditorPanel(this);
-            } else if (Globals.VARIABLE_TYPE_TEXT_AREA_NAME.equalsIgnoreCase(variableType)) {
-                vep = new TextFieldVariableEditorPanel(this);
-            } else if(currentVariable.getDictionaryID() >= 0 && dictionary.get(currentVariable.getDictionaryID()) != null)
-                vep = new DictionaryVariableEditorPanel(this);
-            else {
-                vep = new VariableEditorPanel(this);
-            }
-
-            vep.setDatabaseVariablesListElement(currentVariable);
-
-            int dictionaryID = currentVariable.getDictionaryID();
-            if (dictionaryID >= 0) {
-                Dictionary dic = dictionary.get(dictionaryID);
-                if (dic != null)            
-                    ((DictionaryVariableEditorPanel)vep).setDictionary(dic);                
-            } else {
-                //vep.setDictionary(null);
             }
 
             String variableName = currentVariable.getDatabaseVariableName();
