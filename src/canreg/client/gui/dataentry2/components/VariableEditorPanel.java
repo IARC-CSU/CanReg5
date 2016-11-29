@@ -26,30 +26,16 @@
 package canreg.client.gui.dataentry2.components;
 
 import canreg.client.gui.components.*;
-import canreg.client.CanRegClientApp;
-import canreg.client.gui.CanRegClientView;
-import canreg.client.gui.dataentry.RecordEditor;
-//import canreg.client.gui.dataentry2.RecordEditor;
+import canreg.client.gui.dataentry2.RecordEditor;
 import canreg.client.gui.tools.MaxLengthDocument;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
-import canreg.common.database.Dictionary;
-import canreg.common.database.DictionaryEntry;
-import java.awt.Component;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.beans.PropertyChangeListener;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
+import java.util.logging.*;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentListener;
 
@@ -59,15 +45,12 @@ import javax.swing.event.DocumentListener;
  */
 public class VariableEditorPanel extends javax.swing.JPanel implements ActionListener, VariableEditorPanelInterface {
    
-    protected DatabaseVariablesListElement databaseListElement;
-    //protected Map<String, DictionaryEntry> possibleValuesMap = null;   
+    protected DatabaseVariablesListElement databaseListElement;  
     protected int maxLength;   
-    //private Dictionary dictionary;
     Object initialValue = null;
     protected boolean mandatory;    
     protected boolean hasChanged = false;
     protected ActionListener listener;
-    //DictionaryElementChooser dictionaryElementChooser;
 
     public VariableEditorPanel() {
         initComponents();
@@ -88,16 +71,16 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
     public boolean isFilledOK() {
         boolean filledOK = false;
         if (mandatory) {
-            if (databaseListElement.getDictionary() != null && codeTextField.getText().trim().length() < databaseListElement.getDictionary().getFullDictionaryCodeLength()) {
+            if (databaseListElement.getDictionary() != null && 
+                codeTextField.getText().trim().length() < databaseListElement.getDictionary().getFullDictionaryCodeLength()) 
                 filledOK = false;
-            } else if (getValue() != null) {
+            else if (getValue() != null)
                 filledOK = getValue().toString().trim().length() > 0;
-            } else {
-                filledOK = false;
-            }
-        } else {
+            else
+                filledOK = false;            
+        } else 
             filledOK = true;
-        }
+        
         return filledOK;
     }
 
@@ -217,12 +200,11 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
                     // valueObject = -1;
                     Logger.getLogger(VariableEditorPanel.class.getName()).log(Level.WARNING, databaseListElement.getShortName() + " " + valueString, numberFormatException);
                 }
-            } else {
-                valueObject = null;
-            }
-        } else {
+            } else 
+                valueObject = null;            
+        } else 
             valueObject = valueString;
-        }
+        
         return valueObject;
     }
     
@@ -237,9 +219,8 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
         if (fillInStatus.equalsIgnoreCase(Globals.FILL_IN_STATUS_AUTOMATIC_STRING)) {
             codeTextField.setFocusable(false);
             codeTextField.setEditable(false);
-        } else if (fillInStatus.equalsIgnoreCase(Globals.FILL_IN_STATUS_MANDATORY_STRING)) {
-            codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
-        }
+        } else if (fillInStatus.equalsIgnoreCase(Globals.FILL_IN_STATUS_MANDATORY_STRING)) 
+            codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);        
 
         // String variableType = databaseListElement.getVariableType();
         /*descriptionCombo.setVisible(false);
@@ -289,9 +270,8 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
     
     protected void setMaximumLength(int length) {
         this.maxLength = length;
-        if (this.maxLength > 0) {
-            codeTextField.setDocument(new MaxLengthDocument(maxLength, this));
-        }
+        if (this.maxLength > 0) 
+            codeTextField.setDocument(new MaxLengthDocument(maxLength, this));        
     }
     
     protected void componentFocusGained(java.awt.event.FocusEvent evt) {
@@ -390,14 +370,15 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
     }*/
 
     protected void transferFocusToNext() {
-        SwingUtilities.invokeLater(new Runnable() {
+        /*SwingUtilities.invokeLater(new Runnable() {
             @Override
-            public void run() {
+            public void run() {            
                 codeTextField.setRequestFocusEnabled(true);
                 codeTextField.requestFocus();
                 codeTextField.transferFocus();
             }
-        });
+        });*/
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
     }
  
     @SuppressWarnings("unchecked")
@@ -443,14 +424,14 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
                 codeTextFieldMouseReleased(evt);
             }
         });
+        codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                codeTextFieldFocusLost(evt);
+            }
+        });
         codeTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 codeTextFieldKeyTyped(evt);
-            }
-        });
-        codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                codeTextFieldActionPerformed(evt);
             }
         });
         jPanel1.add(codeTextField);
@@ -478,12 +459,11 @@ private void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FI
 }//GEN-LAST:event_codeTextFieldMouseReleased
 
     protected void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {
-        if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
-            transferFocusToNext();
-        }
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER) 
+            transferFocusToNext();        
     }
     
-    protected void codeTextFieldActionPerformed(java.awt.event.FocusEvent evt) {
+    protected void codeTextFieldFocusLost(java.awt.event.FocusEvent evt) {
         updateFilledInStatusColor();        
     }
 

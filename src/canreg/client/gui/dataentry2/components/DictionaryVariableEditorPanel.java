@@ -17,18 +17,26 @@
 package canreg.client.gui.dataentry2.components;
 
 
+import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.matchers.TextMatcherEditor;
+import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import canreg.client.dataentry.DictionaryHelper;
-import canreg.client.gui.dataentry.RecordEditor;
-//import canreg.client.gui.dataentry2.dataentry.RecordEditor;
+import canreg.client.gui.components.DictionaryElementTextFilterator;
+import canreg.client.gui.dataentry2.RecordEditor;
 import canreg.client.gui.tools.MaxLengthDocument;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 
 
 /**
@@ -38,7 +46,8 @@ import javax.swing.DefaultComboBoxModel;
 public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     
     private Dictionary dictionary;    
-    //private Map<String, DictionaryEntry> possibleValuesMap;
+    private AutoCompleteSupport<DictionaryEntry> categoryComboCompSup;
+    private AutoCompleteSupport<DictionaryEntry> descriptionComboCompSup;    
     private static final Color ORDER_CODE_COLOR = new Color(51,51,51);
     private static final Color ORDER_DESCRIPTION_COLOR = new Color(255,255,255);
     private ActionListener categoryComboListener;
@@ -63,9 +72,8 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         outerSplitPane = new javax.swing.JSplitPane();
         innerSplitPane = new javax.swing.JSplitPane();        
         descriptionCombo = new javax.swing.JComboBox();
-        categoryCombo = new javax.swing.JComboBox();
-        //categoryToggle = new javax.swing.JToggleButton();                
-        descriptionToggle = new javax.swing.JToggleButton();
+        categoryCombo = new javax.swing.JComboBox();                     
+        sortToggle = new javax.swing.JToggleButton();
                 
         jPanel1.setName("jPanel1"); // NOI18N
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.PAGE_AXIS));
@@ -88,60 +96,58 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         categoryCombo.setMinimumSize(new Dimension(20, 20));
         categoryCombo.setPreferredSize(new Dimension(20, 20));
         categoryCombo.setName("categoryCombo"); // NOI18N
-        categoryCombo.setEditable(true);
-        descriptionCombo.addKeyListener(new java.awt.event.KeyAdapter() {
+        categoryCombo.setEditable(true);        
+        categoryCombo.getEditor().getEditorComponent().addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 comboBoxKeyTyped(evt);
             }
         });
-                
-        /*categoryToggle.setBackground(ORDER_CODE_COLOR); // NOI18N
-        categoryToggle.setText("");
-        categoryToggle.setIcon(resourceMap.getIcon("sortBy.icon.code")); // NOI18N
-        categoryToggle.setToolTipText(resourceMap.getString("sortByLabel.text") + " " + 
-                                      resourceMap.getString("sortByCodeSelected.Action.text")); // NOI18N
-        categoryToggle.setBorder(null);
-        categoryToggle.setContentAreaFilled(false);
-        categoryToggle.setMaximumSize(new java.awt.Dimension(25, 25));
-        categoryToggle.setMinimumSize(new java.awt.Dimension(20, 20));
-        categoryToggle.setName("categoryToggle"); // NOI18N
-        categoryToggle.setOpaque(true);
-        categoryToggle.setPreferredSize(new java.awt.Dimension(20, 20));
-        categoryToggle.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                categoryToggleItemStateChanged(evt);
+        categoryCombo.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                categoryCombo.showPopup();
             }
-        });*/
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                categoryCombo.hidePopup();
+            }
+        });
         
+                
         jPanel4.setName("jPanel4"); // NOI18N
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
-        jPanel4.add(categoryCombo);
-        //jPanel4.add(categoryToggle);
+        jPanel4.add(categoryCombo);        
         
         descriptionCombo.setPreferredSize(new Dimension(20, 20));
         descriptionCombo.setMinimumSize(new Dimension(20, 20));
         descriptionCombo.setName("descriptionCombo"); // NOI18N
         descriptionCombo.setEditable(true);
-        descriptionCombo.addKeyListener(new java.awt.event.KeyAdapter() {
+        descriptionCombo.getEditor().getEditorComponent().addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 comboBoxKeyTyped(evt);
             }
         });
+        descriptionCombo.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                descriptionCombo.showPopup();
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                descriptionCombo.hidePopup();
+            }
+        });
         
-        descriptionToggle.setBackground(ORDER_CODE_COLOR); // NOI18N
-        descriptionToggle.setText("");
-        descriptionToggle.setIcon(resourceMap.getIcon("sortBy.icon.code")); // NOI18N
-        descriptionToggle.setToolTipText(resourceMap.getString("sortByLabel.text") + " " + 
+        sortToggle.setBackground(ORDER_CODE_COLOR); // NOI18N
+        sortToggle.setText("");
+        sortToggle.setIcon(resourceMap.getIcon("sortBy.icon.code")); // NOI18N
+        sortToggle.setToolTipText(resourceMap.getString("sortByLabel.text") + " " + 
                                          resourceMap.getString("sortByCodeSelected.Action.text")); // NOI18N
-        descriptionToggle.setBorder(null);
-        descriptionToggle.setFocusable(false);
-        descriptionToggle.setContentAreaFilled(false);
-        descriptionToggle.setMaximumSize(new java.awt.Dimension(25, 25));
-        descriptionToggle.setMinimumSize(new java.awt.Dimension(20, 20));
-        descriptionToggle.setName("descriptionToggle"); // NOI18N
-        descriptionToggle.setOpaque(true);
-        descriptionToggle.setPreferredSize(new java.awt.Dimension(20, 20));
-        descriptionToggle.addItemListener(new java.awt.event.ItemListener() {
+        sortToggle.setBorder(null);
+        sortToggle.setFocusable(false);
+        sortToggle.setContentAreaFilled(false);
+        sortToggle.setMaximumSize(new java.awt.Dimension(25, 25));
+        sortToggle.setMinimumSize(new java.awt.Dimension(20, 20));
+        sortToggle.setName("descriptionToggle"); // NOI18N
+        sortToggle.setOpaque(true);
+        sortToggle.setPreferredSize(new java.awt.Dimension(20, 20));
+        sortToggle.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 descriptionToggleItemStateChanged(evt);
             }
@@ -150,7 +156,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         jPanel5.setName("jPanel5"); // NOI18N
         jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.LINE_AXIS));
         jPanel5.add(descriptionCombo);
-        jPanel5.add(descriptionToggle);
+        jPanel5.add(sortToggle);
         
         innerSplitPane.setLeftComponent(jPanel4);
         innerSplitPane.setRightComponent(jPanel5);                              
@@ -177,6 +183,11 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         updateFilledInStatusColor();
     }
 
+    /**
+     * If codeTextField has a code written in it, it looks for a category item
+     * and/or description item that matches the code.
+     * @throws NullPointerException 
+     */
     private void lookUpAndSetDescription() throws NullPointerException {
         //descriptionTextField.setText("");        
         //categoryTextField.setText("");        
@@ -230,21 +241,27 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         if(dictionary.getDictionaryEntries() == null) {          
             categoryCombo.setModel(
                     new javax.swing.DefaultComboBoxModel(
-                            new String[] {java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel").getString("Empty_dictionary")}));        
+                            new String[] {java.util.ResourceBundle.
+                                    getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel").getString("Empty_dictionary")}));        
             descriptionCombo.setModel(
                     new javax.swing.DefaultComboBoxModel(
-                            new String[] {java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel").getString("Empty_dictionary")}));            
+                            new String[] {java.util.ResourceBundle.
+                                    getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel").getString("Empty_dictionary")}));            
         }
-        else {    
-            categoryCombo.setModel(new javax.swing.DefaultComboBoxModel<DictionaryEntry>() {});
-            descriptionCombo.setModel(new javax.swing.DefaultComboBoxModel<DictionaryEntry>() {});        
+        else {            
+            LinkedList<DictionaryEntry> categoryPossibleValuesCollection = new LinkedList<DictionaryEntry>();
+            LinkedList<DictionaryEntry> descriptionPossibleValuesCollection = new LinkedList<DictionaryEntry>();
+                  
             if(dictionary.isCompoundDictionary()) {                                
                 for(DictionaryEntry entry : dictionary.getDictionaryEntries().values()) {                    
-                    if(entry.getCode().length() < dictionary.getFullDictionaryCodeLength())                         
-                        categoryCombo.addItem(entry);
-                    else if(entry.getCode().length() == dictionary.getFullDictionaryCodeLength()) 
-                        descriptionCombo.addItem(entry);
+                    if(entry.getCode().length() < dictionary.getFullDictionaryCodeLength()) 
+                        categoryPossibleValuesCollection.add(entry);                   
+                    else if(entry.getCode().length() == dictionary.getFullDictionaryCodeLength())
+                        descriptionPossibleValuesCollection.add(entry);                    
                 }
+                          
+                categoryComboCompSup = this.setComboModel(categoryComboCompSup, categoryCombo, categoryPossibleValuesCollection);
+
                 categoryCombo.setSelectedIndex(-1);
                 categoryComboListener = new ActionListener() {
                     @Override
@@ -252,12 +269,15 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                         categoryComboActionPerformed(e);
                     }
                 };
-                categoryCombo.addActionListener(categoryComboListener);                
+                categoryCombo.addActionListener(categoryComboListener);
+                
             } else {
-                for(DictionaryEntry entry : dictionary.getDictionaryEntries().values())
-                    descriptionCombo.addItem(entry);
+                for(DictionaryEntry entry : dictionary.getDictionaryEntries().values()) 
+                    descriptionPossibleValuesCollection.add(entry);                
             }            
-            
+                                    
+            descriptionComboCompSup = this.setComboModel(descriptionComboCompSup, descriptionCombo, descriptionPossibleValuesCollection);
+
             descriptionCombo.setSelectedIndex(-1);
             descriptionComboListener = new ActionListener() {
                 @Override
@@ -267,14 +287,35 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             };
             descriptionCombo.addActionListener(descriptionComboListener);            
         }   
-    }            
+    }         
     
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(avoidActionPerformed) {
-            return;            
+    /**
+     * GlazedList's comboBox autocompletion and autofiltering.
+     * @param combo
+     * @param values 
+     */
+    private AutoCompleteSupport<DictionaryEntry> setComboModel(AutoCompleteSupport<DictionaryEntry> compSup, 
+                               JComboBox combo, 
+                               List<DictionaryEntry> values) {
+        EventList<DictionaryEntry> possibleValuesEventList = new BasicEventList<DictionaryEntry>(values);
+        if(compSup != null) {
+            compSup.uninstall();
+            compSup = null;
         }
-        else {
+        compSup = AutoCompleteSupport.install(combo, possibleValuesEventList, new DictionaryElementTextFilterator());        
+        compSup.setFilterMode(TextMatcherEditor.CONTAINS);
+        return compSup;
+    }
+    
+    /**
+     * Executed when:
+     * - A key is pressed on codeTextField
+     * - codeTextField.setText() without previously indicating avoidActionPerformed = true     
+     * @param e 
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {    
+        if(! avoidActionPerformed) {
             if(e.getActionCommand().equalsIgnoreCase(MaxLengthDocument.MAX_LENGTH_ACTION_STRING)) {
                 try {
                     lookUpAndSetDescription();
@@ -288,7 +329,8 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 try {
                     lookUpAndSetDescription();
                     Object currentValue = getValue();
-                    if (listener != null && ((currentValue != null && !currentValue.equals(initialValue)) || (initialValue != null && !initialValue.equals(currentValue)))) {
+                    if (listener != null && 
+                        ((currentValue != null && !currentValue.equals(initialValue)) || (initialValue != null && !initialValue.equals(currentValue)))) {
                         hasChanged = true;
                         listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
                     }
@@ -298,26 +340,14 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                             new String[] {java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel").getString("Dictionary_Error")}));
                 }
                 updateFilledInStatusColor();
-            }     
-        }
-        
-        /*if (e.getActionCommand().equalsIgnoreCase(DictionaryElementChooser.OK_ACTION)) {
-            codeTextField.setText(dictionaryElementChooser.getSelectedElement().getCode());
-            try {
-                lookUpAndSetDescription();
-            } catch (NullPointerException ne) {
-                //descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
-                descriptionCombo.setModel(new javax.swing.DefaultComboBoxModel(
-                        new String[] {java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/DictionaryVariableEditorPanel").getString("Dictionary_Error")}));
             }
-            updateFilledInStatusColor();
+                        
             listener.actionPerformed(new ActionEvent(this, 0, RecordEditor.REQUEST_FOCUS));
-            // setFocus();            
-        }*/        
+        }    
     }
     
     @Override
-    protected void codeTextFieldActionPerformed(java.awt.event.FocusEvent evt) {                                              
+    protected void codeTextFieldFocusLost(java.awt.event.FocusEvent evt) {                                              
        try {
             lookUpAndSetDescription();
             updateFilledInStatusColor();
@@ -353,34 +383,23 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         }
     }    
     
+    /**
+     * Triggered when the user clicks on the arrows crossing button (change
+     * sort button)     
+     * @param evt 
+     */
     private void descriptionToggleItemStateChanged(java.awt.event.ItemEvent evt) {                                                
-        if(descriptionToggle.isSelected()) {            
-            descriptionToggle.setBackground(ORDER_DESCRIPTION_COLOR);
-            descriptionToggle.setIcon(resourceMap.getIcon("sortBy.icon.description")); // NOI18N
-            descriptionToggle.setToolTipText(resourceMap.getString("sortByLabel.text") + " " + 
+        if(sortToggle.isSelected()) {            
+            sortToggle.setBackground(ORDER_DESCRIPTION_COLOR);
+            sortToggle.setIcon(resourceMap.getIcon("sortBy.icon.description")); // NOI18N
+            sortToggle.setToolTipText(resourceMap.getString("sortByLabel.text") + " " + 
                                              resourceMap.getString("sortByDescriptionSelected.Action.text")); // NOI18N
             
-            DictionaryEntry selectedDescEntry = (DictionaryEntry) descriptionCombo.getSelectedItem();
-            DefaultComboBoxModel<DictionaryEntry> newDescModel = new DefaultComboBoxModel<DictionaryEntry>() {};
-            for(int i = 0; i < descriptionCombo.getItemCount(); i++) {
-                DictionaryEntry entry = (DictionaryEntry)descriptionCombo.getItemAt(i);
-                entry.setSortByCode();
-                newDescModel.addElement(entry);
-            }            
-            descriptionCombo.setModel(newDescModel);
-            descriptionCombo.setSelectedItem(selectedDescEntry);
+            descriptionComboCompSup = this.changeComboListSorting(descriptionComboCompSup, descriptionCombo, true);
                         
             if(dictionary.isCompoundDictionary()) {
-                DictionaryEntry selectedEntry = (DictionaryEntry) categoryCombo.getSelectedItem();
-                DefaultComboBoxModel<DictionaryEntry> newModel = new DefaultComboBoxModel<DictionaryEntry>() {};
-                for(int i = 0; i < categoryCombo.getItemCount(); i++) {
-                    DictionaryEntry entry = (DictionaryEntry)categoryCombo.getItemAt(i);
-                    entry.setSortByCode();
-                    newModel.addElement(entry);
-                }      
                 categoryCombo.removeActionListener(categoryComboListener);
-                categoryCombo.setModel(newModel);
-                categoryCombo.setSelectedItem(selectedEntry);
+                categoryComboCompSup = this.changeComboListSorting(categoryComboCompSup, categoryCombo, true);
                 categoryCombo.addActionListener(categoryComboListener);
             }
                                     
@@ -389,33 +408,16 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             //Este setDictionary nos caga todo!!
             setDictionary(dictionary);*/
         } else {
-            descriptionToggle.setBackground(ORDER_CODE_COLOR);
-            descriptionToggle.setIcon(resourceMap.getIcon("sortBy.icon.code")); // NOI18N
-            descriptionToggle.setToolTipText(resourceMap.getString("sortByLabel.text") + " " + 
+            sortToggle.setBackground(ORDER_CODE_COLOR);
+            sortToggle.setIcon(resourceMap.getIcon("sortBy.icon.code")); // NOI18N
+            sortToggle.setToolTipText(resourceMap.getString("sortByLabel.text") + " " + 
                                              resourceMap.getString("sortByCodeSelected.Action.text")); // NOI18N 
            
-            DictionaryEntry selectedDescEntry = (DictionaryEntry) descriptionCombo.getSelectedItem();
-            DefaultComboBoxModel<DictionaryEntry> newDescModel = new DefaultComboBoxModel<DictionaryEntry>() {};
-            for(int i = 0; i < descriptionCombo.getItemCount(); i++) {
-                DictionaryEntry entry = (DictionaryEntry)descriptionCombo.getItemAt(i);
-                entry.setSortByDescription();
-                newDescModel.addElement(entry);
-            }            
-            descriptionCombo.setModel(newDescModel);
-            descriptionCombo.setSelectedItem(selectedDescEntry);
-            
-            //categoryCombo is inside jPanel4
-            if(jPanel4.isVisible()) {
-                DictionaryEntry selectedEntry = (DictionaryEntry) categoryCombo.getSelectedItem();
-                DefaultComboBoxModel<DictionaryEntry> newModel = new DefaultComboBoxModel<DictionaryEntry>() {};
-                for(int i = 0; i < categoryCombo.getItemCount(); i++) {
-                    DictionaryEntry entry = (DictionaryEntry)categoryCombo.getItemAt(i);
-                    entry.setSortByDescription();
-                    newModel.addElement(entry);
-                }            
+            descriptionComboCompSup = this.changeComboListSorting(descriptionComboCompSup, descriptionCombo, false);
+                        
+            if(dictionary.isCompoundDictionary()) {        
                 categoryCombo.removeActionListener(categoryComboListener);
-                categoryCombo.setModel(newModel);
-                categoryCombo.setSelectedItem(selectedEntry);
+                categoryComboCompSup = this.changeComboListSorting(categoryComboCompSup, categoryCombo, false);
                 categoryCombo.addActionListener(categoryComboListener);
             }
             
@@ -426,6 +428,50 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         }
     }
     
+    /**
+     * Changes the sorting (sort by code or sort by description) of a comboBox 
+     * list.
+     * @param compSup
+     * @param combo
+     * @param sortByCode
+     * @return 
+     */
+    private AutoCompleteSupport<DictionaryEntry> changeComboListSorting(AutoCompleteSupport<DictionaryEntry> compSup, 
+                                                                        JComboBox<DictionaryEntry> combo, 
+                                                                        boolean sortByCode) {
+        //We need to setup the new comboBox values. We traverse the current combo
+        //list because it could be already filtered by a specific category
+        DictionaryEntry selectedDescEntry = (DictionaryEntry) combo.getSelectedItem();
+        //List<DictionaryEntry> newValuesList = new LinkedList<DictionaryEntry>() {};
+        for(int i = 0; i < combo.getItemCount(); i++) {            
+            DictionaryEntry entry = compSup.getItemList().get(i);
+            if(sortByCode)
+                entry.setSortByCode();
+            else
+                entry.setSortByDescription();
+            //newValuesList.add(entry);
+        }         
+        //compSup = this.setComboModel(compSup, combo, newValuesList);
+        if(combo.isPopupVisible()) {
+            combo.hidePopup();
+            combo.revalidate();
+            combo.repaint();
+            combo.showPopup();
+        } else {
+            combo.revalidate();
+            combo.repaint();
+        }
+        combo.setSelectedItem(selectedDescEntry);
+        return compSup;
+    }
+    
+    /**
+     * Triggered when:
+     * - A key is pressed in the categoryComboBox (because when presseing a key, 
+     * AutoCompleteSupport selects a possible match for what we are writing)
+     * - An item is selected when using the mouse
+     * @param evt 
+     */
     private void categoryComboActionPerformed(java.awt.event.ActionEvent evt) {                                              
         if(categoryCombo.getSelectedItem() != null) { 
             String categoryCode = null;
@@ -439,28 +485,39 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 descriptionCombo.removeActionListener(descriptionComboListener);                    
                 avoidActionPerformed = true;
                 codeTextField.setText("");
-                avoidActionPerformed = false;                    
-                descriptionCombo.setModel(new DefaultComboBoxModel<DictionaryEntry>() {}); 
-                DictionaryEntry[] entries = DictionaryHelper.getDictionaryEntriesStartingWith(categoryCode,
-                                                                                              dictionary.getDictionaryEntries().values().toArray(new DictionaryEntry[0]));
-                for(DictionaryEntry entry : entries)
-                    descriptionCombo.addItem(entry);
+                avoidActionPerformed = false;                       
+                List<DictionaryEntry> entries = DictionaryHelper
+                        .getDictionaryEntriesCodeStartingWith(categoryCode, dictionary.getDictionaryEntries().values().toArray(new DictionaryEntry[0]));
+                descriptionComboCompSup = this.setComboModel(descriptionComboCompSup, descriptionCombo, entries);
                 descriptionCombo.setSelectedIndex(-1);
-                /*descriptionComboListener = new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        descriptionComboActionPerformed(e);
-                    }
-                };*/
                 descriptionCombo.addActionListener(descriptionComboListener);
             }            
             categorySelected = (DictionaryEntry) categoryCombo.getSelectedItem();
         }
+        
+        /*transferFocusToNext();*/
     } 
     
+    /**
+     * Triggered when:
+     * - A key is pressed in the descriptonComboBox (because when presseing a key, 
+     * AutoCompleteSupport selects a possible match for what we are writing)
+     * - When pressing ENTER, even if there was already a selected item
+     * - An item is selected when using the mouse
+     * - When the keys UP or DOWN are pressed when traversing the combo's list
+     * @param evt 
+     */
     private void descriptionComboActionPerformed(java.awt.event.ActionEvent evt) {                                              
         if(descriptionCombo.getSelectedItem() != null) {
-            String descriptionCode = ((DictionaryEntry) descriptionCombo.getSelectedItem()).getCode();
+            String descriptionCode = null;
+            try {
+                 descriptionCode = ((DictionaryEntry) descriptionCombo.getSelectedItem()).getCode();
+            } catch(ClassCastException ex) {
+                descriptionCombo.removeActionListener(descriptionComboListener);
+                descriptionCombo.setSelectedIndex(-1);
+                descriptionCombo.addActionListener(descriptionComboListener);                
+                return;
+            }
             if(descriptionCode != null) {
                 if(dictionary.isCompoundDictionary() /*&& categoryCombo.getSelectedIndex() == -1*/) {                    
                     DictionaryEntry categoryEntry = DictionaryHelper.getDictionaryEntryBestMatchingSubcode(descriptionCode, 
@@ -475,17 +532,24 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 codeTextField.setText(descriptionCode);
                 avoidActionPerformed = false;
                 updateFilledInStatusColor();
+                
                 //listener.actionPerformed(new ActionEvent(this, 0, RecordEditor.REQUEST_FOCUS));
                 // setFocus();
                 //transferFocusToNext();                                
             }            
         }
     } 
-    
-    private void comboBoxKeyTyped(java.awt.event.KeyEvent evt) {                                       
+       
+    private void comboBoxKeyTyped(java.awt.event.KeyEvent evt) {
         if(evt.getKeyChar() == KeyEvent.VK_ENTER) 
-            transferFocusToNext();        
-    } 
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
+        //Change the sorting
+        else if(evt.getKeyChar() == '+') {
+            evt.consume();
+            this.sortToggle.doClick();
+        }
+    }
+       
     
     private javax.swing.JComboBox<DictionaryEntry> categoryCombo;    
     private javax.swing.JComboBox<DictionaryEntry> descriptionCombo;
@@ -493,7 +557,6 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;    
     private javax.swing.JSplitPane outerSplitPane;
-    private javax.swing.JSplitPane innerSplitPane;
-    //private javax.swing.JToggleButton categoryToggle;
-    private javax.swing.JToggleButton descriptionToggle;
+    private javax.swing.JSplitPane innerSplitPane;    
+    private javax.swing.JToggleButton sortToggle;
 }
