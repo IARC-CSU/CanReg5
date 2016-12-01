@@ -22,7 +22,6 @@ import canreg.client.gui.CanRegClientView;
 import static canreg.client.gui.CanRegClientView.maximizeHeight;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.client.gui.dataentry.EditChecksInternalFrame;
-import canreg.client.gui.dataentry2.RecordEditorPanel;
 import canreg.client.gui.management.ComparePatientsInternalFrame;
 import canreg.client.gui.tools.PrintUtilities;
 import canreg.client.gui.tools.WaitFrame;
@@ -108,7 +107,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     //unused private final String patientRecordIDTumourTableVariableName = null;
     private BrowseInternalFrame browseInternalFrame;
         
-    public RecordEditor(JDesktopPane desktopPane) {
+    
+    public RecordEditor(JDesktopPane desktopPane) {        
         this.desktopPane = desktopPane;
         initComponents();
         patientRecords = new LinkedHashSet<DatabaseRecord>();
@@ -146,9 +146,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     dispose(); 
                 }
             }
-        });
-        
-
+        });        
         // Add a listener for changing the active tab
         ChangeListener tabbedPaneChangeListener = new ChangeListener() {
             @Override
@@ -189,15 +187,13 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             DatabaseVariablesListElement dbvle = tumourSelected.getObsoleteFlagVariableListElement();
             if (dbvle != null) {
                 boolean obsolete = tumourObsoleteToggleButton.isSelected();
-                if (obsolete) {
+                if (obsolete) 
                     tumourSelected.getDatabaseRecord().setVariable(dbvle.getDatabaseVariableName(), Globals.OBSOLETE_VALUE);
-                } else {
-                    tumourSelected.getDatabaseRecord().setVariable(dbvle.getDatabaseVariableName(), Globals.NOT_OBSOLETE_VALUE);
-                }
+                else 
+                    tumourSelected.getDatabaseRecord().setVariable(dbvle.getDatabaseVariableName(), Globals.NOT_OBSOLETE_VALUE);                
             }
-        } else {
-            tumourObsoleteToggleButton.setSelected(!tumourObsoleteToggleButton.isSelected());
-        }
+        } else 
+            tumourObsoleteToggleButton.setSelected(!tumourObsoleteToggleButton.isSelected());        
     }
     
     public void setGlobalToolBox(GlobalToolBox globalToolBox) {
@@ -226,7 +222,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             rePanel.setDocument(doc);
             rePanel.setRecordAndBuildPanel(dbr);
             patientRecords.add(dbr);
-            Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
+            Object regno = dbr.getVariable(globalToolBox
+                    .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString())
+                    .getDatabaseVariableName());
             String regnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
             if (regno != null) {
                 regnoString = regno.toString();
@@ -243,12 +241,14 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                                      + ": " + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString(" RECORD ") 
                                      + (patientTabbedPane.getTabCount() + 1), rePanel);
             if (!titleSet) {
-                Object patno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
+                Object patno = dbr.getVariable(globalToolBox
+                        .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
                 String patnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
                 if (patno != null) {
                     patnoString = patno.toString();
                     if (patnoString.length() > 0) {
-                        this.setTitle(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PATIENT ID:") + patnoString);
+                        this.setTitle(java.util.ResourceBundle
+                                .getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PATIENT ID:") + patnoString);
                         titleSet = true;
                     }
                 }
@@ -259,7 +259,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             rePanel.setDocument(doc);
             rePanel.setRecordAndBuildPanel(dbr);
             tumourRecords.add(dbr);
-            Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName());
+            Object regno = dbr.getVariable(globalToolBox
+                    .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName());
             String regnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
             if (regno != null) {
                 regnoString = regno.toString();
@@ -333,8 +334,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             // copy all information
             for (String variableName : dbr.getVariableNames()) {
                 if (variableName.equalsIgnoreCase(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) 
-                    || variableName.equalsIgnoreCase(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString())
-                                                                  .getDatabaseVariableName())) {
+                    || variableName.equalsIgnoreCase(globalToolBox
+                            .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString())
+                            .getDatabaseVariableName())) {
                     /*Nothing here*/
                 }
                 else 
@@ -342,7 +344,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             }
             // except the database record ID and the patientTable ID
             dbr.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, null);
-            dbr.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName(), null);
+            dbr.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals
+                    .StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName(), null);
         }
         return dbr;
     }
@@ -355,7 +358,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private void refreshTitles(RecordEditorPanel recordEditorPanel, DatabaseRecord dbr) {
         if(dbr instanceof Patient) {
             // patientRecords.add(dbr);
-            Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
+            Object regno = dbr.getVariable(globalToolBox
+                    .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
             String regnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
             if(regno != null) {
                 regnoString = regno.toString();
@@ -372,20 +376,24 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 index++;
             }
             if(!titleSet) {
-                Object patno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
+                Object patno = dbr.getVariable(globalToolBox
+                        .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
                 String patnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
                 if(patno != null) {
                     patnoString = patno.toString();
                     if(patnoString.length() > 0) {
-                        this.setTitle(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PATIENT ID:") + patnoString);
+                        this.setTitle(java.util.ResourceBundle
+                                .getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PATIENT ID:") + patnoString);
                         titleSet = true;
                     }
                 }
             }
         } else if(dbr instanceof Tumour) {
             // tumourRecords.add(dbr);
-            Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName());
-            String regnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
+            Object regno = dbr.getVariable(globalToolBox
+                    .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName());
+            String regnoString = java.util.ResourceBundle
+                    .getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
             if(regno != null) {
                 regnoString = regno.toString();
                 if(regnoString.length() == 0) 
@@ -555,13 +563,21 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     }
 
     private DatabaseRecord associateTumourRecordToPatientID(DatabaseRecord tumourDatabaseRecord, String patientID) {
-        tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName(),
+        tumourDatabaseRecord.setVariable(globalToolBox
+                .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString())
+                .getDatabaseVariableName(),
                 patientID);
-        tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName(),
+        tumourDatabaseRecord.setVariable(globalToolBox
+                .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString())
+                .getDatabaseVariableName(),
                 patientID);
-        tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString()).getDatabaseVariableName(),
+        tumourDatabaseRecord.setVariable(globalToolBox
+                .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString())
+                .getDatabaseVariableName(),
                 Globals.RECORD_STATUS_PENDING_CODE);
-        tumourDatabaseRecord.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUnduplicationStatus.toString()).getDatabaseVariableName(),
+        tumourDatabaseRecord.setVariable(globalToolBox
+                .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUnduplicationStatus.toString())
+                .getDatabaseVariableName(),
                 Globals.UNDUPLICATION_NOT_DONE_CODE);
         return tumourDatabaseRecord;
     }
@@ -595,10 +611,11 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
     @Action
     public void changePatientID() {
-        String requestedPatientID = JOptionPane.showInputDialog(null, 
-																java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PLEASE ENTER PATIENT ID:"), 
-																java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("CHANGE TO WHICH PATIENTID?"), 
-																JOptionPane.QUESTION_MESSAGE);
+        String requestedPatientID = JOptionPane
+                .showInputDialog(null, 
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PLEASE ENTER PATIENT ID:"), 
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("CHANGE TO WHICH PATIENTID?"), 
+                                JOptionPane.QUESTION_MESSAGE);
         if (requestedPatientID != null) {
             Patient[] patientDatabaseRecord = null;
             try {
@@ -612,20 +629,21 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                         tumour = associateTumourRecordToPatientID(tumour, requestedPatientID);
                         saveRecord(tumour);
                     }
-                    JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RECORD MOVED."));
+                    JOptionPane.showInternalMessageDialog(this, 
+                            java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RECORD MOVED."));
                 } else {
                     JOptionPane.showInternalMessageDialog(this, 
-														  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("NO SUCH PATIENT ID."), 
-														  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"), 
-														  JOptionPane.WARNING_MESSAGE);
+                                        java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("NO SUCH PATIENT ID."), 
+                                        java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"), 
+                                        JOptionPane.WARNING_MESSAGE);
                     changePatientID();
                 }
             } catch (canreg.server.database.RecordLockedException ex) {
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showInternalMessageDialog(this, 
-													  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RECORD_LOCKED"), 
-													  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RECORD_LOCKED"), 
-													  JOptionPane.WARNING_MESSAGE);
+                                        java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RECORD_LOCKED"), 
+                                        java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RECORD_LOCKED"), 
+                                        JOptionPane.WARNING_MESSAGE);
             } catch (SQLException ex) {
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
@@ -661,8 +679,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         
         // Release all tumour records held
         for (DatabaseRecord record : tumourRecords) {
-            Tumour tumour = (Tumour) record;
-            
+            Tumour tumour = (Tumour) record;            
             // Release all sources
             for (Source source : tumour.getSources()) {
                 try {
@@ -719,7 +736,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
     private void deleteRecord(RecordEditorPanel recordEditorPanel) {
         int option = JOptionPane.NO_OPTION;
-        option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PERMANENTLY DELETE RECORD?"));
+        option = JOptionPane.showConfirmDialog(null, 
+                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PERMANENTLY DELETE RECORD?"));
         JTabbedPane tabbedPane = null;
         if(option == JOptionPane.YES_OPTION) {
             boolean success = false;
@@ -731,9 +749,11 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 else if (record instanceof Tumour)
                     tabbedPane = tumourTabbedPane;                
                 tabbedPane.remove((Component) recordEditorPanel);
-                JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RECORD DELETED."));
+                JOptionPane.showInternalMessageDialog(this,
+                        java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RECORD DELETED."));
             } else 
-                JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RECORD NOT DELETED.ERROR OCCURED..."));            
+                JOptionPane.showInternalMessageDialog(this,
+                        java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RECORD NOT DELETED.ERROR OCCURED..."));            
         }
     }
 
@@ -764,15 +784,18 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         allPresent = allPresent && tumourRecordEditorPanel.areAllVariablesPresent();
 
         if (!allPresent) {
-            editChecksInternalFrame.setMandatoryVariablesTextAreaText(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("MANDATORY VARIABLES MISSING."));
+            editChecksInternalFrame.setMandatoryVariablesTextAreaText(
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("MANDATORY VARIABLES MISSING."));
             worstResultCodeFound = CheckResult.ResultCode.Missing;
             message += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("NOT PERFORMED.");
         } else {
-            editChecksInternalFrame.setMandatoryVariablesTextAreaText(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("ALL MANDATORY VARIABLES PRESENT."));
+            editChecksInternalFrame.setMandatoryVariablesTextAreaText(
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("ALL MANDATORY VARIABLES PRESENT."));
             // Run the checks on the data
             LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumour);
 
-            Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes = new TreeMap<Globals.StandardVariableNames, CheckResult.ResultCode>();
+            Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes =
+                    new TreeMap<Globals.StandardVariableNames, CheckResult.ResultCode>();
             worstResultCodeFound = CheckResult.ResultCode.OK;
             for (CheckResult result : checkResults) {
                 if (result.getResultCode() != CheckResult.ResultCode.OK && result.getResultCode() != CheckResult.ResultCode.NotDone) {
@@ -781,11 +804,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                         worstResultCodeFound = CheckResult.decideWorstResultCode(result.getResultCode(), worstResultCodeFound);
                         for (Globals.StandardVariableNames standardVariableName : result.getVariablesInvolved()) {
                             CheckResult.ResultCode worstResultCodeFoundForThisVariable = mapOfVariablesAndWorstResultCodes.get(standardVariableName);
-                            if (worstResultCodeFoundForThisVariable == null) {
+                            if (worstResultCodeFoundForThisVariable == null) 
                                 mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());
-                            } else if (CheckResult.compareResultSets(result.getResultCode(), worstResultCodeFoundForThisVariable) > 0) {
-                                mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());
-                            }
+                            else if (CheckResult.compareResultSets(result.getResultCode(), worstResultCodeFoundForThisVariable) > 0) 
+                                mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());                            
                         }
                     }
                 }
@@ -794,14 +816,15 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
             if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing) {
                 // If no errors were found we generate ICD10 code
-                ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
+                ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication()
+                        .performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
                 if (conversionResult != null) {
                     if (conversionResult[0].getResultCode() != ConversionResult.ResultCode.Invalid) {
                         editChecksInternalFrame.setICD10TextFieldText(conversionResult[0].getValue() + "");
-                        DatabaseVariablesListElement ICD10databaseVariablesElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ICD10.toString());
-                        if (ICD10databaseVariablesElement != null) {
-                            tumour.setVariable(ICD10databaseVariablesElement.getDatabaseVariableName(), conversionResult[0].getValue());
-                        }
+                        DatabaseVariablesListElement ICD10databaseVariablesElement = 
+                                globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ICD10.toString());
+                        if (ICD10databaseVariablesElement != null) 
+                            tumour.setVariable(ICD10databaseVariablesElement.getDatabaseVariableName(), conversionResult[0].getValue());                        
                     }
                 }
                 // ...and ICCC3 code
@@ -810,9 +833,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     if (conversionResult[0].getResultCode() != ConversionResult.ResultCode.Invalid) {
                         editChecksInternalFrame.setICCCTextFieldText(conversionResult[0].getValue() + "");
                         DatabaseVariablesListElement ICCCdatabaseVariablesElement = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ICCC.toString());
-                        if (ICCCdatabaseVariablesElement != null) {
-                            tumour.setVariable(ICCCdatabaseVariablesElement.getDatabaseVariableName(), conversionResult[0].getValue());
-                        }
+                        if (ICCCdatabaseVariablesElement != null) 
+                            tumour.setVariable(ICCCdatabaseVariablesElement.getDatabaseVariableName(), conversionResult[0].getValue());                        
                     }
                 }
             }
@@ -826,11 +848,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 for (Globals.StandardVariableNames standardVariableName : mapOfVariablesAndWorstResultCodes.keySet()) {
                     DatabaseVariablesListElement dbvle = globalToolBox.translateStandardVariableNameToDatabaseListElement(standardVariableName.toString());
 
-                    if (dbvle.getDatabaseTableName().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+                    if (dbvle.getDatabaseTableName().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME))
                         tumourRecordEditorPanel.setResultCodeOfVariable(dbvle.getDatabaseVariableName(), mapOfVariablesAndWorstResultCodes.get(standardVariableName));
-                    } else if (dbvle.getDatabaseTableName().equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-                        patientRecordEditorPanel.setResultCodeOfVariable(dbvle.getDatabaseVariableName(), mapOfVariablesAndWorstResultCodes.get(standardVariableName));
-                    }
+                    else if (dbvle.getDatabaseTableName().equalsIgnoreCase(Globals.PATIENT_TABLE_NAME))
+                        patientRecordEditorPanel.setResultCodeOfVariable(dbvle.getDatabaseVariableName(), mapOfVariablesAndWorstResultCodes.get(standardVariableName));                    
                 }
             }
         }
@@ -853,9 +874,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             OK = associateTumourRecordToPatientRecord(databaseRecord, patientDatabaseRecord);
             if (!OK) 
                 JOptionPane.showInternalMessageDialog(this, 
-												      java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PLEASE SAVE PATIENT RECORD FIRST."),
-													  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"), 
-													  JOptionPane.WARNING_MESSAGE);            
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PLEASE SAVE PATIENT RECORD FIRST."),
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"), 
+                                JOptionPane.WARNING_MESSAGE);            
         } else if (databaseRecord instanceof Patient) {
             // see if the patient has been given ID already by looking at other patient records
             String patientID = null;
@@ -885,27 +906,27 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 }
             } catch (RecordLockedException ex) {
                 JOptionPane.showInternalMessageDialog(this, 
-													  ex.getLocalizedMessage(),
-													  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"), 
-													  JOptionPane.WARNING_MESSAGE);
+                                ex.getLocalizedMessage(),
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"), 
+                                JOptionPane.WARNING_MESSAGE);
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
                 JOptionPane.showInternalMessageDialog(this, 
-												      ex.getLocalizedMessage(), 
-													  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"),
-													  JOptionPane.WARNING_MESSAGE);
+                                ex.getLocalizedMessage(), 
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"),
+                                JOptionPane.WARNING_MESSAGE);
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
                 JOptionPane.showInternalMessageDialog(this, 
-													  ex.getLocalizedMessage(), 
-													  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"), 
-													  JOptionPane.WARNING_MESSAGE);
+                                ex.getLocalizedMessage(), 
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"), 
+                                JOptionPane.WARNING_MESSAGE);
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
                 JOptionPane.showInternalMessageDialog(this, 
-													  ex.getLocalizedMessage(),
-													  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"),
-													  JOptionPane.WARNING_MESSAGE);
+                                ex.getLocalizedMessage(),
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"),
+                                JOptionPane.WARNING_MESSAGE);
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -915,9 +936,9 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private void changePatientRecord(RecordEditorTumour tumourRecordEditorPanel) {
         Tumour tumourDatabaseRecord = (Tumour) tumourRecordEditorPanel.getDatabaseRecord();
         String requestedPatientRecordID = JOptionPane.showInputDialog(null,
-																	  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PLEASE ENTER PATIENT RECORD ID:"), 
-																	  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("MOVE TUMOUR TO WHICH PATIENT RECORD?"), 
-																	  JOptionPane.QUESTION_MESSAGE);
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PLEASE ENTER PATIENT RECORD ID:"), 
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("MOVE TUMOUR TO WHICH PATIENT RECORD?"), 
+                                JOptionPane.QUESTION_MESSAGE);
         if (requestedPatientRecordID != null) {
             // First see if it is one of the records shown
             RecordEditorPatient patientRecordEditorPanel = patientRecordsMap.get(requestedPatientRecordID);
@@ -927,17 +948,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             else {
                 try {
                     patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecord(requestedPatientRecordID, false);
-                } catch (SQLException ex) {
-                    Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (RemoteException ex) {
-                    Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SecurityException ex) {
-                    Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (DistributedTableDescriptionException ex) {
-                    Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (RecordLockedException ex) {
-                    Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (UnknownTableException ex) {
+                } catch (Exception ex) {
                     Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -948,36 +959,32 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     try {
                         saveRecord(tumourDatabaseRecord);
                         tumourTabbedPane.remove(tumourRecordEditorPanel);
-                        JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RECORD MOVED."));
-                    } catch (RecordLockedException ex) {
+                        JOptionPane.showInternalMessageDialog(this, 
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RECORD MOVED."));
+                    } catch (Exception ex) {
                         Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SecurityException ex) {
-                        Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    } 
                     tumourRecordEditorPanel.refreshDatabaseRecord(tumourDatabaseRecord);
-                } else {
+                } else 
                     JOptionPane.showInternalMessageDialog(this, 
-														  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PLEASE SAVE PATIENT RECORD FIRST."), 
-														  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"), 
-														  JOptionPane.WARNING_MESSAGE);
-                }
-            } else {
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PLEASE SAVE PATIENT RECORD FIRST."), 
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"), 
+                                JOptionPane.WARNING_MESSAGE);
+                
+            } else 
                 JOptionPane.showInternalMessageDialog(this, 
-													  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("NO SUCH PATIENT RECORD."), 
-													  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"),
-													  JOptionPane.WARNING_MESSAGE);
-            }
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("NO SUCH PATIENT RECORD."), 
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"),
+                                JOptionPane.WARNING_MESSAGE);            
         }
     }
 
     private void runMPsearch(RecordEditorTumour recordEditorPanel) {
         DatabaseRecord databaseRecordA = recordEditorPanel.getDatabaseRecord();
-        String topographyA = (String) databaseRecordA.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Topography.toString()).getDatabaseVariableName());
-        String morphologyA = (String) databaseRecordA.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Morphology.toString()).getDatabaseVariableName());
+        String topographyA = (String) databaseRecordA.getVariable(globalToolBox
+                .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Topography.toString()).getDatabaseVariableName());
+        String morphologyA = (String) databaseRecordA.getVariable(globalToolBox
+                .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Morphology.toString()).getDatabaseVariableName());
 
         MultiplePrimaryTesterInterface multiplePrimaryTester = new DefaultMultiplePrimaryTester();
         if (tumourTabbedPane.getComponents().length > 1) {
@@ -985,27 +992,31 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 RecordEditorTumour tumourPanel = (RecordEditorTumour) tumourPanelComponent;
                 if (!recordEditorPanel.equals(tumourPanel)) {
                     DatabaseRecord dbr = tumourPanel.getDatabaseRecord();
-                    String topographyB = (String) dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Topography.toString()).getDatabaseVariableName());
-                    String morphologyB = (String) dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Morphology.toString()).getDatabaseVariableName());
+                    String topographyB = (String) dbr.getVariable(globalToolBox
+                            .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Topography.toString()).getDatabaseVariableName());
+                    String morphologyB = (String) dbr.getVariable(globalToolBox
+                            .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.Morphology.toString()).getDatabaseVariableName());
                     int result = multiplePrimaryTester.multiplePrimaryTest(topographyA, morphologyA, topographyB, morphologyB);
-                    databaseRecordA.setVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PersonSearch.toString()).getDatabaseVariableName(), result);
+                    databaseRecordA.setVariable(globalToolBox
+                            .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PersonSearch.toString())
+                            .getDatabaseVariableName(), result);
+                    
                     if (result == MultiplePrimaryTesterInterface.mptDuplicate ) {
                         // set pending
                         recordEditorPanel.setPending();
                     }
                     JOptionPane.showInternalMessageDialog(this, 
-														  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RESULT: ")  
-															 + multiplePrimaryTester.mptCodes[result], 
-														  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RESULT"), 
-														  JOptionPane.WARNING_MESSAGE);
+                                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RESULT: ")  
+                                           + multiplePrimaryTester.mptCodes[result], 
+                                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RESULT"), 
+                                    JOptionPane.WARNING_MESSAGE);
                 }
             }
-        } else {
+        } else 
             JOptionPane.showInternalMessageDialog(this, 
-												  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("ONLY ONE TUMOUR."), 
-												  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RESULT"), 
-												  JOptionPane.PLAIN_MESSAGE);
-        }
+                            java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("ONLY ONE TUMOUR."), 
+                            java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("RESULT"), 
+                            JOptionPane.PLAIN_MESSAGE);        
     }
 
     private void runPersonSearch(RecordEditorPatient recordEditorPanel) {
@@ -1039,26 +1050,22 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                             Patient patient2 = canreg.client.CanRegClientApp.getApplication().getPatientRecord(prid, false);
                             cpif.addRecordSet(patient2, null, map.get(prid));
                             records += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("PATIENT ID: ") 
-									+ patient2.getVariable(patientIDVariableName) 
-									+ java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString(", SCORE: ")
-									+ map.get(prid) + "%\n";
-                        } catch (SQLException ex) {
+                                                    + patient2.getVariable(patientIDVariableName) 
+                                                    + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString(", SCORE: ")
+                                                    + map.get(prid) + "%\n";
+                        } catch (Exception ex) {
                             Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (RecordLockedException ex) {
-                            Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (UnknownTableException ex) {
-                            Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (DistributedTableDescriptionException ex) {
-                            Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        } 
                     }
                 }
                 setCursor(normalCursor);
-                JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("POTENTIAL DUPLICATES FOUND:") + records);
+                JOptionPane.showInternalMessageDialog(this, 
+                        java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("POTENTIAL DUPLICATES FOUND:") + records);
                 CanRegClientView.showAndPositionInternalFrame(desktopPane, cpif);
             } else {
                 setCursor(normalCursor);
-                JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("NO POTENTIAL DUPLICATES FOUND."));
+                JOptionPane.showInternalMessageDialog(this, 
+                        java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("NO POTENTIAL DUPLICATES FOUND."));
                 // recordEditorPanel.setPersonSearchStatus();
             }
         } catch (SecurityException ex) {
@@ -1077,27 +1084,23 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         String tableName = null;
         if (record instanceof Patient) {
             Object idObject = record.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
-            if (idObject != null) {
-                id = (Integer) idObject;
-            }
+            if (idObject != null) 
+                id = (Integer) idObject;            
             tableName = Globals.PATIENT_TABLE_NAME;
         } else if (record instanceof Tumour) {
             // delete sources first.
             Tumour tumour = (Tumour) record;
-            for (Source source : tumour.getSources()) {
+            for (Source source : tumour.getSources()) 
                 deleteRecord(source);
-            }
-
+            
             Object idObject = record.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
-            if (idObject != null) {
-                id = (Integer) idObject;
-            }
+            if (idObject != null) 
+                id = (Integer) idObject;            
             tableName = Globals.TUMOUR_TABLE_NAME;
         } else if (record instanceof Source) {
             Object idObject = record.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
-            if (idObject != null) {
-                id = (Integer) idObject;
-            }
+            if (idObject != null) 
+                id = (Integer) idObject;            
             tableName = Globals.SOURCE_TABLE_NAME;
         }
         if (id >= 0) {
@@ -1106,7 +1109,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 success = canreg.client.CanRegClientApp.getApplication().deleteRecord(id, tableName);
             } catch (SQLException ex) {
                 JOptionPane.showInternalMessageDialog(this,
-													  java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("THIS RECORD HAS OTHER RECORDS ASSIGNED TO IT.PLEASE DELETE OR MOVE THOSE FIRST."));
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor")
+                                .getString("THIS RECORD HAS OTHER RECORDS ASSIGNED TO IT.PLEASE DELETE OR MOVE THOSE FIRST."));
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.WARNING, null, ex);
             } catch (RecordLockedException ex) {
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.WARNING, null, ex);
@@ -1128,11 +1132,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         String fileName = Globals.CANREG_PATIENT_PDFS_FOLDER + Globals.FILE_SEPARATOR;
 
         Object id = panel.getDatabaseRecord().getPatientID();
-        if (id != null && id.toString().length() > 0) {
+        if (id != null && id.toString().length() > 0) 
             fileName += id.toString();
-        } else {
-            fileName += "Patient";
-        }
+        else 
+            fileName += "Patient";        
         fileName += ".pdf";
 
         for (Component component : tumourTabbedPane.getComponents()) {
@@ -1175,20 +1178,18 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 ) {
                 skippable.add(canreg.common.Tools.toLowerCaseStandardized(key));
             } 
-            if (!databaseVariable.getVariableType().equals(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
-                numbers.add(canreg.common.Tools.toLowerCaseStandardized(key));
-            }
+            if (!databaseVariable.getVariableType().equals(Globals.VARIABLE_TYPE_NUMBER_NAME)) 
+                numbers.add(canreg.common.Tools.toLowerCaseStandardized(key));            
         }
         
         for (String varb:variables) {
             String content = record.getVariableAsString(varb);
             DatabaseVariablesListElement databaseVariable = map.get(varb);
             if (!content.trim().isEmpty() && skippable.contains(canreg.common.Tools.toLowerCaseStandardized(varb))) {
-                if(!numbers.contains(canreg.common.Tools.toLowerCaseStandardized(varb))){
+                if(!numbers.contains(canreg.common.Tools.toLowerCaseStandardized(varb)))
                     searchStringComponents.add(varb + "=" + content);
-                } else {
-                    searchStringComponents.add(varb + " LIKE " + "'%" + content + "%'");
-                }
+                else 
+                    searchStringComponents.add(varb + " LIKE " + "'%" + content + "%'");                
             }
         }
         
@@ -1197,12 +1198,11 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         if (searchString.trim().isEmpty()) {
             JOptionPane.showInternalMessageDialog(this, 
 //                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("THIS RECORD HAS OTHER RECORDS ASSIGNED TO IT.PLEASE DELETE OR MOVE THOSE FIRST.")
-                    "Please enter some data first."
-            );
+                    "Please enter some data first.");
         } else {
-            if (browseInternalFrame == null) {
+            if (browseInternalFrame == null) 
                 browseInternalFrame = new BrowseInternalFrame(desktopPane);
-            } else {
+            else {
                 browseInternalFrame.close();
                 desktopPane.remove(browseInternalFrame);
                 desktopPane.validate();
@@ -1447,7 +1447,6 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addTumourRecordButton;

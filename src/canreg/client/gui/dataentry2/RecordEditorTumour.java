@@ -18,7 +18,6 @@ package canreg.client.gui.dataentry2;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.components.VariableEditorPanelInterface;
-import canreg.client.gui.dataentry2.RecordEditorPanel;
 import canreg.client.gui.dataentry2.components.DateVariableEditorPanel;
 import canreg.client.gui.dataentry2.components.DictionaryVariableEditorPanel;
 import canreg.client.gui.dataentry2.components.TextFieldVariableEditorPanel;
