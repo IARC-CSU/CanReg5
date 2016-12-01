@@ -186,6 +186,14 @@ public class Globals {
      *
      */
     public static String DATE_FORMAT_STRING = "yyyyMMdd";
+    
+    public static String[] DATE_FORMAT_STRINGS_ARRAY = {
+        "yyyyMMdd",
+        "dd/MM/yyyy",
+        "MM/dd/yyyy",
+        "yyyy-MM-dd"
+    };
+   
     public static String DATAENTRY_LANGUAGE_ENGLISH = "en";
     public static String DATAENTRY_LANGUAGE_FRENCH = "fr";
     public static String DATAENTRY_LANGUAGE_SPANISH = "es";
@@ -287,6 +295,7 @@ public class Globals {
         new AgeGroupStructure(5, 60),
         new AgeGroupStructure(10, 75, 15),
         new AgeGroupStructure(10, 65, 15),
+        new AgeGroupStructure(5, 15, 15),
         new AgeGroupStructure(5, 15, 1, 15),
         new AgeGroupStructure(5, 20, 5, 20)
     };

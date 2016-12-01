@@ -20,6 +20,8 @@
 package canreg.common;
 
 // import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
+import canreg.client.CanRegClientApp;
+import canreg.client.LocalSettings;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Patient;
 import canreg.common.database.Source;
@@ -47,6 +49,7 @@ public class GlobalToolBox {
     private final Charset standardCharSet;
     private final Translator translator;
     private final Map<String, DatabaseVariablesListElement> databaseVariableNameToDatabaseVariableListElementMap;
+    private final LocalSettings localSettings;
 
     /**
      * 
@@ -60,6 +63,7 @@ public class GlobalToolBox {
         databaseVariableNameToDatabaseVariableListElementMap = buildDBVariablesMap(databaseVariablesListElements);
         standardCharSet = Tools.getStandardCharset(doc, Globals.NAMESPACE);
         translator = Tools.getTranslator(doc, Globals.NAMESPACE);
+        localSettings = CanRegClientApp.getApplication().getLocalSettings();
         // mapIARCstandardVariablesVariableName = Tools.getMapIARCstandardVariablesVariableName(doc, Globals.NAMESPACE);
     }
 
@@ -220,5 +224,8 @@ public class GlobalToolBox {
         }
         System.out.println("Unknown age code = "+code);
         return code;
+    }
+    public String getDateFormatString() {
+        return localSettings.getProperty(LocalSettings.DATE_FORMAT_KEY);
     }
 }

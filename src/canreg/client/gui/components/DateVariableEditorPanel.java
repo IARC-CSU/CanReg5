@@ -56,7 +56,8 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         setVariableName(databaseListElement.getFullName());
 
         dateChooser = new JDateChooser();
-        dateChooser.setDateFormatString(Globals.DATE_FORMAT_STRING);
+        String dateFormatString = databaseListElement.getDateFormatString();
+        dateChooser.setDateFormatString(dateFormatString);
         // dateChooser.setDateFormatString("MMMMM d, yyyy");
         splitPane1.remove(splitPane1.getRightComponent());
         splitPane1.setTopComponent(dateChooser);
@@ -67,7 +68,6 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                 codeTextFieldKeyTyped(evt);
             }
         });
-        
 
         String fillInStatus = databaseListElement.getFillInStatus();
         if (fillInStatus.equalsIgnoreCase(Globals.FILL_IN_STATUS_AUTOMATIC_STRING)) {
@@ -77,7 +77,8 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             dateField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
             mandatory = true;
         }
-        setMaximumLength(databaseListElement.getVariableLength());
+        // setMaximumLength(databaseListElement.getVariableLength());
+        setMaximumLength(dateFormatString.length());
 
         dateField.addFocusListener(new java.awt.event.FocusAdapter() {
 
