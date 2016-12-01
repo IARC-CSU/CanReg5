@@ -163,6 +163,10 @@ public final class LocalSettings {
      *
      */
     public static final String FONT_SIZE_BIG = "Big";
+    /**
+     *
+     */    
+    public static String DATE_FORMAT_KEY = "date_format_string";
 
     /**
      *
@@ -363,11 +367,19 @@ public final class LocalSettings {
      */
     public String getProperty(String key) {
         String property = properties.getProperty(key);
-        if (property == null
-                // Detect if R has been installed since last launch.
-                || (property.length() == 0 && key.equals(R_PATH))
-                // Detect if GS has been installed since last launch.
-                || (property.length() == 0 && key.equals(GS_PATH))) {
+
+        if (key.equals(R_PATH) || key.equals(GS_PATH)) {
+            if (property != null && property.length() > 0) {
+                File tempFile = new File(property);
+                if (!tempFile.exists()) {
+                    property = null;
+                }
+            } else {
+                property = null;
+            }
+        }
+
+        if (property == null) {
             property = getDefaultProperty(key);
         }
 
@@ -413,6 +425,8 @@ public final class LocalSettings {
             property = FONT_NAME_DEFAULT;
         } else if (key.equalsIgnoreCase(FONT_SIZE_KEY)) {
             property = FONT_SIZE_MEDIUM;
+        } else if (key.equalsIgnoreCase(DATE_FORMAT_KEY)){
+            property = Globals.DATE_FORMAT_STRING;
         }
         return property;
     }
@@ -429,6 +443,7 @@ public final class LocalSettings {
         setProperty(GS_PATH, getDefaultProperty(GS_PATH));
         setProperty(FONT_NAME_KEY, getDefaultProperty(FONT_NAME_KEY));
         setProperty(FONT_SIZE_KEY, getDefaultProperty(FONT_SIZE_KEY));
+        setProperty(DATE_FORMAT_KEY, getDefaultProperty(DATE_FORMAT_KEY));
         settingsChanged = true;
     }
 
@@ -470,7 +485,6 @@ public final class LocalSettings {
 
         // First we find all strings mentioning server in our properties
         // ie. server.0.name
-
         Iterator<String> i = set.iterator();
         Set foundServers = new HashSet();
 
@@ -761,5 +775,13 @@ public final class LocalSettings {
             property = temp.toUpperCase();
         }
         return property;
+    }
+
+    public String getDateFormatString() {
+        String df = getProperty(DATE_FORMAT_KEY);
+        // make sure that the month variable is upper case. (m is minute)
+        // Ref: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+        df = df.replaceAll("m", "M");
+        return df;
     }
 }

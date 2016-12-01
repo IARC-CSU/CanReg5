@@ -49,6 +49,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     private String variableFormula = null;
     private String multiplePrimaryCopy = null;
     private DatabaseGroupsListElement group;
+    private String dateFormatString = "yyyyMMdd";
 
     /**
      * 
@@ -488,5 +489,12 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     @Override
     public int compareTo(DatabaseVariablesListElement o) {
         return toString().compareTo(o.toString());
+    }
+    
+    public String getDateFormatString() {
+        return dateFormatString;
+    }
+    public void setDateFormatString(String dateFormat) {
+        this.dateFormatString = dateFormat;
     }
 }

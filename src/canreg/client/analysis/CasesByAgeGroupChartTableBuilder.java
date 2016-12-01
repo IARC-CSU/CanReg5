@@ -235,7 +235,7 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
                         }
                     }
                 } else {
-                    System.out.println("Not counted: " + icdString + "/" + morphologyString);
+                   // System.out.println("Not counted: " + icdString + "/" + morphologyString);
                 }
             }
 

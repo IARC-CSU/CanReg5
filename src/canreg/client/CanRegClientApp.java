@@ -461,7 +461,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             loggedIn = true;
             doc = server.getDatabseDescription();
             dictionary = server.getDictionary();
-            globalToolBox = new GlobalToolBox(doc);
+            globalToolBox = getGlobalToolBox();
 
             canregServerRunningOnThisMachine = InetAddress.getLocalHost().
                     equals(server.getIPAddress());
@@ -1313,6 +1313,9 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @return
      */
     public GlobalToolBox getGlobalToolBox() {
+        if (globalToolBox == null) {
+            globalToolBox = new GlobalToolBox(doc);
+        }
         return globalToolBox;
     }
 

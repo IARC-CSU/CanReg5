@@ -665,7 +665,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
             for (int sexNumber = 0; sexNumber < numberOfSexes - 1; sexNumber++) {
                 String tabReportFileName = "";
                 try {
-                    tabReportFileName = reportFileName + sexLabel[sexNumber] + ".tsv";
+                    tabReportFileName = reportFileName + sexLabel[sexNumber] + ".csv";
                     System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("WRITING TO ") + tabReportFileName);
                     reportFileWriter = new OutputStreamWriter(new FileOutputStream(tabReportFileName), "UTF-8");
                 } catch (IOException ioe) {
