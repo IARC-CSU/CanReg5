@@ -367,7 +367,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         int index = 0;
         for(Component comp : sourcesTabbedPane.getComponents()) {
             sourcesTabbedPane.setTitleAt(index, java.util.ResourceBundle
-                    .getBundle("canreg/client/gui/dataentry2/resources/SingleSourcePanel").getString("SOURCE:_") + (index + 1));
+                    .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorSource").getString("SOURCE:_") + (index + 1));
             index++;
         }
     }
@@ -745,7 +745,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
                 canBeConfirmed = true;
             } else if (resultCode == ResultCode.Rare) {
                 //Yellow colored border
-                checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(249, 238, 43), 2));
+                checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 0), 2));
                 if (CanRegClientApp.getApplication().getUserRightLevel() == Globals.UserRightLevels.SUPERVISOR) 
                     canBeConfirmed = true;                
             }
