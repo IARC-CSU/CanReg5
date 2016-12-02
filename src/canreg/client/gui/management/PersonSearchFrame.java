@@ -34,7 +34,6 @@ import canreg.client.gui.dataentry.RecordEditor;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
-import canreg.common.qualitycontrol.DefaultPersonSearch;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Patient;
 import canreg.common.database.Tumour;
@@ -61,6 +60,7 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
+import canreg.common.qualitycontrol.PersonSearcher;
 
 /**
  *
@@ -68,21 +68,22 @@ import canreg.common.cachingtableapi.DistributedTableDescriptionException;
  */
 public class PersonSearchFrame extends javax.swing.JInternalFrame implements ActionListener {
 
-    private PersonSearchListener listener;
+    private final PersonSearchListener listener;
     private Task duplicateSearchTask;
     private JDesktopPane desktopPane;
-    private Document doc;
+    private final Document doc;
     private String personSearchHandlerID;
     int recordsTested;
     int matchesFound;
-    private DefaultTableModel resultTableModel;
+    private final DefaultTableModel resultTableModel;
     boolean personSearcherRunning = false;
     private GlobalToolBox globalToolBox;
     private String patientIDlookupVariable;
     private String patientIDTumourTablelookupVariable;
     private String tumourIDlookupVariable;
 
-    /** Creates new form PersonSearchFrame */
+    /** Creates new form PersonSearchFrame
+     * @param desktopPane */
     public PersonSearchFrame(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
 
@@ -417,7 +418,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         duplicateSearchTask = new PerformDuplicateSearchTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
         performButton.setEnabled(false);
         interruptButton.setEnabled(true);
-        DefaultPersonSearch searcher = personSearchVariablesPanel1.getSearcher();
+        PersonSearcher searcher = personSearchVariablesPanel1.getSearcher();
         // TODO: File selector?
         try {
             String rangeStart = rangeStartTextField.getText();
