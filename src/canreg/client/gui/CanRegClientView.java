@@ -1304,8 +1304,7 @@ public final class CanRegClientView extends FrameView {
      */
     @Action
     public void createNewRecordSetAction() {
-        //RecordEditor internalFrame = new RecordEditor(desktopPane);
-        canreg.client.gui.dataentry2.RecordEditor internalFrame = new canreg.client.gui.dataentry2.RecordEditor(desktopPane);
+        RecordEditor internalFrame = new RecordEditor(desktopPane);
         internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
         internalFrame.addRecord(new Tumour());
