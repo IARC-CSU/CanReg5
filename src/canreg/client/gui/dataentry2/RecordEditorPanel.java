@@ -36,6 +36,11 @@ public interface RecordEditorPanel {
     
     boolean isSaveNeeded();
     void setSaveNeeded(boolean saveNeeded);
+    
+    /**
+     * This method is known as setRecord() in canreg.client.gui.dataentry.RecordEditorPanel()
+     * @param dbr 
+     */
     void setDatabaseRecord(DatabaseRecord record);
     DatabaseRecord getDatabaseRecord();
     void refreshDatabaseRecord(DatabaseRecord record);

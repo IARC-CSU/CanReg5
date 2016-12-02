@@ -37,7 +37,6 @@ import canreg.common.database.Source;
 import canreg.common.database.Tumour;
 import canreg.common.qualitycontrol.CheckResult;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
@@ -75,7 +74,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
    
     private DatabaseRecord databaseRecord;
     private Document doc;
-    private panelTypes panelType;
+    private final panelTypes panelType = panelTypes.TUMOUR;
     private DatabaseVariablesListElement[] variablesInTable;
     private Map<String, VariableEditorPanelInterface> variableEditorPanels;
     private Map<Integer, Dictionary> dictionary;
@@ -97,7 +96,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private DatabaseVariablesListElement updateDateVariableListElement;
     private DatabaseVariablesListElement tumourSequenceNumberVariableListElement;
     private DatabaseVariablesListElement tumourSequenceTotalVariableListElement;
-    private SingleSourcePanel sourcesPanel;
+    //private RecordEditorSource sourcesPanel;
     private final SimpleDateFormat dateFormat;
     private final LinkedList<DatabaseVariablesListElement> autoFillList;
     private final RecordEditor recordEditor;
@@ -122,14 +121,13 @@ public class RecordEditorTumour extends javax.swing.JPanel
         //searchLabel.setVisible(false);
         //mpLabel.setVisible(false);
 
-        dateFormat = new SimpleDateFormat("yyyyMMdd");
-
+        dateFormat = new SimpleDateFormat(Globals.DATE_FORMAT_STRING);
         autoFillList = new LinkedList<DatabaseVariablesListElement>();
         
-        //tumourLinkedPanel.setVisible(false);
-        this.panelType = panelTypes.TUMOUR;
+        //tumourLinkedPanel.setVisible(false);        
         
-        resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RecordEditorTumour.class);
+        resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class)
+                .getContext().getResourceMap(RecordEditorTumour.class);
     }
     
     @Override
@@ -162,9 +160,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
         if (recordStatusVariableListElement != null) {
             if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
                 DictionaryEntry recordStatusValue = (DictionaryEntry) recordStatusComboBox.getSelectedItem();
-                if (recordStatusValue != null) {
+                if (recordStatusValue != null) 
                     databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusValue.getCode());
-                } else {
+                else {
                     databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
                     // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
                     Logger.getLogger(RecordEditorTumour.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
@@ -176,16 +174,14 @@ public class RecordEditorTumour extends javax.swing.JPanel
             }
         }
         if (obsoleteFlagVariableListElement != null) {
-            /*if (recordEditor.getObsoleteToggleButton().isSelected()) {
+            if (recordEditor.isObsoleteToggleButtonSelected(this))
                 databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.OBSOLETE_VALUE);
-            } else {
-                databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.NOT_OBSOLETE_VALUE);
-            }*/
+            else 
+                databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.NOT_OBSOLETE_VALUE);            
         }
         if (checkVariableListElement != null) {
-            if (resultCode == null) {
-                resultCode = ResultCode.NotDone;
-            }
+            if (resultCode == null) 
+                resultCode = ResultCode.NotDone;            
             databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(),
                     CheckResult.toDatabaseVariable(resultCode));
         }
@@ -195,29 +191,27 @@ public class RecordEditorTumour extends javax.swing.JPanel
         dataPanel.removeAll();
 
         if (variableEditorPanels != null) {
-            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) {
-                vep.removeListener();
-            }
+            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) 
+                vep.removeListener();            
         }
+        
         variableEditorPanels = new LinkedHashMap();
-        Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();
-        Map<String, DictionaryEntry> possibleValues;
+        Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();        
 
-        for (int i = 0; i < variablesInTable.length; i++) {
+        for(int i = 0; i < variablesInTable.length; i++) {
             DatabaseVariablesListElement currentVariable = variablesInTable[i];
             VariableEditorPanel vep;
 
             String variableType = currentVariable.getVariableType();
 
-            if (Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)) {
+            if (Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)) 
                 vep = new DateVariableEditorPanel(this);
-            } else if (Globals.VARIABLE_TYPE_TEXT_AREA_NAME.equalsIgnoreCase(variableType)) {
+            else if (Globals.VARIABLE_TYPE_TEXT_AREA_NAME.equalsIgnoreCase(variableType)) 
                 vep = new TextFieldVariableEditorPanel(this);
-            } else if(currentVariable.getDictionaryID() >= 0 && dictionary.get(currentVariable.getDictionaryID()) != null)
+            else if(currentVariable.getDictionaryID() >= 0 && dictionary.get(currentVariable.getDictionaryID()) != null)
                 vep = new DictionaryVariableEditorPanel(this);
-            else {
-                vep = new VariableEditorPanel(this);
-            }
+            else 
+                vep = new VariableEditorPanel(this);            
 
             vep.setDatabaseVariablesListElement(currentVariable);
 
@@ -232,15 +226,13 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
             String variableName = currentVariable.getDatabaseVariableName();
             Object variableValue = databaseRecord.getVariable(variableName);
-            if (variableValue != null) {
-                vep.setInitialValue(variableValue.toString());
-            }
+            if (variableValue != null) 
+                vep.setInitialValue(variableValue.toString());            
 
             String variableFillStatus = currentVariable.getFillInStatus();
-            if (Globals.FILL_IN_STATUS_AUTOMATIC_STRING.equalsIgnoreCase(variableFillStatus)) {
+            if (Globals.FILL_IN_STATUS_AUTOMATIC_STRING.equalsIgnoreCase(variableFillStatus)) 
                 autoFillList.add(currentVariable);
-            }
-
+            
             Integer groupID = currentVariable.getGroupID();
             //Skip 0 and -1 - System groups
             if (groupID > 0) {
@@ -259,8 +251,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
         }
 
         // Iterate trough groups
-
-        // Iterator<Integer> iterator = groupIDtoPanelMap.keySet().iterator();
         for (DatabaseGroupsListElement groupListElement : groupListElements) {
             int groupID = groupListElement.getGroupIndex();
             JPanel panel = groupIDtoPanelMap.get(groupID);
@@ -270,14 +260,24 @@ public class RecordEditorTumour extends javax.swing.JPanel
             }
         }
 
-        // If this is the tumour part we add the source table
-        if (panelType == panelTypes.TUMOUR) {            
+        //If this is the tumour part we add the source table
+        if (panelType == panelTypes.TUMOUR) {
+            //In this implementation the sources tabbed pane is always present
+            /*sourcesPanel = new SourcesPanel(this);
+            sourcesPanel.setDictionary(dictionary);
+            sourcesPanel.setDoc(doc);
+            sourcesPanel.setVisible(true);*/
+            
             Tumour tumour = (Tumour) databaseRecord;
-            setSources(tumour.getSources());            
+            
+            //sourcesPanel.setSources(tumour.getSources());
+            this.setSources(tumour.getSources());
+                        
+            //dataPanel.add(sourcesPanel);
             refreshSequence();
         }
         if (panelType != panelTypes.SOURCE) {
-            //refreshObsoleteStatus(databaseRecord);
+            refreshObsoleteStatus(databaseRecord);
             refreshRecordStatus(databaseRecord);
             refreshCheckStatus(databaseRecord);
         }
@@ -291,9 +291,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     public void calculateAge() {
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CALC_AGE));
     }*/
-    
-    
-    
+            
     private void changesDone() {
         setSaveNeeded(true);
         setChecksResultCode(ResultCode.NotDone);
@@ -305,17 +303,18 @@ public class RecordEditorTumour extends javax.swing.JPanel
         return clone();
     }        
     
+    @Override
     public LinkedList<DatabaseVariablesListElement> getAutoFillList() {
         return autoFillList;
     }
     
     public void setSources(Set<Source> sources) {
-        if (sources == null) {
+        if (sources == null) 
             sources = Collections.synchronizedSet(new LinkedHashSet<Source>());
-        }
-        if (sources.isEmpty()) {
+        
+        if (sources.isEmpty()) 
             sources.add(new Source());
-        }
+        
         this.sources = sources;
         buildTabs();
         refreshTitles();
@@ -325,7 +324,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     public Set<Source> getSources() {        
         sources = Collections.synchronizedSet(new LinkedHashSet<Source>());
         for (Component comp : sourcesTabbedPane.getComponents()) {
-            SingleSourcePanel rep = (SingleSourcePanel) comp;
+            RecordEditorSource rep = (RecordEditorSource) comp;
             Source source = (Source) rep.getDatabaseRecord();
             sources.add(source);
         }
@@ -333,8 +332,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
     }
     
     private void buildTabs() {
+        sourcesTabbedPane.removeAll();
         for (Source source : sources) {
-            SingleSourcePanel newPanel = new SingleSourcePanel(this);
+            RecordEditorSource newPanel = new RecordEditorSource(this);
             newPanel.setDictionary(dictionary);
             newPanel.setDocument(doc);
             newPanel.setRecordAndBuildPanel(source);
@@ -345,7 +345,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     @Action
     public void addSourceAction() {
         Source newSource = new Source();
-        SingleSourcePanel newPanel = new SingleSourcePanel(this);
+        RecordEditorSource newPanel = new RecordEditorSource(this);
         newPanel.setDictionary(dictionary);
         newPanel.setDocument(doc);
         newPanel.setRecordAndBuildPanel(newSource);
@@ -357,7 +357,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     
     @Action
     public void removeSourceAction() {
-        SingleSourcePanel oldPanel = (SingleSourcePanel) sourcesTabbedPane.getSelectedComponent();
+        RecordEditorSource oldPanel = (RecordEditorSource) sourcesTabbedPane.getSelectedComponent();
         Source oldSource = (Source) oldPanel.getDatabaseRecord();
         sources.remove(oldSource);
         sourcesTabbedPane.remove(oldPanel);
@@ -365,22 +365,22 @@ public class RecordEditorTumour extends javax.swing.JPanel
     
     private void refreshTitles() {
         int index = 0;
-        for (Component comp : sourcesTabbedPane.getComponents()) {
-            sourcesTabbedPane.setTitleAt(index, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/SingleSourcePanel").getString("SOURCE:_") + (index + 1));
+        for(Component comp : sourcesTabbedPane.getComponents()) {
+            sourcesTabbedPane.setTitleAt(index, java.util.ResourceBundle
+                    .getBundle("canreg/client/gui/dataentry2/resources/SingleSourcePanel").getString("SOURCE:_") + (index + 1));
             index++;
         }
     }
     
+    @Override
     public boolean isSaveNeeded() {
         // hasChanged = false;
 
         for (DatabaseVariablesListElement databaseVariablesListElement : variablesInTable) {
             VariableEditorPanelInterface panel = variableEditorPanels.get(databaseVariablesListElement.getDatabaseVariableName());
-            if (panel != null) {
-                hasChanged = hasChanged || panel.hasChanged();
-            }
+            if (panel != null) 
+                hasChanged = hasChanged || panel.hasChanged();            
         }
-
         return hasChanged;
     }
     
@@ -399,8 +399,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
                 JTextField textField = (JTextField) e.getNewValue();
                 textField.selectAll();
             }
-
-        } /** Called when a field's "value" property changes. */
+        } 
+        //Called when a field's "value" property changes.
         else if ("value".equals(propName)) {
             setSaveNeeded(true);
             //Temporarily disabled
@@ -412,9 +412,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     }
     
     private void refreshCheckStatus(DatabaseRecord record) {
-        /*
-         * Set the check status
-         */
+        // Set the check status
         if (checkVariableListElement != null) {
             Object checkStatus = record.getVariable(checkVariableListElement.getDatabaseVariableName());
             if (checkStatus != null) {
@@ -439,7 +437,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
         buildPanel();
 
         // set record status and check status
-
         refreshCheckStatus(record);
         refreshRecordStatus(record);
         refreshUpdatedBy();
@@ -448,14 +445,13 @@ public class RecordEditorTumour extends javax.swing.JPanel
    /**
      * Set the obsolete status
      */
-   /* private void refreshObsoleteStatus(DatabaseRecord record) {       
+   private void refreshObsoleteStatus(DatabaseRecord record) {       
         String obsoleteStatus = (String) record.getVariable(obsoleteFlagVariableListElement.getDatabaseVariableName());
-        if (obsoleteStatus != null && obsoleteStatus.equalsIgnoreCase(Globals.OBSOLETE_VALUE)) {
-            recordEditor.getObsoleteToggleButton().setSelected(true);
-        } else {
-            recordEditor.getObsoleteToggleButton().setSelected(false);
-        }
-    }*/        
+        if (obsoleteStatus != null && obsoleteStatus.equalsIgnoreCase(Globals.OBSOLETE_VALUE)) 
+            recordEditor.setObsoleteToggleButtonSelected(this, true);
+        else 
+            recordEditor.setObsoleteToggleButtonSelected(this, false);
+    }        
     
     @Override
     public void setDocument(Document doc) {
@@ -466,9 +462,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     public void setDictionary(Map<Integer, Dictionary> dictionary) {
         this.dictionary = dictionary;
     }    
-
-       
-    
+          
     void setPending(){
          databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
          refreshDatabaseRecord(databaseRecord);
@@ -480,19 +474,23 @@ public class RecordEditorTumour extends javax.swing.JPanel
         buildPanel();
     }
     
+    @Override
     public void setSaveNeeded(boolean saveNeeded) {
         this.hasChanged = saveNeeded;
     }
     
+    @Override
     public void setVariable(DatabaseVariablesListElement variable, String value) {
         VariableEditorPanelInterface vep = variableEditorPanels.get(variable.getDatabaseVariableName());
         vep.setValue(value);
     }        
     
-    /*
-     * Set the resultcode of individual variables.
-     *
-     */
+   /**
+    * Set the resultcode of individual variables.
+    * @param databaseVariableName
+    * @param resultCode 
+    */
+    @Override
     public void setResultCodeOfVariable(String databaseVariableName, ResultCode resultCode) {
         VariableEditorPanelInterface panel = variableEditorPanels.get(databaseVariableName);
         panel.setResultCode(resultCode);
@@ -519,9 +517,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString());
             updatedByVariableListElement =
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdatedBy.toString());
-
         } else*/ if (databaseRecord.getClass().isInstance(new Tumour())) {
-            panelType = panelTypes.TUMOUR;
+            //panelType = panelTypes.TUMOUR;
             recordStatusVariableListElement =
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
             obsoleteFlagVariableListElement =
@@ -541,14 +538,10 @@ public class RecordEditorTumour extends javax.swing.JPanel
             recordStatusVariableListElement = null;
             unduplicationVariableListElement = null;
             obsoleteFlagVariableListElement = null;
-            checkVariableListElement = null;
-            
+            checkVariableListElement = null;            
         }*/
 
-        /*
-         * Build the record status map.
-         */
-
+        //Build the record status map.
         if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
             recStatusDictMap = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
 
@@ -559,35 +552,44 @@ public class RecordEditorTumour extends javax.swing.JPanel
             LinkedList<DictionaryEntry> recStatusDictWithoutConfirmVector = new LinkedList<DictionaryEntry>();
             for (DictionaryEntry entry : recStatusDictCollection) {
                 // "1" is the code for confirmed... TODO: change to dynamic code...
-                if (!entry.getCode().equalsIgnoreCase("1")) {
-                    recStatusDictWithoutConfirmVector.add(entry);
-                }
+                if (!entry.getCode().equalsIgnoreCase("1")) 
+                    recStatusDictWithoutConfirmVector.add(entry);                
             }
             recStatusDictWithoutConfirmArray = recStatusDictWithoutConfirmVector.toArray(new DictionaryEntry[0]);
         }
 
         String tableName = null;
 
-        /*if (panelType == panelTypes.PATIENT) {
-            tableName = Globals.PATIENT_TABLE_NAME;
-//            mpPanel.setVisible(false);
-            mpPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Exact Search")); // This hack works, but is far from ideal...
-            changePatientRecordMenuItem.setVisible(false);
-            obsoleteToggleButton.setVisible(false);
-            checksPanel.setVisible(false);
-            sequencePanel.setVisible(false);
-        } else*/ if (panelType == panelTypes.TUMOUR) {
-            tableName = Globals.TUMOUR_TABLE_NAME;
-            //personSearchPanel.setVisible(false);
-        } /*else if (panelType == panelTypes.SOURCE) {
-            tableName = Globals.SOURCE_TABLE_NAME;
-            systemPanel.setVisible(false);
-        }*/
+        if(panelType != null) switch (panelType) {
+            case PATIENT:
+                /*tableName = Globals.PATIENT_TABLE_NAME;
+                //            mpPanel.setVisible(false);
+                mpPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Exact Search")); // This hack works, but is far from ideal...
+                changePatientRecordMenuItem.setVisible(false);
+                obsoleteToggleButton.setVisible(false);
+                checksPanel.setVisible(false);
+                sequencePanel.setVisible(false);
+                break;*/
+                throw new IllegalArgumentException("This should be a Tumour panelType, not a Patient.");
+            case TUMOUR:
+                tableName = Globals.TUMOUR_TABLE_NAME;
+                //personSearchPanel.setVisible(false);
+                break;                
+            case SOURCE:
+                /*tableName = Globals.SOURCE_TABLE_NAME;
+                systemPanel.setVisible(false);
+                break;*/
+                throw new IllegalArgumentException("This should be a Tumour panelType, not a Source.");
+            default:
+                break;
+        }
+        
         variablesInTable =
                 canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
         Arrays.sort(variablesInTable, new DatabaseVariablesListElementPositionSorter());
     }
 
+    @Override
     public DatabaseRecord getDatabaseRecord() {
         buildDatabaseRecord();
         return databaseRecord;
@@ -597,21 +599,17 @@ public class RecordEditorTumour extends javax.swing.JPanel
         return obsoleteFlagVariableListElement;
     }
     
-    private void refreshRecordStatus(DatabaseRecord record) {
-        /*
-         * Set the record status.
-         */
+    private void refreshRecordStatus(DatabaseRecord record) {        
+        //Set the record status.        
         if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
             recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithConfirmArray));
             String recStatus = (String) record.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
-            if (recStatus != null) {
+            if (recStatus != null) 
                 recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
-            } else {
-                recordStatusComboBox.setSelectedItem(recStatusDictMap.get("0"));
-            }
-        } else {
-            recordStatusPanel.setVisible(false);
-        }
+            else 
+                recordStatusComboBox.setSelectedItem(recStatusDictMap.get("0"));            
+        } else 
+            recordStatusPanel.setVisible(false);        
     }
     
     private void refreshSequence() {
@@ -626,21 +624,20 @@ public class RecordEditorTumour extends javax.swing.JPanel
     }
     
     private void refreshUpdatedBy() {
-        String updatedBy = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("UNKNOWN_BY");
-        String updateDateToolTip = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("UNKNOWN_DATE");
-        /*
-         * Set the updatedBy
-         */
+        String updatedBy = java.util.ResourceBundle
+                .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("UNKNOWN_BY");
+        String updateDateToolTip = java.util.ResourceBundle
+                .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("UNKNOWN_DATE");
+        
+        //Set the updatedBy
         if (updatedByVariableListElement != null) {
             String updatedByString = (String) databaseRecord.getVariable(updatedByVariableListElement.getDatabaseVariableName());
-            if (updatedByString != null && updatedByString.trim().length() > 0) {
-                updatedBy = updatedByString;
-            }
+            if (updatedByString != null && updatedByString.trim().length() > 0) 
+                updatedBy = updatedByString;            
         }
         userLabel.setText(updatedBy);
-        /*
-         * Set the update date
-         */
+        
+        //Set the update date
         if (updateDateVariableListElement != null) {
             String updateDate = (String) databaseRecord.getVariable(updateDateVariableListElement.getDatabaseVariableName());
             String updateDateString = "";
@@ -658,19 +655,23 @@ public class RecordEditorTumour extends javax.swing.JPanel
                     recordCal.setTime(date);
                     if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR)
                             && todayCal.get(Calendar.DAY_OF_YEAR) == recordCal.get(Calendar.DAY_OF_YEAR)) {
-                        updateDateString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("TODAY");
+                        updateDateString = java.util.ResourceBundle
+                                .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("TODAY");
                         updateDateToolTip = DateFormat.getDateInstance().format(date);
                     } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR)
                             && todayCal.get(Calendar.DAY_OF_YEAR) - recordCal.get(Calendar.DAY_OF_YEAR) == 1) {
-                        updateDateString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("YESTERDAY");
+                        updateDateString = java.util.ResourceBundle
+                                .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("YESTERDAY");
                         updateDateToolTip = DateFormat.getDateInstance().format(date);
                     } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR)
                             && todayCal.get(Calendar.WEEK_OF_YEAR) == recordCal.get(Calendar.WEEK_OF_YEAR)) {
-                        updateDateString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("THIS_WEEK");
+                        updateDateString = java.util.ResourceBundle
+                                .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("THIS_WEEK");
                         updateDateToolTip = DateFormat.getDateInstance().format(date);
                     } else if (todayCal.get(Calendar.YEAR) == recordCal.get(Calendar.YEAR)
                             && todayCal.get(Calendar.WEEK_OF_YEAR) - recordCal.get(Calendar.WEEK_OF_YEAR) == 1) {
-                        updateDateString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("LAST_WEEK");
+                        updateDateString = java.util.ResourceBundle
+                                .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("LAST_WEEK");
                         updateDateToolTip = DateFormat.getDateInstance().format(date);
                     } else {
                         updateDateString = DateFormat.getDateInstance().format(date);
@@ -680,7 +681,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
             }
             dateLabel.setText(updateDateString);
         }
-        updatedByPanel.setToolTipText(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("RECORD_UPDATED_BY_") + updatedBy + ", " + updateDateToolTip);
+        updatedByPanel.setToolTipText(java.util.ResourceBundle
+                .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour")
+                .getString("RECORD_UPDATED_BY_") + updatedBy + ", " + updateDateToolTip);
     }
    
     @Action
@@ -695,7 +698,14 @@ public class RecordEditorTumour extends javax.swing.JPanel
             actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.RUN_MP));
         /*else 
             actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.RUN_EXACT));*/
-    }        
+    }
+    
+    /*Not present in Tumour panel
+    @Action
+    public void runPersonSearch() {
+        autoFill();
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.PERSON_SEARCH));
+    }*/
     
     @Action
     public void saveRecord() {
@@ -716,50 +726,46 @@ public class RecordEditorTumour extends javax.swing.JPanel
         this.resultCode = resultCode;
         String recStatus = null;
         boolean canBeConfirmed = false;
-        if (resultCode == null) {
-            //checksLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorPanel").getString("NOT_DONE"));
+        
+        if (resultCode == null
+            || resultCode == ResultCode.NotDone) {            
             checksButton.setText(resourceMap.getString("checksPanel.border.title") + " " +
                     java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("NOT_DONE"));
-            checksButton.setForeground(Color.RED);
+            //Red colored border
+            checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 2));
             canBeConfirmed = false;
-        } else if (resultCode == ResultCode.NotDone) {
-            //checksLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorPanel").getString("NOT_DONE"));
-            checksButton.setText(resourceMap.getString("checksPanel.border.title") + " " + 
-                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("NOT_DONE"));
-            checksButton.setForeground(Color.RED);
-            canBeConfirmed = false;
-        } else {
-            //checksLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorPanel").getString("DONE:_") + resultCode.toString());
+        } else {            
             checksButton.setText(resourceMap.getString("checksPanel.border.title") + " " +
-                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("DONE:_") + resultCode.toString());            
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour")
+                            .getString("DONE:_") + resultCode.toString());  
+            
             if (resultCode == ResultCode.OK || resultCode == ResultCode.Query) {
-                checksButton.setForeground(Color.GREEN);
+                //Green colored border
+                checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(32, 166, 72), 2));
                 canBeConfirmed = true;
             } else if (resultCode == ResultCode.Rare) {
-                checksButton.setForeground(Color.YELLOW);
-                if (CanRegClientApp.getApplication().getUserRightLevel() == Globals.UserRightLevels.SUPERVISOR) {
-                    canBeConfirmed = true;
-                }
+                //Yellow colored border
+                checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(249, 238, 43), 2));
+                if (CanRegClientApp.getApplication().getUserRightLevel() == Globals.UserRightLevels.SUPERVISOR) 
+                    canBeConfirmed = true;                
             }
         }
         // Set record status
         if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
             recStatus = "0";
-            if (hasChanged) {
+            if (hasChanged) 
                 recStatus = "0";
-            } else {
+            else 
                 recStatus = (String) databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
-            }
+           
             if (canBeConfirmed) {
                 recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithConfirmArray));
-                if (recStatus != null) {
-                    recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
-                }
+                if (recStatus != null) 
+                    recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));                
             } else {
                 recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithoutConfirmArray));
-                if (recStatus != null) {
-                    recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));
-                }
+                if (recStatus != null) 
+                    recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));                
             }
             databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recStatus);
             databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(), CheckResult.toDatabaseVariable(resultCode));
@@ -773,9 +779,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
             VariableEditorPanelInterface panel = variableEditorPanels.get(databaseVariablesListElement.getDatabaseVariableName());
             if (panel != null) {
                 boolean filledOK = panel.isFilledOK();
-                if (!filledOK) {
+                if (!filledOK) 
                     panel.updateFilledInStatusColor();
-                }
+                
                 allPresent = allPresent & filledOK;
             }
         }
@@ -785,12 +791,18 @@ public class RecordEditorTumour extends javax.swing.JPanel
     @Action
     public void autoFill() {
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.AUTO_FILL));
+    }   
+    
+    @Action
+    public void sourceMenuAction() {
+        sourcePopupMenu.show(sourceMenuButton, 0, 0);
     }
-   
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        sourcePopupMenu = new javax.swing.JPopupMenu();
+        sourceDeleteMenuItem = new javax.swing.JMenuItem();
         systemPanel = new javax.swing.JPanel();
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 32767));
         jPanel1 = new javax.swing.JPanel();
@@ -800,10 +812,10 @@ public class RecordEditorTumour extends javax.swing.JPanel
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 32767));
         tumourLinkedPanel = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
+        tumourPatientLinkLabel = new javax.swing.JLabel();
         filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 4), new java.awt.Dimension(0, 4), new java.awt.Dimension(32767, 4));
         jPanel13 = new javax.swing.JPanel();
-        patientTabsOpenCombo = new javax.swing.JComboBox();
+        openPatientsComboBox = new javax.swing.JComboBox();
         filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 32767));
         recordStatusPanel = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
@@ -838,6 +850,13 @@ public class RecordEditorTumour extends javax.swing.JPanel
         filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 10));
         sourcesTabbedPane = new canreg.client.gui.dataentry2.components.FixedWidthRowTabbedPane();
 
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditorTumour.class, this);
+        sourceDeleteMenuItem.setAction(actionMap.get("removeSourceAction")); // NOI18N
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RecordEditorTumour.class);
+        sourceDeleteMenuItem.setText(resourceMap.getString("removeSourceAction.Action.text")); // NOI18N
+        sourceDeleteMenuItem.setName("deleteRecord"); // NOI18N
+        sourcePopupMenu.add(sourceDeleteMenuItem);
+
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
         systemPanel.setMaximumSize(new java.awt.Dimension(32767, 100));
@@ -849,16 +868,16 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel1.setPreferredSize(new java.awt.Dimension(130, 50));
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.PAGE_AXIS));
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditorTumour.class, this);
         checksButton.setAction(actionMap.get("runChecksAction")); // NOI18N
-        checksButton.setText("Verified: NO");
+        checksButton.setText(resourceMap.getString("checksButton.text")); // NOI18N
         checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 2));
         checksButton.setMaximumSize(new java.awt.Dimension(200, 45));
         jPanel1.add(checksButton);
         jPanel1.add(filler1);
 
         mpButton.setAction(actionMap.get("runMultiplePrimarySearch")); // NOI18N
-        mpButton.setText("MP Search");
+        mpButton.setText(resourceMap.getString("mpButton.text")); // NOI18N
+        mpButton.setToolTipText(resourceMap.getString("mpButton.toolTipText")); // NOI18N
         mpButton.setMaximumSize(new java.awt.Dimension(200, 45));
         jPanel1.add(mpButton);
 
@@ -872,14 +891,13 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel12.setMaximumSize(new java.awt.Dimension(200, 45));
         jPanel12.setLayout(new javax.swing.BoxLayout(jPanel12, javax.swing.BoxLayout.LINE_AXIS));
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel3.setText("Tumour linked to");
-        jLabel3.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        jLabel3.setMaximumSize(new java.awt.Dimension(200, 100));
-        jLabel3.setPreferredSize(new java.awt.Dimension(68, 23));
-        jPanel12.add(jLabel3);
+        tumourPatientLinkLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        tumourPatientLinkLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tumourPatientLinkLabel.setText(resourceMap.getString("tumourPatientLinkLabel.text")); // NOI18N
+        tumourPatientLinkLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        tumourPatientLinkLabel.setMaximumSize(new java.awt.Dimension(200, 100));
+        tumourPatientLinkLabel.setPreferredSize(new java.awt.Dimension(68, 23));
+        jPanel12.add(tumourPatientLinkLabel);
 
         tumourLinkedPanel.add(jPanel12);
         tumourLinkedPanel.add(filler10);
@@ -887,8 +905,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel13.setMaximumSize(new java.awt.Dimension(200, 45));
         jPanel13.setLayout(new javax.swing.BoxLayout(jPanel13, javax.swing.BoxLayout.LINE_AXIS));
 
-        patientTabsOpenCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Coming Soon!" }));
-        jPanel13.add(patientTabsOpenCombo);
+        openPatientsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Coming Soon!" }));
+        openPatientsComboBox.setName("possiblePatientsComboBox"); // NOI18N
+        jPanel13.add(openPatientsComboBox);
 
         tumourLinkedPanel.add(jPanel13);
 
@@ -903,9 +922,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel6.setLayout(new javax.swing.BoxLayout(jPanel6, javax.swing.BoxLayout.LINE_AXIS));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel2.setText("Record Status");
-        jLabel2.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText(resourceMap.getString("recordStatusPanel.border.title")); // NOI18N
         jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         jLabel2.setMaximumSize(new java.awt.Dimension(200, 100));
         jLabel2.setPreferredSize(new java.awt.Dimension(68, 23));
@@ -918,6 +936,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
 
         recordStatusComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        recordStatusComboBox.setName("recordStatusComboBox"); // NOI18N
         jPanel3.add(recordStatusComboBox);
 
         recordStatusPanel.add(jPanel3);
@@ -925,15 +944,19 @@ public class RecordEditorTumour extends javax.swing.JPanel
         systemPanel.add(recordStatusPanel);
         systemPanel.add(filler5);
 
-        updatedByPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Updated", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11))); // NOI18N
-        updatedByPanel.setMaximumSize(new java.awt.Dimension(32767, 95));
+        updatedByPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, resourceMap.getString("updatedByPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11))); // NOI18N
+        updatedByPanel.setMaximumSize(new java.awt.Dimension(400, 95));
         updatedByPanel.setMinimumSize(new java.awt.Dimension(100, 30));
+        updatedByPanel.setPreferredSize(new java.awt.Dimension(300, 69));
 
-        byLabel.setText("By:");
+        byLabel.setText(resourceMap.getString("byLabel.text")); // NOI18N
+        byLabel.setName("byLabel"); // NOI18N
 
-        userLabel.setText("<username>");
+        userLabel.setText(resourceMap.getString("userLabel.text")); // NOI18N
+        userLabel.setName("userLabel"); // NOI18N
 
-        dateLabel.setText("<username>");
+        dateLabel.setText(resourceMap.getString("dateLabel.text")); // NOI18N
+        dateLabel.setName("dateLabel"); // NOI18N
 
         javax.swing.GroupLayout updatedByPanelLayout = new javax.swing.GroupLayout(updatedByPanel);
         updatedByPanel.setLayout(updatedByPanelLayout);
@@ -945,7 +968,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
                     .addGroup(updatedByPanelLayout.createSequentialGroup()
                         .addComponent(byLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE))
+                        .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
                     .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -962,17 +985,18 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         systemPanel.add(updatedByPanel);
 
-        updatedByPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Updated", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11))); // NOI18N
-        updatedByPanel1.setMaximumSize(new java.awt.Dimension(32767, 95));
+        updatedByPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, resourceMap.getString("sequencePanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11))); // NOI18N
+        updatedByPanel1.setMaximumSize(new java.awt.Dimension(150, 95));
         updatedByPanel1.setMinimumSize(new java.awt.Dimension(100, 30));
+        updatedByPanel1.setPreferredSize(new java.awt.Dimension(150, 80));
 
-        sequenceNumberDescriptionLabel.setText("Number:");
+        sequenceNumberDescriptionLabel.setText(resourceMap.getString("sequenceNumberDescriptionLabel.text")); // NOI18N
 
-        sequenceNumberValueLabel.setText("<username>");
+        sequenceNumberValueLabel.setText(resourceMap.getString("sequenceNumberValueLabel.text")); // NOI18N
 
-        sequenceTotalDescriptionLabel.setText("Total: ");
+        sequenceTotalDescriptionLabel.setText(resourceMap.getString("sequenceTotalDescriptionLabel.text")); // NOI18N
 
-        sequenceTotalValueLabel.setText("Total: ");
+        sequenceTotalValueLabel.setText(resourceMap.getString("sequenceTotalValueLabel.text")); // NOI18N
 
         javax.swing.GroupLayout updatedByPanel1Layout = new javax.swing.GroupLayout(updatedByPanel1);
         updatedByPanel1.setLayout(updatedByPanel1Layout);
@@ -985,7 +1009,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
                     .addComponent(sequenceNumberDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(updatedByPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sequenceNumberValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                    .addComponent(sequenceNumberValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
                     .addComponent(sequenceTotalValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -1033,13 +1057,15 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel9.add(filler7);
 
         addSourceRecordButton.setAction(actionMap.get("addSourceAction")); // NOI18N
-        addSourceRecordButton.setText("Add source record");
+        addSourceRecordButton.setText(resourceMap.getString("addSourceAction.Action.text")); // NOI18N
         addSourceRecordButton.setMaximumSize(new java.awt.Dimension(220, 23));
         addSourceRecordButton.setMinimumSize(new java.awt.Dimension(21, 23));
+        addSourceRecordButton.setName("addSourceAction"); // NOI18N
         jPanel9.add(addSourceRecordButton);
         jPanel9.add(filler8);
 
-        sourceMenuButton.setText("Menu\n");
+        sourceMenuButton.setAction(actionMap.get("sourceMenuAction")); // NOI18N
+        sourceMenuButton.setText(resourceMap.getString("menuButton.text")); // NOI18N
         sourceMenuButton.setMaximumSize(new java.awt.Dimension(100, 23));
         sourceMenuButton.setMinimumSize(new java.awt.Dimension(30, 23));
         jPanel9.add(sourceMenuButton);
@@ -1094,7 +1120,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private javax.swing.Box.Filler filler8;
     private javax.swing.Box.Filler filler9;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel12;
@@ -1107,17 +1132,20 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private javax.swing.JPanel jPanel9;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JButton mpButton;
-    private javax.swing.JComboBox<String> patientTabsOpenCombo;
+    private javax.swing.JComboBox<String> openPatientsComboBox;
     private javax.swing.JComboBox<String> recordStatusComboBox;
     private javax.swing.JPanel recordStatusPanel;
     private javax.swing.JLabel sequenceNumberDescriptionLabel;
     private javax.swing.JLabel sequenceNumberValueLabel;
     private javax.swing.JLabel sequenceTotalDescriptionLabel;
     private javax.swing.JLabel sequenceTotalValueLabel;
+    private javax.swing.JMenuItem sourceDeleteMenuItem;
     private javax.swing.JButton sourceMenuButton;
+    private javax.swing.JPopupMenu sourcePopupMenu;
     private canreg.client.gui.dataentry2.components.FixedWidthRowTabbedPane sourcesTabbedPane;
     private javax.swing.JPanel systemPanel;
     private javax.swing.JPanel tumourLinkedPanel;
+    private javax.swing.JLabel tumourPatientLinkLabel;
     private javax.swing.JPanel updatedByPanel;
     private javax.swing.JPanel updatedByPanel1;
     private javax.swing.JLabel userLabel;

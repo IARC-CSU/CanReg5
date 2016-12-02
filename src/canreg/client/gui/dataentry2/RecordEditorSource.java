@@ -37,28 +37,34 @@ import canreg.common.database.DictionaryEntry;
 import canreg.common.database.Source;
 import canreg.common.qualitycontrol.CheckResult;
 import java.awt.Component;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
 /**
- *
  * @author patri_000
  */
-public class SingleSourcePanel extends javax.swing.JPanel implements ActionListener {
+public class RecordEditorSource extends javax.swing.JPanel 
+        implements ActionListener, RecordEditorPanel, PropertyChangeListener {
 
     private Map<Integer, Dictionary> dictionary;
     private Document doc;
-    private final ActionListener listener;
+    private ActionListener actionListener;
     private DatabaseRecord databaseRecord;
     private boolean hasChanged = false;
     private DatabaseGroupsListElement[] groupListElements;
@@ -66,13 +72,16 @@ public class SingleSourcePanel extends javax.swing.JPanel implements ActionListe
     private Map<String, VariableEditorPanelInterface> variableEditorPanels;
     private final LinkedList<DatabaseVariablesListElement> autoFillList;
     private final GlobalToolBox globalToolBox;
-    private panelTypes panelType;
+    private final panelTypes panelType = panelTypes.SOURCE;
+    private final SimpleDateFormat dateFormat;
    
-    public SingleSourcePanel(ActionListener listener) {
+    public RecordEditorSource(ActionListener listener) {
         initComponents();
-        this.listener = listener; 
+        this.actionListener = listener; 
         autoFillList = new LinkedList<DatabaseVariablesListElement>();
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
+        dateFormat = new SimpleDateFormat(Globals.DATE_FORMAT_STRING);
     }
                
     public void setRecordAndBuildPanel(DatabaseRecord dbr) {
@@ -81,15 +90,31 @@ public class SingleSourcePanel extends javax.swing.JPanel implements ActionListe
         buildPanel();
     }
     
+    @Override
+    public void setResultCodeOfVariable(String databaseVariableName, CheckResult.ResultCode resultCode) {
+        VariableEditorPanelInterface panel = variableEditorPanels.get(databaseVariableName);
+        panel.setResultCode(resultCode);
+    }
+    
+    @Override
     public void setSaveNeeded(boolean saveNeeded) {
         this.hasChanged = saveNeeded;
     }
     
+    @Override
+    public void setVariable(DatabaseVariablesListElement variable, String value) {
+        VariableEditorPanelInterface vep = variableEditorPanels.get(variable.getDatabaseVariableName());
+        vep.setValue(value);
+    }
+    
+    @Override
     public DatabaseRecord getDatabaseRecord() {
+        buildDatabaseRecord();
         return this.databaseRecord;
     }
     
-    private void setDatabaseRecord(DatabaseRecord dbr) {
+    @Override
+    public void setDatabaseRecord(DatabaseRecord dbr) {
         this.databaseRecord = dbr;
         setSaveNeeded(false);
         groupListElements = Tools.getGroupsListElements(doc, Globals.NAMESPACE);
@@ -109,7 +134,6 @@ public class SingleSourcePanel extends javax.swing.JPanel implements ActionListe
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString());
             updatedByVariableListElement =
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdatedBy.toString());
-
         } else if (databaseRecord.getClass().isInstance(new Tumour())) {
             panelType = panelTypes.TUMOUR;
             recordStatusVariableListElement =
@@ -127,7 +151,7 @@ public class SingleSourcePanel extends javax.swing.JPanel implements ActionListe
             tumourSequenceTotalVariableListElement =
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimTot.toString());
         } else*/ if (databaseRecord.getClass().isInstance(new Source())) {
-            panelType = panelTypes.SOURCE;
+            //panelType = panelTypes.SOURCE;
             /*recordStatusVariableListElement = null;
             unduplicationVariableListElement = null;
             obsoleteFlagVariableListElement = null;
@@ -139,7 +163,6 @@ public class SingleSourcePanel extends javax.swing.JPanel implements ActionListe
          */
         /*if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
             recStatusDictMap = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
-
             Collection<DictionaryEntry> recStatusDictCollection = recStatusDictMap.values();
             recStatusDictWithConfirmArray =
                     recStatusDictCollection.toArray(new DictionaryEntry[0]);
@@ -147,9 +170,8 @@ public class SingleSourcePanel extends javax.swing.JPanel implements ActionListe
             LinkedList<DictionaryEntry> recStatusDictWithoutConfirmVector = new LinkedList<DictionaryEntry>();
             for (DictionaryEntry entry : recStatusDictCollection) {
                 // "1" is the code for confirmed... TODO: change to dynamic code...
-                if (!entry.getCode().equalsIgnoreCase("1")) {
-                    recStatusDictWithoutConfirmVector.add(entry);
-                }
+                if (!entry.getCode().equalsIgnoreCase("1")) 
+                    recStatusDictWithoutConfirmVector.add(entry);                
             }
             recStatusDictWithoutConfirmArray = recStatusDictWithoutConfirmVector.toArray(new DictionaryEntry[0]);
         }*/        
@@ -178,14 +200,12 @@ public class SingleSourcePanel extends javax.swing.JPanel implements ActionListe
         dataPanel.removeAll();
 
         if (variableEditorPanels != null) {
-            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) {
-                vep.removeListener();
-            }
+            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) 
+                vep.removeListener();            
         }
         variableEditorPanels = new LinkedHashMap();
 
-        Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();
-        Map<String, DictionaryEntry> possibleValues;
+        Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();        
 
         for (int i = 0; i < variablesInTable.length; i++) {
             DatabaseVariablesListElement currentVariable = variablesInTable[i];
@@ -216,14 +236,12 @@ public class SingleSourcePanel extends javax.swing.JPanel implements ActionListe
 
             String variableName = currentVariable.getDatabaseVariableName();
             Object variableValue = databaseRecord.getVariable(variableName);
-            if (variableValue != null) {
-                vep.setInitialValue(variableValue.toString());
-            }
+            if (variableValue != null) 
+                vep.setInitialValue(variableValue.toString());            
 
             String variableFillStatus = currentVariable.getFillInStatus();
-            if (Globals.FILL_IN_STATUS_AUTOMATIC_STRING.equalsIgnoreCase(variableFillStatus)) {
-                autoFillList.add(currentVariable);
-            }
+            if (Globals.FILL_IN_STATUS_AUTOMATIC_STRING.equalsIgnoreCase(variableFillStatus)) 
+                autoFillList.add(currentVariable);            
 
             Integer groupID = currentVariable.getGroupID();
             //Skip 0 and -1 - System groups
@@ -243,8 +261,6 @@ public class SingleSourcePanel extends javax.swing.JPanel implements ActionListe
         }
 
         // Iterate trough groups
-
-        // Iterator<Integer> iterator = groupIDtoPanelMap.keySet().iterator();
         for (DatabaseGroupsListElement groupListElement : groupListElements) {
             int groupID = groupListElement.getGroupIndex();
             JPanel panel = groupIDtoPanelMap.get(groupID);
@@ -265,7 +281,6 @@ public class SingleSourcePanel extends javax.swing.JPanel implements ActionListe
             dataPanel.add(sourcesPanel);
             refreshSequence();
         }
-
         if (panelType != panelTypes.SOURCE) {
             refreshObsoleteStatus(databaseRecord);
             refreshRecordStatus(databaseRecord);
@@ -278,15 +293,163 @@ public class SingleSourcePanel extends javax.swing.JPanel implements ActionListe
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // forward the event...
-        listener.actionPerformed(e);
+        if (e.getActionCommand().equalsIgnoreCase("Changed")) {
+            /*if (e.getSource().equals(saveButton)) {
+                // do nothing...
+            } else {*/
+                changesDone();
+                actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
+            //}
+        } else {
+            // pass it on
+            actionListener.actionPerformed(e);
+        }
+    }
+    
+    @Override
+    public boolean areAllVariablesPresent() {
+        boolean allPresent = true;
+        for (DatabaseVariablesListElement databaseVariablesListElement : variablesInTable) {
+            VariableEditorPanelInterface panel = variableEditorPanels.get(databaseVariablesListElement.getDatabaseVariableName());
+            if (panel != null) {
+                boolean filledOK = panel.isFilledOK();
+                if (!filledOK) {
+                    panel.updateFilledInStatusColor();
+                }
+                allPresent = allPresent & filledOK;
+            }
+        }
+        return allPresent;
+    }
+    
+    private void buildDatabaseRecord() {
+        Iterator<VariableEditorPanelInterface> iterator = variableEditorPanels.values().iterator();
+        while (iterator.hasNext()) {
+            VariableEditorPanelInterface vep = iterator.next();
+            databaseRecord.setVariable(vep.getKey(), vep.getValue());
+        }
+
+        /*if (panelType == panelTypes.TUMOUR) {
+            Tumour tumour = (Tumour) databaseRecord;
+            tumour.setSources(sourcesPanel.getSources());
+        }*/
+        
+        /* No record status in sources
+        if (recordStatusVariableListElement != null) {
+            if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
+                DictionaryEntry recordStatusValue = (DictionaryEntry) recordStatusComboBox.getSelectedItem();
+                if (recordStatusValue != null) {
+                    databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusValue.getCode());
+                } else {
+                    databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
+                    // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
+                    Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
+                }
+            } else {
+                databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
+                // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
+                Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
+            }
+        }
+        //No obsolete button in sources
+        if (obsoleteFlagVariableListElement != null) {
+            if (obsoleteToggleButton.isSelected()) {
+                databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.OBSOLETE_VALUE);
+            } else {
+                databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.NOT_OBSOLETE_VALUE);
+            }
+        }
+        //no checks button in sources
+        if (checkVariableListElement != null) {
+            if (resultCode == null) {
+                resultCode = ResultCode.NotDone;
+            }
+            databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(),
+                    CheckResult.toDatabaseVariable(resultCode));
+        }*/
+    }
+    
+    private void changesDone() {
+        setSaveNeeded(true);
+        //setChecksResultCode(CheckResult.ResultCode.NotDone);
+    }
+    
+    @Override
+    public LinkedList<DatabaseVariablesListElement> getAutoFillList() {
+        return autoFillList;
     }
    
     public Map<Integer, Dictionary> getDictionary() {
         return dictionary;
     }
+    
+    public boolean isSaveNeeded() {
+        // hasChanged = false;
 
+        for (DatabaseVariablesListElement databaseVariablesListElement : variablesInTable) {
+            VariableEditorPanelInterface panel = variableEditorPanels.get(databaseVariablesListElement.getDatabaseVariableName());
+            if (panel != null) 
+                hasChanged = hasChanged || panel.hasChanged();            
+        }
+
+        return hasChanged;
+    }
+    
+    public void maximizeSize() {
+        int heightToGrowBy = this.getHeight() - dataScrollPane.getHeight() + dataPanel.getHeight();
+        int widthToGrowBy = this.getWidth() - dataScrollPane.getWidth() + dataPanel.getWidth();
+        this.setSize(this.getHeight() + heightToGrowBy, this.getWidth() + widthToGrowBy);
+        this.revalidate();
+    }
+    
+    @Override
+    public void propertyChange(PropertyChangeEvent e) {
+        String propName = e.getPropertyName();
+        if ("focusOwner".equals(propName)) {
+            if (e.getNewValue() instanceof JTextField) {
+                JTextField textField = (JTextField) e.getNewValue();
+                textField.selectAll();
+            }
+        } /** Called when a field's "value" property changes. */
+        else if ("value".equals(propName)) {
+            setSaveNeeded(true);
+            //Temporarily disabled
+            actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
+            // saveButton.setEnabled(saveNeeded);
+        } else {
+            // Do nothing.
+        }
+    }
+    
+    @Override
+    public void refreshDatabaseRecord(DatabaseRecord record) {
+        setDatabaseRecord(record);
+        setSaveNeeded(false);
+
+        buildPanel();
+
+        // set record status and check status        
+        //refreshCheckStatus(record);
+        //refreshRecordStatus(record);
+        //refreshUpdatedBy();
+    }
+    
+    @Action
+    public void saveRecord() {
+        buildDatabaseRecord();
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.SAVE));
+        Iterator<VariableEditorPanelInterface> iterator = variableEditorPanels.values().iterator();
+        while (iterator.hasNext()) {
+            VariableEditorPanelInterface vep = iterator.next();
+            vep.setSaved();
+        }
+    }
+    
+    void setActionListener(ActionListener listener) {
+        this.actionListener = listener;
+    }
    
+    @Override
     public void setDictionary(Map<Integer, Dictionary> dictionary) {
         this.dictionary = dictionary;
     }
@@ -295,6 +458,7 @@ public class SingleSourcePanel extends javax.swing.JPanel implements ActionListe
         return doc;
     }
    
+    @Override
     public void setDocument(Document doc) {
         this.doc = doc;
     }

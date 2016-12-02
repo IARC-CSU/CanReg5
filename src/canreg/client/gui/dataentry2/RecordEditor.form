@@ -11,10 +11,14 @@
         <MenuItem class="javax.swing.JMenuItem" name="patientDeleteMenuItem">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="canreg.client.gui.dataentry.RecordEditorPanel" id="deleteRecord" methodName="deleteRecord"/>
+              <action class="canreg.client.gui.dataentry2.RecordEditor" id="deletePatientRecord" methodName="deletePatientRecord"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Delete record"/>
+            <Property name="text" type="java.lang.String" resourceKey="deleteMenuItem.text"/>
+            <Property name="name" type="java.lang.String" value="deleteRecord" noResource="true"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="patientDeleteMenuItem.setIcon(resourceMap.getIcon(&quot;deleteRecord.Action.icon&quot;));"/>
+          </AuxValues>
         </MenuItem>
       </SubComponents>
     </Container>
@@ -27,10 +31,15 @@
         <MenuItem class="javax.swing.JMenuItem" name="tumourDeleteMenuItem">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="canreg.client.gui.dataentry.RecordEditorPanel" id="deleteRecord" methodName="deleteRecord"/>
+              <action class="canreg.client.gui.dataentry2.RecordEditor" id="deleteTumourRecord" methodName="deleteTumourRecord"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Delete record"/>
+            <Property name="text" type="java.lang.String" resourceKey="deleteMenuItem.text"/>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="deleteRecord.Action.shortDescription"/>
+            <Property name="name" type="java.lang.String" value="deleteRecord" noResource="true"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="tumourDeleteMenuItem.setIcon(resourceMap.getIcon(&quot;deleteRecord.Action.icon&quot;));"/>
+          </AuxValues>
         </MenuItem>
         <MenuItem class="javax.swing.JRadioButtonMenuItem" name="tumourObsoleteToggleButton">
           <Properties>
@@ -38,6 +47,8 @@
               <action class="canreg.client.gui.dataentry.RecordEditorPanel" id="setObsoleteFlag" methodName="setObsoleteFlag"/>
             </Property>
             <Property name="selected" type="boolean" value="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="obsoleteToggleButton.text"/>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="setObsoleteFlag.Action.shortDescription"/>
           </Properties>
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="tumourChangePatientRecordMenuItem">
@@ -45,6 +56,8 @@
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.dataentry.RecordEditorPanel" id="changePatientRecord" methodName="changePatientRecord"/>
             </Property>
+            <Property name="text" type="java.lang.String" resourceKey="changePatientRecord.Action.text"/>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="changePatientRecord.Action.shortDescription"/>
           </Properties>
         </MenuItem>
       </SubComponents>
@@ -386,7 +399,7 @@
                             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                               <action class="canreg.client.gui.dataentry2.RecordEditor" id="patientMenuAction" methodName="patientMenuAction"/>
                             </Property>
-                            <Property name="text" type="java.lang.String" value="Menu&#xa;"/>
+                            <Property name="text" type="java.lang.String" resourceKey="menuButton.text"/>
                             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                               <Dimension value="[100, 23]"/>
                             </Property>
@@ -549,7 +562,6 @@
                             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                               <action class="canreg.client.gui.dataentry2.RecordEditor" id="addTumourAction" methodName="addTumourAction"/>
                             </Property>
-                            <Property name="text" type="java.lang.String" value="Add tumour record"/>
                             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                               <Dimension value="[220, 23]"/>
                             </Property>
@@ -579,7 +591,7 @@
                             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                               <action class="canreg.client.gui.dataentry2.RecordEditor" id="tumourMenuAction" methodName="tumourMenuAction"/>
                             </Property>
-                            <Property name="text" type="java.lang.String" value="Menu&#xa;"/>
+                            <Property name="text" type="java.lang.String" resourceKey="menuButton.text"/>
                             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                               <Dimension value="[100, 23]"/>
                             </Property>
@@ -641,6 +653,9 @@
                           <Dimension value="[700, 451]"/>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="tumourTabbedPaneStateChanged"/>
+                      </Events>
 
                       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
                     </Container>

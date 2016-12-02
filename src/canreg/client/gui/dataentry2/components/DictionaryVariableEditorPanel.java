@@ -59,7 +59,9 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     
     
     public DictionaryVariableEditorPanel(ActionListener listener) {
-        super(listener);        
+        super(listener);
+        if(listener == null)
+            System.out.println("WTF!!!");        
         resourceMap = org.jdesktop.application.Application.getInstance(
                 canreg.client.CanRegClientApp.class).getContext().getResourceMap(DictionaryVariableEditorPanel.class);
         initComponents();
@@ -341,8 +343,9 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 }
                 updateFilledInStatusColor();
             }
-                        
-            listener.actionPerformed(new ActionEvent(this, 0, RecordEditor.REQUEST_FOCUS));
+               
+            /*if(listener != null)
+                listener.actionPerformed(new ActionEvent(this, 0, RecordEditor.REQUEST_FOCUS));*/
         }    
     }
     

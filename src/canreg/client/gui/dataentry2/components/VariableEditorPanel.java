@@ -36,14 +36,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeListener;
 import java.util.logging.*;
-import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentListener;
 
 /**
  *
  * @author  ervikm, patri_000
  */
-public class VariableEditorPanel extends javax.swing.JPanel implements ActionListener, VariableEditorPanelInterface {
+public class VariableEditorPanel extends javax.swing.JPanel 
+        implements ActionListener, VariableEditorPanelInterface {
    
     protected DatabaseVariablesListElement databaseListElement;  
     protected int maxLength;   
@@ -416,14 +416,6 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
         codeTextField.setMinimumSize(new java.awt.Dimension(20, 20));
         codeTextField.setName("codeTextField"); // NOI18N
         codeTextField.setPreferredSize(new java.awt.Dimension(100, 20));
-        codeTextField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                codeTextFieldMousePressed(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                codeTextFieldMouseReleased(evt);
-            }
-        });
         codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 codeTextFieldFocusLost(evt);
@@ -450,16 +442,16 @@ public class VariableEditorPanel extends javax.swing.JPanel implements ActionLis
         );
     }// </editor-fold>//GEN-END:initComponents
 
-private void codeTextFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_codeTextFieldMousePressed
-    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(codeTextField, evt);
-}//GEN-LAST:event_codeTextFieldMousePressed
+    protected void codeTextFieldMousePressed(java.awt.event.MouseEvent evt) {                                           
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(codeTextField, evt);
+    }                                          
 
-private void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_codeTextFieldMouseReleased
-    MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(codeTextField, evt);
-}//GEN-LAST:event_codeTextFieldMouseReleased
+    protected void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {                                            
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(codeTextField, evt);
+    } 
 
     protected void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {
-        if (evt.getKeyChar() == KeyEvent.VK_ENTER) 
+        if(evt.getKeyChar() == KeyEvent.VK_ENTER) 
             transferFocusToNext();        
     }
     

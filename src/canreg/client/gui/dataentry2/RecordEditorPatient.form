@@ -84,7 +84,7 @@
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.gui.dataentry2.RecordEditorPatient" id="runPersonSearch" methodName="runPersonSearch"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" resourceKey="personSearchPanel.border.title"/>
+                    <Property name="text" type="java.lang.String" resourceKey="personSearchPanel.border.title" postCode="searchButton.setToolTipText(resourceMap.getString(&quot;searchButton.toolTipText&quot;));"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[200, 45]"/>
                     </Property>
@@ -109,9 +109,10 @@
                 <Component class="javax.swing.JButton" name="exactButton">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="canreg.client.gui.dataentry2.RecordEditorPatient" id="runMultiplePrimarySearch" methodName="runMultiplePrimarySearch"/>
+                      <action class="canreg.client.gui.dataentry2.RecordEditorPatient" id="runExactSearch" methodName="runExactSearch"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Exact Search"/>
+                    <Property name="text" type="java.lang.String" resourceKey="exactSearchButton.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="exactSearchButton.Action.shortDescription"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[200, 45]"/>
                     </Property>
@@ -156,6 +157,7 @@
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                     <TitledBorder title="Updated">
+                      <Property name="titleX" resourceKey="updatedByPanel.border.title"/>
                       <Font PropertyName="font" name="Dialog" size="11" style="0"/>
                     </TitledBorder>
                   </Border>
@@ -202,17 +204,20 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="byLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="By:"/>
+                    <Property name="text" type="java.lang.String" resourceKey="byLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="byLabel" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="userLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="&lt;username&gt;"/>
+                    <Property name="text" type="java.lang.String" resourceKey="userLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="userLabel" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="dateLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="&lt;username&gt;"/>
+                    <Property name="text" type="java.lang.String" resourceKey="dateLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="dateLabel" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
