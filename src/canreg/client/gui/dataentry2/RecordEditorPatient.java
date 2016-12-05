@@ -124,10 +124,10 @@ public class RecordEditorPatient extends javax.swing.JPanel
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equalsIgnoreCase("Changed")) {
+        if (e.getActionCommand().equals(VariableEditorPanelInterface.CHANGED_STRING)) {
             /*if (e.getSource().equals(saveButton)) {
                 // do nothing...
-            } else {*/
+            else {*/
                 changesDone();
                 actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
             //}
@@ -230,7 +230,11 @@ public class RecordEditorPatient extends javax.swing.JPanel
         for(DatabaseVariablesListElement databaseVariablesListElement : variablesInTable) {
             VariableEditorPanelInterface panel = variableEditorPanels.get(databaseVariablesListElement.getDatabaseVariableName());
             if(panel != null) 
-                hasChanged = hasChanged || panel.hasChanged();            
+                hasChanged = hasChanged || panel.hasChanged();   
+            //Whenever hasChanged is true, than it will never turn to false.
+            //We break, so we don't have to check all the panels, is pointless.
+            if(hasChanged)
+                break;
         }
         return hasChanged;
     }
@@ -392,9 +396,9 @@ public class RecordEditorPatient extends javax.swing.JPanel
     }
 
     @Override
-    public void refreshDatabaseRecord(DatabaseRecord record) {
+    public void refreshDatabaseRecord(DatabaseRecord record, boolean isSaveNeeded) {
         setDatabaseRecord(record);
-        setSaveNeeded(false);
+        setSaveNeeded(isSaveNeeded);
 
         buildPanel();
 
@@ -526,16 +530,21 @@ public class RecordEditorPatient extends javax.swing.JPanel
         autoFill();
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.PERSON_SEARCH));
     }
-    
-    @Action
+        
     public void saveRecord() {
         buildDatabaseRecord();
-        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.SAVE));
-        Iterator<VariableEditorPanelInterface> iterator = variableEditorPanels.values().iterator();
+        
+        //This is now performed solely by RecordEditor
+        //actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.SAVE));
+        
+        //The next code is pointless, because the entire record, along with the
+        //GUI and all the variables in this class have been refreshed and
+        //regenerated when saving the record (by the method refreshDatabaseRecord())        
+        /*Iterator<VariableEditorPanelInterface> iterator = variableEditorPanels.values().iterator();
         while (iterator.hasNext()) {
             VariableEditorPanelInterface vep = iterator.next();
             vep.setSaved();
-        }
+        }*/
     }
     
     void setActionListener(ActionListener listener) {

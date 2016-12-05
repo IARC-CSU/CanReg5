@@ -39,14 +39,26 @@ public interface RecordEditorPanel {
     
     /**
      * This method is known as setRecord() in canreg.client.gui.dataentry.RecordEditorPanel()
+     * @param record
      * @param dbr 
      */
     void setDatabaseRecord(DatabaseRecord record);
     DatabaseRecord getDatabaseRecord();
-    void refreshDatabaseRecord(DatabaseRecord record);
+    
+    /**
+     * Performs a complete refresh of the record:
+     * - re-sets the record variables     
+     * - re-builds the GUI (this means that ALL panels go to "no save is needed"
+     * state)
+     * @param record 
+     * @param isSaveNeeded if true, is assumed the record has been refreshed but
+     * not saved on the database, therefore the method isSaveNeeded will return true.
+     * If false, is assumed the record has been previosly saved and no new 
+     * data has been input.
+     */
+    void refreshDatabaseRecord(DatabaseRecord record, boolean isSaveNeeded);
     void setDictionary(Map<Integer, Dictionary> dictionary);
-    void setDocument(Document doc);
-    //void toggleObsolete(boolean confirmed);
+    void setDocument(Document doc);    
     LinkedList<DatabaseVariablesListElement> getAutoFillList();
     void setVariable(DatabaseVariablesListElement variable, String value);
     boolean areAllVariablesPresent();
