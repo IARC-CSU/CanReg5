@@ -1621,6 +1621,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
         jPanel7.add(jPanel8);
 
+        jPanel10.setOpaque(false);
         jPanel10.setPreferredSize(new java.awt.Dimension(700, 451));
         jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.PAGE_AXIS));
         jPanel10.add(filler14);

@@ -735,8 +735,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         String recStatus = null;
         boolean canBeConfirmed = false;
         
-        if (resultCode == null
-            || resultCode == ResultCode.NotDone) {            
+        if (resultCode == null || resultCode == ResultCode.NotDone) {            
             checksButton.setText(resourceMap.getString("checksPanel.border.title") + " " +
                     java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("NOT_DONE"));
             //Red colored border
@@ -1094,6 +1093,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         jPanel7.add(jPanel8);
 
+        jPanel10.setOpaque(false);
         jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.PAGE_AXIS));
         jPanel10.add(filler12);
         jPanel10.add(sourcesTabbedPane);
