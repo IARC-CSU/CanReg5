@@ -814,20 +814,18 @@ public class RecordEditorTumour extends javax.swing.JPanel
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 32767));
         jPanel1 = new javax.swing.JPanel();
         checksButton = new javax.swing.JButton();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 4), new java.awt.Dimension(0, 4), new java.awt.Dimension(32767, 4));
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 3), new java.awt.Dimension(0, 3), new java.awt.Dimension(20000, 3));
         mpButton = new javax.swing.JButton();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 32767));
         tumourLinkedPanel = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
         tumourPatientLinkLabel = new javax.swing.JLabel();
-        filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 4), new java.awt.Dimension(0, 4), new java.awt.Dimension(32767, 4));
         jPanel13 = new javax.swing.JPanel();
         openPatientsComboBox = new javax.swing.JComboBox();
         filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 32767));
         recordStatusPanel = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 4), new java.awt.Dimension(0, 4), new java.awt.Dimension(32767, 4));
         jPanel3 = new javax.swing.JPanel();
         recordStatusComboBox = new javax.swing.JComboBox();
         filler5 = new javax.swing.Box.Filler(new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 32767));
@@ -871,21 +869,23 @@ public class RecordEditorTumour extends javax.swing.JPanel
         systemPanel.setLayout(new javax.swing.BoxLayout(systemPanel, javax.swing.BoxLayout.LINE_AXIS));
         systemPanel.add(filler4);
 
-        jPanel1.setMaximumSize(new java.awt.Dimension(32767, 95));
+        jPanel1.setMaximumSize(new java.awt.Dimension(20000, 25000));
         jPanel1.setPreferredSize(new java.awt.Dimension(130, 50));
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.PAGE_AXIS));
 
         checksButton.setAction(actionMap.get("runChecksAction")); // NOI18N
         checksButton.setText(resourceMap.getString("checksButton.text")); // NOI18N
         checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 2));
-        checksButton.setMaximumSize(new java.awt.Dimension(200, 45));
+        checksButton.setMaximumSize(new java.awt.Dimension(225, 45));
+        checksButton.setPreferredSize(new java.awt.Dimension(27, 25));
         jPanel1.add(checksButton);
         jPanel1.add(filler1);
 
         mpButton.setAction(actionMap.get("runMultiplePrimarySearch")); // NOI18N
         mpButton.setText(resourceMap.getString("mpPanel.border.title")); // NOI18N
-        mpButton.setToolTipText(resourceMap.getString("mpButton.toolTipText")); // NOI18N
-        mpButton.setMaximumSize(new java.awt.Dimension(200, 45));
+        mpButton.setToolTipText(resourceMap.getString("runMultiplePrimarySearch.Action.shortDescription")); // NOI18N
+        mpButton.setMaximumSize(new java.awt.Dimension(225, 45));
+        mpButton.setMinimumSize(new java.awt.Dimension(93, 21));
         jPanel1.add(mpButton);
 
         systemPanel.add(jPanel1);
@@ -907,13 +907,15 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel12.add(tumourPatientLinkLabel);
 
         tumourLinkedPanel.add(jPanel12);
-        tumourLinkedPanel.add(filler10);
 
-        jPanel13.setMaximumSize(new java.awt.Dimension(200, 45));
+        jPanel13.setMaximumSize(new java.awt.Dimension(32000, 38));
         jPanel13.setLayout(new javax.swing.BoxLayout(jPanel13, javax.swing.BoxLayout.LINE_AXIS));
 
         openPatientsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Coming Soon!" }));
+        openPatientsComboBox.setMaximumSize(new java.awt.Dimension(32767, 38));
+        openPatientsComboBox.setMinimumSize(new java.awt.Dimension(31, 15));
         openPatientsComboBox.setName("possiblePatientsComboBox"); // NOI18N
+        openPatientsComboBox.setPreferredSize(new java.awt.Dimension(31, 30));
         jPanel13.add(openPatientsComboBox);
 
         tumourLinkedPanel.add(jPanel13);
@@ -921,7 +923,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         systemPanel.add(tumourLinkedPanel);
         systemPanel.add(filler11);
 
-        recordStatusPanel.setMaximumSize(new java.awt.Dimension(32767, 95));
+        recordStatusPanel.setMaximumSize(new java.awt.Dimension(15000, 95));
         recordStatusPanel.setPreferredSize(new java.awt.Dimension(150, 50));
         recordStatusPanel.setLayout(new javax.swing.BoxLayout(recordStatusPanel, javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -937,13 +939,15 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel6.add(jLabel2);
 
         recordStatusPanel.add(jPanel6);
-        recordStatusPanel.add(filler2);
 
-        jPanel3.setMaximumSize(new java.awt.Dimension(200, 45));
+        jPanel3.setMaximumSize(new java.awt.Dimension(32000, 38));
         jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
 
         recordStatusComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        recordStatusComboBox.setMaximumSize(new java.awt.Dimension(32767, 38));
+        recordStatusComboBox.setMinimumSize(new java.awt.Dimension(31, 15));
         recordStatusComboBox.setName("recordStatusComboBox"); // NOI18N
+        recordStatusComboBox.setPreferredSize(new java.awt.Dimension(31, 30));
         jPanel3.add(recordStatusComboBox);
 
         recordStatusPanel.add(jPanel3);
@@ -975,7 +979,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
                     .addGroup(updatedByPanelLayout.createSequentialGroup()
                         .addComponent(byLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
+                        .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
                     .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -1017,7 +1021,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(updatedByPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sequenceNumberValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-                    .addComponent(sequenceTotalValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(sequenceTotalValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
                 .addContainerGap())
         );
         updatedByPanel1Layout.setVerticalGroup(
@@ -1082,7 +1086,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1143, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1295, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1116,10 +1120,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private javax.swing.JScrollPane dataScrollPane;
     private javax.swing.JLabel dateLabel;
     private javax.swing.Box.Filler filler1;
-    private javax.swing.Box.Filler filler10;
     private javax.swing.Box.Filler filler11;
     private javax.swing.Box.Filler filler12;
-    private javax.swing.Box.Filler filler2;
     private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
     private javax.swing.Box.Filler filler5;
