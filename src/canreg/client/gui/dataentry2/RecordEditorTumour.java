@@ -809,8 +809,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         String recStatus = null;
         boolean canBeConfirmed = false;
         
-        if (resultCode == null
-            || resultCode == ResultCode.NotDone) {            
+        if (resultCode == null || resultCode == ResultCode.NotDone) {            
             checksButton.setText(resourceMap.getString("checksPanel.border.title") + " " +
                     java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("NOT_DONE"));
             //Red colored border
@@ -889,20 +888,18 @@ public class RecordEditorTumour extends javax.swing.JPanel
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 32767));
         jPanel1 = new javax.swing.JPanel();
         checksButton = new javax.swing.JButton();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 4), new java.awt.Dimension(0, 4), new java.awt.Dimension(32767, 4));
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 3), new java.awt.Dimension(0, 3), new java.awt.Dimension(20000, 3));
         mpButton = new javax.swing.JButton();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 32767));
         tumourLinkedPanel = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
         tumourPatientLinkLabel = new javax.swing.JLabel();
-        filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 4), new java.awt.Dimension(0, 4), new java.awt.Dimension(32767, 4));
         jPanel13 = new javax.swing.JPanel();
         patientsComboBox = new javax.swing.JComboBox();
         filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 32767));
         recordStatusPanel = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 4), new java.awt.Dimension(0, 4), new java.awt.Dimension(32767, 4));
         jPanel3 = new javax.swing.JPanel();
         recordStatusComboBox = new javax.swing.JComboBox();
         filler5 = new javax.swing.Box.Filler(new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 32767));
@@ -960,9 +957,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         mpButton.setAction(actionMap.get("runMultiplePrimarySearch")); // NOI18N
         mpButton.setText(resourceMap.getString("mpPanel.border.title")); // NOI18N
-        mpButton.setToolTipText(resourceMap.getString("mpButton.toolTipText")); // NOI18N
         mpButton.setFocusable(false);
         mpButton.setMaximumSize(new java.awt.Dimension(200, 45));
+        mpButton.setToolTipText(resourceMap.getString("runMultiplePrimarySearch.Action.shortDescription")); // NOI18N
         jPanel1.add(mpButton);
 
         systemPanel.add(jPanel1);
@@ -985,7 +982,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel12.add(tumourPatientLinkLabel);
 
         tumourLinkedPanel.add(jPanel12);
-        tumourLinkedPanel.add(filler10);
 
         jPanel13.setMaximumSize(new java.awt.Dimension(32000, 45));
         jPanel13.setLayout(new javax.swing.BoxLayout(jPanel13, javax.swing.BoxLayout.LINE_AXIS));
@@ -1022,15 +1018,15 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel6.add(jLabel2);
 
         recordStatusPanel.add(jPanel6);
-        recordStatusPanel.add(filler2);
 
         jPanel3.setMaximumSize(new java.awt.Dimension(300, 45));
         jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
-
-        recordStatusComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        
         recordStatusComboBox.setFocusable(false);
         recordStatusComboBox.setMaximumSize(new java.awt.Dimension(250, 32767));
+
         recordStatusComboBox.setName("recordStatusComboBox"); // NOI18N
+        recordStatusComboBox.setPreferredSize(new java.awt.Dimension(31, 30));
         jPanel3.add(recordStatusComboBox);
 
         recordStatusPanel.add(jPanel3);
@@ -1210,10 +1206,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private javax.swing.JScrollPane dataScrollPane;
     private javax.swing.JLabel dateLabel;
     private javax.swing.Box.Filler filler1;
-    private javax.swing.Box.Filler filler10;
     private javax.swing.Box.Filler filler11;
     private javax.swing.Box.Filler filler12;
-    private javax.swing.Box.Filler filler2;
     private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
     private javax.swing.Box.Filler filler5;
