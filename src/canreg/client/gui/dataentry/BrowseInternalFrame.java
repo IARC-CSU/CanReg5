@@ -675,7 +675,8 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
         setCursor(hourglassCursor);
 
-        RecordEditor recordEditor = new RecordEditor(dtp);
+        //RecordEditor recordEditor = new RecordEditor(dtp);
+        canreg.client.gui.dataentry2.RecordEditor recordEditor = new canreg.client.gui.dataentry2.RecordEditor(dtp);
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         Patient patient = null;
@@ -783,7 +784,8 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
      */
     public void editTumourID(String idString) {
 
-        RecordEditor recordEditor = new RecordEditor(dtp);
+        //RecordEditor recordEditor = new RecordEditor(dtp);
+        canreg.client.gui.dataentry2.RecordEditor recordEditor = new canreg.client.gui.dataentry2.RecordEditor(dtp);
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord record = null;

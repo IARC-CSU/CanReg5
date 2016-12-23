@@ -34,8 +34,6 @@ import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
 import canreg.common.database.Patient;
-import canreg.common.database.Source;
-import canreg.common.database.Tumour;
 import canreg.common.qualitycontrol.CheckResult;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
 import java.awt.KeyboardFocusManager;
@@ -531,15 +529,14 @@ public class RecordEditorPatient extends javax.swing.JPanel
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.PERSON_SEARCH));
     }
         
-    public void saveRecord() {
+    @Override
+    public void prepareToSaveRecord() {
         buildDatabaseRecord();
-        
-        //This is now performed solely by RecordEditor
+                
         //actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.SAVE));
         
-        //The next code is pointless, because the entire record, along with the
-        //GUI and all the variables in this class have been refreshed and
-        //regenerated when saving the record (by the method refreshDatabaseRecord())        
+        //COMMENTED: the next code is already executed when the record is saved 
+        //by executing refreshDatabaseRecord()
         /*Iterator<VariableEditorPanelInterface> iterator = variableEditorPanels.values().iterator();
         while (iterator.hasNext()) {
             VariableEditorPanelInterface vep = iterator.next();
@@ -600,19 +597,23 @@ public class RecordEditorPatient extends javax.swing.JPanel
 
         if (recordStatusVariableListElement != null) {
             if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
-                //No record status in patient panel.
+                
+                //COMMENTED: No record status in patient panel.
                 /*DictionaryEntry recordStatusValue = (DictionaryEntry) recordStatusComboBox.getSelectedItem();
                 if (recordStatusValue != null) {
                     databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusValue.getCode());
                 } else {*/
+                
                     databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
                     // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
-                    Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
+                    Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.WARNING, 
+                                     "Warning! Record status dictionary entries missing.");
                 //}
             } else {
                 databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
                 // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
-                Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
+                Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.WARNING, 
+                                 "Warning! Record status dictionary entries missing.");
             }
         }
         

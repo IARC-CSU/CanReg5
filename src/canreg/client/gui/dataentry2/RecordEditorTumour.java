@@ -102,6 +102,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private final RecordEditor recordEditor;
     private final org.jdesktop.application.ResourceMap resourceMap;
     private Set<Source> sources;
+    private boolean avoidPatientsComboBoxListener;
     
     
     public RecordEditorTumour(ActionListener listener, 
@@ -694,6 +695,81 @@ public class RecordEditorTumour extends javax.swing.JPanel
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHECKS));
     }
     
+    /**
+     * Changes the selection of linked patient in the combobox.
+     * @param patientTitle the patient to be selected (it has to be previously
+     * loaded, if not a IllegalArgumentException() will be thrown).
+     */
+    public void setLinkedPatient(String patientTitle) {
+        DefaultComboBoxModel model = (DefaultComboBoxModel) this.patientsComboBox.getModel();
+        int index = model.getIndexOf(patientTitle);
+        if(index != -1)
+            this.patientsComboBox.setSelectedIndex(index);
+        else
+            throw new IllegalArgumentException("The patient " + patientTitle + " has not been previously loaded in the combobox.");
+    }
+    
+    /**
+     * Returns the currently selected Patient in the combobox
+     * (represented as a String, it should look the same as in the 
+     * patient tab title). 
+     * @return 
+     */
+    public String getLinkedPatient() {
+        if(this.patientsComboBox.getSelectedIndex() != -1 &&
+           this.patientsComboBox.getSelectedItem() != null)
+            return (String) this.patientsComboBox.getSelectedItem();
+        return null;
+    }
+    
+    /**
+     * Replaces an already existing patient in the combobox. If the patient
+     * to be replaced wasn't found in the combobox, the replacer is not added.
+     * @param toBeReplaced patient to be replaced by another
+     * @param replacer patient to replace a previously existing one
+     */
+    public void replaceLinkablePatient(String toBeReplaced, String replacer) {
+        this.avoidPatientsComboBoxListener = true;
+        boolean selectAfterReplace = false;
+        if(this.getLinkedPatient().equals(toBeReplaced))
+            selectAfterReplace = true;
+        if(this.removeLinkablePatient(toBeReplaced)) {
+            this.addLinkablePatient(replacer);
+            if(selectAfterReplace)
+                this.setLinkedPatient(replacer);
+        }      
+        this.avoidPatientsComboBoxListener = false;
+    }
+    
+    /**
+     * Adds a String, representing a Patient tab, to the combobox. This method
+     * does not allow to insert a duplicate String.
+     * @param patientTitle should be the same string that shows on the patient
+     * tab title.
+     */
+    public void addLinkablePatient(String patientTitle) {
+        DefaultComboBoxModel model = (DefaultComboBoxModel) this.patientsComboBox.getModel();
+        //That patient cannot be previosly loaded in the combobox
+        if(patientTitle != null &&
+           ! patientTitle.isEmpty() &&
+           model.getIndexOf(patientTitle) == -1) 
+            this.patientsComboBox.addItem(patientTitle);
+    }
+    
+    /**
+     * Removes an already present Patient from the combobox.
+     * @param patientTitle 
+     * @return  true if the patient has been removed. False if that patient
+     * was never present.
+     */
+    public boolean removeLinkablePatient(String patientTitle) {
+        int beforeRemoving = this.patientsComboBox.getItemCount();
+        this.patientsComboBox.removeItem(patientTitle);
+        if(this.patientsComboBox.getItemCount() != beforeRemoving)
+            return true;
+        return false;
+    }
+    
     @Action
     public void runMultiplePrimarySearch() {
         //if ( panelType == panelTypes.TUMOUR )
@@ -708,17 +784,15 @@ public class RecordEditorTumour extends javax.swing.JPanel
         autoFill();
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.PERSON_SEARCH));
     }*/
-    
-    @Action
-    public void saveRecord() {
-        buildDatabaseRecord();
         
-        //This is now performed solely by RecordEditor
+    @Override
+    public void prepareToSaveRecord() {
+        buildDatabaseRecord();
+                
         //actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.SAVE));
         
-        //The next code is pointless, because the entire record, along with the
-        //GUI and all the variables in this class have been refreshed and
-        //regenerated when saving the record (by the method refreshDatabaseRecord())  
+        //COMMENTED: the next code is already executed when the record is saved 
+        //by executing refreshDatabaseRecord() 
         /*Iterator<VariableEditorPanelInterface> iterator = variableEditorPanels.values().iterator();
         while (iterator.hasNext()) {
             VariableEditorPanelInterface vep = iterator.next();
@@ -823,7 +897,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         tumourPatientLinkLabel = new javax.swing.JLabel();
         filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 4), new java.awt.Dimension(0, 4), new java.awt.Dimension(32767, 4));
         jPanel13 = new javax.swing.JPanel();
-        openPatientsComboBox = new javax.swing.JComboBox();
+        patientsComboBox = new javax.swing.JComboBox();
         filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 32767));
         recordStatusPanel = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
@@ -872,13 +946,14 @@ public class RecordEditorTumour extends javax.swing.JPanel
         systemPanel.setLayout(new javax.swing.BoxLayout(systemPanel, javax.swing.BoxLayout.LINE_AXIS));
         systemPanel.add(filler4);
 
-        jPanel1.setMaximumSize(new java.awt.Dimension(32767, 95));
+        jPanel1.setMaximumSize(new java.awt.Dimension(10000, 95));
         jPanel1.setPreferredSize(new java.awt.Dimension(130, 50));
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.PAGE_AXIS));
 
         checksButton.setAction(actionMap.get("runChecksAction")); // NOI18N
         checksButton.setText(resourceMap.getString("checksButton.text")); // NOI18N
         checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 2));
+        checksButton.setFocusable(false);
         checksButton.setMaximumSize(new java.awt.Dimension(200, 45));
         jPanel1.add(checksButton);
         jPanel1.add(filler1);
@@ -886,6 +961,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         mpButton.setAction(actionMap.get("runMultiplePrimarySearch")); // NOI18N
         mpButton.setText(resourceMap.getString("mpPanel.border.title")); // NOI18N
         mpButton.setToolTipText(resourceMap.getString("mpButton.toolTipText")); // NOI18N
+        mpButton.setFocusable(false);
         mpButton.setMaximumSize(new java.awt.Dimension(200, 45));
         jPanel1.add(mpButton);
 
@@ -893,7 +969,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
         systemPanel.add(filler3);
 
         tumourLinkedPanel.setMaximumSize(new java.awt.Dimension(32767, 95));
-        tumourLinkedPanel.setPreferredSize(new java.awt.Dimension(150, 50));
+        tumourLinkedPanel.setMinimumSize(new java.awt.Dimension(120, 40));
+        tumourLinkedPanel.setPreferredSize(new java.awt.Dimension(220, 50));
         tumourLinkedPanel.setLayout(new javax.swing.BoxLayout(tumourLinkedPanel, javax.swing.BoxLayout.PAGE_AXIS));
 
         jPanel12.setMaximumSize(new java.awt.Dimension(200, 45));
@@ -910,19 +987,26 @@ public class RecordEditorTumour extends javax.swing.JPanel
         tumourLinkedPanel.add(jPanel12);
         tumourLinkedPanel.add(filler10);
 
-        jPanel13.setMaximumSize(new java.awt.Dimension(200, 45));
+        jPanel13.setMaximumSize(new java.awt.Dimension(32000, 45));
         jPanel13.setLayout(new javax.swing.BoxLayout(jPanel13, javax.swing.BoxLayout.LINE_AXIS));
 
-        openPatientsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Coming Soon!" }));
-        openPatientsComboBox.setName("possiblePatientsComboBox"); // NOI18N
-        jPanel13.add(openPatientsComboBox);
+        patientsComboBox.setFocusable(false);
+        patientsComboBox.setMinimumSize(new java.awt.Dimension(100, 22));
+        patientsComboBox.setName("possiblePatientsComboBox"); // NOI18N
+        patientsComboBox.setPreferredSize(new java.awt.Dimension(200, 22));
+        patientsComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                patientsComboBoxActionPerformed(evt);
+            }
+        });
+        jPanel13.add(patientsComboBox);
 
         tumourLinkedPanel.add(jPanel13);
 
         systemPanel.add(tumourLinkedPanel);
         systemPanel.add(filler11);
 
-        recordStatusPanel.setMaximumSize(new java.awt.Dimension(32767, 95));
+        recordStatusPanel.setMaximumSize(new java.awt.Dimension(8000, 95));
         recordStatusPanel.setPreferredSize(new java.awt.Dimension(150, 50));
         recordStatusPanel.setLayout(new javax.swing.BoxLayout(recordStatusPanel, javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -940,10 +1024,12 @@ public class RecordEditorTumour extends javax.swing.JPanel
         recordStatusPanel.add(jPanel6);
         recordStatusPanel.add(filler2);
 
-        jPanel3.setMaximumSize(new java.awt.Dimension(200, 45));
+        jPanel3.setMaximumSize(new java.awt.Dimension(300, 45));
         jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
 
         recordStatusComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        recordStatusComboBox.setFocusable(false);
+        recordStatusComboBox.setMaximumSize(new java.awt.Dimension(250, 32767));
         recordStatusComboBox.setName("recordStatusComboBox"); // NOI18N
         jPanel3.add(recordStatusComboBox);
 
@@ -954,8 +1040,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         updatedByPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, resourceMap.getString("updatedByPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11))); // NOI18N
         updatedByPanel.setMaximumSize(new java.awt.Dimension(400, 95));
-        updatedByPanel.setMinimumSize(new java.awt.Dimension(100, 30));
-        updatedByPanel.setPreferredSize(new java.awt.Dimension(300, 69));
+        updatedByPanel.setMinimumSize(new java.awt.Dimension(100, 50));
+        updatedByPanel.setPreferredSize(new java.awt.Dimension(220, 69));
 
         byLabel.setText(resourceMap.getString("byLabel.text")); // NOI18N
         byLabel.setName("byLabel"); // NOI18N
@@ -976,7 +1062,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
                     .addGroup(updatedByPanelLayout.createSequentialGroup()
                         .addComponent(byLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
+                        .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
                     .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -995,7 +1081,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         updatedByPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, resourceMap.getString("sequencePanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11))); // NOI18N
         updatedByPanel1.setMaximumSize(new java.awt.Dimension(150, 95));
-        updatedByPanel1.setMinimumSize(new java.awt.Dimension(100, 30));
+        updatedByPanel1.setMinimumSize(new java.awt.Dimension(100, 50));
         updatedByPanel1.setPreferredSize(new java.awt.Dimension(150, 80));
 
         sequenceNumberDescriptionLabel.setText(resourceMap.getString("sequenceNumberDescriptionLabel.text")); // NOI18N
@@ -1018,7 +1104,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(updatedByPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sequenceNumberValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-                    .addComponent(sequenceTotalValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(sequenceTotalValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
                 .addContainerGap())
         );
         updatedByPanel1Layout.setVerticalGroup(
@@ -1066,6 +1152,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         addSourceRecordButton.setAction(actionMap.get("addSourceAction")); // NOI18N
         addSourceRecordButton.setText(resourceMap.getString("addSourceAction.Action.text")); // NOI18N
+        addSourceRecordButton.setFocusable(false);
         addSourceRecordButton.setMaximumSize(new java.awt.Dimension(220, 23));
         addSourceRecordButton.setMinimumSize(new java.awt.Dimension(21, 23));
         addSourceRecordButton.setName("addSourceAction"); // NOI18N
@@ -1074,6 +1161,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         sourceMenuButton.setAction(actionMap.get("sourceMenuAction")); // NOI18N
         sourceMenuButton.setText(resourceMap.getString("menuButton.text")); // NOI18N
+        sourceMenuButton.setFocusable(false);
         sourceMenuButton.setMaximumSize(new java.awt.Dimension(100, 23));
         sourceMenuButton.setMinimumSize(new java.awt.Dimension(30, 23));
         jPanel9.add(sourceMenuButton);
@@ -1083,7 +1171,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1143, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1357, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1094,6 +1182,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         jPanel7.add(jPanel8);
 
+        jPanel10.setOpaque(false);
         jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.PAGE_AXIS));
         jPanel10.add(filler12);
         jPanel10.add(sourcesTabbedPane);
@@ -1106,6 +1195,11 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         add(jPanel4);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void patientsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientsComboBoxActionPerformed
+        if( ! this.avoidPatientsComboBoxListener)
+            this.setSaveNeeded(true);
+    }//GEN-LAST:event_patientsComboBoxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1140,7 +1234,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private javax.swing.JPanel jPanel9;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JButton mpButton;
-    private javax.swing.JComboBox<String> openPatientsComboBox;
+    private javax.swing.JComboBox<String> patientsComboBox;
     private javax.swing.JComboBox<String> recordStatusComboBox;
     private javax.swing.JPanel recordStatusPanel;
     private javax.swing.JLabel sequenceNumberDescriptionLabel;

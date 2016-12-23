@@ -23,7 +23,6 @@ import ca.odell.glazedlists.matchers.TextMatcherEditor;
 import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import canreg.client.dataentry.DictionaryHelper;
 import canreg.client.gui.components.DictionaryElementTextFilterator;
-import canreg.client.gui.dataentry2.RecordEditor;
 import canreg.client.gui.tools.MaxLengthDocument;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
@@ -52,10 +51,10 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     private static final Color ORDER_DESCRIPTION_COLOR = new Color(255,255,255);
     private ActionListener categoryComboListener;
     private ActionListener descriptionComboListener;
-    private DictionaryEntry categorySelected;
-    private DictionaryEntry descriptionSelected;
+    //private DictionaryEntry categorySelected;
+    //private DictionaryEntry descriptionSelected;
     private boolean avoidActionPerformed = false;
-    private org.jdesktop.application.ResourceMap resourceMap;
+    private final org.jdesktop.application.ResourceMap resourceMap;
     
     
     public DictionaryVariableEditorPanel(ActionListener listener) {
@@ -495,7 +494,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 descriptionCombo.setSelectedIndex(-1);
                 descriptionCombo.addActionListener(descriptionComboListener);
             }            
-            categorySelected = (DictionaryEntry) categoryCombo.getSelectedItem();
+            //categorySelected = (DictionaryEntry) categoryCombo.getSelectedItem();
         }
         
         /*transferFocusToNext();*/

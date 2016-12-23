@@ -448,6 +448,7 @@
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanel11">
                   <Properties>
+                    <Property name="opaque" type="boolean" value="false"/>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[450, 451]"/>
                     </Property>
@@ -640,6 +641,7 @@
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanel10">
                   <Properties>
+                    <Property name="opaque" type="boolean" value="false"/>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[700, 451]"/>
                     </Property>

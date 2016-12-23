@@ -346,7 +346,8 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
 
         String tableName = Globals.PATIENT_TABLE_NAME;
 
-        RecordEditor recordEditor = new RecordEditor(desktopPane);
+        //RecordEditor recordEditor = new RecordEditor(desktopPane);
+        canreg.client.gui.dataentry2.RecordEditor recordEditor = new canreg.client.gui.dataentry2.RecordEditor(desktopPane);
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord record = null;

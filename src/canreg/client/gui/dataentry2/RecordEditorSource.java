@@ -18,7 +18,6 @@ package canreg.client.gui.dataentry2;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.components.VariableEditorPanelInterface;
-import canreg.client.gui.dataentry2.RecordEditorPanel;
 import canreg.client.gui.dataentry2.RecordEditorPanel.panelTypes;
 import canreg.client.gui.dataentry2.components.DateVariableEditorPanel;
 import canreg.client.gui.dataentry2.components.DictionaryVariableEditorPanel;
@@ -33,10 +32,8 @@ import canreg.common.Globals;
 import canreg.common.Tools;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Dictionary;
-import canreg.common.database.DictionaryEntry;
 import canreg.common.database.Source;
 import canreg.common.qualitycontrol.CheckResult;
-import java.awt.Component;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,16 +41,12 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
 /**
@@ -199,29 +192,28 @@ public class RecordEditorSource extends javax.swing.JPanel
     private void buildPanel() {
         dataPanel.removeAll();
 
-        if (variableEditorPanels != null) {
+        if (variableEditorPanels != null) 
             for (VariableEditorPanelInterface vep : variableEditorPanels.values()) 
                 vep.removeListener();            
-        }
+        
         variableEditorPanels = new LinkedHashMap();
 
         Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();        
 
-        for (int i = 0; i < variablesInTable.length; i++) {
+        for(int i = 0; i < variablesInTable.length; i++) {
             DatabaseVariablesListElement currentVariable = variablesInTable[i];
             VariableEditorPanel vep;
 
             String variableType = currentVariable.getVariableType();
             
-            if (Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)) {
+            if (Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)) 
                 vep = new DateVariableEditorPanel(this);
-            } else if (Globals.VARIABLE_TYPE_TEXT_AREA_NAME.equalsIgnoreCase(variableType)) {
+            else if (Globals.VARIABLE_TYPE_TEXT_AREA_NAME.equalsIgnoreCase(variableType)) 
                 vep = new TextFieldVariableEditorPanel(this);
-            } else if(currentVariable.getDictionaryID() >= 0 && dictionary.get(currentVariable.getDictionaryID()) != null)
+            else if(currentVariable.getDictionaryID() >= 0 && dictionary.get(currentVariable.getDictionaryID()) != null)
                 vep = new DictionaryVariableEditorPanel(this);
-            else {
-                vep = new VariableEditorPanel(this);
-            }
+            else 
+                vep = new VariableEditorPanel(this);            
 
             vep.setDatabaseVariablesListElement(currentVariable);
 
@@ -435,17 +427,16 @@ public class RecordEditorSource extends javax.swing.JPanel
         //refreshRecordStatus(record);
         //refreshUpdatedBy();
     }
-    
-    @Action
-    public void saveRecord() {
+        
+    @Override
+    public void prepareToSaveRecord() {
         buildDatabaseRecord();
         
         //This is now performed solely by RecordEditor
         //actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.SAVE));
         
-        //The next code is pointless, because the entire record, along with the
-        //GUI and all the variables in this class have been refreshed and
-        //regenerated when saving the record (by the method refreshDatabaseRecord())  
+        //COMMENTED: the next code is already executed when the record is saved 
+        //by executing refreshDatabaseRecord()
         /*Iterator<VariableEditorPanelInterface> iterator = variableEditorPanels.values().iterator();
         while (iterator.hasNext()) {
             VariableEditorPanelInterface vep = iterator.next();

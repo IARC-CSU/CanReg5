@@ -30,19 +30,40 @@ import org.w3c.dom.Document;
  */
 public interface RecordEditorPanel {
     
+    /**
+     * The different types of Records.
+     */
     enum panelTypes {
         PATIENT, TUMOUR, SOURCE
     }
     
+    /**
+     * Returns true if this Record has changed data and needs to be saved
+     * in the database. False if the Record
+     * @return 
+     */
     boolean isSaveNeeded();
+    
+    /**
+     * Sets if this Record needs to be saved.
+     * @param saveNeeded true if this Record should be saved, false if the 
+     * Record hasn't changed.
+     */
     void setSaveNeeded(boolean saveNeeded);
     
     /**
-     * This method is known as setRecord() in canreg.client.gui.dataentry.RecordEditorPanel()
-     * @param record
-     * @param dbr 
+     * Prepares this Record to be saved. The saving itself of all Records
+     * is handled by canreg.client.gui.dataentry2.RecordEditor
+     */
+    void prepareToSaveRecord();
+    
+    /**
+     * This method is known as setRecord() in 
+     * canreg.client.gui.dataentry.RecordEditorPanel()
+     * @param record     
      */
     void setDatabaseRecord(DatabaseRecord record);
+    
     DatabaseRecord getDatabaseRecord();
     
     /**
@@ -53,7 +74,7 @@ public interface RecordEditorPanel {
      * @param record 
      * @param isSaveNeeded if true, is assumed the record has been refreshed but
      * not saved on the database, therefore the method isSaveNeeded will return true.
-     * If false, is assumed the record has been previosly saved and no new 
+     * If false, is assumed the record has been previously saved and no new 
      * data has been input.
      */
     void refreshDatabaseRecord(DatabaseRecord record, boolean isSaveNeeded);
