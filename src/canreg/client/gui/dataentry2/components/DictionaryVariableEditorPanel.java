@@ -200,30 +200,25 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
      * @throws NullPointerException 
      */
     private void lookUpAndSetDescription() throws NullPointerException {
-        //descriptionTextField.setText("");        
-        //categoryTextField.setText("");        
         if (codeTextField.getText().trim().length() > 0) { 
                 try {
                     if(dictionary.isCompoundDictionary() && codeTextField.getText().length() >= dictionary.getCodeLength()) {
-                        /*categoryTextField.setText(possibleValuesMap.get(
-                                codeTextField.getText().substring(0, dictionary.getCodeLength())).getDescription());*/  
                         String code = codeTextField.getText();
                         categoryCombo.setSelectedItem(
                                 dictionary.getDictionaryEntries().get(codeTextField.getText().substring(0, dictionary.getCodeLength())));
+                        
+                        //avoid action performed, otherwise we get stackOverflow because
+                        //lookUpAndSetDescription() is called endlessly
                         avoidActionPerformed = true;
                         codeTextField.setText(code);
                         avoidActionPerformed = false;
                     }
                     if(dictionary.isCompoundDictionary()) {
-                        if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) {
-                            //descriptionTextField.setText(possibleValuesMap.get(codeTextField.getText()).getDescription());
+                        if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
                             descriptionCombo.setSelectedItem(
                                 dictionary.getDictionaryEntries().get(codeTextField.getText()));
-                        }
-                    } else {
-                        //descriptionTextField.setText(possibleValuesMap.get(codeTextField.getText()).getDescription());
-                        descriptionCombo.setSelectedItem(dictionary.getDictionaryEntries().get(codeTextField.getText()));
-                    }
+                    } else 
+                        descriptionCombo.setSelectedItem(dictionary.getDictionaryEntries().get(codeTextField.getText()));                    
                 } catch (NullPointerException e) {
                     throw e;
                 }            
@@ -234,7 +229,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         if(dictionary == null) 
             return;        
         
-        avoidActionPerformed = true;
+        //avoidActionPerformed = true;
         codeTextField.setText("");
         updateFilledInStatusColor();
         avoidActionPerformed = false;
@@ -364,9 +359,6 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 }
                 updateFilledInStatusColor();
             }
-               
-            /*if(listener != null)
-                listener.actionPerformed(new ActionEvent(this, 0, RecordEditor.REQUEST_FOCUS));*/
         }    
     }
     
@@ -400,8 +392,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             if(categoryCombo.isVisible())
                 this.categoryCombo.showPopup();
             else if(descriptionCombo.isVisible())
-                this.descriptionCombo.showPopup();
-            //showDictionaryChooser();
+                this.descriptionCombo.showPopup();            
         } else if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
             transferFocusToNext();
         }
@@ -425,12 +416,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 categoryCombo.removeActionListener(categoryComboListener);
                 categoryComboCompSup = this.changeComboListSorting(categoryComboCompSup, categoryCombo, true);
                 categoryCombo.addActionListener(categoryComboListener);
-            }
-                                    
-            /*for(DictionaryEntry de : dictionary.getDictionaryEntries().values()) 
-                de.setSortByCode();
-            //Este setDictionary nos caga todo!!
-            setDictionary(dictionary);*/
+            }                                    
         } else {
             sortToggle.setBackground(ORDER_CODE_COLOR);
             sortToggle.setIcon(resourceMap.getIcon("sortBy.icon.code")); // NOI18N
@@ -443,12 +429,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 categoryCombo.removeActionListener(categoryComboListener);
                 categoryComboCompSup = this.changeComboListSorting(categoryComboCompSup, categoryCombo, false);
                 categoryCombo.addActionListener(categoryComboListener);
-            }
-            
-            /*for(DictionaryEntry de : dictionary.getDictionaryEntries().values()) 
-                de.setSortByDescription();   
-            //Este setDictionary nos caga todo!!
-            setDictionary(dictionary);*/
+            }            
         }
     }
     
@@ -472,10 +453,8 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             if(sortByCode)
                 entry.setSortByCode();
             else
-                entry.setSortByDescription();
-            //newValuesList.add(entry);
-        }         
-        //compSup = this.setComboModel(compSup, combo, newValuesList);
+                entry.setSortByDescription();            
+        }                 
         if(combo.isPopupVisible()) {
             combo.hidePopup();
             combo.revalidate();
@@ -506,7 +485,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             }
 
             if(categoryCode != null) {                
-                avoidActionPerformed = true;
+                //avoidActionPerformed = true;
                 codeTextField.setText("");
                 avoidActionPerformed = false;
                 
@@ -524,10 +503,17 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         //if selectedItem == null, then we must remove all filters from descriptionComboBox so
         //all items in the descriptionComboBox are available
         else {
-            avoidActionPerformed = true;
+            //avoidActionPerformed = true;
             codeTextField.setText("");
             updateFilledInStatusColor();
-            avoidActionPerformed = false;
+            Object currentValue = getValue();
+                if (listener != null && 
+                    ((currentValue != null && !currentValue.equals(initialValue)) ||
+                     (initialValue != null && !initialValue.equals(currentValue)))) {
+                    hasChanged = true;
+                    listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
+                }                
+            //avoidActionPerformed = false;
             
             descriptionCombo.removeActionListener(descriptionComboListener);
             LinkedList<DictionaryEntry> descriptionPossibleValuesCollection = new LinkedList<DictionaryEntry>();
@@ -542,8 +528,6 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                                                          descriptionPossibleValuesCollection);
             descriptionCombo.addActionListener(descriptionComboListener);
         }
-        
-        /*transferFocusToNext();*/
     } 
     
     /**
@@ -565,7 +549,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 descriptionCombo.removeActionListener(descriptionComboListener);
                 descriptionCombo.setSelectedIndex(-1);
                 descriptionCombo.addActionListener(descriptionComboListener); 
-                avoidActionPerformed = true;
+                //avoidActionPerformed = true;
                 codeTextField.setText("");
                 updateFilledInStatusColor();
                 avoidActionPerformed = false;                
@@ -583,15 +567,34 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                         categoryCombo.addActionListener(categoryComboListener);
                     }  
                 }
+                
                 avoidActionPerformed = true;
                 codeTextField.setText(descriptionCode);
                 updateFilledInStatusColor();
-                avoidActionPerformed = false;                
-                
-                //listener.actionPerformed(new ActionEvent(this, 0, RecordEditor.REQUEST_FOCUS));
-                // setFocus();
-                //transferFocusToNext();                                
+                Object currentValue = getValue();
+                if (listener != null && 
+                    ((currentValue != null && !currentValue.equals(initialValue)) ||
+                     (initialValue != null && !initialValue.equals(currentValue)))) {
+                    hasChanged = true;
+                    listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
+                }                
+                avoidActionPerformed = false;
             }            
+        }
+        //The user has erased/deleted the text contained in the combobox, pretty much
+        //the same as setting the selectedIndex of the combo to -1
+        else {
+            avoidActionPerformed = true;
+            codeTextField.setText("");
+            updateFilledInStatusColor();
+            Object currentValue = getValue();
+                if (listener != null && 
+                    ((currentValue != null && !currentValue.equals(initialValue)) ||
+                     (initialValue != null && !initialValue.equals(currentValue)))) {
+                    hasChanged = true;
+                    listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
+                }                
+            avoidActionPerformed = false;
         }
     } 
        

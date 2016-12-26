@@ -2,9 +2,10 @@ BUG LIST
 
 - Bug de lockeo de records y generacion de nuevos tumores indeseados
   1) Ir a browse, hacer refresh table, y elegir un record. Se abrira en el data entry form
-  2) Inmediatamente cerrar el data entry form desde la cruz. Nos saltara el cartel de si desea guardar los cambios realizados, cuando en realidad nunca se realizaron cambios
+  2) Inmediatamente cerrar el data entry form desde la cruz. Nos saltara el cartel de si desea guardar los cambios realizados, 
+  cuando en realidad nunca se realizaron cambios
   3) Al darle que "no guardar cambios realizados", el record quedara locked, por lo cual no podemos volver a abrirlo
-  4) Al lograr unlockearlo, el record tendra nuevos tumores que no corresponden
+  4) Al lograr unlockearlo, el record tendra nuevos tumores que no corresponden    
 
 - "Please save patient record first" happened when I clicked save all. (Maybe because I hadn`t filled anything in the patient part?)
     - Y que se propone para solucionarlo??? sin checks de paciente no hay forma de solucionar esto
@@ -25,7 +26,7 @@ BUG LIST
 - Personally, I would probably like slightly more "air" around the components. Especially to the right of the elements of the form...
 - Dotted lines along split panes and transform mouse into "little hand" when above a dotted line
 - Put placeholders for LocalSettings to change Tumour/source split orientation and choosing between the 2 GUI's
-- Scroll doesn't work when the mouse is on top of a text field
+- Scroll doesn't work when the mouse is on top of a combobox (category y description)
 - Key "/" to tab backwards
 - Hide one of the splitpanes of a dictionary variable when category doesn't exist
 - falta quitar de RecordEditorTumour (de idiomas ru, tr y zh) los textos de changePatientRecord, menuAction, menuButton, deleteRecord, setObsolete
@@ -48,7 +49,10 @@ BUG LIST
      RecordEditor PATIENT\ NOT\ OPEN
      RecordEditorTumour tumourPatientLinkLabel.text
 
-
+DONE
+====
+- (DONE) (en variables diccionario) Si elegimos una categoria, pero resulta que la descripcion no esta dentro de esa categoria, queremos
+quitar la categoria y no se cambian las opciones de descripcion
 
 Splitpane divider changes:
 https://www.formdev.com/blog/swing-tip-jsplitpane-with-zero-size-divider/

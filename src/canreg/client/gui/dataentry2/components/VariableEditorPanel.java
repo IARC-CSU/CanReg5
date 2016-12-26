@@ -143,42 +143,8 @@ public class VariableEditorPanel extends javax.swing.JPanel
     @Override
     public synchronized void setValue(String value) {
         codeTextField.setText(value);
-        /*try {
-            lookUpAndSetDescription();
-        } catch (NullPointerException e) {
-            //descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
-            descriptionCombo.setModel(
-                    new javax.swing.DefaultComboBoxModel(
-                            new String[] {java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error")}));
-        }*/
         updateFilledInStatusColor();
     }
-
-    /*private void lookUpAndSetDescription() throws NullPointerException {
-        //descriptionTextField.setText("");
-        descriptionCombo.setModel(new javax.swing.DefaultComboBoxModel());
-        //categoryTextField.setText("");
-        categoryCombo.setModel(new javax.swing.DefaultComboBoxModel());
-        if (codeTextField.getText().trim().length() > 0) {
-            if (possibleValuesMap != null) {
-                try {
-                    if (dictionary.isCompoundDictionary() && codeTextField.getText().length() >= dictionary.getCodeLength()) {
-                        categoryTextField.setText(possibleValuesMap.get(
-                                codeTextField.getText().substring(0, dictionary.getCodeLength())).getDescription());
-                    }
-                    if (dictionary.isCompoundDictionary()) {
-                        if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) {
-                            descriptionTextField.setText(possibleValuesMap.get(codeTextField.getText()).getDescription());
-                        }
-                    } else {
-                        descriptionTextField.setText(possibleValuesMap.get(codeTextField.getText()).getDescription());
-                    }
-                } catch (NullPointerException e) {
-                    throw e;
-                }
-            }
-        }
-    }*/
 
     @Override
     public void updateFilledInStatusColor() {
@@ -212,9 +178,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseListElement) {
         this.databaseListElement = databaseListElement;
         setVariableName(databaseListElement.getFullName());
-        /*if (databaseListElement.getDictionaryID() < 0) {
-            splitPane1.remove(splitPane2);            
-        }*/
+        
         String fillInStatus = databaseListElement.getFillInStatus();
         if (fillInStatus.equalsIgnoreCase(Globals.FILL_IN_STATUS_AUTOMATIC_STRING)) {
             codeTextField.setFocusable(false);
@@ -222,9 +186,6 @@ public class VariableEditorPanel extends javax.swing.JPanel
         } else if (fillInStatus.equalsIgnoreCase(Globals.FILL_IN_STATUS_MANDATORY_STRING)) 
             codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);        
 
-        // String variableType = databaseListElement.getVariableType();
-        /*descriptionCombo.setVisible(false);
-        categoryCombo.setVisible(false);*/
         setMaximumLength(databaseListElement.getVariableLength());
         mandatory = databaseListElement.getFillInStatus().equalsIgnoreCase(Globals.FILL_IN_STATUS_MANDATORY_STRING);
         codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -238,35 +199,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
                 componentFocusLost(evt);
             }
         });
-    }
-    
-    /*public void setDictionary(Dictionary dictionary) {
-        this.dictionary = dictionary;
-        if (dictionary != null) {
-            if (dictionary.isCompoundDictionary())
-                categoryCombo.setVisible(true);            
-            descriptionCombo.setVisible(true);
-            setPossibleValues(dictionary.getDictionaryEntries());
-        }
-    }*/
-    
-    /*private void setPossibleValues(Map<String, DictionaryEntry> possibleValues) {
-        this.possibleValuesMap = possibleValues;
-        DictionaryEntry m;
-        if (possibleValuesMap == null) {
-            splitPane2.setVisible(false);
-        } else {
-            
-            Object value = getValue();
-            if (value != null) {
-                m = possibleValuesMap.get(value.toString());
-                if (m != null) {
-                    //descriptionTextField.setText(m.getDescription());                    
-                    descriptionCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] {m.getDescription()}));
-                }
-            }
-        }
-    }*/
+    }    
     
     protected void setMaximumLength(int length) {
         this.maxLength = length;
@@ -295,13 +228,6 @@ public class VariableEditorPanel extends javax.swing.JPanel
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equalsIgnoreCase(MaxLengthDocument.MAX_LENGTH_ACTION_STRING)) {
-            /*try {
-                lookUpAndSetDescription();
-            } catch (NullPointerException ne) {
-                descriptionCombo.setModel(new javax.swing.DefaultComboBoxModel(
-                        new String[] {java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error")}));
-                //descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
-            }*/
             updateFilledInStatusColor();
         } else if (e.getActionCommand().equalsIgnoreCase(MaxLengthDocument.CHANGED_ACTION_STRING)) {
             try {
@@ -314,73 +240,36 @@ public class VariableEditorPanel extends javax.swing.JPanel
                     listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
                 }
             } catch (NullPointerException ne) {
-                // descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
-                /*descriptionCombo.setModel(new javax.swing.DefaultComboBoxModel(
-                        new String[] {java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error")}));*/
+                
             }
             updateFilledInStatusColor();
         }
         if (e.getActionCommand().equalsIgnoreCase(DictionaryElementChooser.OK_ACTION)) {
-            /*codeTextField.setText(dictionaryElementChooser.getSelectedElement().getCode());
-            /*try {
-                lookUpAndSetDescription();
-            } catch (NullPointerException ne) {
-                //descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
-                descriptionCombo.setModel(new javax.swing.DefaultComboBoxModel(
-                        new String[] {java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error")}));
-            }*/
             updateFilledInStatusColor();
             listener.actionPerformed(new ActionEvent(this, 0, RecordEditor.REQUEST_FOCUS));
-            // setFocus();
             transferFocusToNext();
         }
     }
 
-    /*private void showDictionaryChooser() {
-        if (databaseListElement.getVariableType().equalsIgnoreCase("dict")) {
-            if (possibleValuesMap == null) {
-                JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Empty_dictionary."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Warning"), JOptionPane.WARNING_MESSAGE);
-            } else {
-                String oldValue = getValue().toString();
-                DictionaryEntry oldSelection = possibleValuesMap.get(oldValue);
-                if (dictionaryElementChooser == null) {
-                    dictionaryElementChooser = new DictionaryElementChooser(this);
-                } else {
-                    dictionaryElementChooser.setFirstPass();
-                }
-                dictionaryElementChooser.setDictionary(dictionary);
-                dictionaryElementChooser.setSelectedElement(oldSelection);
-
-                CanRegClientView.showAndPositionInternalFrame(
-                        CanRegClientApp.getApplication().getDesktopPane(),
-                        dictionaryElementChooser);
-            }
-        } else {
-            // Do nothing
-            // This should never happen...
-        }
-    }*/
-
-    /*private void setFocus() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                codeTextField.setRequestFocusEnabled(true);
-                codeTextField.requestFocus();
-            }
-        });
-    }*/
-
     protected void transferFocusToNext() {
-        /*SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {            
-                codeTextField.setRequestFocusEnabled(true);
-                codeTextField.requestFocus();
-                codeTextField.transferFocus();
-            }
-        });*/
         KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
+    }
+    
+    protected void codeTextFieldMousePressed(java.awt.event.MouseEvent evt) {                                           
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(codeTextField, evt);
+    }                                          
+
+    protected void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {                                            
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(codeTextField, evt);
+    } 
+
+    protected void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {
+        if(evt.getKeyChar() == KeyEvent.VK_ENTER) 
+            transferFocusToNext();        
+    }
+    
+    protected void codeTextFieldFocusLost(java.awt.event.FocusEvent evt) {
+        updateFilledInStatusColor();        
     }
  
     @SuppressWarnings("unchecked")
@@ -443,24 +332,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
             .addComponent(mainSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    protected void codeTextFieldMousePressed(java.awt.event.MouseEvent evt) {                                           
-        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(codeTextField, evt);
-    }                                          
-
-    protected void codeTextFieldMouseReleased(java.awt.event.MouseEvent evt) {                                            
-        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(codeTextField, evt);
-    } 
-
-    protected void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {
-        if(evt.getKeyChar() == KeyEvent.VK_ENTER) 
-            transferFocusToNext();        
-    }
-    
-    protected void codeTextFieldFocusLost(java.awt.event.FocusEvent evt) {
-        updateFilledInStatusColor();        
-    }
-
+  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JTextField codeTextField;
     protected javax.swing.JPanel jPanel1;
