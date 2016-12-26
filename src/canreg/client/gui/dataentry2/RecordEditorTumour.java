@@ -426,7 +426,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
             } else {
                 // String checkStatusString = (String) checkStatus;
                 // resultCode = CheckResult.toResultCode(checkStatusString);
-                setSaveNeeded(true);
+                //setSaveNeeded(true);
                 setChecksResultCode(ResultCode.NotDone);
             }
         }
@@ -696,6 +696,37 @@ public class RecordEditorTumour extends javax.swing.JPanel
     }
     
     /**
+     * Adds a String, representing a Patient tab, to the combobox. This method
+     * does not allow to insert a duplicate String.
+     * @param patientTitle should be the same string that shows on the patient
+     * tab title.
+     */
+    public void addLinkablePatient(String patientTitle) {                                
+        DefaultComboBoxModel model = (DefaultComboBoxModel) this.patientsComboBox.getModel();
+        //That patient cannot be previosly loaded in the combobox
+        if(patientTitle != null &&
+           ! patientTitle.isEmpty() &&
+           model.getIndexOf(patientTitle) == -1) {
+            //Another method might be already handling the flag avoidPatientsComboBoxListener, 
+            //so we have to make sure to leave it as it was.
+            boolean previousAvoidStatus = this.avoidPatientsComboBoxListener;
+            
+            this.avoidPatientsComboBoxListener = true;
+            this.patientsComboBox.addItem(patientTitle);
+                                    
+            //Select this new patient if it's already linked to this tumour
+            DatabaseRecord tumourRecord = this.getDatabaseRecord();
+            String tumourPatientID = (String) tumourRecord.getVariable(globalToolBox
+                             .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString())
+                             .getDatabaseVariableName());
+            if(tumourPatientID != null && ! tumourPatientID.isEmpty() && patientTitle.contains(tumourPatientID))
+               this.setLinkedPatient(patientTitle);
+            
+            this.avoidPatientsComboBoxListener = previousAvoidStatus;
+        }
+    }
+    
+    /**
      * Changes the selection of linked patient in the combobox.
      * @param patientTitle the patient to be selected (it has to be previously
      * loaded, if not a IllegalArgumentException() will be thrown).
@@ -703,8 +734,11 @@ public class RecordEditorTumour extends javax.swing.JPanel
     public void setLinkedPatient(String patientTitle) {
         DefaultComboBoxModel model = (DefaultComboBoxModel) this.patientsComboBox.getModel();
         int index = model.getIndexOf(patientTitle);
-        if(index != -1)
+        if(index != -1) {            
+            //this.avoidPatientsComboBoxListener = avoidComboListener;
             this.patientsComboBox.setSelectedIndex(index);
+            //this.avoidPatientsComboBoxListener = false;
+        }            
         else
             throw new IllegalArgumentException("The patient " + patientTitle + " has not been previously loaded in the combobox.");
     }
@@ -739,22 +773,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
                 this.setLinkedPatient(replacer);
         }      
         this.avoidPatientsComboBoxListener = false;
-    }
-    
-    /**
-     * Adds a String, representing a Patient tab, to the combobox. This method
-     * does not allow to insert a duplicate String.
-     * @param patientTitle should be the same string that shows on the patient
-     * tab title.
-     */
-    public void addLinkablePatient(String patientTitle) {
-        DefaultComboBoxModel model = (DefaultComboBoxModel) this.patientsComboBox.getModel();
-        //That patient cannot be previosly loaded in the combobox
-        if(patientTitle != null &&
-           ! patientTitle.isEmpty() &&
-           model.getIndexOf(patientTitle) == -1) 
-            this.patientsComboBox.addItem(patientTitle);
-    }
+    }        
     
     /**
      * Removes an already present Patient from the combobox.
@@ -764,7 +783,14 @@ public class RecordEditorTumour extends javax.swing.JPanel
      */
     public boolean removeLinkablePatient(String patientTitle) {
         int beforeRemoving = this.patientsComboBox.getItemCount();
+                
+        if( ! this.getLinkedPatient().equals(patientTitle))
+            this.avoidPatientsComboBoxListener = true;
+            
         this.patientsComboBox.removeItem(patientTitle);
+        
+        this.avoidPatientsComboBoxListener = false;
+        
         if(this.patientsComboBox.getItemCount() != beforeRemoving)
             return true;
         return false;

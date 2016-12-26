@@ -307,7 +307,9 @@ public class VariableEditorPanel extends javax.swing.JPanel
             try {
                 //lookUpAndSetDescription();
                 Object currentValue = getValue();
-                if (listener != null && ((currentValue != null && !currentValue.equals(initialValue)) || (initialValue != null && !initialValue.equals(currentValue)))) {
+                if (listener != null && 
+                     ((currentValue != null && !currentValue.equals(initialValue)) ||
+                      (initialValue != null && !initialValue.equals(currentValue)))  ) {
                     hasChanged = true;
                     listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
                 }
