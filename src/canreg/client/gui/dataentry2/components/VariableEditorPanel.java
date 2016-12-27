@@ -158,13 +158,14 @@ public class VariableEditorPanel extends javax.swing.JPanel
     public synchronized Object getValue() {
         Object valueObject = null;
         String valueString = codeTextField.getText();
-        if (databaseListElement.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
-            if (valueString.trim().length() > 0) {
+        if(databaseListElement.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
+            if(valueString.trim().length() > 0) {
                 try {
                     valueObject = Integer.parseInt(valueString.trim());
                 } catch (NumberFormatException numberFormatException) {
-                    // valueObject = -1;
-                    Logger.getLogger(VariableEditorPanel.class.getName()).log(Level.WARNING, databaseListElement.getShortName() + " " + valueString, numberFormatException);
+                    Logger.getLogger(VariableEditorPanel.class.getName())
+                            .log(Level.WARNING, databaseListElement.getShortName() 
+                                 + " " + valueString, numberFormatException);
                 }
             } else 
                 valueObject = null;            
