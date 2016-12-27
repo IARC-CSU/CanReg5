@@ -202,10 +202,13 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     private void lookUpAndSetDescription() throws NullPointerException {
         if (codeTextField.getText().trim().length() > 0) { 
                 try {
-                    if(dictionary.isCompoundDictionary() && codeTextField.getText().length() >= dictionary.getCodeLength()) {
+                    if(dictionary.isCompoundDictionary() && 
+                       codeTextField.getText().length() >= dictionary.getCodeLength()) {
+                        
                         String code = codeTextField.getText();
                         categoryCombo.setSelectedItem(
-                                dictionary.getDictionaryEntries().get(codeTextField.getText().substring(0, dictionary.getCodeLength())));
+                                dictionary.getDictionaryEntries().get(
+                                        codeTextField.getText().substring(0, dictionary.getCodeLength())));
                         
                         //avoid action performed, otherwise we get stackOverflow because
                         //lookUpAndSetDescription() is called endlessly
@@ -214,11 +217,14 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                         avoidActionPerformed = false;
                     }
                     if(dictionary.isCompoundDictionary()) {
-                        if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
+                        if(codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
                             descriptionCombo.setSelectedItem(
                                 dictionary.getDictionaryEntries().get(codeTextField.getText()));
-                    } else 
-                        descriptionCombo.setSelectedItem(dictionary.getDictionaryEntries().get(codeTextField.getText()));                    
+                    } else {
+                        if(codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
+                            descriptionCombo.setSelectedItem(dictionary.getDictionaryEntries().get(codeTextField.getText()));
+                    }
+                        
                 } catch (NullPointerException e) {
                     throw e;
                 }            
