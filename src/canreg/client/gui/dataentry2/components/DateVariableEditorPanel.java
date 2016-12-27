@@ -53,9 +53,6 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         dateChooser = new JDateChooser();
         String dateFormatString = databaseListElement.getDateFormatString();
         dateChooser.setDateFormatString(dateFormatString);
-        // dateChooser.setDateFormatString("MMMMM d, yyyy");
-        //splitPane1.remove(splitPane1.getRightComponent());
-        //splitPane1.setTopComponent(dateChooser);
         jPanel1.remove(codeTextField);
         jPanel1.add(dateChooser);
         dateField = (JTextField) dateChooser.getDateEditor().getUiComponent();
@@ -105,23 +102,23 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
        
     @Override
     public void setValue(String value) {
-        if (value.trim().length() == 0) {
-            if (databaseListElement.getFillInStatus().equalsIgnoreCase(Globals.FILL_IN_STATUS_MANDATORY_STRING)) 
+        if(value.trim().length() == 0) {
+            if(databaseListElement.getFillInStatus().equalsIgnoreCase(Globals.FILL_IN_STATUS_MANDATORY_STRING)) 
                 codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);            
             codeTextField.setText(value);
         } else {
             codeTextField.setBackground(java.awt.SystemColor.text);
             try {
                 GregorianCalendarCanReg date = DateHelper.parseDateStringToGregorianCalendarCanReg(value, Globals.DATE_FORMAT_STRING);
-                if (date != null) {
+                if(date != null) {
                     dateChooser.setCalendar(date);
                     String dateString = codeTextField.getText();
                     String dateFormatString = dateChooser.getDateFormatString();
                     // dateField.setText(value);
-                    if (date.isUnknownDay()) 
+                    if(date.isUnknownDay()) 
                         dateString = DateHelper.setDay(dateString, dateFormatString, "99");
                     
-                    if (date.isUnknownMonth()) 
+                    if(date.isUnknownMonth()) 
                         dateString = DateHelper.setMonth(dateString, dateFormatString, "99");
                     
                     codeTextField.setText(dateString);
@@ -130,11 +127,20 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             } catch (ParseException ex) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NumberFormatException numberFormatException) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel").getString("VALUE: ") + value, numberFormatException);
+                Logger.getLogger(DateVariableEditorPanel.class.getName())
+                        .log(Level.WARNING, java.util.ResourceBundle
+                                .getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel")
+                                .getString("VALUE: ") + value, numberFormatException);
             } catch (IllegalArgumentException ex) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel").getString("VALUE: ") + value, ex);
+                Logger.getLogger(DateVariableEditorPanel.class.getName())
+                        .log(Level.WARNING, java.util.ResourceBundle
+                                .getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel")
+                                .getString("VALUE: ") + value, ex);
             } catch (StringIndexOutOfBoundsException stringIndexOutOfBoundsException) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel").getString("VALUE: ") + value, stringIndexOutOfBoundsException);
+                Logger.getLogger(DateVariableEditorPanel.class.getName())
+                        .log(Level.WARNING, java.util.ResourceBundle
+                                .getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel")
+                                .getString("VALUE: ") + value, stringIndexOutOfBoundsException);
             }
         }
     }
@@ -152,10 +158,15 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             } catch (ParseException ex) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException ex) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel").getString("VALUE: ") + valueString + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel").getString(", DATE FORMAT: ") + dateChooser.getDateFormatString(), ex);
+                Logger.getLogger(DateVariableEditorPanel.class.getName())
+                        .log(Level.WARNING, java.util.ResourceBundle
+                                .getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel")
+                                .getString("VALUE: ") + valueString + 
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel")
+                                        .getString(", DATE FORMAT: ") + dateChooser.getDateFormatString(), ex);
             } finally {
                 // if the date is malformed we just return the data as is.
-                if (valueObjectString == null || valueObjectString.isEmpty()) 
+                if(valueObjectString == null || valueObjectString.isEmpty()) 
                     valueObjectString = codeTextField.getText().trim();                
             }
         }

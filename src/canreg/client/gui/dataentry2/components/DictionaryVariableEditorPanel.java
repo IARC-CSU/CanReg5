@@ -51,8 +51,6 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     private static final Color ORDER_DESCRIPTION_COLOR = new Color(255,255,255);
     private ActionListener categoryComboListener;
     private ActionListener descriptionComboListener;
-    //private DictionaryEntry categorySelected;
-    //private DictionaryEntry descriptionSelected;
     private boolean avoidActionPerformed = false;
     private final org.jdesktop.application.ResourceMap resourceMap;
     
@@ -99,7 +97,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         categoryCombo.getEditor().getEditorComponent().addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                comboBoxKeyTyped(evt);
+                categoryComboBoxKeyTyped(evt);
             }
         });
         categoryCombo.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
@@ -113,6 +111,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 categoryCombo.hidePopup();
             }
         });
+        categoryCombo.setFocusTraversalKeysEnabled(false);
                         
         jPanel4.setName("jPanel4"); // NOI18N
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
@@ -125,7 +124,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         descriptionCombo.getEditor().getEditorComponent().addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                comboBoxKeyTyped(evt);
+                descriptionComboBoxKeyTyped(evt);
             }
         });
         descriptionCombo.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
@@ -139,6 +138,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 descriptionCombo.hidePopup();
             }
         });
+        descriptionCombo.setFocusTraversalKeysEnabled(false);
         
         sortToggle.setBackground(ORDER_CODE_COLOR); // NOI18N
         sortToggle.setText("");
@@ -349,13 +349,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             } else if (e.getActionCommand().equalsIgnoreCase(MaxLengthDocument.CHANGED_ACTION_STRING)) {
                 try {
                     lookUpAndSetDescription();
-                    Object currentValue = getValue();
-                    if (listener != null && 
-                        ((currentValue != null && !currentValue.equals(initialValue)) ||
-                         (initialValue != null && !initialValue.equals(currentValue)))) {
-                        hasChanged = true;
-                        listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
-                    }
+                    checkForChanges();
                 } catch (NullPointerException ne) {
                     // descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
                     descriptionCombo.setModel(new javax.swing.DefaultComboBoxModel(
@@ -512,13 +506,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             //avoidActionPerformed = true;
             codeTextField.setText("");
             updateFilledInStatusColor();
-            Object currentValue = getValue();
-                if (listener != null && 
-                    ((currentValue != null && !currentValue.equals(initialValue)) ||
-                     (initialValue != null && !initialValue.equals(currentValue)))) {
-                    hasChanged = true;
-                    listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
-                }                
+            checkForChanges();                
             //avoidActionPerformed = false;
             
             descriptionCombo.removeActionListener(descriptionComboListener);
@@ -538,7 +526,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     
     /**
      * Triggered when:
-     * - A key is pressed in the descriptonComboBox (because when presseing a key, 
+     * - A key is pressed in the descriptonComboBox (because when pressing a key, 
      * AutoCompleteSupport selects a possible match for what we are writing)
      * - When pressing ENTER, even if there was already a selected item
      * - An item is selected when using the mouse
@@ -558,6 +546,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 //avoidActionPerformed = true;
                 codeTextField.setText("");
                 updateFilledInStatusColor();
+                checkForChanges();
                 avoidActionPerformed = false;                
                 return;
             }
@@ -577,13 +566,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 avoidActionPerformed = true;
                 codeTextField.setText(descriptionCode);
                 updateFilledInStatusColor();
-                Object currentValue = getValue();
-                if (listener != null && 
-                    ((currentValue != null && !currentValue.equals(initialValue)) ||
-                     (initialValue != null && !initialValue.equals(currentValue)))) {
-                    hasChanged = true;
-                    listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
-                }                
+                checkForChanges();               
                 avoidActionPerformed = false;
             }            
         }
@@ -593,20 +576,43 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             avoidActionPerformed = true;
             codeTextField.setText("");
             updateFilledInStatusColor();
-            Object currentValue = getValue();
-                if (listener != null && 
-                    ((currentValue != null && !currentValue.equals(initialValue)) ||
-                     (initialValue != null && !initialValue.equals(currentValue)))) {
-                    hasChanged = true;
-                    listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
-                }                
+            checkForChanges();               
             avoidActionPerformed = false;
         }
     } 
+    
+    /*@Override
+    protected void checkForChanges() {
+       Object currentValue = getValue();
+        if (listener != null && 
+            ((currentValue != null && !currentValue.equals(initialValue)) ||
+             (initialValue != null && !initialValue.equals(currentValue)))) {
+            hasChanged = true;
+            listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
+        } 
+    }*/
        
-    private void comboBoxKeyTyped(java.awt.event.KeyEvent evt) {
-        if(evt.getKeyChar() == KeyEvent.VK_ENTER) 
+    private void categoryComboBoxKeyTyped(java.awt.event.KeyEvent evt) {
+        categoryComboActionPerformed(null);
+        
+        if(evt.getKeyChar() == KeyEvent.VK_ENTER ||
+           evt.getKeyChar() == KeyEvent.VK_TAB)             
             KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
+        
+        //Change the sorting
+        else if(evt.getKeyChar() == '+') {
+            evt.consume();
+            this.sortToggle.doClick();
+        }
+    }
+    
+    private void descriptionComboBoxKeyTyped(java.awt.event.KeyEvent evt) {
+        descriptionComboActionPerformed(null);
+
+        if(evt.getKeyChar() == KeyEvent.VK_ENTER ||
+           evt.getKeyChar() == KeyEvent.VK_TAB) 
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
+        
         //Change the sorting
         else if(evt.getKeyChar() == '+') {
             evt.consume();

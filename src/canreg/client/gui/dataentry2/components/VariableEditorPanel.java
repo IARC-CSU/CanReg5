@@ -228,27 +228,32 @@ public class VariableEditorPanel extends javax.swing.JPanel
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        updateFilledInStatusColor();
         if (e.getActionCommand().equalsIgnoreCase(MaxLengthDocument.MAX_LENGTH_ACTION_STRING)) {
-            updateFilledInStatusColor();
+            //Nothing
         } else if (e.getActionCommand().equalsIgnoreCase(MaxLengthDocument.CHANGED_ACTION_STRING)) {
-            try {
-                //lookUpAndSetDescription();
-                Object currentValue = getValue();
-                if (listener != null && 
-                     ((currentValue != null && !currentValue.equals(initialValue)) ||
-                      (initialValue != null && !initialValue.equals(currentValue)))  ) {
-                    hasChanged = true;
-                    listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
-                }
-            } catch (NullPointerException ne) {
-                
-            }
-            updateFilledInStatusColor();
+            this.checkForChanges();
         }
-        if (e.getActionCommand().equalsIgnoreCase(DictionaryElementChooser.OK_ACTION)) {
-            updateFilledInStatusColor();
+        if (e.getActionCommand().equalsIgnoreCase(DictionaryElementChooser.OK_ACTION)) {            
             listener.actionPerformed(new ActionEvent(this, 0, RecordEditor.REQUEST_FOCUS));
             transferFocusToNext();
+        }
+    }
+    
+    protected void checkForChanges() {
+        try {
+            Object currentValue = getValue();
+            if(listener != null) {
+                if((currentValue != null && !currentValue.equals(initialValue)) ||
+                   (initialValue != null && !initialValue.equals(currentValue))) 
+                    hasChanged = true;
+                else 
+                   hasChanged = false;
+                listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
+            }
+        } catch(NullPointerException ne) {
+            Logger.getLogger(VariableEditorPanel.class.getName())
+                    .log(Level.WARNING, "Warning! NPE in VariableEditorPanel.checkForChanges()", ne);
         }
     }
 
@@ -265,6 +270,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
     } 
 
     protected void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {
+        this.checkForChanges();
         if(evt.getKeyChar() == KeyEvent.VK_ENTER) 
             transferFocusToNext();        
     }

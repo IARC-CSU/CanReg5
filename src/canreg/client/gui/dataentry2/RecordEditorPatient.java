@@ -86,7 +86,6 @@ public class RecordEditorPatient extends javax.swing.JPanel
     private Map<String, DictionaryEntry> recStatusDictMap;
     private DictionaryEntry[] recStatusDictWithConfirmArray;
     private DictionaryEntry[] recStatusDictWithoutConfirmArray;
-    private ResultCode resultCode = null;
     private DatabaseVariablesListElement patientIDVariableListElement;
     private DatabaseVariablesListElement patientRecordIDVariableListElement;
     //private DatabaseVariablesListElement obsoleteFlagVariableListElement;
@@ -112,9 +111,6 @@ public class RecordEditorPatient extends javax.swing.JPanel
         this.actionListener = listener;
         this.globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
         
-        // setChecksResultCode(resultCode);
-        // Remove this for now?
-        
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
         this.dateFormat = new SimpleDateFormat(Globals.DATE_FORMAT_STRING);
         this.autoFillList = new LinkedList<DatabaseVariablesListElement>();        
@@ -126,6 +122,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
             /*if (e.getSource().equals(saveButton)) {
                 // do nothing...
             else {*/
+            aca tenes que ver de enviarle a todos los tumores o hacia record editor 
                 changesDone();
                 actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
             //}

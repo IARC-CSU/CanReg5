@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -110,7 +111,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     
     private volatile boolean mouseInsideSave = false;
     
-    private HashMap<RecordEditorTumour, Boolean> obsoleteToggles;
+    private final HashMap<RecordEditorTumour, Boolean> obsoleteToggles;
         
     
     public RecordEditor(JDesktopPane desktopPane) {        
@@ -232,7 +233,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             Object regno = dbr.getVariable(globalToolBox
                     .translateStandardVariableNameToDatabaseListElement(Globals
                             .StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
-            String regnoString = null;
+            String regnoString;
             if (regno != null) {
                 regnoString = regno.toString();
                 if (regnoString.length() == 0) 
@@ -274,7 +275,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 Object patno = dbr.getVariable(globalToolBox
                         .translateStandardVariableNameToDatabaseListElement(Globals
                                 .StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
-                String patnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
+                String patnoString;// = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
                 if (patno != null) {
                     patnoString = patno.toString();
                     if (patnoString.length() > 0) {
@@ -516,8 +517,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 Object patno = dbr.getVariable(globalToolBox
                         .translateStandardVariableNameToDatabaseListElement(Globals
                                 .StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
-                String patnoString = java.util.ResourceBundle
-                        .getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
+                String patnoString;// = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
                 if(patno != null) {
                     patnoString = patno.toString();
                     if(patnoString.length() > 0) {
@@ -633,7 +633,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             } else if (e.getActionCommand().equalsIgnoreCase(AUTO_FILL)) {                
                 LinkedList<DatabaseVariablesListElement> autoFillList = recordEditorPanel.getAutoFillList();
                 DatabaseRecord sourceOfActionDatabaseRecord = recordEditorPanel.getDatabaseRecord();
-                DatabaseRecord otherDatabaseRecord = null;
+                DatabaseRecord otherDatabaseRecord;
                 if (sourceOfActionDatabaseRecord instanceof Tumour) {
                     RecordEditorPatient patientRecordEditorPanel = (RecordEditorPatient) patientTabbedPane.getSelectedComponent();
                     otherDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
@@ -673,7 +673,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 tumourRecords.add(newDatabaseRecord);
             }                                    
         } else {
-            int id = -1;
+            int id;
             if (databaseRecord instanceof Patient) {
                 id = (Integer) databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
                 canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME);
@@ -781,9 +781,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                                                                 .getString("CHANGE TO WHICH PATIENTID?"), 
                                         JOptionPane.QUESTION_MESSAGE);
         if (requestedPatientID != null) {
-            Patient[] patientDatabaseRecord = null;
             try {
-                patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecordsByID(requestedPatientID, false);
+                Patient[] patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecordsByID(requestedPatientID, false);
                 if (patientDatabaseRecord != null && patientDatabaseRecord.length > 0) {
                     for (DatabaseRecord patient : patientRecords) {
                         patient = associatePatientRecordToPatientID(patient, requestedPatientID);
@@ -909,13 +908,12 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                                         .getString("PERMANENTLY DELETE RECORD?"));
         JTabbedPane tabbedPane = null;
         if(option == JOptionPane.YES_OPTION) {
-            boolean success = false;
             DatabaseRecord record = recordEditorPanel.getDatabaseRecord();
-            success = deleteRecord(record);
+            boolean success = deleteRecord(record);
             if(success) {
                 if(record instanceof Patient) 
                     tabbedPane = patientTabbedPane;
-                else if (record instanceof Tumour)
+                else if(record instanceof Tumour)
                     tabbedPane = tumourTabbedPane;                
                 tabbedPane.remove((Component) recordEditorPanel);
                 JOptionPane.showInternalMessageDialog(this,
@@ -932,7 +930,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         RecordEditorTumour tumourRecordEditorPanel;
         RecordEditorPatient patientRecordEditorPanel;
         DatabaseRecord record = recordEditorPanel.getDatabaseRecord();
-        ResultCode worstResultCodeFound = ResultCode.OK;
+        ResultCode worstResultCodeFound;
         String message = "";
         Patient patient;
         Tumour tumour;
@@ -968,7 +966,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumour);
 
             Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes =
-                    new TreeMap<Globals.StandardVariableNames, CheckResult.ResultCode>();
+                    new EnumMap<Globals.StandardVariableNames, CheckResult.ResultCode>(Globals.StandardVariableNames.class);
             worstResultCodeFound = CheckResult.ResultCode.OK;
             for (CheckResult result : checkResults) {
                 if (result.getResultCode() != CheckResult.ResultCode.OK && result.getResultCode() != CheckResult.ResultCode.NotDone) {
