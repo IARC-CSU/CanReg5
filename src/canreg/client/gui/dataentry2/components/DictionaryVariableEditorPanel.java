@@ -201,33 +201,31 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
      */
     private void lookUpAndSetDescription() throws NullPointerException {
         if (codeTextField.getText().trim().length() > 0) { 
-                try {
-                    if (dictionary.isCompoundDictionary() && 
-                       codeTextField.getText().length() >= dictionary.getCodeLength()) {
-                        
-                        String code = codeTextField.getText();
-                        categoryCombo.setSelectedItem(
-                                dictionary.getDictionaryEntries().get(
-                                        codeTextField.getText().substring(0, dictionary.getCodeLength())));
-                        
-                        //avoid action performed, otherwise we get stackOverflow because
-                        //lookUpAndSetDescription() is called endlessly
-                        avoidActionPerformed = true;
-                        codeTextField.setText(code);
-                        avoidActionPerformed = false;
-                    }
-                    if (dictionary.isCompoundDictionary()) {
-                        if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
-                            descriptionCombo.setSelectedItem(
-                                dictionary.getDictionaryEntries().get(codeTextField.getText()));
-                    } else {
-                        if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
-                            descriptionCombo.setSelectedItem(dictionary.getDictionaryEntries().get(codeTextField.getText()));
-                    }
-                        
-                } catch (NullPointerException e) {
-                    throw e;
-                }            
+            try {
+                if (dictionary.isCompoundDictionary() && codeTextField.getText().length() >= dictionary.getCodeLength()) {
+                    String code = codeTextField.getText();
+                    categoryCombo.setSelectedItem(
+                            dictionary.getDictionaryEntries().get(
+                                    codeTextField.getText().substring(0, dictionary.getCodeLength())));
+
+                    //avoid action performed, otherwise we get stackOverflow because
+                    //lookUpAndSetDescription() is called endlessly
+                    avoidActionPerformed = true;
+                    codeTextField.setText(code);
+                    avoidActionPerformed = false;
+                }
+                if (dictionary.isCompoundDictionary()) {
+                    if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
+                        descriptionCombo.setSelectedItem(
+                            dictionary.getDictionaryEntries().get(codeTextField.getText()));
+                } else {
+                    if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
+                        descriptionCombo.setSelectedItem(dictionary.getDictionaryEntries().get(codeTextField.getText()));
+                }
+
+            } catch (NullPointerException e) {
+                throw e;
+            }            
         }
     }
     
@@ -388,13 +386,25 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     
     @Override
     protected void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {
+        updateFilledInStatusColor();
         if (dictionary != null && evt.getKeyChar() == '?') {
             if (categoryCombo.isVisible())
                 this.categoryCombo.showPopup();
             else if (descriptionCombo.isVisible())
                 this.descriptionCombo.showPopup();            
         } else if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
-            transferFocusToNext();
+            
+            //Skip to next VariableEditorPanel if this dictionary code is complete and correct
+            if (this.codeTextField.getBackground() == VARIABLE_OK_COLOR) {
+                this.descriptionCombo.setFocusable(false);                
+                if (this.dictionary.isCompoundDictionary()) 
+                    this.categoryCombo.setFocusable(false);
+                transferFocusToNext();
+                this.descriptionCombo.setFocusable(true);                
+                if (this.dictionary.isCompoundDictionary()) 
+                    this.categoryCombo.setFocusable(true);
+            } else
+                transferFocusToNext();
         }
     }    
     

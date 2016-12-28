@@ -283,8 +283,6 @@ public class RecordEditorPatient extends javax.swing.JPanel
     }
     
     public void setRecordAndBuildPanel(DatabaseRecord dbr) {
-        //No checks in Patient panel
-        //setChecksResultCode(ResultCode.NotDone);
         setDatabaseRecord(dbr);
         buildPanel();
     }
@@ -439,7 +437,6 @@ public class RecordEditorPatient extends javax.swing.JPanel
                                  "Warning! Record status dictionary entries missing.");
             }
         }
-                
     }
     
     private void buildPanel() {
