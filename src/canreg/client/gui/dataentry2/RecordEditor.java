@@ -138,7 +138,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     changesDone = changesDone || panel.isSaveNeeded();
                 }
                 
-                if(changesDone) {
+                if (changesDone) {
                     int option = JOptionPane.showConfirmDialog(null, 
                                 java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor")
                                         .getString("REALLY CLOSE?CHANGES MADE WILL BE LOST."), 
@@ -159,7 +159,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             public void stateChanged(ChangeEvent e) {
                 JTabbedPane pane = (JTabbedPane) e.getSource();
                 RecordEditorPanel rep = (RecordEditorPanel) pane.getSelectedComponent();
-                if(rep != null)
+                if (rep != null)
                     setActiveRecord(rep);                
             }
         };
@@ -172,18 +172,18 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         Object regno = dbr.getVariable(globalToolBox
                                         .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString())
                                         .getDatabaseVariableName());
-        if(regno != null) 
+        if (regno != null) 
             patientRecordsMap.put(regno, recordEditorPanel);        
     }
     
     private void setActiveRecord(RecordEditorPanel rep) {
         DatabaseRecord dbr = rep.getDatabaseRecord();
-        if(dbr != null && dbr instanceof Tumour) {
+        if (dbr != null && dbr instanceof Tumour) {
             Object patientRecordID = dbr.getVariable(globalToolBox
                                                       .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString())
                                                       .getDatabaseVariableName());
             Component comp = patientRecordsMap.get(patientRecordID);
-            if(comp != null)
+            if (comp != null)
                 patientTabbedPane.setSelectedComponent(comp);            
         }
     }
@@ -254,22 +254,24 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             
             //Add to all tumour tabs this Patient title
             for(Component tumourComp : this.tumourTabbedPane.getComponents()) {
-                ((RecordEditorTumour)tumourComp).addLinkablePatient(tabTitle);
+                RecordEditorTumour tumourPanel = (RecordEditorTumour) tumourComp;
                 
-                //Select this patient on tumours that are linked to it
-                DatabaseRecord tumourRecord = ((RecordEditorTumour)tumourComp).getDatabaseRecord();
+                //When adding this patient, it will automatically select it if
+                //it was previously linked to it.
+                tumourPanel.addLinkablePatient(tabTitle);
+                
+                //We check to see if this tumour was previously linked to 
+                //the dbr patient that's being added.
+                DatabaseRecord tumourRecord = tumourPanel.getDatabaseRecord();
                 String tumourPatientID = (String) tumourRecord.getVariable(globalToolBox
-                                                      .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString())
+                                                      .translateStandardVariableNameToDatabaseListElement(Globals
+                                                              .StandardVariableNames.PatientRecordIDTumourTable.toString())
                                                       .getDatabaseVariableName());
-                if(tumourPatientID != null && ! tumourPatientID.isEmpty() && tumourPatientID.startsWith(regnoString))
-                   ((RecordEditorTumour)tumourComp).setLinkedPatient(tabTitle);
+                if (tumourPatientID != null && ! tumourPatientID.isEmpty() && tumourPatientID.startsWith(regnoString)) 
+                    rePanel.addTumour(tumourPanel);                    
             }
-            
-            
-            
-            //patientTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);
-            patientTabbedPane.addTab(tabTitle, 
-                                     rePanel);
+                
+            patientTabbedPane.addTab(tabTitle, rePanel);
             
             if (!titleSet) {
                 Object patno = dbr.getVariable(globalToolBox
@@ -311,8 +313,20 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             }                
                         
             //Add to this new tumour all the patient tabs titles
-            for(int i = 0; i < this.patientTabbedPane.getTabCount(); i++) 
+            for(int i = 0; i < this.patientTabbedPane.getTabCount(); i++) {
                 rePanel.addLinkablePatient(this.patientTabbedPane.getTitleAt(i));
+                
+                RecordEditorPatient patientPanel = (RecordEditorPatient) this.patientTabbedPane.getComponentAt(i);
+                //We check to see if this tumour that's being added was already
+                //linked to an existing patient tab                
+                String tumourPatientID = (String) dbr.getVariable(globalToolBox
+                                                      .translateStandardVariableNameToDatabaseListElement(Globals
+                                                              .StandardVariableNames.PatientRecordIDTumourTable.toString())
+                                                      .getDatabaseVariableName());
+                if (tumourPatientID != null && ! tumourPatientID.isEmpty() && 
+                    this.patientTabbedPane.getTitleAt(i).contains(tumourPatientID)) 
+                    patientPanel.addTumour(rePanel);
+            }
                                                          
             //tumourTabbedPane.addTab(dbr.toString() + ": " + regnoString + " ", rePanel);            
             tumourTabbedPane.addTab(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("TUMOUR") 
@@ -415,7 +429,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         for(int i = 0; i < patientTabbedPane.getTabCount(); i++) {
             try {            
                 RecordEditorPatient patient = (RecordEditorPatient) patientTabbedPane.getComponentAt(i);
-                if(patient.isSaveNeeded()) {                    
+                if (patient.isSaveNeeded()) {                    
                     patient.prepareToSaveRecord();
                     this.saveRecord(patient);
                 }
@@ -431,7 +445,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         for(int i = 0; i < tumourTabbedPane.getTabCount(); i++) {             
             try {
                 RecordEditorTumour tumour = (RecordEditorTumour) tumourTabbedPane.getComponentAt(i);
-                if(tumour.isSaveNeeded()) {
+                if (tumour.isSaveNeeded()) {
                     tumour.prepareToSaveRecord();
                     this.saveRecord(tumour);                    
                 }
@@ -448,7 +462,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         //so the sequences get updated on all succesfully saved tumours.
         //Tumours that failed to be saved are not going to have the sequence updated
         //and are not going to be considered in the total sequence.
-        if( ! successfulTumours.isEmpty()) {
+        if ( ! successfulTumours.isEmpty()) {
             updateAllTumoursSequences(successfulTumours);
             for(int i = 0; i < tumourTabbedPane.getTabCount(); i++) {             
                 try {
@@ -462,7 +476,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             }
         }
                  
-        if(failedTumours.isEmpty() && failedPatients.isEmpty())
+        if (failedTumours.isEmpty() && failedPatients.isEmpty())
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle
                                                         .getBundle("canreg/client/gui/dataentry2/resources/RecordEditor")
                                                         .getString("RECORD SAVED."));
@@ -480,16 +494,16 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     }
     
     private void refreshTitles(RecordEditorPanel recordEditorPanel, DatabaseRecord dbr) {
-        if(dbr instanceof Patient) {
+        if (dbr instanceof Patient) {
             // patientRecords.add(dbr);
             Object regno = dbr.getVariable(globalToolBox
                     .translateStandardVariableNameToDatabaseListElement(Globals
                             .StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
             String regnoString = java.util.ResourceBundle
                     .getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
-            if(regno != null) {
+            if (regno != null) {
                 regnoString = regno.toString();
-                if(regnoString.length() == 0)
+                if (regnoString.length() == 0)
                     regnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
                 else {
                     // patientRecordsMap.put(regno, recordEditorPanel);
@@ -500,7 +514,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             int index = 0;
             for(Component comp : patientTabbedPane.getComponents()) {              
                 //Only the Patient tab passed by parameter gets the title updated
-                if(comp.equals(recordEditorPanel)) {
+                if (comp.equals(recordEditorPanel)) {
                     //We also update the Patient title in the "Tumour linked to" combobox.
                     //This Patient title will likely be present in several tumour tabs.
                     for(Component tumourComp : this.tumourTabbedPane.getComponents()) {
@@ -513,14 +527,14 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 index++;
             }
             
-            if(!titleSet) {
+            if (!titleSet) {
                 Object patno = dbr.getVariable(globalToolBox
                         .translateStandardVariableNameToDatabaseListElement(Globals
                                 .StandardVariableNames.PatientID.toString()).getDatabaseVariableName());
                 String patnoString;// = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
-                if(patno != null) {
+                if (patno != null) {
                     patnoString = patno.toString();
-                    if(patnoString.length() > 0) {
+                    if (patnoString.length() > 0) {
                         this.setTitle(java.util.ResourceBundle
                                 .getBundle("canreg/client/gui/dataentry2/resources/RecordEditor")
                                 .getString("PATIENT ID:") + patnoString);
@@ -532,23 +546,23 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         
         //This method is NEVER called with a Tumour passed as parameter, but we
         //leave this here as legacy code in case we want to change the tumours tab titles
-        else if(dbr instanceof Tumour) {
+        else if (dbr instanceof Tumour) {
             // tumourRecords.add(dbr);
             Object regno = dbr.getVariable(globalToolBox
                     .translateStandardVariableNameToDatabaseListElement(Globals
                             .StandardVariableNames.TumourID.toString()).getDatabaseVariableName());
             String regnoString = java.util.ResourceBundle
                     .getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
-            if(regno != null) {
+            if (regno != null) {
                 regnoString = regno.toString();
-                if(regnoString.length() == 0) {
+                if (regnoString.length() == 0) {
                     regnoString = java.util.ResourceBundle
                             .getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
                 }
             }
             int index = 0;
             for(Component comp : tumourTabbedPane.getComponents()) {
-                if(comp.equals(recordEditorPanel)) 
+                if (comp.equals(recordEditorPanel)) 
                     tumourTabbedPane.setTitleAt(index, dbr.toString() + ": " + regnoString);                
                 index++;
             }
@@ -883,7 +897,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             Tumour tumour = (Tumour) tumourRecord.getDatabaseRecord();
             boolean obsolete = tumour.getVariable(tumourObsoleteVariableName)
                                      .toString().equalsIgnoreCase(Globals.OBSOLETE_VALUE);
-            if( ! obsolete) 
+            if ( ! obsolete) 
                 totalTumours++;           
         }
         
@@ -907,13 +921,13 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor")
                                         .getString("PERMANENTLY DELETE RECORD?"));
         JTabbedPane tabbedPane = null;
-        if(option == JOptionPane.YES_OPTION) {
+        if (option == JOptionPane.YES_OPTION) {
             DatabaseRecord record = recordEditorPanel.getDatabaseRecord();
             boolean success = deleteRecord(record);
-            if(success) {
-                if(record instanceof Patient) 
+            if (success) {
+                if (record instanceof Patient) 
                     tabbedPane = patientTabbedPane;
-                else if(record instanceof Tumour)
+                else if (record instanceof Tumour)
                     tabbedPane = tumourTabbedPane;                
                 tabbedPane.remove((Component) recordEditorPanel);
                 JOptionPane.showInternalMessageDialog(this,
@@ -1058,8 +1072,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             //There's no linked patient. If there's only one patient tab then we
             //automatically link the tumour to that patient. If there's more than
             //one tab patient then we ask the user to select a patient.
-            if(linkedPatient == null) {
-                if(this.patientTabbedPane.getTabCount() > 1)
+            if (linkedPatient == null) {
+                if (this.patientTabbedPane.getTabCount() > 1)
                     throw new SaveRecordException(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor")
                                                                           .getString("PLEASE SELECT PATIENT RECORD FIRST."));
                 else {
@@ -1074,17 +1088,17 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             RecordEditorPatient patientRecordEditorPanel = null;
             DatabaseRecord patientDatabaseRecord = null;
             for(int i = 0; i < this.patientTabbedPane.getTabCount(); i++) {
-                if(this.patientTabbedPane.getTitleAt(i).equals(linkedPatient))
+                if (this.patientTabbedPane.getTitleAt(i).equals(linkedPatient))
                     patientRecordEditorPanel = (RecordEditorPatient) this.patientTabbedPane.getComponentAt(i);
             }
-            if(patientRecordEditorPanel == null)                
+            if (patientRecordEditorPanel == null)                
                 throw new SaveRecordException(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor")
                                                                       .getString("PATIENT NOT OPEN."));
             else
                 patientDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
             
             OK = associateTumourRecordToPatientRecord(databaseRecord, patientDatabaseRecord);
-            if( ! OK) 
+            if ( ! OK) 
                 throw new SaveRecordException(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor")
                                                                       .getString("PLEASE SAVE PATIENT RECORD FIRST."));                            
         } else if (databaseRecord instanceof Patient) {
@@ -1104,14 +1118,14 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             } else 
                 databaseRecord.setVariable(patientIDVariableName, patientID);            
         }
-        if(OK){
+        if (OK){
             try {
                 databaseRecord = saveRecord(databaseRecord); 
                                                                
                 //false is passed as the second parameter because if we get up to
                 //here, then the record has already been succesfully saved in the database :)
                 recordEditorPanel.refreshDatabaseRecord(databaseRecord, false); 
-                if(databaseRecord instanceof Patient) {
+                if (databaseRecord instanceof Patient) {
                     addToPatientMap((RecordEditorPatient) recordEditorPanel, databaseRecord);
                     // String ID = (String) databaseRecord.getVariable(patientIDVariableName);
                                         
@@ -1426,7 +1440,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             String content = record.getVariableAsString(varb);
             DatabaseVariablesListElement databaseVariable = map.get(varb);
             if (!content.trim().isEmpty() && skippable.contains(canreg.common.Tools.toLowerCaseStandardized(varb))) {
-                if(!numbers.contains(canreg.common.Tools.toLowerCaseStandardized(varb)))
+                if (!numbers.contains(canreg.common.Tools.toLowerCaseStandardized(varb)))
                     searchStringComponents.add(varb + "=" + content);
                 else 
                     searchStringComponents.add(varb + " LIKE " + "'%" + content + "%'");                
@@ -1759,7 +1773,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
     private void tumourTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tumourTabbedPaneStateChanged
         RecordEditorTumour tumourTab = (RecordEditorTumour) tumourTabbedPane.getSelectedComponent();
-        if(tumourTab != null)
+        if (tumourTab != null)
             this.tumourObsoleteToggleButton.setSelected(this.obsoleteToggles.get(tumourTab));
     }//GEN-LAST:event_tumourTabbedPaneStateChanged
 

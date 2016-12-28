@@ -117,11 +117,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
         this.actionListener = listener;
         this.recordEditor = recordEditor;
         this.changesMap = new HashMap<VariableEditorPanel, Boolean>();
-
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
-        //saveButton.setEnabled(true);
-        // setChecksResultCode(resultCode);
-        // Remove this for now?
+
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
 
         dateFormat = new SimpleDateFormat(Globals.DATE_FORMAT_STRING);
@@ -129,6 +126,12 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class)
                 .getContext().getResourceMap(RecordEditorTumour.class);
+    }
+    
+    @Override
+    public RecordEditorTumour clone() throws CloneNotSupportedException {
+        RecordEditorTumour clone = (RecordEditorTumour) super.clone();
+        return clone();
     }
     
     @Override
@@ -183,14 +186,14 @@ public class RecordEditorTumour extends javax.swing.JPanel
             if (resultCode == null) 
                 resultCode = ResultCode.NotDone;            
             databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(),
-                    CheckResult.toDatabaseVariable(resultCode));
+                                       CheckResult.toDatabaseVariable(resultCode));
         }
     }
     
     private void buildPanel() {
         dataPanel.removeAll();
 
-        if(variableEditorPanels != null) 
+        if (variableEditorPanels != null) 
             for (VariableEditorPanelInterface vep : variableEditorPanels.values()) 
                 vep.removeListener();            
         
@@ -203,11 +206,11 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
             String variableType = currentVariable.getVariableType();
 
-            if(Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)) 
+            if (Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)) 
                 vep = new DateVariableEditorPanel(this);
-            else if(Globals.VARIABLE_TYPE_TEXT_AREA_NAME.equalsIgnoreCase(variableType)) 
+            else if (Globals.VARIABLE_TYPE_TEXT_AREA_NAME.equalsIgnoreCase(variableType)) 
                 vep = new TextFieldVariableEditorPanel(this);
-            else if(currentVariable.getDictionaryID() >= 0 && dictionary.get(currentVariable.getDictionaryID()) != null)
+            else if (currentVariable.getDictionaryID() >= 0 && dictionary.get(currentVariable.getDictionaryID()) != null)
                 vep = new DictionaryVariableEditorPanel(this);
             else 
                 vep = new VariableEditorPanel(this);            
@@ -215,9 +218,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
             vep.setDatabaseVariablesListElement(currentVariable);
 
             int dictionaryID = currentVariable.getDictionaryID();
-            if(dictionaryID >= 0) {
+            if (dictionaryID >= 0) {
                 Dictionary dic = dictionary.get(dictionaryID);
-                if(dic != null)            
+                if (dic != null)            
                     ((DictionaryVariableEditorPanel)vep).setDictionary(dic);                
             } else {
                 //vep.setDictionary(null);
@@ -225,16 +228,16 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
             String variableName = currentVariable.getDatabaseVariableName();
             Object variableValue = databaseRecord.getVariable(variableName);
-            if(variableValue != null) 
+            if (variableValue != null) 
                 vep.setInitialValue(variableValue.toString());            
 
             String variableFillStatus = currentVariable.getFillInStatus();
-            if(Globals.FILL_IN_STATUS_AUTOMATIC_STRING.equalsIgnoreCase(variableFillStatus)) 
+            if (Globals.FILL_IN_STATUS_AUTOMATIC_STRING.equalsIgnoreCase(variableFillStatus)) 
                 autoFillList.add(currentVariable);
             
             Integer groupID = currentVariable.getGroupID();
             //Skip 0 and -1 - System groups
-            if(groupID > 0) {
+            if (groupID > 0) {
                 VariableEditorGroupPanel panel = groupIDtoPanelMap.get(groupID);
                 if (panel == null) {
                     panel = new VariableEditorGroupPanel();
@@ -256,18 +259,18 @@ public class RecordEditorTumour extends javax.swing.JPanel
         for(DatabaseGroupsListElement groupListElement : groupListElements) {
             int groupID = groupListElement.getGroupIndex();
             JPanel panel = groupIDtoPanelMap.get(groupID);
-            if(panel != null) {
+            if (panel != null) {
                 dataPanel.add(panel);
                 panel.setVisible(true);
             }
         }
 
-        if(panelType == panelTypes.TUMOUR) {
+        if (panelType == panelTypes.TUMOUR) {
             Tumour tumour = (Tumour) databaseRecord;
             this.setSources(tumour.getSources());
             refreshSequence();
         }
-        if(panelType != panelTypes.SOURCE) {
+        if (panelType != panelTypes.SOURCE) {
             refreshObsoleteStatus(databaseRecord);
             refreshRecordStatus(databaseRecord);
             refreshCheckStatus(databaseRecord);
@@ -275,45 +278,39 @@ public class RecordEditorTumour extends javax.swing.JPanel
         refreshUpdatedBy();
         dataPanel.revalidate();
         dataPanel.repaint();
-    }
-    
-    //This is never used
-    /*@Action
-    public void calculateAge() {
-        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CALC_AGE));
-    }*/
+    }       
             
     private void changesDone(Object source) {
-        if(checkResultCodeBeforeChanges == null)
+        //We save the previous code and status, so we can go back to them
+        //if changes are reversed.
+        if (checkResultCodeBeforeChanges == null)
             checkResultCodeBeforeChanges = resultCode;
-        if(recordStatusBeforeChanges == null)
+        if (recordStatusBeforeChanges == null)
             recordStatusBeforeChanges = (String) databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
 
-        if(source instanceof VariableEditorPanel) {
+        if (source instanceof VariableEditorPanel) {
             VariableEditorPanel vep = (VariableEditorPanel) source;
             this.changesMap.put(vep, vep.hasChanged());
+            
+            //If at least 1 vep has changes, then checks and status are set
+            //to "not done".
             boolean vepsWithChanges = false;
             for(Boolean vepChanges : this.changesMap.values()) 
                 vepsWithChanges = vepsWithChanges || vepChanges;
             setSaveNeeded(vepsWithChanges);
-            if(vepsWithChanges)
+            if (vepsWithChanges)
                 setChecksResultCode(ResultCode.NotDone);                               
             else {
-                setChecksResultCode(checkResultCodeBeforeChanges);
                 databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusBeforeChanges);
-                recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recordStatusBeforeChanges)); 
+                setChecksResultCode(checkResultCodeBeforeChanges);
+                
+                //recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recordStatusBeforeChanges)); 
             }
         } else {
             setSaveNeeded(true);
             setChecksResultCode(ResultCode.NotDone);
         }
-    }    
-    
-    @Override
-    public RecordEditorTumour clone() throws CloneNotSupportedException {
-        RecordEditorTumour clone = (RecordEditorTumour) super.clone();
-        return clone();
-    }        
+    }                    
     
     @Override
     public LinkedList<DatabaseVariablesListElement> getAutoFillList() {
@@ -330,7 +327,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
         this.sources = sources;
         buildTabs();
         refreshTitles();
-        //setScrollPaneSize();
     }
     
     public Set<Source> getSources() {        
@@ -364,7 +360,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
         sources.add(newSource);
         sourcesTabbedPane.add(newPanel);
         refreshTitles();
-        //setScrollPaneSize();
     }
     
     @Action
@@ -376,12 +371,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
     }
     
     private void refreshTitles() {
-        int index = 0;
-        for(Component comp : sourcesTabbedPane.getComponents()) {
+        for(int index = 0 ; index < sourcesTabbedPane.getComponentCount(); index++)
             sourcesTabbedPane.setTitleAt(index, java.util.ResourceBundle
                     .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorSource").getString("SOURCE:_") + (index + 1));
-            index++;
-        }
     }
     
     @Override
@@ -390,9 +382,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
             VariableEditorPanelInterface panel = variableEditorPanels.get(databaseVariablesListElement.getDatabaseVariableName());
             if (panel != null) 
                 hasChanged = hasChanged || panel.hasChanged();  
-            //Whenever hasChanged is true, than it will never turn to false.
             //We break, so we don't have to check all the panels, is pointless.
-            if(hasChanged)
+            if (hasChanged)
                 break;
         }
         return hasChanged;
@@ -417,7 +408,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         //Called when a field's "value" property changes.
         else if ("value".equals(propName)) {
             setSaveNeeded(true);
-            //Temporarily disabled
+
             //COMMENTED: doesn't do anything on this actionListener's implementation of CHANGED (RecordEditor)
             //actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
             // saveButton.setEnabled(saveNeeded);
@@ -520,7 +511,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
         setSaveNeeded(false);
         groupListElements = Tools.getGroupsListElements(doc, Globals.NAMESPACE);
         if (databaseRecord.getClass().isInstance(new Tumour())) {
-            //panelType = panelTypes.TUMOUR;
             recordStatusVariableListElement =
                     globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
             obsoleteFlagVariableListElement =
@@ -556,7 +546,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         String tableName = null;
 
-        if(panelType != null) switch (panelType) {
+        if (panelType != null) switch (panelType) {
             case PATIENT:                
                 throw new IllegalArgumentException("This should be a Tumour panelType, not a Patient.");
             case TUMOUR:
@@ -687,14 +677,14 @@ public class RecordEditorTumour extends javax.swing.JPanel
     public void addLinkablePatient(String patientTitle) {                                
         DefaultComboBoxModel model = (DefaultComboBoxModel) this.patientsComboBox.getModel();
         //That patient cannot be previosly loaded in the combobox
-        if(patientTitle != null &&
+        if (patientTitle != null &&
            ! patientTitle.isEmpty() &&
            model.getIndexOf(patientTitle) == -1) {
             //Another method might be already handling the flag avoidPatientsComboBoxListener, 
-            //so we have to make sure to leave it as it was.
+            //so we have to make sure to leave it as it was when we finish here.
             boolean previousAvoidStatus = this.avoidPatientsComboBoxListener;
-            
             this.avoidPatientsComboBoxListener = true;
+            
             this.patientsComboBox.addItem(patientTitle);
                                     
             //Select this new patient if it's already linked to this tumour
@@ -702,7 +692,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
             String tumourPatientID = (String) tumourRecord.getVariable(globalToolBox
                              .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString())
                              .getDatabaseVariableName());
-            if(tumourPatientID != null && ! tumourPatientID.isEmpty() && patientTitle.contains(tumourPatientID))
+            if (tumourPatientID != null && ! tumourPatientID.isEmpty() && patientTitle.contains(tumourPatientID))
                this.setLinkedPatient(patientTitle);
             
             this.avoidPatientsComboBoxListener = previousAvoidStatus;
@@ -717,7 +707,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     public void setLinkedPatient(String patientTitle) {
         DefaultComboBoxModel model = (DefaultComboBoxModel) this.patientsComboBox.getModel();
         int index = model.getIndexOf(patientTitle);
-        if(index != -1) {            
+        if (index != -1) {            
             //this.avoidPatientsComboBoxListener = avoidComboListener;
             this.patientsComboBox.setSelectedIndex(index);
             //this.avoidPatientsComboBoxListener = false;
@@ -733,7 +723,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
      * @return 
      */
     public String getLinkedPatient() {
-        if(this.patientsComboBox.getSelectedIndex() != -1 &&
+        if (this.patientsComboBox.getSelectedIndex() != -1 &&
            this.patientsComboBox.getSelectedItem() != null)
             return (String) this.patientsComboBox.getSelectedItem();
         return null;
@@ -748,11 +738,11 @@ public class RecordEditorTumour extends javax.swing.JPanel
     public void replaceLinkablePatient(String toBeReplaced, String replacer) {
         this.avoidPatientsComboBoxListener = true;
         boolean selectAfterReplace = false;
-        if(this.getLinkedPatient().equals(toBeReplaced))
+        if (this.getLinkedPatient().equals(toBeReplaced))
             selectAfterReplace = true;
-        if(this.removeLinkablePatient(toBeReplaced)) {
+        if (this.removeLinkablePatient(toBeReplaced)) {
             this.addLinkablePatient(replacer);
-            if(selectAfterReplace)
+            if (selectAfterReplace)
                 this.setLinkedPatient(replacer);
         }      
         this.avoidPatientsComboBoxListener = false;
@@ -767,14 +757,14 @@ public class RecordEditorTumour extends javax.swing.JPanel
     public boolean removeLinkablePatient(String patientTitle) {
         int beforeRemoving = this.patientsComboBox.getItemCount();
                 
-        if( ! this.getLinkedPatient().equals(patientTitle))
+        if ( ! this.getLinkedPatient().equals(patientTitle))
             this.avoidPatientsComboBoxListener = true;
             
         this.patientsComboBox.removeItem(patientTitle);
         
         this.avoidPatientsComboBoxListener = false;
         
-        if(this.patientsComboBox.getItemCount() != beforeRemoving)
+        if (this.patientsComboBox.getItemCount() != beforeRemoving)
             return true;
         return false;
     }
@@ -811,7 +801,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         this.resultCode = resultCode;
         boolean canBeConfirmed = false;
         
-        if(resultCode == null || resultCode == ResultCode.NotDone) {            
+        if (resultCode == null || resultCode == ResultCode.NotDone) {            
             checksButton.setText(resourceMap.getString("checksPanel.border.title") + " " +
                     java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("NOT_DONE"));
             //Red colored border
@@ -822,32 +812,32 @@ public class RecordEditorTumour extends javax.swing.JPanel
                     java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour")
                             .getString("DONE:_") + resultCode.toString());  
             
-            if(resultCode == ResultCode.OK || resultCode == ResultCode.Query) {
+            if (resultCode == ResultCode.OK || resultCode == ResultCode.Query) {
                 //Green colored border
                 checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(32, 166, 72), 2));
                 canBeConfirmed = true;
-            } else if(resultCode == ResultCode.Rare) {
+            } else if (resultCode == ResultCode.Rare) {
                 //Yellow colored border
                 checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 0), 2));
-                if(CanRegClientApp.getApplication().getUserRightLevel() == Globals.UserRightLevels.SUPERVISOR) 
+                if (CanRegClientApp.getApplication().getUserRightLevel() == Globals.UserRightLevels.SUPERVISOR) 
                     canBeConfirmed = true;                
             }
         }
         // Set record status
-        if(recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
+        if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
             String recStatus;
-            if(hasChanged) 
+            if (hasChanged) 
                 recStatus = "0";
             else 
                 recStatus = (String) databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
            
-            if(canBeConfirmed) {
+            if (canBeConfirmed) {
                 recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithConfirmArray));
-                if(recStatus != null) 
+                if (recStatus != null) 
                     recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));                
             } else {
                 recordStatusComboBox.setModel(new DefaultComboBoxModel(recStatusDictWithoutConfirmArray));
-                if(recStatus != null) 
+                if (recStatus != null) 
                     recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recStatus));                
             }
             databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recStatus);
@@ -1199,7 +1189,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     }// </editor-fold>//GEN-END:initComponents
 
     private void patientsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientsComboBoxActionPerformed
-        if( ! this.avoidPatientsComboBoxListener)
+        if ( ! this.avoidPatientsComboBoxListener)
             this.setSaveNeeded(true);
     }//GEN-LAST:event_patientsComboBoxActionPerformed
 

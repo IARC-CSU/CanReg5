@@ -202,7 +202,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     private void lookUpAndSetDescription() throws NullPointerException {
         if (codeTextField.getText().trim().length() > 0) { 
                 try {
-                    if(dictionary.isCompoundDictionary() && 
+                    if (dictionary.isCompoundDictionary() && 
                        codeTextField.getText().length() >= dictionary.getCodeLength()) {
                         
                         String code = codeTextField.getText();
@@ -216,12 +216,12 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                         codeTextField.setText(code);
                         avoidActionPerformed = false;
                     }
-                    if(dictionary.isCompoundDictionary()) {
-                        if(codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
+                    if (dictionary.isCompoundDictionary()) {
+                        if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
                             descriptionCombo.setSelectedItem(
                                 dictionary.getDictionaryEntries().get(codeTextField.getText()));
                     } else {
-                        if(codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
+                        if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
                             descriptionCombo.setSelectedItem(dictionary.getDictionaryEntries().get(codeTextField.getText()));
                     }
                         
@@ -232,7 +232,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     }
     
     public void setDictionary(Dictionary dictionary) {
-        if(dictionary == null) 
+        if (dictionary == null) 
             return;        
         
         //avoidActionPerformed = true;
@@ -244,13 +244,13 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         descriptionCombo.removeActionListener(descriptionComboListener);
         
         this.dictionary = dictionary;
-        if(dictionary.isCompoundDictionary())
+        if (dictionary.isCompoundDictionary())
             //categoryCombo is inside the jPanel4
             jPanel4.setVisible(true);
         else
             jPanel4.setVisible(false);       
                 
-        if(dictionary.getDictionaryEntries() == null) {          
+        if (dictionary.getDictionaryEntries() == null) {          
             categoryCombo.setModel(
                     new javax.swing.DefaultComboBoxModel(
                             new String[] {java.util.ResourceBundle
@@ -266,11 +266,11 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             LinkedList<DictionaryEntry> categoryPossibleValuesCollection = new LinkedList<DictionaryEntry>();
             LinkedList<DictionaryEntry> descriptionPossibleValuesCollection = new LinkedList<DictionaryEntry>();
                   
-            if(dictionary.isCompoundDictionary()) {                                
+            if (dictionary.isCompoundDictionary()) {                                
                 for(DictionaryEntry entry : dictionary.getDictionaryEntries().values()) {                    
-                    if(entry.getCode().length() < dictionary.getFullDictionaryCodeLength()) 
+                    if (entry.getCode().length() < dictionary.getFullDictionaryCodeLength()) 
                         categoryPossibleValuesCollection.add(entry);                   
-                    else if(entry.getCode().length() == dictionary.getFullDictionaryCodeLength())
+                    else if (entry.getCode().length() == dictionary.getFullDictionaryCodeLength())
                         descriptionPossibleValuesCollection.add(entry);                    
                 }
                           
@@ -316,7 +316,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                                JComboBox combo, 
                                List<DictionaryEntry> values) {
         EventList<DictionaryEntry> possibleValuesEventList = new BasicEventList<DictionaryEntry>(values);
-        if(compSup != null) {
+        if (compSup != null) {
             compSup.uninstall();
             //gc should clean it
             compSup = null;
@@ -334,8 +334,8 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
      */
     @Override
     public void actionPerformed(ActionEvent e) {    
-        if(! avoidActionPerformed) {
-            if(e.getActionCommand().equalsIgnoreCase(MaxLengthDocument.MAX_LENGTH_ACTION_STRING)) {
+        if (! avoidActionPerformed) {
+            if (e.getActionCommand().equalsIgnoreCase(MaxLengthDocument.MAX_LENGTH_ACTION_STRING)) {
                 try {
                     lookUpAndSetDescription();
                 } catch (NullPointerException ne) {
@@ -389,9 +389,9 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     @Override
     protected void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {
         if (dictionary != null && evt.getKeyChar() == '?') {
-            if(categoryCombo.isVisible())
+            if (categoryCombo.isVisible())
                 this.categoryCombo.showPopup();
-            else if(descriptionCombo.isVisible())
+            else if (descriptionCombo.isVisible())
                 this.descriptionCombo.showPopup();            
         } else if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
             transferFocusToNext();
@@ -404,7 +404,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
      * @param evt 
      */
     private void descriptionToggleItemStateChanged(java.awt.event.ItemEvent evt) {                                                
-        if(sortToggle.isSelected()) {            
+        if (sortToggle.isSelected()) {            
             sortToggle.setBackground(ORDER_DESCRIPTION_COLOR);
             sortToggle.setIcon(resourceMap.getIcon("sortBy.icon.description")); // NOI18N
             sortToggle.setToolTipText(resourceMap.getString("sortByLabel.text") + " " + 
@@ -412,7 +412,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             
             descriptionComboCompSup = this.changeComboListSorting(descriptionComboCompSup, descriptionCombo, true);
                         
-            if(dictionary.isCompoundDictionary()) {
+            if (dictionary.isCompoundDictionary()) {
                 categoryCombo.removeActionListener(categoryComboListener);
                 categoryComboCompSup = this.changeComboListSorting(categoryComboCompSup, categoryCombo, true);
                 categoryCombo.addActionListener(categoryComboListener);
@@ -425,7 +425,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
            
             descriptionComboCompSup = this.changeComboListSorting(descriptionComboCompSup, descriptionCombo, false);
                         
-            if(dictionary.isCompoundDictionary()) {        
+            if (dictionary.isCompoundDictionary()) {        
                 categoryCombo.removeActionListener(categoryComboListener);
                 categoryComboCompSup = this.changeComboListSorting(categoryComboCompSup, categoryCombo, false);
                 categoryCombo.addActionListener(categoryComboListener);
@@ -450,12 +450,12 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         //List<DictionaryEntry> newValuesList = new LinkedList<DictionaryEntry>() {};
         for(int i = 0; i < combo.getItemCount(); i++) {            
             DictionaryEntry entry = compSup.getItemList().get(i);
-            if(sortByCode)
+            if (sortByCode)
                 entry.setSortByCode();
             else
                 entry.setSortByDescription();            
         }                 
-        if(combo.isPopupVisible()) {
+        if (combo.isPopupVisible()) {
             combo.hidePopup();
             combo.revalidate();
             combo.repaint();
@@ -476,7 +476,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
      * @param evt 
      */
     private void categoryComboActionPerformed(java.awt.event.ActionEvent evt) {                                              
-        if(categoryCombo.getSelectedItem() != null) { 
+        if (categoryCombo.getSelectedItem() != null) { 
             String categoryCode = null;
             try {
                 categoryCode = ((DictionaryEntry) categoryCombo.getSelectedItem()).getCode();
@@ -484,7 +484,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 setDictionary(dictionary);
             }
 
-            if(categoryCode != null) {                
+            if (categoryCode != null) {                
                 //avoidActionPerformed = true;
                 codeTextField.setText("");
                 avoidActionPerformed = false;
@@ -513,7 +513,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             LinkedList<DictionaryEntry> descriptionPossibleValuesCollection = new LinkedList<DictionaryEntry>();
             
             for(DictionaryEntry entry : dictionary.getDictionaryEntries().values()) {
-                if(entry.getCode().length() == dictionary.getFullDictionaryCodeLength())
+                if (entry.getCode().length() == dictionary.getFullDictionaryCodeLength())
                     descriptionPossibleValuesCollection.add(entry);                    
             }
             
@@ -535,7 +535,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
      * @param evt 
      */
     private void descriptionComboActionPerformed(java.awt.event.ActionEvent evt) {                                              
-        if(descriptionCombo.getSelectedItem() != null) {
+        if (descriptionCombo.getSelectedItem() != null) {
             String descriptionCode = null;
             try {
                  descriptionCode = ((DictionaryEntry) descriptionCombo.getSelectedItem()).getCode();
@@ -550,13 +550,13 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 avoidActionPerformed = false;                
                 return;
             }
-            if(descriptionCode != null) {
-                if(dictionary.isCompoundDictionary() /*&& categoryCombo.getSelectedIndex() == -1*/) {                    
+            if (descriptionCode != null) {
+                if (dictionary.isCompoundDictionary() /*&& categoryCombo.getSelectedIndex() == -1*/) {                    
                     DictionaryEntry categoryEntry = DictionaryHelper.
                             getDictionaryEntryBestMatchingSubcode(descriptionCode, 
                                                                   dictionary.getDictionaryEntries()
                                                                     .values().toArray(new DictionaryEntry[0]));
-                    if(categoryEntry != null) {
+                    if (categoryEntry != null) {
                         categoryCombo.removeActionListener(categoryComboListener);
                         categoryCombo.setSelectedItem(categoryEntry);
                         categoryCombo.addActionListener(categoryComboListener);
@@ -595,12 +595,12 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     private void categoryComboBoxKeyTyped(java.awt.event.KeyEvent evt) {
         categoryComboActionPerformed(null);
         
-        if(evt.getKeyChar() == KeyEvent.VK_ENTER ||
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER ||
            evt.getKeyChar() == KeyEvent.VK_TAB)             
             KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
         
         //Change the sorting
-        else if(evt.getKeyChar() == '+') {
+        else if (evt.getKeyChar() == '+') {
             evt.consume();
             this.sortToggle.doClick();
         }
@@ -609,12 +609,12 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     private void descriptionComboBoxKeyTyped(java.awt.event.KeyEvent evt) {
         descriptionComboActionPerformed(null);
 
-        if(evt.getKeyChar() == KeyEvent.VK_ENTER ||
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER ||
            evt.getKeyChar() == KeyEvent.VK_TAB) 
             KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
         
         //Change the sorting
-        else if(evt.getKeyChar() == '+') {
+        else if (evt.getKeyChar() == '+') {
             evt.consume();
             this.sortToggle.doClick();
         }

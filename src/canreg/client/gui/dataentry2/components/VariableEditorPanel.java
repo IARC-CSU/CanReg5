@@ -158,8 +158,8 @@ public class VariableEditorPanel extends javax.swing.JPanel
     public synchronized Object getValue() {
         Object valueObject = null;
         String valueString = codeTextField.getText();
-        if(databaseListElement.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
-            if(valueString.trim().length() > 0) {
+        if (databaseListElement.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
+            if (valueString.trim().length() > 0) {
                 try {
                     valueObject = Integer.parseInt(valueString.trim());
                 } catch (NumberFormatException numberFormatException) {
@@ -243,8 +243,8 @@ public class VariableEditorPanel extends javax.swing.JPanel
     protected void checkForChanges() {
         try {
             Object currentValue = getValue();
-            if(listener != null) {
-                if((currentValue != null && !currentValue.equals(initialValue)) ||
+            if (listener != null) {
+                if ((currentValue != null && !currentValue.equals(initialValue)) ||
                    (initialValue != null && !initialValue.equals(currentValue))) 
                     hasChanged = true;
                 else 
@@ -271,7 +271,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
 
     protected void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {
         this.checkForChanges();
-        if(evt.getKeyChar() == KeyEvent.VK_ENTER) 
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER) 
             transferFocusToNext();        
     }
     

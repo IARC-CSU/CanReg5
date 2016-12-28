@@ -210,7 +210,7 @@ public class RecordEditorSource extends javax.swing.JPanel
                 vep = new DateVariableEditorPanel(this);
             else if (Globals.VARIABLE_TYPE_TEXT_AREA_NAME.equalsIgnoreCase(variableType)) 
                 vep = new TextFieldVariableEditorPanel(this);
-            else if(currentVariable.getDictionaryID() >= 0 && dictionary.get(currentVariable.getDictionaryID()) != null)
+            else if (currentVariable.getDictionaryID() >= 0 && dictionary.get(currentVariable.getDictionaryID()) != null)
                 vep = new DictionaryVariableEditorPanel(this);
             else 
                 vep = new VariableEditorPanel(this);            
@@ -383,7 +383,7 @@ public class RecordEditorSource extends javax.swing.JPanel
                 hasChanged = hasChanged || panel.hasChanged();  
             //Whenever hasChanged is true, than it will never turn to false.
             //We break, so we don't have to check all the panels, is pointless.
-            if(hasChanged)
+            if (hasChanged)
                 break;
         }
         return hasChanged;
