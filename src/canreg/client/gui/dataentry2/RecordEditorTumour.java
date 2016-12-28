@@ -109,6 +109,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private HashMap<VariableEditorPanel, Boolean> changesMap;
     private ResultCode checkResultCodeBeforeChanges;
     private String recordStatusBeforeChanges;
+    //The patient to which this tumour is linked to
+    private RecordEditorPatient patient;
     
     
     public RecordEditorTumour(ActionListener listener, 
@@ -138,7 +140,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(VariableEditorPanelInterface.CHANGED_STRING)) {           
             changesDone(e.getSource());
-            
             //COMMENTED: this situation is also comented on RecordEditor (the class acting
             //as this actionListener), so it really does nothing at all.
             //actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
@@ -146,6 +147,10 @@ public class RecordEditorTumour extends javax.swing.JPanel
             // pass it on
             actionListener.actionPerformed(e);
         }
+    }
+    
+    public void setPatientRecord(RecordEditorPatient patient) {
+        this.patient = patient;
     }
     
     private void buildDatabaseRecord() {
@@ -192,6 +197,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     
     private void buildPanel() {
         dataPanel.removeAll();
+        this.changesMap = new HashMap<VariableEditorPanel, Boolean>();
 
         if (variableEditorPanels != null) 
             for (VariableEditorPanelInterface vep : variableEditorPanels.values()) 
@@ -280,7 +286,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         dataPanel.repaint();
     }       
             
-    private void changesDone(Object source) {
+    public void changesDone(Object source) {
         //We save the previous code and status, so we can go back to them
         //if changes are reversed.
         if (checkResultCodeBeforeChanges == null)
@@ -449,6 +455,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
         refreshCheckStatus(record);
         refreshRecordStatus(record);
         refreshUpdatedBy();
+        
+        if(this.patient != null)
+            patient.refreshDatabaseRecord(this.patient.getDatabaseRecord(), isSaveNeeded);
     }
     
    /**
@@ -692,6 +701,10 @@ public class RecordEditorTumour extends javax.swing.JPanel
             String tumourPatientID = (String) tumourRecord.getVariable(globalToolBox
                              .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString())
                              .getDatabaseVariableName());
+            
+            //This only takes care of linking the patient and the tumour when 
+            //the tumour is NOT brand new. If the tumour is new, then the linkage 
+            //is resolved in RecordEditor.addRecord()
             if (tumourPatientID != null && ! tumourPatientID.isEmpty() && patientTitle.contains(tumourPatientID))
                this.setLinkedPatient(patientTitle);
             
@@ -705,12 +718,24 @@ public class RecordEditorTumour extends javax.swing.JPanel
      * loaded, if not a IllegalArgumentException() will be thrown).
      */
     public void setLinkedPatient(String patientTitle) {
+        this.setLinkedPatient(patientTitle, false);
+    }
+    
+    /**
+     * Changes the selection of linked patient in the combobox.
+     * @param patientTitle the patient to be selected (it has to be previously
+     * loaded, if not a IllegalArgumentException() will be thrown).
+     * @param avoidComboboxListener true if the caller wants to avoid the patient linkage
+     * combobox listener. This is useful when the caller wants to link the tumour to 
+     * a patient but don't consider this as a change on the tumour. 
+     */
+    public void setLinkedPatient(String patientTitle, boolean avoidComboboxListener) {
         DefaultComboBoxModel model = (DefaultComboBoxModel) this.patientsComboBox.getModel();
         int index = model.getIndexOf(patientTitle);
         if (index != -1) {            
-            //this.avoidPatientsComboBoxListener = avoidComboListener;
+            this.avoidPatientsComboBoxListener = avoidComboboxListener;
             this.patientsComboBox.setSelectedIndex(index);
-            //this.avoidPatientsComboBoxListener = false;
+            this.avoidPatientsComboBoxListener = false;
         }            
         else
             throw new IllegalArgumentException("The patient " + patientTitle + " has not been previously loaded in the combobox.");
@@ -935,7 +960,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         systemPanel.setLayout(new javax.swing.BoxLayout(systemPanel, javax.swing.BoxLayout.LINE_AXIS));
         systemPanel.add(filler4);
 
-        jPanel1.setMaximumSize(new java.awt.Dimension(10000, 95));
+        jPanel1.setMaximumSize(new java.awt.Dimension(32767, 95));
         jPanel1.setPreferredSize(new java.awt.Dimension(130, 50));
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -943,16 +968,18 @@ public class RecordEditorTumour extends javax.swing.JPanel
         checksButton.setText(resourceMap.getString("checksButton.text")); // NOI18N
         checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 2));
         checksButton.setFocusable(false);
-        checksButton.setMaximumSize(new java.awt.Dimension(225, 45));
-        checksButton.setPreferredSize(new java.awt.Dimension(27, 25));
+        checksButton.setMaximumSize(new java.awt.Dimension(32767, 45));
+        checksButton.setMinimumSize(new java.awt.Dimension(20, 21));
+        checksButton.setPreferredSize(new java.awt.Dimension(130, 25));
         jPanel1.add(checksButton);
         jPanel1.add(filler1);
 
         mpButton.setAction(actionMap.get("runMultiplePrimarySearch")); // NOI18N
         mpButton.setText(resourceMap.getString("mpPanel.border.title")); // NOI18N
         mpButton.setFocusable(false);
-        mpButton.setMaximumSize(new java.awt.Dimension(225, 45));
-        mpButton.setMinimumSize(new java.awt.Dimension(93, 21));
+        mpButton.setMaximumSize(new java.awt.Dimension(32767, 45));
+        mpButton.setMinimumSize(new java.awt.Dimension(27, 21));
+        mpButton.setPreferredSize(new java.awt.Dimension(130, 25));
         jPanel1.add(mpButton);
 
         systemPanel.add(jPanel1);
@@ -1018,9 +1045,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         recordStatusComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         recordStatusComboBox.setFocusable(false);
-        recordStatusComboBox.setMaximumSize(new java.awt.Dimension(250, 32767));
+        recordStatusComboBox.setMaximumSize(new java.awt.Dimension(250, 38));
+        recordStatusComboBox.setMinimumSize(new java.awt.Dimension(31, 15));
         recordStatusComboBox.setName("recordStatusComboBox"); // NOI18N
-        recordStatusComboBox.setPreferredSize(new java.awt.Dimension(31, 30));
         jPanel3.add(recordStatusComboBox);
 
         recordStatusPanel.add(jPanel3);
@@ -1163,7 +1190,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1072, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1304, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

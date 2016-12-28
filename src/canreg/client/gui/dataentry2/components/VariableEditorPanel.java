@@ -278,7 +278,36 @@ public class VariableEditorPanel extends javax.swing.JPanel
     protected void codeTextFieldFocusLost(java.awt.event.FocusEvent evt) {
         updateFilledInStatusColor();        
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 37 * hash + (this.variableNameLabel != null ? this.variableNameLabel.getText().hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final VariableEditorPanel other = (VariableEditorPanel) obj;
+        if (this.variableNameLabel != other.variableNameLabel && 
+            (this.variableNameLabel == null || ! this.variableNameLabel.getText().equals(other.variableNameLabel.getText()))) {
+            return false;
+        }
+        return true;
+    }
+
  
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

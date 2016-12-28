@@ -127,19 +127,19 @@ public class RecordEditorPatient extends javax.swing.JPanel
     }
     
     public void addTumour(RecordEditorTumour tumour) {
-        if (tumour != null && ! this.tumours.contains(tumour))
+        if (tumour != null && ! this.tumours.contains(tumour)) {
             this.tumours.add(tumour);
+            tumour.setPatientRecord(this);
+        }
     }
     
     public void removeTumour(RecordEditorTumour tumour) {
-        this.tumours.remove(ui);
+        this.tumours.remove(tumour);
     }    
     
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(VariableEditorPanelInterface.CHANGED_STRING)) {
-            aca tenes que ver de enviarle a todos los tumores o hacia record editor 
-                    y tambien acordate de poner todos los controles de cambios que hiciste en recordEditortumour
             changesDone(e.getSource());
             //COMMENTED: this situation is also comented on RecordEditor (the class acting
             //as this actionListener), so it really does nothing at all.
@@ -171,25 +171,16 @@ public class RecordEditorPatient extends javax.swing.JPanel
             VariableEditorPanel vep = (VariableEditorPanel) source;
             this.changesMap.put(vep, vep.hasChanged());
             
-            //If at least 1 vep has changes, then checks and status are set
-            //to "not done".
+            //If at least 1 vep has changes, then the checks and status of all
+            //the tumours linked to this patient are set to "not done".
             boolean vepsWithChanges = false;
             for(Boolean vepChanges : this.changesMap.values()) 
                 vepsWithChanges = vepsWithChanges || vepChanges;
             setSaveNeeded(vepsWithChanges);
             
+            //Each tumour will take care of reacting to these changes.
             for(RecordEditorTumour tumourPanel : this.tumours)
-                tumourPanel.c
-                
-            No deberia ir todo esto de abajo, se encarga cada tumourPanel
-            if (vepsWithChanges)
-                setChecksResultCode(ResultCode.NotDone);                               
-            else {
-                databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusBeforeChanges);
-                setChecksResultCode(checkResultCodeBeforeChanges);
-                
-                //recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recordStatusBeforeChanges)); 
-            }
+                tumourPanel.changesDone(source);                
         } else 
             setSaveNeeded(true);            
     }
@@ -453,6 +444,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
     
     private void buildPanel() {
         dataPanel.removeAll();
+        this.changesMap = new HashMap<VariableEditorPanel, Boolean>();
 
         if (variableEditorPanels != null) {
             for (VariableEditorPanelInterface vep : variableEditorPanels.values()) 
@@ -509,6 +501,9 @@ public class RecordEditorPatient extends javax.swing.JPanel
             }
 
             variableEditorPanels.put(currentVariable.getDatabaseVariableName(), vep);
+            
+            //When the variable is inserted, we consider there's no changes to be saved (false)
+            changesMap.put(vep, false);
         }
 
         // Iterate trough groups        
