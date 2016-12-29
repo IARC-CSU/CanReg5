@@ -85,6 +85,7 @@
                       <action class="canreg.client.gui.dataentry2.RecordEditorPatient" id="runPersonSearch" methodName="runPersonSearch"/>
                     </Property>
                     <Property name="text" type="java.lang.String" resourceKey="personSearchPanel.border.title" postCode="searchButton.setToolTipText(resourceMap.getString(&quot;searchButton.toolTipText&quot;));"/>
+                    <Property name="focusable" type="boolean" value="false"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[200, 45]"/>
                     </Property>
@@ -113,6 +114,7 @@
                     </Property>
                     <Property name="text" type="java.lang.String" resourceKey="exactSearchButton.text"/>
                     <Property name="toolTipText" type="java.lang.String" resourceKey="exactSearchButton.Action.shortDescription"/>
+                    <Property name="focusable" type="boolean" value="false"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[200, 45]"/>
                     </Property>

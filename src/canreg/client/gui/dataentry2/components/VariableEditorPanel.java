@@ -278,6 +278,11 @@ public class VariableEditorPanel extends javax.swing.JPanel
     protected void codeTextFieldFocusLost(java.awt.event.FocusEvent evt) {
         updateFilledInStatusColor();        
     }
+    
+    @Override
+    public void requestFocus() {
+        this.codeTextField.requestFocus();
+    }
 
     @Override
     public int hashCode() {
@@ -304,10 +309,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
         }
         return true;
     }
-
- 
-    
-    
+         
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

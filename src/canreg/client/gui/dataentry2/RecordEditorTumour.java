@@ -111,6 +111,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private String recordStatusBeforeChanges;
     //The patient to which this tumour is linked to
     private RecordEditorPatient patient;
+    //The first variable of this panel, used to gain focus when a new tumour is added
+    private VariableEditorPanel firstVariable;
     
     
     public RecordEditorTumour(ActionListener listener, 
@@ -222,6 +224,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
                 vep = new VariableEditorPanel(this);            
 
             vep.setDatabaseVariablesListElement(currentVariable);
+            if(i == 0)
+                this.firstVariable = vep;
 
             int dictionaryID = currentVariable.getDictionaryID();
             if (dictionaryID >= 0) {
@@ -953,6 +957,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         sourceDeleteMenuItem.setName("deleteRecord"); // NOI18N
         sourcePopupMenu.add(sourceDeleteMenuItem);
 
+        setFocusable(false);
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
         systemPanel.setMaximumSize(new java.awt.Dimension(32767, 100));
@@ -1220,7 +1225,10 @@ public class RecordEditorTumour extends javax.swing.JPanel
             this.setSaveNeeded(true);
     }//GEN-LAST:event_patientsComboBoxActionPerformed
 
-
+    public void requestFocusOnFirstVariable() {
+        this.firstVariable.requestFocus();
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addSourceRecordButton;
     private javax.swing.JLabel byLabel;

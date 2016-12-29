@@ -29,6 +29,7 @@ import canreg.client.gui.dataentry.ImportFilesView;
 import canreg.client.gui.dataentry.ImportView;
 import canreg.client.gui.dataentry.PDSChooserInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
+import canreg.client.gui.dataentry2.RecordEditorPanel;
 import canreg.client.gui.management.BackUpInternalFrame;
 import canreg.client.gui.management.CanReg4PDSImporterInternalFrame;
 import canreg.client.gui.management.CanReg4SystemConverterInternalFrame;
@@ -1309,8 +1310,10 @@ public final class CanRegClientView extends FrameView {
         canreg.client.gui.dataentry2.RecordEditor internalFrame = new canreg.client.gui.dataentry2.RecordEditor(desktopPane);
         internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
-        internalFrame.addRecord(new Patient());
-        internalFrame.addRecord(new Tumour());
+        
+        //Swing Framework demands that these methods return object be listened to...
+        RecordEditorPanel dummyPanel = internalFrame.addRecord(new Patient());
+        RecordEditorPanel dummyPanel2 = internalFrame.addRecord(new Tumour());
         showAndPositionInternalFrame(desktopPane, internalFrame);
         maximizeHeight(desktopPane, internalFrame);
     }

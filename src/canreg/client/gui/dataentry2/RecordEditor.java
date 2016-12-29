@@ -45,12 +45,14 @@ import canreg.server.database.UnknownTableException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -67,6 +69,7 @@ import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameAdapter;
@@ -226,13 +229,15 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
      * Adds a new record (Patient or Tumour) to this Frame. Please load
      * patients first and then the tumours
      * @param dbr 
+     * @return  
      */
-    public void addRecord(DatabaseRecord dbr) {                
+    public RecordEditorPanel addRecord(DatabaseRecord dbr) {
+        RecordEditorPanel rePanel = null;
         if (dbr instanceof Patient) {                                   
-            RecordEditorPatient rePanel = new RecordEditorPatient(this);
+            rePanel = new RecordEditorPatient(this);
             rePanel.setDictionary(dictionary);
             rePanel.setDocument(doc);
-            rePanel.setRecordAndBuildPanel(dbr);
+            ((RecordEditorPatient)rePanel).setRecordAndBuildPanel(dbr);
             patientRecords.add(dbr);
             
             Object regno = dbr.getVariable(globalToolBox
@@ -244,7 +249,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 if (regnoString.length() == 0) 
                     regnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("N/A");
                 else 
-                    patientRecordsMap.put(regno, rePanel);               
+                    patientRecordsMap.put(regno, ((RecordEditorPatient)rePanel));               
             }
             else 
                 regnoString = String.valueOf((patientTabbedPane.getTabCount() + 1));
@@ -279,10 +284,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                 if ((tumourPatientID == null || tumourPatientID.isEmpty()) 
                         || 
                       tumourPatientID.startsWith(regnoString)) 
-                    rePanel.addTumour(tumourPanel); 
+                    ((RecordEditorPatient)rePanel).addTumour(tumourPanel); 
             }
                 
-            patientTabbedPane.addTab(tabTitle, rePanel);
+            patientTabbedPane.addTab(tabTitle, ((RecordEditorPatient)rePanel));
             
             if (!titleSet) {
                 Object patno = dbr.getVariable(globalToolBox
@@ -297,18 +302,18 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                         titleSet = true;
                     }
                 }
-            }
+            }                        
         } else if (dbr instanceof Tumour) {
             //If no patients were previosly added, it gets very very difficult 
             //to link the tumours and the patients.
             if (this.patientTabbedPane.getComponentCount() == 0)
                 throw new RuntimeException("Before adding a tumour first load at least 1 patient please");
             
-            RecordEditorTumour rePanel = new RecordEditorTumour((ActionListener)this, (RecordEditor)this);
+            rePanel = new RecordEditorTumour((ActionListener)this, (RecordEditor)this);
             rePanel.setDictionary(dictionary);
             rePanel.setDocument(doc);
-            rePanel.setRecordAndBuildPanel(dbr);
-            obsoleteToggles.put(rePanel, false);
+            ((RecordEditorTumour)rePanel).setRecordAndBuildPanel(dbr);
+            obsoleteToggles.put(((RecordEditorTumour)rePanel), false);
             tumourRecords.add(dbr);
             
             //COMMENTED: regno and regnoString is commented because it's never used in the title of the tumour tab.
@@ -325,12 +330,12 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             Object tumourObsoleteStatus = dbr.getVariable(tumourObsoleteVariableName);
             if (tumourObsoleteStatus != null && tumourObsoleteStatus.equals(Globals.OBSOLETE_VALUE)) {
                 //regnoString += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString(" (OBSOLETE)");
-                obsoleteToggles.put(rePanel, true);
+                obsoleteToggles.put(((RecordEditorTumour)rePanel), true);
             }                
                         
             //Add to this new tumour all the patient tabs titles
             for(int i = 0; i < this.patientTabbedPane.getTabCount(); i++) {
-                rePanel.addLinkablePatient(this.patientTabbedPane.getTitleAt(i));
+                ((RecordEditorTumour)rePanel).addLinkablePatient(this.patientTabbedPane.getTitleAt(i));
                 
                 RecordEditorPatient patientPanel = (RecordEditorPatient) this.patientTabbedPane.getComponentAt(i);
                 //We check to see if this tumour that's being added was already
@@ -346,24 +351,32 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                       this.patientTabbedPane.getComponentAt(i).equals(this.patientTabbedPane.getSelectedComponent()))
                         || 
                       this.patientTabbedPane.getTitleAt(i).contains(tumourPatientID)) {
-                    patientPanel.addTumour(rePanel);
-                    rePanel.setLinkedPatient(this.patientTabbedPane.getTitleAt(i), true);
+                    patientPanel.addTumour(((RecordEditorTumour)rePanel));
+                    ((RecordEditorTumour)rePanel).setLinkedPatient(this.patientTabbedPane.getTitleAt(i), true);
                 }                                    
             }
                                                          
             tumourTabbedPane.addTab(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("TUMOUR") 
                                         + ":" + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString(" RECORD ") 
                                         + " " + (tumourTabbedPane.getTabCount() + 1), 
-                                    rePanel);
+                                    ((RecordEditorTumour)rePanel));
         }
         refreshShowObsolete();
+        return rePanel;
     }
         
     @Action
     public void addTumourAction() {
+        this.addTumourRecordButton.setFocusable(true);
         Tumour tumour = new Tumour();
         populateNewRecord(tumour, doc);
-        addRecord(tumour);
+        final RecordEditorTumour tumourPanel = (RecordEditorTumour) addRecord(tumour);        
+        this.tumourTabbedPane.setSelectedIndex(tumourTabbedPane.getComponentCount() - 1);
+        this.repaint();        
+        this.revalidate();
+        tumourPanel.requestFocusOnFirstVariable();
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();         
+        this.addTumourRecordButton.setFocusable(false);
     }
     
     @Action
@@ -405,7 +418,11 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     else 
                         number = (Integer) unk;                    
                 }
-                dbr.setVariable(dbvle.getDatabaseVariableName(), number);
+                
+                if(number == -1)
+                    dbr.setVariable(dbvle.getDatabaseVariableName(), "");  
+                else
+                    dbr.setVariable(dbvle.getDatabaseVariableName(), number);
             } else 
                 dbr.setVariable(dbvle.getDatabaseVariableName(), "");            
         }
@@ -1590,11 +1607,13 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
         jButton1.setAction(actionMap.get("changePatientID")); // NOI18N
         jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
+        jButton1.setFocusable(false);
         jPanel2.add(jButton1);
         jPanel2.add(filler5);
 
         showObsoleteRecordsCheckBox.setAction(actionMap.get("toggleShowObsoleteRecords")); // NOI18N
         showObsoleteRecordsCheckBox.setText(resourceMap.getString("showObsoleteRecordsCheckBox.text")); // NOI18N
+        showObsoleteRecordsCheckBox.setFocusable(false);
         jPanel2.add(showObsoleteRecordsCheckBox);
         jPanel2.add(filler13);
 
@@ -1605,6 +1624,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         saveAllButton.setText(resourceMap.getString("saveAllAction.Action.text")); // NOI18N
         saveAllButton.setToolTipText(resourceMap.getString("saveAllAction.Action.shortDescription")); // NOI18N
         saveAllButton.setContentAreaFilled(false);
+        saveAllButton.setFocusable(false);
         saveAllButton.setMaximumSize(new java.awt.Dimension(150, 23));
         saveAllButton.setOpaque(true);
         saveAllButton.addMouseListener(new MouseAdapter() {
@@ -1652,11 +1672,13 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
         jButton3.setAction(actionMap.get("writePDF")); // NOI18N
         jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
+        jButton3.setFocusable(false);
         jPanel2.add(jButton3);
         jPanel2.add(filler2);
 
         printButton.setAction(actionMap.get("printAction")); // NOI18N
         printButton.setText(resourceMap.getString("printButton.text")); // NOI18N
+        printButton.setFocusable(false);
         jPanel2.add(printButton);
         jPanel2.add(filler3);
         jPanel2.add(filler7);
@@ -1687,6 +1709,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
         patientMenuButton.setAction(actionMap.get("patientMenuAction")); // NOI18N
         patientMenuButton.setText(resourceMap.getString("menuButton.text")); // NOI18N
+        patientMenuButton.setFocusable(false);
         patientMenuButton.setMaximumSize(new java.awt.Dimension(100, 23));
         patientMenuButton.setMinimumSize(new java.awt.Dimension(30, 23));
         jPanel16.add(patientMenuButton);
@@ -1712,6 +1735,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         jPanel11.setLayout(new javax.swing.BoxLayout(jPanel11, javax.swing.BoxLayout.PAGE_AXIS));
         jPanel11.add(filler15);
 
+        patientTabbedPane.setFocusable(false);
         patientTabbedPane.setPreferredSize(new java.awt.Dimension(450, 451));
         jPanel11.add(patientTabbedPane);
 
@@ -1733,6 +1757,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         jPanel9.add(filler10);
 
         addTumourRecordButton.setAction(actionMap.get("addTumourAction")); // NOI18N
+        addTumourRecordButton.setFocusable(false);
         addTumourRecordButton.setMaximumSize(new java.awt.Dimension(220, 23));
         addTumourRecordButton.setMinimumSize(new java.awt.Dimension(21, 23));
         jPanel9.add(addTumourRecordButton);
@@ -1740,6 +1765,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
         tumourMenuButton.setAction(actionMap.get("tumourMenuAction")); // NOI18N
         tumourMenuButton.setText(resourceMap.getString("menuButton.text")); // NOI18N
+        tumourMenuButton.setFocusable(false);
         tumourMenuButton.setMaximumSize(new java.awt.Dimension(100, 23));
         tumourMenuButton.setMinimumSize(new java.awt.Dimension(30, 23));
         jPanel9.add(tumourMenuButton);
@@ -1765,6 +1791,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.PAGE_AXIS));
         jPanel10.add(filler14);
 
+        tumourTabbedPane.setFocusable(false);
         tumourTabbedPane.setPreferredSize(new java.awt.Dimension(700, 451));
         tumourTabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {

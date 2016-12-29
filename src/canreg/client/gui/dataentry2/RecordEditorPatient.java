@@ -574,6 +574,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RecordEditorPatient.class);
         searchButton.setText(resourceMap.getString("personSearchPanel.border.title")); // NOI18N
         searchButton.setToolTipText(resourceMap.getString("searchButton.toolTipText"));
+        searchButton.setFocusable(false);
         searchButton.setMaximumSize(new java.awt.Dimension(200, 45));
         buttonsPanel.add(searchButton);
         buttonsPanel.add(filler1);
@@ -581,6 +582,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
         exactButton.setAction(actionMap.get("runExactSearch")); // NOI18N
         exactButton.setText(resourceMap.getString("exactSearchButton.text")); // NOI18N
         exactButton.setToolTipText(resourceMap.getString("exactSearchButton.Action.shortDescription")); // NOI18N
+        exactButton.setFocusable(false);
         exactButton.setMaximumSize(new java.awt.Dimension(200, 45));
         buttonsPanel.add(exactButton);
 
