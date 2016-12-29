@@ -111,8 +111,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private String recordStatusBeforeChanges;
     //The patient to which this tumour is linked to
     private RecordEditorPatient patient;
-    //The first variable of this panel, used to gain focus when a new tumour is added
-    private VariableEditorPanel firstVariable;
     
     
     public RecordEditorTumour(ActionListener listener, 
@@ -224,8 +222,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
                 vep = new VariableEditorPanel(this);            
 
             vep.setDatabaseVariablesListElement(currentVariable);
-            if(i == 0)
-                this.firstVariable = vep;
 
             int dictionaryID = currentVariable.getDictionaryID();
             if (dictionaryID >= 0) {
@@ -314,9 +310,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
                 setChecksResultCode(ResultCode.NotDone);                               
             else {
                 databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusBeforeChanges);
-                setChecksResultCode(checkResultCodeBeforeChanges);
-                
-                //recordStatusComboBox.setSelectedItem(recStatusDictMap.get(recordStatusBeforeChanges)); 
+                setChecksResultCode(checkResultCodeBeforeChanges);  
             }
         } else {
             setSaveNeeded(true);
@@ -802,10 +796,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     
     @Action
     public void runMultiplePrimarySearch() {
-        //if ( panelType == panelTypes.TUMOUR )
-            actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.RUN_MP));
-        /*else 
-            actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.RUN_EXACT));*/
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.RUN_MP));
     }    
         
     @Override
@@ -1226,10 +1217,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
         if ( ! this.avoidPatientsComboBoxListener)
             this.setSaveNeeded(true);
     }//GEN-LAST:event_patientsComboBoxActionPerformed
-
-    public void requestFocusOnFirstVariable() {
-        this.firstVariable.requestFocus();
-    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addSourceRecordButton;
