@@ -180,7 +180,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
             
             //Each tumour will take care of reacting to these changes.
             for(RecordEditorTumour tumourPanel : this.tumours)
-                tumourPanel.changesDone(source);                
+                tumourPanel.changesDone(source, false);                
         } else 
             setSaveNeeded(true);            
     }

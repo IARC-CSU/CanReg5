@@ -139,7 +139,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(VariableEditorPanelInterface.CHANGED_STRING)) {           
-            changesDone(e.getSource());
+            changesDone(e.getSource(), false);
             //COMMENTED: this situation is also comented on RecordEditor (the class acting
             //as this actionListener), so it really does nothing at all.
             //actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
@@ -288,7 +288,18 @@ public class RecordEditorTumour extends javax.swing.JPanel
         dataPanel.repaint();
     }       
             
-    public void changesDone(Object source) {
+    /**
+     * Checks if changes have been made in any of the variables contained by this
+     * tumour. This includes source variables and patient variables, because:
+     *   - If a patient has a change in any of its variables, this tumour changes
+     *     to a state of "Checks not done"
+     *   - If a source has a change in any of its variables, this tumour is 
+     *     considered as saveNeeded = true
+     * @param componentWithChanges
+     * @param sourceRecord true if this method is called by a source record, indicating that
+     * a change in a source variable has been made
+     */
+    public void changesDone(Object componentWithChanges, boolean sourceRecord) {
         //We save the previous code and status, so we can go back to them
         //if changes are reversed.
         if (checkResultCodeBeforeChanges == null)
@@ -296,8 +307,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
         if (recordStatusBeforeChanges == null)
             recordStatusBeforeChanges = (String) databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
 
-        if (source instanceof VariableEditorPanel) {
-            VariableEditorPanel vep = (VariableEditorPanel) source;
+        if (componentWithChanges instanceof VariableEditorPanel) {
+            VariableEditorPanel vep = (VariableEditorPanel) componentWithChanges;
             this.changesMap.put(vep, vep.hasChanged());
             
             //If at least 1 vep has changes, then checks and status are set
@@ -306,11 +317,14 @@ public class RecordEditorTumour extends javax.swing.JPanel
             for(Boolean vepChanges : this.changesMap.values()) 
                 vepsWithChanges = vepsWithChanges || vepChanges;
             setSaveNeeded(vepsWithChanges);
-            if (vepsWithChanges)
-                setChecksResultCode(ResultCode.NotDone);                               
-            else {
-                databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusBeforeChanges);
-                setChecksResultCode(checkResultCodeBeforeChanges);  
+            
+            if( ! sourceRecord) {
+                if (vepsWithChanges)
+                    setChecksResultCode(ResultCode.NotDone);                               
+                else {
+                    databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusBeforeChanges);
+                    setChecksResultCode(checkResultCodeBeforeChanges);  
+                }
             }
         } else {
             setSaveNeeded(true);
@@ -567,8 +581,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
                 break;
         }
         
-        variablesInTable =
-                canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
+        variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
         Arrays.sort(variablesInTable, new DatabaseVariablesListElementPositionSorter());
     }
 
@@ -706,7 +719,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
             //the tumour is NOT brand new. If the tumour is new, then the linkage 
             //is resolved in RecordEditor.addRecord()
             if (tumourPatientID != null && ! tumourPatientID.isEmpty() && patientTitle.contains(tumourPatientID))
-               this.setLinkedPatient(patientTitle);
+               this.setLinkedPatient(patientTitle, true);
             
             this.avoidPatientsComboBoxListener = previousAvoidStatus;
         }

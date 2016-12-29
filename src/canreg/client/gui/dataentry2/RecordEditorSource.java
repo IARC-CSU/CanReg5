@@ -110,81 +110,23 @@ public class RecordEditorSource extends javax.swing.JPanel
     public void setDatabaseRecord(DatabaseRecord dbr) {
         this.databaseRecord = dbr;
         setSaveNeeded(false);
-        groupListElements = Tools.getGroupsListElements(doc, Globals.NAMESPACE);
-        /*if (databaseRecord.getClass().isInstance(new Patient())) {
-            panelType = panelTypes.PATIENT;
-            recordStatusVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordStatus.toString());
-            unduplicationVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PersonSearch.toString());
-            patientIDVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
-            patientRecordIDVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString());
-            obsoleteFlagVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString());
-            updateDateVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdateDate.toString());
-            updatedByVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientUpdatedBy.toString());
-        } else if (databaseRecord.getClass().isInstance(new Tumour())) {
-            panelType = panelTypes.TUMOUR;
-            recordStatusVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
-            obsoleteFlagVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString());
-            checkVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.CheckStatus.toString());
-            updateDateVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdateDate.toString());
-            updatedByVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUpdatedBy.toString());
-            tumourSequenceNumberVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimSeq.toString());
-            tumourSequenceTotalVariableListElement =
-                    globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimTot.toString());
-        } else*/ if (databaseRecord.getClass().isInstance(new Source())) {
-            //panelType = panelTypes.SOURCE;
-            /*recordStatusVariableListElement = null;
-            unduplicationVariableListElement = null;
-            obsoleteFlagVariableListElement = null;
-            checkVariableListElement = null;*/
-        }
-
-        /*
-         * Build the record status map.
-         */
-        /*if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
-            recStatusDictMap = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
-            Collection<DictionaryEntry> recStatusDictCollection = recStatusDictMap.values();
-            recStatusDictWithConfirmArray =
-                    recStatusDictCollection.toArray(new DictionaryEntry[0]);
-
-            LinkedList<DictionaryEntry> recStatusDictWithoutConfirmVector = new LinkedList<DictionaryEntry>();
-            for (DictionaryEntry entry : recStatusDictCollection) {
-                // "1" is the code for confirmed... TODO: change to dynamic code...
-                if (!entry.getCode().equalsIgnoreCase("1")) 
-                    recStatusDictWithoutConfirmVector.add(entry);                
-            }
-            recStatusDictWithoutConfirmArray = recStatusDictWithoutConfirmVector.toArray(new DictionaryEntry[0]);
-        }*/        
+        groupListElements = Tools.getGroupsListElements(doc, Globals.NAMESPACE);            
 
         String tableName = null;
-        /*if (panelType == panelTypes.PATIENT) {
-            tableName = Globals.PATIENT_TABLE_NAME;
-//            mpPanel.setVisible(false);
-            mpPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Exact Search")); // This hack works, but is far from ideal...
-            changePatientRecordMenuItem.setVisible(false);
-            obsoleteToggleButton.setVisible(false);
-            checksPanel.setVisible(false);
-            sequencePanel.setVisible(false);
-        } else if (panelType == panelTypes.TUMOUR) {
-            tableName = Globals.TUMOUR_TABLE_NAME;
-            personSearchPanel.setVisible(false);
-        } else*/ if (panelType == panelTypes.SOURCE) {
+        if (panelType == panelTypes.SOURCE) 
             tableName = Globals.SOURCE_TABLE_NAME;
-            //systemPanel.setVisible(false);
+        
+        if (panelType != null) switch (panelType) {
+            case PATIENT:                
+                throw new IllegalArgumentException("This should be a Source panelType, not a Patient.");
+            case TUMOUR:
+                throw new IllegalArgumentException("This should be a Source panelType, not a Tumour.");
+            case SOURCE:
+                tableName = Globals.SOURCE_TABLE_NAME;
+            default:
+                break;
         }
+        
         variablesInTable = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, tableName);
         Arrays.sort(variablesInTable, new DatabaseVariablesListElementPositionSorter());
     }
@@ -200,7 +142,7 @@ public class RecordEditorSource extends javax.swing.JPanel
 
         Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();        
 
-        for(int i = 0; i < variablesInTable.length; i++) {
+        for (int i = 0; i < variablesInTable.length; i++) {
             DatabaseVariablesListElement currentVariable = variablesInTable[i];
             VariableEditorPanel vep;
 
@@ -264,36 +206,19 @@ public class RecordEditorSource extends javax.swing.JPanel
             }
         }
 
-        // If this is the tumour part we add the source table
-        /*if (panelType == panelTypes.TUMOUR) {
-            sourcesPanel = new SourcesPanel(this);
-            sourcesPanel.setDictionary(dictionary);
-            sourcesPanel.setDoc(doc);
-            sourcesPanel.setVisible(true);
-            Tumour tumour = (Tumour) databaseRecord;
-            sourcesPanel.setSources(tumour.getSources());
-            dataPanel.add(sourcesPanel);
-            refreshSequence();
-        }
-        if (panelType != panelTypes.SOURCE) {
-            refreshObsoleteStatus(databaseRecord);
-            refreshRecordStatus(databaseRecord);
-            refreshCheckStatus(databaseRecord);
-        }
-        refreshUpdatedBy();*/
         dataPanel.revalidate();
         dataPanel.repaint();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals(VariableEditorPanelInterface.CHANGED_STRING)) {
-            /*if (e.getSource().equals(saveButton)) {
-                // do nothing...
-            } else {*/
-                changesDone();
-                actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
-            //}
+        if (e.getActionCommand().equals(VariableEditorPanelInterface.CHANGED_STRING)) {           
+            //Bubbles to RecordEditorTumour (it takes care of all change management)
+            RecordEditorTumour tumour = (RecordEditorTumour) actionListener;
+            tumour.changesDone(e.getSource(), true);
+            //COMMENTED: this situation is also comented on RecordEditor (the class acting
+            //as this actionListener), so it really does nothing at all.
+            //actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
         } else {
             // pass it on
             actionListener.actionPerformed(e);
@@ -307,9 +232,9 @@ public class RecordEditorSource extends javax.swing.JPanel
             VariableEditorPanelInterface panel = variableEditorPanels.get(databaseVariablesListElement.getDatabaseVariableName());
             if (panel != null) {
                 boolean filledOK = panel.isFilledOK();
-                if (!filledOK) {
+                if (!filledOK) 
                     panel.updateFilledInStatusColor();
-                }
+                
                 allPresent = allPresent & filledOK;
             }
         }
@@ -322,50 +247,10 @@ public class RecordEditorSource extends javax.swing.JPanel
             VariableEditorPanelInterface vep = iterator.next();
             databaseRecord.setVariable(vep.getKey(), vep.getValue());
         }
-
-        /*if (panelType == panelTypes.TUMOUR) {
-            Tumour tumour = (Tumour) databaseRecord;
-            tumour.setSources(sourcesPanel.getSources());
-        }*/
-        
-        /* No record status in sources
-        if (recordStatusVariableListElement != null) {
-            if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
-                DictionaryEntry recordStatusValue = (DictionaryEntry) recordStatusComboBox.getSelectedItem();
-                if (recordStatusValue != null) {
-                    databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), recordStatusValue.getCode());
-                } else {
-                    databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
-                    // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
-                    Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
-                }
-            } else {
-                databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
-                // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
-                Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
-            }
-        }
-        //No obsolete button in sources
-        if (obsoleteFlagVariableListElement != null) {
-            if (obsoleteToggleButton.isSelected()) {
-                databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.OBSOLETE_VALUE);
-            } else {
-                databaseRecord.setVariable(obsoleteFlagVariableListElement.getDatabaseVariableName(), Globals.NOT_OBSOLETE_VALUE);
-            }
-        }
-        //no checks button in sources
-        if (checkVariableListElement != null) {
-            if (resultCode == null) {
-                resultCode = ResultCode.NotDone;
-            }
-            databaseRecord.setVariable(checkVariableListElement.getDatabaseVariableName(),
-                    CheckResult.toDatabaseVariable(resultCode));
-        }*/
     }
     
     private void changesDone() {
         setSaveNeeded(true);
-        //setChecksResultCode(CheckResult.ResultCode.NotDone);
     }
     
     @Override
@@ -423,11 +308,6 @@ public class RecordEditorSource extends javax.swing.JPanel
         setSaveNeeded(isSaveNeeded);
 
         buildPanel();
-
-        // set record status and check status        
-        //refreshCheckStatus(record);
-        //refreshRecordStatus(record);
-        //refreshUpdatedBy();
     }
         
     @Override
