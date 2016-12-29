@@ -380,6 +380,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         sources.add(newSource);
         sourcesTabbedPane.add(newPanel);
         refreshTitles();
+        this.sourcesTabbedPane.setSelectedIndex(sourcesTabbedPane.getComponentCount() - 1);
     }
     
     @Action
@@ -471,7 +472,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         refreshUpdatedBy();
         
         if(this.patient != null)
-            patient.refreshDatabaseRecord(this.patient.getDatabaseRecord(), isSaveNeeded);
+            patient.refreshDatabaseRecord(this.patient.getDatabaseRecord(), this.patient.isSaveNeeded());
     }
     
    /**
@@ -608,7 +609,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
             recordStatusPanel.setVisible(false);        
     }
     
-    private void refreshSequence() {
+    public void refreshSequence() {
         if (tumourSequenceNumberVariableListElement != null) {
             String tumourSequenceNumberString = (String) databaseRecord.getVariable(tumourSequenceNumberVariableListElement.getDatabaseVariableName());
             sequenceNumberValueLabel.setText(tumourSequenceNumberString);
@@ -708,6 +709,10 @@ public class RecordEditorTumour extends javax.swing.JPanel
             this.avoidPatientsComboBoxListener = true;
             
             this.patientsComboBox.addItem(patientTitle);
+            if(this.patientsComboBox.getItemCount() == 1)
+                this.patientsComboBox.setEnabled(false);
+            else
+                this.patientsComboBox.setEnabled(true);
                                     
             //Select this new patient if it's already linked to this tumour
             DatabaseRecord tumourRecord = this.getDatabaseRecord();
@@ -720,7 +725,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
             //is resolved in RecordEditor.addRecord()
             if (tumourPatientID != null && ! tumourPatientID.isEmpty() && patientTitle.contains(tumourPatientID))
                this.setLinkedPatient(patientTitle, true);
-            
+                                    
             this.avoidPatientsComboBoxListener = previousAvoidStatus;
         }
     }
@@ -799,6 +804,10 @@ public class RecordEditorTumour extends javax.swing.JPanel
             this.avoidPatientsComboBoxListener = true;
             
         this.patientsComboBox.removeItem(patientTitle);
+        if(this.patientsComboBox.getItemCount() == 1)
+                this.patientsComboBox.setEnabled(false);
+            else
+                this.patientsComboBox.setEnabled(true);
         
         this.avoidPatientsComboBoxListener = false;
         
@@ -1182,10 +1191,14 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         addSourceRecordButton.setAction(actionMap.get("addSourceAction")); // NOI18N
         addSourceRecordButton.setText(resourceMap.getString("addSourceAction.Action.text")); // NOI18N
-        addSourceRecordButton.setFocusable(false);
         addSourceRecordButton.setMaximumSize(new java.awt.Dimension(220, 23));
         addSourceRecordButton.setMinimumSize(new java.awt.Dimension(21, 23));
         addSourceRecordButton.setName("addSourceAction"); // NOI18N
+        addSourceRecordButton.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                addSourceRecordButtonFocusGained(evt);
+            }
+        });
         jPanel9.add(addSourceRecordButton);
         jPanel9.add(filler8);
 
@@ -1230,6 +1243,10 @@ public class RecordEditorTumour extends javax.swing.JPanel
         if ( ! this.avoidPatientsComboBoxListener)
             this.setSaveNeeded(true);
     }//GEN-LAST:event_patientsComboBoxActionPerformed
+
+    private void addSourceRecordButtonFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addSourceRecordButtonFocusGained
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
+    }//GEN-LAST:event_addSourceRecordButtonFocusGained
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addSourceRecordButton;

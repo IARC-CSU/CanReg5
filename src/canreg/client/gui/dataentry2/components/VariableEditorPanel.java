@@ -129,6 +129,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
     
     protected void setVariableName(String variableName) {
         variableNameLabel.setText(variableName);
+        variableNameLabel.setToolTipText(variableName); 
     }
 
     @Override
@@ -256,6 +257,10 @@ public class VariableEditorPanel extends javax.swing.JPanel
                     .log(Level.WARNING, "Warning! NPE in VariableEditorPanel.checkForChanges()", ne);
         }
     }
+    
+    protected void transferFocusToPrevious() {
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().focusPreviousComponent();
+    }
 
     protected void transferFocusToNext() {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
@@ -272,7 +277,11 @@ public class VariableEditorPanel extends javax.swing.JPanel
     protected void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {
         this.checkForChanges();
         if (evt.getKeyChar() == KeyEvent.VK_ENTER) 
-            transferFocusToNext();        
+            transferFocusToNext();
+        else if (evt.getKeyChar() == '+') {
+            evt.consume();
+            transferFocusToPrevious();
+        }            
     }
     
     protected void codeTextFieldFocusLost(java.awt.event.FocusEvent evt) {

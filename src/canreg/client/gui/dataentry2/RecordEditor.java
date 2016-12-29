@@ -213,6 +213,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
         patientObsoleteVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagPatientTable.toString()).getDatabaseVariableName();
         tumourObsoleteVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ObsoleteFlagTumourTable.toString()).getDatabaseVariableName();
+        
+        //A verrr debugea que mierda hay en estas dos variableeeees
         tumourSequenceVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimSeq.toString()).getDatabaseVariableName();
         tumourSequenceTotalVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.MultPrimTot.toString()).getDatabaseVariableName();
 
@@ -499,6 +501,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     RecordEditorTumour tumour = (RecordEditorTumour) tumourTabbedPane.getComponentAt(i);
                     tumour.prepareToSaveRecord();
                     this.saveRecord(tumour);
+                    tumour.refreshSequence();
                 } catch(SaveRecordException ex) {                             
                     failedTumours.add(tumourTabbedPane.getTitleAt(i) + " (Tab nº" + (i+1) + ") " +
                                       failed + ": " + ex.getLocalizedMessage());
@@ -699,7 +702,6 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
 
     private DatabaseRecord saveRecord(DatabaseRecord databaseRecord) 
             throws SecurityException, RemoteException, SQLException, RecordLockedException {
-        
         DatabaseRecord newDatabaseRecord = null;
         if (databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) == null &&
             databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) == null) {            
@@ -943,6 +945,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             } else 
                 tumour.setVariable(tumourSequenceVariableName, "-");
             tumour.setVariable(tumourSequenceTotalVariableName, totalTumours + "");
+            tumourRecord.refreshDatabaseRecord(tumour, false);
         }
     }
 
@@ -953,10 +956,21 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         JTabbedPane tabbedPane = null;
         if (option == JOptionPane.YES_OPTION) {
             DatabaseRecord record = recordEditorPanel.getDatabaseRecord();
+            
+            String patientTitle = null;
+            if (record instanceof Patient) {                
+                for (int i = 0; i < patientTabbedPane.getComponentCount(); i++) 
+                    if(this.patientTabbedPane.getComponentAt(i) == recordEditorPanel)
+                        patientTitle = this.patientTabbedPane.getTitleAt(i);
+            }
+            
             boolean success = deleteRecord(record);
             if (success) {
-                if (record instanceof Patient) 
+                if (record instanceof Patient) {
                     tabbedPane = patientTabbedPane;
+                    for (Component tumourPanel : this.tumourTabbedPane.getComponents())
+                        ((RecordEditorTumour) tumourPanel).removeLinkablePatient(patientTitle);
+                }
                 else if (record instanceof Tumour)
                     tabbedPane = tumourTabbedPane;                
                 tabbedPane.remove((Component) recordEditorPanel);
@@ -1517,6 +1531,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         tumourDeleteMenuItem = new javax.swing.JMenuItem();
         tumourObsoleteToggleButton = new javax.swing.JRadioButtonMenuItem();
         tumourChangePatientRecordMenuItem = new javax.swing.JMenuItem();
+        filler17 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 3), new java.awt.Dimension(0, 3), new java.awt.Dimension(32767, 3));
+        filler21 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 3), new java.awt.Dimension(0, 3), new java.awt.Dimension(32767, 3));
         jPanel2 = new javax.swing.JPanel();
         filler9 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         filler6 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
@@ -1533,6 +1549,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         filler8 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
+        filler18 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 3), new java.awt.Dimension(0, 3), new java.awt.Dimension(32767, 3));
+        filler19 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 3), new java.awt.Dimension(0, 3), new java.awt.Dimension(32767, 3));
         jPanel1 = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel3 = new javax.swing.JPanel();
@@ -1583,10 +1601,13 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         tumourPopupMenu.add(tumourChangePatientRecordMenuItem);
 
         setClosable(true);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
+        getContentPane().add(filler17);
+        getContentPane().add(filler21);
 
         jPanel2.setMaximumSize(new java.awt.Dimension(32767, 28));
         jPanel2.setMinimumSize(new java.awt.Dimension(400, 28));
@@ -1676,11 +1697,13 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         jPanel2.add(filler8);
 
         getContentPane().add(jPanel2);
+        getContentPane().add(filler18);
+        getContentPane().add(filler19);
 
         jPanel1.setMaximumSize(new java.awt.Dimension(20000, 20000));
         jPanel1.setOpaque(false);
 
-        jSplitPane1.setDividerLocation(380);
+        jSplitPane1.setDividerLocation(425);
         jSplitPane1.setDividerSize(7);
         jSplitPane1.setResizeWeight(0.25);
         jSplitPane1.setContinuousLayout(true);
@@ -1710,13 +1733,13 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         jPanel15.setLayout(jPanel15Layout);
         jPanel15Layout.setHorizontalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
+            .addComponent(jPanel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel15Layout.createSequentialGroup()
                 .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 415, Short.MAX_VALUE))
+                .addGap(0, 397, Short.MAX_VALUE))
         );
 
         jPanel3.add(jPanel15);
@@ -1772,13 +1795,13 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 692, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 647, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 415, Short.MAX_VALUE))
+                .addGap(0, 397, Short.MAX_VALUE))
         );
 
         jPanel7.add(jPanel8);
@@ -1809,7 +1832,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
         );
 
         getContentPane().add(jPanel1);
@@ -1837,8 +1860,12 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private javax.swing.Box.Filler filler14;
     private javax.swing.Box.Filler filler15;
     private javax.swing.Box.Filler filler16;
+    private javax.swing.Box.Filler filler17;
+    private javax.swing.Box.Filler filler18;
+    private javax.swing.Box.Filler filler19;
     private javax.swing.Box.Filler filler2;
     private javax.swing.Box.Filler filler20;
+    private javax.swing.Box.Filler filler21;
     private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
     private javax.swing.Box.Filler filler5;

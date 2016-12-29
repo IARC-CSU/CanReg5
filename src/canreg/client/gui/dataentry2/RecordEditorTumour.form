@@ -615,7 +615,6 @@
                               <action class="canreg.client.gui.dataentry2.RecordEditorTumour" id="addSourceAction" methodName="addSourceAction"/>
                             </Property>
                             <Property name="text" type="java.lang.String" resourceKey="addSourceAction.Action.text"/>
-                            <Property name="focusable" type="boolean" value="false"/>
                             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                               <Dimension value="[220, 23]"/>
                             </Property>
@@ -624,6 +623,9 @@
                             </Property>
                             <Property name="name" type="java.lang.String" value="addSourceAction" noResource="true"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="addSourceRecordButtonFocusGained"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.Box$Filler" name="filler8">
                           <Properties>

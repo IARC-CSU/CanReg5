@@ -392,8 +392,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 this.categoryCombo.showPopup();
             else if (descriptionCombo.isVisible())
                 this.descriptionCombo.showPopup();            
-        } else if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
-            
+        } else if (evt.getKeyChar() == KeyEvent.VK_ENTER) {            
             //Skip to next VariableEditorPanel if this dictionary code is complete and correct
             if (this.codeTextField.getBackground() == VARIABLE_OK_COLOR) {
                 this.descriptionCombo.setFocusable(false);                
@@ -405,6 +404,9 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                     this.categoryCombo.setFocusable(true);
             } else
                 transferFocusToNext();
+        } else if (evt.getKeyChar() == '+') {
+            evt.consume();
+            transferFocusToPrevious();
         }
     }    
     
@@ -610,9 +612,14 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
         
         //Change the sorting
-        else if (evt.getKeyChar() == '+') {
+        else if (evt.getKeyChar() == '-') {
             evt.consume();
             this.sortToggle.doClick();
+        }
+        
+        else if (evt.getKeyChar() == '+') {
+            evt.consume();
+            transferFocusToPrevious();
         }
     }
     
@@ -624,9 +631,14 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
         
         //Change the sorting
-        else if (evt.getKeyChar() == '+') {
+        else if (evt.getKeyChar() == '-') {
             evt.consume();
             this.sortToggle.doClick();
+        }
+        
+        else if (evt.getKeyChar() == '+') {
+            evt.consume();
+            transferFocusToPrevious();
         }
     }
        
