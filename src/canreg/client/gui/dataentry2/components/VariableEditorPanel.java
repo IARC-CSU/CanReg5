@@ -320,10 +320,12 @@ public class VariableEditorPanel extends javax.swing.JPanel
         variableNameLabel = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         codeTextField = new javax.swing.JTextField();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
 
         setMaximumSize(new java.awt.Dimension(32767, 24));
         setMinimumSize(new java.awt.Dimension(40, 24));
         setName("Form"); // NOI18N
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
         mainSplitPane.setBorder(null);
         mainSplitPane.setDividerLocation(150);
@@ -361,20 +363,15 @@ public class VariableEditorPanel extends javax.swing.JPanel
 
         mainSplitPane.setRightComponent(jPanel1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        add(mainSplitPane);
+
+        filler1.setName("filler1"); // NOI18N
+        add(filler1);
     }// </editor-fold>//GEN-END:initComponents
   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JTextField codeTextField;
+    private javax.swing.Box.Filler filler1;
     protected javax.swing.JPanel jPanel1;
     protected javax.swing.JSplitPane mainSplitPane;
     protected javax.swing.JLabel variableNameLabel;

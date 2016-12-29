@@ -495,6 +495,8 @@ public class RecordEditorPatient extends javax.swing.JPanel
                 }
 
                 panel.add(vep);
+                panel.add(new javax.swing.Box.Filler(new java.awt.Dimension(0, 3),
+                        new java.awt.Dimension(0, 3), new java.awt.Dimension(32767, 3)));
             }
 
             variableEditorPanels.put(currentVariable.getDatabaseVariableName(), vep);

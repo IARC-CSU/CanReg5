@@ -7,9 +7,6 @@ BUG LIST
   3) Al darle que "no guardar cambios realizados", el record quedara locked, por lo cual no podemos volver a abrirlo
   4) Al lograr unlockearlo, el record tendra nuevos tumores que no corresponden    
 
-- "Please save patient record first" happened when I clicked save all. (Maybe because I hadn`t filled anything in the patient part?)
-    - estamos de acuerdo con este funcionamiento, un paciente o tumor no deberian estar vacios y poder guardarse
-
 - Sequence/total not working aparentemente al hacer un save de un tumour, se le aplica el cambio de secuencia a TODOS los paneles de tumores abiertos. Nada mas que no se reflejan en 
       las otras tabs porque no se les ejecuta el metodo RecordEditorPanel.refreshDatabaseRecord(). No deberian solo actualizarse las secuencias y numeros de los tumores de ese paciente?? 
       o hacerse refresh de todos los paneles????. Tampoco parecen estar guardandose en la base de datos esas secuencias correctamente (aparecen todos con numero 0)
@@ -20,29 +17,23 @@ BUG LIST
 - The "tumour linked to" button is there even when the case has only one patient record.
 - Actualizar (o quitar, si queda solo 1 paciente) la lista de "Tumour linked to" cuando se elimina un paciente
 
-- When picking a code that does not exist in a dictionary the field should be coloured red/pink.
-
-- Personally, I would probably like slightly more "air" around the components. Especially to the right of the elements of the form...
+- (DONE) Personally, I would probably like slightly more "air" around the components. Especially to the right of the elements of the form...
 - Dotted lines along split panes and transform mouse into "little hand" when above a dotted line
 - Put placeholders for LocalSettings to change Tumour/source split orientation and choosing between the 2 GUI's
 - Scroll doesn't work when the mouse is on top of a combobox (category y description)
 - Key "/" to tab backwards
 - Hide one of the splitpanes of a dictionary variable when category doesn't exist
 - falta quitar de RecordEditorTumour (de idiomas ru, tr y zh) los textos de changePatientRecord, menuAction, menuButton, deleteRecord, setObsolete
-- Si el textfield de una variable dictionario ya ha sido llenado correctamente, el tab debe saltar a la proxima variable (y no al combo)
-- la deteccion de cambios en campos de diccionario no funciona bien (al cambiar una categoria o description, no se ejecuta el changesDone())
+
 
 - Changes in a source should change "run checks" of that tumour
-- Change "run checks" on all the tumours of a patient when patient data changes
-- Erasing something on a field does not trigger the changes detection
-- Automatically changing the "run checks" button when a change has been made
+
 - Save all en otros idiomas
 - poner tooltip de variableName ya que si es muy grande solo se van a ver puntitos suspensivos.
 
 - Avoiding tabs go in front of Menu button if there are too many
 
 - Si se intenta eliminar un tumor que nunca fue guardado, no nos deja (BUG DE MORTEN??)
-- Paint red or show a label when a patient doesn't have any tumours linked
 - Left to translate to other languages other than english and spanish:
      RecordEditor PLEASE\ SELECT\ PATIENT\ RECORD\ FIRST
      RecordEditor PATIENT\ NOT\ OPEN
@@ -53,6 +44,14 @@ DONE
 - (DONE) (en variables diccionario) Si elegimos una categoria, pero resulta que la descripcion no esta dentro de esa categoria, queremos
 quitar la categoria y no se cambian las opciones de descripcion
 - (??????) The "label" part of the dictionary chooser still gets focus when tabbing (or "entering") through the form. That is not the way it should be.
+- (DONE) Change "run checks" on all the tumours of a patient when patient data changes
+- (DONE) Erasing something on a field does not trigger the changes detection
+- (DONE) Automatically changing the "run checks" button when a change has been made
+- (DONE) Si el textfield de una variable dictionario ya ha sido llenado correctamente, el tab debe saltar a la proxima variable (y no al combo)
+- (DONE) la deteccion de cambios en campos de diccionario no funciona bien (al cambiar una categoria o description, no se ejecuta el changesDone())
+- (DONE) When picking a code that does not exist in a dictionary the field should be coloured red/pink.
+- "Please save patient record first" happened when I clicked save all. (Maybe because I hadn`t filled anything in the patient part?)
+    - estamos de acuerdo con este funcionamiento, un paciente o tumor no deberian estar vacios y poder guardarse
 
 
 

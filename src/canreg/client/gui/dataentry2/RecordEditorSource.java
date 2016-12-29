@@ -246,6 +246,8 @@ public class RecordEditorSource extends javax.swing.JPanel
                 }
 
                 panel.add(vep);
+                panel.add(new javax.swing.Box.Filler(new java.awt.Dimension(0, 3), 
+                        new java.awt.Dimension(0, 3), new java.awt.Dimension(32767, 3)));
             }
 
             // vep.setPropertyChangeListener(this);
