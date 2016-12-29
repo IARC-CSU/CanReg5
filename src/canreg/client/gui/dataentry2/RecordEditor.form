@@ -588,7 +588,6 @@
                             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                               <action class="canreg.client.gui.dataentry2.RecordEditor" id="addTumourAction" methodName="addTumourAction"/>
                             </Property>
-                            <Property name="focusable" type="boolean" value="false"/>
                             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                               <Dimension value="[220, 23]"/>
                             </Property>
@@ -596,6 +595,12 @@
                               <Dimension value="[21, 23]"/>
                             </Property>
                           </Properties>
+                          <Events>
+                            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="addTumourRecordButtonFocusGained"/>
+                          </Events>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="//This is a hack to automatically put the focus on the first variable&#xa;//of a tumour when a new tumour is added"/>
+                          </AuxValues>
                         </Component>
                         <Component class="javax.swing.Box$Filler" name="filler11">
                           <Properties>

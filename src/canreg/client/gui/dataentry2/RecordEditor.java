@@ -228,13 +228,11 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     /**
      * Adds a new record (Patient or Tumour) to this Frame. Please load
      * patients first and then the tumours
-     * @param dbr 
-     * @return  
+     * @param dbr  
      */
-    public RecordEditorPanel addRecord(DatabaseRecord dbr) {
-        RecordEditorPanel rePanel = null;
+    public void addRecord(DatabaseRecord dbr) {
         if (dbr instanceof Patient) {                                   
-            rePanel = new RecordEditorPatient(this);
+            RecordEditorPatient rePanel = new RecordEditorPatient(this);
             rePanel.setDictionary(dictionary);
             rePanel.setDocument(doc);
             ((RecordEditorPatient)rePanel).setRecordAndBuildPanel(dbr);
@@ -309,7 +307,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             if (this.patientTabbedPane.getComponentCount() == 0)
                 throw new RuntimeException("Before adding a tumour first load at least 1 patient please");
             
-            rePanel = new RecordEditorTumour((ActionListener)this, (RecordEditor)this);
+            RecordEditorTumour rePanel = new RecordEditorTumour((ActionListener)this, (RecordEditor)this);
             rePanel.setDictionary(dictionary);
             rePanel.setDocument(doc);
             ((RecordEditorTumour)rePanel).setRecordAndBuildPanel(dbr);
@@ -362,21 +360,14 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                                     ((RecordEditorTumour)rePanel));
         }
         refreshShowObsolete();
-        return rePanel;
     }
         
     @Action
     public void addTumourAction() {
-        this.addTumourRecordButton.setFocusable(true);
         Tumour tumour = new Tumour();
         populateNewRecord(tumour, doc);
-        final RecordEditorTumour tumourPanel = (RecordEditorTumour) addRecord(tumour);        
+        addRecord(tumour);        
         this.tumourTabbedPane.setSelectedIndex(tumourTabbedPane.getComponentCount() - 1);
-        this.repaint();        
-        this.revalidate();
-        tumourPanel.requestFocusOnFirstVariable();
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();         
-        this.addTumourRecordButton.setFocusable(false);
     }
     
     @Action
@@ -1757,9 +1748,15 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         jPanel9.add(filler10);
 
         addTumourRecordButton.setAction(actionMap.get("addTumourAction")); // NOI18N
-        addTumourRecordButton.setFocusable(false);
         addTumourRecordButton.setMaximumSize(new java.awt.Dimension(220, 23));
         addTumourRecordButton.setMinimumSize(new java.awt.Dimension(21, 23));
+        //This is a hack to automatically put the focus on the first variable
+        //of a tumour when a new tumour is added
+        addTumourRecordButton.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                addTumourRecordButtonFocusGained(evt);
+            }
+        });
         jPanel9.add(addTumourRecordButton);
         jPanel9.add(filler11);
 
@@ -1825,6 +1822,10 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         if (tumourTab != null)
             this.tumourObsoleteToggleButton.setSelected(this.obsoleteToggles.get(tumourTab));
     }//GEN-LAST:event_tumourTabbedPaneStateChanged
+
+    private void addTumourRecordButtonFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addTumourRecordButtonFocusGained
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
+    }//GEN-LAST:event_addTumourRecordButtonFocusGained
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addTumourRecordButton;

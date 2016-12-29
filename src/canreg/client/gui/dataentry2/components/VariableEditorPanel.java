@@ -281,7 +281,9 @@ public class VariableEditorPanel extends javax.swing.JPanel
     
     @Override
     public void requestFocus() {
-        this.codeTextField.requestFocus();
+        this.codeTextField.setText("niggaaahhh");
+        this.codeTextField.setFocusable(true);
+        this.codeTextField.grabFocus();
     }
 
     @Override
