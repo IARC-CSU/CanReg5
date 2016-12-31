@@ -952,10 +952,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         int option = JOptionPane.showConfirmDialog(null, 
                 java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor")
                                         .getString("PERMANENTLY DELETE RECORD?"));
-        JTabbedPane tabbedPane = null;
         if (option == JOptionPane.YES_OPTION) {
             DatabaseRecord record = recordEditorPanel.getDatabaseRecord();
-            
             String patientTitle = null;
             if (record instanceof Patient) {                
                 for (int i = 0; i < patientTabbedPane.getComponentCount(); i++) 
@@ -966,16 +964,18 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             boolean success = deleteRecord(record);
             if (success) {
                 if (record instanceof Patient) {
-                    tabbedPane = patientTabbedPane;
+                    this.patientTabbedPane.remove((Component) recordEditorPanel);
                     //Remove the deleted patient from all tumours
                     for (Component tumourPanel : this.tumourTabbedPane.getComponents())
                         ((RecordEditorTumour) tumourPanel).removeLinkablePatient(patientTitle);
                 }
                 else if (record instanceof Tumour) {
-                    tabbedPane = tumourTabbedPane;
-                    tabbedPane.remove((Component) recordEditorPanel);
+                    tumourTabbedPane.remove((Component) recordEditorPanel);
                     //We update the sequence of all remaining tumours
-                    updateAllTumoursSequences(tabbedPane.);                    
+                    LinkedList<RecordEditorTumour> tumoursLeft = new LinkedList<RecordEditorTumour>();
+                    for(Component comp : tumourTabbedPane.getComponents())
+                        tumoursLeft.add((RecordEditorTumour) comp);
+                    updateAllTumoursSequences(tumoursLeft);                    
                     for(int i = 0; i < tumourTabbedPane.getTabCount(); i++) {             
                         try {
                             RecordEditorTumour tumour = (RecordEditorTumour) tumourTabbedPane.getComponentAt(i);
