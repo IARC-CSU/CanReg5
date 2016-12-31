@@ -6,13 +6,13 @@ BUG LIST
 - Scroll doesn't work when the mouse is on top of a combobox (category y description)
 - Hide one of the splitpanes of a dictionary variable when category combo doesn't exist
 - Avoiding tabs go in front of Menu button if there are too many
-- description y category combo no muestran "error de diccionario"  cuando el diccionario no fue encontrado
 
 - Left to translate to other languages other than english and spanish:
      RecordEditor PLEASE\ SELECT\ PATIENT\ RECORD\ FIRST
      RecordEditor PATIENT\ NOT\ OPEN
      RecordEditorTumour tumourPatientLinkLabel.text
 	 RecordEditor saveAllAction.Action.text
+	 DictionaryVariableEditorPanel Empty_dictionary
 
 DONE
 ====
@@ -37,8 +37,10 @@ quitar la categoria y no se cambian las opciones de descripcion
 - (DONE) Actualizar (o quitar, si queda solo 1 paciente) la lista de "Tumour linked to" cuando se elimina un paciente
 - (DONE) Close dialog of the RecordEditor ALWAYS closes no matter what option you choose
 - (DONE) Personally, I would probably like slightly more "air" around the components. Especially to the right of the elements of the form...
+- (DONE) description y category combo no muestran "error de diccionario"  cuando el diccionario no fue encontrado
 - "Please save patient record first" happened when I clicked save all. (Maybe because I hadn`t filled anything in the patient part?)
     - estamos de acuerdo con este funcionamiento, un paciente o tumor no deberian estar vacios y poder guardarse
+	
 
 
 

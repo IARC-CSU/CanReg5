@@ -183,12 +183,15 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         try {
             lookUpAndSetDescription();
         } catch (NullPointerException e) {
-            //descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
+            if(categoryComboCompSup != null && categoryComboCompSup.isInstalled())
+                categoryComboCompSup.uninstall();
             categoryCombo.setModel(
                     new javax.swing.DefaultComboBoxModel(
                             new String[] {java.util.ResourceBundle
                                     .getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel")
                                     .getString("Dictionary_Error")}));
+            if(descriptionComboCompSup != null && descriptionComboCompSup.isInstalled())
+                descriptionComboCompSup.uninstall();
             descriptionCombo.setModel(
                     new javax.swing.DefaultComboBoxModel(
                             new String[] {java.util.ResourceBundle
@@ -203,7 +206,8 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
      * and/or description item that matches the code.
      * @throws NullPointerException 
      */
-    private void lookUpAndSetDescription() throws NullPointerException {
+    private void lookUpAndSetDescription() 
+            throws NullPointerException {
         if (codeTextField.getText().trim().length() > 0) { 
             try {
                 if (dictionary.isCompoundDictionary() && codeTextField.getText().length() >= dictionary.getCodeLength()) {
@@ -252,7 +256,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         else
             jPanel4.setVisible(false);       
                 
-        if (dictionary.getDictionaryEntries() == null) {          
+        if (dictionary.getDictionaryEntries() == null || dictionary.getDictionaryEntries().isEmpty()) {          
             categoryCombo.setModel(
                     new javax.swing.DefaultComboBoxModel(
                             new String[] {java.util.ResourceBundle
@@ -306,7 +310,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 }
             };
             descriptionCombo.addActionListener(descriptionComboListener);
-        }   
+        } 
     }         
     
     /**
@@ -319,7 +323,8 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                                List<DictionaryEntry> values) {
         EventList<DictionaryEntry> possibleValuesEventList = new BasicEventList<DictionaryEntry>(values);
         if (compSup != null) {
-            compSup.uninstall();
+            if(compSup.isInstalled())
+                compSup.uninstall();
             //gc should clean it
             compSup = null;
         }
@@ -341,23 +346,41 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 try {
                     lookUpAndSetDescription();
                 } catch (NullPointerException ne) {
-                    descriptionCombo.setModel(new javax.swing.DefaultComboBoxModel(
-                            new String[] {java.util.ResourceBundle
-                                    .getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel")
-                                    .getString("Dictionary_Error")}));
-                    //descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
+                    if(categoryComboCompSup != null && categoryComboCompSup.isInstalled())
+                        categoryComboCompSup.uninstall();
+                    categoryCombo.setModel(
+                            new javax.swing.DefaultComboBoxModel(
+                                    new String[] {java.util.ResourceBundle
+                                            .getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel")
+                                            .getString("Dictionary_Error")}));
+                    if(descriptionComboCompSup != null && descriptionComboCompSup.isInstalled())
+                        descriptionComboCompSup.uninstall();
+                    descriptionCombo.setModel(
+                            new javax.swing.DefaultComboBoxModel(
+                                    new String[] {java.util.ResourceBundle
+                                            .getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel")
+                                            .getString("Dictionary_Error")}));
                 }
                 updateFilledInStatusColor();
             } else if (e.getActionCommand().equalsIgnoreCase(MaxLengthDocument.CHANGED_ACTION_STRING)) {
                 try {
                     lookUpAndSetDescription();
                     checkForChanges();
-                } catch (NullPointerException ne) {
-                    // descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Dictionary_Error"));
-                    descriptionCombo.setModel(new javax.swing.DefaultComboBoxModel(
-                            new String[] {java.util.ResourceBundle
-                                    .getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel")
-                                    .getString("Dictionary_Error")}));
+                } catch (NullPointerException ne) {  
+                    if(categoryComboCompSup != null && categoryComboCompSup.isInstalled())
+                        categoryComboCompSup.uninstall();
+                    categoryCombo.setModel(
+                            new javax.swing.DefaultComboBoxModel(
+                                    new String[] {java.util.ResourceBundle
+                                            .getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel")
+                                            .getString("Dictionary_Error")}));
+                    if(descriptionComboCompSup != null && descriptionComboCompSup.isInstalled())
+                        descriptionComboCompSup.uninstall();
+                    descriptionCombo.setModel(
+                            new javax.swing.DefaultComboBoxModel(
+                                    new String[] {java.util.ResourceBundle
+                                            .getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel")
+                                            .getString("Dictionary_Error")}));
                 }
                 updateFilledInStatusColor();
             }
@@ -371,20 +394,20 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             updateFilledInStatusColor();
         } catch (NullPointerException e) {
             codeTextField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
-            descriptionCombo.setModel(new DefaultComboBoxModel(
-                    new String[]{
-                        java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel").getString("Error")
-                        + ": "
-                        + codeTextField.getText()
-                        + " "
-                        + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel").getString("_is_not_a_valid_dictionary_code.")
-                    }));
-            /*descriptionTextField.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Error")
-                    + ": "
-                    + codeTextField.getText()
-                    + " "
-                    + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("_is_not_a_valid_dictionary_code."));*/
-            // JOptionPane.showInternalMessageDialog(this, codeTextField.getText() + " " + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("_is_not_a_valid_dictionary_code."), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("Error"), JOptionPane.ERROR_MESSAGE);
+            if(categoryComboCompSup != null && categoryComboCompSup.isInstalled())
+                categoryComboCompSup.uninstall();
+            categoryCombo.setModel(
+                    new javax.swing.DefaultComboBoxModel(
+                            new String[] {java.util.ResourceBundle
+                                    .getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel")
+                                    .getString("Dictionary_Error")}));
+            if(descriptionComboCompSup != null && descriptionComboCompSup.isInstalled())
+                descriptionComboCompSup.uninstall();
+            descriptionCombo.setModel(
+                    new javax.swing.DefaultComboBoxModel(
+                            new String[] {java.util.ResourceBundle
+                                    .getBundle("canreg/client/gui/dataentry2/components/resources/DictionaryVariableEditorPanel")
+                                    .getString("Dictionary_Error")}));
         }
     }             
     
