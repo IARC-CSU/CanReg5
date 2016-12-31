@@ -1,5 +1,6 @@
-/*
- * Copyright (C) 2016 Betty
+/**
+ * CanReg5 - a tool to input, store, check and analyse cancer registry data.
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,12 +14,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * @author Patricio Ezequiel Carranza, patocarranza@gmail.com
  */
 package canreg.client.gui.dataentry2;
 
 /**
- *
- * @author Betty
+ * General exception to be used when a Record (Patient or Tumour) has an 
+ * error when trying to save it. Use this exception when grouping multiple
+ * exceptions into one.
+ * @author patri_000
  */
 public class SaveRecordException extends Exception {
     

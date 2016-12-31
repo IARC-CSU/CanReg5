@@ -14,22 +14,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * 
  * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
- */
-
-/*
- * VariableEditorGroupPanel.java
- *
- * Created on 04 August 2008, 15:59
+ *         Patricio Ezequiel Carranza, patocarranza@gmail.com
  */
 package canreg.client.gui.dataentry2.components;
 
-//import canreg.client.gui.components.*;
-
 /**
  *
- * @author  ervikm, patri_000
+ * @author ervikm, patri_000
  */
 public class VariableEditorGroupPanel extends javax.swing.JPanel {
     

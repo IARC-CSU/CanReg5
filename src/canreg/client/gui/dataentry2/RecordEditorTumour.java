@@ -1,5 +1,6 @@
-/*
- * Copyright (C) 2016 patri_000
+/**
+ * CanReg5 - a tool to input, store, check and analyse cancer registry data.
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,6 +14,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
+ *         Patricio Ezequiel Carranza, patocarranza@gmail.com
  */
 package canreg.client.gui.dataentry2;
 
@@ -68,7 +72,7 @@ import org.w3c.dom.Document;
 
 /**
  *
- * @author patri_000
+ * @author ervikm, patri_000
  */
 public class RecordEditorTumour extends javax.swing.JPanel 
         implements RecordEditorPanel, ActionListener, Cloneable, PropertyChangeListener {
@@ -970,6 +974,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RecordEditorTumour.class);
         sourceDeleteMenuItem.setText(resourceMap.getString("removeSourceAction.Action.text")); // NOI18N
         sourceDeleteMenuItem.setName("deleteRecord"); // NOI18N
+        sourceDeleteMenuItem.setIcon(resourceMap.getIcon("deleteRecord.Action.icon"));
         sourcePopupMenu.add(sourceDeleteMenuItem);
 
         setFocusable(false);

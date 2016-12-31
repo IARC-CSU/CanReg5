@@ -1,5 +1,6 @@
-/*
- * Copyright (C) 2016 patri_000
+/**
+ * CanReg5 - a tool to input, store, check and analyse cancer registry data.
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,6 +14,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
+ *         Patricio Ezequiel Carranza, patocarranza@gmail.com
  */
 package canreg.client.gui.dataentry2;
 
@@ -26,7 +30,7 @@ import org.w3c.dom.Document;
 
 /**
  *
- * @author patri_000
+ * @author ervikm, patri_000
  */
 public interface RecordEditorPanel {
     

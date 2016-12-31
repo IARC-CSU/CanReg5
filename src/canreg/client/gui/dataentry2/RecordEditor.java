@@ -1,5 +1,6 @@
-/*
- * Copyright (C) 2016 patri_000
+/**
+ * CanReg5 - a tool to input, store, check and analyse cancer registry data.
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,6 +14,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
+ *         Patricio Ezequiel Carranza, patocarranza@gmail.com
  */
 package canreg.client.gui.dataentry2;
 
@@ -52,7 +56,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -69,7 +72,6 @@ import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameAdapter;
@@ -79,7 +81,7 @@ import org.w3c.dom.Document;
 
 /**
  *
- * @author patri_000
+ * @author ervikm, patri_000
  */
 public class RecordEditor extends javax.swing.JInternalFrame implements ActionListener {
      
@@ -110,10 +112,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     AutoFillHelper autoFillHelper;
     private String patientIDVariableName = null;
     private String patientRecordIDVariableName = null;
-    private BrowseInternalFrame browseInternalFrame;
-    
-    private volatile boolean mouseInsideSave = false;
-    
+    private BrowseInternalFrame browseInternalFrame;    
+    private volatile boolean mouseInsideSave = false;    
     private final HashMap<RecordEditorTumour, Boolean> obsoleteToggles;
         
     
@@ -501,7 +501,6 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                     RecordEditorTumour tumour = (RecordEditorTumour) tumourTabbedPane.getComponentAt(i);
                     tumour.prepareToSaveRecord();
                     this.saveRecord(tumour);
-                    tumour.refreshSequence();
                 } catch(SaveRecordException ex) {                             
                     failedTumours.add(tumourTabbedPane.getTitleAt(i) + " (Tab nº" + (i+1) + ") " +
                                       failed + ": " + ex.getLocalizedMessage());
@@ -524,7 +523,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
                                                   failed, 
                                                   JOptionPane.ERROR_MESSAGE);
         }
-    }
+    }        
     
     private void refreshTitles(RecordEditorPanel recordEditorPanel, DatabaseRecord dbr) {
         if (dbr instanceof Patient) {
@@ -968,12 +967,27 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             if (success) {
                 if (record instanceof Patient) {
                     tabbedPane = patientTabbedPane;
+                    //Remove the deleted patient from all tumours
                     for (Component tumourPanel : this.tumourTabbedPane.getComponents())
                         ((RecordEditorTumour) tumourPanel).removeLinkablePatient(patientTitle);
                 }
-                else if (record instanceof Tumour)
-                    tabbedPane = tumourTabbedPane;                
-                tabbedPane.remove((Component) recordEditorPanel);
+                else if (record instanceof Tumour) {
+                    tabbedPane = tumourTabbedPane;
+                    tabbedPane.remove((Component) recordEditorPanel);
+                    //We update the sequence of all remaining tumours
+                    updateAllTumoursSequences(tabbedPane.);                    
+                    for(int i = 0; i < tumourTabbedPane.getTabCount(); i++) {             
+                        try {
+                            RecordEditorTumour tumour = (RecordEditorTumour) tumourTabbedPane.getComponentAt(i);
+                            tumour.prepareToSaveRecord();
+                            this.saveRecord(tumour);
+                        } catch(SaveRecordException ex) {
+                            Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName())
+                                    .log(Level.SEVERE, null, ex.getLocalizedMessage());
+                        }
+                    }
+                }
+                                
                 JOptionPane.showInternalMessageDialog(this,
                         java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor")
                                                 .getString("RECORD DELETED."));
@@ -1179,31 +1193,15 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
             //Bubble all exceptions all the way to saveAllAction(), so all JOptionPanes
             //are handled from there.
             catch (RecordLockedException ex) {
-                /*JOptionPane.showInternalMessageDialog(this, 
-                                ex.getLocalizedMessage(),
-                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"), 
-                                JOptionPane.WARNING_MESSAGE);*/
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                 throw new SaveRecordException(ex.getLocalizedMessage());
             } catch (SecurityException ex) {
-                /*JOptionPane.showInternalMessageDialog(this, 
-                                ex.getLocalizedMessage(), 
-                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"),
-                                JOptionPane.WARNING_MESSAGE);*/
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                 throw new SaveRecordException(ex.getLocalizedMessage());
             } catch (RemoteException ex) {
-                /*JOptionPane.showInternalMessageDialog(this, 
-                                ex.getLocalizedMessage(), 
-                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"), 
-                                JOptionPane.WARNING_MESSAGE);*/
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                 throw new SaveRecordException(ex.getLocalizedMessage());
             } catch (SQLException ex) {
-                /*JOptionPane.showInternalMessageDialog(this, 
-                                ex.getLocalizedMessage(),
-                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("FAILED"),
-                                JOptionPane.WARNING_MESSAGE);*/
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                 throw new SaveRecordException(ex.getLocalizedMessage());
             }

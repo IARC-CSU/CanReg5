@@ -16,6 +16,9 @@
             <Property name="text" type="java.lang.String" resourceKey="removeSourceAction.Action.text"/>
             <Property name="name" type="java.lang.String" value="deleteRecord" noResource="true"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="sourceDeleteMenuItem.setIcon(resourceMap.getIcon(&quot;deleteRecord.Action.icon&quot;));"/>
+          </AuxValues>
         </MenuItem>
       </SubComponents>
     </Container>
