@@ -24,6 +24,7 @@ import canreg.client.CanRegClientApp;
 import canreg.client.gui.components.VariableEditorPanelInterface;
 import canreg.client.gui.dataentry2.components.DateVariableEditorPanel;
 import canreg.client.gui.dataentry2.components.DictionaryVariableEditorPanel;
+import canreg.client.gui.dataentry2.components.DottedDividerSplitPane;
 import canreg.client.gui.dataentry2.components.TextFieldVariableEditorPanel;
 import canreg.client.gui.dataentry2.components.VariableEditorGroupPanel;
 import canreg.client.gui.dataentry2.components.VariableEditorPanel;
@@ -45,6 +46,7 @@ import java.awt.Component;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
@@ -66,6 +68,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
@@ -1171,9 +1174,12 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
 
+        jSplitPane2.setDividerSize(7);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane2.setResizeWeight(0.5);
         jSplitPane2.setContinuousLayout(true);
+        jSplitPane2.setDoubleBuffered(true);
+        jSplitPane2.setUI(new DottedDividerSplitPane());
 
         dataScrollPane.setBorder(null);
         dataScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -1225,7 +1231,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(185, Short.MAX_VALUE))
+                .addContainerGap(311, Short.MAX_VALUE))
         );
 
         jPanel7.add(jPanel8);

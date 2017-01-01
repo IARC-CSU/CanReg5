@@ -26,6 +26,7 @@ import canreg.client.gui.CanRegClientView;
 import static canreg.client.gui.CanRegClientView.maximizeHeight;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.client.gui.dataentry.EditChecksInternalFrame;
+import canreg.client.gui.dataentry2.components.DottedDividerSplitPane;
 import canreg.client.gui.management.ComparePatientsInternalFrame;
 import canreg.client.gui.tools.PrintUtilities;
 import canreg.client.gui.tools.WaitFrame;
@@ -1705,6 +1706,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         jSplitPane1.setDividerSize(7);
         jSplitPane1.setResizeWeight(0.25);
         jSplitPane1.setContinuousLayout(true);
+        jSplitPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jSplitPane1.setUI(new DottedDividerSplitPane());
 
         jPanel3.setPreferredSize(new java.awt.Dimension(450, 451));
         jPanel3.setLayout(new javax.swing.OverlayLayout(jPanel3));

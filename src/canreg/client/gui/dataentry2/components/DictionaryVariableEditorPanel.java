@@ -30,16 +30,19 @@ import canreg.client.gui.components.DictionaryElementTextFilterator;
 import canreg.client.gui.tools.MaxLengthDocument;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
+import com.sun.glass.ui.Cursor;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 
 /**
@@ -86,13 +89,21 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         innerSplitPane.setResizeWeight(0.5);
         innerSplitPane.setFocusable(false);
         innerSplitPane.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        innerSplitPane.setMinimumSize(new java.awt.Dimension(20, 24));
         innerSplitPane.setName("innerSplitPane"); // NOI18N
+        innerSplitPane.setDividerSize(7);
+        innerSplitPane.setUI(new DottedDividerSplitPane());
+        innerSplitPane.setBorder(null);
         
         outerSplitPane.setDividerLocation(70);
         outerSplitPane.setBorder(null);
         outerSplitPane.setFocusable(false);
         outerSplitPane.setResizeWeight(0.2);
-        outerSplitPane.setName("outerSplitPane"); // NOI18N               
+        outerSplitPane.setMinimumSize(new java.awt.Dimension(20, 24));
+        outerSplitPane.setName("outerSplitPane"); // NOI18N
+        outerSplitPane.setDividerSize(7);
+        outerSplitPane.setUI(new DottedDividerSplitPane());
+        outerSplitPane.setBorder(null);
         
         categoryCombo.setMinimumSize(new Dimension(20, 20));
         categoryCombo.setPreferredSize(new Dimension(20, 20));
@@ -253,8 +264,10 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         if (dictionary.isCompoundDictionary())
             //categoryCombo is inside the jPanel4
             jPanel4.setVisible(true);
-        else
-            jPanel4.setVisible(false);       
+        else {
+            jPanel4.setVisible(false);
+            innerSplitPane.setDividerSize(0);
+        }
                 
         if (dictionary.getDictionaryEntries() == null || dictionary.getDictionaryEntries().isEmpty()) {          
             categoryCombo.setModel(

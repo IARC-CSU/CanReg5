@@ -124,7 +124,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
     }
     
     protected void setVariableName(String variableName) {
-        variableNameLabel.setText(variableName);
+        variableNameLabel.setText(variableName + "  ");
         variableNameLabel.setToolTipText(variableName); 
     }
 
@@ -334,9 +334,14 @@ public class VariableEditorPanel extends javax.swing.JPanel
 
         mainSplitPane.setBorder(null);
         mainSplitPane.setDividerLocation(150);
+        mainSplitPane.setDividerSize(7);
         mainSplitPane.setResizeWeight(0.3);
-        mainSplitPane.setMinimumSize(new java.awt.Dimension(20, 20));
+        mainSplitPane.setContinuousLayout(true);
+        mainSplitPane.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        mainSplitPane.setMinimumSize(new java.awt.Dimension(20, 24));
         mainSplitPane.setName("mainSplitPane"); // NOI18N
+        mainSplitPane.setUI(new DottedDividerSplitPane());
+        mainSplitPane.setBorder(null);
 
         variableNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(VariableEditorPanel.class);
