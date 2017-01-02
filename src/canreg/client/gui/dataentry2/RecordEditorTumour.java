@@ -43,10 +43,14 @@ import canreg.common.database.Tumour;
 import canreg.common.qualitycontrol.CheckResult;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
 import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
@@ -70,6 +74,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -122,9 +128,10 @@ public class RecordEditorTumour extends javax.swing.JPanel
     
     public RecordEditorTumour(ActionListener listener, 
                               RecordEditor recordEditor) {
-        initComponents(); 
-        this.actionListener = listener;
         this.recordEditor = recordEditor;
+        this.actionListener = listener;
+        initComponents(); 
+
         this.changesMap = new HashMap<VariableEditorPanel, Boolean>();
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
 
@@ -235,9 +242,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
                 Dictionary dic = dictionary.get(dictionaryID);
                 if (dic != null)            
                     ((DictionaryVariableEditorPanel)vep).setDictionary(dic);                
-            } else {
-                //vep.setDictionary(null);
-            }
+            } 
 
             String variableName = currentVariable.getDatabaseVariableName();
             Object variableValue = databaseRecord.getVariable(variableName);
@@ -251,7 +256,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
             Integer groupID = currentVariable.getGroupID();
             //Skip 0 and -1 - System groups
             if (groupID > 0) {
-                VariableEditorGroupPanel panel = groupIDtoPanelMap.get(groupID);
+                    VariableEditorGroupPanel panel = groupIDtoPanelMap.get(groupID);
                 if (panel == null) {
                     panel = new VariableEditorGroupPanel();
                     panel.setGroupName(globalToolBox.translateGroupIDToDatabaseGroupListElement(groupID).getGroupName());
@@ -418,8 +423,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
     }
     
     public void maximizeSize() {
-        int heightToGrowBy = this.getHeight() - dataScrollPane.getHeight() + dataPanel.getHeight();
-        int widthToGrowBy = this.getWidth() - dataScrollPane.getWidth() + dataPanel.getWidth();
+        int heightToGrowBy = this.getHeight() - this.dataScrollPane.getHeight() + this.dataPanel.getHeight();
+        int widthToGrowBy = this.getWidth() - this.dataScrollPane.getWidth() + this.dataPanel.getWidth();
         this.setSize(this.getHeight() + heightToGrowBy, this.getWidth() + widthToGrowBy);
         this.revalidate();
     }   
@@ -955,7 +960,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
         sequenceNumberValueLabel = new javax.swing.JLabel();
         sequenceTotalDescriptionLabel = new javax.swing.JLabel();
         sequenceTotalValueLabel = new javax.swing.JLabel();
-        filler6 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 4), new java.awt.Dimension(0, 4), new java.awt.Dimension(32767, 4));
         jPanel4 = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
         dataScrollPane = new javax.swing.JScrollPane();
@@ -981,9 +985,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
         sourcePopupMenu.add(sourceDeleteMenuItem);
 
         setFocusable(false);
-        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
         systemPanel.setMaximumSize(new java.awt.Dimension(32767, 100));
+        systemPanel.setMinimumSize(new java.awt.Dimension(300, 50));
         systemPanel.setPreferredSize(new java.awt.Dimension(1062, 80));
         systemPanel.setLayout(new javax.swing.BoxLayout(systemPanel, javax.swing.BoxLayout.LINE_AXIS));
         systemPanel.add(filler4);
@@ -1169,25 +1173,19 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         systemPanel.add(updatedByPanel1);
 
-        add(systemPanel);
-        add(filler6);
-
-        jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel4.setPreferredSize(new java.awt.Dimension(100, 50));
 
         jSplitPane2.setDividerSize(7);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane2.setResizeWeight(0.5);
-        jSplitPane2.setContinuousLayout(true);
-        jSplitPane2.setDoubleBuffered(true);
+        jSplitPane2.setResizeWeight(0.65);
+        jSplitPane2.setPreferredSize(new java.awt.Dimension(100, 50));
         jSplitPane2.setUI(new DottedDividerSplitPane());
-
-        dataScrollPane.setBorder(null);
-        dataScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         dataPanel.setLayout(new javax.swing.BoxLayout(dataPanel, javax.swing.BoxLayout.PAGE_AXIS));
         dataScrollPane.setViewportView(dataPanel);
 
         jSplitPane2.setLeftComponent(dataScrollPane);
+        dataScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         jPanel7.setLayout(new javax.swing.OverlayLayout(jPanel7));
 
@@ -1225,13 +1223,13 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1304, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1075, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(311, Short.MAX_VALUE))
+                .addContainerGap(383, Short.MAX_VALUE))
         );
 
         jPanel7.add(jPanel8);
@@ -1243,11 +1241,33 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         jPanel7.add(jPanel10);
 
-        jSplitPane2.setRightComponent(jPanel7);
+        jSplitPane2.setBottomComponent(jPanel7);
 
-        jPanel4.add(jSplitPane2);
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE)
+        );
 
-        add(jPanel4);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 1077, Short.MAX_VALUE)
+            .addComponent(systemPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1077, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(systemPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     private void patientsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientsComboBoxActionPerformed
@@ -1272,7 +1292,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
     private javax.swing.Box.Filler filler5;
-    private javax.swing.Box.Filler filler6;
     private javax.swing.Box.Filler filler7;
     private javax.swing.Box.Filler filler8;
     private javax.swing.Box.Filler filler9;

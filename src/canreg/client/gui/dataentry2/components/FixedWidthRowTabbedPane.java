@@ -16,7 +16,6 @@
  */
 package canreg.client.gui.dataentry2.components;
 
-import canreg.client.gui.components.*;
 import javax.swing.JTabbedPane;
 
 /**

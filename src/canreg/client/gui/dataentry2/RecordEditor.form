@@ -412,9 +412,8 @@
       <SubComponents>
         <Container class="javax.swing.JSplitPane" name="jSplitPane1">
           <Properties>
-            <Property name="dividerLocation" type="int" value="425"/>
             <Property name="dividerSize" type="int" value="7"/>
-            <Property name="resizeWeight" type="double" value="0.25"/>
+            <Property name="resizeWeight" type="double" value="0.4"/>
             <Property name="continuousLayout" type="boolean" value="true"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
               <Color id="Default Cursor"/>
@@ -449,7 +448,7 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanel16" alignment="1" pref="424" max="32767" attributes="0"/>
+                          <Component id="jPanel16" alignment="1" pref="277" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
@@ -615,7 +614,7 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanel9" alignment="1" pref="647" max="32767" attributes="0"/>
+                          <Component id="jPanel9" alignment="1" pref="794" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">

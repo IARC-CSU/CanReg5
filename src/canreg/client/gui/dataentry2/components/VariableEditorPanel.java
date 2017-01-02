@@ -32,7 +32,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeListener;
 import java.util.logging.*;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.event.DocumentListener;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 /**
  *
@@ -327,7 +331,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
         codeTextField = new javax.swing.JTextField();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
 
-        setMaximumSize(new java.awt.Dimension(32767, 24));
+        setMaximumSize(new java.awt.Dimension(32767, 28));
         setMinimumSize(new java.awt.Dimension(40, 24));
         setName("Form"); // NOI18N
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
@@ -336,10 +340,10 @@ public class VariableEditorPanel extends javax.swing.JPanel
         mainSplitPane.setDividerLocation(150);
         mainSplitPane.setDividerSize(7);
         mainSplitPane.setResizeWeight(0.3);
-        mainSplitPane.setContinuousLayout(true);
-        mainSplitPane.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        mainSplitPane.setMaximumSize(new java.awt.Dimension(2147483647, 28));
         mainSplitPane.setMinimumSize(new java.awt.Dimension(20, 24));
         mainSplitPane.setName("mainSplitPane"); // NOI18N
+        mainSplitPane.setPreferredSize(new java.awt.Dimension(250, 28));
         mainSplitPane.setUI(new DottedDividerSplitPane());
         mainSplitPane.setBorder(null);
 

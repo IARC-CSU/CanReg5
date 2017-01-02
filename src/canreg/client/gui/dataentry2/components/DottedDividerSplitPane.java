@@ -21,6 +21,9 @@ package canreg.client.gui.dataentry2.components;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JSplitPane;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
@@ -29,13 +32,17 @@ import javax.swing.plaf.basic.BasicSplitPaneUI;
  * Custom painter for a JSplirPane divider. Paints the divider as a set of small
  * circles instead of being a straight line. You can use this painter like this:
  *      jSplitPane.setUI(new DottedDividerSplitPane());
+ * And set the border of the splitPane AFTER setting the UI. For example:
+ *      jSplitPane.setUI(new DottedDividerSplitPane());
+ *      jSplitPane.setBorder(null);
  * @author patri_000
  */
-public class DottedDividerSplitPane extends BasicSplitPaneUI {        
+public class DottedDividerSplitPane extends BasicSplitPaneUI {
+    
     
     public DottedDividerSplitPane() {
-        
     }
+    
        
     @Override
     public BasicSplitPaneDivider createDefaultDivider() {
@@ -47,7 +54,7 @@ public class DottedDividerSplitPane extends BasicSplitPaneUI {
             }
 
             @Override
-            public void paint(Graphics g) {
+            public void paint(Graphics g) {                
                 g.setColor(Color.DARK_GRAY);
                 int startOval = 0;
                 final int ovalSize = divider.getDividerSize() % 2 == 0 ? 

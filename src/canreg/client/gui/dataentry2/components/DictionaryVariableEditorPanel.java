@@ -88,8 +88,8 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         innerSplitPane.setBorder(null);
         innerSplitPane.setResizeWeight(0.5);
         innerSplitPane.setFocusable(false);
-        innerSplitPane.setMaximumSize(new java.awt.Dimension(32767, 32767));
         innerSplitPane.setMinimumSize(new java.awt.Dimension(20, 24));
+        innerSplitPane.setPreferredSize(new java.awt.Dimension(100, 28));
         innerSplitPane.setName("innerSplitPane"); // NOI18N
         innerSplitPane.setDividerSize(7);
         innerSplitPane.setUI(new DottedDividerSplitPane());
@@ -100,6 +100,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         outerSplitPane.setFocusable(false);
         outerSplitPane.setResizeWeight(0.2);
         outerSplitPane.setMinimumSize(new java.awt.Dimension(20, 24));
+        outerSplitPane.setPreferredSize(new java.awt.Dimension(100, 28));
         outerSplitPane.setName("outerSplitPane"); // NOI18N
         outerSplitPane.setDividerSize(7);
         outerSplitPane.setUI(new DottedDividerSplitPane());

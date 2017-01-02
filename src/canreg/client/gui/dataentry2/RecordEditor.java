@@ -72,6 +72,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -917,14 +918,26 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         }
         tumourRecords.clear();
     }
+    
+    public JSplitPane getMainSplitPane() {
+        return this.jSplitPane1;
+    }
 
-    /*Tenemos que armar un hashmap de contadores, donde la key sea el paciente
-            al cual esta asociado el tumor. De esta forma, cuando actualicemos
-                    los tumores debemos hacerlo en base a los pacientes que estan linkeados */
+    /**
+     * Updates the "sequence" and "total" variables of all open tumours. This implementation
+     * considers that ALL open tumours belong to the same patient (it does not takes under 
+     * consideration if the user prefers to have different sequencing for tumours belonging to
+     * different patients, the user will have to open each patient on a separate RecordEditor
+     * and save changes for the sequences to change).
+     * This method DOES NOT save these updates nor does it re-draw the labels for the "sequence"
+     * and "tumour" variables shown in the RecordEditorTumour.
+     * @param tumoursToUpdate collection of tumours to be updated. Usually this method is run
+     * after saving changes, so if a tumour was not succesfully saved is recommended to NOT
+     * be included in this collection.
+     */
     private void updateAllTumoursSequences(Collection<RecordEditorTumour> tumoursToUpdate) {
         int totalTumours = 0;
-        //for (int i = 0; i < tumourTabbedPane.getComponentCount(); i++) {
-        //RecordEditorTumour rep = (RecordEditorTumour) tumourTabbedPane.getComponentAt(i);
+
         for(RecordEditorTumour tumourRecord : tumoursToUpdate) {
             Tumour tumour = (Tumour) tumourRecord.getDatabaseRecord();
             boolean obsolete = tumour.getVariable(tumourObsoleteVariableName)
@@ -1702,9 +1715,8 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         jPanel1.setMaximumSize(new java.awt.Dimension(20000, 20000));
         jPanel1.setOpaque(false);
 
-        jSplitPane1.setDividerLocation(425);
         jSplitPane1.setDividerSize(7);
-        jSplitPane1.setResizeWeight(0.25);
+        jSplitPane1.setResizeWeight(0.4);
         jSplitPane1.setContinuousLayout(true);
         jSplitPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jSplitPane1.setUI(new DottedDividerSplitPane());
@@ -1734,7 +1746,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         jPanel15.setLayout(jPanel15Layout);
         jPanel15Layout.setHorizontalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+            .addComponent(jPanel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1796,7 +1808,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 647, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 794, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
