@@ -391,7 +391,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         newPanel.setRecordAndBuildPanel(newSource);
         sources.add(newSource);
         sourcesTabbedPane.add(newPanel);
-        refreshTitles();
+        refreshTitles(); 
         this.sourcesTabbedPane.setSelectedIndex(sourcesTabbedPane.getComponentCount() - 1);
     }
     
@@ -974,7 +974,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         filler9 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         jPanel10 = new javax.swing.JPanel();
         filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 10));
-        sourcesTabbedPane = new canreg.client.gui.dataentry2.components.FixedWidthRowTabbedPane();
+        sourcesTabbedPane = new javax.swing.JTabbedPane();
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditorTumour.class, this);
         sourceDeleteMenuItem.setAction(actionMap.get("removeSourceAction")); // NOI18N
@@ -1175,11 +1175,15 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         jPanel4.setPreferredSize(new java.awt.Dimension(100, 50));
 
+        jSplitPane2.setBorder(null);
         jSplitPane2.setDividerSize(7);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane2.setResizeWeight(0.65);
         jSplitPane2.setPreferredSize(new java.awt.Dimension(100, 50));
         jSplitPane2.setUI(new DottedDividerSplitPane());
+        jSplitPane2.setBorder(null);
+
+        dataScrollPane.setBorder(null);
 
         dataPanel.setLayout(new javax.swing.BoxLayout(dataPanel, javax.swing.BoxLayout.PAGE_AXIS));
         dataScrollPane.setViewportView(dataPanel);
@@ -1223,13 +1227,13 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1075, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1077, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(383, Short.MAX_VALUE))
+                .addContainerGap(414, Short.MAX_VALUE))
         );
 
         jPanel7.add(jPanel8);
@@ -1318,7 +1322,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private javax.swing.JMenuItem sourceDeleteMenuItem;
     private javax.swing.JButton sourceMenuButton;
     private javax.swing.JPopupMenu sourcePopupMenu;
-    private canreg.client.gui.dataentry2.components.FixedWidthRowTabbedPane sourcesTabbedPane;
+    private javax.swing.JTabbedPane sourcesTabbedPane;
     private javax.swing.JPanel systemPanel;
     private javax.swing.JPanel tumourLinkedPanel;
     private javax.swing.JLabel tumourPatientLinkLabel;

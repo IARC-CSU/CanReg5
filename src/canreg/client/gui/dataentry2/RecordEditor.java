@@ -969,7 +969,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         if (option == JOptionPane.YES_OPTION) {
             DatabaseRecord record = recordEditorPanel.getDatabaseRecord();
             String patientTitle = null;
-            if (record instanceof Patient) {                
+            if (record instanceof Patient) {                 
                 for (int i = 0; i < patientTabbedPane.getComponentCount(); i++) 
                     if(this.patientTabbedPane.getComponentAt(i) == recordEditorPanel)
                         patientTitle = this.patientTabbedPane.getTitleAt(i);
@@ -1573,7 +1573,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         filler20 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         jPanel11 = new javax.swing.JPanel();
         filler15 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 10));
-        patientTabbedPane = new canreg.client.gui.dataentry2.components.FixedWidthRowTabbedPane();
+        patientTabbedPane = new javax.swing.JTabbedPane();
         jPanel7 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
@@ -1584,7 +1584,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
         filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         jPanel10 = new javax.swing.JPanel();
         filler14 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 10));
-        tumourTabbedPane = new canreg.client.gui.dataentry2.components.FixedWidthRowTabbedPane();
+        tumourTabbedPane = new javax.swing.JTabbedPane();
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditor.class, this);
         patientDeleteMenuItem.setAction(actionMap.get("deletePatientRecord")); // NOI18N
@@ -1902,7 +1902,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private javax.swing.JMenuItem patientDeleteMenuItem;
     private javax.swing.JButton patientMenuButton;
     private javax.swing.JPopupMenu patientPopupMenu;
-    private canreg.client.gui.dataentry2.components.FixedWidthRowTabbedPane patientTabbedPane;
+    private javax.swing.JTabbedPane patientTabbedPane;
     private javax.swing.JButton printButton;
     private javax.swing.JButton saveAllButton;
     private javax.swing.JCheckBox showObsoleteRecordsCheckBox;
@@ -1911,7 +1911,7 @@ public class RecordEditor extends javax.swing.JInternalFrame implements ActionLi
     private javax.swing.JButton tumourMenuButton;
     private javax.swing.JRadioButtonMenuItem tumourObsoleteToggleButton;
     private javax.swing.JPopupMenu tumourPopupMenu;
-    private canreg.client.gui.dataentry2.components.FixedWidthRowTabbedPane tumourTabbedPane;
+    private javax.swing.JTabbedPane tumourTabbedPane;
     // End of variables declaration//GEN-END:variables
     
 }

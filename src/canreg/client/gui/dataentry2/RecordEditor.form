@@ -550,13 +550,16 @@
                         <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.VerticalStrut"/>
                       </AuxValues>
                     </Component>
-                    <Container class="canreg.client.gui.dataentry2.components.FixedWidthRowTabbedPane" name="patientTabbedPane">
+                    <Container class="javax.swing.JTabbedPane" name="patientTabbedPane">
                       <Properties>
                         <Property name="focusable" type="boolean" value="false"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[450, 451]"/>
                         </Property>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JTabbedPane()"/>
+                      </AuxValues>
 
                       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
                     </Container>
@@ -751,7 +754,7 @@
                         <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.VerticalStrut"/>
                       </AuxValues>
                     </Component>
-                    <Container class="canreg.client.gui.dataentry2.components.FixedWidthRowTabbedPane" name="tumourTabbedPane">
+                    <Container class="javax.swing.JTabbedPane" name="tumourTabbedPane">
                       <Properties>
                         <Property name="focusable" type="boolean" value="false"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -761,6 +764,9 @@
                       <Events>
                         <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="tumourTabbedPaneStateChanged"/>
                       </Events>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JTabbedPane()"/>
+                      </AuxValues>
 
                       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
                     </Container>

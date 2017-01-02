@@ -54,8 +54,12 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         dateChooser = new JDateChooser();
         String dateFormatString = databaseListElement.getDateFormatString();
         dateChooser.setDateFormatString(dateFormatString);
+        
+        dateChooser.setMinimumSize(codeTextField.getMinimumSize());
+        dateChooser.setPreferredSize(codeTextField.getPreferredSize());
         jPanel1.remove(codeTextField);
         jPanel1.add(dateChooser);
+                
         dateField = (JTextField) dateChooser.getDateEditor().getUiComponent();
         codeTextField = dateField;
         codeTextField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -73,7 +77,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             dateField.setBackground(MANDATORY_VARIABLE_MISSING_COLOR);
             mandatory = true;
         }
-        //setMaximumLength(databaseListElement.getVariableLength());
+
         setMaximumLength(dateFormatString.length());
 
         dateField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -115,7 +119,6 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                     dateChooser.setCalendar(date);
                     String dateString = codeTextField.getText();
                     String dateFormatString = dateChooser.getDateFormatString();
-                    // dateField.setText(value);
                     if (date.isUnknownDay()) 
                         dateString = DateHelper.setDay(dateString, dateFormatString, "99");
                     
