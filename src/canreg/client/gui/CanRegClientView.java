@@ -1262,7 +1262,7 @@ public final class CanRegClientView extends FrameView {
     public void showLastRecord() {
         canreg.client.gui.dataentry2.RecordEditor internalFrame = null;
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
-        if (dataEntryVersion == LocalSettings.DATA_ENTRY_VERSION_NEW)
+        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
             internalFrame = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
         else 
             internalFrame = new RecordEditor(desktopPane);
@@ -1314,7 +1314,7 @@ public final class CanRegClientView extends FrameView {
     public void createNewRecordSetAction() {
         canreg.client.gui.dataentry2.RecordEditor internalFrame = null;
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
-        if (dataEntryVersion == LocalSettings.DATA_ENTRY_VERSION_NEW)
+        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
             internalFrame = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
         else 
             internalFrame = new RecordEditor(desktopPane);

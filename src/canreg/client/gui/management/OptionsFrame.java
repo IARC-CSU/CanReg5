@@ -233,7 +233,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         dataEntryLabel.setText(resourceMap.getString("dataEntryLabel.text")); // NOI18N
         dataEntryLabel.setName("dataEntryLabel"); // NOI18N
 
-        dataEntryVersionComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Original Version", "New Version" }));
+        dataEntryVersionComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "New Version", "Original Version" }));
         dataEntryVersionComboBox.setName("dataEntryVersionComboBox"); // NOI18N
 
         newDataEntryVerticalSources.setText(resourceMap.getString("newDataEntryVerticalSources.text")); // NOI18N

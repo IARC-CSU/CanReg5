@@ -681,7 +681,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
 
         canreg.client.gui.dataentry2.RecordEditor recordEditor = null;
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
-        if (dataEntryVersion == LocalSettings.DATA_ENTRY_VERSION_NEW)
+        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
             recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(dtp);
         else 
             recordEditor = new RecordEditor(dtp);
@@ -792,9 +792,13 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
      * @param idString
      */
     public void editTumourID(String idString) {
-
-        //RecordEditor recordEditor = new RecordEditor(dtp);
-        canreg.client.gui.dataentry2.RecordEditorMainFrame recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(dtp);
+        canreg.client.gui.dataentry2.RecordEditor recordEditor = null;
+        String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
+        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
+            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(dtp);
+        else 
+            recordEditor = new RecordEditor(dtp);
+        
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord record = null;

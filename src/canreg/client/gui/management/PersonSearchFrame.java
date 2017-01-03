@@ -671,7 +671,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
 
         canreg.client.gui.dataentry2.RecordEditor recordEditor = null;
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
-        if (dataEntryVersion == LocalSettings.DATA_ENTRY_VERSION_NEW)
+        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
             recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
         else 
             recordEditor = new RecordEditor(desktopPane);

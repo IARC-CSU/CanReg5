@@ -332,8 +332,8 @@
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="2">
-                        <StringItem index="0" value="Original Version"/>
-                        <StringItem index="1" value="New Version"/>
+                        <StringItem index="0" value="New Version"/>
+                        <StringItem index="1" value="Original Version"/>
                       </StringArray>
                     </Property>
                     <Property name="name" type="java.lang.String" value="dataEntryVersionComboBox" noResource="true"/>
