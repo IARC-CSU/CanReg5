@@ -1260,8 +1260,13 @@ public final class CanRegClientView extends FrameView {
      */
     @Action
     public void showLastRecord() {
-        //RecordEditor internalFrame = new RecordEditor(desktopPane);
-        canreg.client.gui.dataentry2.RecordEditor internalFrame = new canreg.client.gui.dataentry2.RecordEditor(desktopPane);
+        canreg.client.gui.dataentry2.RecordEditor internalFrame = null;
+        String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
+        if (dataEntryVersion == LocalSettings.DATA_ENTRY_VERSION_NEW)
+            internalFrame = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
+        else 
+            internalFrame = new RecordEditor(desktopPane);
+
         internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord patientRecord = null;
@@ -1288,8 +1293,9 @@ public final class CanRegClientView extends FrameView {
         } catch (RecordLockedException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
         }
-        showAndPositionInternalFrame(desktopPane, internalFrame);
-        maximizeHeight(desktopPane, internalFrame);
+        
+        showAndPositionInternalFrame(desktopPane, (JInternalFrame)internalFrame);
+        maximizeHeight(desktopPane, (JInternalFrame)internalFrame);
     }
 
     /**
@@ -1306,14 +1312,19 @@ public final class CanRegClientView extends FrameView {
      */
     @Action
     public void createNewRecordSetAction() {
-        //RecordEditor internalFrame = new RecordEditor(desktopPane);
-        canreg.client.gui.dataentry2.RecordEditor internalFrame = new canreg.client.gui.dataentry2.RecordEditor(desktopPane);
+        canreg.client.gui.dataentry2.RecordEditor internalFrame = null;
+        String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
+        if (dataEntryVersion == LocalSettings.DATA_ENTRY_VERSION_NEW)
+            internalFrame = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
+        else 
+            internalFrame = new RecordEditor(desktopPane);
+        
         internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
         internalFrame.addRecord(new Patient());
         internalFrame.addRecord(new Tumour());
-        showAndPositionInternalFrame(desktopPane, internalFrame);
-        maximizeHeight(desktopPane, internalFrame);
+        showAndPositionInternalFrame(desktopPane, (JInternalFrame)internalFrame);
+        maximizeHeight(desktopPane, (JInternalFrame)internalFrame);
     }
 
     /**

@@ -21,6 +21,7 @@
 package canreg.client.gui.dataentry2;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.LocalSettings;
 import canreg.client.gui.components.VariableEditorPanelInterface;
 import canreg.client.gui.dataentry2.components.DateVariableEditorPanel;
 import canreg.client.gui.dataentry2.components.DictionaryVariableEditorPanel;
@@ -43,14 +44,9 @@ import canreg.common.database.Tumour;
 import canreg.common.qualitycontrol.CheckResult;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
 import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
@@ -72,10 +68,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.JTextField;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -112,7 +105,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private DatabaseVariablesListElement tumourSequenceTotalVariableListElement;
     private final SimpleDateFormat dateFormat;
     private final LinkedList<DatabaseVariablesListElement> autoFillList;
-    private final RecordEditor recordEditor;
+    private final RecordEditorMainFrame recordEditor;
     private final org.jdesktop.application.ResourceMap resourceMap;
     private Set<Source> sources;
     private boolean avoidPatientsComboBoxListener;
@@ -124,12 +117,14 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private String recordStatusBeforeChanges;
     //The patient to which this tumour is linked to
     private RecordEditorPatient patient;
+    private LocalSettings localSettings;
     
     
     public RecordEditorTumour(ActionListener listener, 
-                              RecordEditor recordEditor) {
+                              RecordEditorMainFrame recordEditor) {
         this.recordEditor = recordEditor;
         this.actionListener = listener;
+        localSettings = CanRegClientApp.getApplication().getLocalSettings();
         initComponents(); 
 
         this.changesMap = new HashMap<VariableEditorPanel, Boolean>();
@@ -141,7 +136,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         autoFillList = new LinkedList<DatabaseVariablesListElement>();
 
         resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class)
-                .getContext().getResourceMap(RecordEditorTumour.class);
+                .getContext().getResourceMap(RecordEditorTumour.class);                
     }
     
     @Override
@@ -698,7 +693,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     @Action
     public void runChecksAction() {
         autoFill();
-        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHECKS));
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditorMainFrame.CHECKS));
         checkResultCodeBeforeChanges = resultCode;
         recordStatusBeforeChanges = (String) databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
     }
@@ -830,7 +825,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     
     @Action
     public void runMultiplePrimarySearch() {
-        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.RUN_MP));
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditorMainFrame.RUN_MP));
     }    
         
     @Override
@@ -919,7 +914,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     
     @Action
     public void autoFill() {
-        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.AUTO_FILL));
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditorMainFrame.AUTO_FILL));
     }   
     
     @Action
@@ -1177,6 +1172,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         jSplitPane2.setBorder(null);
         jSplitPane2.setDividerSize(7);
+        if (localSettings.isDataEntryVerticalSources())
+        jSplitPane2.setOrientation(javax.swing.JSplitPane.HORIZONTAL_SPLIT);
+        else
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane2.setResizeWeight(0.65);
         jSplitPane2.setPreferredSize(new java.awt.Dimension(100, 50));

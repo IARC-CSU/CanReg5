@@ -22,7 +22,7 @@
 package canreg.client.gui.dataentry2.components;
 
 import canreg.client.gui.components.*;
-import canreg.client.gui.dataentry2.RecordEditor;
+import canreg.client.gui.dataentry2.RecordEditorMainFrame;
 import canreg.client.gui.tools.MaxLengthDocument;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseVariablesListElement;
@@ -236,7 +236,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
             this.checkForChanges();
         }
         if (e.getActionCommand().equalsIgnoreCase(DictionaryElementChooser.OK_ACTION)) {            
-            listener.actionPerformed(new ActionEvent(this, 0, RecordEditor.REQUEST_FOCUS));
+            listener.actionPerformed(new ActionEvent(this, 0, RecordEditorMainFrame.REQUEST_FOCUS));
             transferFocusToNext();
         }
     }

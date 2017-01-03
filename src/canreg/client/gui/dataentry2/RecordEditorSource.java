@@ -298,7 +298,7 @@ public class RecordEditorSource extends javax.swing.JPanel
         else if ("value".equals(propName)) {
             setSaveNeeded(true);
             //Temporarily disabled
-            actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
+            actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditorMainFrame.CHANGED));
             // saveButton.setEnabled(saveNeeded);
         } else {
             // Do nothing.

@@ -368,7 +368,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
     @Action
     public void runPersonSearch() {
         autoFill();
-        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.PERSON_SEARCH));
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditorMainFrame.PERSON_SEARCH));
     }
         
     @Override
@@ -392,7 +392,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
     
     @Action
     public void runExactSearch() {
-        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.RUN_EXACT));
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditorMainFrame.RUN_EXACT));
     }
 
     @Override
@@ -419,7 +419,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
     
     @Action
     public void autoFill() {
-        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.AUTO_FILL));
+        actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditorMainFrame.AUTO_FILL));
     }
     
     private void buildDatabaseRecord() {
@@ -536,7 +536,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
         else if ("value".equals(propName)) {
             setSaveNeeded(true);
             //Temporarily disabled
-            actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
+            actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditorMainFrame.CHANGED));
         } else {
             // Do nothing.
         }

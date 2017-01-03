@@ -1,18 +1,14 @@
 BUG LIST
 
-mainSplitPane.setUI(new DottedDividerSplitPane());
-mainSplitPane.setBorder(null);
-
-- VariableEditorPanel no coinciden en tamaño horizontal
-- Put placeholders for LocalSettings to change Tumour/source split orientation and choosing between the 2 GUI's
-- Avoiding tabs go in front of Menu button if there are too many
-
 - Left to translate to other languages other than english and spanish:
      RecordEditor PLEASE\ SELECT\ PATIENT\ RECORD\ FIRST
      RecordEditor PATIENT\ NOT\ OPEN
      RecordEditorTumour tumourPatientLinkLabel.text
 	 RecordEditor saveAllAction.Action.text
 	 DictionaryVariableEditorPanel Empty_dictionary
+   OptionsFrame(All Languages) dataEntryLabel.text
+   OptionsFrame(All Languages) newDataEntryVerticalSources.toolTipText
+   OptionsFrame(All Languages)newDataEntryVerticalSources.text
 
 DONE
 ====
@@ -40,12 +36,9 @@ quitar la categoria y no se cambian las opciones de descripcion
 - (DONE) description y category combo no muestran "error de diccionario"  cuando el diccionario no fue encontrado
 - (DONE) Hide one of the splitpanes of a dictionary variable when category combo doesn't exist
 - (DONE) Dotted lines along split panes and transform mouse into "little hand" when above a dotted line
+- (DONE) Put placeholders for LocalSettings to change Tumour/source split orientation and choosing between the 2 GUI's
+- (Impossible to change, the arquitecture made by Avoiding tabs go in front of Menu button if there are too many
 - (Java bug https://bugs.openjdk.java.net/browse/JDK-8136998) Scroll doesn't work when the mouse is on top of a combobox (category y description)
 - "Please save patient record first" happened when I clicked save all. (Maybe because I hadn`t filled anything in the patient part?)
     - estamos de acuerdo con este funcionamiento, un paciente o tumor no deberian estar vacios y poder guardarse
 	
-
-tabs
-http://stackoverflow.com/questions/476678/tabs-with-equal-constant-width-in-jtabbedpane
-http://stackoverflow.com/questions/9636601/tabs-at-fixed-positions-in-jtabbedpane-or-in-one-row
-http://stackoverflow.com/questions/2510310/how-to-make-jtabbedpane-autoresize-to-fit-page-dimensions
