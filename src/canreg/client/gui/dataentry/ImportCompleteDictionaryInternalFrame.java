@@ -47,6 +47,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
+import org.apache.commons.lang.StringUtils;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 
@@ -385,7 +387,11 @@ private void previewTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-
                 String line = br.readLine();
                 int dictionaryID = -1;
                 while (line != null) {
-
+//<ictl.co>
+                    if(!StringUtils.isEmpty(line) && (int)line.charAt(0) == 65279){
+                        line = line.substring(1);
+                    }
+//</ictl.co>
                     while (line != null && line.trim().length() == 0) {
                         // skip empty lines
                         line = br.readLine();

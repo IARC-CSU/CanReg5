@@ -522,6 +522,9 @@ public class DatabaseVariableEditorPanel extends javax.swing.JPanel {
         standardVariableNameComboBox.setModel(new DefaultComboBoxModel(standardVariableNames));
         fillInStatusComboBox.setModel(new DefaultComboBoxModel(
                 new TranslatableListElement[]{
+//<ictl.co>
+                        new TranslatableListElement(Globals.VARIABLE_TYPE_NCID_NAME, java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/DatabaseVariableEditorPanel").getString("NCID")),
+//</ictl.co>
                     new TranslatableListElement(Globals.FILL_IN_STATUS_MANDATORY_STRING, java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/DatabaseVariableEditorPanel").getString("MANDATORY")),
                     new TranslatableListElement(Globals.FILL_IN_STATUS_OPTIONAL_STRING, java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/DatabaseVariableEditorPanel").getString("OPTIONAL")),
                     new TranslatableListElement(Globals.FILL_IN_STATUS_AUTOMATIC_STRING, java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/DatabaseVariableEditorPanel").getString("AUTOMATIC")),

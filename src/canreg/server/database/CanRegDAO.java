@@ -1,17 +1,17 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
  * Copyright (C) 2008-2016 International Agency for Research on Cancer
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *
@@ -19,52 +19,24 @@
  */
 package canreg.server.database;
 
-import canreg.common.database.User;
-import canreg.common.database.Patient;
-import canreg.common.database.PopulationDatasetsEntry;
-import canreg.common.database.Tumour;
-import canreg.common.database.PopulationDataset;
-import canreg.common.database.Source;
-import canreg.common.database.NameSexRecord;
-import canreg.common.database.Dictionary;
-import canreg.common.database.DictionaryEntry;
-import canreg.common.database.AgeGroupStructure;
-import canreg.common.database.DatabaseRecord;
-import canreg.common.DatabaseDictionaryListElement;
+import canreg.common.*;
 import canreg.common.cachingtableapi.DistributedTableDataSource;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
-import canreg.common.DatabaseFilter;
-import canreg.common.DatabaseVariablesListElement;
-import canreg.common.GlobalToolBox;
-import canreg.common.Globals;
+import canreg.common.database.*;
+import canreg.common.database.Dictionary;
 import canreg.server.DatabaseStats;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.ibm.icu.util.Calendar;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import java.io.*;
 import java.rmi.RemoteException;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.sql.*;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.w3c.dom.*;
 
 /**
  *
@@ -407,7 +379,7 @@ public class CanRegDAO {
             if (!popset.isWorldPopulationBool()) {
                 popset.setWorldPopulation(
                         populationDatasetMap.get(
-                        popset.getWorldPopulationID()));
+                                popset.getWorldPopulationID()));
             }
         }
 
@@ -655,6 +627,9 @@ public class CanRegDAO {
                 // debugOut(query);
                 statement.execute(query);
             }
+            //<ictl.co>
+            statement.execute(QueryGenerator.strCreateUtilsToDateFunction());
+            //</ictl.co>
             bCreatedTables = true;
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -848,6 +823,19 @@ public class CanRegDAO {
             // CanRegDAO now throws database mismatch exceptions if the database structure doesn't match the prepared queries.
             throw new RemoteException("Database description mismatch... \n" + ex.getLocalizedMessage());
         }
+
+        //<ictl.co>
+        //Deprecate on next version
+        try {
+            if (isConnected) {
+                Statement statement = dbConnection.createStatement();
+                statement.execute(QueryGenerator.strCreateUtilsToDateFunction());
+                statement.close();
+            }
+        } catch (Exception ignore) {
+
+        }
+        //</ictl.co>
         return isConnected;
     }
 
@@ -903,7 +891,7 @@ public class CanRegDAO {
 
     /**
      *
-     * @return 
+     * @return
      * @throws java.sql.SQLException
      */
     public boolean disconnect() throws SQLException {
@@ -991,6 +979,35 @@ public class CanRegDAO {
                     } else {
                         stmtSaveNewRecord.setString(recordVariableNumber, "");
                     }
+                    //<ictl.co>
+                } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NCID_NAME)) {
+                    if (obj != null) {
+                        try {
+                            String strObj = obj.toString();
+                            if (strObj.length() > 0) {
+                                if (variableLength > 0 && strObj.length() > variableLength) {
+                                    strObj = strObj.substring(0, variableLength);
+                                }
+                                stmtSaveNewRecord.setString(recordVariableNumber, strObj);
+                            } else {
+                                stmtSaveNewRecord.setString(recordVariableNumber, "");
+                            }
+/*
+                            Long intObj = Long.parseLong(strObj);
+                            if (!GlobalToolBox.validateNCID(strObj)) {
+                                throw new IllegalArgumentException("Invalid NCID");
+                            }
+                            stmtSaveNewRecord.setString(recordVariableNumber, strObj);
+*/
+                        } catch (java.lang.NumberFormatException cce) {
+                            debugOut("NCID " + variableType + " " + obj);
+                            throw cce;
+                        } catch (java.lang.ClassCastException cce) {
+                            debugOut("NCID " + variableType + " " + obj);
+                            throw cce;
+                        }
+                    }
+//</ictl.co>
                 } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
                     if (obj != null) {
                         try {
@@ -1540,6 +1557,32 @@ public class CanRegDAO {
                         } else {
                             stmtEditRecord.setString(variableNumber, "");
                         }
+                        //<ictl.co>
+                    } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NCID_NAME)) {
+                        if (obj != null) {
+                            try {
+                                String strObj = obj.toString();
+                                if (strObj.length() > 0) {
+                                    stmtEditRecord.setString(variableNumber, strObj);
+                                } else {
+                                    stmtEditRecord.setString(variableNumber, "");
+                                }
+/*
+                                Long intObj = Long.parseLong(strObj);
+                                if (!GlobalToolBox.validateNCID(strObj)) {
+                                    throw new IllegalArgumentException("Invalid NCID");
+                                }
+                                stmtEditRecord.setString(variableNumber, strObj);
+*/
+                            } catch (java.lang.NumberFormatException cce) {
+                                debugOut("NCID " + variableType + " " + obj);
+                                throw cce;
+                            } catch (java.lang.ClassCastException cce) {
+                                debugOut("NCID " + variableType + " " + obj);
+                                throw cce;
+                            }
+                        }
+//</ictl.co>
                     } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
                         if (obj != null) {
                             try {
@@ -1745,6 +1788,7 @@ public class CanRegDAO {
      * @param index
      * @return
      */
+
     /**
      *
      * @param recordID
@@ -1787,6 +1831,7 @@ public class CanRegDAO {
      * @param index
      * @return
      */
+
     /**
      *
      * @param recordID
@@ -1891,7 +1936,12 @@ public class CanRegDAO {
             if (highestPatientID != null) {
                 patientID = canreg.common.Tools.increment(highestPatientID);
             } else {
+                //<ictl.co>
                 int year = Calendar.getInstance().get(Calendar.YEAR);
+                if (LocalizationHelper.isRtlLanguageActive() && LocalizationHelper.isPersianLocale()) {
+                    year = DateHelper.convertJalaliYearToGregoranYear(year);
+                }
+                //<ictl.co>
                 patientID = year + "";
                 int patientIDlength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getVariableLength();
                 while (patientID.length() < patientIDlength - 1) {
@@ -2082,6 +2132,7 @@ public class CanRegDAO {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.INFO, msg);
         }
     }
+
     private Connection dbConnection;
     private Properties dbProperties;
     private boolean isConnected;
@@ -2138,7 +2189,7 @@ public class CanRegDAO {
     private final String ns = Globals.NAMESPACE;
     private static final String strGetPatient =
             "SELECT * FROM APP.PATIENT "
-            + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+                    + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private final String strGetPatients =
             "SELECT * FROM APP.PATIENT";
     private final String strGetUsers =
@@ -2157,22 +2208,22 @@ public class CanRegDAO {
     private final String strCountSourcesAndTumoursAndPatients;
     private static final String strGetTumour =
             "SELECT * FROM APP.TUMOUR "
-            + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+                    + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private static final String strGetSource =
             "SELECT * FROM APP.Source "
-            + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+                    + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private final String strGetTumours =
             "SELECT * FROM APP.TUMOUR";
     private final String strCountTumours =
             "SELECT COUNT(*) FROM APP.TUMOUR";
     private static final String strGetDictionary =
             "SELECT * FROM APP.DICTIONARIES "
-            + "WHERE ID = ?";
+                    + "WHERE ID = ?";
     private final String strGetDictionaries =
             "SELECT * FROM APP.DICTIONARIES ";
     private static final String strGetDictionaryEntry =
             "SELECT * FROM APP.DICTIONARY "
-            + "WHERE ID = ?";
+                    + "WHERE ID = ?";
     private static final String strGetDictionaryEntries =
             "SELECT * FROM APP.DICTIONARY ORDER BY ID";
     private static final String strGetPopulationDatasetEntries =
@@ -2183,24 +2234,24 @@ public class CanRegDAO {
             "SELECT * FROM APP.NAMESEX ";
     private static final String strDeletePatientRecord =
             "DELETE FROM APP.PATIENT "
-            + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+                    + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private static final String strDeleteSourceRecord =
             "DELETE FROM APP.SOURCE "
-            + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+                    + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private static final String strDeleteTumourRecord =
             "DELETE FROM APP.TUMOUR "
-            + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+                    + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private static final String strDeleteDictionaryEntries =
             "DELETE FROM APP.DICTIONARY "
-            + "WHERE DICTIONARY = ?";
+                    + "WHERE DICTIONARY = ?";
     private static final String strClearNameSexTable =
             "DELETE FROM APP.NAMESEX";
     private static final String strDeletePopulationDataset =
             "DELETE FROM APP.PDSETS "
-            + "WHERE PDS_ID = ?";
+                    + "WHERE PDS_ID = ?";
     private static final String strDeletePopulationDatasetEntries =
             "DELETE FROM APP.PDSET "
-            + "WHERE PDS_ID = ?";
+                    + "WHERE PDS_ID = ?";
     // The Dynamic ones
     private String strMaxNumberOfSourcesPerTumourRecord;
     private String strSavePatient;
@@ -2249,6 +2300,7 @@ public class CanRegDAO {
     }
 
     // release a locked record
+
     /**
      *
      * @param recordID
@@ -2362,29 +2414,46 @@ public class CanRegDAO {
         String filterString = filter.getFilterString();
 
         if (!filterString.isEmpty()) {
+/*<ictl.co>
             if ((tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME))) {
                 filterString = " WHERE ( " + filterString + " )";
             } else {
                 filterString = " AND ( " + filterString + " )";
             }
-        } 
+</ictl.co>*/
+//<ictl.co>
+            filterString = " AND (" + filterString + ")";
+//</ictl.co>
+        }
 
         // Add the range part
         if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-            if (!filterString.isEmpty()) 
+/*<ictl.co>
+            if (!filterString.isEmpty())
                 filterString += " AND ";
             else { 
                 filterString += " WHERE ";
             }
+</ictl.co>*/
+//<ictl.co>
+            filterString += " AND ";
+//</ictl.co>
             String rangeFilterString = QueryGenerator.buildRangePart(filter);
             filterString += rangeFilterString;
         }
         filterVariables = filter.getDatabaseVariables();
         String variablesList = "";
+        //<ictl.co>
+        String aliasList = "";
+        //</ictl.co>
         if (filterVariables.size() > 0) {
             for (DatabaseVariablesListElement variable : filterVariables) {
                 if (variable != null) {
-                    variablesList += ", APP." + variable.getDatabaseTableName() + "." + variable.getDatabaseVariableName();
+                    //<ictl.co>
+//                    variablesList += ", APP." + variable.getDatabaseTableName() + "." + variable.getDatabaseVariableName();
+                    variablesList += ", APP." + variable.getDatabaseTableName() + "." + variable.getDatabaseVariableName() + " as " + variable.getDatabaseVariableName();
+                    aliasList += "," + variable.getDatabaseVariableName();
+                    //</ictl.co>
                 }
             }
 
@@ -2399,34 +2468,77 @@ public class CanRegDAO {
 
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)
                 || tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+            //<ictl.co>
+/*
             query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
                     + "FROM APP.TUMOUR, APP.PATIENT "
                     + "WHERE APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " "
                     + filterString + " "
                     + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
                     + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+*/
+            query = "SELECT x as \"YEAR\"" + aliasList + ",COUNT(*) as Cases " +
+                    "FROM (SELECT " + Globals.SCHEMA_NAME + ".TODATE(" + incidenceDateVariableName + ",'yyyy','" + Locale.getDefault().getLanguage() + "') " + variablesList + " "
+                    + "FROM APP.TUMOUR, APP.PATIENT "
+                    + "WHERE APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " "
+                    + filterString + ") t(x" + aliasList + ") "
+                    + "GROUP BY x " + aliasList + " "
+                    + "ORDER BY x " + aliasList;
+
+//</ictl.co>
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)
                 || tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
+            //<ictl.co>
+/*
             query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
                     + "FROM APP.SOURCE, APP.TUMOUR "
                     + "WHERE APP.SOURCE." + tumourIDVariableNameSourceTable + " = APP.TUMOUR." + tumourIDVariableNameTumourTable + " "
                     + filterString + " "
                     + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
                     + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+*/
+            query = "SELECT x as \"YEAR\"" + aliasList + ",COUNT(*) as Cases " +
+                    "FROM (SELECT " + Globals.SCHEMA_NAME + ".TODATE(" + incidenceDateVariableName + ",'yyyy','" + Locale.getDefault().getLanguage() + "') " + variablesList + " "
+                    + "FROM APP.SOURCE, APP.TUMOUR "
+                    + "WHERE APP.SOURCE." + tumourIDVariableNameSourceTable + " = APP.TUMOUR." + tumourIDVariableNameTumourTable + " "
+                    + filterString + ") t(x" + aliasList + ") "
+                    + "GROUP BY x " + aliasList + " "
+                    + "ORDER BY x " + aliasList;
+//</ictl.co>
         } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-            query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
+            //<ictl.co>
+/*            query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
                     + "FROM APP.TUMOUR "
                     + (filterString.trim().length() > 0 ? filterString + " " : "")
                     + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
                     + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+*/
+            query = "SELECT x as \"YEAR\"" + aliasList + ",COUNT(*) as Cases " +
+                    "FROM (SELECT " + Globals.SCHEMA_NAME + ".TODATE(" + incidenceDateVariableName + ",'yyyy','" + Locale.getDefault().getLanguage() + "') " + variablesList + " "
+                    + "FROM APP.TUMOUR "
+                    + (filterString.trim().length() > 0 ? filterString + " " : "") + ") t(x" + aliasList + ") "
+                    + "GROUP BY x " + aliasList + " "
+                    + "ORDER BY x " + aliasList;
+//</ictl.co>
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
-            query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
+            //<ictl.co>
+/*            query = "SELECT SUBSTR(" + incidenceDateVariableName + ",1,4) as \"YEAR\" " + variablesList + ", COUNT(*) as Cases "
                     + "FROM APP.SOURCE, APP.TUMOUR, APP.PATIENT "
                     + "WHERE APP.SOURCE." + tumourIDVariableNameSourceTable + " = APP.TUMOUR." + tumourIDVariableNameTumourTable + " "
                     + "AND APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " "
                     + filterString + " "
                     + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
                     + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
+*/
+            query = "SELECT x as \"YEAR\"" + aliasList + ",COUNT(*) as Cases " +
+                    "FROM (SELECT " + Globals.SCHEMA_NAME + ".TODATE(" + incidenceDateVariableName + ",'yyyy','" + Locale.getDefault().getLanguage() + "') " + variablesList + " "
+                    + "FROM APP.SOURCE, APP.TUMOUR, APP.PATIENT "
+                    + "WHERE APP.SOURCE." + tumourIDVariableNameSourceTable + " = APP.TUMOUR." + tumourIDVariableNameTumourTable + " "
+                    + "AND APP.PATIENT." + patientIDVariableNamePatientTable + " = APP.TUMOUR." + patientIDVariableNameTumourTable + " "
+                    + filterString + ") t(x" + aliasList + ") "
+                    + "GROUP BY x " + aliasList + " "
+                    + "ORDER BY x " + aliasList;
+//</ictl.co>
         }
         System.out.println(query);
         try {
@@ -2511,9 +2623,9 @@ public class CanRegDAO {
         }
 
         /* debug stuff */
-         System.out.println("filterString: " + filterStringBuilder);
-         System.out.println("getterString: " + getterStringBuilder);
-         System.out.println("counterString: " + counterStringBuilder);
+        System.out.println("filterString: " + filterStringBuilder);
+        System.out.println("getterString: " + getterStringBuilder);
+        System.out.println("counterString: " + counterStringBuilder);
          /* */
 
         ResultSet countRowSet;
@@ -2549,7 +2661,7 @@ public class CanRegDAO {
     private void fillDictionary(Globals.StandardVariableNames standardVariableName, String fileName) throws IOException {
         DatabaseVariablesListElement element =
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                standardVariableName.toString());
+                        standardVariableName.toString());
         if (element != null) {
             DatabaseDictionaryListElement dictionary = element.getDictionary();
             InputStream in = getClass().getResourceAsStream(fileName);
@@ -2582,7 +2694,7 @@ public class CanRegDAO {
         // Set primary keys in patient table
         for (String command : QueryGenerator.strCreatePatientTablePrimaryKey(
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
+                        Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
             try {
                 System.out.println(command);
                 statement.execute(command);
@@ -2594,7 +2706,7 @@ public class CanRegDAO {
         // Set primary keys in tumour table
         for (String command : QueryGenerator.strCreateTumourTablePrimaryKey(
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName())) {
+                        Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName())) {
             try {
                 System.out.println(command);
                 statement.execute(command);
@@ -2607,7 +2719,7 @@ public class CanRegDAO {
         // Set primary keys in source table
         for (String command : QueryGenerator.strCreateSourceTablePrimaryKey(
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName())) {
+                        Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName())) {
             try {
                 System.out.println(command);
                 statement.execute(command);
@@ -2620,9 +2732,9 @@ public class CanRegDAO {
         // Set foreign keys in tumour table
         for (String command : QueryGenerator.strCreateTumourTableForeignKey(
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName(),
+                        Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName(),
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
+                        Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
             try {
                 System.out.println(command);
                 statement.execute(command);
@@ -2634,9 +2746,9 @@ public class CanRegDAO {
         // Set foreign keys in source table
         for (String command : QueryGenerator.strCreateSourceTableForeignKey(
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName(),
+                        Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName(),
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName())) {
+                        Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName())) {
             try {
                 System.out.println(command);
                 statement.execute(command);

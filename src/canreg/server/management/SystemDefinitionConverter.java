@@ -201,7 +201,8 @@ public class SystemDefinitionConverter {
         Globals.VARIABLE_TYPE_ALPHA_NAME,
         Globals.VARIABLE_TYPE_DATE_NAME,
         Globals.VARIABLE_TYPE_DICTIONARY_NAME,
-        Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME
+        Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME,
+            /*</ictl.co>*/ Globals.VARIABLE_TYPE_NCID_NAME/*</ictl.co>*/
     };
     private final String[] mpCopyValues = {
         "Must",

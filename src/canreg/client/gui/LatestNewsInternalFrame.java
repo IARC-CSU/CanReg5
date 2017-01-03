@@ -31,6 +31,7 @@ package canreg.client.gui;
  * @author ervikm
  */
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import com.ibm.icu.util.Calendar;
 import com.sun.cnpi.rss.elements.Category;
 import com.sun.cnpi.rss.elements.Item;
 import com.sun.cnpi.rss.elements.Link;
@@ -43,7 +44,6 @@ import com.sun.cnpi.rss.parser.*;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.HyperlinkEvent;

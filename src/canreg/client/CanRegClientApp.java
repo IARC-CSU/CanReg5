@@ -435,9 +435,9 @@ public class CanRegClientApp extends SingleFrameApplication {
         return returnString;
     }
 
-    public String loginDirect(String serverCode, String username, char[] password) throws LoginException, NullPointerException, NotBoundException, MalformedURLException, RemoteException, UnknownHostException, WrongCanRegVersionException {
+    public String loginDirect(String serverCode, String username, char[] password/*<ictl.co>*/, int port/*</ictl.co>*/) throws LoginException, NullPointerException, NotBoundException, MalformedURLException, RemoteException, UnknownHostException, WrongCanRegVersionException {
         // should this be moved to the loginserver?
-        CanRegLoginInterface loginServer = new CanRegLoginImpl(serverCode);
+        CanRegLoginInterface loginServer = new CanRegLoginImpl(serverCode/*<ictl.co>*/, port/*</ictl.co>*/);
         return login(loginServer, username, password);
     }
 

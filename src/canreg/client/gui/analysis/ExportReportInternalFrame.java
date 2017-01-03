@@ -32,11 +32,7 @@ import canreg.client.LocalSettings;
 import canreg.client.gui.components.VariablesExportDetailsPanel;
 import canreg.client.gui.tools.TableColumnAdjuster;
 import canreg.client.gui.tools.XTableColumnModel;
-import canreg.common.DatabaseFilter;
-import canreg.common.DatabaseVariablesListElement;
-import canreg.common.DateHelper;
-import canreg.common.Globals;
-import canreg.common.GregorianCalendarCanReg;
+import canreg.common.*;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.cachingtableapi.DistributedTableModel;
@@ -45,7 +41,8 @@ import canreg.common.database.Source;
 import canreg.common.database.Tumour;
 import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
-import java.awt.Cursor;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -58,7 +55,6 @@ import java.io.Writer;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -72,7 +68,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+
+import com.ibm.icu.util.Calendar;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 
@@ -87,7 +87,32 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private DistributedTableDataSourceClient tableDataSource;
     private DistributedTableModel tableDataModel;
     private JScrollPane resultScrollPane;
-    private JTable resultTable = new JTable();
+    //<ictl.co>
+//    private JTable resultTable = new JTable();
+    private JTable resultTable = new javax.swing.JTable() {
+        //<ictl.co>
+        @Override
+        public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+            Component c = super.prepareRenderer(renderer, row, column);
+            String columnName = this.getColumnName(column);
+            if (variableChooserPanel.isLocalCalendarSelected() && LocalizationHelper.isRtlLanguageActive() &&
+                    ("InciD".equalsIgnoreCase(columnName) ||
+                            "BirthD".equalsIgnoreCase(columnName) ||
+                            "YEAR".equalsIgnoreCase(columnName) ||
+                            "DLC".equalsIgnoreCase(columnName) ||
+                            "PatientUpdateDate".equalsIgnoreCase(columnName) ||
+                            "UpDate".equalsIgnoreCase(columnName)
+                    )) {
+                if (c instanceof DefaultTableCellRenderer.UIResource) {
+                    String value = ((DefaultTableCellRenderer.UIResource) c).getText();
+                    ((DefaultTableCellRenderer.UIResource) c).setText(DateHelper.analyseJTableColumnValue(value, getModel().getColumnName(column)));
+                }
+            }
+            return c;
+        }
+        //</ictl.co>
+    };
+    //</ictl.co>
     private JFileChooser chooser;
     private String path;
     private LocalSettings localSettings;
@@ -887,6 +912,15 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 for (int column = 0; column < columnCount; column++) {
                     dvle = variableChooserPanel.getVariablesExportDetailsPanelByName(resultTable.getColumnName(column));
                     value = resultTable.getValueAt(row, column);
+                    //<ictl.co>
+                    if (LocalizationHelper.isRtlLanguageActive()) {
+                        if (dvle.getVariable().getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)
+                                && variableChooserPanel.isLocalCalendarSelected()
+                                && DateHelper.analyseContentForDateValue((String) value)) {
+                            value = DateHelper.gregorianDateStringToLocaleDateString((String) value, Globals.DATE_FORMAT_STRING);
+                        }
+                    }
+                    //<ictl.oc>
                     boolean[] bools = dvle.getCheckboxes();
                     // the raw code
                     if (bools[0]) {
@@ -909,7 +943,13 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                                     }
                                 }
                                 if (gregorianCanRegCalendar != null) {
-                                    value = DateHelper.parseGregorianCalendarCanRegToDateString(gregorianCanRegCalendar, (String) dateFormatComboBox.getSelectedItem());
+                                    //<ictl.co>
+                                    if (variableChooserPanel.isLocalCalendarSelected() && LocalizationHelper.isRtlLanguageActive()) {
+                                        value = DateHelper.parseGregorianCalendarCanRegToDateStringLocale(gregorianCanRegCalendar, (String) dateFormatComboBox.getSelectedItem());
+                                    } else {
+                                        value = DateHelper.parseGregorianCalendarCanRegToDateString(gregorianCanRegCalendar, (String) dateFormatComboBox.getSelectedItem());
+                                    }
+                                    //</ictl.co>
                                 }
                             } catch (ParseException ex) {
                                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);

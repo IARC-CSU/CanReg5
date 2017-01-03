@@ -22,8 +22,10 @@ package canreg.client.analysis;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.analysis.TableBuilderInterface.FileTypes;
+import canreg.common.DateHelper;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
+import canreg.common.LocalizationHelper;
 import canreg.common.database.PopulationDataset;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -232,10 +234,20 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                         if (icdIndex != Tools.DONT_COUNT && icdIndex >= 0) {
                             yearString = line[YEAR_COLUMN].toString();
                             year = Integer.parseInt(yearString);
+                            //<ictl.co>
+                            if(LocalizationHelper.isPersianLocale() && DateHelper.isGregorianYear(year)){
+                                year = DateHelper.convertGregorianYearToPersianYear(year);
+                            }
+                            //</ictl.co>
                             ageString = line[AGE_COLUMN].toString();
                             ageInt = Integer.parseInt(ageString);
                             yearIndex = year - startYear;
-
+//<ictl.co>
+                            if(LocalizationHelper.isPersianLocale()){
+                                if(yearIndex < 0)
+                                    yearIndex = 0;
+                            }
+//<ictl.co>
                             if (ageInt == unknownAgeInt) {
                                 ageGroup = unknownAgeGroupIndex;
                             } else {

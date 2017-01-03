@@ -21,7 +21,9 @@ package canreg.client.analysis;
 
 import canreg.client.analysis.TableBuilderInterface.ChartType;
 import canreg.client.analysis.TableBuilderInterface.FileTypes;
+import canreg.common.DateHelper;
 import canreg.common.Globals;
+import canreg.common.LocalizationHelper;
 import canreg.common.database.IncompatiblePopulationDataSetException;
 import canreg.common.database.PopulationDataset;
 import canreg.common.database.PopulationDatasetsEntry;
@@ -344,7 +346,18 @@ public class Tools {
             if (popset != null) {
                 String[] ageGroupNames = popset.getAgeGroupStructure().getAgeGroupNames();
                 for (PopulationDatasetsEntry pop : popset.getAgeGroups()) {
-                    popoutput.append(thisYear + "").append(separator);
+                    //<ictl.co>
+                    if(LocalizationHelper.isRtlLanguageActive()){
+                        if(LocalizationHelper.isPersianLocale() && DateHelper.isGregorianYear(thisYear)){
+                            int _thisYear = DateHelper.convertGregorianYearToPersianYear(thisYear);
+                            popoutput.append(_thisYear + "").append(separator);
+                        }else{
+                            popoutput.append(thisYear + "").append(separator);
+                        }
+                    }else{
+                        popoutput.append(thisYear + "").append(separator);
+                    }
+                    //</ictl.co>
                     popoutput.append(ageGroupNames[pop.getAgeGroup()]).append(separator);
                     popoutput.append(pop.getStringRepresentationOfAgeGroupsForFile(separator)).append(separator);
                     // get reference pop

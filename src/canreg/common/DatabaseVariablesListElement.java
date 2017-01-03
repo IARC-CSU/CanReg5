@@ -360,7 +360,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
      * @return
      */
     public String getSQLqueryFormat(String string) {
-        if (getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
+        if (getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)/*<ictl.co>*/|| getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NCID_NAME)/*</ictl.co>*/) {
             string = "'" + string + "'";
         }
         return string;
@@ -469,7 +469,8 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
             desc += " (Number, Group: " + getGroupName() + ")";
         } else if (getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME)
                 || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME)
-                || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
+                || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)
+                /*<ictl.co>*/ || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NCID_NAME)/*</ictl.co>*/) {
             desc += " (Text, Length: " + getVariableLength() + ", Group: " + getGroupName() + ")";
         } else if (getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)) {
             desc += " (Date, Group: " + getGroupName() + ")";

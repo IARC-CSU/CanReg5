@@ -29,6 +29,9 @@ package canreg.client.gui.dataentry;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
+import canreg.common.DateHelper;
+import canreg.common.Globals;
+import canreg.common.LocalizationHelper;
 import canreg.common.database.PopulationDataset;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -265,7 +268,14 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
         nameTextField.setText(pds.getPopulationDatasetName());
         sourceTextField.setText(pds.getSource());
         descriptionTextArea.setText(pds.getDescription());
-        dateTextField.setText(pds.getDate().toString());
+        //<ictl.co>
+        if (LocalizationHelper.isRtlLanguageActive()) {
+            dateTextField.setText(DateHelper.gregorianDateStringToLocaleDateString(pds.getDate().toString(), Globals.DATE_FORMAT_STRING));
+        } else {
+            dateTextField.setText(pds.getDate().toString());
+        }
+        //</ictl.co>
+//        dateTextField.setText(pds.getDate().toString());
     }
     
     /**

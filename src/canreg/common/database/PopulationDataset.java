@@ -19,6 +19,9 @@
  */
 package canreg.common.database;
 
+import canreg.common.DateHelper;
+import canreg.common.LocalizationHelper;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -83,6 +86,22 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
 
     @Override
     public String toString() {
+        //<ictl.co>
+        String[] names = populationDatasetName.split(",");
+        if (names.length == 2) {
+            try {
+                int year = Integer.parseInt(names[1].trim());
+                if (LocalizationHelper.isPersianLocale() && DateHelper.isGregorianYear(year)) {
+                    year = DateHelper.convertGregorianYearToPersianYear(year);
+                } else if (LocalizationHelper.isGregorianLocale() && DateHelper.isJalaliYear(year)) {
+                    year = DateHelper.convertJalaliYearToGregoranYear(year);
+                }
+                return names[0] + "," + year;
+            } catch (NumberFormatException ex) {
+
+            }
+        }
+        //</ictl.co>
         return populationDatasetName;
     }
 
@@ -107,6 +126,22 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      * @return
      */
     public String getPopulationDatasetName() {
+        //<ictl.co>
+        String[] names = populationDatasetName.split(",");
+        if (names.length == 2) {
+            try {
+                int year = Integer.parseInt(names[1].trim());
+                if (LocalizationHelper.isPersianLocale() && DateHelper.isGregorianYear(year)) {
+                    year = DateHelper.convertGregorianYearToPersianYear(year);
+                } else if (LocalizationHelper.isGregorianLocale() && DateHelper.isJalaliYear(year)) {
+                    year = DateHelper.convertJalaliYearToGregoranYear(year);
+                }
+                return names[0] + "," + year;
+            } catch (NumberFormatException ex) {
+
+            }
+        }
+        //</ictl.co>
         return populationDatasetName;
     }
 

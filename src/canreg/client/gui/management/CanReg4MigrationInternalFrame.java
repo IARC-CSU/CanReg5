@@ -657,7 +657,7 @@ public class MigrationTask extends SwingWorker<String, Progress> {
                 publish(new Progress(Component.LOG, "Login to CanReg5 System.\n"));
                 String canregSystem = null;
                 try {
-                    canregSystem = CanRegClientApp.getApplication().loginDirect(regcode, "morten", password);
+                    canregSystem = CanRegClientApp.getApplication().loginDirect(regcode, "morten", password,Globals.DEFAULT_PORT);
                     // Closing WelcomeInternalFrame
                     JDesktopPane jdp = new JDesktopPane();
                     jdp = CanRegClientApp.getApplication().getDeskTopPane();

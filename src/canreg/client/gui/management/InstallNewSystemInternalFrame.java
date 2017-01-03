@@ -350,7 +350,7 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
             // log in as default user
             // String serverObjectString = "rmi://" + Globals.DEFAULT_SERVER_ADDRESS + ":" + Globals.DEFAULT_PORT + "/CanRegLogin" + systemDescription.getSystemCode();
             try {
-                String canRegSystemName = CanRegClientApp.getApplication().loginDirect(systemDescription.getSystemCode(), "morten", new char[]{'e', 'r', 'v', 'i', 'k'});
+                String canRegSystemName = CanRegClientApp.getApplication().loginDirect(systemDescription.getSystemCode(), "morten", new char[]{'e', 'r', 'v', 'i', 'k'},Globals.DEFAULT_PORT);
             } catch (LoginException ex) {
                 Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NullPointerException ex) {

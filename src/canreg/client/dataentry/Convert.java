@@ -70,14 +70,17 @@ import java.rmi.RemoteException;
 import javax.xml.parsers.*;
 import javax.swing.JOptionPane;
 
+import com.googlecode.paradox.ParadoxConnection;
+import com.googlecode.paradox.data.TableData;
+import com.googlecode.paradox.metadata.ParadoxTable;
 import org.w3c.dom.*;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.paradox.ParadoxConnection;
-import org.paradox.metadata.ParadoxTable;
-import org.paradox.data.TableData;
+//import org.paradox.ParadoxConnection;
+//import org.paradox.metadata.ParadoxTable;
+//import org.paradox.data.TableData;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import org.paradox.data.table.value.FieldValue;
+//import org.paradox.data.table.value.FieldValue;
 import org.xml.sax.SAXException;
 
 public class Convert {

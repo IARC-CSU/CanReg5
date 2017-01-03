@@ -1101,9 +1101,9 @@ public final class CanRegClientView extends FrameView {
         JInternalFrame importInternalFrame;
         // int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DO YOU HAVA ALL YOUR DATA IN ONE FILE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("ONE FILE?"), JOptionPane.YES_NO_OPTION);
         // if (i == JOptionPane.YES_OPTION) {
-        //    importInternalFrame = new ImportView();
+        //    importInternalFrame = new ImportView(/*<ictl.co>*/getDesktopPane()/*</ictl.co>*/);
         //} else {
-        importInternalFrame = new ImportFilesView();
+        importInternalFrame = new ImportFilesView(/*<ictl.co>*/getDesktopPane()/*</ictl.co>*/);
         //}
 
         showAndPositionInternalFrame(desktopPane, importInternalFrame);
@@ -1115,7 +1115,7 @@ public final class CanRegClientView extends FrameView {
      */
     @Action
     public void importDataFromCR4() {
-        JInternalFrame importInternalFrame = new ImportView();
+        JInternalFrame importInternalFrame = new ImportView(/*<ictl.co>*/getDesktopPane()/*</ictl.co>*/);
         showAndPositionInternalFrame(desktopPane, importInternalFrame);
         maximizeHeight(desktopPane, importInternalFrame);
     }

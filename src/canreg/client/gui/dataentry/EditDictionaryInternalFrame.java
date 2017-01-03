@@ -34,10 +34,8 @@ import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.Globals;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+
+import java.io.*;
 import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.Map;
@@ -283,7 +281,10 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 localSettings.setProperty("dictionary_import_path", file.getParent());
                 localSettings.writeSettings();
 
-                bw = new BufferedWriter(new FileWriter(file));
+//<iclt.co>
+                bw = new BufferedWriter(new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8")));
+//                bw = new BufferedWriter(new FileWriter(file));
+//</ictl.co>
 
                 for (DatabaseDictionaryListElement dbdle : dictionariesInDB) {
                     bw.write("#" + dbdle.getDictionaryID() + "\t----" + dbdle.getName() + Globals.newline);

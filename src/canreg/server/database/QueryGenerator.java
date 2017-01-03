@@ -1,17 +1,17 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
  * Copyright (C) 2008-2015  International Agency for Research on Cancer
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -20,17 +20,14 @@
 
 package canreg.server.database;
 
-import canreg.common.DatabaseFilter;
-import canreg.common.DatabaseIndexesListElement;
-import canreg.common.DatabaseVariablesListElement;
-import canreg.common.GlobalToolBox;
-import canreg.common.Globals;
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import canreg.common.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class QueryGenerator {
 
@@ -38,7 +35,7 @@ public class QueryGenerator {
     static final String namespace = "ns3:";
 
     /**
-     * 
+     *
      * @param tableName
      * @param doc
      * @return
@@ -103,7 +100,7 @@ public class QueryGenerator {
                 tableRecordIDVariableName = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
             } else if (tableName.contains(Globals.TUMOUR_TABLE_NAME)) {
                 tableRecordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
-            }else if (tableName.contains(Globals.PATIENT_TABLE_NAME)) {
+            } else if (tableName.contains(Globals.PATIENT_TABLE_NAME)) {
                 tableRecordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
             }
 
@@ -112,15 +109,41 @@ public class QueryGenerator {
                     + " FROM APP." + tableName
                     + " WHERE ";
             if (filter.getRangeStart() != null && filter.getRangeStart().length() > 0) {
+                //<ictl.co>
+                if (LocalizationHelper.isPersianLocale()) {
+                    String[] years = DateHelper.getGregorianYearsInPersianYear(filter.getRangeStart().replace("'",""));
+                    filterString += "(APP.TODATE(" + filter.getRangeDatabaseVariablesListElement().getDatabaseVariableName()
+                            + ",'yyyy','en') >= '" + years[0] + "' OR APP.TODATE(" + filter.getRangeDatabaseVariablesListElement().getDatabaseVariableName()
+                            + ",'yyyy','en') >= '" + years[1] + "')";
+                } else {
+                    filterString += "APP.TODATE("+filter.getRangeDatabaseVariablesListElement().getDatabaseVariableName()
+                            + ",'yyyy','en') >= " + filter.getRangeStart();
+                }
+                //</ictl.co>
+/*
                 filterString += filter.getRangeDatabaseVariablesListElement().getDatabaseVariableName()
                         + " >= " + filter.getRangeStart();
+*/
             }
             if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) && (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
                 filterString += " AND ";
             }
             if (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0) {
+                //<ictl.co>
+                if (LocalizationHelper.isPersianLocale()) {
+                    String[] years = DateHelper.getGregorianYearsInPersianYear(filter.getRangeEnd().replace("'",""));
+                    filterString += "(APP.TODATE(" + filter.getRangeDatabaseVariablesListElement().getDatabaseVariableName()
+                            + ",'yyyy','en') <= '" + years[0] + "' OR APP.TODATE(" + filter.getRangeDatabaseVariablesListElement().getDatabaseVariableName()
+                            + ",'yyyy','en') <= '" + years[1] + "')";
+                } else {
+                    filterString += "APP.TODATE("+filter.getRangeDatabaseVariablesListElement().getDatabaseVariableName()
+                            + ",'yyyy','en') <= " + filter.getRangeEnd();
+                }
+                //</ictl.co>
+/*
                 filterString += filter.getRangeDatabaseVariablesListElement().getDatabaseVariableName()
                         + " <= " + filter.getRangeEnd();
+*/
             }
             filterString += ")";
         }
@@ -152,7 +175,7 @@ public class QueryGenerator {
     }
 
     /**
-     * 
+     *
      * @param doc
      * @return
      */
@@ -172,7 +195,7 @@ public class QueryGenerator {
     }
 
     /**
-     * 
+     *
      * @param doc
      * @return
      */
@@ -187,7 +210,7 @@ public class QueryGenerator {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static String strSaveDictionary() {
@@ -199,7 +222,7 @@ public class QueryGenerator {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static String strSaveDictionaryEntry() {
@@ -232,7 +255,7 @@ public class QueryGenerator {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static String strSavePopoulationDataset() {
@@ -244,7 +267,7 @@ public class QueryGenerator {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static String strSavePopoulationDatasetsEntry() {
@@ -255,7 +278,7 @@ public class QueryGenerator {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static String strCreatePopulationDatasetTable() {
@@ -275,7 +298,7 @@ public class QueryGenerator {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static String strCreatePopulationDatasetsTable() {
@@ -290,7 +313,7 @@ public class QueryGenerator {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static String strCreateUsersTable() {
@@ -307,7 +330,7 @@ public class QueryGenerator {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static String strCreateSystemPropertiesTable() {
@@ -333,7 +356,7 @@ public class QueryGenerator {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static String strSaveNameSexEntry() {
@@ -345,7 +368,7 @@ public class QueryGenerator {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static String strDeleteNameSexEntry() {
@@ -355,7 +378,7 @@ public class QueryGenerator {
     }
 
     /**
-     * 
+     *
      * @param doc
      * @return
      */
@@ -364,7 +387,7 @@ public class QueryGenerator {
     }
 
     /**
-     * 
+     *
      * @param doc
      * @return
      */
@@ -635,7 +658,8 @@ public class QueryGenerator {
 
         if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME)
                 || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME)
-                || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
+                || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)
+                /*<ictl.co>*/ || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NCID_NAME)/*</ictl.co>*/) {
             queryLine += " VARCHAR(";
             queryLine += element.getElementsByTagName("ns3:variable_length").item(0).getTextContent() + ") ";
         } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
@@ -695,12 +719,21 @@ public class QueryGenerator {
     static String strAddColumnToTable(String columnName, String columnType, String table) {
         return "ALTER TABLE APP." + table + " ADD COLUMN " + columnName.toUpperCase() + " " + columnType;
     }
-    
+
     static String strDropColumnFromTable(String columnName, String table) {
         return "ALTER TABLE APP." + table + " DROP COLUMN " + columnName.toUpperCase();
     }
 
     static String strSetColumnDataType(String columnName, String columnType, String table) {
-        return "ALTER TABLE APP." + table + " ALTER "+ columnName.toUpperCase() + " SET DATA TYPE "+columnType;
+        return "ALTER TABLE APP." + table + " ALTER " + columnName.toUpperCase() + " SET DATA TYPE " + columnType;
     }
+
+    //<ictl.co>
+    public static String strCreateUtilsToDateFunction() {
+        String queryLine = "CREATE FUNCTION " + Globals.SCHEMA_NAME + ".TODATE(DTE VARCHAR(20),PATTERN VARCHAR(20),LOCALE VARCHAR(10)) RETURNS VARCHAR(20)" +
+                "  PARAMETER STYLE JAVA NO SQL LANGUAGE  JAVA" +
+                "  EXTERNAL NAME 'canreg.server.database.derby.Functions.toDate'";
+        return queryLine;
+    }
+    //</ictl.co>
 }

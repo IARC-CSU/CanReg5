@@ -26,7 +26,6 @@ import canreg.common.Globals;
 import canreg.common.GregorianCalendarCanReg;
 import canreg.common.database.DatabaseRecord;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
