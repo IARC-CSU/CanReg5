@@ -30,19 +30,15 @@ import canreg.client.gui.components.DictionaryElementTextFilterator;
 import canreg.client.gui.tools.MaxLengthDocument;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
-import com.sun.glass.ui.Cursor;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JComboBox;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 
 /**
@@ -79,7 +75,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         categoryCombo = new javax.swing.JComboBox();                     
         sortToggle = new javax.swing.JToggleButton();
                 
-        jPanel1.setName("jPanel1"); // NOI18N
+        jPanel1.setName("jPanel1");
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.PAGE_AXIS));
         
         mainSplitPane.remove(codeTextField);

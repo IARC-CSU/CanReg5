@@ -136,7 +136,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         autoFillList = new LinkedList<DatabaseVariablesListElement>();
 
         resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class)
-                .getContext().getResourceMap(RecordEditorTumour.class);                
+                .getContext().getResourceMap(RecordEditorTumour.class);
     }
     
     @Override
@@ -960,6 +960,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
         dataScrollPane = new javax.swing.JScrollPane();
         dataPanel = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
+        jPanel10 = new javax.swing.JPanel();
+        filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 25), new java.awt.Dimension(0, 25), new java.awt.Dimension(32767, 25));
+        sourcesTabbedPane = new javax.swing.JTabbedPane();
         jPanel8 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
@@ -967,9 +970,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
         filler8 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         sourceMenuButton = new javax.swing.JButton();
         filler9 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
-        jPanel10 = new javax.swing.JPanel();
-        filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 10));
-        sourcesTabbedPane = new javax.swing.JTabbedPane();
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditorTumour.class, this);
         sourceDeleteMenuItem.setAction(actionMap.get("removeSourceAction")); // NOI18N
@@ -1191,6 +1191,13 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         jPanel7.setLayout(new javax.swing.OverlayLayout(jPanel7));
 
+        jPanel10.setOpaque(false);
+        jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.PAGE_AXIS));
+        jPanel10.add(filler12);
+        jPanel10.add(sourcesTabbedPane);
+
+        jPanel7.add(jPanel10);
+
         jPanel8.setOpaque(false);
 
         jPanel9.setMaximumSize(new java.awt.Dimension(32767, 36));
@@ -1235,13 +1242,6 @@ public class RecordEditorTumour extends javax.swing.JPanel
         );
 
         jPanel7.add(jPanel8);
-
-        jPanel10.setOpaque(false);
-        jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.PAGE_AXIS));
-        jPanel10.add(filler12);
-        jPanel10.add(sourcesTabbedPane);
-
-        jPanel7.add(jPanel10);
 
         jSplitPane2.setBottomComponent(jPanel7);
 

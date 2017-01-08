@@ -24,7 +24,9 @@ import canreg.common.database.DatabaseRecord;
 import java.util.Map;
 
 /**
- *
+ * This interface was created only to fabricate polymorphism between the different
+ * DataEntry versions in order to switch between them according to options
+ * configuration.
  * @author patri_000
  */
 public interface RecordEditor {

@@ -933,15 +933,14 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
      * consideration if the user prefers to have different sequencing for tumours belonging to
      * different patients, the user will have to open each patient on a separate RecordEditor
      * and save changes for the sequences to change).
-     * This method DOES NOT save these updates nor does it re-draw the labels for the "sequence"
-     * and "tumour" variables shown in the RecordEditorTumour.
+     * This method DOES NOT save these updates in the DB, but it DOES re-draw the labels for the 
+     * "sequence" and "tumour" variables shown in the RecordEditorTumour.
      * @param tumoursToUpdate collection of tumours to be updated. Usually this method is run
      * after saving changes, so if a tumour was not succesfully saved is recommended to NOT
      * be included in this collection.
      */
     private void updateAllTumoursSequences(Collection<RecordEditorTumour> tumoursToUpdate) {
         int totalTumours = 0;
-
         for(RecordEditorTumour tumourRecord : tumoursToUpdate) {
             Tumour tumour = (Tumour) tumourRecord.getDatabaseRecord();
             boolean obsolete = tumour.getVariable(tumourObsoleteVariableName)
@@ -951,8 +950,6 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         }
         
         int tumourSequence = 0;
-        //for (int i = 0; i < tumourTabbedPane.getComponentCount(); i++) {
-            //RecordEditorTumour rep = (RecordEditorTumour) tumourTabbedPane.getComponentAt(i);
         for(RecordEditorTumour tumourRecord : tumoursToUpdate) {
             Tumour tumour = (Tumour) tumourRecord.getDatabaseRecord();
             boolean obsolete = tumour.getVariable(tumourObsoleteVariableName).toString().equalsIgnoreCase(Globals.OBSOLETE_VALUE);
@@ -1570,15 +1567,18 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         jPanel1 = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel3 = new javax.swing.JPanel();
+        jPanel11 = new javax.swing.JPanel();
+        filler15 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 25), new java.awt.Dimension(0, 25), new java.awt.Dimension(32767, 25));
+        patientTabbedPane = new JTabbedPane();
         jPanel15 = new javax.swing.JPanel();
         jPanel16 = new javax.swing.JPanel();
         filler16 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         patientMenuButton = new javax.swing.JButton();
         filler20 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
-        jPanel11 = new javax.swing.JPanel();
-        filler15 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 10));
-        patientTabbedPane = new JTabbedPane();
         jPanel7 = new javax.swing.JPanel();
+        jPanel10 = new javax.swing.JPanel();
+        filler14 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 25), new java.awt.Dimension(0, 25), new java.awt.Dimension(32767, 25));
+        tumourTabbedPane = new JTabbedPane();
         jPanel8 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
@@ -1586,9 +1586,6 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         tumourMenuButton = new javax.swing.JButton();
         filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
-        jPanel10 = new javax.swing.JPanel();
-        filler14 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 10));
-        tumourTabbedPane = new JTabbedPane();
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditorMainFrame.class, this);
         patientDeleteMenuItem.setAction(actionMap.get("deletePatientRecord")); // NOI18N
@@ -1728,6 +1725,17 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         jPanel3.setPreferredSize(new java.awt.Dimension(450, 451));
         jPanel3.setLayout(new javax.swing.OverlayLayout(jPanel3));
 
+        jPanel11.setOpaque(false);
+        jPanel11.setPreferredSize(new java.awt.Dimension(450, 451));
+        jPanel11.setLayout(new javax.swing.BoxLayout(jPanel11, javax.swing.BoxLayout.PAGE_AXIS));
+        jPanel11.add(filler15);
+
+        patientTabbedPane.setFocusable(false);
+        patientTabbedPane.setPreferredSize(new java.awt.Dimension(450, 451));
+        jPanel11.add(patientTabbedPane);
+
+        jPanel3.add(jPanel11);
+
         jPanel15.setOpaque(false);
         jPanel15.setPreferredSize(new java.awt.Dimension(450, 451));
 
@@ -1756,26 +1764,40 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel15Layout.createSequentialGroup()
                 .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 397, Short.MAX_VALUE))
+                .addGap(0, 412, Short.MAX_VALUE))
         );
 
         jPanel3.add(jPanel15);
-
-        jPanel11.setOpaque(false);
-        jPanel11.setPreferredSize(new java.awt.Dimension(450, 451));
-        jPanel11.setLayout(new javax.swing.BoxLayout(jPanel11, javax.swing.BoxLayout.PAGE_AXIS));
-        jPanel11.add(filler15);
-
-        patientTabbedPane.setFocusable(false);
-        patientTabbedPane.setPreferredSize(new java.awt.Dimension(450, 451));
-        jPanel11.add(patientTabbedPane);
-
-        jPanel3.add(jPanel11);
 
         jSplitPane1.setLeftComponent(jPanel3);
 
         jPanel7.setPreferredSize(new java.awt.Dimension(700, 451));
         jPanel7.setLayout(new javax.swing.OverlayLayout(jPanel7));
+
+        jPanel10.setFocusable(false);
+        jPanel10.setOpaque(false);
+        jPanel10.setPreferredSize(new java.awt.Dimension(700, 451));
+        jPanel10.setRequestFocusEnabled(false);
+        jPanel10.setVerifyInputWhenFocusTarget(false);
+        jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.PAGE_AXIS));
+
+        filler14.setEnabled(false);
+        filler14.setFocusable(false);
+        filler14.setRequestFocusEnabled(false);
+        filler14.setVerifyInputWhenFocusTarget(false);
+        jPanel10.add(filler14);
+
+        tumourTabbedPane.setFocusable(false);
+        tumourTabbedPane.setPreferredSize(new java.awt.Dimension(700, 451));
+        tumourTabbedPane.setVerifyInputWhenFocusTarget(false);
+        tumourTabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tumourTabbedPaneStateChanged(evt);
+            }
+        });
+        jPanel10.add(tumourTabbedPane);
+
+        jPanel7.add(jPanel10);
 
         jPanel8.setOpaque(false);
         jPanel8.setPreferredSize(new java.awt.Dimension(700, 451));
@@ -1818,26 +1840,10 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 397, Short.MAX_VALUE))
+                .addGap(0, 412, Short.MAX_VALUE))
         );
 
         jPanel7.add(jPanel8);
-
-        jPanel10.setOpaque(false);
-        jPanel10.setPreferredSize(new java.awt.Dimension(700, 451));
-        jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.PAGE_AXIS));
-        jPanel10.add(filler14);
-
-        tumourTabbedPane.setFocusable(false);
-        tumourTabbedPane.setPreferredSize(new java.awt.Dimension(700, 451));
-        tumourTabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                tumourTabbedPaneStateChanged(evt);
-            }
-        });
-        jPanel10.add(tumourTabbedPane);
-
-        jPanel7.add(jPanel10);
 
         jSplitPane1.setRightComponent(jPanel7);
 
@@ -1849,7 +1855,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
         );
 
         getContentPane().add(jPanel1);

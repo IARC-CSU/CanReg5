@@ -25,7 +25,7 @@ import canreg.client.gui.components.VariableEditorPanelInterface;
 import canreg.client.gui.dataentry2.components.DateVariableEditorPanel;
 import canreg.client.gui.dataentry2.components.DictionaryVariableEditorPanel;
 import canreg.client.gui.dataentry2.components.TextFieldVariableEditorPanel;
-import canreg.client.gui.dataentry2.components.VariableEditorGroupPanel;
+import canreg.client.gui.components.VariableEditorGroupPanel;
 import canreg.client.gui.dataentry2.components.VariableEditorPanel;
 import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseVariablesListElement;
