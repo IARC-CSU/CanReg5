@@ -533,7 +533,6 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     
     private void refreshTitles(RecordEditorPanel recordEditorPanel, DatabaseRecord dbr) {
         if (dbr instanceof Patient) {
-            // patientRecords.add(dbr);
             Object regno = dbr.getVariable(globalToolBox
                     .translateStandardVariableNameToDatabaseListElement(Globals
                             .StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
@@ -543,9 +542,6 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 regnoString = regno.toString();
                 if (regnoString.length() == 0)
                     regnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString("N/A");
-                else {
-                    // patientRecordsMap.put(regno, recordEditorPanel);
-                }
             }
             String newTitle = dbr.toString() + ": " + regnoString;
             
@@ -858,15 +854,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                                         java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString("RECORD_LOCKED"), 
                                         java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString("RECORD_LOCKED"), 
                                         JOptionPane.WARNING_MESSAGE);
-            } catch (SQLException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnknownTableException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (DistributedTableDescriptionException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
@@ -1207,16 +1195,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
             } 
             //Bubble all exceptions all the way to saveAllAction(), so all JOptionPanes
             //are handled from there.
-            catch (RecordLockedException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                throw new SaveRecordException(ex.getLocalizedMessage());
-            } catch (SecurityException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                throw new SaveRecordException(ex.getLocalizedMessage());
-            } catch (RemoteException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                throw new SaveRecordException(ex.getLocalizedMessage());
-            } catch (SQLException ex) {
+            catch (Exception ex) {
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 throw new SaveRecordException(ex.getLocalizedMessage());
             }
@@ -1379,9 +1358,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                                                 .getString("NO POTENTIAL DUPLICATES FOUND."));
                 // recordEditorPanel.setPersonSearchStatus();
             }
-        } catch (SecurityException ex) {
-            Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
@@ -1425,9 +1402,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.WARNING, null, ex);
             } catch (RecordLockedException ex) {
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.WARNING, null, ex);
-            } catch (SecurityException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -1870,7 +1845,14 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     }//GEN-LAST:event_tumourTabbedPaneStateChanged
 
     private void addTumourRecordButtonFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addTumourRecordButtonFocusGained
+        //This is a nasty cheat to put the focus on the first variable of a newly
+        //created tumour. We play with the OverlayLayout z-order to be able to put 
+        //the focus on the panel that we want (which is jPanel8)
+        jPanel7.remove(jPanel10);
+        jPanel7.add(jPanel10);
         KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
+        jPanel7.remove(jPanel8);
+        jPanel7.add(jPanel8);
     }//GEN-LAST:event_addTumourRecordButtonFocusGained
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
