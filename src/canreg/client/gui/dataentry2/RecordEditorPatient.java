@@ -21,11 +21,12 @@
 package canreg.client.gui.dataentry2;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.components.TextFieldVariableEditorPanel;
 import canreg.client.gui.components.VariableEditorPanelInterface;
 import canreg.client.gui.dataentry2.components.DateVariableEditorPanel;
 import canreg.client.gui.dataentry2.components.DictionaryVariableEditorPanel;
-import canreg.client.gui.dataentry2.components.TextFieldVariableEditorPanel;
-import canreg.client.gui.components.VariableEditorGroupPanel;
+import canreg.client.gui.dataentry2.components.TextAreaVariableEditorPanel;
+import canreg.client.gui.dataentry2.components.VariableEditorGroupPanel;
 import canreg.client.gui.dataentry2.components.VariableEditorPanel;
 import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseVariablesListElement;
@@ -461,7 +462,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
             if (Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)) 
                 vep = new DateVariableEditorPanel(this);
             else if (Globals.VARIABLE_TYPE_TEXT_AREA_NAME.equalsIgnoreCase(variableType)) 
-                vep = new TextFieldVariableEditorPanel(this);
+                vep = new TextAreaVariableEditorPanel(this);
             else if (dictionary.get(currentVariable.getDictionaryID()) != null && currentVariable.getDictionaryID() >= 0)
                 vep = new DictionaryVariableEditorPanel(this);
             else
@@ -497,9 +498,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
                     groupIDtoPanelMap.put(currentVariable.getGroupID(), panel);
                 }
 
-                panel.add(vep);
-                panel.add(new javax.swing.Box.Filler(new java.awt.Dimension(0, 3),
-                        new java.awt.Dimension(0, 3), new java.awt.Dimension(32767, 3)));
+                panel.addVariablePanel(vep);
             }
 
             variableEditorPanels.put(currentVariable.getDatabaseVariableName(), vep);

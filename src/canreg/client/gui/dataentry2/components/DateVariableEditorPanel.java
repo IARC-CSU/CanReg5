@@ -56,6 +56,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         dateChooser.setDateFormatString(dateFormatString);
         
         dateChooser.setMinimumSize(codeTextField.getMinimumSize());
+        dateChooser.setMaximumSize(codeTextField.getMaximumSize());
         dateChooser.setPreferredSize(codeTextField.getPreferredSize());
         jPanel1.remove(codeTextField);
         jPanel1.add(dateChooser);

@@ -32,11 +32,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeListener;
 import java.util.logging.*;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.event.DocumentListener;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 /**
  *
@@ -331,38 +327,42 @@ public class VariableEditorPanel extends javax.swing.JPanel
         codeTextField = new javax.swing.JTextField();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
 
-        setMaximumSize(new java.awt.Dimension(32767, 28));
-        setMinimumSize(new java.awt.Dimension(40, 24));
+        setMaximumSize(new java.awt.Dimension(32767, 26));
+        setMinimumSize(new java.awt.Dimension(40, 26));
         setName("Form"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(260, 26));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
         mainSplitPane.setBorder(null);
         mainSplitPane.setDividerLocation(150);
         mainSplitPane.setDividerSize(7);
-        mainSplitPane.setResizeWeight(0.3);
-        mainSplitPane.setMaximumSize(new java.awt.Dimension(2147483647, 28));
-        mainSplitPane.setMinimumSize(new java.awt.Dimension(20, 24));
+        mainSplitPane.setMaximumSize(new java.awt.Dimension(2147483647, 26));
+        mainSplitPane.setMinimumSize(new java.awt.Dimension(20, 26));
         mainSplitPane.setName("mainSplitPane"); // NOI18N
-        mainSplitPane.setPreferredSize(new java.awt.Dimension(250, 28));
+        mainSplitPane.setPreferredSize(new java.awt.Dimension(250, 26));
         mainSplitPane.setUI(new DottedDividerSplitPane());
         mainSplitPane.setBorder(null);
 
         variableNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(VariableEditorPanel.class);
         variableNameLabel.setText(resourceMap.getString("variableNameLabel.text")); // NOI18N
-        variableNameLabel.setMaximumSize(new java.awt.Dimension(67, 24));
-        variableNameLabel.setMinimumSize(new java.awt.Dimension(20, 14));
+        variableNameLabel.setMaximumSize(new java.awt.Dimension(150, 26));
+        variableNameLabel.setMinimumSize(new java.awt.Dimension(20, 26));
         variableNameLabel.setName("variableNameLabel"); // NOI18N
-        variableNameLabel.setPreferredSize(new java.awt.Dimension(67, 24));
+        variableNameLabel.setPreferredSize(new java.awt.Dimension(150, 26));
         mainSplitPane.setLeftComponent(variableNameLabel);
 
+        jPanel1.setMaximumSize(new java.awt.Dimension(2147483647, 26));
+        jPanel1.setMinimumSize(new java.awt.Dimension(20, 26));
         jPanel1.setName("jPanel1"); // NOI18N
+        jPanel1.setPreferredSize(new java.awt.Dimension(100, 26));
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
         codeTextField.setText(resourceMap.getString("codeTextField.text")); // NOI18N
-        codeTextField.setMinimumSize(new java.awt.Dimension(20, 20));
+        codeTextField.setMaximumSize(new java.awt.Dimension(2147483647, 26));
+        codeTextField.setMinimumSize(new java.awt.Dimension(20, 26));
         codeTextField.setName("codeTextField"); // NOI18N
-        codeTextField.setPreferredSize(new java.awt.Dimension(100, 20));
+        codeTextField.setPreferredSize(new java.awt.Dimension(100, 26));
         codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 codeTextFieldFocusLost(evt);

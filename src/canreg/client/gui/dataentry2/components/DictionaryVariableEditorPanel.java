@@ -57,6 +57,12 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     private boolean avoidActionPerformed = false;
     private final org.jdesktop.application.ResourceMap resourceMap;
     
+    public DictionaryVariableEditorPanel() {
+        super();
+        resourceMap = org.jdesktop.application.Application.getInstance(
+                canreg.client.CanRegClientApp.class).getContext().getResourceMap(DictionaryVariableEditorPanel.class);
+        initComponents();
+    }
     
     public DictionaryVariableEditorPanel(ActionListener listener) {
         super(listener);      
@@ -84,8 +90,8 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         innerSplitPane.setBorder(null);
         innerSplitPane.setResizeWeight(0.5);
         innerSplitPane.setFocusable(false);
-        innerSplitPane.setMinimumSize(new java.awt.Dimension(20, 24));
-        innerSplitPane.setPreferredSize(new java.awt.Dimension(100, 28));
+        innerSplitPane.setMinimumSize(new java.awt.Dimension(20, 26));
+        innerSplitPane.setPreferredSize(new java.awt.Dimension(100, 26));
         innerSplitPane.setName("innerSplitPane"); // NOI18N
         innerSplitPane.setDividerSize(7);
         innerSplitPane.setUI(new DottedDividerSplitPane());
@@ -95,15 +101,15 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         outerSplitPane.setBorder(null);
         outerSplitPane.setFocusable(false);
         outerSplitPane.setResizeWeight(0.2);
-        outerSplitPane.setMinimumSize(new java.awt.Dimension(20, 24));
-        outerSplitPane.setPreferredSize(new java.awt.Dimension(100, 28));
+        outerSplitPane.setMinimumSize(new java.awt.Dimension(20, 26));
+        outerSplitPane.setPreferredSize(new java.awt.Dimension(100, 26));
         outerSplitPane.setName("outerSplitPane"); // NOI18N
         outerSplitPane.setDividerSize(7);
         outerSplitPane.setUI(new DottedDividerSplitPane());
         outerSplitPane.setBorder(null);
         
-        categoryCombo.setMinimumSize(new Dimension(20, 20));
-        categoryCombo.setPreferredSize(new Dimension(20, 20));
+        categoryCombo.setMinimumSize(new Dimension(20, 26));
+        categoryCombo.setPreferredSize(new Dimension(20, 26));
         categoryCombo.setName("categoryCombo"); // NOI18N
         categoryCombo.setEditable(true);        
         categoryCombo.getEditor().getEditorComponent().addKeyListener(new java.awt.event.KeyAdapter() {
@@ -129,8 +135,8 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
         jPanel4.add(categoryCombo);        
         
-        descriptionCombo.setPreferredSize(new Dimension(20, 20));
-        descriptionCombo.setMinimumSize(new Dimension(20, 20));
+        descriptionCombo.setPreferredSize(new Dimension(20, 26));
+        descriptionCombo.setMinimumSize(new Dimension(20, 26));
         descriptionCombo.setName("descriptionCombo"); // NOI18N
         descriptionCombo.setEditable(true);
         descriptionCombo.getEditor().getEditorComponent().addKeyListener(new java.awt.event.KeyAdapter() {
@@ -160,11 +166,11 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         sortToggle.setBorder(null);
         sortToggle.setFocusable(false);
         sortToggle.setContentAreaFilled(false);
-        sortToggle.setMaximumSize(new java.awt.Dimension(25, 25));
-        sortToggle.setMinimumSize(new java.awt.Dimension(20, 20));
+        sortToggle.setMaximumSize(new java.awt.Dimension(25, 26));
+        sortToggle.setMinimumSize(new java.awt.Dimension(20, 26));
         sortToggle.setName("descriptionToggle"); // NOI18N
         sortToggle.setOpaque(true);
-        sortToggle.setPreferredSize(new java.awt.Dimension(20, 20));
+        sortToggle.setPreferredSize(new java.awt.Dimension(20, 26));
         sortToggle.addItemListener(new java.awt.event.ItemListener() {
             @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
