@@ -117,7 +117,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private String recordStatusBeforeChanges;
     //The patient to which this tumour is linked to
     private RecordEditorPatient patient;
-    private LocalSettings localSettings;
+    private final LocalSettings localSettings;
     
     
     public RecordEditorTumour(ActionListener listener, 
@@ -728,7 +728,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
             //This only takes care of linking the patient and the tumour when 
             //the tumour is NOT brand new. If the tumour is new, then the linkage 
             //is resolved in RecordEditor.addRecord()
-            if (tumourPatientID != null && ! tumourPatientID.isEmpty() && patientTitle.contains(tumourPatientID))
+            if (tumourPatientID != null && ! tumourPatientID.isEmpty() && patientTitle.contains(tumourPatientID)) 
                this.setLinkedPatient(patientTitle, true);
                                     
             this.avoidPatientsComboBoxListener = previousAvoidStatus;
@@ -762,7 +762,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         }            
         else
             throw new IllegalArgumentException("The patient " + patientTitle + " has not been previously loaded in the combobox.");
-    }
+    }    
     
     /**
      * Returns the currently selected Patient in the combobox
@@ -1274,8 +1274,10 @@ public class RecordEditorTumour extends javax.swing.JPanel
     }// </editor-fold>//GEN-END:initComponents
 
     private void patientsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientsComboBoxActionPerformed
-        if ( ! this.avoidPatientsComboBoxListener)
+        if ( ! this.avoidPatientsComboBoxListener) {
             this.setSaveNeeded(true);
+            setChecksResultCode(ResultCode.NotDone);
+        }
     }//GEN-LAST:event_patientsComboBoxActionPerformed
 
     private void addSourceRecordButtonFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addSourceRecordButtonFocusGained

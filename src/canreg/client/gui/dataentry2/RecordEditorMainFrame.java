@@ -1000,8 +1000,8 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     }
 
     private void runChecks(RecordEditorPanel recordEditorPanel) {
-        RecordEditorTumour tumourRecordEditorPanel;
-        RecordEditorPatient patientRecordEditorPanel;
+        RecordEditorTumour tumourRecordEditorPanel = null;
+        RecordEditorPatient patientRecordEditorPanel = null;
         DatabaseRecord record = recordEditorPanel.getDatabaseRecord();
         ResultCode worstResultCodeFound;
         String message = "";
@@ -1015,7 +1015,15 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         } else {
             tumour = (Tumour) record;
             tumourRecordEditorPanel = (RecordEditorTumour) recordEditorPanel;
-            patientRecordEditorPanel = (RecordEditorPatient) patientTabbedPane.getSelectedComponent();
+            
+            //The checks are run against the currently selected patient on the 
+            //"Tumour linked to" comboBox
+            for(int i = 0; i < this.patientTabbedPane.getTabCount(); i++) {
+                if (this.patientTabbedPane.getTitleAt(i).equals(((RecordEditorTumour) recordEditorPanel).getLinkedPatient()))
+                    patientRecordEditorPanel = (RecordEditorPatient) this.patientTabbedPane.getComponentAt(i);
+            }
+            if(patientRecordEditorPanel == null)
+                patientRecordEditorPanel = (RecordEditorPatient) this.patientTabbedPane.getSelectedComponent();
             patient = (Patient) patientRecordEditorPanel.getDatabaseRecord();
         }
 
