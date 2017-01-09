@@ -637,6 +637,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
         jPanel2.add(systemPanel);
 
         dataScrollPane.setBorder(null);
+        dataScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         dataPanel.setLayout(new javax.swing.BoxLayout(dataPanel, javax.swing.BoxLayout.PAGE_AXIS));
         dataScrollPane.setViewportView(dataPanel);

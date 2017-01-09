@@ -354,6 +354,7 @@ public class RecordEditorSource extends javax.swing.JPanel
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
         dataScrollPane.setBorder(null);
+        dataScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         dataPanel.setLayout(new javax.swing.BoxLayout(dataPanel, javax.swing.BoxLayout.PAGE_AXIS));
         dataScrollPane.setViewportView(dataPanel);
