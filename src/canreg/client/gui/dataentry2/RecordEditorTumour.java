@@ -704,7 +704,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
      */
     public void addLinkablePatient(String patientTitle) {                                
         DefaultComboBoxModel model = (DefaultComboBoxModel) this.patientsComboBox.getModel();
-        //That patient cannot be previosly loaded in the combobox
+        //That patient cannot be previously loaded in the combobox
         if (patientTitle != null &&
            ! patientTitle.isEmpty() &&
            model.getIndexOf(patientTitle) == -1) {
@@ -715,9 +715,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
             
             this.patientsComboBox.addItem(patientTitle);
             if(this.patientsComboBox.getItemCount() == 1)
-                this.patientsComboBox.setEnabled(false);
+                this.tumourLinkedPanel.setVisible(false);
             else
-                this.patientsComboBox.setEnabled(true);
+                this.tumourLinkedPanel.setVisible(true);
                                     
             //Select this new patient if it's already linked to this tumour
             DatabaseRecord tumourRecord = this.getDatabaseRecord();
@@ -738,7 +738,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     /**
      * Changes the selection of linked patient in the combobox.
      * @param patientTitle the patient to be selected (it has to be previously
-     * loaded, if not a IllegalArgumentException() will be thrown).
+     * added in the combobox, if not an IllegalArgumentException() will be thrown).
      */
     public void setLinkedPatient(String patientTitle) {
         this.setLinkedPatient(patientTitle, false);
@@ -747,7 +747,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     /**
      * Changes the selection of linked patient in the combobox.
      * @param patientTitle the patient to be selected (it has to be previously
-     * loaded, if not a IllegalArgumentException() will be thrown).
+     * added in the comboBox, if not a IllegalArgumentException() will be thrown).
      * @param avoidComboboxListener true if the caller wants to avoid the patient linkage
      * combobox listener. This is useful when the caller wants to link the tumour to 
      * a patient but don't consider this as a change on the tumour. 
@@ -810,9 +810,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
             
         this.patientsComboBox.removeItem(patientTitle);
         if(this.patientsComboBox.getItemCount() == 1)
-                this.patientsComboBox.setEnabled(false);
+                this.tumourLinkedPanel.setVisible(false);
             else
-                this.patientsComboBox.setEnabled(true);
+                this.tumourLinkedPanel.setVisible(true);
         
         this.avoidPatientsComboBoxListener = false;
         
