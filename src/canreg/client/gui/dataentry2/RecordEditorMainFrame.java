@@ -20,7 +20,6 @@
  */
 package canreg.client.gui.dataentry2;
 
-import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
 import static canreg.client.gui.CanRegClientView.maximizeHeight;
@@ -46,7 +45,6 @@ import canreg.server.database.RecordLockedException;
 import canreg.common.database.Source;
 import canreg.common.database.Tumour;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
-import canreg.server.database.UnknownTableException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;

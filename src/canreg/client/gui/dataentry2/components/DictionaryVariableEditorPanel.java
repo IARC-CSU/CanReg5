@@ -69,6 +69,8 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         resourceMap = org.jdesktop.application.Application.getInstance(
                 canreg.client.CanRegClientApp.class).getContext().getResourceMap(DictionaryVariableEditorPanel.class);
         initComponents();
+        this.outerSplitPane.setDividerLocation(90);
+        this.outerSplitPane.setResizeWeight(0.0);
     }
     
     private void initComponents() {        
@@ -97,10 +99,8 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         innerSplitPane.setUI(new DottedDividerSplitPane());
         innerSplitPane.setBorder(null);
         
-        outerSplitPane.setDividerLocation(70);
         outerSplitPane.setBorder(null);
         outerSplitPane.setFocusable(false);
-        outerSplitPane.setResizeWeight(0.2);
         outerSplitPane.setMinimumSize(new java.awt.Dimension(20, 26));
         outerSplitPane.setPreferredSize(new java.awt.Dimension(100, 26));
         outerSplitPane.setName("outerSplitPane"); // NOI18N
@@ -236,6 +236,14 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                     codeTextField.setText(code);
                     avoidActionPerformed = false;
                 }
+                else if (dictionary.isCompoundDictionary() && codeTextField.getText().length() < dictionary.getCodeLength()){
+                    categoryCombo.removeActionListener(categoryComboListener);
+                    categoryCombo.setSelectedIndex(-1);
+                    categoryCombo.addActionListener(categoryComboListener);
+                    descriptionCombo.removeActionListener(descriptionComboListener);
+                    descriptionCombo.setSelectedIndex(-1);
+                    descriptionCombo.addActionListener(descriptionComboListener);
+                }
                 if (dictionary.isCompoundDictionary()) {
                     if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
                         descriptionCombo.setSelectedItem(
@@ -243,11 +251,25 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 } else {
                     if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
                         descriptionCombo.setSelectedItem(dictionary.getDictionaryEntries().get(codeTextField.getText()));
+                    else {
+                        descriptionCombo.removeActionListener(descriptionComboListener);
+                        descriptionCombo.setSelectedIndex(-1);
+                        descriptionCombo.addActionListener(descriptionComboListener);
+                    }
                 }
 
             } catch (NullPointerException e) {
                 throw e;
             }            
+        } else {
+            if (dictionary.isCompoundDictionary()) {
+                categoryCombo.removeActionListener(categoryComboListener);
+                categoryCombo.setSelectedIndex(-1);
+                categoryCombo.addActionListener(categoryComboListener);
+            }
+            descriptionCombo.removeActionListener(descriptionComboListener);
+            descriptionCombo.setSelectedIndex(-1);
+            descriptionCombo.addActionListener(descriptionComboListener);
         }
     }
     
@@ -429,7 +451,8 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     
     @Override
     protected void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {
-        updateFilledInStatusColor();
+        //updateFilledInStatusColor();
+        this.actionPerformed(new ActionEvent(this, 0, MaxLengthDocument.CHANGED_ACTION_STRING));
         if (dictionary != null && evt.getKeyChar() == '?') {
             if (categoryCombo.isVisible())
                 this.categoryCombo.showPopup();
@@ -437,7 +460,8 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 this.descriptionCombo.showPopup();            
         } else if (evt.getKeyChar() == KeyEvent.VK_ENTER) {            
             //Skip to next VariableEditorPanel if this dictionary code is complete and correct
-            if (this.codeTextField.getBackground() == VARIABLE_OK_COLOR) {
+            if (this.codeTextField.getBackground() == VARIABLE_OK_COLOR
+                && this.descriptionCombo.getSelectedIndex() != -1) {
                 this.descriptionCombo.setFocusable(false);                
                 if (this.dictionary.isCompoundDictionary()) 
                     this.categoryCombo.setFocusable(false);
