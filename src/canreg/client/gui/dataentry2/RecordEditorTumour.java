@@ -853,21 +853,23 @@ public class RecordEditorTumour extends javax.swing.JPanel
         if (resultCode == null || resultCode == ResultCode.NotDone) {            
             checksButton.setText(resourceMap.getString("checksPanel.border.title") + " " +
                     java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("NOT_DONE"));
+            checksButton.setToolTipText(checksButton.getText());
             //Red colored border
-            checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 2));
+            checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 3));
             canBeConfirmed = false;
         } else {            
             checksButton.setText(resourceMap.getString("checksPanel.border.title") + " " +
                     java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour")
-                            .getString("DONE:_") + resultCode.toString());  
+                            .getString("DONE:_") + resultCode.toString());
+            checksButton.setToolTipText(checksButton.getText());
             
             if (resultCode == ResultCode.OK || resultCode == ResultCode.Query) {
                 //Green colored border
-                checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(32, 166, 72), 2));
+                checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(32, 166, 72), 3));
                 canBeConfirmed = true;
             } else if (resultCode == ResultCode.Rare) {
                 //Yellow colored border
-                checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 0), 2));
+                checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 0), 3));
                 if (CanRegClientApp.getApplication().getUserRightLevel() == Globals.UserRightLevels.SUPERVISOR) 
                     canBeConfirmed = true;                
             }
@@ -991,7 +993,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         checksButton.setAction(actionMap.get("runChecksAction")); // NOI18N
         checksButton.setText(resourceMap.getString("checksButton.text")); // NOI18N
-        checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 2));
+        checksButton.setToolTipText(resourceMap.getString("checksButton.text")); // NOI18N
+        checksButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 3));
         checksButton.setFocusable(false);
         checksButton.setMaximumSize(new java.awt.Dimension(32767, 45));
         checksButton.setMinimumSize(new java.awt.Dimension(20, 21));
@@ -1081,9 +1084,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
         systemPanel.add(filler5);
 
         updatedByPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, resourceMap.getString("updatedByPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11))); // NOI18N
-        updatedByPanel.setMaximumSize(new java.awt.Dimension(400, 95));
+        updatedByPanel.setMaximumSize(new java.awt.Dimension(180, 95));
         updatedByPanel.setMinimumSize(new java.awt.Dimension(100, 50));
-        updatedByPanel.setPreferredSize(new java.awt.Dimension(220, 69));
+        updatedByPanel.setPreferredSize(new java.awt.Dimension(180, 69));
 
         byLabel.setText(resourceMap.getString("byLabel.text")); // NOI18N
         byLabel.setName("byLabel"); // NOI18N
@@ -1106,7 +1109,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
                     .addGroup(updatedByPanelLayout.createSequentialGroup()
                         .addComponent(byLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE))
+                        .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE))
                     .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -1124,9 +1127,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
         systemPanel.add(updatedByPanel);
 
         updatedByPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, resourceMap.getString("sequencePanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11))); // NOI18N
-        updatedByPanel1.setMaximumSize(new java.awt.Dimension(150, 95));
+        updatedByPanel1.setMaximumSize(new java.awt.Dimension(100, 95));
         updatedByPanel1.setMinimumSize(new java.awt.Dimension(100, 50));
-        updatedByPanel1.setPreferredSize(new java.awt.Dimension(150, 80));
+        updatedByPanel1.setPreferredSize(new java.awt.Dimension(100, 80));
 
         sequenceNumberDescriptionLabel.setText(resourceMap.getString("sequenceNumberDescriptionLabel.text")); // NOI18N
 
@@ -1147,9 +1150,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
                     .addComponent(sequenceNumberDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(updatedByPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sequenceNumberValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
-                    .addComponent(sequenceTotalValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(sequenceNumberValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                    .addComponent(sequenceTotalValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE))
+                .addGap(5, 5, 5))
         );
         updatedByPanel1Layout.setVerticalGroup(
             updatedByPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

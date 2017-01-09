@@ -1,24 +1,23 @@
 BUG LIST
 
-- En la BD TRT si cambiamos un valor en la variable "Personal ID" no se detectan los cambios y por ende no los guarda
-- Dictionary variables que NO son mandatory al apretar enter (y no tener codigo ingresado) considera como si tiene
-- Ancho de variables se sigue moviendo como se le canta la gana (ponele un ancho fijo al variableName y listo culia) (se ve bien solo si esta maximizado en el eje vertical)
+(DONE) - En la BD TRT si cambiamos un valor en la variable "Personal ID" no se detectan los cambios y por ende no los guarda
+(DONE) - Dictionary variables que NO son mandatory al apretar enter (y no tener codigo ingresado) considera como si tiene
+(DONE) - Ancho de variables se sigue moviendo como se le canta la gana 
 - Cambios residuales cuando se guarda nueva fuente:
   1) Browsear un paciente con tumores ya cargados
   2) Dentro de un tumor existente, crear una nueva fuente (esto NO trigueara el checks, lo cual esta bien)
   3) Save All
   4) Al apretar para salir del RecordEditorMainFrame, nos saltara el cartel de que hay cambios sin guardar (cuando
      no deberia porque acaban de guardarse todos los cambios con el Save All)
-- segui intentando con los splitpane cursor
-- tooltip para el boton Checks
+(DONE) - segui intentando con los splitpane cursor
+(DONE) - tooltip para el boton Checks
 - Achicar Updated, Sequence y Tumour Linked para agrandar un poco mas el boton de checks
 - Sacar "Tumour Linked To" cuando solo hay un solo paciente
 - Revisar tooltips de los 4 botones grandes de la GUI (searchs, checks, etc)
 - Si el Patient Link cambia, hay que poner el checks en "Not Done"
-- TextAreas saltean el focus cuando se aprieta enter (cuando en esos campos si esta permitido apretar enter para saltar de linea.)
-- Fijate que campos que sean textareas se expandan verticalmente (en teoria pasa tambien enla version vieja)
-- Que hacemos con el tema de la sequence 0 cuando hay un solo tumor cargado??
-- Setear a mano velocidad de la ruedita en todos los splitpanes (ya que no coincide)
+(DONE) - TextAreas saltean el focus cuando se aprieta enter (cuando en esos campos si esta permitido apretar enter para saltar de linea.)
+(DONE) - Fijate que campos que sean textareas se expandan verticalmente (en teoria pasa tambien enla version vieja)
+(DONE) - Setear a mano velocidad de la ruedita en todos los splitpanes (ya que no coincide)
   
 
 - Left to translate to other languages other than english and spanish:
