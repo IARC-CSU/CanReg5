@@ -1,31 +1,20 @@
 BUG LIST
 
-(DONE) - En la BD TRT si cambiamos un valor en la variable "Personal ID" no se detectan los cambios y por ende no los guarda
-(DONE) - Dictionary variables que NO son mandatory al apretar enter (y no tener codigo ingresado) considera como si tiene
-(DONE) - Ancho de variables se sigue moviendo como se le canta la gana 
-- Cambios residuales cuando se guarda nueva fuente:
-  1) Browsear un paciente con tumores ya cargados
-  2) Dentro de un tumor existente, crear una nueva fuente (esto NO trigueara el checks, lo cual esta bien)
-  3) Save All
-  4) Al apretar para salir del RecordEditorMainFrame, nos saltara el cartel de que hay cambios sin guardar (cuando
-     no deberia porque acaban de guardarse todos los cambios con el Save All)
-(DONE) - segui intentando con los splitpane cursor
-(DONE) - tooltip para el boton Checks
-- Achicar Updated, Sequence y Tumour Linked para agrandar un poco mas el boton de checks
-- Sacar "Tumour Linked To" cuando solo hay un solo paciente
-- Revisar tooltips de los 4 botones grandes de la GUI (searchs, checks, etc)
-- Si el Patient Link cambia, hay que poner el checks en "Not Done"
-(DONE) - TextAreas saltean el focus cuando se aprieta enter (cuando en esos campos si esta permitido apretar enter para saltar de linea.)
-(DONE) - Fijate que campos que sean textareas se expandan verticalmente (en teoria pasa tambien enla version vieja)
-(DONE) - Setear a mano velocidad de la ruedita en todos los splitpanes (ya que no coincide)
+(NON REPRODUCIBLE) - Cambios residuales cuando se guarda nueva fuente:
+				  1) Browsear un paciente con tumores ya cargados
+				  2) Dentro de un tumor existente, crear una nueva fuente (esto NO trigueara el checks, lo cual esta bien)
+				  3) Save All
+				  4) Al apretar para salir del RecordEditorMainFrame, nos saltara el cartel de que hay cambios sin guardar (cuando
+					 no deberia porque acaban de guardarse todos los cambios con el Save All)
+
   
 
 - Left to translate to other languages other than english and spanish:
-    RecordEditor PLEASE\ SELECT\ PATIENT\ RECORD\ FIRST
+   RecordEditor PLEASE\ SELECT\ PATIENT\ RECORD\ FIRST
    RecordEditor PATIENT\ NOT\ OPEN
    RecordEditorTumour tumourPatientLinkLabel.text
-	 RecordEditor saveAllAction.Action.text
-	 DictionaryVariableEditorPanel Empty_dictionary
+   RecordEditor saveAllAction.Action.text
+   DictionaryVariableEditorPanel Empty_dictionary
    OptionsFrame(All Languages) dataEntryLabel.text
    OptionsFrame(All Languages) newDataEntryVerticalSources.toolTipText
    OptionsFrame(All Languages) newDataEntryVerticalSources.text
@@ -38,7 +27,7 @@ DONE
 - (DONE) Close dialog of the RecordEditor ALWAYS closes no matter what option you choose
 - (DONE) Personally, I would probably like slightly more "air" around the components. Especially to the right of the elements of the form...
 - (DONE) (en variables diccionario) Si elegimos una categoria, pero resulta que la descripcion no esta dentro de esa categoria, queremos
-quitar la categoria y no se cambian las opciones de descripcion
+		 quitar la categoria y no se cambian las opciones de descripcion
 - (??????) The "label" part of the dictionary chooser still gets focus when tabbing (or "entering") through the form. That is not the way it should be.
 - (DONE) Change "run checks" on all the tumours of a patient when patient data changes
 - (DONE) Erasing something on a field does not trigger the changes detection
@@ -57,6 +46,18 @@ quitar la categoria y no se cambian las opciones de descripcion
 - (DONE) Hide one of the splitpanes of a dictionary variable when category combo doesn't exist
 - (DONE) Dotted lines along split panes and transform mouse into "little hand" when above a dotted line
 - (DONE) Put placeholders for LocalSettings to change Tumour/source split orientation and choosing between the 2 GUI's
+- (DONE) segui intentando con los splitpane cursor
+- (DONE) tooltip para el boton Checks
+- (DONE) Achicar Updated, Sequence y Tumour Linked para agrandar un poco mas el boton de checks
+- (DONE) Sacar "Tumour Linked To" cuando solo hay un solo paciente
+- (DONE) Revisar tooltips de los 4 botones grandes de la GUI (searchs, checks, etc)
+- (DONE) Si el Patient Link cambia, hay que poner el checks en "Not Done"
+- (DONE) TextAreas saltean el focus cuando se aprieta enter (cuando en esos campos si esta permitido apretar enter para saltar de linea.)
+- (DONE) Fijate que campos que sean textareas se expandan verticalmente (en teoria pasa tambien enla version vieja)
+- (DONE) Setear a mano velocidad de la ruedita en todos los splitpanes (ya que no coincide)
+- (DONE) En la BD TRT si cambiamos un valor en la variable "Personal ID" no se detectan los cambios y por ende no los guarda
+- (DONE) Dictionary variables que NO son mandatory al apretar enter (y no tener codigo ingresado) considera como si tiene
+- (DONE) Ancho de variables se sigue moviendo como se le canta la gana 
 - (Impossible to change, the arquitecture made by Avoiding tabs go in front of Menu button if there are too many
 - (Java bug https://bugs.openjdk.java.net/browse/JDK-8136998) Scroll doesn't work when the mouse is on top of a combobox (category y description)
 - "Please save patient record first" happened when I clicked save all. (Maybe because I hadn`t filled anything in the patient part?)
