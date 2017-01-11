@@ -557,6 +557,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
         byLabel = new javax.swing.JLabel();
         userLabel = new javax.swing.JLabel();
         dateLabel = new javax.swing.JLabel();
+        filler6 = new javax.swing.Box.Filler(new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 0), new java.awt.Dimension(8, 32767));
         dataScrollPane = new javax.swing.JScrollPane();
         dataPanel = new javax.swing.JPanel();
 
@@ -570,7 +571,8 @@ public class RecordEditorPatient extends javax.swing.JPanel
         systemPanel.add(filler4);
 
         buttonsPanel.setMaximumSize(new java.awt.Dimension(32767, 95));
-        buttonsPanel.setPreferredSize(new java.awt.Dimension(130, 50));
+        buttonsPanel.setMinimumSize(new java.awt.Dimension(130, 62));
+        buttonsPanel.setPreferredSize(new java.awt.Dimension(250, 50));
         buttonsPanel.setLayout(new javax.swing.BoxLayout(buttonsPanel, javax.swing.BoxLayout.PAGE_AXIS));
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditorPatient.class, this);
@@ -579,7 +581,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
         searchButton.setText(resourceMap.getString("personSearchPanel.border.title")); // NOI18N
         searchButton.setToolTipText(resourceMap.getString("searchButton.toolTipText"));
         searchButton.setFocusable(false);
-        searchButton.setMaximumSize(new java.awt.Dimension(200, 45));
+        searchButton.setMaximumSize(new java.awt.Dimension(400, 45));
         buttonsPanel.add(searchButton);
         buttonsPanel.add(filler1);
 
@@ -587,7 +589,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
         exactButton.setText(resourceMap.getString("exactSearchButton.text")); // NOI18N
         exactButton.setToolTipText(resourceMap.getString("exactSearchButton.Action.shortDescription")); // NOI18N
         exactButton.setFocusable(false);
-        exactButton.setMaximumSize(new java.awt.Dimension(200, 45));
+        exactButton.setMaximumSize(new java.awt.Dimension(400, 45));
         buttonsPanel.add(exactButton);
 
         systemPanel.add(buttonsPanel);
@@ -596,7 +598,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
 
         updatedByPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, resourceMap.getString("updatedByPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11))); // NOI18N
         updatedByPanel.setMaximumSize(new java.awt.Dimension(32767, 95));
-        updatedByPanel.setMinimumSize(new java.awt.Dimension(100, 30));
+        updatedByPanel.setMinimumSize(new java.awt.Dimension(60, 30));
 
         byLabel.setText(resourceMap.getString("byLabel.text")); // NOI18N
         byLabel.setName("byLabel"); // NOI18N
@@ -617,7 +619,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
                     .addGroup(updatedByPanelLayout.createSequentialGroup()
                         .addComponent(byLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE))
+                        .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -633,6 +635,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
         );
 
         systemPanel.add(updatedByPanel);
+        systemPanel.add(filler6);
 
         jPanel2.add(systemPanel);
 
@@ -648,7 +651,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 803, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -668,6 +671,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
     private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
     private javax.swing.Box.Filler filler5;
+    private javax.swing.Box.Filler filler6;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JButton searchButton;
     private javax.swing.JPanel systemPanel;

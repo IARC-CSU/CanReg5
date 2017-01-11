@@ -21,7 +21,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanel2" alignment="0" pref="803" max="32767" attributes="0"/>
+          <Component id="jPanel2" alignment="0" pref="624" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -70,8 +70,11 @@
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[32767, 95]"/>
                 </Property>
+                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[130, 62]"/>
+                </Property>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[130, 50]"/>
+                  <Dimension value="[250, 50]"/>
                 </Property>
               </Properties>
 
@@ -87,7 +90,7 @@
                     <Property name="text" type="java.lang.String" resourceKey="personSearchPanel.border.title" postCode="searchButton.setToolTipText(resourceMap.getString(&quot;searchButton.toolTipText&quot;));"/>
                     <Property name="focusable" type="boolean" value="false"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[200, 45]"/>
+                      <Dimension value="[400, 45]"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -116,7 +119,7 @@
                     <Property name="toolTipText" type="java.lang.String" resourceKey="exactSearchButton.Action.shortDescription"/>
                     <Property name="focusable" type="boolean" value="false"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[200, 45]"/>
+                      <Dimension value="[400, 45]"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -168,7 +171,7 @@
                   <Dimension value="[32767, 95]"/>
                 </Property>
                 <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[100, 30]"/>
+                  <Dimension value="[60, 30]"/>
                 </Property>
               </Properties>
 
@@ -181,7 +184,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="byLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="userLabel" pref="579" max="32767" attributes="0"/>
+                                  <Component id="userLabel" max="32767" attributes="0"/>
                               </Group>
                               <Component id="dateLabel" alignment="0" max="32767" attributes="0"/>
                           </Group>
@@ -224,6 +227,22 @@
                 </Component>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.Box$Filler" name="filler6">
+              <Properties>
+                <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[8, 32767]"/>
+                </Property>
+                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[8, 0]"/>
+                </Property>
+                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[8, 0]"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.HorizontalStrut"/>
+              </AuxValues>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JScrollPane" name="dataScrollPane">

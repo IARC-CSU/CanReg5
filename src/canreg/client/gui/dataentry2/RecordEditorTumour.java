@@ -952,8 +952,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
         dateLabel = new javax.swing.JLabel();
         updatedByPanel1 = new javax.swing.JPanel();
         sequenceNumberDescriptionLabel = new javax.swing.JLabel();
-        sequenceNumberValueLabel = new javax.swing.JLabel();
         sequenceTotalDescriptionLabel = new javax.swing.JLabel();
+        sequenceNumberValueLabel = new javax.swing.JLabel();
         sequenceTotalValueLabel = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
@@ -1127,17 +1127,17 @@ public class RecordEditorTumour extends javax.swing.JPanel
         systemPanel.add(updatedByPanel);
 
         updatedByPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, resourceMap.getString("sequencePanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11))); // NOI18N
-        updatedByPanel1.setMaximumSize(new java.awt.Dimension(100, 95));
-        updatedByPanel1.setMinimumSize(new java.awt.Dimension(100, 50));
-        updatedByPanel1.setPreferredSize(new java.awt.Dimension(100, 80));
+        updatedByPanel1.setMaximumSize(new java.awt.Dimension(140, 95));
+        updatedByPanel1.setMinimumSize(new java.awt.Dimension(124, 50));
+        updatedByPanel1.setPreferredSize(new java.awt.Dimension(124, 80));
 
         sequenceNumberDescriptionLabel.setText(resourceMap.getString("sequenceNumberDescriptionLabel.text")); // NOI18N
 
-        sequenceNumberValueLabel.setText(resourceMap.getString("sequenceNumberValueLabel.text")); // NOI18N
-
         sequenceTotalDescriptionLabel.setText(resourceMap.getString("sequenceTotalDescriptionLabel.text")); // NOI18N
 
-        sequenceTotalValueLabel.setText(resourceMap.getString("sequenceTotalValueLabel.text")); // NOI18N
+        sequenceNumberValueLabel.setText("10");
+
+        sequenceTotalValueLabel.setText("10");
 
         javax.swing.GroupLayout updatedByPanel1Layout = new javax.swing.GroupLayout(updatedByPanel1);
         updatedByPanel1.setLayout(updatedByPanel1Layout);
@@ -1148,11 +1148,11 @@ public class RecordEditorTumour extends javax.swing.JPanel
                 .addGroup(updatedByPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(sequenceTotalDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(sequenceNumberDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(5, 5, 5)
                 .addGroup(updatedByPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sequenceNumberValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
-                    .addComponent(sequenceTotalValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE))
-                .addGap(5, 5, 5))
+                    .addComponent(sequenceNumberValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sequenceTotalValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         updatedByPanel1Layout.setVerticalGroup(
             updatedByPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1163,8 +1163,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(updatedByPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(sequenceTotalDescriptionLabel)
-                    .addComponent(sequenceTotalValueLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                    .addComponent(sequenceTotalValueLabel))
+                .addContainerGap(7, Short.MAX_VALUE))
         );
 
         systemPanel.add(updatedByPanel1);
@@ -1233,7 +1233,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1077, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1120, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1261,8 +1261,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 1077, Short.MAX_VALUE)
-            .addComponent(systemPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1077, Short.MAX_VALUE)
+            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 1120, Short.MAX_VALUE)
+            .addComponent(systemPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1120, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
