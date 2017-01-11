@@ -57,6 +57,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
     private ActionListener categoryComboListener;
     private ActionListener descriptionComboListener;
     private boolean avoidActionPerformed = false;
+    private boolean doNotSetText = false;
     private final org.jdesktop.application.ResourceMap resourceMap;
     
     public DictionaryVariableEditorPanel() {
@@ -250,19 +251,23 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             throws NullPointerException {
         if (codeTextField.getText().trim().length() > 0) { 
             try {
-                if (dictionary.isCompoundDictionary() && codeTextField.getText().length() >= dictionary.getCodeLength()) {
+                if (dictionary.isCompoundDictionary() && 
+                    codeTextField.getText().length() >= dictionary.getCodeLength()) {
                     String code = codeTextField.getText();
+                    this.doNotSetText = true;
                     categoryCombo.setSelectedItem(
                             dictionary.getDictionaryEntries().get(
                                     codeTextField.getText().substring(0, dictionary.getCodeLength())));
+                    this.doNotSetText = false;
 
                     //avoid action performed, otherwise we get stackOverflow because
                     //lookUpAndSetDescription() is called endlessly
-                    avoidActionPerformed = true;
-                    codeTextField.setText(code);
-                    avoidActionPerformed = false;
+                    //avoidActionPerformed = true;
+                    //codeTextField.setText(code);
+                    //avoidActionPerformed = false;
                 }
-                else if (dictionary.isCompoundDictionary() && codeTextField.getText().length() < dictionary.getCodeLength()){
+                else if (dictionary.isCompoundDictionary() && 
+                         codeTextField.getText().length() < dictionary.getCodeLength()){
                     categoryCombo.removeActionListener(categoryComboListener);
                     categoryCombo.setSelectedIndex(-1);
                     categoryCombo.addActionListener(categoryComboListener);
@@ -271,12 +276,19 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                     descriptionCombo.addActionListener(descriptionComboListener);
                 }
                 if (dictionary.isCompoundDictionary()) {
-                    if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
+                    if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) {
+                        this.doNotSetText = true;
                         descriptionCombo.setSelectedItem(
                             dictionary.getDictionaryEntries().get(codeTextField.getText()));
+                        this.doNotSetText = false;
+                    }
                 } else {
-                    if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) 
-                        descriptionCombo.setSelectedItem(dictionary.getDictionaryEntries().get(codeTextField.getText()));
+                    if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) {
+                        this.doNotSetText = true;
+                        descriptionCombo.setSelectedItem(
+                            dictionary.getDictionaryEntries().get(codeTextField.getText()));
+                        this.doNotSetText = false;
+                    }
                     else {
                         descriptionCombo.removeActionListener(descriptionComboListener);
                         descriptionCombo.setSelectedIndex(-1);
@@ -590,8 +602,9 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             }
 
             if (categoryCode != null) {                
-                //avoidActionPerformed = true;
-                codeTextField.setText("");
+                avoidActionPerformed = true;
+                if( ! this.doNotSetText ) 
+                    codeTextField.setText(categoryCode);
                 avoidActionPerformed = false;
                 
                 descriptionCombo.removeActionListener(descriptionComboListener);
@@ -669,9 +682,11 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 }
                 
                 avoidActionPerformed = true;
-                codeTextField.setText(descriptionCode);
-                updateFilledInStatusColor();
-                checkForChanges();               
+                if ( ! this.doNotSetText ) {
+                    codeTextField.setText(descriptionCode);
+                    updateFilledInStatusColor();
+                    checkForChanges(); 
+                }
                 avoidActionPerformed = false;
             }            
         }
@@ -684,18 +699,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             checkForChanges();               
             avoidActionPerformed = false;
         }
-    } 
-    
-    /*@Override
-    protected void checkForChanges() {
-       Object currentValue = getValue();
-        if (listener != null && 
-            ((currentValue != null && !currentValue.equals(initialValue)) ||
-             (initialValue != null && !initialValue.equals(currentValue)))) {
-            hasChanged = true;
-            listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
-        } 
-    }*/
+    }    
        
     private void categoryComboBoxKeyTyped(java.awt.event.KeyEvent evt) {
         categoryComboActionPerformed(null);
