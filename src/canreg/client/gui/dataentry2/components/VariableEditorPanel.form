@@ -116,7 +116,7 @@
                 </Property>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {&#xa;    public void focusLost(java.awt.event.FocusEvent evt) {&#xa;        codeTextFieldFocusLost(evt);&#xa;    }&#xa;});&#xa;codeTextField.addKeyListener(new java.awt.event.KeyAdapter() {&#xa;    public void keyTyped(java.awt.event.KeyEvent evt) {&#xa;        codeTextFieldKeyTyped(evt);&#xa;    }&#xa;});"/>
+                <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="codeTextField.addFocusListener(new java.awt.event.FocusAdapter() {&#xa;    public void focusLost(java.awt.event.FocusEvent evt) {&#xa;        codeTextFieldFocusLost(evt);&#xa;    }&#xa;});&#xa;codeTextField.addKeyListener(new java.awt.event.KeyAdapter() {&#xa;    public void keyTyped(java.awt.event.KeyEvent evt) {&#xa;        codeTextFieldKeyTyped(evt);&#xa;    }&#xa;});&#xa;codeTextField.addMouseListener(new java.awt.event.MouseAdapter() {&#xa;    public void mousePressed(java.awt.event.MouseEvent evt) {&#xa;        codeTextFieldMousePressed(evt);&#xa;    }&#xa;    public void mouseReleased(java.awt.event.MouseEvent evt) {&#xa;        codeTextFieldMouseReleased(evt);&#xa;    }&#xa;});"/>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
               </AuxValues>
             </Component>

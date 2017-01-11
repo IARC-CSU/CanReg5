@@ -373,6 +373,14 @@ public class VariableEditorPanel extends javax.swing.JPanel
                 codeTextFieldKeyTyped(evt);
             }
         });
+        codeTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                codeTextFieldMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                codeTextFieldMouseReleased(evt);
+            }
+        });
         jPanel1.add(codeTextField);
 
         mainSplitPane.setRightComponent(jPanel1);

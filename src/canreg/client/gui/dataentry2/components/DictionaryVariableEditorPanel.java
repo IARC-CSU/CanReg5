@@ -28,6 +28,7 @@ import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import canreg.client.dataentry.DictionaryHelper;
 import canreg.client.gui.components.DictionaryElementTextFilterator;
 import canreg.client.gui.tools.MaxLengthDocument;
+import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
 import java.awt.Color;
@@ -39,6 +40,7 @@ import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JComboBox;
+import javax.swing.text.JTextComponent;
 
 
 /**
@@ -129,6 +131,14 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 categoryCombo.hidePopup();
             }
         });
+        categoryCombo.getEditor().getEditorComponent().addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                comboBoxMousePressed(categoryCombo, evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                comboBoxMouseReleased(categoryCombo, evt);
+            }
+        });
         categoryCombo.setFocusTraversalKeysEnabled(false);
                         
         jPanel4.setName("jPanel4"); // NOI18N
@@ -154,6 +164,14 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 descriptionCombo.hidePopup();
+            }
+        });
+        descriptionCombo.getEditor().getEditorComponent().addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                comboBoxMousePressed(descriptionCombo, evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                comboBoxMouseReleased(descriptionCombo, evt);
             }
         });
         descriptionCombo.setFocusTraversalKeysEnabled(false);
@@ -213,6 +231,14 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                                     .getString("Dictionary_Error")}));
         }
         updateFilledInStatusColor();
+    }
+    
+    private void comboBoxMousePressed(JComboBox comboBox, java.awt.event.MouseEvent evt) {                                           
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent((JTextComponent)comboBox.getEditor().getEditorComponent(), evt);
+    }                                          
+
+    private void comboBoxMouseReleased(JComboBox comboBox, java.awt.event.MouseEvent evt) {                                            
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent((JTextComponent)comboBox.getEditor().getEditorComponent(), evt);
     }
 
     /**
