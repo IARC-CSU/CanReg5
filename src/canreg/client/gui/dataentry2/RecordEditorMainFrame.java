@@ -263,8 +263,8 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 regnoString += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString(" (OBSOLETE)");
             
             String tabTitle = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString("PATIENT") 
-                                        + ":" + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString(" RECORD ") 
-                                        + " " + regnoString;
+                                        + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString(" RECORD ") 
+                                        + ": " + regnoString;
             
             //Add to all tumour tabs this Patient title
             for(Component tumourComp : this.tumourTabbedPane.getComponents()) {
@@ -529,7 +529,16 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         }
     }        
     
-    private void refreshTitles(RecordEditorPanel recordEditorPanel, DatabaseRecord dbr) {
+    /**
+     * Refreshes a record (patient or tumour) id/title. This should be executed
+     * when a record has been saved.
+     * SO FAR this method is only called to refresh patient titles, tumours titles
+     * are not refresh (but the implementation is supported by this method).
+     * @param recordEditorPanel
+     * @param dbr 
+     */
+    private void refreshTitles(RecordEditorPanel recordEditorPanel) {
+        DatabaseRecord dbr = recordEditorPanel.getDatabaseRecord();
         if (dbr instanceof Patient) {
             Object regno = dbr.getVariable(globalToolBox
                     .translateStandardVariableNameToDatabaseListElement(Globals
@@ -539,24 +548,28 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
             if (regno != null) {
                 regnoString = regno.toString();
                 if (regnoString.length() == 0)
-                    regnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString("N/A");
+                    regnoString = java.util.ResourceBundle
+                            .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString("N/A");
             }
-            String newTitle = dbr.toString() + ": " + regnoString;
             
-            int index = 0;
-            for(Component comp : patientTabbedPane.getComponents()) {              
+            String newTitle = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString("PATIENT") 
+                                        + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString(" RECORD ") 
+                                        + ": " + regnoString;
+                        
+            for(int index = 0; index < patientTabbedPane.getComponentCount(); index++) {
                 //Only the Patient tab passed by parameter gets the title updated
-                if (comp.equals(recordEditorPanel)) {
-                    //We also update the Patient title in the "Tumour linked to" combobox.
-                    //This Patient title will likely be present in several tumour tabs.
+                if (patientTabbedPane.getComponentAt(index).equals(recordEditorPanel)) {
+                    
+                    patientTabbedPane.setTitleAt(index, newTitle);
+                    
+                    //We also update the Patient title in the "Tumour linked to" combobox
+                    //of all the tumours linked to this patient.
                     for(Component tumourComp : this.tumourTabbedPane.getComponents()) {
                         RecordEditorTumour tumourPanel = (RecordEditorTumour) tumourComp;
                         tumourPanel.replaceLinkablePatient(this.patientTabbedPane.getTitleAt(index), 
                                                            newTitle);
                     }                    
-                    patientTabbedPane.setTitleAt(index, newTitle);                    
                 }
-                index++;
             }
             
             if (!titleSet) {
@@ -587,10 +600,9 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                     .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString("N/A");
             if (regno != null) {
                 regnoString = regno.toString();
-                if (regnoString.length() == 0) {
+                if (regnoString.length() == 0) 
                     regnoString = java.util.ResourceBundle
                             .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString("N/A");
-                }
             }
             int index = 0;
             for(Component comp : tumourTabbedPane.getComponents()) {
@@ -1192,11 +1204,12 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 //false is passed as the second parameter because if we get up to
                 //here, then the record has already been succesfully saved in the database :)
                 recordEditorPanel.refreshDatabaseRecord(databaseRecord, false); 
+                
+                //If the saved record is a patient, then this patient tab and
+                //its tumours must refresh the patient id/title
                 if (databaseRecord instanceof Patient) {
                     addToPatientMap((RecordEditorPatient) recordEditorPanel, databaseRecord);
-                    // String ID = (String) databaseRecord.getVariable(patientIDVariableName);
-                                        
-                    refreshTitles(recordEditorPanel, databaseRecord);
+                    refreshTitles(recordEditorPanel);
                 }
             } 
             //Bubble all exceptions all the way to saveAllAction(), so all JOptionPanes

@@ -108,7 +108,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private final RecordEditorMainFrame recordEditor;
     private final org.jdesktop.application.ResourceMap resourceMap;
     private Set<Source> sources;
-    private boolean avoidPatientsComboBoxListener;
+    private boolean avoidTumourLinkedToComboBoxListener;
     //Contains all the variables hold by this tumour and a boolean indicating if
     //there are changes in that variable that need to be saved (true if there
     //are changes, false otherwise)
@@ -300,9 +300,11 @@ public class RecordEditorTumour extends javax.swing.JPanel
      *     to a state of "Checks not done"
      *   - If a source has a change in any of its variables, this tumour is 
      *     considered as saveNeeded = true
-     * @param componentWithChanges
+     * @param componentWithChanges the visual component that received the change 
+     * (usually a jtextfield).
      * @param sourceRecord true if this method is called by a source record, indicating that
-     * a change in a source variable has been made
+     * a change in a source variable has been made. This is because the checks are only 
+     * affected by changes in patient and tumour changes, but not from changes in sources.
      */
     public void changesDone(Object componentWithChanges, boolean sourceRecord) {
         //We save the previous code and status, so we can go back to them
@@ -323,6 +325,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
                 vepsWithChanges = vepsWithChanges || vepChanges;
             setSaveNeeded(vepsWithChanges);
             
+            //The checks are only affected by changes in patient and tumour changes, 
+            //but not from changes in sources
             if( ! sourceRecord) {
                 if (vepsWithChanges)
                     setChecksResultCode(ResultCode.NotDone);                               
@@ -704,16 +708,17 @@ public class RecordEditorTumour extends javax.swing.JPanel
      */
     public void addLinkablePatient(String patientTitle) {                                
         DefaultComboBoxModel model = (DefaultComboBoxModel) this.patientsComboBox.getModel();
+        boolean previousAvoidStatus = this.avoidTumourLinkedToComboBoxListener;
+        
         //That patient cannot be previously loaded in the combobox
         if (patientTitle != null &&
            ! patientTitle.isEmpty() &&
            model.getIndexOf(patientTitle) == -1) {
-            //Another method might be already handling the flag avoidPatientsComboBoxListener, 
-            //so we have to make sure to leave it as it was when we finish here.
-            boolean previousAvoidStatus = this.avoidPatientsComboBoxListener;
-            this.avoidPatientsComboBoxListener = true;
+            
+            this.avoidTumourLinkedToComboBoxListener = true;
             
             this.patientsComboBox.addItem(patientTitle);
+            
             if(this.patientsComboBox.getItemCount() == 1)
                 this.tumourLinkedPanel.setVisible(false);
             else
@@ -731,7 +736,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
             if (tumourPatientID != null && ! tumourPatientID.isEmpty() && patientTitle.contains(tumourPatientID)) 
                this.setLinkedPatient(patientTitle, true);
                                     
-            this.avoidPatientsComboBoxListener = previousAvoidStatus;
+            this.avoidTumourLinkedToComboBoxListener = previousAvoidStatus;
         }
     }
     
@@ -756,9 +761,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
         DefaultComboBoxModel model = (DefaultComboBoxModel) this.patientsComboBox.getModel();
         int index = model.getIndexOf(patientTitle);
         if (index != -1) {            
-            this.avoidPatientsComboBoxListener = avoidComboboxListener;
+            this.avoidTumourLinkedToComboBoxListener = avoidComboboxListener;
             this.patientsComboBox.setSelectedIndex(index);
-            this.avoidPatientsComboBoxListener = false;
+            this.avoidTumourLinkedToComboBoxListener = false;
         }            
         else
             throw new IllegalArgumentException("The patient " + patientTitle + " has not been previously loaded in the combobox.");
@@ -784,37 +789,44 @@ public class RecordEditorTumour extends javax.swing.JPanel
      * @param replacer patient to replace a previously existing one
      */
     public void replaceLinkablePatient(String toBeReplaced, String replacer) {
-        this.avoidPatientsComboBoxListener = true;
-        boolean selectAfterReplace = false;
+        this.avoidTumourLinkedToComboBoxListener = true;
+        boolean selectTheSamePatientAfterReplace = false;
+        
         if (this.getLinkedPatient().equals(toBeReplaced))
-            selectAfterReplace = true;
+            selectTheSamePatientAfterReplace = true;
+        
         if (this.removeLinkablePatient(toBeReplaced)) {
             this.addLinkablePatient(replacer);
-            if (selectAfterReplace)
-                this.setLinkedPatient(replacer);
-        }      
-        this.avoidPatientsComboBoxListener = false;
+            if (selectTheSamePatientAfterReplace)
+                this.setLinkedPatient(replacer, this.avoidTumourLinkedToComboBoxListener);
+        }     
+        
+        this.avoidTumourLinkedToComboBoxListener = false;
     }        
     
     /**
-     * Removes an already present Patient from the combobox.
+     * Removes an already present Patient from the "Tumour linked to" combobox.
      * @param patientTitle 
-     * @return  true if the patient has been removed. False if that patient
+     * @return true if the patient has been removed. False if that patient
      * was never present.
      */
     public boolean removeLinkablePatient(String patientTitle) {
         int beforeRemoving = this.patientsComboBox.getItemCount();
+        boolean previousAvoidStatus = this.avoidTumourLinkedToComboBoxListener;
                 
+        //If the patient that is being removed is NOT the patient currently linked
+        //then we don't want the comboBoxActionPerformed to be triggered.
         if ( ! this.getLinkedPatient().equals(patientTitle))
-            this.avoidPatientsComboBoxListener = true;
+            this.avoidTumourLinkedToComboBoxListener = true;
             
         this.patientsComboBox.removeItem(patientTitle);
-        if(this.patientsComboBox.getItemCount() == 1)
-                this.tumourLinkedPanel.setVisible(false);
-            else
-                this.tumourLinkedPanel.setVisible(true);
         
-        this.avoidPatientsComboBoxListener = false;
+        if(this.patientsComboBox.getItemCount() == 1)
+            this.tumourLinkedPanel.setVisible(false);
+        else
+            this.tumourLinkedPanel.setVisible(true);
+        
+        this.avoidTumourLinkedToComboBoxListener = previousAvoidStatus;
         
         if (this.patientsComboBox.getItemCount() != beforeRemoving)
             return true;
@@ -1274,7 +1286,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     }// </editor-fold>//GEN-END:initComponents
 
     private void patientsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientsComboBoxActionPerformed
-        if ( ! this.avoidPatientsComboBoxListener) {
+        if ( ! this.avoidTumourLinkedToComboBoxListener) {
             this.setSaveNeeded(true);
             setChecksResultCode(ResultCode.NotDone);
         }
