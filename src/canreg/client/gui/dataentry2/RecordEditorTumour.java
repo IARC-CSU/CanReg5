@@ -148,7 +148,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(VariableEditorPanelInterface.CHANGED_STRING)) {           
-            changesDone(e.getSource(), false);
+            changesDone(e.getSource(), false, false);
             //COMMENTED: this situation is also comented on RecordEditor (the class acting
             //as this actionListener), so it really does nothing at all.
             //actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
@@ -305,8 +305,13 @@ public class RecordEditorTumour extends javax.swing.JPanel
      * @param sourceRecord true if this method is called by a source record, indicating that
      * a change in a source variable has been made. This is because the checks are only 
      * affected by changes in patient and tumour changes, but not from changes in sources.
+     * @param patientRecord true if this methos is called by a patient record, indicating
+     * that a change in a patient variable has been made. Checks are affected, but the
+     * tumour is NOT set as saveIsNeeded.
      */
-    public void changesDone(Object componentWithChanges, boolean sourceRecord) {
+    public void changesDone(Object componentWithChanges, 
+                            boolean sourceRecord, 
+                            boolean patientRecord) {
         //We save the previous code and status, so we can go back to them
         //if changes are reversed.
         if (checkResultCodeBeforeChanges == null)
@@ -323,11 +328,12 @@ public class RecordEditorTumour extends javax.swing.JPanel
             boolean vepsWithChanges = false;
             for(Boolean vepChanges : this.changesMap.values()) 
                 vepsWithChanges = vepsWithChanges || vepChanges;
-            setSaveNeeded(vepsWithChanges);
+            if( ! patientRecord)
+                setSaveNeeded(vepsWithChanges);
             
             //The checks are only affected by changes in patient and tumour changes, 
             //but not from changes in sources
-            if( ! sourceRecord) {
+            if ( ! sourceRecord) {
                 if (vepsWithChanges)
                     setChecksResultCode(ResultCode.NotDone);                               
                 else {

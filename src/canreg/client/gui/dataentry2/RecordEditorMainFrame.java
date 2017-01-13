@@ -58,6 +58,7 @@ import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -457,7 +458,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     @Action
     public void saveAllAction() {       
         LinkedList<RecordEditorPatient> successfulPatients = new LinkedList<RecordEditorPatient>();
-        LinkedList<String> failedPatients = new LinkedList<String>();
+        LinkedList<String> failedPatients = new LinkedList<String>();        
         LinkedList<RecordEditorTumour> successfulTumours = new LinkedList<RecordEditorTumour>();
         LinkedList<String> failedTumours = new LinkedList<String>();
         String failed = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
@@ -466,59 +467,51 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         //First we try to save the patients because we need them saved in order
         //to save the tumours. Only patients with changed data are saved.
         for(int i = 0; i < patientTabbedPane.getTabCount(); i++) {
+            RecordEditorPatient patient = (RecordEditorPatient) patientTabbedPane.getComponentAt(i);
             try {            
-                RecordEditorPatient patient = (RecordEditorPatient) patientTabbedPane.getComponentAt(i);
                 if (patient.isSaveNeeded()) {                    
                     patient.prepareToSaveRecord();
                     this.saveRecord(patient);
                 }
                 successfulPatients.add(patient);
             } catch(SaveRecordException ex) {
+                patient.setSaveNeeded(true);
                 failedPatients.add(patientTabbedPane.getTitleAt(i) + " (Tab nº" + (i+1) + ") " +
                                    failed + ": " + ex.getLocalizedMessage());
             } 
         }
         
+        //Before saving the tumours, the sequences are updated.
+        //The sequence will ONLY be updated if it changed (or if the
+        //record is new).
+        LinkedList<RecordEditorTumour> openTumours = new LinkedList<RecordEditorTumour>();
+        for(Component comp : this.tumourTabbedPane.getComponents())
+            openTumours.add((RecordEditorTumour)comp);
+        this.updateAllTumoursSequences(openTumours);
+        
         //Now we try to save all open tumours. 
         //Only tumours with changed data are saved.
         for(int i = 0; i < tumourTabbedPane.getTabCount(); i++) {             
+            RecordEditorTumour tumour = (RecordEditorTumour) tumourTabbedPane.getComponentAt(i);
             try {
-                RecordEditorTumour tumour = (RecordEditorTumour) tumourTabbedPane.getComponentAt(i);
                 if (tumour.isSaveNeeded()) {
                     tumour.prepareToSaveRecord();
                     this.saveRecord(tumour);                    
                 }
                 //We consider it succesful even if it didn't have any changes.
-                //successfulTumours are used to update the tumours sequences.
                 successfulTumours.add(tumour);
             } catch(SaveRecordException ex) {                              
+                tumour.setSaveNeeded(true);
                 failedTumours.add(tumourTabbedPane.getTitleAt(i) + " (Tab nº" + (i+1) + ") " +
                                   failed + ": " + ex.getLocalizedMessage());
             }
         }
-        
-        //If at least one tumour was succesfully saved, then we re-save them
-        //so the sequences get updated on all succesfully saved tumours.
-        //Tumours that failed to be saved are not going to have the sequence updated
-        //and are not going to be considered in the total sequence.
-        if ( ! successfulTumours.isEmpty()) {
-            updateAllTumoursSequences(successfulTumours);
-            for(int i = 0; i < tumourTabbedPane.getTabCount(); i++) {             
-                try {
-                    RecordEditorTumour tumour = (RecordEditorTumour) tumourTabbedPane.getComponentAt(i);
-                    tumour.prepareToSaveRecord();
-                    this.saveRecord(tumour);
-                } catch(SaveRecordException ex) {                             
-                    failedTumours.add(tumourTabbedPane.getTitleAt(i) + " (Tab nº" + (i+1) + ") " +
-                                      failed + ": " + ex.getLocalizedMessage());
-                }
-            }
-        }
                  
         if (failedTumours.isEmpty() && failedPatients.isEmpty())
-            JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle
-                                                        .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
-                                                        .getString("RECORD SAVED."));
+            JOptionPane.showInternalMessageDialog(this, 
+                                                  java.util.ResourceBundle
+                                                  .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
+                                                  .getString("RECORD SAVED."));
         else {
             StringBuilder str = new StringBuilder();
             for(String pat : failedPatients) 
@@ -563,15 +556,15 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 //Only the Patient tab passed by parameter gets the title updated
                 if (patientTabbedPane.getComponentAt(index).equals(recordEditorPanel)) {
                     
-                    patientTabbedPane.setTitleAt(index, newTitle);
-                    
-                    //We also update the Patient title in the "Tumour linked to" combobox
-                    //of all the tumours linked to this patient.
+                    //We also update this particular Patient title in the "Tumour linked to" combobox
+                    //of all the tumours present 
                     for(Component tumourComp : this.tumourTabbedPane.getComponents()) {
                         RecordEditorTumour tumourPanel = (RecordEditorTumour) tumourComp;
                         tumourPanel.replaceLinkablePatient(this.patientTabbedPane.getTitleAt(index), 
                                                            newTitle);
-                    }                    
+                    }
+                    patientTabbedPane.setTitleAt(index, newTitle);
+                    break;
                 }
             }
             
@@ -929,16 +922,17 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     }
 
     /**
-     * Updates the "sequence" and "total" variables of all open tumours. This implementation
+     * Updates the "sequence" and "total" variables of all open tumours ONLY if their 
+     * "sequence" or "total" value has changed (this applies when the record is new). This implementation
      * considers that ALL open tumours belong to the same patient (it does not takes under 
      * consideration if the user prefers to have different sequencing for tumours belonging to
-     * different patients, the user will have to open each patient on a separate RecordEditor
+     * different open patients, the user will have to open each patient on a separate RecordEditor
      * and save changes for the sequences to change).
      * This method DOES NOT save these updates in the DB, but it DOES re-draw the labels for the 
      * "sequence" and "tumour" variables shown in the RecordEditorTumour.
-     * @param tumoursToUpdate collection of tumours to be updated. Usually this method is run
-     * after saving changes, so if a tumour was not succesfully saved is recommended to NOT
-     * be included in this collection.
+     * Because there is a memory leak when saving tumours, these method should be called RIGHT
+     * BEFORE saving a tumour.
+     * @param tumoursToUpdate collection of tumours to be updated. 
      */
     private void updateAllTumoursSequences(Collection<RecordEditorTumour> tumoursToUpdate) {
         int totalTumours = 0;
@@ -951,16 +945,47 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         }
         
         int tumourSequence = 0;
-        for(RecordEditorTumour tumourRecord : tumoursToUpdate) {
-            Tumour tumour = (Tumour) tumourRecord.getDatabaseRecord();
-            boolean obsolete = tumour.getVariable(tumourObsoleteVariableName).toString().equalsIgnoreCase(Globals.OBSOLETE_VALUE);
+        for(RecordEditorTumour tumour : tumoursToUpdate) {
+            boolean tumourChanged = false;
+            Tumour tumourRecord = (Tumour) tumour.getDatabaseRecord();
+            boolean obsolete = tumourRecord.getVariable(tumourObsoleteVariableName)
+                    .toString().equalsIgnoreCase(Globals.OBSOLETE_VALUE);
+            
             if (!obsolete) {
-                tumourSequence++;
-                tumour.setVariable(tumourSequenceVariableName, tumourSequence + "");
-            } else 
-                tumour.setVariable(tumourSequenceVariableName, "-");
-            tumour.setVariable(tumourSequenceTotalVariableName, totalTumours + "");
-            tumourRecord.refreshDatabaseRecord(tumour, false);
+                
+                //IARC CanReg's manual states that if only 1 tumour is present, the
+                //sequence of that only tumour is 0
+                if(totalTumours > 1)
+                    tumourSequence++;
+                
+                //If the "sequence" value already present is different than the
+                //newly calculated value, then the value is updated and the tumour
+                //will have to be saved (even if it didn't have changes in the
+                //rest of the data)
+                if ( ! ((String)tumourRecord.getVariable(tumourSequenceVariableName))
+                        .equalsIgnoreCase(Integer.toString(tumourSequence))) {
+                    tumourRecord.setVariable(tumourSequenceVariableName, tumourSequence + "");
+                    tumourChanged = true;
+                }
+            } else {
+                if ( ! ((String)tumourRecord.getVariable(tumourSequenceVariableName))
+                        .equalsIgnoreCase(Integer.toString(tumourSequence))) {
+                    tumourRecord.setVariable(tumourSequenceVariableName, "-");
+                    tumourChanged = true;
+                }
+            }
+            
+            if ( ! ((String)tumourRecord.getVariable(tumourSequenceTotalVariableName))
+                        .equalsIgnoreCase(Integer.toString(totalTumours))) {
+                tumourRecord.setVariable(tumourSequenceTotalVariableName, totalTumours + "");
+                tumourChanged = true;
+            }
+            
+            //Tumour with data changes from before entering this method will need
+            //to be saved (it doesn't matter if the values in this method were 
+            //not updated).
+            if(tumourChanged || tumour.isSaveNeeded())
+                tumour.refreshDatabaseRecord(tumourRecord, (tumourChanged || tumour.isSaveNeeded()));
         }
     }
 
@@ -1164,9 +1189,6 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 }
             }
             
-            // set the patient id to the active patient number                        
-            //RecordEditorPatient patientRecordEditorPanel = (RecordEditorPatient) patientTabbedPane.getSelectedComponent();
-            //DatabaseRecord patientDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
             RecordEditorPatient patientRecordEditorPanel = null;
             DatabaseRecord patientDatabaseRecord = null;
             for(int i = 0; i < this.patientTabbedPane.getTabCount(); i++) {

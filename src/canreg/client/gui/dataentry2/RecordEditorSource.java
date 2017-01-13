@@ -216,7 +216,7 @@ public class RecordEditorSource extends javax.swing.JPanel
         if (e.getActionCommand().equals(VariableEditorPanelInterface.CHANGED_STRING)) {           
             //Bubbles to RecordEditorTumour (it takes care of all change management)
             RecordEditorTumour tumour = (RecordEditorTumour) actionListener;
-            tumour.changesDone(e.getSource(), true);
+            tumour.changesDone(e.getSource(), true, false);
             //COMMENTED: this situation is also comented on RecordEditor (the class acting
             //as this actionListener), so it really does nothing at all.
             //actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHANGED));
