@@ -124,7 +124,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
                               RecordEditorMainFrame recordEditor) {
         this.recordEditor = recordEditor;
         this.actionListener = listener;
-        localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        this.localSettings = CanRegClientApp.getApplication().getLocalSettings();
         initComponents(); 
 
         this.changesMap = new HashMap<VariableEditorPanel, Boolean>();
@@ -1183,13 +1183,14 @@ public class RecordEditorTumour extends javax.swing.JPanel
 
         jPanel4.setPreferredSize(new java.awt.Dimension(100, 50));
 
-        jSplitPane2.setBorder(null);
+        jSplitPane2.setResizeWeight(0.65);
         jSplitPane2.setDividerSize(7);
-        if (localSettings.isDataEntryVerticalSources())
-        jSplitPane2.setOrientation(javax.swing.JSplitPane.HORIZONTAL_SPLIT);
+        if (localSettings.isDataEntryVerticalSources()) {
+            jSplitPane2.setOrientation(javax.swing.JSplitPane.HORIZONTAL_SPLIT);
+            jSplitPane2.setDividerLocation(435);
+        }
         else
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane2.setResizeWeight(0.65);
         jSplitPane2.setPreferredSize(new java.awt.Dimension(100, 50));
         jSplitPane2.setUI(new DottedDividerSplitPane());
         jSplitPane2.setBorder(null);
@@ -1245,13 +1246,13 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1120, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1118, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(414, Short.MAX_VALUE))
+                .addContainerGap(432, Short.MAX_VALUE))
         );
 
         jPanel7.add(jPanel8);

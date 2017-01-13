@@ -21,6 +21,7 @@
 package canreg.client.gui.dataentry2;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
 import static canreg.client.gui.CanRegClientView.maximizeHeight;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
@@ -116,10 +117,12 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     private BrowseInternalFrame browseInternalFrame;    
     private volatile boolean mouseInsideSave = false;    
     private final HashMap<RecordEditorTumour, Boolean> obsoleteToggles;
+    private final LocalSettings localSettings;
         
     
     public RecordEditorMainFrame(JDesktopPane desktopPane) {        
         this.desktopPane = desktopPane;
+        this.localSettings = CanRegClientApp.getApplication().getLocalSettings();
         initComponents();
         patientRecords = new LinkedHashSet<DatabaseRecord>();
         tumourRecords = new LinkedHashSet<DatabaseRecord>();
@@ -1612,6 +1615,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
+        setPreferredSize(new java.awt.Dimension(1200, 524));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
         getContentPane().add(filler17);
         getContentPane().add(filler21);
@@ -1711,6 +1715,11 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         jPanel1.setOpaque(false);
 
         jSplitPane1.setDividerSize(7);
+        if (localSettings.isDataEntryVerticalSources()) {
+            jSplitPane1.setResizeWeight(0.30);
+            jSplitPane1.setDividerLocation(370);
+        }
+        else
         jSplitPane1.setResizeWeight(0.4);
         jSplitPane1.setContinuousLayout(true);
         jSplitPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
