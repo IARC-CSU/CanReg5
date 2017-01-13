@@ -140,7 +140,11 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 comboBoxMouseReleased(categoryCombo, evt);
             }
         });
+        //Tabbing is handled by keyTiped method
         categoryCombo.setFocusTraversalKeysEnabled(false);
+        
+        //Tabbing is handled by keyTiped method
+        codeTextField.setFocusTraversalKeysEnabled(false);
                         
         jPanel4.setName("jPanel4"); // NOI18N
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
@@ -175,6 +179,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 comboBoxMouseReleased(descriptionCombo, evt);
             }
         });
+        //Tabbing is handled by keyTiped method
         descriptionCombo.setFocusTraversalKeysEnabled(false);
         
         sortToggle.setBackground(ORDER_CODE_COLOR); // NOI18N
@@ -496,7 +501,8 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                 this.categoryCombo.showPopup();
             else if (descriptionCombo.isVisible())
                 this.descriptionCombo.showPopup();            
-        } else if (evt.getKeyChar() == KeyEvent.VK_ENTER) {            
+        } else if (evt.getKeyChar() == KeyEvent.VK_ENTER ||
+                   evt.getKeyChar() == KeyEvent.VK_TAB) {            
             //Skip to next VariableEditorPanel if this dictionary code is complete and correct
             if (this.codeTextField.getBackground() == VARIABLE_OK_COLOR
                 && this.descriptionCombo.getSelectedIndex() != -1) {
@@ -705,7 +711,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         categoryComboActionPerformed(null);
         
         if (evt.getKeyChar() == KeyEvent.VK_ENTER ||
-           evt.getKeyChar() == KeyEvent.VK_TAB)             
+            evt.getKeyChar() == KeyEvent.VK_TAB)             
             KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
         
         //Change the sorting
