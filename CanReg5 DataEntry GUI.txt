@@ -1,37 +1,10 @@
 BUG LIST
 
-BROWSE
-======
-  PATO: 3:32 pm a 3:40 pm = 473/745 Mb
-  MORTEN: IGUAL
-
-NEW RECORD
-==========
-PATO:
-MORTEN: 3:50 pm a 3:57 pm = 434/789 Mb (2 llanuras de 1 1/2 minuto cada una)
-
-
-(NON REPRODUCIBLE) - Cambios residuales cuando se guarda nueva fuente:
-				  1) Browsear un paciente con tumores ya cargados
-				  2) Dentro de un tumor existente, crear una nueva fuente (esto NO trigueara el checks, lo cual esta bien)
-				  3) Save All
-				  4) Al apretar para salir del RecordEditorMainFrame, nos saltara el cartel de que hay cambios sin guardar (cuando
-					 no deberia porque acaban de guardarse todos los cambios con el Save All)
-
-- Al hacer click en el codetextField de una variable diccionario que ya fue llenada (y automaticmente se selecciona todo el texto), 
-no permite cambiar el contenido apretando cualquier tecla (menos backspace). Para borrar el contenido tenemos que de-seleccionar todo
-o borrar todo.
-
-- Bug de checks:
-  1) Abrir un registro mediante el browse
-  2) Fijarse que los checks esten en verde
-  3) Cambiar un dato cualquiera, el checks se volvera rojo
-  4) Correr los checks para que se pongan en verde. Aparecera la opcion "Confirmado" en el status de registro
-  5) Eleir "Confirmado" en el status de registro
-  6) Guardar todo
-  7) El checks volvera a mostrarse en rojo (deberia estar en verde, si ya guardamos los datos) (y encima si cerramos el registro y volvemos
-     a abrirlo lo veremos en rojo todavia)
-  
+- EVERYTIME there is a change in sequence/total, the RecordStatus goes back to "0" after
+  saving. This includes cases such as:
+  - Deleting a tumour
+  - Adding a new tumour
+  - Saving data and a tumour had an incorrect sequence/total
 
 - Left to translate to other languages other than english and spanish:
    RecordEditor PLEASE\ SELECT\ PATIENT\ RECORD\ FIRST
