@@ -984,8 +984,14 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
             //Tumour with data changes from before entering this method will need
             //to be saved (it doesn't matter if the values in this method were 
             //not updated).
-            if(tumourChanged)
-                tumour.refreshDatabaseRecord(tumourRecord, true);
+            if(tumourChanged) {
+                //DO NOT TOUCH THIS ORDER OF EXECUTION!!!!!! OTHERWISE
+                //THE RECORD STATUS WILL BREAK WHEN CREATING/DELETING TUMOURS!!
+                //ALSO DO NOT TRY TO UNDERSTAND WHY A FALSE WAS PASSED FIRST
+                //AND A TRUE RIGHT AFTER, JUST PRETEND THIS IS PERFECT
+                tumour.refreshDatabaseRecord(tumourRecord, false);
+                tumour.setSaveNeeded(true);
+            }
         }
     }
 

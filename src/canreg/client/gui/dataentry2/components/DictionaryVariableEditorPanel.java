@@ -502,19 +502,25 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
             else if (descriptionCombo.isVisible())
                 this.descriptionCombo.showPopup();            
         } else if (evt.getKeyChar() == KeyEvent.VK_ENTER ||
-                   evt.getKeyChar() == KeyEvent.VK_TAB) {            
+                   (evt.getKeyChar() == KeyEvent.VK_TAB && ! evt.isShiftDown())) {   
+            
             //Skip to next VariableEditorPanel if this dictionary code is complete and correct
             if (this.codeTextField.getBackground() == VARIABLE_OK_COLOR
                 && this.descriptionCombo.getSelectedIndex() != -1) {
-                this.descriptionCombo.setFocusable(false);                
-                if (this.dictionary.isCompoundDictionary()) 
-                    this.categoryCombo.setFocusable(false);
-                transferFocusToNext();
-                this.descriptionCombo.setFocusable(true);                
-                if (this.dictionary.isCompoundDictionary()) 
-                    this.categoryCombo.setFocusable(true);
+                
+                    this.descriptionCombo.setFocusable(false);                
+                    if (this.dictionary.isCompoundDictionary()) 
+                        this.categoryCombo.setFocusable(false);
+                    
+                    transferFocusToNext();
+                    this.descriptionCombo.setFocusable(true);
+                    
+                    if (this.dictionary.isCompoundDictionary()) 
+                        this.categoryCombo.setFocusable(true);
             } else
                 transferFocusToNext();
+        } else if (evt.getKeyChar() == KeyEvent.VK_TAB && evt.isShiftDown()) {
+            transferFocusToPrevious();
         } else if (evt.getKeyChar() == '+') {
             evt.consume();
             transferFocusToPrevious();
