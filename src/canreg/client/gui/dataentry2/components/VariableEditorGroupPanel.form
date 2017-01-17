@@ -84,16 +84,5 @@
         <Property name="axis" type="int" value="3"/>
       </Layout>
     </Container>
-    <Component class="javax.swing.Box$Filler" name="filler1">
-      <Properties>
-        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[0, 32767]"/>
-        </Property>
-        <Property name="name" type="java.lang.String" value="filler1" noResource="true"/>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.VerticalGlue"/>
-      </AuxValues>
-    </Component>
   </SubComponents>
 </Form>

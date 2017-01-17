@@ -43,7 +43,6 @@ public class VariableEditorGroupPanel extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         jSeparator3 = new javax.swing.JSeparator();
         variablesPanel = new javax.swing.JPanel();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
 
         setName("Form"); // NOI18N
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
@@ -81,9 +80,6 @@ public class VariableEditorGroupPanel extends javax.swing.JPanel {
         variablesPanel.setName("variablesPanel"); // NOI18N
         variablesPanel.setLayout(new javax.swing.BoxLayout(variablesPanel, javax.swing.BoxLayout.PAGE_AXIS));
         add(variablesPanel);
-
-        filler1.setName("filler1"); // NOI18N
-        add(filler1);
     }// </editor-fold>//GEN-END:initComponents
 
     public void addVariablePanel(JPanel vep) {
@@ -97,7 +93,6 @@ public class VariableEditorGroupPanel extends javax.swing.JPanel {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.Box.Filler filler1;
     private javax.swing.JLabel groupName;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
