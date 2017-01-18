@@ -616,22 +616,22 @@
                 </MenuItem>
               </SubComponents>
             </Menu>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem8">
+            <MenuItem class="javax.swing.JMenuItem" name="latestNewsMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="openLatestNews" methodName="openLatestNews"/>
                 </Property>
-                <Property name="text" type="java.lang.String" resourceKey="jMenuItem8.text"/>
-                <Property name="name" type="java.lang.String" value="jMenuItem8" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="latestNewsMenuItem.text"/>
+                <Property name="name" type="java.lang.String" value="latestNewsMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem9">
+            <MenuItem class="javax.swing.JMenuItem" name="changelogMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.CanRegClientView" id="showChangeLogAction" methodName="showChangeLogAction"/>
                 </Property>
-                <Property name="text" type="java.lang.String" resourceKey="jMenuItem9.text"/>
-                <Property name="name" type="java.lang.String" value="jMenuItem9" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="changelogMenuItem.text"/>
+                <Property name="name" type="java.lang.String" value="changelogMenuItem" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="aboutMenuItem">
