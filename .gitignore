@@ -237,3 +237,5 @@ hs_err_pid*
 *.tmp1
 CanReg5.zip.tmp2
 translations/
+CanReg5.zip
+CanReg5.zip.tmp3
