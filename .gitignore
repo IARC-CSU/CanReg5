@@ -236,3 +236,5 @@ hs_err_pid*
 *.lyx#
 *.tmp1
 CanReg5.zip.tmp2
+*.zip
+*.tmp3
