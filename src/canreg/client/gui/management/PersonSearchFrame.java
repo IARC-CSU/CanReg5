@@ -29,6 +29,7 @@ import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.client.CanRegClientApp;
+import canreg.client.LocalSettings;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
 import canreg.common.DatabaseFilter;
@@ -61,6 +62,7 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
+import javax.swing.JInternalFrame;
 
 /**
  *
@@ -81,6 +83,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     private String patientIDlookupVariable;
     private String patientIDTumourTablelookupVariable;
     private String tumourIDlookupVariable;
+    private LocalSettings localSettings;
 
     /** Creates new form PersonSearchFrame */
     public PersonSearchFrame(JDesktopPane desktopPane) {
@@ -90,6 +93,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         patientIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
         patientIDTumourTablelookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName();
         tumourIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+        
+        localSettings = CanRegClientApp.getApplication().getLocalSettings();
 
         resultTableModel = new DefaultTableModel(new String[]{java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("PATIENT A RECORD ID"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("PATIENT B RECORD ID"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("MATCH %")}, 0) {
 
@@ -148,7 +153,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 columnTableMousePressed(evt);
             }
-        });
+        });                
     }
 
     /** This method is called from within the constructor to
@@ -664,7 +669,13 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
 
         String tableName = Globals.PATIENT_TABLE_NAME;
 
-        RecordEditor recordEditor = new RecordEditor(desktopPane);
+        canreg.client.gui.dataentry2.RecordEditor recordEditor = null;
+        String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
+        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
+            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
+        else 
+            recordEditor = new RecordEditor(desktopPane);
+        
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord record = null;
@@ -738,8 +749,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                     // store them in a map, so we don't show them several times
                     recordEditor.addRecord(rec);
                 }
-                CanRegClientView.showAndPositionInternalFrame(desktopPane, recordEditor);
-                CanRegClientView.maximizeHeight(desktopPane, recordEditor);
+                CanRegClientView.showAndPositionInternalFrame(desktopPane, (JInternalFrame)recordEditor);
+                CanRegClientView.maximizeHeight(desktopPane, (JInternalFrame)recordEditor);
             } else {
                 JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD_NOT_FOUND"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             }

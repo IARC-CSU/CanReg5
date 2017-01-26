@@ -30,6 +30,7 @@ import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.cachingtableapi.DistributedTableModel;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
+import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.tools.TableColumnAdjuster;
 import canreg.client.gui.tools.XTableColumnModel;
@@ -56,6 +57,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -78,6 +80,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
     private TableModel tableDataModel;
     private JScrollPane resultScrollPane;
     String sortByVariableName;
+    private LocalSettings localSettings;
     private final JTable resultTable = new JTable() {
         @Override
         public Component prepareRenderer(TableCellRenderer renderer,
@@ -122,6 +125,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         tumourIDSourceTableLookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
         patientIDLength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getVariableLength();
         tumourIDLength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getVariableLength();
+        localSettings = CanRegClientApp.getApplication().getLocalSettings();
         initComponents();
         initOtherComponents();
         initValues();
@@ -675,7 +679,13 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
         setCursor(hourglassCursor);
 
-        RecordEditor recordEditor = new RecordEditor(dtp);
+        canreg.client.gui.dataentry2.RecordEditor recordEditor = null;
+        String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
+        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
+            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(dtp);
+        else 
+            recordEditor = new RecordEditor(dtp);
+        
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         Patient patient = null;
@@ -743,8 +753,8 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             }
             // make sure the records are locked...
             CanRegClientApp.getApplication().getPatientRecordsByID(idString, true);
-            CanRegClientView.showAndPositionInternalFrame(dtp, recordEditor);
-            CanRegClientView.maximizeHeight(dtp, recordEditor);
+            CanRegClientView.showAndPositionInternalFrame(dtp, (JInternalFrame)recordEditor);
+            CanRegClientView.maximizeHeight(dtp, (JInternalFrame)recordEditor);
 
         } catch (DistributedTableDescriptionException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -782,8 +792,13 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
      * @param idString
      */
     public void editTumourID(String idString) {
-
-        RecordEditor recordEditor = new RecordEditor(dtp);
+        canreg.client.gui.dataentry2.RecordEditor recordEditor = null;
+        String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
+        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
+            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(dtp);
+        else 
+            recordEditor = new RecordEditor(dtp);
+        
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord record = null;

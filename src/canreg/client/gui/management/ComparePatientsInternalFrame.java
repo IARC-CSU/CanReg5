@@ -26,6 +26,7 @@
 package canreg.client.gui.management;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.dataentry.RecordEditor;
 import canreg.common.DatabaseFilter;
@@ -52,6 +53,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
@@ -83,6 +85,7 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
     private String[] defaultColumns;
     private String firstColumnName;
     private JTable resultTable;
+    private LocalSettings localSettings;
 
     /** Creates new form ComparePatientsInternalFrame */
     public ComparePatientsInternalFrame(JDesktopPane desktopPane) {
@@ -105,6 +108,7 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
         recordSets = new LinkedList<Pair<Patient, Tumour[]>>();
         percentList = new LinkedList<Float>();
         mergeButton.setVisible(false);
+        localSettings = CanRegClientApp.getApplication().getLocalSettings();
     }
 
     public void setColumnsToShow(String[] columnNames) {
@@ -346,7 +350,13 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
 
         String tableName = Globals.PATIENT_TABLE_NAME;
 
-        RecordEditor recordEditor = new RecordEditor(desktopPane);
+        canreg.client.gui.dataentry2.RecordEditor recordEditor = null;
+        String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
+        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
+            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
+        else 
+            recordEditor = new RecordEditor(desktopPane);
+        
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord record = null;
@@ -420,7 +430,7 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
                     // store them in a map, so we don't show them several times
                     recordEditor.addRecord(rec);
                 }
-                CanRegClientView.showAndPositionInternalFrame(desktopPane, recordEditor);
+                CanRegClientView.showAndPositionInternalFrame(desktopPane, (JInternalFrame)recordEditor);
             } else {
                 JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD_NOT_FOUND"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             }

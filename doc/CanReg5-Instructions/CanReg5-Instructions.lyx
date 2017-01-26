@@ -8777,7 +8777,7 @@ options
 \end_layout
 
 \begin_layout Subsection
-[UPDATED]Language
+Language
 \begin_inset Index idx
 status open
 
@@ -8887,6 +8887,116 @@ only outline
  of windows while moving” will increase the performance of the user interface
  of CanReg.
  Tick this if moving windows around the screen is slow.
+\end_layout
+
+\begin_layout Subsubsection
+[NEW] Data Entry Version
+\end_layout
+
+\begin_layout Standard
+Here you can choose between the 
+\begin_inset Quotes eld
+\end_inset
+
+New Version
+\begin_inset Quotes erd
+\end_inset
+
+ of the data entry form and the original version.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename DataEntryNew.png
+	width 60text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:data-entry-new"
+
+\end_inset
+
+The new data entry form
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename DataEntryOriginal.png
+	width 60col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:data-entry-original"
+
+\end_inset
+
+The original data entry form
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+[NEW]Show sources to the right side of tumours
+\end_layout
+
+\begin_layout Standard
+This relates to the new version of the data entry form.
+ Sources can either be shown below or to the right of the tumours.
 \end_layout
 
 \begin_layout Subsection
@@ -9002,7 +9112,7 @@ R
 \begin_inset Quotes erd
 \end_inset
 
-.)
+ and GhostScript.)
 \end_layout
 
 \begin_layout Standard
@@ -13433,7 +13543,7 @@ Copyright
 \end_layout
 
 \begin_layout Standard
-© 2008-2016 International Agency for Research on Cancer World Health Organizatio
+© 2008-2017 International Agency for Research on Cancer World Health Organizatio
 n All rights reserved.
 \end_layout
 
@@ -13472,6 +13582,10 @@ Sebastien Antoni (R code for analysis)
 
 \begin_layout Itemize
 Hemant Dhivar (Migration Tool)
+\end_layout
+
+\begin_layout Itemize
+Betty Carballo and Patricio Carranza (New Dataentry form)
 \end_layout
 
 \begin_layout Subsection

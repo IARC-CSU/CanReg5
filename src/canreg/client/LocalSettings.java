@@ -80,6 +80,16 @@ public final class LocalSettings {
     /**
      *
      */
+    public static final String DATA_ENTRY_VERSION_KEY = "data_entry_version";
+    public static final String DATA_ENTRY_VERSION_NEW = "New Version";
+    public static final String DATA_ENTRY_VERSION_ORIGINAL = "Original Version";
+    /**
+     *
+     */
+    public static String DATA_ENTRY_VERTICAL_SOURCES_KEY = "data_entry_vertical_sources";
+    /**
+     *
+     */
     public static final String TABLES_PATH_KEY = "tables_path";
     /**
      *
@@ -154,7 +164,7 @@ public final class LocalSettings {
     /**
      *
      */
-    public static final String FONT_SIZE_MEDIUM = "Medium";
+    public static final String FONT_SIZE_MEDIUM = "Medium";    
     /**
      *
      */
@@ -425,6 +435,8 @@ public final class LocalSettings {
             property = FONT_NAME_DEFAULT;
         } else if (key.equalsIgnoreCase(FONT_SIZE_KEY)) {
             property = FONT_SIZE_MEDIUM;
+        } else if (key.equalsIgnoreCase(DATA_ENTRY_VERSION_KEY)) {
+            property = DATA_ENTRY_VERSION_NEW;
         } else if (key.equalsIgnoreCase(DATE_FORMAT_KEY)){
             property = Globals.DATE_FORMAT_STRING;
         }
@@ -443,6 +455,7 @@ public final class LocalSettings {
         setProperty(GS_PATH, getDefaultProperty(GS_PATH));
         setProperty(FONT_NAME_KEY, getDefaultProperty(FONT_NAME_KEY));
         setProperty(FONT_SIZE_KEY, getDefaultProperty(FONT_SIZE_KEY));
+        setProperty(DATA_ENTRY_VERSION_KEY, getDefaultProperty(DATA_ENTRY_VERSION_KEY));
         setProperty(DATE_FORMAT_KEY, getDefaultProperty(DATE_FORMAT_KEY));
         settingsChanged = true;
     }
@@ -615,6 +628,15 @@ public final class LocalSettings {
         }
         return isOutLineDragMode;
     }
+    
+    public boolean isDataEntryVerticalSources() {
+        boolean isDataEntryVerticalSources = false;
+        String isDataEntryVerticalSourcesString = properties.getProperty(DATA_ENTRY_VERTICAL_SOURCES_KEY);
+        if (isDataEntryVerticalSourcesString != null) {
+            isDataEntryVerticalSources = isDataEntryVerticalSourcesString.trim().equalsIgnoreCase(ON_PROPERTY);
+        }
+        return isDataEntryVerticalSources;
+    }
 
     /**
      *
@@ -625,6 +647,14 @@ public final class LocalSettings {
             setProperty(OUTLINE_DRAG_MODE_KEY, ON_PROPERTY);
         } else {
             setProperty(OUTLINE_DRAG_MODE_KEY, OFF_PROPERTY);
+        }
+    }
+    
+    public void setDataEntryVerticalSources(boolean dataEntryVerticalSources) {
+        if (dataEntryVerticalSources) {
+            setProperty(DATA_ENTRY_VERTICAL_SOURCES_KEY, ON_PROPERTY);
+        } else {
+            setProperty(DATA_ENTRY_VERTICAL_SOURCES_KEY, OFF_PROPERTY);
         }
     }
 
