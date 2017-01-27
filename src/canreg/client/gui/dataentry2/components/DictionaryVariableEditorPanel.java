@@ -260,9 +260,19 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                     
                     if(codeTextField.getText().length() >= dictionary.getCodeLength()) {                        
                         this.doNotSetText = true;
-                        categoryCombo.setSelectedItem(
-                                dictionary.getDictionaryEntries().get(
-                                        codeTextField.getText().substring(0, dictionary.getCodeLength())));
+                        
+                        //The dictionary code could be in Upper case or in lower. First
+                        //we try as the user wrote it, and then we try in upper and lower.
+                        DictionaryEntry entry = dictionary.getDictionaryEntries().get(
+                                codeTextField.getText().substring(0, dictionary.getCodeLength()));
+                        if(entry == null)
+                            entry = dictionary.getDictionaryEntries().get(
+                                codeTextField.getText().toUpperCase().substring(0, dictionary.getCodeLength()));
+                        if(entry == null)
+                            entry = dictionary.getDictionaryEntries().get(
+                                codeTextField.getText().toLowerCase().substring(0, dictionary.getCodeLength()));
+                        
+                        categoryCombo.setSelectedItem(entry);
                         this.doNotSetText = false;
                     } 
                     else if (codeTextField.getText().length() < dictionary.getCodeLength()){
@@ -276,16 +286,40 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                     
                     if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) {
                         this.doNotSetText = true;
-                        descriptionCombo.setSelectedItem(
-                            dictionary.getDictionaryEntries().get(codeTextField.getText()));
+                        
+                        //The dictionary code could be in Upper case or in lower. First
+                        //we try as the user wrote it, and then we try in upper and lower.
+                        DictionaryEntry entry = dictionary.getDictionaryEntries().get(
+                                codeTextField.getText().substring(0, dictionary.getFullDictionaryCodeLength()));
+                        if(entry == null)
+                            entry = dictionary.getDictionaryEntries().get(
+                                codeTextField.getText().toUpperCase().substring(0, dictionary.getFullDictionaryCodeLength()));
+                        if(entry == null)
+                            entry = dictionary.getDictionaryEntries().get(
+                                codeTextField.getText().toLowerCase().substring(0, dictionary.getFullDictionaryCodeLength()));
+                        
+                        categoryCombo.setSelectedItem(entry);
+                        
                         this.doNotSetText = false;
                     }
                 }  
                 else {
                     if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) {
                         this.doNotSetText = true;
-                        descriptionCombo.setSelectedItem(
-                            dictionary.getDictionaryEntries().get(codeTextField.getText()));
+                        
+                        //The dictionary code could be in Upper case or in lower. First
+                        //we try as the user wrote it, and then we try in upper and lower.
+                        DictionaryEntry entry = dictionary.getDictionaryEntries().get(
+                                codeTextField.getText().substring(0, dictionary.getFullDictionaryCodeLength()));
+                        if(entry == null)
+                            entry = dictionary.getDictionaryEntries().get(
+                                codeTextField.getText().toUpperCase().substring(0, dictionary.getFullDictionaryCodeLength()));
+                        if(entry == null)
+                            entry = dictionary.getDictionaryEntries().get(
+                                codeTextField.getText().toLowerCase().substring(0, dictionary.getFullDictionaryCodeLength()));
+                        
+                        descriptionCombo.setSelectedItem(entry);
+                        
                         this.doNotSetText = false;
                     }
                     else {
