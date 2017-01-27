@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015 International Agency for Research on Cancer
+ * Copyright (C) 2008-2017 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -51,7 +51,6 @@ import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -87,17 +86,17 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private DistributedTableDataSourceClient tableDataSource;
     private DistributedTableModel tableDataModel;
     private JScrollPane resultScrollPane;
-    private JTable resultTable = new JTable();
+    private final JTable resultTable = new JTable();
     private JFileChooser chooser;
     private String path;
-    private LocalSettings localSettings;
+    private final LocalSettings localSettings;
     private LinkedList<String> variablesToShow;
     private XTableColumnModel tableColumnModel;
     private final Map<Integer, Dictionary> dictionary;
-    private int VARIABLE_NAME_ENGLISH_INDEX = 1;
-    private int VARIABLE_NAME_SHORT_INDEX = 0;
-    private int VARIABLE_NAME_FULL_INDEX = 2;
-    private int VARIABLE_NAME_STANDARD_INDEX = 3;
+    private final int VARIABLE_NAME_ENGLISH_INDEX = 1;
+    private final int VARIABLE_NAME_SHORT_INDEX = 0;
+    private final int VARIABLE_NAME_FULL_INDEX = 2;
+    private final int VARIABLE_NAME_STANDARD_INDEX = 3;
     private DatabaseVariablesListElement tumourIDdbvle;
     private String fileName;
 

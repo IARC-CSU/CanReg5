@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2016 International Agency for Research on Cancer
+ * Copyright (C) 2008-2017 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -184,7 +184,6 @@ public final class LocalSettings {
      * @throws java.io.IOException
      */
     public LocalSettings(String localSettingsFileName) throws IOException {
-        boolean settingsLoaded = false;
         this.settingsFileName = localSettingsFileName;
         // set (and create) settings directory
         settingsDir = setCanRegClientSettingsDir();
@@ -192,7 +191,7 @@ public final class LocalSettings {
         // Initialize properties
         properties = new Properties();
         // Try to load the settings file
-        settingsLoaded = loadSettings();
+        boolean settingsLoaded = loadSettings();
 
         if (!settingsLoaded) {
             // If not possible to load the settings - get the default ones
@@ -741,72 +740,7 @@ public final class LocalSettings {
         //
         return path;
     }
-
-    private String pathShorter(String longPath) {
-        // this doesn't work yet
-        String shortPath = "";
-        StringTokenizer tokenizer = new StringTokenizer(longPath, "\\");
-        while (tokenizer.hasMoreTokens() == true) {
-            String temp = tokenizer.nextToken();
-            if (!tokenizer.hasMoreTokens() && temp.split(".").length > 1) {
-                // the last token has two parts
-                String[] a = temp.split(".");
-                String suffix = a[a.length - 1];
-                a[a.length - 1] = "";
-                temp = Tools.combine(a, "");
-                if (temp.length() >= 8) {
-                    temp = thingShorter(temp, 6, 1);
-                }
-                suffix = suffix.substring(0, Math.min(suffix.length(), 3));
-                shortPath += temp + "." + suffix;
-            } else {
-                if (temp.length() >= 8) {
-                    temp = thingShorter(temp, 6, 1);
-                }
-                shortPath += temp;
-                if (tokenizer.hasMoreTokens()) {
-                    shortPath += "\\";
-                }
-            }
-        }
-        return shortPath.toUpperCase();
-    }
-
-    private String thingShorter(String string, int length, int number) {
-        string = string.replaceAll("[\\s\\.]", "");
-        int len = Math.min(string.length(), length);
-        string = string.substring(0, len) + "~" + number;
-        return string;
-    }
-
-    private String fixWindowsPath(String property) {
-        // temporary hack for (english) windows machines...
-        // based on http://en.wikipedia.org/wiki/Program_Files
-        String replaceBy = "";
-        String replace = "";
-        if (property.toLowerCase().contains("archivos de programa")) {
-            replace = "archivos de programa";
-            replaceBy = "archiv";
-        } else if (property.toLowerCase().contains("program files")) {
-            replace = "program files";
-            replaceBy = "progra";
-        } else if (property.toLowerCase().contains("arquivos de programas")) {
-            replace = "arquivos de programas";
-            replaceBy = "arquiv";
-        }
-        // transform the filename
-        // property = pathShorter(property);
-        if (replace.length() > 0) {
-            int n = 0;
-            String temp = property.toLowerCase().replace(replace, replaceBy + "~" + (n++));
-            while (n < 10 && !(new File(temp).exists())) {
-                temp = property.toLowerCase().replace(replace, replaceBy + "~" + (n++));
-            }
-            property = temp.toUpperCase();
-        }
-        return property;
-    }
-
+    
     public String getDateFormatString() {
         String df = getProperty(DATE_FORMAT_KEY);
         // make sure that the month variable is upper case. (m is minute)

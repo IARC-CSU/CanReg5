@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015 International Agency for Research on Cancer
+ * Copyright (C) 2008-2017 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -29,7 +29,6 @@ import canreg.client.gui.dataentry.ImportFilesView;
 import canreg.client.gui.dataentry.ImportView;
 import canreg.client.gui.dataentry.PDSChooserInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
-import canreg.client.gui.dataentry2.RecordEditorPanel;
 import canreg.client.gui.management.BackUpInternalFrame;
 import canreg.client.gui.management.CanReg4PDSImporterInternalFrame;
 import canreg.client.gui.management.CanReg4SystemConverterInternalFrame;
@@ -60,7 +59,6 @@ import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;

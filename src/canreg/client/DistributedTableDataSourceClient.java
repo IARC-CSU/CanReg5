@@ -35,7 +35,7 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
 	 * Constructor for DemoTableDataSource.
          * 
          * @param distributedTableDescription
-         * @throws Exception 
+         * @throws canreg.common.cachingtableapi.DistributedTableDescriptionException
          */
 	public DistributedTableDataSourceClient(DistributedTableDescription distributedTableDescription) throws DistributedTableDescriptionException {
 		super();
