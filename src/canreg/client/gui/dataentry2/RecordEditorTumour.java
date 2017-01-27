@@ -1186,6 +1186,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel10.setOpaque(false);
         jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.PAGE_AXIS));
         jPanel10.add(filler12);
+
+        sourcesTabbedPane.setFocusable(false);
         jPanel10.add(sourcesTabbedPane);
 
         jPanel7.add(jPanel10);
