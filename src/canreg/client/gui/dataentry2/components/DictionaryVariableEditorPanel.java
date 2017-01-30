@@ -298,7 +298,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                             entry = dictionary.getDictionaryEntries().get(
                                 codeTextField.getText().toLowerCase().substring(0, dictionary.getFullDictionaryCodeLength()));
                         
-                        categoryCombo.setSelectedItem(entry);
+                        descriptionCombo.setSelectedItem(entry);
                         
                         this.doNotSetText = false;
                     }
