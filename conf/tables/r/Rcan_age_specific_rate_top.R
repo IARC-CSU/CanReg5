@@ -24,17 +24,17 @@
   multi_graph <-canreg_getArgs(Args, "-multi_graph", boolean = TRUE)
   canreg_header <- (canreg_getArgs(Args, "-header"))
   
-	## Merge inc and pop
+# Merge inc and pop
 	dt_all <- csu_merge_inc_pop(
 		inc_file =fileInc,
 		pop_file =filePop,
-		var_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX"), 
+		var_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX"),
 		column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL"))
 		)
-    
+
   ##Prepare canreg data for ageSpecific rate
 	dt_all <- canreg_ageSpecific_rate_data(dt_all)
-	
+
 	#create filename from out and avoid double extension (.pdf.pdf)
 	if (substr(out,nchar(out)-nchar(fileType),nchar(out)) == paste0(".", fileType)) {
 	  filename <- out
@@ -49,7 +49,21 @@
 	              dt=dt_all,log_scale = log_scale,nb_top = nb_top,
 				  canreg_header = canreg_header)
 
-	##talk to canreg
-	cat(paste("-outFile",filename,sep=":"))
+	#talk to canreg
+	
+	if (fileType %in% c("png", "tiff", "svg")) {
+	  temp_file <- substr(filename,0,nchar(filename)-nchar(fileType)-1)
+	  file.rename(paste0(temp_file,"001.",fileType),paste0(temp_file,"-male.",fileType))
+	  file.rename(paste0(temp_file,"002.",fileType),paste0(temp_file,"-female.",fileType))
+
+    cat(paste("-outFile",paste0(temp_file,"-male.",fileType),sep=":"))
+    cat("\n")
+    cat(paste("-outFile",paste0(temp_file,"-female.",fileType),sep=":"))
+    
+	} else {
+	  
+	  cat(paste("-outFile",filename,sep=":"))
+	  
+	}
 	
 	
