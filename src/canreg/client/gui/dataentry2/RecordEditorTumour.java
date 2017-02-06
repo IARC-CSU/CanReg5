@@ -406,7 +406,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private void refreshTitles() {
         for(int index = 0 ; index < sourcesTabbedPane.getComponentCount(); index++)
             sourcesTabbedPane.setTitleAt(index, java.util.ResourceBundle
-                    .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorSource").getString("SOURCE:_") + (index + 1));
+                    .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("SOURCE:_") + (index + 1));
     }
     
     @Override
