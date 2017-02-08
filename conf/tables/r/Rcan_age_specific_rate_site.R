@@ -53,7 +53,16 @@
 				  canreg_header=canreg_header)
 	
 	
-	##talk to canreg
-	cat(paste("-outFile",filename,sep=":"))
+	#talk to canreg
+	
+	if (fileType %in% c("png", "tiff", "svg")) {
+	  temp_file <- substr(filename,0,nchar(filename)-nchar(fileType)-1)
+	  cat(paste("-outFile",paste0(temp_file,"001.",fileType),sep=":"))
+	  
+	} else {
+	  
+	  cat(paste("-outFile",filename,sep=":"))
+	  
+	}
 	
 	

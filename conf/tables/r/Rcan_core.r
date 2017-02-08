@@ -1,6 +1,6 @@
 
-
 canreg_load_packages <- function(packages_list) { 
+  
   
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]
   
@@ -9,6 +9,12 @@ canreg_load_packages <- function(packages_list) {
   new.repos <- old.repos 
   new.repos["CRAN"] <- "http://cran.stat.ucla.edu" #set your favorite  CRAN Mirror here 
   options(repos = new.repos) 
+  
+  if (!"Rcpp" %in% missing_packages) {
+    if (packageVersion("Rcpp") < "0.11.0") {
+      missing_packages <- c(missing_packages,"Rcpp" )
+    }
+  }
   
   if (!"ggplot2" %in% missing_packages) {
     if (packageVersion("ggplot2") < "2.2.0") {
@@ -22,9 +28,40 @@ canreg_load_packages <- function(packages_list) {
     }
   }
   
+  if (!"scales" %in% missing_packages) {
+    if (packageVersion("scales") < "0.4.1") {
+      missing_packages <- c(missing_packages,"scales" )
+    }
+  }
+  
+  if ("scales" %in% missing_packages) {
+    
+    if ("munsell" %in% installed.packages()[,"Package"]) {
+      if (packageVersion("munsell") < "0.2") {
+        missing_packages <- c(missing_packages,"munsell" )
+      }
+    }
+  }
+  
+  if ("ggplot2" %in% missing_packages) {
+    
+    if ("gtable" %in% installed.packages()[,"Package"]) {
+      if (packageVersion("gtable") < "0.1.1") {
+        missing_packages <- c(missing_packages,"gtable" )
+      }
+    }
+    if ("plyr" %in% installed.packages()[,"Package"]) {
+      if (packageVersion("plyr") < "1.7.1") {
+        missing_packages <- c(missing_packages,"plyr" )
+      }
+    }
+  }
+  
+  missing_packages <- unique(missing_packages)
+  
   if(length(missing_packages) > 0 ) {
     for (i in missing_packages) {
-      eval(parse(text=paste("install.packages('", i, "')", sep=""))) 
+      install.packages(i, dependencies=  c("Depends", "Imports", "LinkingTo"))
     }
   }
   
