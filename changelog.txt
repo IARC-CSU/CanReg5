@@ -5,6 +5,7 @@ Changelog
 - Ability to enable/disble new data entry form in Options.
 - Removed latest news since Twitter no longer allows access to their API like that.
 - Updated Spanish translation.
+- Updated JavaDB to version 10.13.1.1.
 - Small fixes.
 
 5.00.40

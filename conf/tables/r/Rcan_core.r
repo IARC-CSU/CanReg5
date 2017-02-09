@@ -1372,7 +1372,8 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
   tiff_height <- ifelse(landscape, 2480 , 3508 )
   svg_width <- ifelse(landscape, 11.692 , 8.267 )
   svg_height <- ifelse(landscape, 8.267 , 11.692 )
-  
+  pdf_width <- ifelse(landscape, 11.692 , 8.267 )    # Needs tuning of margins
+  pdf_height <- ifelse(landscape, 8.267 , 11.692 )   # Needs tuning of margins
   file_number <- ifelse(list_graph, "%03d", "")
   
   
@@ -1398,7 +1399,8 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
     FUN(..., landscape=landscape, list_graph=list_graph)
     dev.off()
   }else if (output_type == "pdf") {
-    pdf(paste(filename,".pdf", sep=""), paper = paper, width = 0, height = 0)
+    # pdf(paste(filename,".pdf", sep=""), paper = paper, width = 0, height = 0)
+    CairoPDF(paste(filename,".pdf", sep=""), width = pdf_width, height = pdf_height)
     FUN(..., landscape=landscape, list_graph=list_graph)
     dev.off()
   } else if (output_type == "csv") {

@@ -2,10 +2,14 @@ BUG LIST
 
 
 - Left to translate to other languages other than english and spanish:
-   RecordEditor PLEASE\ SELECT\ PATIENT\ RECORD\ FIRST
-   RecordEditor PATIENT\ NOT\ OPEN
+   RecordEditorMainFrame PLEASE\ SELECT\ PATIENT\ RECORD\ FIRST
+   RecordEditorMainFrame PATIENT\ NOT\ OPEN
+   RecordEditorMainFrame saveAllAction.Action.text
+   RecordEditorMainFrame saveAllAction.Action.shortDescription
    RecordEditorTumour tumourPatientLinkLabel.text
-   RecordEditor saveAllAction.Action.text
+   RecordEditorPatient exactSearchButton.Action.text
+   RecordEditorPatient exactSearchButton.Action.shortDescription
+   RecordEditorPatient exactSearchButton.text
    DictionaryVariableEditorPanel Empty_dictionary
    OptionsFrame(All Languages) dataEntryLabel.text
    OptionsFrame(All Languages) newDataEntryVerticalSources.toolTipText
