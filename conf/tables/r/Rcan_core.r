@@ -1374,7 +1374,6 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
   svg_height <- ifelse(landscape, 8.267 , 11.692 )
   pdf_width <- ifelse(landscape, 11.692 , 8.267 )    # Needs tuning of margins
   pdf_height <- ifelse(landscape, 8.267 , 11.692 )   # Needs tuning of margins
-
   file_number <- ifelse(list_graph, "%03d", "")
   
   
