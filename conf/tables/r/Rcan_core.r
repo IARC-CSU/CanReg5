@@ -1391,7 +1391,7 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
     FUN(..., landscape=landscape, list_graph=list_graph)
     dev.off()
   } else if (output_type == "tiff") {
-    tiff(paste(filename,file_number,".tiff", sep=""),width = tiff_width, height = tiff_height, units = "px",res = 300,compression ="jpeg" ) 
+    tiff(paste(filename,file_number,".tiff", sep=""),width = tiff_width, height = tiff_height, units = "px",res = 300,compression ="lzw" ) 
     FUN(..., landscape=landscape, list_graph=list_graph)
     dev.off()
   }else if (output_type == "svg") {
