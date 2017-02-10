@@ -11,7 +11,7 @@
   ################
 
   ## install packages missing and require them
-  invisible(canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "cairoDevice")))
+  invisible(canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo")))
 	
 	## get Args from canreg
 	fileInc <- canreg_getArgs(Args, "-inc")

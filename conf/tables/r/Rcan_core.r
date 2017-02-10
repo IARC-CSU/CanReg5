@@ -1399,7 +1399,7 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
     dev.off()
   }else if (output_type == "pdf") {
     # pdf(paste(filename,".pdf", sep=""), paper = paper, width = 0, height = 0)
-    Cairo_pdf(paste(filename,".pdf", sep=""), width = pdf_width, height = pdf_height)
+    CairoPDF(paste(filename,".pdf", sep=""), width = pdf_width, height = pdf_height)
     FUN(..., landscape=landscape, list_graph=list_graph)
     dev.off()
   } else if (output_type == "csv") {
