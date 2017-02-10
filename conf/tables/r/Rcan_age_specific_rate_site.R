@@ -46,7 +46,7 @@
 	##Produce output
 	canreg_output(output_type = fileType, filename = out,landscape = FALSE,
 	              list_graph = TRUE,
-	              FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_all,var_by="SEX",var_age_label_list = "AGE_LABEL",
+	              FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_all,var_by="SEX",var_age_label_list = "AGE_GROUP_LABEL",
 	              log_scale = log_scale,  
 	              color_trend=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
 	              multi_graph= multi_graph,
