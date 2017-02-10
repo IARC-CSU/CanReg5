@@ -635,7 +635,6 @@ csu_ageSpecific_core <-
       } 
     }
     ##create age label:
-    
     if (is.null(age_label_list)) {
       
       
@@ -943,7 +942,7 @@ canreg_ageSpecific_rate_multi_plot <- function(dt,
                                                var_cases= "CASES",
                                                var_py= "COUNT",
                                                var_by="SEX",
-                                               var_age_label_list = "AGE_LABEL",
+                                               var_age_label_list = "AGE_GROUP_LABEL",
                                                color_trend=c("Male" = "#08519c", "Female" = "#a50f15"),
                                                log_scale=FALSE,
                                                multi_graph=TRUE,
@@ -1150,7 +1149,7 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
                                         var_cases= "CASES", 
                                         var_py= "COUNT",
                                         var_by="SEX",
-                                        var_age_label_list = "AGE_LABEL",
+                                        var_age_label_list = "AGE_GROUP_LABEL",
                                         log_scale = TRUE,
                                         nb_top = 5,
                                         landscape = FALSE,
@@ -1198,7 +1197,7 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
       plot_caption <- canreg_header
     }
       
-
+    
     
     dt_plot <- dt[get(var_by) == i]
     dt_label_order <- setkey(unique(dt_plot[, c("cancer_label", "cancer_rank"), with=FALSE]), cancer_rank)
@@ -1409,6 +1408,7 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
               row.names = FALSE)
   }
 }
+
 
 
 
