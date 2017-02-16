@@ -1023,7 +1023,7 @@ canreg_ageSpecific_rate_multi_plot <- function(dt,
   
   
   
-  if (landscape) {
+    if (landscape) {
     
     theme_orient <- list(theme(axis.text.x = element_text(size=8, angle = 60,  hjust = 1),
                                plot.subtitle = element_text(size=12)
@@ -1172,6 +1172,88 @@ canreg_ageSpecific_rate_multi_plot <- function(dt,
     }
     
   }
+  
+}
+
+
+canreg_age_cases_pie_multi_plot <- function(dt, 
+                                            var_cases= "CASES",
+                                            var_bar  = "group_label",
+                                            color_age=c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854"),
+                                            list_graph=FALSE,
+                                            landscape = TRUE,
+                                            return_data = FALSE,
+                                            canreg_header=NULL) {
+  
+  
+  
+  if (return_data) {
+    dt[, age_cut :=NULL]
+    dt[, percent:=sum(get(var_cases)), by="SEX"]
+    dt[, percent:=get(var_cases)/percent*100]
+    setkeyv(dt, c("SEX", "group_label"))
+    return(dt)
+    stop() 
+  }
+  
+  lay <- rbind(c(4,4),
+               c(1,2),
+               c(3,3))
+  
+  theme_3p4 <- list(theme(
+    legend.position="none",  ## use a fonction depending on row and col
+    line = element_line(size = 0.25),
+    plot.title = element_blank(),
+    plot.margin=margin(0,0,0,0),
+  )
+  )
+  
+  widths <- c(1,1)
+  heights <- c(1,4,1)
+  
+  plotlist_grid <- list()
+  
+  j <- 1
+  
+  for ( i in levels(dt$SEX) ) { 
+    
+    dt_temp <- dt[SEX ==i]
+    temp <- canreg_cases_age_pie(df_data = dt_temp,
+                                 var_cases = var_cases,
+                                 var_bar = var_bar,
+                                 color_age = color_age,
+                                 list_graph = list_graph,
+                                 plot_subtitle = i,
+                                 canreg_header = canreg_header
+    )
+    if (j==1) {
+      
+      grid_legend <- extract_legend_axes(temp)
+    }
+    
+    temp <- temp  + theme_3p4
+    plotlist_grid[[j]] <- temp
+    
+    j <- j+1
+    
+  }
+  
+  
+  plotlist_grid[[j]] <- grid_legend$legend
+  plotlist_grid[[j+1]] <- grid_legend$title
+
+  
+  grid.arrange(
+    grobs=plotlist_grid,
+    layout_matrix = lay,
+    widths = widths,
+    heights=heights,
+    left=" ",
+    top= " ",
+    bottom= " ",
+    right= " "
+  )
+  
   
 }
 
@@ -1521,7 +1603,71 @@ canreg_cases_age_bar <- function(df_data,
 }
 
 
+canreg_cases_age_pie <- function(
+                        df_data = dt_all,
+                        var_cases = "CASES",
+                        var_bar  =  "group_label",
+                        color_age = c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854"),
+                        list_graph  =  FALSE,
+                        plot_subtitle = "Male",
+                        canreg_header  = NULL,
+                        plot_caption  = NULL ) {
+  
+  dt <- as.data.table(df_data)
+  dt[, percent:=sum(get(var_cases))]
+  dt[, percent:=get(var_cases)/percent]
+  
 
+  
+  setnames(dt, var_cases, "CSU_CASES")
+  setnames(dt, var_bar, "CSU_BAR")
+  dt$CSU_BAR <- factor(dt$CSU_BAR)
+  
+  factor_order <- unique(dt[, c("CSU_BAR", "age_cut"), with=FALSE])
+  dt$CSU_BAR <- factor(dt$CSU_BAR,
+                       levels = rev(setkeyv(factor_order, "age_cut")$CSU_BAR)) 
+  
+  
+  dt[, x_label:=1]
+  dt[percent < 0.04,x_label:=1.6]
+  dt[percent > 0.04 & percent < 0.1,x_label:=1.6]
+  
+  
+  dt[, y_label2 := cumsum(CSU_CASES) - 0.5*CSU_CASES]
+  
+  
+  color_age <- c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854")
+  color_age <- color_age[1:length(levels(dt$CSU_BAR))]
+  
+  csu_plot <- 
+    ggplot(data = dt, aes(x = "", y = CSU_CASES, fill = CSU_BAR)) + 
+    geom_bar(width = 1, stat = "identity") +
+    geom_text(aes(label = percent(percent), x=x_label, y= y_label2)) +
+    coord_polar(theta = "y") +
+    scale_fill_manual(name = "Age Group", values = color_age) + 
+    labs(title = canreg_header, 
+         subtitle = plot_subtitle)+
+    theme(plot.background= element_blank(),
+          plot.title = element_text(size=18, margin=margin(0,0,0,0),hjust = 0.5),
+          plot.subtitle = element_text(size=16, margin=margin(0,0,0,0),hjust = 0.5),
+          panel.background = element_blank(),
+          axis.text.x=element_blank(),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          panel.border = element_blank(),
+          panel.grid=element_blank(),
+          legend.position = "bottom",
+          legend.key = element_rect(fill="transparent"),
+          legend.text = element_text(size = 11),
+          legend.key.height = unit(0.5,"cm"),
+          legend.key.width =unit(0.8,"cm"),
+          legend.margin = margin(0, 0, 0, 0),
+          axis.ticks = element_blank()) +
+    guides(fill=guide_legend(title.vjust=0.75, label.vjust=0.75, reverse = TRUE))
+  
+  return(csu_plot)
+  
+}
 
 
 canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,list_graph = TRUE, FUN,...) {
@@ -1710,10 +1856,12 @@ extract_legend_axes<-function(a_gplot){
   xlab_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,12 ) == "axis.title.x"))
   ylab_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,12 ) == "axis.title.y"))
   title_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,10 ) == "plot.title"))
+  caption_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,10 ) == "plot.capti"))
   legend <- tmp$grobs[[leg_index]]
   xlab <- tmp$grobs[[xlab_index]]
   ylab <- tmp$grobs[[ylab_index]]
   title <- tmp$grobs[[title_index]]
+  caption <- tmp$grobs[[caption_index]]
   dev.off()
-  return(list(legend=legend, xlab=xlab, ylab=ylab, title=title))
+  return(list(legend=legend, xlab=xlab, ylab=ylab, title=title, caption=caption))
 }
