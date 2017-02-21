@@ -224,7 +224,6 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                     .addComponent(buttonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
                     .addContainerGap()))
-        );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 381, Short.MAX_VALUE)
@@ -232,7 +231,6 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(buttonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)))
-        );
 
         mainPanel.add(jPanel5);
 
