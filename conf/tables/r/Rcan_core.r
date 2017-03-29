@@ -1243,17 +1243,33 @@ canreg_age_cases_pie_multi_plot <- function(dt,
   plotlist_grid[[j]] <- grid_legend$legend
   plotlist_grid[[j+1]] <- grid_legend$title
 
+
   
-  grid.arrange(
-    grobs=plotlist_grid,
-    layout_matrix = lay,
-    widths = widths,
-    heights=heights,
-    left=" ",
-    top= " ",
-    bottom= " ",
-    right= " "
-  )
+  if(!canreg_report) {
+    grid.arrange(
+      grobs=plotlist_grid,
+      layout_matrix = lay,
+      widths = widths,
+      heights=heights,
+      left=" ",
+      top= " ",
+      bottom= " ",
+      right= " "
+    )
+    
+  } else {
+    return(
+      grid.arrange(
+      grobs=plotlist_grid,
+      layout_matrix = lay,
+      widths = widths,
+      heights=heights,
+      left=" ",
+      top= " ",
+      bottom= " ",
+      right= " "
+    ))
+  }
   
   
 }
