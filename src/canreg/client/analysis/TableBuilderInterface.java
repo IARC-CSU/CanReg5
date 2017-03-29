@@ -31,7 +31,6 @@ public interface TableBuilderInterface {
     };
 
     public enum FileTypes {
-
         ps,
         pdf,
         csv,
@@ -41,7 +40,10 @@ public interface TableBuilderInterface {
         svg,
         wmf,
         jchart,
-        seer
+        seer,
+        tiff,
+        docx,
+        pptx
     };
 
     public static enum ChartType {
