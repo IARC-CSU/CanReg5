@@ -1,6 +1,6 @@
 Changelog
 
-5.00.41RC1
+5.00.41
 - New data entry form. (Developed in collaboration with Betty Carballo and Patricio Carranza.)
 - Ability to enable/disble new data entry form in Options.
 - Removed latest news since Twitter no longer allows access to their API like that.
