@@ -238,5 +238,9 @@ translations/
 CanReg5.zip
 doc/CanReg5-Instructions.pdf
 CanReg5-R-packages.zip
+<<<<<<< HEAD
 *.orig
 CanReg5.zip.tmp4
+=======
+/CanReg5.zip.tmp4
+>>>>>>> refs/remotes/IARC-CSU/master
