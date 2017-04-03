@@ -1183,7 +1183,8 @@ canreg_age_cases_pie_multi_plot <- function(dt,
                                             list_graph=FALSE,
                                             landscape = TRUE,
                                             return_data = FALSE,
-                                            canreg_header=NULL) {
+                                            canreg_header=NULL,
+                                            canreg_report = FALSE) {
   
   
   
@@ -1242,17 +1243,33 @@ canreg_age_cases_pie_multi_plot <- function(dt,
   plotlist_grid[[j]] <- grid_legend$legend
   plotlist_grid[[j+1]] <- grid_legend$title
 
+
   
-  grid.arrange(
-    grobs=plotlist_grid,
-    layout_matrix = lay,
-    widths = widths,
-    heights=heights,
-    left=" ",
-    top= " ",
-    bottom= " ",
-    right= " "
-  )
+  if(!canreg_report) {
+    grid.arrange(
+      grobs=plotlist_grid,
+      layout_matrix = lay,
+      widths = widths,
+      heights=heights,
+      left=" ",
+      top= " ",
+      bottom= " ",
+      right= " "
+    )
+    
+  } else {
+    return(
+      grid.arrange(
+      grobs=plotlist_grid,
+      layout_matrix = lay,
+      widths = widths,
+      heights=heights,
+      left=" ",
+      top= " ",
+      bottom= " ",
+      right= " "
+    ))
+  }
   
   
 }
@@ -1267,7 +1284,8 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
                                         landscape = FALSE,
                                         list_graph = FALSE,
                                         return_data = FALSE,
-                                        canreg_header="") {
+                                        canreg_header="",
+                                        canreg_report=FALSE) {
   
   
   dt_rank <- dt[, list(total= sum(CASES)), by=c(var_by, "cancer_label")]
@@ -1331,8 +1349,13 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
     j <- j+1
   }
   
-  print(plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=0.75), nrow=1,byrow=TRUE)))
-  print(plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=0.75), nrow=1,byrow=TRUE)))
+  
+  if(!canreg_report) {
+    print(plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=0.75), nrow=1,byrow=TRUE)))
+    print(plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=0.75), nrow=1,byrow=TRUE)))
+  } else {
+    return(list(male=plotlist[[1]], female=plotlist[[2]]))
+  }
   
 }
 
@@ -1350,7 +1373,8 @@ canreg_ASR_bar_top <- function(df_data,
                                canreg_header=NULL,
                                canreg_age_group = "",
                                return_data = FALSE,
-                               plot_caption= NULL) {
+                               plot_caption= NULL,
+                               canreg_report=FALSE) {
   
   
   dt <- data.table(df_data)
@@ -1468,7 +1492,13 @@ canreg_ASR_bar_top <- function(df_data,
       legend.margin = margin(0, 0, 0, 0)
     )
   
-  print(csu_plot)
+  if(!canreg_report){
+    print(csu_plot)
+  } 
+  else {
+    return(csu_plot)
+  }
+  
   
 }
 
@@ -1483,7 +1513,8 @@ canreg_cases_age_bar <- function(df_data,
                                      canreg_header=NULL,
                                      return_data = FALSE,
                                      skin=TRUE,
-                                     plot_caption= NULL) {
+                                     plot_caption= NULL,
+                                     canreg_report=FALSE) {
   
   
   dt <- as.data.table(df_data)
@@ -1598,7 +1629,16 @@ canreg_cases_age_bar <- function(df_data,
       legend.margin = margin(0, 0, 0, 0)
     )
   
-  print(csu_plot)
+  if(!canreg_report){
+    print(csu_plot)
+  } 
+  else {
+    return(csu_plot)
+  }
+
+  setnames(df_data, "CSU_CASES",var_cases )
+  setnames(df_data,  "CSU_BAR", var_bar)
+  setnames(df_data,  "CSU_BY", var_by)
   
 }
 
