@@ -1676,6 +1676,8 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
   paper <- ifelse(landscape, "a4r", "a4")
   png_width <- ifelse(landscape, 2339 , 1654 )
   png_height <- ifelse(landscape, 1654 , 2339 )
+  #png_width <- ifelse(landscape, 3508 , 2480 )
+  #png_height <- ifelse(landscape, 2480 , 3508 )
   tiff_width <- ifelse(landscape, 3508 , 2480 )
   tiff_height <- ifelse(landscape, 2480 , 3508 )
   svg_width <- ifelse(landscape, 11.692 , 8.267 )
