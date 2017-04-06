@@ -1586,7 +1586,7 @@ canreg_population_pyramid <- function(df_data,
   dt_poly3$AGE_GROUP =  dt_poly3$AGE_GROUP+1
   dt_poly <- rbind(dt_poly1,dt_poly2,dt_poly3)
   dt_poly[,AGE_GROUP :=AGE_GROUP+0.5]
-  dt_poly[AGE_GROUP == max(AGE_GROUP),AGE_GROUP :=AGE_GROUP+0.5]
+  dt_poly[AGE_GROUP == max(AGE_GROUP),AGE_GROUP :=AGE_GROUP+1]
   
   dt[AGE_GROUP == max(AGE_GROUP), cases_plot :=0 ]
   
