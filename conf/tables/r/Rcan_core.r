@@ -70,28 +70,28 @@ canreg_load_packages <- function(packages_list) {
 }
 
 
-canreg_getArgs <- function(Args, variable, boolean=FALSE) {
-  
-  length_variable <-  nchar(variable)
-  variable_name_list <- substr(Args, 1, length_variable)
-  
-  if (variable %in% variable_name_list) {
-    
-    if (boolean) {
-      return(TRUE)
-    } else {
-      var_nb <- which(variable_name_list == variable)
-      return(substring(Args[var_nb], (length_variable+2), nchar(Args[var_nb]) ))
-    }
-    
-  } else {
-    if (boolean) {
-      return(FALSE)
-    } else {
-      stop(variable, " is not in the list of option return by canreg")
-    }
-  }
-}
+# canreg_getArgs <- function(Args, variable, boolean=FALSE) {
+#   
+#   length_variable <-  nchar(variable)
+#   variable_name_list <- substr(Args, 1, length_variable)
+#   
+#   if (variable %in% variable_name_list) {
+#     
+#     if (boolean) {
+#       return(TRUE)
+#     } else {
+#       var_nb <- which(variable_name_list == variable)
+#       return(substring(Args[var_nb], (length_variable+2), nchar(Args[var_nb]) ))
+#     }
+#     
+#   } else {
+#     if (boolean) {
+#       return(FALSE)
+#     } else {
+#       stop(variable, " is not in the list of option return by canreg")
+#     }
+#   }
+# }
 
 
 canreg_missing_age <- function(dt,
@@ -222,6 +222,24 @@ canreg_pop_data <- function(dt) {
   dt_pop$SEX <- factor(dt_pop$SEX, levels=c(1,2), labels=c("Male", "Female"))
   return(dt_pop)
   
+}
+
+
+canreg_get_agegroup_label <- function(dt, first_age, last_age) {
+  
+  temp_max <- max(dt$AGE_GROUP)
+  temp_min <- min(dt$AGE_GROUP)
+  if (temp_max < last_age) {
+    last_age = temp_max
+  } 
+  if (temp_min > first_age) {
+    temp_min = first_age
+  } 
+  temp1 <- as.character(unique(dt[dt$AGE_GROUP == first_age,]$AGE_GROUP_LABEL))
+  temp2 <-as.character(unique(dt[dt$AGE_GROUP == last_age,]$AGE_GROUP_LABEL))
+  temp1 <- substr(temp1,1,regexpr("-", temp1)[1]-1)
+  temp2 <- substr(temp2,regexpr("-", temp2)[1]+1,nchar(temp2))
+  return(paste0(temp1,"-",temp2, " years"))
 }
 
 csu_asr_core <- function(df_data, var_age, var_cases, var_py, var_by=NULL,
@@ -2054,9 +2072,6 @@ csu_legend_wrapper <- function(label, width) {
   return(label)
   
 }
-
-
-
 
 extract_legend_axes<-function(a_gplot){
   pdf(file=NULL)
