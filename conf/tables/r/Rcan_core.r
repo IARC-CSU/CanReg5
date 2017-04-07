@@ -1647,6 +1647,7 @@ canreg_population_pyramid <- function(df_data,
     legend.key.width =unit(1.5,"cm"),
     legend.margin = margin(0, 0, 0, 0)
   )
+  
 
 if(!canreg_report){
   print(csu_plot)
@@ -1655,9 +1656,7 @@ else {
   return(csu_plot)
 }
 
-setnames(df_data, "CSU_CASES",var_cases )
-setnames(df_data,  "CSU_BAR", var_bar)
-setnames(df_data,  "CSU_BY", var_by)
+
 
 }
 canreg_cases_age_bar <- function(df_data,
@@ -1793,10 +1792,6 @@ canreg_cases_age_bar <- function(df_data,
   else {
     return(csu_plot)
   }
-
-  setnames(df_data, "CSU_CASES",var_cases )
-  setnames(df_data,  "CSU_BAR", var_bar)
-  setnames(df_data,  "CSU_BY", var_by)
   
 }
 
