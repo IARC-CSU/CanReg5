@@ -1,8 +1,8 @@
-  ## load Rcan_core
+## load Rcan_core
   source(paste(sep="/", script.basename, "Rcan_core.r"))
 
 ## install packages missing and require them
-  invisible(canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo", "ReporteRs")))
+  invisible(canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs")))
 	
   
   ## get Args from canreg  

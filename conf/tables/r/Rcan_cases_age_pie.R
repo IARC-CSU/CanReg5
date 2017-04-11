@@ -6,7 +6,7 @@
   file.arg.name <- "--file="
   script.name <- sub(file.arg.name, "", 
                      initial.options[grep(file.arg.name, initial.options)])
-  script.basename <- dirname(script.name)
+  script.basename <- dirname(script.name) 
   source(paste(sep="/", script.basename, "Rcan_source.r"))
   ################
 

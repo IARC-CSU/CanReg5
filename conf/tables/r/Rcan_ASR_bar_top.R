@@ -7,7 +7,6 @@
   script.name <- sub(file.arg.name, "", 
                      initial.options[grep(file.arg.name, initial.options)])
   script.basename <- dirname(script.name)
-  source(paste(sep="/", script.basename, "Rcan_core.r"))
   source(paste(sep="/", script.basename, "Rcan_source.r"))
   ################
 
@@ -39,10 +38,11 @@
 		
 	#produce graph
 	canreg_output(output_type = ft, filename = out,landscape = landscape,list_graph = FALSE,
-              FUN=canreg_ASR_bar_top,
+              FUN=canreg_bar_top,
               df_data=dt_all,color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),nb_top = number,
 			  canreg_header = header,
-              canreg_age_group = canreg_age_group)
+			  ytitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group))
+
 	
 	
 	##talk to canreg
