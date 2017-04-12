@@ -1,13 +1,15 @@
 
 canreg_load_packages <- function(packages_list) { 
   
+  dir.create(file.path(Sys.getenv("R_LIBS_USER")),recursive = TRUE)
+  .libPaths(Sys.getenv("R_LIBS_USER"))
   
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]
   
   old.repos <- getOption("repos") 
   on.exit(options(repos = old.repos)) #this resets the repos option when the function exits 
   new.repos <- old.repos 
-  new.repos["CRAN"] <- "http://cran.stat.ucla.edu" #set your favorite  CRAN Mirror here 
+  new.repos["CRAN"] <- "http://cran.rstudio.com" #set your favorite  CRAN Mirror here 
   options(repos = new.repos) 
   
   if (!"Rcpp" %in% missing_packages) {
@@ -57,17 +59,33 @@ canreg_load_packages <- function(packages_list) {
     }
   }
   
-  missing_packages <- unique(missing_packages)
   
-  if(length(missing_packages) > 0 ) {
-    for (i in missing_packages) {
-      install.packages(i, dependencies=  c("Depends", "Imports", "LinkingTo"))
+  if ("ReporteRs" %in% missing_packages) {
+     
+    if ("rvg" %in% installed.packages()[,"Package"]) {
+      if (packageVersion("rvg") < "0.1.2") {
+        missing_packages <- c(missing_packages,"rvg")
+      }
     }
   }
   
+  missing_packages <- unique(missing_packages)
+  print(missing_packages)
+  
+  if(length(missing_packages) > 0 ) {
+    for (i in missing_packages) {
+      install.packages(i, dependencies=  c("Depends","Imports", "LinkingTo"), quiet=TRUE)
+    }
+  }
+
+  #if (Sys.getenv("JAVA_HOME")!="") {
+  #  Sys.setenv(JAVA_HOME="")
+  #}
+    
   lapply(packages_list, require, character.only = TRUE)
   
 }
+
 
 
 
