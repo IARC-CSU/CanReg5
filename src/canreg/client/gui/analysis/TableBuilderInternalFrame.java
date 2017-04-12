@@ -609,7 +609,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         tiffButton.setToolTipText(resourceMap.getString("tiffButton.toolTipText")); // NOI18N
         tiffButton.setName("tiffButton"); // NOI18N
 
-        docxButton.setAction(actionMap.get("generateTabulatedTables")); // NOI18N
+        docxButton.setAction(actionMap.get("generateDOCX")); // NOI18N
         docxButton.setText(resourceMap.getString("docxButton.text")); // NOI18N
         docxButton.setName("docxButton"); // NOI18N
 
