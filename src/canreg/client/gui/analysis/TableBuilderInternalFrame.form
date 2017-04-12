@@ -435,6 +435,8 @@
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
         </Container>
         <Container class="javax.swing.JPanel" name="writeOutPanel">
           <Properties>
@@ -644,7 +646,7 @@
             <Component class="javax.swing.JButton" name="docxButton">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateTabulatedTables" methodName="generateTabulatedTables"/>
+                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateDOCX" methodName="generateDOCX"/>
                 </Property>
                 <Property name="text" type="java.lang.String" resourceKey="docxButton.text"/>
                 <Property name="name" type="java.lang.String" value="docxButton" noResource="true"/>
