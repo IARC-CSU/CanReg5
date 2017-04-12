@@ -2,14 +2,9 @@
   source(paste(sep="/", script.basename, "Rcan_core.r"))
 
 ## install packages missing and require them
-<<<<<<< HEAD
+
    invisible(canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs")))
 
-  
-=======
-  invisible(canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "jpeg")))
-	
->>>>>>> refs/remotes/IARC-CSU/new-analysis
   ## get Args from canreg  
   skin <- FALSE
   landscape <- FALSE

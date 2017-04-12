@@ -9,11 +9,9 @@ canreg_load_packages <- function(packages_list) {
   old.repos <- getOption("repos") 
   on.exit(options(repos = old.repos)) #this resets the repos option when the function exits 
   new.repos <- old.repos 
-<<<<<<< HEAD
-  new.repos["CRAN"] <- "http://cran.rstudio.com" #set your favorite  CRAN Mirror here 
-=======
+
   new.repos["CRAN"] <- "https://cloud.r-project.org/" #set your favorite  CRAN Mirror here 
->>>>>>> refs/remotes/IARC-CSU/new-analysis
+
   options(repos = new.repos) 
   
   if (!"Rcpp" %in% missing_packages) {
@@ -62,7 +60,7 @@ canreg_load_packages <- function(packages_list) {
       }
     }
   }
-<<<<<<< HEAD
+
   
   
   if ("ReporteRs" %in% missing_packages) {
@@ -74,25 +72,20 @@ canreg_load_packages <- function(packages_list) {
     }
   }
   
-=======
 
->>>>>>> refs/remotes/IARC-CSU/new-analysis
+
+
   missing_packages <- unique(missing_packages)
   print(missing_packages)
   
   if(length(missing_packages) > 0 ) {
     for (i in missing_packages) {
-<<<<<<< HEAD
-      install.packages(i, dependencies=  c("Depends","Imports", "LinkingTo"), quiet=TRUE)
-=======
       install.packages(i, dependencies=  c("Depends", "Imports", "LinkingTo"), quiet = TRUE)
->>>>>>> refs/remotes/IARC-CSU/new-analysis
+
     }
   }
 
-  #if (Sys.getenv("JAVA_HOME")!="") {
-  #  Sys.setenv(JAVA_HOME="")
-  #}
+
     
   lapply(packages_list, require, character.only = TRUE)
   
