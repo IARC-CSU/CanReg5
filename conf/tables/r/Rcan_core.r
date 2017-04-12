@@ -70,29 +70,6 @@ canreg_load_packages <- function(packages_list) {
 }
 
 
-# canreg_getArgs <- function(Args, variable, boolean=FALSE) {
-#   
-#   length_variable <-  nchar(variable)
-#   variable_name_list <- substr(Args, 1, length_variable)
-#   
-#   if (variable %in% variable_name_list) {
-#     
-#     if (boolean) {
-#       return(TRUE)
-#     } else {
-#       var_nb <- which(variable_name_list == variable)
-#       return(substring(Args[var_nb], (length_variable+2), nchar(Args[var_nb]) ))
-#     }
-#     
-#   } else {
-#     if (boolean) {
-#       return(FALSE)
-#     } else {
-#       stop(variable, " is not in the list of option return by canreg")
-#     }
-#   }
-# }
-
 
 canreg_missing_age <- function(dt,
                                var_age = "AGE_GROUP",
@@ -111,6 +88,86 @@ canreg_cancer_info <- function(dt,
   
   return(list(cancer_label = cancer_label, cancer_sex = cancer_sex))
   
+}
+
+canreg_import_txt <- function(file,folder) {
+  text <- scan(paste0(folder, file), what="character", sep="\n", blank.lines.skip = FALSE, quiet=TRUE)
+  for (i in 2:length(text)) {
+    text[1] <- paste(text[1], text[i], sep = "\n")
+  }
+  return(text[1])
+
+}
+
+canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select="Male") {
+  
+  dt_temp <- as.data.table(dt_report)
+  dt_temp <- dt_temp[SEX==sex_select]
+  dt_temp[, cancer_rank:= frank(-CASES, ties.method="first")]
+  setkeyv(dt_temp, c("cancer_rank"))
+  temp <- dt_temp[cancer_rank==1,CASES]
+  dt_temp[, pct_temp:=(temp-CASES)/temp*100]
+  dt_temp[pct_temp<=percent_equal, rank:=1]
+  
+  temp <- dt_temp[cancer_rank==2,CASES]
+  dt_temp[, pct_temp:=(temp-CASES)/temp*100]
+  dt_temp[pct_temp<=percent_equal & is.na(rank), rank:=2]
+  
+  dt_temp <- dt_temp[rank<=2]
+  
+  label1 <- dt_temp[rank==1,cancer_label]
+  cases1 <- dt_temp[rank==1,CASES]
+  label2 <- dt_temp[rank==2,cancer_label]
+  cases2 <- dt_temp[rank==2,CASES]
+  
+  label1 <- label1[1]
+  cases1<- formatC(cases1[1], format="d", big.mark=",")
+  
+  if (length(label1) > 1) {
+    for (i in 2:length(label1)) {
+      
+      if (i != length(label1)) {
+        
+        label1 <- paste0(label1,", ",label1[i])
+        cases1 <- paste0(cases1,", ",formatC(cases1[i], format="d", big.mark=","))
+        
+      } else {
+        
+        label1 <- paste0(label1," and ",label1[i])
+        cases1 <- paste0(cases1," and ",formatC(cases1[i], format="d", big.mark=","))
+      }
+    }
+    
+    label1 <- paste0(label1," are ")
+    
+  } else {
+    
+    label1 <- paste0(label1," is ")
+  }
+  
+  cases1 <- paste0(cases1," cases")
+  text2 <- paste0(label2[1], " (",formatC(cases2[1], format="d", big.mark=","), " cases)")
+
+  if (length(label2) > 1) {
+    for (i in 2:length(label2)) {
+      
+      if (i != length(label2)) {
+        
+        text2 <- paste0(text2,", ",label2[i], " (",formatC(cases2[i], format="d", big.mark=","), " cases)")
+        
+      } else {
+        
+        text2 <- paste0(text2," and ",label2[i], " (",formatC(cases2[i], format="d", big.mark=","), " cases)")
+        
+      }
+    }
+  }
+  
+  
+  
+  text <-paste0(label1,"the most commonly diagnosed malignancy with ",cases1,
+                       " followed by ",text2,".")
+  return(text)
 }
 
 
@@ -1394,17 +1451,17 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
 
 
 
-canreg_ASR_bar_top <- function(df_data,
-                               var_asr = "asr",
+canreg_bar_top <- function(df_data,
+                               var_top = "asr",
                                var_bar = "cancer_label",
                                var_by = "SEX",
                                nb_top = 10,
-                               db_rate = 100000,
                                color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
                                landscape = FALSE,
                                list_graph = FALSE,
                                canreg_header=NULL,
-                               canreg_age_group = "",
+                               ytitle = "",
+                               nsmall = 1,
                                return_data = FALSE,
                                plot_caption= NULL,
                                canreg_report=FALSE) {
@@ -1420,10 +1477,10 @@ canreg_ASR_bar_top <- function(df_data,
     csu_bar_label_size = 5 
   }
   
-  line_size <- 0.1
+  line_size <- 0.4
   text_size <- 14
   
-  setnames(dt, var_asr, "CSU_ASR")
+  setnames(dt, var_top, "CSU_ASR")
   setnames(dt, var_bar, "CSU_BAR")
   setnames(dt, var_by, "CSU_BY")
   
@@ -1440,7 +1497,7 @@ canreg_ASR_bar_top <- function(df_data,
     dt[, asr_both := NULL]
     setnames(dt, "CSU_BAR",var_bar)
     setnames(dt, "CSU_BY", var_by)
-    setnames(dt, "CSU_ASR", var_asr)
+    setnames(dt, "CSU_ASR", var_top)
     setkeyv(dt, c("cancer_rank",var_bar))
     return(dt)
     stop() 
@@ -1470,7 +1527,8 @@ canreg_ASR_bar_top <- function(df_data,
   
   dt$asr_label <- dt$CSU_ASR + (tick_space*0.1)
   dt[CSU_BY==levels(dt$CSU_BY)[[1]], asr_label:= asr_label*(-1)]
-  dt$asr_round <-  format(round(dt$CSU_ASR, digits = 1), nsmall = 1)
+  
+  dt$asr_round <-  format(round(dt$CSU_ASR, digits = 1), nsmall = nsmall)
   
   csu_plot <- ggplot(dt, aes(CSU_BAR, asr_plot, fill=CSU_BY)) +
     geom_bar(stat="identity", width = 0.8)+
@@ -1482,7 +1540,7 @@ canreg_ASR_bar_top <- function(df_data,
               size = csu_bar_label_size,
               hjust = 1)+
     coord_flip(ylim = c(tick_minor_list[1]-(tick_space*0.25),tick_minor_list[length(tick_minor_list)]+(tick_space*0.25)), expand = TRUE)+
-    scale_y_continuous(name = paste0("Age-standardized incidence rate per ", formatC(db_rate, format="d", big.mark=","), ", ", canreg_age_group),
+    scale_y_continuous(name = ytitle,
                        breaks=tick_major_list,
                        minor_breaks = tick_minor_list,
                        labels=tick_label
@@ -1710,7 +1768,7 @@ canreg_cases_age_bar <- function(df_data,
     csu_bar_label_size = 5 
   }
   
-  line_size <- 0.1
+  line_size <- 0.4
   text_size <- 14
   if (skin) {
     plot_subtitle <- paste("All cancers")
@@ -1915,31 +1973,31 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
   if (is.null(output_type)) {
     FUN(..., landscape=landscape, list_graph=list_graph)
   } else if (output_type == "ps") {
-    postscript(paste(filename,".ps", sep=""),width = svg_width, height = svg_height)
+    postscript(paste0(filename,".ps"),width = svg_width, height = svg_height)
     FUN(..., landscape=landscape, list_graph=list_graph)
     dev.off()
   } else if (output_type == "png") {
-    png(paste(filename,file_number,".png", sep=""),width = png_width, height = png_height, units = "px",res = 200) 
+    png(paste0(filename,file_number,".png"),width = png_width, height = png_height, units = "px",res = 200) 
     FUN(..., landscape=landscape, list_graph=list_graph)
     dev.off()
   } else if (output_type == "tiff") {
-    tiff(paste(filename,file_number,".tiff", sep=""),width = tiff_width, height = tiff_height, units = "px",res = 300,compression ="lzw" ) 
+    tiff(paste0(filename,file_number,".tiff"),width = tiff_width, height = tiff_height, units = "px",res = 300,compression ="lzw" ) 
     FUN(..., landscape=landscape, list_graph=list_graph)
     dev.off()
   }else if (output_type == "svg") {
-    svg(paste(filename,file_number,".svg", sep=""),width = svg_width, height = svg_height,) 
+    svg(paste0(filename,file_number,".svg"),width = svg_width, height = svg_height,) 
     FUN(..., landscape=landscape, list_graph=list_graph)
     dev.off()
   }else if (output_type == "pdf") {
-    CairoPDF(file=paste(filename,".pdf", sep=""), width = pdf_width, height = pdf_height) 
+    CairoPDF(file=paste0(filename,".pdf"), width = pdf_width, height = pdf_height) 
     FUN(..., landscape=landscape, list_graph=list_graph)
     dev.off()
   } else if (output_type == "csv") {
     df_data <- FUN(..., return_data=TRUE)
-    write.csv(df_data, paste(filename,".csv", sep=""),
+    write.csv(df_data, paste0(filename,".csv"),
               row.names = FALSE)
   }  else if (output_type == "jpeg") {
-    jpeg(paste(filename,file_number,".jpeg", sep=""),width = tiff_width, height = tiff_height,res = 300, quality = 90) 
+    jpeg(paste0(filename,file_number,".jpeg"),width = tiff_width, height = tiff_height,res = 300, quality = 90) 
     FUN(..., landscape=landscape, list_graph=list_graph)
     dev.off()
   }
