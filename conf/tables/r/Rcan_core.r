@@ -76,8 +76,7 @@ canreg_load_packages <- function(packages_list) {
 
 
   missing_packages <- unique(missing_packages)
-  print(missing_packages)
-  
+
   if(length(missing_packages) > 0 ) {
     for (i in missing_packages) {
       install.packages(i, dependencies=  c("Depends", "Imports", "LinkingTo"), quiet = TRUE)
@@ -833,7 +832,7 @@ csu_ageSpecific_core <-
       th_legend <- list(theme(
         legend.key = element_rect(fill="transparent"),
         legend.position = "bottom",
-        legend.text = element_text(size = 12),
+        legend.text = element_text(size = 14),
         legend.title = element_text(size = 14),
         legend.key.size=unit(1,"cm"),
         legend.margin = margin(0, 0, 0, 0)
@@ -932,12 +931,12 @@ csu_ageSpecific_core <-
         plot.title = element_text(size=16, margin=margin(0,0,15,0),hjust = 0.5),
         plot.subtitle = element_text(size=15, margin=margin(0,0,15,0),hjust = 0.5),
         plot.caption = element_text(size=10, margin=margin(15,0,0,0)),
-        axis.title = element_text(size=12),
+        axis.title = element_text(size=14),
         axis.title.y = element_text(margin=margin(0,15,0,0)),
         axis.title.x = element_text(margin=margin(15,0,0,0)),
         plot.margin=margin(20,20,20,20),
-        axis.text = element_text(size=12, colour = "black"),
-        axis.text.x = element_text(size=12, angle = 60,  hjust = 1),
+        axis.text = element_text(size=14, colour = "black"),
+        axis.text.x = element_text(size=14, angle = 60,  hjust = 1),
         axis.ticks= element_line(colour = "black", size = 0.5),
         axis.ticks.length = unit(0.2, "cm"),
         axis.line.x = element_line(colour = "black", 
@@ -1405,7 +1404,7 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
   dt_rank[, cancer_rank:= frank(-total, ties.method="min"), by=var_by]
   dt_rank <- dt_rank[cancer_rank <= nb_top,c(var_by, "cancer_label", "cancer_rank"), with=FALSE] 
   dt <- merge(dt_rank, dt,by= c("SEX", "cancer_label"), all.x=TRUE)
-  dt$cancer_label <-csu_legend_wrapper(dt$cancer_label, 17)
+  dt$cancer_label <-csu_legend_wrapper(dt$cancer_label, 14)
   
   
   if (return_data) {
@@ -1464,8 +1463,8 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
   
   
   if(!canreg_report) {
-    print(plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=0.75), nrow=1,byrow=TRUE)))
-    print(plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=0.75), nrow=1,byrow=TRUE)))
+    print(plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
+    print(plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
   } else {
     return(list(male=plotlist[[1]], female=plotlist[[2]]))
   }
@@ -1922,11 +1921,17 @@ canreg_cases_age_pie <- function(
   
   
   dt[, x_label:=1]
-  dt[percent < 0.04,x_label:=1.6]
-  dt[percent > 0.04 & percent < 0.1,x_label:=1.6]
+  dt[percent < 0.1,x_label:=1.6]
+  dt[percent >= 0.1 & percent < 0.2,x_label:=1.2]
   
   
-  dt[, y_label2 := cumsum(CSU_CASES) - 0.5*CSU_CASES]
+  dt[, y_label := cumsum(CSU_CASES) - 0.5*CSU_CASES]
+  dt[shift(percent) < 0.04 & percent <0.04, y_label:=y_label + 0.25*CSU_CASES ]
+
+  
+  dt[,text_size:=2]
+  dt[percent < 0.1,text_size:=1]
+
   
   
   color_age <- c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854")
@@ -1935,9 +1940,10 @@ canreg_cases_age_pie <- function(
   csu_plot <- 
     ggplot(data = dt, aes(x = "", y = CSU_CASES, fill = CSU_BAR)) + 
     geom_bar(width = 1, stat = "identity") +
-    geom_text(aes(label = percent(percent), x=x_label, y= y_label2)) +
+    geom_text(aes(label = percent(percent), x=x_label, y= y_label, size=text_size), show.legend=FALSE) +
     coord_polar(theta = "y") +
     scale_fill_manual(name = "Age Group", values = color_age) + 
+    scale_size_continuous(range=c(4,6))+
     labs(title = canreg_header, 
          subtitle = plot_subtitle)+
     theme(plot.background= element_blank(),
@@ -1951,9 +1957,10 @@ canreg_cases_age_pie <- function(
           panel.grid=element_blank(),
           legend.position = "bottom",
           legend.key = element_rect(fill="transparent"),
-          legend.text = element_text(size = 11),
-          legend.key.height = unit(0.5,"cm"),
-          legend.key.width =unit(0.8,"cm"),
+          legend.title = element_text(size = 16),
+          legend.text = element_text(size = 16),
+          legend.key.height = unit(0.8,"cm"),
+          legend.key.width =unit(1.2,"cm"),
           legend.margin = margin(0, 0, 0, 0),
           axis.ticks = element_blank()) 
     
