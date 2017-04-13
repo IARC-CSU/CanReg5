@@ -51,10 +51,10 @@ if (!grepl("NA\n", text)) {
 } 
 doc <- addParagraph(doc, "\r\n")
 
-dims <- attr( jpeg::readJPEG (paste0(paste(sep="/", script.basename, "report_text/"), "map_general.jpg")), "dim" )
-doc <- addImage(doc, paste0(paste(sep="/", script.basename, "report_text/"), "map_general.jpg"),width=3,height=3*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
+dims <- attr( png::readPNG(paste0(paste(sep="/", script.basename, "report_text/"), "map_general.png")), "dim" )
+doc <- addImage(doc, paste0(paste(sep="/", script.basename, "report_text/"), "map_general.png"),width=3,height=3*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
 doc <- addParagraph(doc, "Fig 1. Region map")
-doc <- addPageBreak(doc) # go to the next page
+
 
 total_pop <- formatC(round(unique(dt_report$Total)), format="d", big.mark=",") 
 total_male <- formatC(round(dt_report[SEX==levels(SEX)[1], sum(COUNT)]), format="d", big.mark=",")
