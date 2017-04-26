@@ -565,11 +565,11 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                         headers.add(ageLabel[age]);
                     }
 
-                    headers.add("CRUDE RATE");
+                   // headers.add("CRUDE RATE");
                     headers.add("(%)");
-                    headers.add("CUM 0-64");
-                    headers.add("CUM 0-74");
-                    headers.add("ASR");
+//                    headers.add("CUM 0-64");
+//                    headers.add("CUM 0-74");
+//                    headers.add("ASR");
                     headers.add("ICD (10th)");
 
                     CSVFormat format = CSVFormat.DEFAULT
