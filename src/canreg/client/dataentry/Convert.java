@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2017  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Hemant Dharam Dhivar, IARC-Mumbai Regional Hub, hemant_dhivar@yahoo.com
+ * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
  */
 package canreg.client.dataentry;
 
-import canreg.common.database.Patient;
-import canreg.common.database.Tools;
-import canreg.common.database.Tumour;
-import canreg.common.database.Source;
-import canreg.common.database.NameSexRecord;
-import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.Globals;
-import canreg.common.conversions.ConversionResult;
-import canreg.common.conversions.Converter;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.dataentry.ImportView;
 import canreg.server.management.SystemDescription;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
 import canreg.common.DatabaseVariablesListElement;
-
-import au.com.bytecode.opencsv.CSVReader;
-
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
+import canreg.common.conversions.ConversionResult;
+import canreg.common.conversions.Converter;
+import canreg.common.database.NameSexRecord;
+import canreg.common.database.Patient;
+import canreg.common.database.Source;
+import canreg.common.database.Tools;
+import canreg.common.database.Tumour;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -55,7 +53,6 @@ import java.io.FileNotFoundException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -76,8 +73,10 @@ import org.paradox.ParadoxConnection;
 import org.paradox.metadata.ParadoxTable;
 import org.paradox.data.TableData;
 
-import au.com.bytecode.opencsv.CSVWriter;
-import org.paradox.data.table.value.FieldValue;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
 import org.xml.sax.SAXException;
 
 public class Convert {
@@ -201,9 +200,9 @@ public class Convert {
         int rowsImported = 0;
 
         String csv = filepath+Globals.FILE_SEPARATOR+regcode+".csv";
-        
+        CSVPrinter printer;
         try {
-            CSVWriter writer = new CSVWriter(new FileWriter(csv), ',', CSVWriter.DEFAULT_ESCAPE_CHARACTER);
+            
             debugOut("Migrating data "+datafile);
             pconn = (ParadoxConnection) DriverManager.getConnection("jdbc:paradox:///"+filepath.replaceAll("\\\\", "/"));
             final ParadoxTable table = TableData.listTables(pconn, datafile).get(0);
@@ -254,14 +253,18 @@ public class Convert {
             }
 
             query += " FROM  \""+datafile+"\"";
+            CSVFormat format = CSVFormat.DEFAULT.
+                    withFirstRecordAsHeader().
+                    withHeader(strheader).
+                    withDelimiter(',');
+
 
             debugOut(query);
-            
-            writer.writeNext(strheader);
+            printer = new CSVPrinter(new FileWriter(csv), format);         
 
             int hdrsize = strheader.length;
 
-            String[] strdata = new String[hdrsize];
+            Object[] strdata = new String[hdrsize];
 
             stmt = conn.createStatement();
             rs_data = stmt.executeQuery(query);
@@ -284,10 +287,11 @@ public class Convert {
                         break;
                     }
                 }
-                writer.writeNext(strdata);
+                printer.printRecord(strdata);
                 rowsImported++;
             }
-	    writer.close();
+            printer.flush();
+	    printer.close();
             success = true;
         }
         catch(SQLException ex) {
@@ -401,8 +405,8 @@ public class Convert {
         String firstNameVariableName = io.getFirstNameVariableName();
         String sexVariableName = io.getSexVariableName();
 
-        CSVReader reader = null;
-
+        CSVParser parser = null;
+        
         HashMap mpCodes = new HashMap();
 
         int numberOfLinesRead = 0;
@@ -410,28 +414,25 @@ public class Convert {
         Map<String, Integer> nameSexTable = server.getNameSexTables();
 
         try {
-            FileInputStream fis = new FileInputStream(file);
-            BufferedReader bsr = new BufferedReader(new InputStreamReader(fis, io.getFileCharset()));
-
             // Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}");
 
             int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath());
 
             debugOut("Importing data from "+file);
 
-            reader = new CSVReader(bsr, io.getSeparator());
-            String[] lineElements;
+            CSVFormat format = CSVFormat
+                .DEFAULT
+                .withFirstRecordAsHeader()
+                .withDelimiter(io.getSeparator());
+            
+            parser = CSVParser.parse(file, io.getFileCharset(), format);
 
             int linesToRead = io.getMaxLines();
             if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
                 linesToRead = numberOfRecordsInFile;
             }
 
-
-            // skip the first line
-            reader.readNext();
-
-            while ((lineElements = reader.readNext()) != null && (numberOfLinesRead < linesToRead)) {
+            for (CSVRecord csvRecord : parser){
                 numberOfLinesRead++;
                 // We allow for null tasks...
                 boolean needToSavePatientAgain = true;
@@ -452,18 +453,18 @@ public class Convert {
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
                     if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
-                        if (rel.getFileColumnNumber() < lineElements.length) {
+                        if (rel.getFileColumnNumber() < csvRecord.size()) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                if (csvRecord.get(rel.getFileColumnNumber()).length() > 0) {
                                     try {
-                                        patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                        patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
                                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
                                     }
                                 }
                             } else {
-                                patient.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(lineElements[rel.getFileColumnNumber()]));
+                                patient.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
                             Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with patient part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
@@ -476,19 +477,19 @@ public class Convert {
                 Tumour tumour = new Tumour();
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour") && rel.getFileColumnNumber() < lineElements.length) {
-                        if (rel.getFileColumnNumber() < lineElements.length) {
+                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour") && rel.getFileColumnNumber() < csvRecord.size()) {
+                        if (rel.getFileColumnNumber() < csvRecord.size()) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                if (csvRecord.get(rel.getFileColumnNumber()).length() > 0) {
                                     try {
-                                        tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                        tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
                                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
                                     }
                                 }
                             } else {
-                                tumour.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(lineElements[rel.getFileColumnNumber()]));
+                                tumour.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
                             Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with tumour part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
@@ -501,19 +502,19 @@ public class Convert {
                 Source source = new Source();
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
-                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME) && rel.getFileColumnNumber() < lineElements.length) {
-                        if (rel.getFileColumnNumber() < lineElements.length) {
+                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME) && rel.getFileColumnNumber() < csvRecord.size()) {
+                        if (rel.getFileColumnNumber() < csvRecord.size()) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                if (csvRecord.get(rel.getFileColumnNumber()).length() > 0) {
                                     try {
-                                        source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                        source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
                                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
                                     }
                                 }
                             } else {
-                                source.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(lineElements[rel.getFileColumnNumber()]));
+                                source.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
                             Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with source part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
@@ -704,9 +705,9 @@ public class Convert {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
             success = false;
         } finally {
-            if (reader != null) {
+            if (parser != null) {
                 try {
-                    reader.close();
+                    parser.close();
                 } catch (IOException ex) {
                     Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                 }
