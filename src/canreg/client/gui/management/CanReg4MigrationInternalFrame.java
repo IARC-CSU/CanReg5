@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2017  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Hemant Dharam Dhivar, IARC Regional Hub, Mumbai.
+ * @author Hemant Dharam Dhivar, IARC Regional Hub, Mumbai,
  * hemant_dhivar@yahoo.com
+ * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
+ *
  */
 package canreg.client.gui.management;
 
@@ -64,22 +66,21 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 import org.apache.commons.lang.WordUtils;
 import org.jdesktop.application.Action;
-import org.jdesktop.application.Task;
 
 public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
 
     public static boolean isPaused;
-    private static String namespace = "ns3:";
-    private JDesktopPane desktopPane;
-    private static boolean debug = true;
+    private static final String namespace = "ns3:";
+    private final JDesktopPane desktopPane;
+    private static final boolean debug = true;
     private String dictionary, data;
     private static String defpath, filepath;
     private String regcode;
     private JList list;
-    private DefaultListModel<String> dlm = new DefaultListModel();
-    private ArrayList<String> deflist = new ArrayList();
-    private ArrayList<String> paths = new ArrayList();
-    private ArrayList<String> registryCodes = new ArrayList();
+    private final DefaultListModel<String> dlm = new DefaultListModel();
+    private final ArrayList<String> deflist = new ArrayList();
+    private final ArrayList<String> paths = new ArrayList();
+    private final ArrayList<String> registryCodes = new ArrayList();
     private SearchSystemDefTask ssdTask;
     //private MigrationTask mTask;
     private MigrationTask cTask;
@@ -87,8 +88,8 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
     private File inFile;
     private LocalSettings localSettings;
     private JFileChooser chooser;
-    private String DEF_FILE_EXTENSION = "DEF";
-    private char[] password = {'e','r','v','i','k'};
+    private final String DEF_FILE_EXTENSION = "DEF";
+    private final char[] password = {'e', 'r', 'v', 'i', 'k'};
     private DatabaseVariablesListElement[] variablesInDB;
     private List<VariableMappingPanel> panelList;
     private GlobalToolBox globalToolBox;
@@ -97,7 +98,11 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
 
     SystemDefinitionConverter sdc = new SystemDefinitionConverter();
 
-    /** Creates new form CanReg4MigrationInternalFrame */
+    /**
+     * Creates new form CanReg4MigrationInternalFrame
+     *
+     * @param dtp
+     */
     public CanReg4MigrationInternalFrame(JDesktopPane dtp) {
         this.desktopPane = dtp;
         initComponents();
@@ -106,8 +111,8 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
 
     @Action
     private void initActions() {
-        for (int i = 0; i<10; i++) {
-            String fileName = CR4Path.replaceFirst("C", new String(Character.toChars(67+i)));
+        for (int i = 0; i < 10; i++) {
+            String fileName = CR4Path.replaceFirst("C", new String(Character.toChars(67 + i)));
             if (new File(fileName).exists()) {
                 CR4Path = fileName;
                 break;
@@ -118,7 +123,7 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
     }
 
     @Action
-    public void cancelAction() throws RemoteException, IOException{
+    public void cancelAction() throws RemoteException, IOException {
         isPaused = true;
         if (cTask != null) {
             if (JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("REALLY_CANCEL?"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("PLEASE_CONFIRM."), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -126,19 +131,18 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("IMPORT_OF_FILE_INTERUPTED"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("WARNING"), JOptionPane.WARNING_MESSAGE);
                 cTask = null;
                 this.dispose();
-            }
-            else {
+            } else {
                 isPaused = false;
             }
         } else {
             this.dispose();
         }
-   }
-     
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -324,66 +328,66 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
 private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
     // TODO add your handling code here:
     list = (JList) evt.getSource();
-    if ( list.getModel().getSize() > 0 ) {
-        if ( list.isSelectedIndex(list.getSelectedIndex()) ) {
+    if (list.getModel().getSize() > 0) {
+        if (list.isSelectedIndex(list.getSelectedIndex())) {
             okButton.setEnabled(true);
         }
         regcode = registryCodes.get(list.getSelectedIndex());
         filepath = paths.get(list.getSelectedIndex());
         DBSearch dbs = new DBSearch();
         File[] dbList = dbs.getDBList(filepath);
-        int dbSearch = (dbs.searchDB(dbList)) ? 1: 0;
-        
-        switch ( dbSearch ) {
+        int dbSearch = (dbs.searchDB(dbList)) ? 1 : 0;
+
+        switch (dbSearch) {
             case 0:
                 okButton.setEnabled(false);
-                JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "'"+dlm.get(list.getSelectedIndex())+"' DB Files are Missing.\nPlease Confirm Location '"+CR4Path+regcode+"'", "Missing DB Files.", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "'" + dlm.get(list.getSelectedIndex()) + "' DB Files are Missing.\nPlease Confirm Location '" + CR4Path + regcode + "'", "Missing DB Files.", JOptionPane.PLAIN_MESSAGE);
                 break;
             case 1:
                 String dicFile = dbs.getDicDB(dbList);
                 String datFile = dbs.getDatDB(dbList);
 
-                if ( dicFile == null || datFile == null ) {
+                if (dicFile == null || datFile == null) {
                     okButton.setEnabled(false);
-                    JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "'"+dlm.get(list.getSelectedIndex())+"' DB Files are Missing.\nPlease Confirm Location '"+CR4Path+regcode+"'", "Missing DB Files.", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "'" + dlm.get(list.getSelectedIndex()) + "' DB Files are Missing.\nPlease Confirm Location '" + CR4Path + regcode + "'", "Missing DB Files.", JOptionPane.PLAIN_MESSAGE);
                 }
 
-                if ( dicFile != null  && datFile != null ) {
-                    String dicname = "CR4-"+regcode+"D.DB";
-                    String dataname = "CR4-"+regcode+"M.DB";
+                if (dicFile != null && datFile != null) {
+                    String dicname = "CR4-" + regcode + "D.DB";
+                    String dataname = "CR4-" + regcode + "M.DB";
 
-                    int dicdb = dicFile.equalsIgnoreCase(dicname) ? 1: 0;
-                    int datdb = datFile.equalsIgnoreCase(dataname) ? 1: 0;
+                    int dicdb = dicFile.equalsIgnoreCase(dicname) ? 1 : 0;
+                    int datdb = datFile.equalsIgnoreCase(dataname) ? 1 : 0;
 
-                    switch ( dicdb ) {
-                      case 0:
-                          okButton.setEnabled(false);
-                          JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Incorrect Dictionary Name.\nExpected: "+dicname+", Found "+dicFile, "Incorrect Dictionary File Name.", JOptionPane.PLAIN_MESSAGE);
+                    switch (dicdb) {
+                        case 0:
+                            okButton.setEnabled(false);
+                            JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Incorrect Dictionary Name.\nExpected: " + dicname + ", Found " + dicFile, "Incorrect Dictionary File Name.", JOptionPane.PLAIN_MESSAGE);
 
-                          switch ( datdb ) {
-                            case 0:
-                                 okButton.setEnabled(false);
-                                 JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Incorrect Data Name.\nExpected: "+dataname+", Found "+datFile, "Incorrect Data File Name.", JOptionPane.PLAIN_MESSAGE);
-                                 break;
-                            case 1:
-                                 okButton.setEnabled(false);
-                                 break;
-                         }
+                            switch (datdb) {
+                                case 0:
+                                    okButton.setEnabled(false);
+                                    JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Incorrect Data Name.\nExpected: " + dataname + ", Found " + datFile, "Incorrect Data File Name.", JOptionPane.PLAIN_MESSAGE);
+                                    break;
+                                case 1:
+                                    okButton.setEnabled(false);
+                                    break;
+                            }
                             break;
-                       case 1:
-                          switch ( datdb ) {
-                            case 0:
-                                okButton.setEnabled(false);
-                                JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Incorrect Data Name.\nExpected: "+dataname+", Found "+datFile, "Incorect Data File Name.", JOptionPane.PLAIN_MESSAGE);
+                        case 1:
+                            switch (datdb) {
+                                case 0:
+                                    okButton.setEnabled(false);
+                                    JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Incorrect Data Name.\nExpected: " + dataname + ", Found " + datFile, "Incorect Data File Name.", JOptionPane.PLAIN_MESSAGE);
 
-                                break;
-                            case 1:
-                                dictionary = dicFile;
-                                data = datFile;
-                                okButton.setEnabled(true);
-                                break;
-                        }
-                        break;
+                                    break;
+                                case 1:
+                                    dictionary = dicFile;
+                                    data = datFile;
+                                    okButton.setEnabled(true);
+                                    break;
+                            }
+                            break;
                     }
                 }
                 break;
@@ -391,472 +395,473 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
     }
 }//GEN-LAST:event_jList1MouseClicked
 
-@Action
-public void MigrationAction() {
-    okButton.setEnabled(false);
-    doneButton.setEnabled(false);
-    cancelButton.setEnabled(true);
-    jList1.setEnabled(false);
-    EditDatabaseVariableTableAssociationInternalFrame edvif = new EditDatabaseVariableTableAssociationInternalFrame();
-    int addServer = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("SUCCESSFULLY_CREATED_XML: ") + "\'" + Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + "\'.\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("ADD_IT_TO_FAV_SERVERS?"), "Success", JOptionPane.YES_NO_OPTION);
-    if (addServer == JOptionPane.YES_OPTION) {
-       localSettings = CanRegClientApp.getApplication().getLocalSettings();
-       localSettings.addServerToServerList(dlm.get(list.getSelectedIndex()), "localhost", Globals.DEFAULT_PORT, regcode);
-       localSettings.writeSettings();
-    }
-    try {
-       edvif.setTitle("Variables and Tables for "+WordUtils.capitalize(dlm.get(list.getSelectedIndex()).toLowerCase()));
-       edvif.loadSystemDefinition(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + ".xml");
-       edvif.setDesktopPane(desktopPane);
-       CanRegClientView.showAndPositionInternalFrame(desktopPane, edvif);
-    }
-    catch (IOException ex) {
-       Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    catch (ParserConfigurationException ex) {
-       Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    catch (SAXException ex) {
-       Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-    }
+    @Action
+    public void MigrationAction() {
+        okButton.setEnabled(false);
+        doneButton.setEnabled(false);
+        cancelButton.setEnabled(true);
+        jList1.setEnabled(false);
+        EditDatabaseVariableTableAssociationInternalFrame edvif = new EditDatabaseVariableTableAssociationInternalFrame();
+        int addServer = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("SUCCESSFULLY_CREATED_XML: ") + "\'" + Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + "\'.\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4SystemConverterInternalFrame").getString("ADD_IT_TO_FAV_SERVERS?"), "Success", JOptionPane.YES_NO_OPTION);
+        if (addServer == JOptionPane.YES_OPTION) {
+            localSettings = CanRegClientApp.getApplication().getLocalSettings();
+            localSettings.addServerToServerList(dlm.get(list.getSelectedIndex()), "localhost", Globals.DEFAULT_PORT, regcode);
+            localSettings.writeSettings();
+        }
+        try {
+            edvif.setTitle("Variables and Tables for " + WordUtils.capitalize(dlm.get(list.getSelectedIndex()).toLowerCase()));
+            edvif.loadSystemDefinition(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + ".xml");
+            edvif.setDesktopPane(desktopPane);
+            CanRegClientView.showAndPositionInternalFrame(desktopPane, edvif);
+        } catch (IOException ex) {
+            Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-    edvif.saveButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            //logout from canreg system before conversion
-            if(CanRegClientApp.getApplication().loggedIn){
-               try {
-                  CanRegClientApp.getApplication().logOut();
-               }
-               catch(RemoteException ex) {
-                  Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-               }
-            }
-            //check to see if there is a database already - rename it
-            File databaseFolder = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + regcode);
-            if (databaseFolder.exists()) {
-                int i = 0;
-                File folder2 = databaseFolder;
-                while (folder2.exists()) {
-                   i++;
-                   folder2 = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + regcode + i);
+        edvif.saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //logout from canreg system before conversion
+                if (CanRegClientApp.getApplication().loggedIn) {
+                    try {
+                        CanRegClientApp.getApplication().logOut();
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-                databaseFolder.renameTo(folder2);
-                debugOut("database: "+databaseFolder);
-                try {
-                   canreg.common.Tools.fileCopy(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + ".xml",
-                   Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + i + ".xml");
+                //check to see if there is a database already - rename it
+                File databaseFolder = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + regcode);
+                if (databaseFolder.exists()) {
+                    int i = 0;
+                    File folder2 = databaseFolder;
+                    while (folder2.exists()) {
+                        i++;
+                        folder2 = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + regcode + i);
+                    }
+                    databaseFolder.renameTo(folder2);
+                    debugOut("database: " + databaseFolder);
+                    try {
+                        canreg.common.Tools.fileCopy(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + ".xml",
+                                Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + i + ".xml");
+                    } catch (IOException ex) {
+                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-                catch (IOException ex) {
-                   Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            ProgressBar.setStringPainted(true);
-            cTask = new ProgressTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
-            cTask.execute();
-            cTask.addPropertyChangeListener(new PropertyChangeListener() {
+                ProgressBar.setStringPainted(true);
+                cTask = new ProgressTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+                cTask.execute();
+                cTask.addPropertyChangeListener(new PropertyChangeListener() {
+                    @Override
                     public void propertyChange(PropertyChangeEvent evt) {
                         if ("progress".equals(evt.getPropertyName())) {
                             ProgressBar.setValue((Integer) evt.getNewValue());
                             ProgressBar.setString(evt.getNewValue().toString() + "%");
                         }
                     }
-            });
-        }
-    });
-}
-
-private class ProgressTask extends MigrationTask {
-    
-    ProgressTask(org.jdesktop.application.Application app) {
+                });
+            }
+        });
     }
 
-    @Override
-    protected void process(List<Progress> chunks) {
+    private class ProgressTask extends MigrationTask {
+
+        ProgressTask(org.jdesktop.application.Application app) {
+        }
+
+        @Override
+        protected void process(List<Progress> chunks) {
             if (!isDisplayable()) {
                 System.out.println("process: DISPOSE_ON_CLOSE");
                 cancel(true);
                 return;
             }
-            for (Progress s: chunks) {
+            for (Progress s : chunks) {
                 //System.out.println(s.component+" "+s.value);
                 switch (s.component) {
-                  case TOTAL:
-                      TotalProgressBar.setValue((Integer) s.value);
-                      TotalProgressBar.setString(s.value.toString()+"%");
-                      break;
-                  case FILE:  ProgressBar.setValue((Integer) s.value); break;
-                  case LOG:   taskOutput.append((String) s.value);    break;
-                  default: throw new AssertionError("Unknown Progress");
+                    case TOTAL:
+                        TotalProgressBar.setValue((Integer) s.value);
+                        TotalProgressBar.setString(s.value.toString() + "%");
+                        break;
+                    case FILE:
+                        ProgressBar.setValue((Integer) s.value);
+                        break;
+                    case LOG:
+                        taskOutput.append((String) s.value);
+                        break;
+                    default:
+                        throw new AssertionError("Unknown Progress");
                 }
             }
-    }
-
-    @Override
-    public void done() {
-        try {
-            String result = get();
-            cancelButton.setEnabled(false);
-            doneButton.setEnabled(true);
-            publish(new Progress(Component.LOG, "Migration done Successfully.\n"));
-            JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration done Successfully.", "Migration done Successfully.", JOptionPane.PLAIN_MESSAGE);
-            int deleteTemp = JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you want to delete temporary files ?", "Delete temporary files.", JOptionPane.YES_NO_OPTION);
-            if ( deleteTemp == JOptionPane.YES_OPTION) {
-                String abspath = inFile.getAbsolutePath();
-                File dicFile = new File(abspath.substring(0, abspath.lastIndexOf('.'))+".txt");
-                inFile.delete();
-                dicFile.delete();
-            }
         }
-        catch (InterruptedException ex) {
-            doneButton.setEnabled(true);
-            cancelButton.setEnabled(false);
-            Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            publish(new Progress(Component.LOG, "Migration failed with "+ex.getCause()));
-            JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration failed.", "Migration failed.", JOptionPane.PLAIN_MESSAGE);
-        }
-        catch (java.util.concurrent.ExecutionException ex) {
-            doneButton.setEnabled(true);
-            cancelButton.setEnabled(false);
-            Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            publish(new Progress(Component.LOG, "Migration failed with "+ex.getCause()));
-            JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration failed.", "Migration failed.", JOptionPane.PLAIN_MESSAGE);
-        }
-        catch (java.util.concurrent.CancellationException ex) {
-            Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            publish(new Progress(Component.LOG, "Migration cancelled.\n"));
-        }
-    }
-}
 
-enum Component { TOTAL, FILE, LOG }
-
-class Progress {
-    public final Object value;
-    public final Component component;
-    public Progress(Component component, Object value) {
-        this.component = component;
-        this.value = value;
-    }
-}
-
-private class DBSearch {
-    private boolean searchDBs = false;
-    private String dicname, dataname;
-
-    private File[] getDBList(String dirPath) {
-        File dir = new File(dirPath);
-
-        File[] dbList = dir.listFiles(new FilenameFilter() {
-             public boolean accept(File dir, String name) {
-                 return name.endsWith(".db") || name.endsWith(".DB");
-             }
-        });
-        return dbList;
-    }
-
-    private boolean searchDB(File[] fList) {
-        for (File files : fList) {
-            if ( files.getName().endsWith(".db") || files.getName().endsWith(".DB") ) {
-                searchDBs = true;
-            }
-        }
-        return searchDBs;
-    }
-
-    private String getDicDB(File[] fList) {
-        for (File files : fList) {
-             if ( files.getName().endsWith("db") || files.getName().endsWith("DB") ) {
-                  if ( files.getName().substring(0, files.getName().lastIndexOf(".")).endsWith("D") ) {
-                     dicname = files.getName();
-                 }
-             }
-        }
-        return dicname;
-    }
-
-    private String getDatDB(File[] fList) {
-        for (File files : fList) {
-             if ( files.getName().endsWith("db") || files.getName().endsWith("DB") ) {
-                 if ( files.getName().substring(0, files.getName().lastIndexOf(".")).endsWith("M") ) {
-                     dataname = files.getName();
-                 }
-             }
-        }
-        return dataname;
-    }
-}
-
-public class MigrationTask extends SwingWorker<String, Progress> {
-    String filename;
-    Map dicimport = null;
-    private final Random r = new Random();
-
-    public boolean isIsPaused() {
-       return isPaused;
-    }
-
-    @Override
-    public String doInBackground() {
-        int subtask = 1;
-        int lengthOfTask = 5; //filelist.size();
-        publish(new Progress(Component.LOG, "--------------------------------------------------------------------------\n"));
-
-        while (subtask <= lengthOfTask && !isCancelled()) {
+        @Override
+        public void done() {
             try {
-                migrate(subtask);
-            } catch (InterruptedException ie) {
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ie);
-                return "Interrupted with "+ie;
+                String result = get();
+                cancelButton.setEnabled(false);
+                doneButton.setEnabled(true);
+                publish(new Progress(Component.LOG, "Migration done Successfully.\n"));
+                JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration done Successfully.", "Migration done Successfully.", JOptionPane.PLAIN_MESSAGE);
+                int deleteTemp = JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Do you want to delete temporary files ?", "Delete temporary files.", JOptionPane.YES_NO_OPTION);
+                if (deleteTemp == JOptionPane.YES_OPTION) {
+                    String abspath = inFile.getAbsolutePath();
+                    File dicFile = new File(abspath.substring(0, abspath.lastIndexOf('.')) + ".txt");
+                    inFile.delete();
+                    dicFile.delete();
+                }
+            } catch (InterruptedException ex) {
+                doneButton.setEnabled(true);
+                cancelButton.setEnabled(false);
+                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                publish(new Progress(Component.LOG, "Migration failed with " + ex.getCause()));
+                JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration failed.", "Migration failed.", JOptionPane.PLAIN_MESSAGE);
+            } catch (java.util.concurrent.ExecutionException ex) {
+                doneButton.setEnabled(true);
+                cancelButton.setEnabled(false);
+                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                publish(new Progress(Component.LOG, "Migration failed with " + ex.getCause()));
+                JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration failed.", "Migration failed.", JOptionPane.PLAIN_MESSAGE);
+            } catch (java.util.concurrent.CancellationException ex) {
+                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                publish(new Progress(Component.LOG, "Migration cancelled.\n"));
             }
-            publish(new Progress(Component.TOTAL, 100 * subtask / lengthOfTask));
-            subtask++;
         }
-        return "Done";
     }
 
-    private void migrate(int subtask) throws InterruptedException {
-        boolean dic_status = false;
-        boolean data_status = false;
-        boolean dicimport_status = false;
-        boolean dataimport_status = false;
-        int current = subtask;
-        int lengthOfTask = 10 + r.nextInt(50); 
+    enum Component {
+        TOTAL, FILE, LOG
+    }
 
-        while (current <= lengthOfTask && !isCancelled()) {
-            if (isPaused) {
+    class Progress {
+
+        public final Object value;
+        public final Component component;
+
+        public Progress(Component component, Object value) {
+            this.component = component;
+            this.value = value;
+        }
+    }
+
+    private class DBSearch {
+
+        private boolean searchDBs = false;
+        private String dicname, dataname;
+
+        private File[] getDBList(String dirPath) {
+            File dir = new File(dirPath);
+
+            File[] dbList;
+            dbList = dir.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".db") || name.endsWith(".DB");
+                }
+            });
+            return dbList;
+        }
+
+        private boolean searchDB(File[] fList) {
+            for (File files : fList) {
+                if (files.getName().endsWith(".db") || files.getName().endsWith(".DB")) {
+                    searchDBs = true;
+                }
+            }
+            return searchDBs;
+        }
+
+        private String getDicDB(File[] fList) {
+            for (File files : fList) {
+                if (files.getName().endsWith("db") || files.getName().endsWith("DB")) {
+                    if (files.getName().substring(0, files.getName().lastIndexOf(".")).endsWith("D")) {
+                        dicname = files.getName();
+                    }
+                }
+            }
+            return dicname;
+        }
+
+        private String getDatDB(File[] fList) {
+            for (File files : fList) {
+                if (files.getName().endsWith("db") || files.getName().endsWith("DB")) {
+                    if (files.getName().substring(0, files.getName().lastIndexOf(".")).endsWith("M")) {
+                        dataname = files.getName();
+                    }
+                }
+            }
+            return dataname;
+        }
+    }
+
+    /**
+     *
+     */
+    public class MigrationTask extends SwingWorker<String, Progress> {
+
+        String filename;
+        Map dicimport = null;
+        private final Random r = new Random();
+
+        public boolean isIsPaused() {
+            return isPaused;
+        }
+
+        @Override
+        public String doInBackground() {
+            int subtask = 1;
+            int lengthOfTask = 5; //filelist.size();
+            publish(new Progress(Component.LOG, "--------------------------------------------------------------------------\n"));
+
+            while (subtask <= lengthOfTask && !isCancelled()) {
                 try {
-                    Thread.sleep(500);
+                    migrate(subtask);
                 } catch (InterruptedException ie) {
                     Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ie);
-                    return;
+                    return "Interrupted with " + ie;
                 }
-                continue;
+                publish(new Progress(Component.TOTAL, 100 * subtask / lengthOfTask));
+                subtask++;
             }
+            return "Done";
+        }
 
-            //dictionary conversion task
-            while(!dic_status && subtask == 1) {
+        private void migrate(int subtask) throws InterruptedException {
+            boolean dic_status = false;
+            boolean data_status = false;
+            boolean dicimport_status = false;
+            boolean dataimport_status = false;
+            int current = subtask;
+            int lengthOfTask = 10 + r.nextInt(50);
+
+            while (current <= lengthOfTask && !isCancelled()) {
+                if (isPaused) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException ie) {
+                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ie);
+                        return;
+                    }
+                    continue;
+                }
+
+                //dictionary conversion task
+                while (!dic_status && subtask == 1) {
                     publish(new Progress(Component.LOG, "Migrating dictionary...\n"));
                     debugOut("Migrating dictionary...");
                     dic_status = CanRegClientApp.getApplication().convertDictionary(cTask, filepath, dictionary, regcode);
-            }
-
-            //data conversion task
-            if(subtask == 2) {
-                publish(new Progress(Component.LOG, "Migrating data...\n"));
-                debugOut("Migrating data...");
-                data_status = CanRegClientApp.getApplication().convertData(cTask, filepath, data, regcode);
-                if(!data_status) {
-                    JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration failed. Could not read CanReg4 database.", "Migration failed.", JOptionPane.PLAIN_MESSAGE);
-                    return;
                 }
-            }
 
-            //login to canreg system
-            while(!CanRegClientApp.getApplication().loggedIn && subtask == 3) {
-                publish(new Progress(Component.LOG, "Login to CanReg5 System.\n"));
-                String canregSystem = null;
-                try {
-                    canregSystem = CanRegClientApp.getApplication().loginDirect(regcode, "morten", password);
-                    // Closing WelcomeInternalFrame
-                    JDesktopPane jdp = new JDesktopPane();
-                    jdp = CanRegClientApp.getApplication().getDeskTopPane();
-                    JInternalFrame[] frames = jdp.getAllFrames();
-                    for(JInternalFrame jf: frames) {
-                        debugOut("frames name: "+jf.getName());
-                        if ( (jf.getClass().getName()).equals("canreg.client.gui.WelcomeInternalFrame")) {
-                           jf.dispose();
+                //data conversion task
+                if (subtask == 2) {
+                    publish(new Progress(Component.LOG, "Migrating data...\n"));
+                    debugOut("Migrating data...");
+                    data_status = CanRegClientApp.getApplication().convertData(cTask, filepath, data, regcode);
+                    if (!data_status) {
+                        JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration failed. Could not read CanReg4 database.", "Migration failed.", JOptionPane.PLAIN_MESSAGE);
+                        return;
+                    }
+                }
+
+                //login to canreg system
+                while (!CanRegClientApp.getApplication().loggedIn && subtask == 3) {
+                    publish(new Progress(Component.LOG, "Login to CanReg5 System.\n"));
+                    String canregSystem = null;
+                    try {
+                        canregSystem = CanRegClientApp.getApplication().loginDirect(regcode, "morten", password);
+                        // Closing WelcomeInternalFrame
+                        JDesktopPane jdp = new JDesktopPane();
+                        jdp = CanRegClientApp.getApplication().getDeskTopPane();
+                        JInternalFrame[] frames = jdp.getAllFrames();
+                        for (JInternalFrame jf : frames) {
+                            debugOut("frames name: " + jf.getName());
+                            if ((jf.getClass().getName()).equals("canreg.client.gui.WelcomeInternalFrame")) {
+                                jf.dispose();
+                            }
+                        }
+                    } catch (LoginException ex) {
+                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (NotBoundException ex) {
+                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (MalformedURLException ex) {
+                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (java.net.UnknownHostException ex) {
+                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (WrongCanRegVersionException ex) {
+                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    if (canregSystem != null) {
+                        JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_LOGIN"), "Login", JOptionPane.INFORMATION_MESSAGE);
+                        publish(new Progress(Component.LOG, "Successfully Login to \"" + CanRegClientApp.getApplication().getSystemName() + "\"\n"));
+                    }
+                }
+
+                //import dictionary to canreg system
+                while (!dicimport_status && subtask == 4) {
+                    publish(new Progress(Component.LOG, "Importing dictionary...\n"));
+                    inFile = new File(filepath + Globals.FILE_SEPARATOR + regcode + ".txt");
+                    filename = filepath + Globals.FILE_SEPARATOR + regcode + ".txt";
+                    dicimport = CanRegClientApp.getApplication().importDictionary(cTask, filename);
+                    if (dicimport.isEmpty()) {
+                        dicimport_status = true;
+                    }
+                }
+
+                //import data to canreg system
+                while (!dataimport_status && subtask == 5) {
+                    inFile = new File(filepath + Globals.FILE_SEPARATOR + regcode + ".csv");
+                    doc = CanRegClientApp.getApplication().getDatabseDescription();
+                    variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+                    globalToolBox = new GlobalToolBox(doc);
+                    initializeVariableMapping();
+
+                    try {
+                        dataimport_status = CanRegClientApp.getApplication().importCRFile(cTask, doc, buildMap(), inFile, buildImportOptions());
+                    } catch (java.sql.SQLException ex) {
+                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (canreg.server.database.RecordLockedException ex) {
+                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+                int iv = 100 * current / lengthOfTask;
+                Thread.sleep(20);
+                publish(new Progress(Component.FILE, iv + 1));
+                current++;
+            }
+            if (dic_status) {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_MIGRATED_FILE") + " Dictionary to " + filepath + Globals.FILE_SEPARATOR + regcode + ".txt", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DIC_EXPORT"), JOptionPane.INFORMATION_MESSAGE);
+                publish(new Progress(Component.LOG, "Successfully converted dictionary.\n"));
+            }
+            if (data_status) {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_MIGRATED_FILE") + " Data to " + filepath + Globals.FILE_SEPARATOR + regcode + ".csv", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DATA_EXPORT"), JOptionPane.INFORMATION_MESSAGE);
+                publish(new Progress(Component.LOG, "Successfully converted data.\n"));
+            }
+            if (dicimport_status) {
+                publish(new Progress(Component.LOG, "Successfully imported dictionary.\n"));
+                debugOut("Successfully imported dictionary.");
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_IMPORTED_FILE") + " Dictionary from " + inFile.getAbsolutePath() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DIC_IMPORT"), JOptionPane.INFORMATION_MESSAGE);
+                publish(new Progress(Component.LOG, "Importing data...\n"));
+            }
+            if (dataimport_status) {
+                publish(new Progress(Component.LOG, "Successfully imported data.\n"));
+                debugOut("Successfully imported data.");
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_IMPORTED_FILE") + " Data from " + inFile.getAbsolutePath() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DATA_IMPORT"), JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
+    private boolean searchSysDef(String canreg4Path) {
+        boolean defsearch = false;
+        File canreg4 = new File(canreg4Path);
+        boolean exists = canreg4.exists();
+
+        if (exists) {
+            File folder = new File(canreg4Path);
+            File[] listOfFiles = folder.listFiles();
+            for (File listOfFile : listOfFiles) {
+                if (listOfFile.isDirectory()) {
+                    File directory = listOfFile;
+                    File[] fList = directory.listFiles();
+                    for (File file : fList) {
+                        String filename = file.getName();
+                        if (filename.endsWith(".def") || filename.endsWith(".DEF")) {
+                            defsearch = true;
                         }
                     }
                 }
-                catch (LoginException ex) {
-                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                catch (NotBoundException ex) {
-                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                catch (MalformedURLException ex) {
-                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                catch (RemoteException ex) {
-                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                catch (java.net.UnknownHostException ex) {
-                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                catch (WrongCanRegVersionException ex) {
-                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                if(canregSystem != null) {
-                    JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_LOGIN"), "Login", JOptionPane.INFORMATION_MESSAGE);
-                    publish(new Progress(Component.LOG, "Successfully Login to \""+CanRegClientApp.getApplication().getSystemName()+"\"\n"));
-                }
             }
-
-            //import dictionary to canreg system
-            while(!dicimport_status && subtask == 4) {
-                publish(new Progress(Component.LOG, "Importing dictionary...\n"));
-                inFile = new File(filepath+Globals.FILE_SEPARATOR+regcode+".txt");
-                filename = filepath+Globals.FILE_SEPARATOR+regcode+".txt";
-                dicimport = CanRegClientApp.getApplication().importDictionary(cTask, filename);
-                if(dicimport.isEmpty()) {
-                    dicimport_status = true;
-                }
-            }
-
-            //import data to canreg system
-            while(!dataimport_status && subtask == 5) {
-                inFile = new File(filepath+Globals.FILE_SEPARATOR+regcode+".csv");
-                doc = CanRegClientApp.getApplication().getDatabseDescription();
-                variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
-                globalToolBox = new GlobalToolBox(doc);
-                initializeVariableMapping();
-                
-                try {
-                    dataimport_status = CanRegClientApp.getApplication().importCRFile(cTask, doc, buildMap(), inFile, buildImportOptions());
-                }
-                catch(java.sql.SQLException ex) {
-                   Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                catch(canreg.server.database.RecordLockedException ex) {
-                   Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                catch(RemoteException ex) {
-                   Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
-            int iv = 100 * current / lengthOfTask;
-            Thread.sleep(20); 
-            publish(new Progress(Component.FILE, iv + 1));
-            current++;
         }
-        if(dic_status) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_MIGRATED_FILE") + " Dictionary to " + filepath +Globals.FILE_SEPARATOR+regcode+ ".txt", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DIC_EXPORT"), JOptionPane.INFORMATION_MESSAGE);
-            publish(new Progress(Component.LOG, "Successfully converted dictionary.\n"));
-        }
-        if(data_status) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_MIGRATED_FILE") + " Data to " + filepath +Globals.FILE_SEPARATOR+regcode+ ".csv", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DATA_EXPORT"), JOptionPane.INFORMATION_MESSAGE);
-            publish(new Progress(Component.LOG, "Successfully converted data.\n"));
-        }
-        if(dicimport_status) {
-            publish(new Progress(Component.LOG, "Successfully imported dictionary.\n"));
-            debugOut("Successfully imported dictionary.");
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_IMPORTED_FILE") + " Dictionary from " + inFile.getAbsolutePath() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DIC_IMPORT"), JOptionPane.INFORMATION_MESSAGE);
-            publish(new Progress(Component.LOG, "Importing data...\n"));
-        }
-        if(dataimport_status) {
-            publish(new Progress(Component.LOG, "Successfully imported data.\n"));
-            debugOut("Successfully imported data.");
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_IMPORTED_FILE") + " Data from " + inFile.getAbsolutePath() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("DATA_IMPORT"), JOptionPane.INFORMATION_MESSAGE);
-        }
+        return defsearch;
     }
-  }
 
-private boolean searchSysDef(String canreg4Path) {
-    boolean defsearch = false;
-    File canreg4=new File(canreg4Path);
-    boolean exists = canreg4.exists();
+    private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, String> {
 
-   if(exists) {
-      File folder = new File(canreg4Path);
-      File[] listOfFiles = folder.listFiles();
-      for (int i = 0; i < listOfFiles.length; i++) {
-         if (listOfFiles[i].isDirectory()) {
-             File directory = listOfFiles[i];
-             File[] fList = directory.listFiles();
-             for (File file : fList){
-                  String filename = file.getName();
-                  if (filename.endsWith(".def") || filename.endsWith(".DEF")) {
-                      defsearch = true;
-                  }
-             }
-         }
-      }
-   }
-   return defsearch;
-}
+        private final String canreg4Path;
 
-private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, String> {
-    private final String canreg4Path;
+        SearchSystemDefTask(org.jdesktop.application.Application app, final String canreg4Path) {
+            super(app);
+            this.canreg4Path = canreg4Path;
+            Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+            setCursor(hourglassCursor);
+        }
 
-    SearchSystemDefTask(org.jdesktop.application.Application app, final String canreg4Path) {
-        super(app);
-        this.canreg4Path = canreg4Path;
-        Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
-        setCursor(hourglassCursor);        
-    }
-    @Override
-    public Object doInBackground() {
-        boolean searchdef = searchSysDef(canreg4Path);
-        boolean status = false;
-	File canreg4=new File(canreg4Path);
-	boolean cr4exists = canreg4.exists();
+        @Override
+        public Object doInBackground() {
+            boolean searchdef = searchSysDef(canreg4Path);
+            boolean status = false;
+            File canreg4 = new File(canreg4Path);
+            boolean cr4exists = canreg4.exists();
 
-        if(cr4exists && searchdef) {
-            publish("Loading and migrating system definition file from default location.\n");
-            File folder = new File(canreg4Path);
-            File[] listOfFiles = folder.listFiles();
-            for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isDirectory()) {
-                    File directory = listOfFiles[i];
-                    File[] fList = directory.listFiles();
-                    for (File file : fList){
-                         String filename = file.getName();
-                         if (filename.endsWith(".def") || filename.endsWith(".DEF")) {
-                            defpath = CR4Path+listOfFiles[i].getName()+Globals.FILE_SEPARATOR+filename;
-                            debugOut("loading system definition file from default location. "+defpath);
-                            try {
-                                sdc.setFileEncoding(Charset.forName(Globals.CHARSET_ENGLISH));
-                                sdc.convertAndSaveInSystemFolder(defpath);
-                                publish("\""+WordUtils.capitalize(sdc.getRegistryName().toLowerCase())+"\"\n");
-                            }
-                            catch (IOException ex) {
+            if (cr4exists && searchdef) {
+                publish("Loading and migrating system definition file from default location.\n");
+                File folder = new File(canreg4Path);
+                File[] listOfFiles = folder.listFiles();
+                for (File listOfFile : listOfFiles) {
+                    if (listOfFile.isDirectory()) {
+                        File directory = listOfFile;
+                        File[] fList = directory.listFiles();
+                        for (File file : fList) {
+                            String filename = file.getName();
+                            if (filename.endsWith(".def") || filename.endsWith(".DEF")) {
+                                defpath = CR4Path + listOfFile.getName() + Globals.FILE_SEPARATOR + filename;
+                                debugOut("loading system definition file from default location. " + defpath);
+                                try {
+                                    sdc.setFileEncoding(Charset.forName(Globals.CHARSET_ENGLISH));
+                                    sdc.convertAndSaveInSystemFolder(defpath);
+                                    publish("\"" + WordUtils.capitalize(sdc.getRegistryName().toLowerCase()) + "\"\n");
+                                } catch (IOException ex) {
                                     Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                registryCodes.add(sdc.getServerCode());
+                                deflist.add(defpath);
+                                paths.add(CR4Path + listOfFile.getName());
+                                dlm.addElement(sdc.getRegistryName());
                             }
-                            registryCodes.add(sdc.getServerCode());
-                            deflist.add(defpath);
-                            paths.add(CR4Path+listOfFiles[i].getName());
-                            dlm.addElement(sdc.getRegistryName());
-                         }
+                        }
                     }
                 }
+                status = true;
+            } else {
+                publish("CanReg4 system definition file not found at default location.\nPlease click \"Browse\" to locate system definition file.\n");
+                debugOut("System definition file not found at default location.");
+                tabbedPane.setSelectedIndex(1);
+                browseCR4Button.setEnabled(true);
+                status = false;
             }
-            status = true;
+            return status;
         }
-        else {
-            publish("CanReg4 system definition file not found at default location.\nPlease click \"Browse\" to locate system definition file.\n");
-            debugOut("System definition file not found at default location.");
-            tabbedPane.setSelectedIndex(1);
-            browseCR4Button.setEnabled(true);
-            status = false;
-        }
-        return status;
-    }
-    @Override
-    protected void process(final List<String> chunks) {
-        // Updates the messages text area
-        for (final String string : chunks) {
-            taskOutput.append(string);
-        }
-    }
-    @Override
-    protected void succeeded(Object defstatus) {
-        Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-        setCursor(normalCursor);
-        try {
-            if ( defstatus.equals(true) ) {
-                taskOutput.append("Migration of system definition done successfully.\n");
-                taskOutput.append("Select registry and then click 'Ok' to start migration.\n");
-                //regSelectButton.setEnabled(true);
+
+        @Override
+        protected void process(final List<String> chunks) {
+            // Updates the messages text area
+            for (final String string : chunks) {
+                taskOutput.append(string);
             }
         }
-        catch(Exception ex) {
-            Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+
+        @Override
+        protected void succeeded(Object defstatus) {
+            Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+            setCursor(normalCursor);
+            try {
+                if (defstatus.equals(true)) {
+                    taskOutput.append("Migration of system definition done successfully.\n");
+                    taskOutput.append("Select registry and then click 'Ok' to start migration.\n");
+                    //regSelectButton.setEnabled(true);
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ssdTask = null;
         }
-        ssdTask = null;
     }
-}
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -902,7 +907,8 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
 
     private class BrowseDefActionTask extends org.jdesktop.application.Task<Object, String> {
 
-        private String defname;
+        private final String defname;
+
         BrowseDefActionTask(org.jdesktop.application.Application app, String defname) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
@@ -912,6 +918,7 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
             Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
             setCursor(hourglassCursor);
         }
+
         @Override
         protected Object doInBackground() {
             // Your Task's code here.  This method runs
@@ -919,33 +926,35 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
             // the Swing GUI from here.
             boolean status = false;
             try {
-                if(defname!=null) {
+                if (defname != null) {
                     publish("Migrating System Definition File for ");
                     sdc.setFileEncoding(Charset.forName(Globals.CHARSET_ENGLISH));
                     sdc.convertAndSaveInSystemFolder(defname);
-                    publish("\""+WordUtils.capitalize(sdc.getRegistryName().toLowerCase())+"\".\n");
+                    publish("\"" + WordUtils.capitalize(sdc.getRegistryName().toLowerCase()) + "\".\n");
                     registryCodes.add(sdc.getServerCode());
                     //deflist.add(defname);
                     File f = new File(defname);
                     String abpath = f.getAbsolutePath();
-                    String defpath = abpath.substring(0,abpath.lastIndexOf(File.separator));
-                    debugOut("Loading system definition file manually from path "+defpath);
+                    String defpath = abpath.substring(0, abpath.lastIndexOf(File.separator));
+                    debugOut("Loading system definition file manually from path " + defpath);
                     paths.add(defpath);
                     dlm.addElement(sdc.getRegistryName());
                     status = true;
                 }
-            }
-            catch (FileNotFoundException ex) {
-               Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
             return status;  // return your result
         }
+
+        @Override
         protected void process(final List<String> chunks) {
             // Updates the messages text area
             for (final String string : chunks) {
                 taskOutput.append(string);
             }
         }
+
         @Override
         protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
@@ -953,15 +962,14 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
             setCursor(normalCursor);
             try {
-                if( result.equals(true) ) {
+                if (result.equals(true)) {
                     taskOutput.append("Migration of System Definition Done Successfully.\n");
                     taskOutput.append("Select Registry and then click 'Ok' for Migration.\n");
                     JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration of System Definition Done Successfully.", "Migration of System Definition", JOptionPane.PLAIN_MESSAGE);
                     tabbedPane.setSelectedIndex(0);
                     //regSelectButton.setEnabled(true);
                 }
-            }
-            catch(Exception ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
             ssdTask = null;
@@ -999,7 +1007,6 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
         io.setDiscrepancies(ImportOptions.UPDATE);
 
         //io.setTestOnly(true);
-
         //Max lines
         io.setMaxLines(-1);
 
@@ -1035,7 +1042,6 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
 
         return io;
     }
-
 
     private char getSeparator() {
         char schar = ','; // Default
@@ -1074,7 +1080,6 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
 
                 //variablesPanel.revalidate();
                 //variablesPanel.repaint();
-
             } catch (RemoteException ex) {
                 Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (FileNotFoundException ex) {
@@ -1101,11 +1106,10 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
 
         //Handling variable names with reserved name
         String[] dbVar = new String[variableNames.length];
-        for ( int i = 0; i < variableNames.length; i++ ) {
-            if ( variableNames[i].endsWith("_") ) {
+        for (int i = 0; i < variableNames.length; i++) {
+            if (variableNames[i].endsWith("_")) {
                 dbVar[i] = variableNames[i].replace("_", "");
-            }
-            else {
+            } else {
                 dbVar[i] = variableNames[i];
             }
         }
@@ -1151,7 +1155,7 @@ private class SearchSystemDefTask extends org.jdesktop.application.Task<Object, 
             Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.INFO, msg);
         }
     }
-    
+
     @Action
     public void DoneAction() {
         this.dispose();
