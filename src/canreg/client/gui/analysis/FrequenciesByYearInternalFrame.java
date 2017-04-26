@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2016 International Agency for Research on Cancer
+ * Copyright (C) 2008-2017 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -25,7 +25,6 @@
  */
 package canreg.client.gui.analysis;
 
-import au.com.bytecode.opencsv.CSVWriter;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableModel;
 import canreg.client.CanRegClientApp;
@@ -35,6 +34,7 @@ import canreg.client.gui.CanRegClientView;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.Tools;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
@@ -67,6 +67,8 @@ import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.lang.ArrayUtils;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
@@ -269,7 +271,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             filter.setRange(rangeFilterPanel.getRange());
             filter.setQueryType(DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR);
             chosenVariables = variablesChooserPanel.getSelectedVariables();
-            filter.setDatabaseVariables(chosenVariables);            
+            filter.setDatabaseVariables(chosenVariables);
         }
 
         @Override
@@ -333,7 +335,6 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                     }
                     Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
                 }
-
 
                 if (tableDataSource != null) {
                     try {
@@ -519,51 +520,56 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         CanRegClientView.showAndPositionInternalFrame(dtp, tableInternalFrame);
         popOutTableButton.setEnabled(false);
     }
-    
+
     @Action
     public void savePivotAction() {
         // createPivot("test");
     }
 
     public void createPivot(String fileName) {
-        String[] columnNames = new String[ resultTable.getColumnCount() ];
-        
+        String[] columnNames = new String[resultTable.getColumnCount()];
+
         // We need 3 columns to work with        
-        if (columnNames.length != 3) { return; }
+        if (columnNames.length != 3) {
+            return;
+        }
         // TODO Extend this to at least 4
-        
-        String[] nextLine = new String[ resultTable.getColumnCount() ];        
-        
+        String[] nextLine = new String[resultTable.getColumnCount()];
+
         // Find the column names
         for (int j = 0; j < columnNames.length; j++) {
             columnNames[j] = resultTable.getColumnName(j);
         }
-        
+
         // variable we lock
         String lockVariable = columnNames[1];
-        
+
         HashMap<String, HashMap> data = new HashMap<String, HashMap>();
         HashMap<String, String> years;
         Set<String> allYears = new TreeSet<String>();
-        
+
         // load up the data
         for (int i = 0; i < resultTable.getRowCount(); i++) {
             String year, cases, code;
-            
+
             for (int j = 0; j < nextLine.length; j++) {
                 nextLine[j] = resultTable.getValueAt(i, j).toString();
             }
             year = nextLine[0];
-            if (year.trim().length() == 0) { year = "MISSING"; }
-            
+            if (year.trim().length() == 0) {
+                year = "MISSING";
+            }
+
             allYears.add(year);
-            
+
             code = nextLine[1];
-            
-            if (code.trim().length() == 0) { code = "MISSING"; }
-            
+
+            if (code.trim().length() == 0) {
+                code = "MISSING";
+            }
+
             cases = nextLine[2];
-            
+
             years = data.get(code);
             if (years == null) {
                 years = new HashMap<String, String>();
@@ -575,61 +581,68 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         // find variables element for the lockedvariable
         DatabaseVariablesListElement lockedDatabaseVariablesListElement = null;
         for (DatabaseVariablesListElement vle : chosenVariables) {
-            if (vle.getShortName().compareToIgnoreCase(lockVariable)==0) {
+            if (vle.getShortName().compareToIgnoreCase(lockVariable) == 0) {
                 lockedDatabaseVariablesListElement = vle;
             }
-        } 
-        
-        if (lockedDatabaseVariablesListElement == null) { return; } // this happens if user has updated the selection of variables
-                
+        }
+
+        if (lockedDatabaseVariablesListElement == null) {
+            return;
+        } // this happens if user has updated the selection of variables
+
         int dictionaryID = lockedDatabaseVariablesListElement.getDictionaryID();
-        Dictionary dict = null; 
-        if (dictionaryID>=0) {
+        Dictionary dict = null;
+        if (dictionaryID >= 0) {
             dict = dictionary.get(dictionaryID);
         }
-        
-        String[] allYearsArray = allYears.toArray( new String[0] );
+
+        String[] allYearsArray = allYears.toArray(new String[0]);
         Writer writer = null;
         try {
             writer = new FileWriter(fileName);
-            CSVWriter csvwriter = new CSVWriter(writer, ',');
 
             // Write the column names
-            String[] codeArray = { lockedDatabaseVariablesListElement.getFullName(), lockVariable };
-            
-            csvwriter.writeNext((String[]) ArrayUtils.addAll(codeArray , allYearsArray));
-            
+            String[] codeArray = {lockedDatabaseVariablesListElement.getFullName(), lockVariable};
+
+            String[] headers = (String[]) ArrayUtils.addAll(codeArray, allYearsArray);
+
             String[] codes = data.keySet().toArray(new String[0]);
             Arrays.sort(codes);
-            
-            // write the rows    
-            for (String code : codes){
-               LinkedList<String> row = new LinkedList<String>();
-               if (dict!=null){
-                   DictionaryEntry dictionaryEntry = dict.getDictionaryEntry(code);
-                   if (dictionaryEntry!=null) {
-                       row.add(dictionaryEntry.getDescription());
-                   } else {
-                       row.add("");
-                   }
-               } else {
-                   row.add("");
-               }
-               row.add(code);
 
-               years = data.get(code); 
-               for (String year : allYears){
-                   String cell = years.get(year);
-                   if (cell == null){
-                       row.add("0");
-                   } else {
-                       row.add(cell);
-                   }
-               }
-               csvwriter.writeNext(row.toArray(new String[0]));
+            CSVFormat format = CSVFormat.DEFAULT
+                    .withDelimiter(',')
+                    .withHeader(headers);
+
+            CSVPrinter csvPrinter = new CSVPrinter(writer, format);
+
+            // write the rows    
+            for (String code : codes) {
+                LinkedList<String> row = new LinkedList<String>();
+                if (dict != null) {
+                    DictionaryEntry dictionaryEntry = dict.getDictionaryEntry(code);
+                    if (dictionaryEntry != null) {
+                        row.add(dictionaryEntry.getDescription());
+                    } else {
+                        row.add("");
+                    }
+                } else {
+                    row.add("");
+                }
+                row.add(code);
+
+                years = data.get(code);
+                for (String year : allYears) {
+                    String cell = years.get(year);
+                    if (cell == null) {
+                        row.add("0");
+                    } else {
+                        row.add(cell);
+                    }
+                }
+                csvPrinter.printRecord(row);
             }
-            csvwriter.flush();                    
-            
+            csvPrinter.flush();
+
         } catch (IOException ex) {
             // JOptionPane.showMessageDialog(this, "File NOT written.\n" + ex.getLocalizedMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -641,11 +654,12 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             } catch (IOException ex) {
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }        
+        }
     }
-    
+
     @Action
     public void saveTableAction() {
+        LinkedList<String> filesCreated = new LinkedList<String>();
         if (!resultTable.isVisible()) {
             refresh();
         }
@@ -667,9 +681,9 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                 try {
                     localSettings.setProperty(LocalSettings.TABLES_PATH_KEY, chooser.getSelectedFile().getParentFile().getCanonicalPath());
                     fileName = chooser.getSelectedFile().getAbsolutePath();
-                    pivotFileName = fileName+"-pivot.csv";
+                    pivotFileName = fileName + "-pivot.csv";
                     // we force the .csv ending to the file
-                    if (!(fileName.endsWith(".csv") || fileName.endsWith(".CSV"))) {                        
+                    if (!(fileName.endsWith(".csv") || fileName.endsWith(".CSV"))) {
                         fileName += ".csv";
                     }
                 } catch (IOException ex) {
@@ -680,24 +694,42 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                 return;
             }
             writer = new FileWriter(fileName);
-            CSVWriter csvwriter = new CSVWriter(writer, ',');
-            String[] nextLine = new String[resultTable.getColumnCount()];
+            // CSVWriter csvwriter = new CSVWriter(writer, ',');
+            String[] headers = new String[resultTable.getColumnCount()];
 
             // Write the column names
-            for (int j = 0; j < nextLine.length; j++) {
-                nextLine[j] = resultTable.getColumnName(j);
+            for (int j = 0; j < headers.length; j++) {
+                headers[j] = resultTable.getColumnName(j);
             }
-            csvwriter.writeNext(nextLine);
+            CSVFormat format = CSVFormat.DEFAULT
+                    .withDelimiter(',')
+                    .withHeader(headers);
+            
+            CSVPrinter csvPrinter = new CSVPrinter(writer, format);
+
+            Object[] nextLine = new String[resultTable.getColumnCount()];
+            
             // write the rows
             for (int i = 0; i < resultTable.getRowCount(); i++) {
                 for (int j = 0; j < nextLine.length; j++) {
                     nextLine[j] = resultTable.getValueAt(i, j).toString();
                 }
-                csvwriter.writeNext(nextLine);
+                csvPrinter.printRecord(nextLine);
             }
-            csvwriter.flush();
-            createPivot(pivotFileName);
-            JOptionPane.showMessageDialog(this, "File written.", "OK", JOptionPane.INFORMATION_MESSAGE);
+            csvPrinter.flush();
+            csvPrinter.close();
+            
+            // We need 3 columns to work with        
+            if (headers.length == 3) {
+                createPivot(pivotFileName);
+                filesCreated.add(pivotFileName);
+                JOptionPane.showMessageDialog(this, "Table written to file: "+fileName+"\nPivot table written to:" + pivotFileName, "OK", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "Table written to file: "+fileName, "OK", JOptionPane.INFORMATION_MESSAGE);
+            }
+            filesCreated.add(fileName);
+            
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "File NOT written.\n" + ex.getLocalizedMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -705,6 +737,9 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             try {
                 if (writer != null) {
                     writer.close();
+                }
+                for(String fn:filesCreated) {
+                    Tools.openFile(fn);
                 }
             } catch (IOException ex) {
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
