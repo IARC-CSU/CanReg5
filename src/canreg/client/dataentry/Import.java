@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2011  International Agency for Research on Cancer
+ * Copyright (C) 2008-2017  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@ import canreg.common.database.Tumour;
 import canreg.common.database.Source;
 import canreg.common.database.NameSexRecord;
 import canreg.common.database.DatabaseRecord;
-import au.com.bytecode.opencsv.CSVReader;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.common.Globals;
@@ -35,7 +34,8 @@ import canreg.common.qualitycontrol.CheckResult;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
-import java.io.BufferedReader;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,6 +57,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.csv.CSVRecord;
 import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -77,10 +78,9 @@ public class Import {
     public static String PATIENTS = "patients";
     public static String TUMOURS = "tumours";
     public static String SOURCES = "sources";
-    
 
     /**
-     * 
+     *
      * @param task
      * @param doc
      * @param map
@@ -93,9 +93,9 @@ public class Import {
      * @throws canreg.server.database.RecordLockedException
      */
     public static boolean importFile(Task<Object, String> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
-    //public static boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
+        //public static boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
         boolean success = false;
-        
+
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
 
         noNeedToLookAtPatientVariables.add(io.getPatientIDVariableName());
@@ -104,7 +104,12 @@ public class Import {
         String firstNameVariableName = io.getFirstNameVariableName();
         String sexVariableName = io.getSexVariableName();
 
-        CSVReader reader = null;
+        CSVParser parser = null;
+        CSVFormat format = CSVFormat.DEFAULT
+                .withFirstRecordAsHeader()
+                .withDelimiter(io.getSeparator());
+
+        int linesToRead = io.getMaxLines();
 
         HashMap mpCodes = new HashMap();
 
@@ -113,27 +118,21 @@ public class Import {
         Map<String, Integer> nameSexTable = server.getNameSexTables();
 
         try {
-            FileInputStream fis = new FileInputStream(file);
-            BufferedReader bsr = new BufferedReader(new InputStreamReader(fis, io.getFileCharset()));
+//            FileInputStream fis = new FileInputStream(file);
+            //           BufferedReader bsr = new BufferedReader(new InputStreamReader(fis, io.getFileCharset()));
 
             // Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}");
-
             int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath());
 
-
-            reader = new CSVReader(bsr, io.getSeparator());
-            String[] lineElements;
-
-            int linesToRead = io.getMaxLines();
-            if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
+            if (linesToRead > 0) {
+                linesToRead = Math.min(numberOfRecordsInFile, linesToRead);
+            } else {
                 linesToRead = numberOfRecordsInFile;
             }
 
+            parser = CSVParser.parse(file, io.getFileCharset(), format);
 
-            // skip the first line
-            reader.readNext();
-
-            while ((lineElements = reader.readNext()) != null && (numberOfLinesRead < linesToRead)) {
+            for (CSVRecord csvRecord : parser) {
                 numberOfLinesRead++;
                 // We allow for null tasks...
                 boolean needToSavePatientAgain = true;
@@ -148,18 +147,18 @@ public class Import {
                 for (int i = 0; i < map.size(); i++) {
                     Relation rel = map.get(i);
                     if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
-                        if (rel.getFileColumnNumber() < lineElements.length) {
+                        if (rel.getFileColumnNumber() < csvRecord.size()) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                if (csvRecord.get(rel.getFileColumnNumber()).length() > 0) {
                                     try {
-                                        patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                        patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
                                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
                                     }
                                 }
                             } else {
-                                patient.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(lineElements[rel.getFileColumnNumber()]));
+                                patient.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
                             Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with patient part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
@@ -171,19 +170,19 @@ public class Import {
                 // Build tumour part
                 Tumour tumour = new Tumour();
                 for (canreg.client.dataentry.Relation rel : map) {
-                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour") && rel.getFileColumnNumber() < lineElements.length) {
-                        if (rel.getFileColumnNumber() < lineElements.length) {
+                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
+                        if (rel.getFileColumnNumber() < csvRecord.size()) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                if (csvRecord.get(rel.getFileColumnNumber()).length() > 0) {
                                     try {
-                                        tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                        tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
                                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
                                     }
                                 }
                             } else {
-                                tumour.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(lineElements[rel.getFileColumnNumber()]));
+                                tumour.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
                             Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with tumour part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
@@ -195,19 +194,19 @@ public class Import {
                 Set<Source> sources = Collections.synchronizedSet(new LinkedHashSet<Source>());
                 Source source = new Source();
                 for (canreg.client.dataentry.Relation rel : map) {
-                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME) && rel.getFileColumnNumber() < lineElements.length) {
-                        if (rel.getFileColumnNumber() < lineElements.length) {
+                    if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+                        if (rel.getFileColumnNumber() < csvRecord.size()) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                if (csvRecord.get(rel.getFileColumnNumber()).length() > 0) {
                                     try {
-                                        source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                        source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
                                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
                                     }
                                 }
                             } else {
-                                source.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(lineElements[rel.getFileColumnNumber()]));
+                                source.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
                             Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with source part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
@@ -237,7 +236,6 @@ public class Import {
                     patient.setVariable(io.getPatientUpdateDateVariableName(), updateDate);
 
                     // Set the patientID the same as the tumourID initially
-
                     // Object tumourSequence = tumour.getVariable(io.getTumourSequenceVariableName());
                     Object tumourSequence = "1";
 
@@ -308,7 +306,6 @@ public class Import {
                     // Set the deprecated flag to 0 - no obsolete records from CR4
                     tumour.setVariable(io.getObsoleteTumourFlagVariableName(), "0");
                     patient.setVariable(io.getObsoletePatientFlagVariableName(), "0");
-
 
                 }
 
@@ -395,9 +392,9 @@ public class Import {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
             success = false;
         } finally {
-            if (reader != null) {
+            if (parser != null) {
                 try {
-                    reader.close();
+                    parser.close();
                 } catch (IOException ex) {
                     Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -424,7 +421,13 @@ public class Import {
 
         String[] lineElements;
         ResultCode worstResultCodeFound;
-        CSVReader csvReader = null;
+//         CSVReader reader = null;
+        CSVParser parser = null;
+        CSVFormat format = CSVFormat.DEFAULT
+                .withFirstRecordAsHeader()
+                .withDelimiter(io.getSeparators()[0]);
+
+        int linesToRead = io.getMaxLines();
 
         try {
             // first we get the patients
@@ -437,25 +440,20 @@ public class Import {
                 FileInputStream patientFIS = new FileInputStream(files[0]);
                 InputStreamReader patientISR = new InputStreamReader(patientFIS, io.getFileCharsets()[0]);
 
-                csvReader = new CSVReader(patientISR, io.getSeparators()[0]);
-
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", patientISR.getEncoding());
 
                 int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[0].getAbsolutePath());
-                int linesToRead = io.getMaxLines();
+
                 numberOfLinesRead = 0;
-                // Skip first line
-                csvReader.readNext();
 
-                // patientNumber
-
-                if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
+                if (linesToRead > 0) {
+                    linesToRead = Math.min(numberOfRecordsInFile, linesToRead);
+                } else {
                     linesToRead = numberOfRecordsInFile;
                 }
+                parser = CSVParser.parse(files[0], io.getFileCharsets()[0], format);
 
-                lineElements = csvReader.readNext();
-
-                while (lineElements != null && (numberOfLinesRead < linesToRead)) {
+                for (CSVRecord csvRecord : parser) {
                     // We allow for null tasks...
                     boolean savePatient = true;
                     boolean deletePatient = false;
@@ -472,16 +470,16 @@ public class Import {
                         Relation rel = map.get(i);
                         if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                if (csvRecord.get(rel.getFileColumnNumber()).length() > 0) {
                                     try {
-                                        patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                        patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
                                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
                                     }
                                 }
                             } else {
-                                patient.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
+                                patient.setVariable(rel.getDatabaseVariableName(), csvRecord.get(rel.getFileColumnNumber()));
                             }
                         }
                         if (task != null) {
@@ -510,7 +508,6 @@ public class Import {
                     } catch (UnknownTableException ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
 
                     if (oldPatientRecord != null) {
                         // deal with discrepancies                        
@@ -564,8 +561,6 @@ public class Import {
                         task.firePropertyChange(RECORD, 100, 75);
                     }
 
-                    //Read next line of data
-                    lineElements = csvReader.readNext();
                     numberOfLinesRead++;
 
                     if (Thread.interrupted()) {
@@ -574,7 +569,7 @@ public class Import {
                         throw new InterruptedException();
                     }
                 }
-                csvReader.close();
+                parser.close();
                 reportWriter.write("Finished reading patients." + Globals.newline + Globals.newline);
                 reportWriter.flush();
             }
@@ -584,10 +579,10 @@ public class Import {
             }
 
             // then we get the tumours            
-            if (task != null) {    
+            if (task != null) {
                 task.firePropertyChange(TUMOURS, 0, 0);
             }
-            
+
             if (files[1] != null) {
                 reportWriter.write("Starting to import tumours from " + files[1].getAbsolutePath() + Globals.newline);
 
@@ -596,23 +591,23 @@ public class Import {
 
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", tumourISR.getEncoding());
 
-                int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[1].getAbsolutePath());
-                int linesToRead = io.getMaxLines();
-                
                 numberOfLinesRead = 0;
 
-                csvReader = new CSVReader(tumourISR, io.getSeparators()[1]);
+                int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[1].getAbsolutePath());
 
-                // Skip first line
-                csvReader.readNext();
-
-                if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
+                if (linesToRead > 0) {
+                    linesToRead = Math.min(numberOfRecordsInFile, linesToRead);
+                } else {
                     linesToRead = numberOfRecordsInFile;
                 }
 
-                lineElements = csvReader.readNext();
+                format = CSVFormat.DEFAULT
+                        .withFirstRecordAsHeader()
+                        .withDelimiter(io.getSeparators()[1]);
 
-                while (lineElements != null && (numberOfLinesRead < linesToRead)) {
+                parser = CSVParser.parse(files[1], io.getFileCharsets()[1], format);
+
+                for (CSVRecord csvRecord : parser) {
                     // We allow for null tasks...
                     boolean saveTumour = true;
                     boolean deleteTumour = false;
@@ -627,9 +622,9 @@ public class Import {
                         Relation rel = map.get(i);
                         if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                if (csvRecord.get(rel.getFileColumnNumber()).length() > 0) {
                                     try {
-                                        tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                        tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
                                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
@@ -637,7 +632,7 @@ public class Import {
                                 }
                             } else {
                                 tumour.setVariable(rel.getDatabaseVariableName(),
-                                        lineElements[rel.getFileColumnNumber()]);
+                                        csvRecord.get(rel.getFileColumnNumber()));
                             }
                         }
                         if (task != null) {
@@ -786,7 +781,7 @@ public class Import {
                         task.firePropertyChange(RECORD, 75, 100);
                     }
                     //Read next line of data
-                    lineElements = csvReader.readNext();
+
                     numberOfLinesRead++;
 
                     if (Thread.interrupted()) {
@@ -795,7 +790,7 @@ public class Import {
                         throw new InterruptedException();
                     }
                 }
-                csvReader.close();
+                parser.close();
                 reportWriter.write("Finished reading tumours." + Globals.newline + Globals.newline);
                 reportWriter.flush();
             }
@@ -815,44 +810,45 @@ public class Import {
 
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", sourceISR.getEncoding());
 
-                int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[2].getAbsolutePath());
-                int linesToRead = io.getMaxLines();
                 numberOfLinesRead = 0;
-                
-                csvReader = new CSVReader(sourceISR, io.getSeparators()[2]);
 
-                // Skip first line
-                csvReader.readNext();
+                int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[2].getAbsolutePath());
 
-                if (linesToRead == -1 || linesToRead > numberOfRecordsInFile) {
+                if (linesToRead > 0) {
+                    linesToRead = Math.min(numberOfRecordsInFile, linesToRead);
+                } else {
                     linesToRead = numberOfRecordsInFile;
                 }
 
-                lineElements = csvReader.readNext();
+                format = CSVFormat.DEFAULT
+                        .withFirstRecordAsHeader()
+                        .withDelimiter(io.getSeparators()[2]);
 
-                while (lineElements != null && (numberOfLinesRead < linesToRead)) {
+                parser = CSVParser.parse(files[2], io.getFileCharsets()[2], format);
+
+                for (CSVRecord csvRecord : parser) {
                     // We allow for null tasks...
                     if (task != null) {
                         task.firePropertyChange(PROGRESS, 67 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 67 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
                         task.firePropertyChange(SOURCES, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
                     }
-                    
+
                     // Build source part
                     Source source = new Source();
                     for (int i = 0; i < map.size(); i++) {
                         Relation rel = map.get(i);
                         if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                                if (lineElements[rel.getFileColumnNumber()].length() > 0) {
+                                if (csvRecord.get(rel.getFileColumnNumber()).length() > 0) {
                                     try {
-                                        source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(lineElements[rel.getFileColumnNumber()]));
+                                        source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
                                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
                                     }
                                 }
                             } else {
-                                source.setVariable(rel.getDatabaseVariableName(), lineElements[rel.getFileColumnNumber()]);
+                                source.setVariable(rel.getDatabaseVariableName(), csvRecord.get(rel.getFileColumnNumber()));
                             }
                         }
                         if (task != null) {
@@ -881,12 +877,12 @@ public class Import {
                         task.firePropertyChange(RECORD, 50, 75);
                     }
                     boolean addSource = true;
-                    
+
                     if (tumour != null) {
                         Set<Source> sources = tumour.getSources();
                         Object sourceRecordID = source.getVariable(io.getSourceIDVariablename());
                         // look for source in sources
-                        for (Source oldSource:sources){
+                        for (Source oldSource : sources) {
                             if (oldSource.getVariable(io.getSourceIDVariablename()).equals(sourceRecordID)) {
                                 // deal with discrepancies
                                 switch (io.getDiscrepancies()) {
@@ -911,7 +907,7 @@ public class Import {
                         }
                         if (addSource) {
                             sources.add(source);
-                        }                        
+                        }
                         tumour.setSources(sources);
                         if (!io.isTestOnly()) {
                             server.editTumour(tumour);
@@ -923,7 +919,7 @@ public class Import {
                         task.firePropertyChange(RECORD, 75, 100);
                     }
                     //Read next line of data
-                    lineElements = csvReader.readNext();
+
                     numberOfLinesRead++;
 
                     if (Thread.interrupted()) {
@@ -934,7 +930,7 @@ public class Import {
                 }
                 reportWriter.write("Finished reading sources." + Globals.newline + Globals.newline);
                 reportWriter.flush();
-                csvReader.close();
+                parser.close();
             }
             if (task != null) {
                 task.firePropertyChange(SOURCES, 100, 100);
@@ -957,23 +953,21 @@ public class Import {
                     ex);
             success = false;
         } finally {
-            if (csvReader != null) {
+            if (parser != null) {
                 try {
-                    csvReader.close();
+                    parser.close();
                 } catch (IOException ex) {
                     Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            if (reportWriter != null) {
-                try {
-                    reportWriter.flush();
-                    reportWriter.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            try {
+                reportWriter.flush();
+                reportWriter.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        if (task!=null){
+        if (task != null) {
             task.firePropertyChange(PROGRESS, 100, 100);
             task.firePropertyChange("finished", null, null);
         }
@@ -981,7 +975,7 @@ public class Import {
     }
 
     /**
-     * 
+     *
      * @param doc
      * @param lineElements
      * @return
