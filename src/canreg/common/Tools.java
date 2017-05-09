@@ -133,6 +133,9 @@ public class Tools {
      * @return
      */
     public static PersonSearchVariable[] getPersonSearchVariables(Document doc, String namespace) {
+        if (doc == null) {
+            return new PersonSearchVariable[0];
+        }
         DatabaseVariablesListElement[] variables = getVariableListElements(doc, namespace);
         NodeList nl = doc.getElementsByTagName(namespace + "search_variable");
         PersonSearchVariable[] searchVariables = new PersonSearchVariable[nl.getLength()];
@@ -181,6 +184,9 @@ public class Tools {
     }
 
     public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace) {
+        if (doc == null) {
+            return new DatabaseVariablesListElement[0];
+        }
         TreeMap<String, DatabaseDictionaryListElement> dictionaryMap = new TreeMap<String, DatabaseDictionaryListElement>();
         for (DatabaseDictionaryListElement dictionary : getDictionaryListElements(doc, namespace)) {
             dictionaryMap.put(dictionary.getName(), dictionary);
@@ -201,6 +207,9 @@ public class Tools {
      * @return
      */
     public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace, TreeMap<String, DatabaseDictionaryListElement> dictionaryMap, TreeMap<String, DatabaseGroupsListElement> groupsMap) {
+        if (doc == null) {
+            return new DatabaseVariablesListElement[0];
+        }
         LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
                 
         String dateFormatString = localSettings.getDateFormatString();
@@ -294,6 +303,9 @@ public class Tools {
      * @return
      */
     public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace, String tableName) {
+        if (doc == null) {
+            return new DatabaseVariablesListElement[0];
+        }
         DatabaseVariablesListElement[] variablesInTable = getVariableListElements(doc, namespace);
         LinkedList<DatabaseVariablesListElement> tempVariablesInTable = new LinkedList<DatabaseVariablesListElement>();
         for (DatabaseVariablesListElement variablesInTable1 : variablesInTable) {
@@ -321,6 +333,9 @@ public class Tools {
      * @return
      */
     public static DatabaseIndexesListElement[] getIndexesListElements(Document doc, String namespace, TreeMap<String, DatabaseVariablesListElement> variablesMap) {
+        if (doc == null) {
+            return new DatabaseIndexesListElement[0];
+        }
         NodeList nl = doc.getElementsByTagName(namespace + "index");
         if (variablesMap == null) {
             variablesMap = buildVariablesMap(getVariableListElements(doc, namespace));
@@ -435,6 +450,9 @@ public class Tools {
      * @return
      */
     public static DatabaseDictionaryListElement[] getDictionaryListElements(Document doc, String namespace) {
+        if (doc == null) {
+            return new DatabaseDictionaryListElement[0];
+        }
         NodeList nl = doc.getElementsByTagName(namespace + "dictionary");
         DatabaseDictionaryListElement[] dictionaries = new DatabaseDictionaryListElement[nl.getLength()];
         for (int i = 0; i < nl.getLength(); i++) {
@@ -469,6 +487,9 @@ public class Tools {
      * @return
      */
     public static DatabaseGroupsListElement[] getGroupsListElements(Document doc, String namespace) {
+        if (doc == null) {
+            return new DatabaseGroupsListElement[0];
+        }
         NodeList nl = doc.getElementsByTagName(namespace + "group");
         DatabaseGroupsListElement[] indexes = new DatabaseGroupsListElement[nl.getLength()];
         for (int i = 0; i < nl.getLength(); i++) {
@@ -494,7 +515,6 @@ public class Tools {
                     position);
         }
         Arrays.sort(indexes, new Comparator() {
-
             @Override
             public int compare(Object o1, Object o2) {
                 DatabaseGroupsListElement group1 = (DatabaseGroupsListElement) o1;
@@ -768,6 +788,9 @@ public class Tools {
 
     public static Charset getStandardCharset(Document doc, String namespace) {
         Charset standardEncoding = Charset.defaultCharset();
+        if (doc == null) {
+            return standardEncoding;
+        }
         NodeList nl = doc.getElementsByTagName(namespace + "data_entry_language");
         if (nl.getLength() > 0) {
             String dataEntryLanguage = nl.item(0).getTextContent();

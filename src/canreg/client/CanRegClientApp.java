@@ -109,7 +109,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private static LocalSettings localSettings;
     private DateFormat dateFormat;
     /**
-     * 
+     *
      */
     public boolean loggedIn = false;
     private CanRegClientView canRegClientView;
@@ -212,6 +212,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     /**
      * Save a new population dataset on the server
+     *
      * @param pds Population Data Set to save
      * @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
@@ -271,7 +272,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
         ExitListener maybeExit;
         maybeExit = new ExitListener() {
-            
+
             @Override
             public boolean canExit(EventObject e) {
                 int option = JOptionPane.NO_OPTION;
@@ -282,25 +283,23 @@ public class CanRegClientApp extends SingleFrameApplication {
                     } else {
                         option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
                     }
-                } else {
-                    if (loggedIn) {
-                        int users = 0;
-                        try {
-                            users = listUsersLoggedIn().length - 1;
-                        } catch (SecurityException ex) {
-                            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (RemoteException ex) {
-                            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        int numberOfRecordsOpen = numberOfRecordsOpen();
-                        if (numberOfRecordsOpen > 0) {
-                            option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + users + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_OTHERS_WILL_BE_DISCONNECTED.") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("YOU_HAVE_") + numberOfRecordsOpen + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_RECORDS_OPEN.") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
-                        } else {
-                            option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + users + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_OTHERS_WILL_BE_DISCONNECTED."), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
-                        }
-                    } else {
-                        option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_OTHERS_WILL_BE_DISCONNECTED."), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
+                } else if (loggedIn) {
+                    int users = 0;
+                    try {
+                        users = listUsersLoggedIn().length - 1;
+                    } catch (SecurityException ex) {
+                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    int numberOfRecordsOpen = numberOfRecordsOpen();
+                    if (numberOfRecordsOpen > 0) {
+                        option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + users + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_OTHERS_WILL_BE_DISCONNECTED.") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("YOU_HAVE_") + numberOfRecordsOpen + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_RECORDS_OPEN.") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
+                    } else {
+                        option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + users + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_OTHERS_WILL_BE_DISCONNECTED."), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
+                    }
+                } else {
+                    option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_OTHERS_WILL_BE_DISCONNECTED."), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
                 }
                 return option == JOptionPane.YES_OPTION;
             }
@@ -339,7 +338,8 @@ public class CanRegClientApp extends SingleFrameApplication {
      * This method is to initialize the specified window by injecting resources.
      * Windows shown in our application come fully initialized from the GUI
      * builder, so this additional configuration is not needed.
-     * @param root 
+     *
+     * @param root
      */
     @Override
     protected void configureWindow(java.awt.Window root) {
@@ -347,6 +347,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     /**
      * A convenient static getter for the application instance.
+     *
      * @return the instance of CanRegClientApp
      */
     public static CanRegClientApp getApplication() {
@@ -384,6 +385,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     /**
      * Test the connection to a server
+     *
      * @param serverObjectString The address to a server
      * @return name of the system, null if not able to connect
      */
@@ -415,7 +417,8 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param username The username of the user
      * @param password The password of the user
      * @return CanReg System's na
-     * @throws javax.security.auth.login.LoginException  if successfull - null if not
+     * @throws javax.security.auth.login.LoginException if successfull - null if
+     * not
      * @throws java.lang.NullPointerException
      * @throws java.rmi.NotBoundException
      * @throws java.net.MalformedURLException
@@ -501,6 +504,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     /**
      * Get list of users logged in to the CanReg server
+     *
      * @return List of users logged in
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -530,6 +534,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     /**
      * Start the database server
+     *
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -546,6 +551,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     /**
      * Stop the database server
+     *
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -561,7 +567,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public LocalSettings getLocalSettings() {
@@ -569,7 +575,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Document getDatabseDescription() {
@@ -577,7 +583,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Map<Integer, Dictionary> getDictionary() {
@@ -585,7 +591,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
@@ -601,7 +607,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      */
     public void applyPreferences() {
         Locale.setDefault(localSettings.getLocale());
@@ -610,7 +616,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
         String fontName = "Tahoma";
         int fontSizeInt = 11;
-        
+
         boolean setFont = false;
         if (fontNameCode != null && fontNameCode.length() > 0 && !fontNameCode.equalsIgnoreCase(LocalSettings.FONT_NAME_DEFAULT)) {
             setFont = true;
@@ -618,9 +624,9 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
         if (fontSize != null && fontSize.length() > 0 && !fontSize.equalsIgnoreCase(LocalSettings.FONT_SIZE_MEDIUM)) {
             setFont = true;
-            if (fontSize.equalsIgnoreCase(LocalSettings.FONT_SIZE_BIG)){
+            if (fontSize.equalsIgnoreCase(LocalSettings.FONT_SIZE_BIG)) {
                 fontSizeInt = 14;
-            } else if (fontSize.equalsIgnoreCase(LocalSettings.FONT_SIZE_SMALL)){
+            } else if (fontSize.equalsIgnoreCase(LocalSettings.FONT_SIZE_SMALL)) {
                 fontSizeInt = 10;
             }
         }
@@ -648,19 +654,19 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param task
      * @param doc
      * @param map
      * @param file
      * @param io
-     * @return 
+     * @return
      * @throws java.sql.SQLException
      * @throws java.rmi.RemoteException
      * @throws canreg.server.database.RecordLockedException
      */
     public boolean importFile(Task<Object, String> task, Document doc, List<Relation> map, File file, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
-    //public boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, Document doc, List<Relation> map, File file, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
+        //public boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, Document doc, List<Relation> map, File file, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
         try {
             return canreg.client.dataentry.Import.importFile(task, doc, map, file, server, io);
             //return canreg.client.dataentry.Convert.importFile(task, doc, map, file, server, io);
@@ -692,7 +698,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param map
      * @param files
      * @param io
-     * @return 
+     * @return
      * @throws java.sql.SQLException
      * @throws java.rmi.RemoteException
      * @throws canreg.server.database.RecordLockedException
@@ -710,18 +716,18 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param task
      * @param filepath
      * @param dictionaryfile
      * @param regcode
-     * @return 
+     * @return
      */
     //public boolean convertDictionary(Task<Object, String> task, String filepath, String dictionaryfile, String regcode) {
     public boolean convertDictionary(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, String filepath, String dictionaryfile, String regcode) {
-       boolean dicsuccess = false;
-       dicsuccess =  canreg.client.dataentry.Convert.convertDictionary(task, filepath, dictionaryfile, regcode);
-       return dicsuccess;
+        boolean dicsuccess = false;
+        dicsuccess = canreg.client.dataentry.Convert.convertDictionary(task, filepath, dictionaryfile, regcode);
+        return dicsuccess;
     }
 
     /**
@@ -730,14 +736,13 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param filepath
      * @param datafile
      * @param regcode
-     * @return 
+     * @return
      */
     public boolean convertData(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, String filepath, String datafile, String regcode) {
-       boolean datsuccess = false;
-       try {
-            datsuccess =  canreg.client.dataentry.Convert.convertData(task, filepath, datafile, regcode);
-        }
-        catch(Exception ex) {
+        boolean datsuccess = false;
+        try {
+            datsuccess = canreg.client.dataentry.Convert.convertData(task, filepath, datafile, regcode);
+        } catch (Exception ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         }
         return datsuccess;
@@ -747,7 +752,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      *
      * @param task
      * @param dictionaryfile
-     * @return 
+     * @return
      */
     //public Map importDictionary(Task<Object, String> task, String dictionaryfile) {
     public Map importDictionary(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, String dictionaryfile) {
@@ -758,7 +763,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param canregServerRunningInThisThread
      */
     public void setCanregServerRunningInThisThread(boolean canregServerRunningInThisThread) {
@@ -766,7 +771,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param evt
      */
     @Action
@@ -782,7 +787,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @throws java.rmi.RemoteException
      */
     public void logOut() throws RemoteException {
@@ -810,7 +815,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public boolean isLoggedIn() {
@@ -818,7 +823,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Globals.UserRightLevels getUserRightLevel() {
@@ -840,9 +845,8 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
+     *
+     * @return @throws java.rmi.RemoteException
      */
     public String performBackup() throws RemoteException {
         String path = null;
@@ -858,7 +862,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param path
      * @return
      * @throws java.lang.SecurityException
@@ -883,7 +887,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public boolean isCanregServerRunningInThisThread() {
@@ -891,7 +895,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public boolean isCanRegServerRunningOnThisMachine() {
@@ -899,14 +903,15 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param filter
      * @param tableName
      * @return
      * @throws java.sql.SQLException
      * @throws java.rmi.RemoteException
      * @throws canreg.server.database.UnknownTableException
-     * @throws canreg.common.cachingtableapi.DistributedTableDescriptionException
+     * @throws
+     * canreg.common.cachingtableapi.DistributedTableDescriptionException
      * @throws java.lang.SecurityException
      */
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, SecurityException, UnknownTableException, DistributedTableDescriptionException, RemoteException {
@@ -922,7 +927,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param recordID
      * @param tableName
      * @param lock
@@ -948,9 +953,9 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param databaseRecord
-     * @return 
+     * @return
      * @throws java.lang.SecurityException
      * @throws java.sql.SQLException
      * @throws canreg.server.database.RecordLockedException
@@ -988,7 +993,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param databaseRecord
      * @throws java.lang.SecurityException
      * @throws canreg.server.database.RecordLockedException
@@ -1054,7 +1059,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param dictionaryID
      * @return
      * @throws java.lang.SecurityException
@@ -1073,9 +1078,8 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
-     * @return
-     * @throws java.lang.SecurityException
+     *
+     * @return @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
     public boolean clearNameSexTable() throws SecurityException, RemoteException {
@@ -1091,9 +1095,8 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
-     * @return
-     * @throws java.lang.SecurityException
+     *
+     * @return @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
     public Map<String, Integer> getNameSexTables() throws SecurityException, RemoteException {
@@ -1109,7 +1112,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param entry
      * @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
@@ -1126,14 +1129,15 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param idString
      * @param lock
      * @return
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      * @throws canreg.server.database.RecordLockedException
-     * @throws canreg.common.cachingtableapi.DistributedTableDescriptionException
+     * @throws
+     * canreg.common.cachingtableapi.DistributedTableDescriptionException
      * @throws canreg.server.database.UnknownTableException
      * @throws java.sql.SQLException
      */
@@ -1309,7 +1313,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public GlobalToolBox getGlobalToolBox() {
@@ -1320,9 +1324,8 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
-     * @return
-     * @throws java.lang.SecurityException
+     *
+     * @return @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
     public Map<Integer, PopulationDataset> getPopulationDatasets() throws SecurityException, RemoteException {
@@ -1338,7 +1341,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param resultSetID
      * @param from
      * @param to
@@ -1360,7 +1363,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param resultSetID
      * @throws java.lang.SecurityException
      * @throws java.sql.SQLException
@@ -1378,9 +1381,8 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
-     * @return
-     * @throws java.lang.SecurityException
+     *
+     * @return @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
     public Date getDateOfLastBackUp() throws SecurityException, RemoteException {
@@ -1400,7 +1402,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param patient
      * @param searcher
      * @return
@@ -1420,7 +1422,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param patient
      * @param tumour
      * @return
@@ -1430,7 +1432,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param conversionName
      * @param patient
      * @param tumour
@@ -1441,7 +1443,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * 
+     *
      * @param searcher
      * @param rangeStart
      * @param rangeEnd
@@ -1509,6 +1511,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     /**
      * Main method launching the application.
+     *
      * @param args
      */
     public static void main(String[] args) {
@@ -1711,8 +1714,12 @@ public class CanRegClientApp extends SingleFrameApplication {
     public void setUIFont(String fontName, int fontSize) {
         UITools.setUIFont(new javax.swing.plaf.FontUIResource(new Font(fontName, Font.PLAIN, fontSize)));
     }
-    
-    public JDesktopPane getDeskTopPane(){
-        return canRegClientView.getDesktopPane();
+
+    public JDesktopPane getDeskTopPane() {
+        if (canRegClientView == null) {
+            return null;
+        } else {
+            return canRegClientView.getDesktopPane();
+        }
     }
 }

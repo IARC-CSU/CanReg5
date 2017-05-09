@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2017  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
  */
 package canreg.client.gui.dataentry;
 
-// import canreg.client.gui.components.VariableMappingPanel;
 import canreg.client.LocalSettings;
 import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseVariablesListElement;
@@ -81,15 +80,15 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     private File patientInFile;
     private File tumourInFile;
     private File sourceInFile;
-    private Document doc;
-    private DatabaseVariablesListElement[] patientVariablesInDB;
-    private DatabaseVariablesListElement[] tumourVariablesInDB;
-    private DatabaseVariablesListElement[] sourceVariablesInDB;
-    private String path;
-    private LocalSettings localSettings;
-    private GlobalToolBox globalToolBox;
+    private final Document doc;
+    private final DatabaseVariablesListElement[] patientVariablesInDB;
+    private final DatabaseVariablesListElement[] tumourVariablesInDB;
+    private final DatabaseVariablesListElement[] sourceVariablesInDB;
+    private final String path;
+    private final LocalSettings localSettings;
+    private final GlobalToolBox globalToolBox;
     private Task importTask;
-    private JFileChooser chooser;
+    private final JFileChooser chooser;
     private boolean reportFileNameSet = false;
 
     /** Creates new form ImportView */

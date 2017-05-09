@@ -1,10 +1,11 @@
 This Would be a basic in introduction, the text in each section can be edit by editing the file:
-C:\Projects\CanReg5\conf\tables\r\report_text\section_name.txt. 
+<CanReg5 installation folder>\conf\tables\r\report_text\section_name.txt. 
+(This will be moved to a user folder eventually...)
 
 Here's an example:
 
 My country is the nice and sweet, you can see funny animals sometimes.
-People are getting old and happy, drinking soda, smoking cigarettes... Like Rich people..
+People are getting old and happy, drinking soda, smoking cigarettes...
 Cancer is coming as sure as winter! 
 
 Plan A: Find a nice looking princess controlling giant dragons, and if possible a funny talkative imp. 
