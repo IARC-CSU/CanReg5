@@ -10,14 +10,6 @@
   source(paste(sep="/", script.basename, "Rcan_source.r"))
   ################
 
-  
-	## Merge inc and pop
-	dt_all <- csu_merge_inc_pop(
-		inc_file =inc,
-		pop_file =pop,
-		var_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX"), 
-		column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL"))
-		)
     
 	##Prepare canreg data for ageSpecific rate
 	dt_all <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE)
