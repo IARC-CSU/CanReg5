@@ -1983,7 +1983,6 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
   # 6 inch = 15.24 cm
   #10,795
     
-  paper <- ifelse(landscape, "a4r", "a4")
   png_width <- ifelse(landscape, 2339 , 1654 )
   png_height <- ifelse(landscape, 1654 , 2339 )
   png_width_600 <- ifelse(landscape, 3600 , 2549 )
@@ -1992,8 +1991,8 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
   tiff_height <- ifelse(landscape, 2480 , 3508 )
   svg_width <- ifelse(landscape, 11.692 , 8.267 )
   svg_height <- ifelse(landscape, 8.267 , 11.692 )
-  pdf_width <- ifelse(landscape, 11.692 , 8.267 )    # Needs tuning of margins
-  pdf_height <- ifelse(landscape, 8.267 , 11.692 )   # Needs tuning of margins
+  pdf_width <- ifelse(landscape, 11.692 , 8.267 )    
+  pdf_height <- ifelse(landscape, 8.267 , 11.692 )   
   file_number <- ifelse(list_graph, "%03d", "")
   
   
