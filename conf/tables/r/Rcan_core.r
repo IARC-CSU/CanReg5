@@ -1404,10 +1404,12 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
                                         canreg_report=FALSE) {
   
   
-  dt_rank <- dt[, list(total= sum(CASES)), by=c(var_by, "cancer_label")]
-  dt_rank[, cancer_rank:= frank(-total, ties.method="min"), by=var_by]
-  dt_rank <- dt_rank[cancer_rank <= nb_top,c(var_by, "cancer_label", "cancer_rank"), with=FALSE] 
-  dt <- merge(dt_rank, dt,by= c("SEX", "cancer_label"), all.x=TRUE)
+  
+  dt <- canreg_rank(dt, var_value = var_cases, var_rank = "cancer_label",group_by = "SEX", number = nb_top) 
+  
+
+  
+  
   dt$cancer_label <-csu_legend_wrapper(dt$cancer_label, 14)
   
   
@@ -1418,14 +1420,14 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
     dt[, AGE_GROUP_LABEL := paste0("'",AGE_GROUP_LABEL,"'")]
     dt <- dt[, c("cancer_label",
                  "ICD10GROUP",
-                 "cancer_rank",
+                 "CSU_RANK",
                  "SEX",
                  "AGE_GROUP",
                  "AGE_GROUP_LABEL",
                  "CASES",
                  "COUNT",
                  "rate"), with=FALSE]
-    setkeyv(dt, c("SEX","cancer_rank","ICD10GROUP" ,"AGE_GROUP" ))
+    setkeyv(dt, c("SEX","CSU_RANK","ICD10GROUP" ,"AGE_GROUP" ))
     return(dt)
     stop() 
   }
@@ -1447,7 +1449,7 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
 
     
     dt_plot <- dt[get(var_by) == i]
-    dt_label_order <- setkey(unique(dt_plot[, c("cancer_label", "cancer_rank"), with=FALSE]), cancer_rank)
+    dt_label_order <- setkey(unique(dt_plot[, c("cancer_label", "CSU_RANK"), with=FALSE]), CSU_RANK)
     dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = dt_label_order$cancer_label) 
     plotlist[[j]] <- csu_ageSpecific_core(dt_plot,
                                           var_age=var_age,
@@ -1512,19 +1514,16 @@ canreg_bar_top <- function(df_data,
   
   plot_subtitle <- paste("top",nb_top,"cancer sites")
   
-  dt_rank <- dt[, list(asr_both=sum(CSU_ASR)), by=CSU_BAR]
-  dt_rank <- dt_rank[asr_both > 0,]
-  dt_rank[, cancer_rank:= frank(-asr_both, ties.method="min"),]
-  dt_rank <- dt_rank[cancer_rank <= nb_top,]
-  dt <- merge(dt_rank, dt,by=c("CSU_BAR"), all.x=TRUE)
+  dt <- canreg_rank(dt, var_value = "CSU_ASR", var_rank = "CSU_BAR",number = nb_top)
+  
   
   
   if (return_data) {
-    dt[, asr_both := NULL]
+    dt[, rank_value := NULL]
     setnames(dt, "CSU_BAR",var_bar)
     setnames(dt, "CSU_BY", var_by)
     setnames(dt, "CSU_ASR", var_top)
-    setkeyv(dt, c("cancer_rank",var_bar))
+    setkeyv(dt, c("CSU_RANK",var_bar))
     return(dt)
     stop() 
   }
@@ -1536,9 +1535,9 @@ canreg_bar_top <- function(df_data,
   dt[CSU_BY==levels(dt$CSU_BY)[[2]], asr_plot:= CSU_ASR]
   
   dt$CSU_BAR <- factor(dt$CSU_BAR)
-  factor_order <- unique(dt[, c("CSU_BAR", "cancer_rank"), with=FALSE])
+  factor_order <- unique(dt[, c("CSU_BAR", "CSU_RANK"), with=FALSE])
   dt$CSU_BAR <- factor(dt$CSU_BAR,
-                       levels = rev(setkeyv(factor_order, "cancer_rank")$CSU_BAR)) 
+                       levels = rev(setkeyv(factor_order, "CSU_RANK")$CSU_BAR)) 
   
   tick_minor_list <- csu_tick_generator(max = max(dt$CSU_ASR), 0)$tick_list
   nb_tick <- length(tick_minor_list) 
@@ -1977,6 +1976,9 @@ canreg_cases_age_pie <- function(
   
 }
 
+
+
+
 canreg_asr_trend_top <- function(dt, var_asr="asr", 
                                  var_cases= "CASES", 
                                  var_year= "YEAR",
@@ -1991,12 +1993,13 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                                  canreg_report=FALSE) {
   
   
-  dt <- as.data.table(dt)
-  dt_rank <- dt[, list(rank_value=sum(get(var_cases))), by=c(group_by, "SEX")]
-  dt_rank <- dt_rank[rank_value > 0,]
-  dt_rank[, rank_pos:= frank(-rank_value, ties.method="min"),by=c( "SEX")]
-  dt_rank <- dt_rank[rank_pos <= number,]
-  dt <- merge(dt_rank, dt,by=c(group_by, "SEX"), all.x=TRUE)
+  dt <- canreg_rank(dt,
+                    var_value= var_cases, 
+                    var_rank = group_by,
+                    group_by = "SEX",
+                    number = number
+                    )
+
   
   #wrap label for legend
   dt[[group_by]] <-csu_legend_wrapper(dt[[group_by]], 14)
@@ -2021,7 +2024,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
     
     
     dt_plot <- dt[get("SEX") == i]
-    dt_label_order <- setkey(unique(dt_plot[, c(group_by, "rank_pos"), with=FALSE]), rank_pos)
+    dt_label_order <- setkey(unique(dt_plot[, c(group_by, "CSU_RANK"), with=FALSE]), CSU_RANK)
     dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = dt_label_order$cancer_label) 
     plotlist[[j]] <- csu_trend_core(dt_plot,
                                     var_trend = "asr",
@@ -2085,7 +2088,7 @@ csu_trend_core <- function (
   setnames(dt_data, group_by, "CSU_BY")
   
 
-  #print(dt_data$CSU_BY)
+
   #smooth with loess  fonction
   if (!is.null(smoothing))
   {
@@ -2283,6 +2286,39 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
 }
 
 
+canreg_rank <- function(dt,
+                        var_value = "CASES",
+                        var_rank = "cancer_label",
+                        group_by = NULL,
+                        number = NULL) {
+  
+  bool_dum_by <- FALSE
+  if (is.null(group_by)) {
+    
+    dt$CSU_dum_by <- "dummy_by"
+    group_by <- "CSU_dum_by"
+    bool_dum_by <- TRUE
+  }
+  
+  dt <- as.data.table(dt)
+  dt_rank <- dt[, list(rank_value=sum(get(var_value))), by=c(var_rank, group_by)]
+  dt_rank[, CSU_RANK:= frank(-rank_value, ties.method="min"), by=group_by]
+
+  if (!is.null(number)){
+    dt_rank <- dt_rank[CSU_RANK <= number,c(group_by, var_rank, "CSU_RANK"), with=FALSE]
+  }
+
+  dt <- merge(dt_rank, dt,by=c(group_by, var_rank), all.x=TRUE)
+  
+  if (bool_dum_by) {
+    
+    dt[,CSU_dum_by:=NULL]
+    
+  }
+  
+  return(dt)
+  
+} 
 
 
 
