@@ -905,7 +905,7 @@ csu_ageSpecific_core <-
       
 
       csu_plot <- csu_plot +
-        geom_point(aes(fill=CSU_BY), size = 3,na.rm=TRUE,shape=21,stroke=0.5,colour="black", show.legend=FALSE)+
+        #geom_point(aes(fill=CSU_BY), size = 3,na.rm=TRUE,shape=21,stroke=0.5,colour="black", show.legend=FALSE)+
         scale_y_continuous(name = paste("Age-specific incidence rate per", formatC(db_rate, format="d", big.mark=",")),
                            breaks=tick$tick_list,
                            minor_breaks = tick$tick_minor_list,
@@ -1405,12 +1405,11 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
   
   
   
-  dt <- canreg_rank(dt, var_value = var_cases, var_rank = "cancer_label",group_by = "SEX", number = nb_top) 
+  dt <- csu_dt_rank(dt, var_value = var_cases, var_rank = "cancer_label",group_by = "SEX", number = nb_top) 
   
 
   
   
-  dt$cancer_label <-csu_legend_wrapper(dt$cancer_label, 14)
   
   
   if (return_data) {
@@ -1418,19 +1417,22 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
     dt[, cancer_sex := NULL]
     dt[, cancer_title := NULL]
     dt[, AGE_GROUP_LABEL := paste0("'",AGE_GROUP_LABEL,"'")]
+    setnames(dt, "CSU_RANK","cancer_rank")
     dt <- dt[, c("cancer_label",
                  "ICD10GROUP",
-                 "CSU_RANK",
+                 "cancer_rank",
                  "SEX",
                  "AGE_GROUP",
                  "AGE_GROUP_LABEL",
                  "CASES",
                  "COUNT",
                  "rate"), with=FALSE]
-    setkeyv(dt, c("SEX","CSU_RANK","ICD10GROUP" ,"AGE_GROUP" ))
+    setkeyv(dt, c("SEX","cancer_rank","ICD10GROUP" ,"AGE_GROUP" ))
     return(dt)
     stop() 
   }
+  
+  dt$cancer_label <-csu_legend_wrapper(dt$cancer_label, 14)
   
   
   plotlist <- list()
@@ -1451,6 +1453,10 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
     dt_plot <- dt[get(var_by) == i]
     dt_label_order <- setkey(unique(dt_plot[, c("cancer_label", "CSU_RANK"), with=FALSE]), CSU_RANK)
     dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = dt_label_order$cancer_label) 
+    
+    color_cancer <- csu_cancer_color(cancer_list =dt_label_order$cancer_label)
+
+    
     plotlist[[j]] <- csu_ageSpecific_core(dt_plot,
                                           var_age=var_age,
                                           var_cases= var_cases,
@@ -1459,7 +1465,7 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
                                           plot_title = plot_title,
                                           plot_subtitle = paste0("Top ",nb_top, " cancer sites\n",i),
                                           plot_caption = plot_caption,
-                                          color_trend = NULL,
+                                          color_trend = color_cancer,
                                           log_scale = log_scale,
                                           age_label_list = unique(dt_plot[[var_age_label_list]]),
     )$csu_plot
@@ -1514,7 +1520,7 @@ canreg_bar_top <- function(df_data,
   
   plot_subtitle <- paste("top",nb_top,"cancer sites")
   
-  dt <- canreg_rank(dt, var_value = "CSU_ASR", var_rank = "CSU_BAR",number = nb_top)
+  dt <- csu_dt_rank(dt, var_value = "CSU_ASR", var_rank = "CSU_BAR",number = nb_top)
   
   
   
@@ -1523,7 +1529,8 @@ canreg_bar_top <- function(df_data,
     setnames(dt, "CSU_BAR",var_bar)
     setnames(dt, "CSU_BY", var_by)
     setnames(dt, "CSU_ASR", var_top)
-    setkeyv(dt, c("CSU_RANK",var_bar))
+    setnames(dt, "CSU_RANK","cancer_rank")
+    setkeyv(dt, c("cancer_rank",var_bar))
     return(dt)
     stop() 
   }
@@ -1993,7 +2000,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                                  canreg_report=FALSE) {
   
   
-  dt <- canreg_rank(dt,
+  dt <- csu_dt_rank(dt,
                     var_value= var_cases, 
                     var_rank = group_by,
                     group_by = "SEX",
@@ -2001,14 +2008,19 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                     )
 
   
-  #wrap label for legend
-  dt[[group_by]] <-csu_legend_wrapper(dt[[group_by]], 14)
+
+
   
   if (return_data) {
+    setnames(dt, "CSU_RANK","cancer_rank")
+    dt <- dt[, c("SEX",group_by,"cancer_rank",var_year,var_asr), with=FALSE]
+    setkeyv(dt, c("SEX","cancer_rank",var_year))
     return(dt)
     stop() 
   }
   
+  #wrap label for legend
+  dt[[group_by]] <-csu_legend_wrapper(dt[[group_by]], 14)
   
   plotlist <- list()
   j <- 1 
@@ -2026,6 +2038,10 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
     dt_plot <- dt[get("SEX") == i]
     dt_label_order <- setkey(unique(dt_plot[, c(group_by, "CSU_RANK"), with=FALSE]), CSU_RANK)
     dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = dt_label_order$cancer_label) 
+    
+    color_cancer <- csu_cancer_color(cancer_list =dt_label_order$cancer_label)
+
+    
     plotlist[[j]] <- csu_trend_core(dt_plot,
                                     var_trend = "asr",
                                     var_year = "YEAR",
@@ -2036,6 +2052,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                                     canreg_header = canreg_header,
                                     plot_subtitle = paste0("Top ",number, " cancer sites\n",i),
                                     plot_caption = plot_caption,
+                                    color_cancer = color_cancer,
                                     mod=1)$csu_plot
     
     j <- j+1
@@ -2064,6 +2081,7 @@ csu_trend_core <- function (
   canreg_header = "test", 
   plot_subtitle = NULL,
   plot_caption = NULL,
+  color_cancer= NULL,
   mod=5) {
   
   linesize <- 0.5
@@ -2179,8 +2197,15 @@ csu_trend_core <- function (
       )
   } 
   
+  if (is.null(color_cancer)) {
+    csu_plot <- csu_plot +scale_colour_discrete(name=legend$title)
+  } 
+  else {
+    csu_plot <- csu_plot +scale_colour_manual(name=NULL, values=color_cancer)
+  }
+  
+
   csu_plot <- csu_plot +
-    scale_colour_discrete(name=legend$title)+
     theme(
       plot.background= element_blank(),
       panel.background = element_blank(),
@@ -2286,7 +2311,7 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
 }
 
 
-canreg_rank <- function(dt,
+csu_dt_rank <- function(dt,
                         var_value = "CASES",
                         var_rank = "cancer_label",
                         group_by = NULL,
@@ -2319,10 +2344,6 @@ canreg_rank <- function(dt,
   return(dt)
   
 } 
-
-
-
-
 
 csu_tick_generator <- function(max,min = 0,log_scale=FALSE) {
   
@@ -2469,6 +2490,76 @@ csu_legend_wrapper <- function(label, width) {
   return(label)
   
 }
+
+
+csu_cancer_color <- function(cancer_list) {
+  
+  
+  
+  cancer_base <- c("Mouth & pharynx","Lip, oral cavity",
+                    "Oesophagus",
+                    "Stomach",
+                    "Colon, rectum, anus",
+                    "Liver", 
+                    "Pancreas", 
+                    "Larynx",
+                    "Lung, trachea, bronchus","Trachea, bronchus and lung","Lung",
+                    "Melanoma of skin",
+                    "Breast",
+                    "Cervix", "Cervix uteri",
+                    "Corpus & Uterus NOS", "Corpus uteri",
+                    "Ovary & adnexa","Ovary",
+                    "Prostate",
+                    "Testis",
+                    "Kidney & urinary NOS","Kidney",
+                    "Bladder",
+                    "Brain & nervous sytem",
+                    "Thyroid",
+                    "Lymphoma",
+                    "Leukaemia",
+                    "Non-Melanoma Skin","Other skin",
+                    "Ill-defined",
+                    "Others and unspecified")
+  
+  cancer_color <- c("#AE563E", "#AE563E",
+                    "#DC1341", 
+                    "#ae56a2",
+                    "#FFD803",
+                    "#F3A654", 
+                    "#940009", 
+                    "#6D8A6D",
+                    "#1E90FF","#1E90FF","#1E90FF",
+                    "#894919",
+                    "#FF68BC", 
+                    "#FF7500","#FF7500",
+                    "#9FE72D", "#9FE72D", 
+                    "#8C07C2", "#8C07C2", 
+                    "#34A76E",
+                    "#4682B4",
+                    "#040186","#040186",
+                    "#7FF76F", 
+                    "#D5BED2",
+                    "#ADD9E4",
+                    "#9931D0",
+                    "#FFFFA6",
+                    "#2A4950","#2A4950",
+                    "#278D29",
+                    "#DCDCDC")
+  
+  
+  dt_color <- data.table(cancer_label = cancer_base, cancer_color= cancer_color)
+  cancer_list <-  gsub("\n"," ", cancer_list)
+  dt_cancer_list <- data.table(cancer_label = cancer_list)
+  dt_color_map <- merge(dt_cancer_list, dt_color, by = c("cancer_label"), all.x=TRUE, sort=F )
+  color_map <- c(dt_color_map$cancer_color)
+
+  return(color_map)
+  
+}
+
+
+
+
 
 extract_legend_axes<-function(a_gplot){
   pdf(file=NULL)
