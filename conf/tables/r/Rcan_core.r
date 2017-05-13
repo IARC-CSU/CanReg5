@@ -2042,6 +2042,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
     color_cancer <- csu_cancer_color(cancer_list =dt_label_order$cancer_label)
 
     
+    
     plotlist[[j]] <- csu_trend_core(dt_plot,
                                     var_trend = "asr",
                                     var_year = "YEAR",
@@ -2052,8 +2053,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                                     canreg_header = canreg_header,
                                     plot_subtitle = paste0("Top ",number, " cancer sites\n",i),
                                     plot_caption = plot_caption,
-                                    color_cancer = color_cancer,
-                                    mod=1)$csu_plot
+                                    color_cancer = color_cancer)$csu_plot
     
     j <- j+1
   }
@@ -2081,8 +2081,7 @@ csu_trend_core <- function (
   canreg_header = "test", 
   plot_subtitle = NULL,
   plot_caption = NULL,
-  color_cancer= NULL,
-  mod=5) {
+  color_cancer= NULL) {
   
   linesize <- 0.5
   
@@ -2121,7 +2120,8 @@ csu_trend_core <- function (
   
   
   #to calcul year axes break
-  year_tick <- csu_year_tick_generator(min(dt_data$CSU_Y),max(dt_data$CSU_Y), mod)
+
+  year_tick <- csu_year_tick_generator(min(dt_data$CSU_Y),max(dt_data$CSU_Y))
   
 
   
@@ -2452,8 +2452,16 @@ csu_tick_generator <- function(max,min = 0,log_scale=FALSE) {
   
 }
 
-csu_year_tick_generator <- function(min, max, mod=5) {
+csu_year_tick_generator <- function(min, max) {
   
+  mod <- 5
+  if (max - min < 10 ) {
+    mod <- 1 
+  } else if (max - min < 20){
+    mod <- 2
+  } 
+  
+
   temp1 <- min - (min %% mod)
   temp2 <- max - (max %% mod) +ifelse(mod>=5,mod,0)
   
