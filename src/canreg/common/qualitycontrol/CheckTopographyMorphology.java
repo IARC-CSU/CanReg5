@@ -169,7 +169,7 @@ public class CheckTopographyMorphology extends CheckInterface {
                     // -----------< entry not found on partial key  Test all the key
                     String messageString = morphologyFamilyString;
                     try {
-                        int famNo = (Integer.parseInt(morphologyFamilyString.substring(1)) + 1);
+                        int famNo = (Integer.parseInt(morphologyFamilyString.substring(1)));
                         messageString = "\""+ morphologyFamMap.get(famNo) + "\" ("+famNo+")";
                     } catch (NumberFormatException nfe) {
                         messageString = morphologyFamilyString;
@@ -191,7 +191,7 @@ public class CheckTopographyMorphology extends CheckInterface {
                 if (lookUpMustNotMap.containsKey(look1)) {
                     String messageString = morphologyFamilyString;
                     try {
-                        int famNo = (Integer.parseInt(morphologyFamilyString.substring(1)) + 64);
+                        int famNo = (Integer.parseInt(morphologyFamilyString.substring(1)) + 63);
                         messageString = "\""+ morphologyFamMap.get(famNo) + "\" ("+famNo+")";
                     } catch (NumberFormatException nfe) {
                         messageString = morphologyFamilyString;
