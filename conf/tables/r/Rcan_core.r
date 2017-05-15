@@ -649,6 +649,7 @@ csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL
   
   #create age dummy: 1 2 3 4 --- 19
   dt_data$age_factor <- c(as.factor(dt_data$CSU_A))
+
   
   # correction factor 
   dt_data$correction <- 1 
@@ -676,6 +677,11 @@ csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL
   dt_data <- merge(dt_data, dt_temp,by= age_label_list, all.x=TRUE)
   
   #keep age group selected 
+  
+  age_max <- max(dt_data$age_factor)
+  if (age_max-1 < last_age) {
+    last_age <- age_max-1 
+  }
   dt_data=dt_data[dt_data$age_factor <= last_age, ]  
   
 
@@ -1662,6 +1668,7 @@ csu_bar_plot <- function(dt,
   
   dt[, plot_value:= get(var_top)]
   
+  
   tick_major_list <- csu_tick_generator(max = max(dt$plot_value), 0)$tick_list
   nb_tick <- length(tick_major_list) 
   tick_space <- tick_major_list[nb_tick] - tick_major_list[nb_tick-1]
@@ -1669,6 +1676,7 @@ csu_bar_plot <- function(dt,
     tick_major_list[nb_tick+1] <- tick_major_list[nb_tick] + tick_space
   }
   
+
   dt$value_label <- dt$plot_value + (tick_space*0.1)
   dt$value_round <-  format(round(dt$plot_value, digits = digit), nsmall = digit)
   
