@@ -615,6 +615,106 @@ csu_asr_new <-
   }
 
 
+csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL,
+                              missing_age = NULL,last_age = 15,
+                              var_cum_risk="cum_risk",
+                              age_label_list = "AGE_GROUP_LABEL") {
+  
+  
+  
+  bool_dum_by <- FALSE
+  
+  if (is.null(group_by)) {
+    
+    df_data$CSU_dum_by <- "dummy_by"
+    group_by <- "CSU_dum_by"
+    bool_dum_by <- TRUE
+    
+  }
+  
+  
+  dt_data <- data.table(df_data, key = group_by) 
+  setnames(dt_data, var_age, "CSU_A")
+  setnames(dt_data, var_cases, "CSU_C")
+  setnames(dt_data, var_py, "CSU_P")
+  
+  
+  # create index to keep order
+  index_order <- c(1:nrow(dt_data))
+  dt_data$index_order <- index_order
+  
+  # missing age 
+  dt_data[dt_data$CSU_A==missing_age,CSU_A:=NA ] 
+  dt_data[is.na(dt_data$CSU_A),CSU_P:=0 ] 
+  
+  #create age dummy: 1 2 3 4 --- 19
+  dt_data$age_factor <- c(as.factor(dt_data$CSU_A))
+  
+  # correction factor 
+  dt_data$correction <- 1 
+  if (!is.null(missing_age)) {
+    
+    
+    dt_data[, total:=sum(CSU_C), by=group_by] #add total
+    dt_data[!is.na(dt_data$age_factor) , total_known:=sum(CSU_C), by=group_by] #add total_know
+    dt_data$correction <- dt_data$total / dt_data$total_know 
+    dt_data[is.na(dt_data$correction),correction:=1 ] 
+    dt_data$total <- NULL
+    dt_data$total_known <- NULL
+    
+  }
+  
+
+  
+  # calcul year interval from age group label
+  
+  dt_temp <- unique(dt_data[, c(age_label_list), with=FALSE])
+  dt_temp[, min:=as.numeric(regmatches(get(age_label_list), regexpr("[0-9]+",get(age_label_list))))]
+  dt_temp[, max:=shift(min, type ="lead")]
+  dt_temp[, age_span := max-min]
+  dt_temp <- dt_temp[, c("age_span",age_label_list), with=FALSE]
+  dt_data <- merge(dt_data, dt_temp,by= age_label_list, all.x=TRUE)
+  
+  #keep age group selected 
+  dt_data=dt_data[dt_data$age_factor <= last_age, ]  
+  
+
+  
+  dt_data[,cum_risk:=age_span*(CSU_C/CSU_P)]
+  dt_data[CSU_P==0,cum_risk:=0]
+  
+
+  
+  # to check order 
+  dt_data<- dt_data[order(dt_data$index_order ),]
+  dt_data <- dt_data[,list( cum_risk=sum(cum_risk), CSU_P=sum(CSU_P),CSU_C=sum(CSU_C),correction = max(correction)), by=group_by]
+  dt_data[,cum_risk:=(1-exp(-cum_risk))*100*correction]
+  
+  dt_data[,cum_risk:=round(cum_risk, digits = 2)]
+  dt_data[, correction:=round((correction-1)*100, digits = 1)]
+  
+  
+  if (var_cum_risk!="cum_risk") {
+    setnames(dt_data, "cum_risk", var_cum_risk)
+  }
+  
+  dt_data$correction <- NULL
+  
+  setnames(dt_data, "CSU_C", var_cases)
+  setnames(dt_data,  "CSU_P", var_py)
+  
+  if (bool_dum_by) {
+    df_data$CSU_dum_by <- NULL
+  }
+  
+  #temp <- last_age*5-1
+  #cat("Cumulative risk have been computed for the age group 0-", last_age*5-1 , "\n",  sep="" )
+  
+  
+  return(dt_data)
+  
+}
+
 csu_ageSpecific_core <-
   function(df_data,var_age="age",
            var_cases="cases",
@@ -1484,6 +1584,144 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
 }
 
 
+canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_by = "SEX",
+                                  nb_top = 10, landscape = FALSE,list_graph=TRUE,
+                                  canreg_header = "", xtitle = "",digit  =  1,
+                                  return_data  =  FALSE) {
+  
+  dt <- csu_dt_rank(dt, var_value = var_top, var_rank = var_bar,group_by = group_by, number = nb_top) 
+  
+  if (return_data) {
+    setnames(dt, "CSU_RANK","cancer_rank")
+    setkeyv(dt, c("SEX","cancer_rank"))
+    return(dt)
+    stop() 
+  }
+  
+  dt$cancer_label <-csu_legend_wrapper(dt$cancer_label, 15)
+  
+  plotlist <- list()
+  j <- 1 
+  
+  for (i in levels(dt[[group_by]])) {
+    
+    if (j == 1) {
+      plot_title <- canreg_header
+      plot_caption <- ""
+    } else {
+      plot_title <- ""
+      plot_caption <- canreg_header
+    }
+    
+    plot_subtitle <-  paste0("Top ",nb_top, " cancer sites\n",i)
+    
+    dt_plot <- dt[get(group_by) == i]
+    dt_label_order <- setkey(unique(dt_plot[, c(var_bar, "CSU_RANK"), with=FALSE]), CSU_RANK)
+    dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = rev(dt_label_order$cancer_label)) 
+    color_cancer <- csu_cancer_color(cancer_list =rev(dt_label_order$cancer_label))
+    
+
+
+    
+    plotlist[[j]] <-
+      csu_bar_plot(
+        dt_plot,var_top=var_top,var_bar=var_bar,
+        plot_title=plot_title,plot_caption=plot_caption,plot_subtitle = plot_subtitle,
+        color_bar=color_cancer,
+        landscape=landscape,digit=digit,
+        xtitle=xtitle)
+    
+    print(plotlist[[j]])
+    j <- j+1
+    
+  }
+}
+
+
+csu_bar_plot <- function(dt, 
+                             var_top,
+                             var_bar,
+                             plot_title = plot_title,
+                             plot_subtitle = "", 
+                             plot_caption = NULL,
+                             xtitle="",
+                             digit = 1,
+                             color_bar = NULL,
+                             landscape = FALSE)  {
+  
+  line_size <- 0.4
+  text_size <- 14 
+  
+  if (landscape) {
+    csu_ratio = 0.6
+    csu_bar_label_size = 4
+  } else {
+    csu_ratio = 1.4
+    csu_bar_label_size = 5
+  }
+  
+  dt[, plot_value:= get(var_top)]
+  
+  tick_major_list <- csu_tick_generator(max = max(dt$plot_value), 0)$tick_list
+  nb_tick <- length(tick_major_list) 
+  tick_space <- tick_major_list[nb_tick] - tick_major_list[nb_tick-1]
+  if ((tick_major_list[nb_tick] -  max(dt$plot_value))/tick_space < 1/4){
+    tick_major_list[nb_tick+1] <- tick_major_list[nb_tick] + tick_space
+  }
+  
+  dt$value_label <- dt$plot_value + (tick_space*0.1)
+  dt$value_round <-  format(round(dt$plot_value, digits = digit), nsmall = digit)
+  
+  csu_plot <- 
+    ggplot(dt, aes(get(var_bar), plot_value, fill=get(var_bar))) +
+    geom_bar(stat="identity", width = 0.8)+
+    geom_hline(yintercept = 0, colour="black",size = line_size)+
+    geom_text(aes(get(var_bar), value_label,label=value_round),
+              size = csu_bar_label_size,
+              hjust = 0)+
+    coord_flip(ylim = c(0,tick_major_list[length(tick_major_list)]+(tick_space*0.25)), expand = TRUE)+
+    scale_y_continuous(name = xtitle,
+                       breaks=tick_major_list,
+                       labels=csu_axes_label
+                       
+    )+
+    scale_fill_manual(name="",
+                      values= color_bar,
+                      drop = FALSE)+
+    labs(title = plot_title, 
+         subtitle = plot_subtitle,
+         caption = plot_caption)+
+    theme(
+      aspect.ratio = csu_ratio,
+      plot.background= element_blank(),
+      panel.background = element_blank(),
+      panel.grid.major.y= element_blank(),
+      panel.grid.major.x= element_line(colour = "grey70",size = line_size),
+      panel.grid.minor.x= element_line(colour = "grey70",size = line_size),
+      plot.title = element_text(size=18, margin=margin(0,0,15,0),hjust = 0.5),
+      plot.subtitle = element_text(size=16, margin=margin(0,0,15,0),hjust = 0.5),
+      plot.caption = element_text(size=12, margin=margin(15,0,0,0)),
+      plot.margin=margin(20,20,20,20),
+      axis.title = element_text(size=text_size),
+      axis.title.x=element_text(margin=margin(10,0,0,0)),
+      axis.title.y = element_blank(),
+      axis.text = element_text(size=text_size, colour = "black"),
+      axis.text.x = element_text(size=text_size),
+      axis.text.y = element_text(size=text_size),
+      axis.ticks.x= element_line(colour = "black", size = line_size),
+      axis.ticks.y= element_blank(),
+      axis.ticks.length = unit(0.2, "cm"),
+      axis.line.y = element_blank(),
+      axis.line.x = element_line(colour = "black", 
+                                 size = line_size, 
+                                 linetype = "solid"),
+      legend.position = "none",
+    )
+  
+  return(csu_plot)
+  
+}
+
 
 canreg_bar_top <- function(df_data,
                                var_top = "asr",
@@ -2273,7 +2511,7 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
   pdf_height <- ifelse(landscape, 8.267 , 11.692 )   
   file_number <- ifelse(list_graph, "%03d", "")
   
-  
+
   ## create output plot
   
   
@@ -2507,7 +2745,8 @@ csu_cancer_color <- function(cancer_list) {
   cancer_base <- c("Mouth & pharynx","Lip, oral cavity",
                     "Oesophagus",
                     "Stomach",
-                    "Colon, rectum, anus",
+                    "Colon, rectum, anus","Colon",
+                    "Rectum",
                     "Liver", 
                     "Pancreas", 
                     "Larynx",
@@ -2521,18 +2760,19 @@ csu_cancer_color <- function(cancer_list) {
                     "Testis",
                     "Kidney & urinary NOS","Kidney",
                     "Bladder",
-                    "Brain & nervous sytem",
+                    "Brain & nervous sytem","Brain, nervous system",
                     "Thyroid",
-                    "Lymphoma",
+                    "Lymphoma","Non-Hodgkin lymphoma",
                     "Leukaemia",
                     "Non-Melanoma Skin","Other skin",
                     "Ill-defined",
-                    "Others and unspecified")
+                    "Others and unspecified","Other and unspecified")
   
   cancer_color <- c("#AE563E", "#AE563E",
                     "#DC1341", 
                     "#ae56a2",
-                    "#FFD803",
+                    "#FFD803","#FFD803",
+                    "#77214c",
                     "#F3A654", 
                     "#940009", 
                     "#6D8A6D",
@@ -2546,13 +2786,13 @@ csu_cancer_color <- function(cancer_list) {
                     "#4682B4",
                     "#040186","#040186",
                     "#7FF76F", 
-                    "#D5BED2",
+                    "#D5BED2","#D5BED2",
                     "#ADD9E4",
-                    "#9931D0",
+                    "#9931D0","#9931D0",
                     "#FFFFA6",
                     "#2A4950","#2A4950",
                     "#278D29",
-                    "#DCDCDC")
+                    "#DCDCDC","#DCDCDC")
   
   
   dt_color <- data.table(cancer_label = cancer_base, cancer_color= cancer_color)
