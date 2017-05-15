@@ -12,7 +12,7 @@
 
   
   
-  graph_width <- 5
+graph_width <- 5
   
   
 doc <- docx()
