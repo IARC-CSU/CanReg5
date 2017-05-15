@@ -29,7 +29,7 @@
   ##calcul of cumulative risk
   dt_cum_risk <- csu_cum_risk_core(df_data = dt,var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
                                    group_by = c("cancer_label", "SEX"), missing_age = canreg_missing_age(dt_all),
-                                   last_age= last_age,
+                                   last_age= last_age+1,
                                    age_label_list = "AGE_GROUP_LABEL")
   
   dt_bar <- dt_asr

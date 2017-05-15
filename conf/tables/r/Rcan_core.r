@@ -682,10 +682,10 @@ csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL
   if (age_max-1 < last_age) {
     last_age <- age_max-1 
   }
-  dt_data=dt_data[dt_data$age_factor <= last_age, ]  
+  dt_data=dt_data[dt_data$age_factor <= last_age]  
   
 
-  
+
   dt_data[,cum_risk:=age_span*(CSU_C/CSU_P)]
   dt_data[CSU_P==0,cum_risk:=0]
   
