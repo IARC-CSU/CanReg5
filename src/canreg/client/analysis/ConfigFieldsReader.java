@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2017  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,13 +51,12 @@ public class ConfigFieldsReader extends DescriptionReader {
             word = readWord(file);
             if (word.equals("{")) {
                 // Do nothing
-            } else if (word.equals("}")) {
+            } else if (word.equals("}") || word.equals("EOF")) {
                 end = true;
             } else if (word.equals("")) {
                 // Do nothing
             } else {
-                String trans = word;
-                fieldDesc.addValue(trans);
+                fieldDesc.addValue(word);
             }
         }
         return fieldDesc;
