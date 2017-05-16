@@ -336,7 +336,8 @@ public class Tools {
         popheader += "AGE_GROUP" + separator;
         popheader += "SEX" + separator;
         popheader += "COUNT" + separator;
-        popheader += "REFERENCE_COUNT";
+        popheader += "REFERENCE_COUNT" + separator;
+        popheader += "AGE_GROUP_SIZE";
         popoutput.append(popheader);
         popoutput.newLine();
         int thisYear = startYear;
@@ -348,7 +349,8 @@ public class Tools {
                     popoutput.append(ageGroupNames[pop.getAgeGroup()]).append(separator);
                     popoutput.append(pop.getStringRepresentationOfAgeGroupsForFile(separator)).append(separator);
                     // get reference pop
-                    popoutput.append(popset.getWorldPopulationForAgeGroupIndex(pop.getSex(), pop.getAgeGroup()) + "");
+                    popoutput.append(popset.getWorldPopulationForAgeGroupIndex(pop.getSex(), pop.getAgeGroup()) + "").append(separator);
+                    popoutput.append(popset.getAgeGroupStructure().getSizeOfAgeGroupByIndex(pop.getAgeGroup()) + "");
                     popoutput.newLine();
                 }
             }

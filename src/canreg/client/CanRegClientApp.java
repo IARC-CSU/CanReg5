@@ -123,6 +123,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private String canRegSystemVersionString;
     private TreeMap<String, Set<Integer>> locksMap;
     private LockFile lockFile;
+    private String systemCode;
 
     public void changePassword(String encrypted) throws SecurityException, RemoteException {
         try {
@@ -440,6 +441,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public String loginDirect(String serverCode, String username, char[] password) throws LoginException, NullPointerException, NotBoundException, MalformedURLException, RemoteException, UnknownHostException, WrongCanRegVersionException {
         // should this be moved to the loginserver?
+        this.systemCode = serverCode;
         CanRegLoginInterface loginServer = new CanRegLoginImpl(serverCode);
         return login(loginServer, username, password);
     }
@@ -488,6 +490,10 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public String getSystemName() {
         return systemName;
+    }
+
+    public String getSystemCode() {
+        return systemCode;
     }
 
     public DatabaseStats getDatabaseStats() throws SecurityException, RemoteException {
