@@ -29,7 +29,6 @@ packages = c(
     "highr_0.6.zip",
     "htmltools_0.3.6.zip",
     "httpuv_1.3.3.zip",
-    "install_packages.R",
     "jsonlite_1.4.zip",
     "knitr_1.15.1.zip",
     "labeling_0.3.zip",
