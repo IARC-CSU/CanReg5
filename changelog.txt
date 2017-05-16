@@ -3,10 +3,18 @@ Changelog
 5.00.42 BETA
 - Analysis features updated in collaboration with Mathieu Laversanne:
   - Default report for further editing in Word or similar added.
-  - Updated and harmonized look on many data visualizations.
+  - Updated and harmonized look on most data visualizations.
+  - Some new visualizations added.
+- ICD-O-3 1st revision is now implemented in the checks and conversions by translating and adapting Jacques Ferlay's C++-code and tables.
+  - New codes are added to the dictionaries when setting up a new CanReg5 system. Existing users must add the codes manually if desired. 
+  - Added a default dictionary of morphological codes on 5 characters.
+  - Default labels harmonized with http://codes.iarc.fr .
+- Improved messages from Topography and Morphology checks.
 - Big parts of importing/exporting rewritten using an updated Java CSV library
 - Files generated (either by exporting or saving tables in frequencies by year) now open in the associated software automatically.
+- Some updates to the French translation. (Thanks Eric Masuyer.)
 - Stability improvements.
+- Other fixes.
 
 5.00.41
 - New data entry form. (Developed in collaboration with Betty Carballo and Patricio Carranza.)
