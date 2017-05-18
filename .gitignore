@@ -240,5 +240,5 @@ doc/CanReg5-Instructions.pdf
 CanReg5-R-packages.zip
 *.orig
 CanReg5.zip.tmp4
-r-packages/*
-r-packages_2/*
+r-packages/*.zip
+/r-packages/dichromat_2.0-0.zip
