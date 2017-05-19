@@ -1,0 +1,1062 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+  xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <author>
+    <name>Morten Ervik</name>
+  </author>
+  <id>http://www.iacr.com.fr/CanReg5/feeds/news.rss</id>
+  <title>CanReg5 Updates</title>
+  <updated>2017-05-18T17:42:43+02:00</updated>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed a bug when the standard variable is a string of 0 lenght.
+
+- Tidied some code.
+
+- Added a menu option to file bug/issue reports.
+
+- Dictionary Editor: Now uses StringBuilder to improve performance and allow for editing of bigger dictionaries.
+
+- Handbook: Updated FAQ
+
+
+</summary>
+    <title>5.00.02</title>
+    <updated>2011-01-06T16:11:06+00:00</updated>
+    <dc:date>2011-01-06T16:11:06+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Turkish bug fixed. Changed all calls to toUpperCase() to a standardized static toUpperCaseStandardize() located in the Tool class. Default upper case and lower case locale set to ENGLISH.
+
+- Merged the handbook and the manual into one PDF that can be updated independent of the CanReg releases.
+
+- Frequencies by Year table can now be written to CSV file.
+
+- Improved the layout of the ExportFrame.
+
+- Export/report and Frequencies by year and now appends the .csv/.txt if the user does not specify this.
+
+- DictionaryEntry can now be added to a tree to be sorted by either code or description.
+
+- The dictionary chooser put in place. Users can now sort dictionary codes by either description or code.
+
+- Implemented a filter for the dictionary element chooser using the Glazed Lists library http://sites.google.com/site/glazedlists/
+
+- DictionaryImporter: Fixed a bug that added a space to the label of dictioanries imported from CR4.
+
+- GUI for the Index-editor implemented. Fixed an update-bug in the database structure editor.
+
+- Fixed a bug where the range sometimes did not work when a join of two tables were accessed.
+
+- Group name now shows up in group editor.
+
+- Import: performance fixes and tidied some code.
+
+- Fixed some potential null-pointer errors.
+
+- Fixed some localization issue.
+
+- Auto detection of file encoding now works.
+
+- FastFilter now uses the new dictionary element chooser.
+
+- Removed the cancel option from &quot;do you want to close&quot;...
+
+- Logging more info if something goes wrong during login.
+
+- Added an easy access list of tables.
+
+- Added links to news items in the &quot;latest news&quot; browser.
+
+- Fixed a bug in the conversion from ICD O 3 to ICD10 where no ICD10 would be generated for some rare morphologies.
+
+- No longer displays patient record numbers but patent ids as results of the person search.
+
+- Implemented the GUI to let the user select types of algorithms for each variable in the person search, like alpha, number and date as well as soundex.
+
+- Improved the database structure editor.
+
+- Implemented user selectable types of algorithms for each variable in the person search, like alpha, number and date as well as soundex. This can be stored in the system definition XML file.
+
+- Implemented a better way to store the person searcher in an XML.
+
+- Updated the about.html. 
+
+- Table builder and export/report now launches faster.
+
+- More info button added to the welcome frame.
+
+- Latest News menu option: Added functionality to read the CanReg Twitter/RSS feed directly from the program.
+
+- Check to see if a standard variable is already mappe to a variable in the database during system setup/tailoring.
+
+- DatabaseStructure editor now displays a warning message if minimum required variables are not in place.
+
+- Improved the GUI of the database variable editor screen.
+
+- Code: Added override annotations, replaced some printstacktraces with proper logging of errors, replaced vectors with lists
+
+- Fixed a bug where the compound dictionaries did not detect faulty (truncated) codes.
+
+- Variable names are sorted in the rangefilter and the fastfilter.
+
+- Updated the welcome frame.
+
+- Performance improvements.
+
+- Updated the about box.
+
+
+</summary>
+    <title>5.00.03</title>
+    <updated>2011-02-15T13:36:25+00:00</updated>
+    <dc:date>2011-02-15T13:36:25+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed the &quot;dropped result set while browsing&quot; bug
+
+- Population data set editor improved.
+
+- Added pyramids directly in the editor for immediate feedback.
+
+- Population Pyramids in the PDS editor can now be saved as PNGs.
+
+- Copy and paste menu for the population data set implemented.
+
+- Improved layout of Export/report frame.
+
+- Improved the layout of the import screen. (Added a scrollbar.)
+
+- Registrar can no longer import files.
+
+- Copy and paste menu for (most) text fields implemented.
+
+- Fixed bug in system description affecting text areas.
+
+- CanReg launch4j project created to facilitate launch on Windows machines.
+
+- Started refactoring and updating tables and table builders.
+
+- Refactored the cachingtableapi out of the main canreg-tree.
+
+- Made sure old resultsets are properly dropped.
+
+- Import complete dictionary no longer shows message as error but warning when no encoding is detected.
+
+- The list of Population Data Sets are now updated in real time if entries are added/updated or deleted.
+
+- Export of sources attached to a tumour table is now (properly) implemented. 
+
+- Sources' variable names are now numbered if more than 2.
+
+- Integrated postcript-viewer test.
+
+- TextArea of backupframe no longer editable.
+
+- Tidied some exception handling.
+
+- Tweaked the build.xml.
+
+- Implemented a calculate age conversion.
+
+- Converter and checker now only depends on the standardvariablenames.
+
+- Added code to select a specific data element from the variableschooserpanel.
+
+- Comments added.
+
+- Varions fixes.
+
+
+</summary>
+    <title>5.00.04</title>
+    <updated>2011-03-23T14:43:52+00:00</updated>
+    <dc:date>2011-03-23T14:43:52+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Translated to Spanish by Graciela Cristina Nicolas.
+
+- Implemented Topography/Morphology check.
+
+- Fixed a memory leak during export.
+
+- Install new system definition frame now detects backups in the same folder as the XML to streamline the initial installation process.
+
+- Standard dictionaries are now filled with standard codes when the database is created.
+
+- If you start CanReg with the registry code as argument it launches only this server - not the client.
+
+- Updated the Age/Morphology, Age/Topography, Grade checks.
+
+- Fixed a bug where dates would not be reported as missing although flagged as mandatory variables.
+
+- Implemented system to request focus after pop up menu. 
+
+- The user can now press '?' to get the dictionary chooser.
+
+- Browse and openFile updated. Now using java.awt.Desktop if possible - falling back on BareBonesBrowserLaunch if necessary.
+
+- Updated the BareBonesBrowserLaunch class.
+
+- The panels are now using the interfaces instead of implementations.
+
+- Added a tray icon to show that the CanReg server is running.
+
+- A system for shutting down the server properly put in place.
+
+- LoginInternalFrame: the Launch server button gets reactivated if you modify the server code.
+
+- System Tray notifications and popups implemented.
+
+- Shows login frame after successfully installed system definition.
+
+- Internationalized the splash screen messages.
+
+- Updated the demo system, TRN.xml
+
+- Javadoc expanded.
+
+- Added some protection from nullpointers.
+
+- Added some tooltips.
+
+- Various fixes.
+
+
+</summary>
+    <title>5.00.05</title>
+    <updated>2011-04-21T12:52:45+00:00</updated>
+    <dc:date>2011-04-21T12:52:45+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed some bugs in the population pyramid where totals showed up as 0s and the population name contained the name of one year of the population data set.
+
+- Fixed a bug where a resultset was not closed properly
+
+- Added functionality to create indexes and keys in a database.
+
+- Added more variables to the import options.
+
+- Implemented a simple pie chart of 10 most common cancers.
+
+- Implemented a system to copy graphics from (and to) CanReg.
+
+- PopPyramid now allows editing of the chart and printing using the ChartPanel from JFreeChart with my added SVG writer using Batik.
+
+- PDS editor now displays male blue and women red.
+
+- FastFilter now clears the filter if user changes dictionary.
+
+- TableBuilder: fixed a bug where pending cases would show up in some of the tables, improved the performance of the filter.
+
+- TableBuilderInternalFrame can now call HTML writers.
+
+- Check Topo/morpho no longer breaks down if Morpho don't have a 4 digit code, but rather returns an error message.
+
+- Password now kept as char array through the entire login process for security purposes.
+
+- Using stringbuilders in CanRegDAO.
+
+- Special characters no longer show up in ICD10 codes.
+
+- Fixed a bug where comments in the ICD03to10 lookup file caused problems.
+
+- Path to R installation added to the Options Pane.
+
+- Implemented automatic detection of (one of the) user's R installations.
+
+- View work files now uses platform independent system calls to open the folder view.
+
+- CheckResult.Missing not displayed.
+
+- Improved the handling of deletion of source records.
+
+- Open backup folder now uses cross platform system calls.
+
+- Filter is now cleared in the dictionary element chooser after a selection has been made.
+
+- Mouse pointer also returns to normal if you view the charts in the built in chartviewer.
+
+- common.Tools: better handling of null pointers.
+
+- Created a TableBuilderFactory to encapsulate the definitions of the various table builders.
+
+- Refactored and tidied some code.
+
+- Other bug fixes
+
+
+</summary>
+    <title>5.00.06</title>
+    <updated>2011-05-31T15:08:18+00:00</updated>
+    <dc:date>2011-05-31T15:08:18+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Implemented a table builder that calls R with any user specified standard variables.
+
+- AgeSpecific incidence curves (linear and semi log) functionality implemented using R. (Thanks to Anahita Rahimi.)
+
+- TableBuilder: user can now write many different file formats depending on what the various table builders support, PDF, PS, SVG, PNG, WMF, HTML etc.
+
+- CanReg chart viewer implemented. Tables supporting this can be previewed directly in CanReg.
+
+- You can now join all 3 tables in the browse/export/frequency tools.
+
+- Improved error messages when filters are incorrect.
+
+- Range can now be formed by any variables that is included in an index.
+</summary>
+    <title>5.00.06</title>
+    <updated>2011-05-31T15:08:18+00:00</updated>
+    <dc:date>2011-05-31T15:08:18+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- The database can now be encrypted with 56-bit DES using a minimum 8 character long boot password. The user must then provide this password during every server launch.
+
+- All server calls now handles server disconnects and requests users to log in again. This should end problems on laptops falling asleep.
+
+- The CanReg server can now be launched in single user mode without RMI (network calls).
+
+- Launch server no longer hangs if XML contains an invalid standard variable name.
+
+- More info shown about the database elements during migration/tailoring.
+
+- Person Search and duplicate search renamed to Duplicate Patient Search.
+
+- New source added to tumour by default on creation of new tumour.
+
+- PatientID shows up as a title of the recordeditor when the patient has been assigned an ID.
+
+- Improved the preview while importing data. Now properly supports other separating characters. No longer editable.
+
+- Fixed a bug in the logout mechanism that would not redraw the desktop after logout.
+
+- Fixed a bug in the dictionary editor where a series of only codes - no labels were accepted, but not added to the database.
+
+- Improved handling of already running servers while launching a new one.
+
+- More consistent layout in the record editor.
+
+- R table builder allows for null as pops or incs. Better handling of nullpointers.
+
+- Updated the R test script.
+
+- Better exception handling.
+
+- Chinese translation started.
+
+- Other bug fixes.
+
+
+</summary>
+    <title>5.00.07</title>
+    <updated>2011-07-11T11:35:23+00:00</updated>
+    <dc:date>2011-07-11T11:35:23+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Updated topography and morphology check.
+
+- Patients comparator implemented.
+
+- Internationalized pop up menus.
+
+- Added functionality to convert CanReg4 system definitions in batch mode using --corvert &lt;.def-file&gt; [encoding] as arguments.
+
+- Updated French translation.
+
+- Updated Chinese translation.
+
+- Updated Spanish translation.
+
+- Handbook is now using the book-layout (instead of article).
+
+- Updated about.html
+
+- Other small fixes.
+
+
+</summary>
+    <title>5.00.08</title>
+    <updated>2011-10-05T12:56:39+00:00</updated>
+    <dc:date>2011-10-05T12:56:39+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed a bug where the last character of some lines in the export file went missing.
+
+- Fixed a bug where user couldn't save dictionary when a it only contained one entry.
+
+- Fixed a bug where no error message was displayed when records were locked and tried to open.
+
+- Removed warning message if no encoding is detected for dictionary during import.
+
+- Removed most generic exceptions and replaced them with specific ones.
+
+- Other bug fixes
+
+
+</summary>
+    <title>5.00.09</title>
+    <updated>2011-10-19T07:29:26+00:00</updated>
+    <dc:date>2011-10-19T07:29:26+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Implemented export facilities to get data in a fixed width file following the NAACR 1946 v11.3 format from CanReg to SEER*prep and then on to SEER*stat.
+
+- System editor GUI is now using tabs to split up variables, dictionaries, groups, etc...
+
+- Improved scroll speed in system editor.
+
+- Fixed bug in system editor where you needed to click several times on arrows if there were hidden variables involved.
+
+- Fixed a bug where one couldn't add new variables after having removed some.
+
+- After adding elements to the database structure editor the relevant editor opens.
+
+- Replaced the old Twitter RSS URL with a more generic one using the Twitter API.
+
+- Updated the French translation.
+
+- Optimized some code.
+
+- Other bugfixes.
+
+
+</summary>
+    <title>5.00.10</title>
+    <updated>2011-11-11T14:56:29+00:00</updated>
+    <dc:date>2011-11-11T14:56:29+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed a bug in the topography/morphology check where too many rare cases were detected.
+
+- Fixed a bug in the table builder where text instead of numbers in age, sex, morphology, topography etc would break the table instead of give a warning.
+
+- Added a warning message when using the &quot;Overwrite&quot; option during import.
+
+- Fixed a bug where csvreader was attempted closed even when null.
+
+- Fixed a bug where windows programs could't detect the line endings of exported files (case listings/dictionaries).
+
+- Other minor fixes.
+
+
+</summary>
+    <title>5.00.11</title>
+    <updated>2011-11-16T10:48:08+00:00</updated>
+    <dc:date>2011-11-16T10:48:08+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Tables for &quot;age specific cases per 100.000&quot; and &quot;age specific cases&quot; can now be written to a character separated file and opened in general spreadsheets for further work.
+
+- Duplicate entries no longer show up in the list of favourite servers.
+
+- Added automatic verification of short name of variables (database variable name) in the system editor.
+
+- Better feedback while logging in. A progress bar shows up if things take long.
+
+- Implemented a changelog-viewer to see what's new in the current version of CanReg.
+
+- Updated handbook.
+
+- Updated translations.
+
+- Various fixes.
+
+
+</summary>
+    <title>5.00.12</title>
+    <updated>2011-12-09T09:14:56+00:00</updated>
+    <dc:date>2011-12-09T09:14:56+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Added functionality in the system definition editor to detect running databases and changes that impacts on the database structure and warns the user about that.
+
+- Reverted back to the old way of accessing the twitter rss feed.
+
+- Logo updated.
+
+- Updated documentation and roadmap.
+
+- Other bug fixes.
+
+
+</summary>
+    <title>5.00.13</title>
+    <updated>2012-01-25T16:08:25+00:00</updated>
+    <dc:date>2012-01-25T16:08:25+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed an import related bug where sometimes cases were missed during imort!
+
+- The browser sorts by default by Incidence Date/PatientID/SourceRecordID depending on tables shown.
+
+- Updated the doc.
+
+- Other minor fixes.
+
+
+</summary>
+    <title>5.00.14</title>
+    <updated>2012-02-16T09:34:53+00:00</updated>
+    <dc:date>2012-02-16T09:34:53+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed a nullpointer error in the rangefilter panel if the actionlistener had not been set.
+
+
+</summary>
+    <title>5.00.15</title>
+    <updated>2012-02-16T14:43:33+00:00</updated>
+    <dc:date>2012-02-16T14:43:33+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Implemented a system to detect records not properly released from the server after an unclean break.
+
+- Tablebuilder can now build tables without denominators.
+
+- Users can now change the font and font size used in CanReg5.
+
+- Tablebuilder automatically guesses population datasets to use in analysis based on the date of the stored sets.
+
+- Database generator: Added user role column to the users table.
+
+- Migrator: Added a migrator to add user roles.
+
+- A Grade Field variable can now be automatically filled from the 6th digit in the morphology part of the ICD-O-3 codes, like Behaviour.
+
+- Improved handling of null pointers in the system description editor.
+
+- Fixed a bug where CanReg didn't launch if the working dir entry in the settings file was missing.
+
+- Fixed a bug related to country specific locales.
+
+- Fixed bugs in the population dataset system.
+
+- Various bug fixes
+
+
+</summary>
+    <title>5.00.17</title>
+    <updated>2012-05-11T15:22:25+00:00</updated>
+    <dc:date>2012-05-11T15:22:25+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed a bug in the pie chart builder where cancer groups with the same count of cases only counted once.
+
+- Fixed a potential null-pointer error while accessing the lock-file.
+
+- Updated the docs.
+
+- Various bug fixes.
+
+
+</summary>
+    <title>5.00.18</title>
+    <updated>2012-05-16T14:43:56+00:00</updated>
+    <dc:date>2012-05-16T14:43:56+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed a potential null-pointer in the table builder if people wanted to use the filter wizard.
+
+- Added JRuby helper scripts to use the CanReg5 conversions and grouping functionality on data not from CanReg. (See handbook.)
+
+- Table builder now shows a warning if trying to build a table with no data.
+
+- Fixed a name error in the changelog. Gon�alo Lacerda translated CanReg5 to Portuguese from Portugal.
+
+- ICD10 codes will be generated even when checks are not performed, potential null pointer error if no name field was defined fixed.
+
+- Updated the handbook.
+
+
+</summary>
+    <title>5.00.19</title>
+    <updated>2012-06-07T07:19:20+00:00</updated>
+    <dc:date>2012-06-07T07:19:20+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- The display now refreshes after removing a variable in the tool to edit the database structure.
+
+- Export now takes into account UTF-8 characters.
+
+- Some tables, previously only available as PS, now also available as PDFs (if GhostScript is installed).
+
+- Data entry forms can now be written as a PDF.
+
+- Improved detection of R-path and added GhostScript-path.
+
+- Fixed a problem with blancs in the path of PS tables.
+
+- Other fixes.
+
+
+</summary>
+    <title>5.00.20</title>
+    <updated>2012-06-26T07:55:18+00:00</updated>
+    <dc:date>2012-06-26T07:55:18+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Cases by age group Pie and Bar charts added.
+
+- Top 10 cancer sites can now also be represented as bar a chart.
+
+- Added a write to PDF function to the built in canreg5 chart viewer.
+
+- PDSEditor: &quot;Save as new&quot; button added as suggested by Max Parkin. 
+
+- If user enter name of PDS in standard format (Name, Year), the date is automatically filled/suggested.
+
+- Removed the rates from the Cases table.
+
+- Legends are now optional in charts - and definable in the .conf file associated with the table.
+
+- The user can now copy the data behind the charts in the chartviewer to clipboard, ready to be pasted into general spread sheets, ie excel.
+
+- Charts can now directly be written as csv files.
+
+- Added some parentheses to account for ORs in filters.
+
+- Fixed a bug in the top 10 cancers tables where sites with the same numbers of cases led to dropped data.
+
+- AgeSpecificCases tables no longer counts all D's into Others &amp; Unspecified.
+</summary>
+    <title>5.00.21</title>
+    <updated>2012-07-27T06:00:27+00:00</updated>
+    <dc:date>2012-07-27T06:00:27+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed a bug where the browser didn't work without a filter/range. (Added too many parentheses in last update.)
+
+- New tables added. Previews updated.
+
+- &quot;Top10&quot; and &quot;Cases by age group&quot; charts can now be generated using R (with ggplot).
+
+- Generators for R and JChart implemented plus helper functions.
+
+- A builder for R files added.
+
+- &quot;makeSureGgplot2IsInstalled&quot; script added.
+
+- Added some static paths to the globals.
+
+- Added chart-type, file-type, count-type, and sex-labels to table builder interface.
+
+- Other bug fixes.
+
+
+</summary>
+    <title>5.00.22</title>
+    <updated>2012-08-30T15:35:42+00:00</updated>
+    <dc:date>2012-08-30T15:35:42+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed bug occuring when top or morph did not have the appropriate length in the ICD03 to 10 module.
+
+- Fixed a bug in the import function where the character set of the imported files were sometimes not taken into consideration.
+
+- Fixed a bug in the person search where weights of the links were not taken into account.
+
+- Fixed a bug occurring when a short name of a variable was a registered word.
+
+- Other bug fixes.
+
+
+</summary>
+    <title>5.00.23</title>
+    <updated>2012-10-18T10:24:02+00:00</updated>
+    <dc:date>2012-10-18T10:24:02+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed an error in ggplot pie charts occuring if any category had a 0 count.
+
+- Updated: The latest ggplot2 no longer allows options(title=&quot;&quot;), but needs labs(title=&quot;&quot;).
+
+- Improved error handling in the population dataset editor.
+
+- Modify Database Structure: Short name of new variables no longer default to &quot;Default name&quot; and there is now a check to see if they are empty before saving.
+
+- Fixed a bug occuring when selecting no standard variable.
+
+- Turkish translation partially done.
+
+- Other fixes
+
+
+</summary>
+    <title>5.00.24</title>
+    <updated>2012-11-23T15:53:22+00:00</updated>
+    <dc:date>2012-11-23T15:53:22+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- R script generated by CanReg5 now functions like the R scripts in the script folder by cat'ing out the file names generated. CanReg then reads from a report file instead of STOUT to decide on files generated by R.
+
+- Improved the &quot;makeSureGgplot2IsInstalled.R&quot; script by changing the repo to a dynamic one and the installation of packages to local folder more explicit.
+
+- Made the export window more dynamic.
+
+- Fixed a bug in the range filter panel occuring when the list of previous filters was missing.
+
+- Started migrating away from the Swing Application Framework.
+
+- Updated many libraries.
+
+- Other fixes.
+
+
+</summary>
+    <title>5.00.25</title>
+    <updated>2013-01-31T15:59:22+00:00</updated>
+    <dc:date>2013-01-31T15:59:22+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- CanRegDAO should now be more thread safe.
+
+- Improved the connection to SEER*stat.
+
+- Updated some R scripts.
+
+- When restoring from backup, CanReg5 now always renames existing folders and files instead of overwriting them.
+
+- Added Lastcontact and Vital Status to the SEERprep.conf file.
+
+- Handbook: Updated to a more compact book layout.
+
+- Handbook: Fixed some lines/graphics that went into the margins.
+
+- &quot;Latest news&quot; now working again. (The down time was due to a change in Twitters API.)
+
+- Other minor fixes.
+
+
+</summary>
+    <title>5.00.26</title>
+    <updated>2013-04-23T08:45:37+00:00</updated>
+    <dc:date>2013-04-23T08:45:37+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- The latest Java update (7u21 and 6u45) broke CanReg5 integration of R and GS due to a new restriction in spaces in file names. This is a quick work around that solves the problem on Windows machines, in most languages (including Spanish, Portuguese, and English).
+
+- Fixed a bug in the testScript.r where generate SVG or PNG did not work.
+
+
+</summary>
+    <title>5.00.27</title>
+    <updated>2013-04-26T11:42:25+00:00</updated>
+    <dc:date>2013-04-26T11:42:25+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Improved handling of separating characters within strings while exporting data.
+
+- Reference population now displayed on Age Specific Rates per 100.000 table.
+
+- Added a new age group structure.
+
+- Changed an inconsistency in the way that age group structures were displayed.
+
+- Other minor fixes.
+
+
+</summary>
+    <title>5.00.28</title>
+    <updated>2013-07-09T08:06:53+00:00</updated>
+    <dc:date>2013-07-09T08:06:53+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed a bug where some times a record would be locked and inaccessible after creating a new record specifying the ID.
+
+- Cleaned some code.
+
+- Other minor fixes.
+
+
+</summary>
+    <title>5.00.30</title>
+    <updated>2013-09-26T15:35:45+00:00</updated>
+    <dc:date>2013-09-26T15:35:45+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Age specific rates for top X cancer sites figure added (SA).
+
+- Data Quality table added (SA).
+
+- Updated other R scripts.
+
+- Added functionality to distribute R packages for CanReg5.
+
+- Table Header and Table Label now passed as arguments to the R scripts.
+
+- Improved detection of lines in output from R.
+
+- R now only installs needed dependencies - not recommended ones.
+
+- Exportizer path added to options.
+
+- Other minor fixes.
+
+
+</summary>
+    <title>5.00.31</title>
+    <updated>2014-01-31T16:56:22+00:00</updated>
+    <dc:date>2014-01-31T16:56:22+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Time trends added. 
+
+- CI5editorial tables added as an analysis option.
+
+- AgeSpecificRatesTopX table now sorts cancers by ASR.
+
+- Poplation pyramid improved.
+
+- ASR Top Cancers bar chart added.
+
+- Fixed a bug where ASR was by 1.000.000 instead of 100.000 in the charts of top 10 cancers.
+
+- Fixed a bug where R would not be called in the background on Linux/OSX.
+
+- Improved the handling of obsolete cases in analysis.
+
+- Improved the handling of pending/deleted/duplicate cases in analysis.
+
+- All sites but skin added to quality indicators.
+
+- Added truncation by age groups.
+
+- Changed the way external programs are called. (Now calling with an array of strings instead of calling with just a string.) This solves problems on Mac and Linux, and improves security on Windows.
+
+- Other updates to the R scripts/analytical functions.
+
+- Updated the code for barcharts and piecharts to take into account upcoming changes to ggplot.
+
+- Russian translation updated.
+
+- Other minor fixes.
+
+
+</summary>
+    <title>5.00.32</title>
+    <updated>2014-04-07T14:25:05+00:00</updated>
+    <dc:date>2014-04-07T14:25:05+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed (Temporarily) the Age-Specific Time Trends script. (It now computes rates/trends for age groups &gt;=40 and for all sites together only)
+
+- Fixed a bug where some non-Latin characters were not exported correctly, but showed up as question-marks. Now properly implemented as unicode (UTF-8).
+
+- Fixed a bug related to import of patients with multiple tumours.
+
+- Turkish translation updated.
+
+- Other minor fixes.
+
+
+</summary>
+    <title>5.00.34</title>
+    <updated>2014-09-10T08:24:27+00:00</updated>
+    <dc:date>2014-09-10T08:24:27+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed a bug in the import of datasets split in three tables where sometimes not all cases were imported.
+
+
+</summary>
+    <title>5.00.35</title>
+    <updated>2014-09-12T15:33:51+00:00</updated>
+    <dc:date>2014-09-12T15:33:51+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed a bug occurring in some tables if the decimal point was not '.' (ie. Russian locale.)
+
+- Saving frequency tables now also produces pivot tables.
+
+- Hid &quot;Other&quot; age group structure button.
+
+- Unknown age code is now dynamic.
+
+- DLC check now with improved handling of unknown dates.
+
+- Allow a lenience for a date being prior to another date in the case of unknown dates.
+
+- DateHelper function &quot;years between&quot; two dates now takes better into account unknown dates.
+
+- Other minor fixes.
+
+
+</summary>
+    <title>5.00.36</title>
+    <updated>2015-07-27T15:03:03+00:00</updated>
+    <dc:date>2015-07-27T15:03:03+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed a bug in the Date of Last contact check introduced in the previous version.
+
+- Fixed a bug where updates to Source records were sometimes not imported.
+
+- Other minor fixes.
+
+
+</summary>
+    <title>5.00.37</title>
+    <updated>2015-09-01T09:44:53+00:00</updated>
+    <dc:date>2015-09-01T09:44:53+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Users can now perform &quot;Exact search&quot; while entering a new case.
+
+- System definition files are now always saved in UTF-8.
+
+- [ModifuDatabaseStructureInternalFrame] Save button now disabled while saving a file.
+
+- Slight restructure of the main menus to make them more consistent.
+
+  - Options are now always visible - even when not logged in.
+
+  - Migrate from CR4 is a separate sub-menu under Tools.
+
+  - Import under data entry always wants data in CR5 format, the CR4 import function is under Tools-&gt;Migrate from CR4.
+
+- Enter now skips to next field during data entry.
+
+- Fixed a bug in the filter wizard where it would not pick up the change of table when changing to a join of all three tables.
+
+- Fixed a bug where the date was sometimes not saved if it was unparsable.
+
+- Frequencies by year now does not allow selection of patients or sources alone.
+
+- Range and filters now work again when selecting only Tumour table in frequencies by year.
+
+- Fixed a bug where pie-charts and bar-charts would not be generated if any cases were recorded with unknown sex codes.
+
+- Versioning system changed from Mercurial to Git.
+
+- Better handling of Unicode characters in output files.
+
+- Other improvements.
+
+
+</summary>
+    <title>5.00.39</title>
+    <updated>2016-05-06T14:12:36+00:00</updated>
+    <dc:date>2016-05-06T14:12:36+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Date format for data entry can now be chosen at user level. (Under &quot;Options&quot;.)
+
+- Added detection of uninstallation/reinstallation/updates of R/GS software.
+
+- Improved year selection in table builder.
+
+- Updated R libraries and R script for installation of those.
+
+- Character separated file extension now defaults to CSV even for tab separated files.
+
+- Added another common population format for children ([0,5&gt;,[5,10&gt;,[10,15&gt;).
+
+- Fixed a bug in that hindered user setting number of cancers in top N cancer trends. (R tables configuration files.)
+
+- Updated Spanish translation.
+
+- Various fixes.
+
+
+</summary>
+    <title>5.00.40</title>
+    <updated>2016-10-18T10:15:11+00:00</updated>
+    <dc:date>2016-10-18T10:15:11+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- New data entry form. (Developed in collaboration with Betty Carballo and Patricio Carranza.)
+
+- Ability to enable/disble new data entry form in Options.
+
+- Removed latest news since Twitter no longer allows access to their API like that.
+
+- Improved layout for login and welcome screens for big fonts.
+
+- Updated Spanish translation.
+
+- Updated JavaDB to version 10.13.1.1.
+
+- Small fixes.
+
+
+</summary>
+    <title>5.00.41</title>
+    <updated>2017-03-29T13:00:01+00:00</updated>
+    <dc:date>2017-03-29T13:00:01+00:00</dc:date>
+  </entry>
+  <dc:date>2017-05-18T17:42:43+02:00</dc:date>
+</feed>
