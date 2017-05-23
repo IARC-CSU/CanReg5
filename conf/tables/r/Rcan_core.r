@@ -193,6 +193,39 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
 }
 
 
+canreg_basis_table <- function(dt,var_cases="CASES", var_basis="BASIS", var_cancer_label="cancer_label", var_ICD="ICD10GROUP") {
+  
+  dt <- as.data.table(dt)
+  setnames(dt, var_cases, "CSU_C")
+  setnames(dt, var_cancer_label, "CSU_label")
+  setnames(dt, var_ICD, "CSU_ICD")
+  
+  
+  dt <-  dt[,list( CSU_C=sum(CSU_C)), by=c(var_basis,"CSU_label", "CSU_ICD")]
+  dt_total <- dt[,list( CSU_C=sum(CSU_C)), by=var_basis]
+  dt_total[, CSU_label:="All sites"]
+  dt_total[, CSU_ICD:="All"]
+  dt <- rbind(dt, dt_total)
+  
+  dt[, total_cases := sum(CSU_C), by=c("CSU_label", "CSU_ICD")]
+  dt[, BASIS_pc := CSU_C/total_cases*100]
+  dt[,BASIS_pc:=round(BASIS_pc,1)]
+  dt[, BASIS_pc:=paste0(format(BASIS_pc, big.mark = ",", scientific = FALSE, drop0trailing = TRUE),"%")]
+  dt[, CSU_C := NULL]
+  
+  dt <- reshape(dt, timevar = "BASIS",idvar = c("CSU_label","CSU_ICD","total_cases"), direction = "wide")
+  dt[, total_pc_test:= total_cases/sum(total_cases)*200]
+  dt[,total_pc_test:=round(total_pc_test,1)]
+  dt[, total_pc_test:=paste0(format(total_pc_test, big.mark = ",", scientific = FALSE, drop0trailing = TRUE),"%")]
+  setkeyv(dt, c("CSU_ICD"))
+  
+  setcolorder(dt, c("CSU_label", "CSU_ICD", "total_cases", "total_pc_test", "BASIS_pc.0", "BASIS_pc.1","BASIS_pc.2"))
+  
+  return(dt)
+}
+
+
+
 
 csu_merge_inc_pop <- function(inc_file,
                               pop_file,
@@ -243,7 +276,7 @@ csu_merge_inc_pop <- function(inc_file,
 }
 
 
-canreg_ageSpecific_rate_data <- function(dt, keep_ref=FALSE, keep_year=FALSE) { 
+canreg_ageSpecific_rate_data <- function(dt, keep_ref=FALSE, keep_year=FALSE, keep_basis = FALSE) { 
   
   var_by <- c("ICD10GROUP", "ICD10GROUPLABEL", "AGE_GROUP","AGE_GROUP_LABEL", "SEX")
   if (keep_ref) {
@@ -252,6 +285,10 @@ canreg_ageSpecific_rate_data <- function(dt, keep_ref=FALSE, keep_year=FALSE) {
   
   if (keep_year) {
     var_by <- c(var_by, "YEAR")
+  }
+  
+  if (keep_basis) {
+    var_by <- c(var_by, "BASIS")
   }
   
   dt <-  dt[AGE_GROUP != canreg_missing_age(dt) ,list(CASES=sum(CASES), COUNT=sum(COUNT)), by=var_by]
