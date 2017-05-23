@@ -43,5 +43,7 @@
 		var_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX"),
 		column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL"))
 		)
+	
+
 		
   

@@ -368,6 +368,60 @@
   doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
   doc <- addParagraph(doc, "Fig 9. Trend in Age-standardized (W) incidence rate")
 
+  ## Basis of diagnosis
+  doc <- addPageBreak(doc)
+  doc <- addTitle(doc, "Basis of Diagnosis (DCO / Clinical / MV) by site", level = 2)
+  
+  
+  dt_basis <- csu_merge_inc_pop(
+    inc_file =inc,
+    pop_file =pop,
+    var_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX", "BASIS"),
+    column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL"))
+  )
+  
+  dt_basis[BASIS > 0 & BASIS < 5, BASIS:=1]
+  dt_basis[BASIS >= 5, BASIS:=2]
+  
+  dt_report <- canreg_ageSpecific_rate_data(dt_basis, keep_basis = TRUE)
+  dt_report <- canreg_basis_table(dt_report)
+  
+  
+  
+  ft <- FlexTable( data = dt_report,
+                   header.columns = FALSE )
+  
+  ft <- addHeaderRow( ft,value = c("Cancer site","ICD-10","No. Cases","% total", "Basis of diagnosis"),
+                      colspan = c( 1,1,1,1,3))
+  
+  ft <- addHeaderRow( ft,value = c("","","","", "DCO", "Clinical", "M.V"),
+                      colspan = c( 1,1,1,1,1,1,1))
+  
+  
+  ft[,2, side = 'left'] <- borderProperties( style = 'none' )
+  ft[,2,to = 'header', side = 'left'] <- borderProperties( style = 'none' )
+  ft[,4, side = 'left'] <- borderProperties( style = 'none' )
+  ft[,4,to = 'header', side = 'left'] <- borderProperties( style = 'none' )
+  ft[1,1:4,to = 'header', side = 'bottom'] <- borderProperties( style = 'none' )
+  
+  ft[,, side = 'bottom'] <- borderProperties( style = 'none' )
+  ft[nrow(dt_report),, side = 'bottom'] <- borderProperties( width = 1 )
+  ft[nrow(dt_report),, side = 'top'] <- borderProperties( width = 1 )
+  
+  ft[,,,to = 'header'] <- parProperties(text.align = "center")
+  ft[,,,to = 'header'] <- textProperties(font.weight = "normal")
+  ft[1,1,to = 'header'] <- textProperties(underlined=TRUE)
+  ft[,,] <- parProperties(text.align = "right")
+  
+  doc <- addParagraph(doc, "\r\n")
+  
+  doc <- addParagraph(doc,
+                      "Table 1 shows the percentage of cases at the major sites that were registered on the basis of information from a death certificate only (DCO) and with morphological verification (MV%) - that is, based on cytology or histology (of the primary tumour, or a metastasis).")
+  
+  doc <- addParagraph(doc, "\r\n")
+  doc <- addFlexTable(doc,ft)
+  doc <- addParagraph(doc, "\r\n")
+  doc <- addParagraph(doc, "Table 1.", par.properties=parProperties(text.align="center", padding=0))
   
 writeDoc(doc, file = filename)
 
