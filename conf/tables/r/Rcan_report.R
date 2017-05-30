@@ -10,7 +10,7 @@
   source(paste(sep="/", script.basename, "Rcan_source.r"))
   ################
 
-  
+tryCatch({  
   
   graph_width <- 5
   
@@ -425,7 +425,22 @@
   
 writeDoc(doc, file = filename)
 
-##talk to canreg
-cat(paste("-outFile",filename,sep=":"))
+#talk to canreg
+  cat(paste("-outFile",filename,sep=":"))
+	
+	
+  },
+  
+  error = function(e){
+    if (exists("doc")) {
+     writeDoc(doc, file = filename)
+     if (file.exists(filename)) file.remove(filename)
+    }
+    
+    canreg_error_log(e,filename,out,Args,inc,pop)
+  }
+)
+	
+	
 	
 	
