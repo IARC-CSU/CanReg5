@@ -818,6 +818,7 @@ csu_ageSpecific_core <-
            missing_age = NULL,
            db_rate = 100000,
            log_scale=FALSE,
+           log_point=TRUE,
            plot_title=NULL,
            plot_subtitle=NULL,
            plot_caption=NULL,
@@ -1097,10 +1098,11 @@ csu_ageSpecific_core <-
       )
     
     if (log_scale){
-      
-
+      if (log_point) {
+        csu_plot <- csu_plot +
+          geom_point(aes(fill=CSU_BY), size = 3,na.rm=TRUE,shape=21,stroke=0.5,colour="black", show.legend=FALSE)
+      }
       csu_plot <- csu_plot +
-        #geom_point(aes(fill=CSU_BY), size = 3,na.rm=TRUE,shape=21,stroke=0.5,colour="black", show.legend=FALSE)+
         scale_y_continuous(name = paste("Age-specific incidence rate per", formatC(db_rate, format="d", big.mark=",")),
                            breaks=tick$tick_list,
                            minor_breaks = tick$tick_minor_list,
@@ -1662,6 +1664,7 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
                                           plot_caption = plot_caption,
                                           color_trend = color_cancer,
                                           log_scale = log_scale,
+                                          log_point=FALSE,
                                           age_label_list = unique(dt_plot[[var_age_label_list]]),
     )$csu_plot
     
