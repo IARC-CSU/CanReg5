@@ -54,6 +54,7 @@ tryCatch({
 
   error = function(e){
     canreg_error_log(e,filename,out,Args,inc,pop)
+    quit()
   }
 )
   
