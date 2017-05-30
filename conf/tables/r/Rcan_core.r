@@ -219,6 +219,21 @@ canreg_basis_table <- function(dt,var_cases="CASES", var_basis="BASIS", var_canc
   dt[, total_pc_test:=paste0(format(total_pc_test, big.mark = ",", scientific = FALSE, drop0trailing = TRUE),"%")]
   setkeyv(dt, c("CSU_ICD"))
   
+  if(!("BASIS_pc.0" %in% colnames(dt)))
+  {
+    dt[, BASIS_pc.0:="0%"]
+  }
+  
+  if(!("BASIS_pc.1" %in% colnames(dt)))
+  {
+    dt[, BASIS_pc.1:="0%"]
+  }
+  
+  if(!("BASIS_pc.2" %in% colnames(dt)))
+  {
+    dt[, BASIS_pc.2:="0%"]
+  }
+  
   setcolorder(dt, c("CSU_label", "CSU_ICD", "total_cases", "total_pc_test", "BASIS_pc.0", "BASIS_pc.1","BASIS_pc.2"))
   
   return(dt)
